@@ -17,6 +17,7 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxColumnComponent } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxTreeGridState - input properties #tGrid', () => {
     let fix;

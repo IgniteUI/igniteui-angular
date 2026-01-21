@@ -5,6 +5,7 @@ import { changei18n, getCurrentResourceStrings as igxGetCurrentResourceStrings }
 import { ActionStripResourceStringsBG } from 'projects/igniteui-angular-i18n/src/i18n/BG/action-strip-resources';
 import { BannerResourceStringsBG, ResourceStringsBG } from 'igniteui-i18n-resources';
 import { IResourceCategories } from 'node_modules/igniteui-i18n-core/i18n-manager.interfaces';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('i18n', () => {
     beforeEach(() => {

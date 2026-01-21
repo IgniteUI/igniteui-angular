@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Update 7.3.4', () => {
     let appTree: UnitTestTree;

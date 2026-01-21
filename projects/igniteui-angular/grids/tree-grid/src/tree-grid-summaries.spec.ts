@@ -8,6 +8,7 @@ import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     const DEBOUNCETIME = 30;

@@ -9,6 +9,7 @@ import { CellType, GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { QueryList } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     let fix;

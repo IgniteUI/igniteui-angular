@@ -18,6 +18,7 @@ import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 

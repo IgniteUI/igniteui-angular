@@ -14,6 +14,7 @@ import { GridRowConditionalStylingComponent } from '../../../test-utils/grid-bas
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';

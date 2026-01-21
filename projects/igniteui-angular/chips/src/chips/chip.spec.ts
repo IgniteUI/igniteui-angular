@@ -10,6 +10,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { getComponentSize } from 'igniteui-angular/core';
 import { ControlsFunction } from 'igniteui-angular/test-utils/controls-functions.spec';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 @Component({
     template: `

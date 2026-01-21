@@ -9,6 +9,7 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { first } from 'rxjs/operators';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IRowDataCancelableEventArgs } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     let fix;

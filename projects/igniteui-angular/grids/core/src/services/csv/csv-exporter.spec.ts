@@ -4,6 +4,7 @@ import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('CSV exporter', () => {
     let exporter: IgxCsvExporterService;

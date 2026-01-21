@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { wait } from '../../../test-utils/ui-interactions.spec';
-import { it } from 'vitest';
+import { describe, it, test, expect, beforeEach, vi } from 'vitest';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';

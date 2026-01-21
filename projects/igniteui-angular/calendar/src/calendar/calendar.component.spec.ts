@@ -14,6 +14,7 @@ import { DateRangeDescriptor, DateRangeType, } from "../../../core/src/core/date
 import { IgxDayItemComponent } from "./days-view/day-item.component";
 import { HelperTestFunctions } from "../../../test-utils/calendar-helper-utils";
 import { WEEKDAYS } from "../../../core/src/core/enums";
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe("IgxCalendar - ", () => {
     registerLocaleData(localeFr);

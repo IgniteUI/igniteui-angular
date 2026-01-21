@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder,
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from '../../radio/radio.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxRadioGroupDirective', () => {
     beforeEach(waitForAsync(() => {

@@ -3,6 +3,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering
 import { recreateTree, recreateTreeFromFields } from './expressions-tree-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 import type { EntityType, FieldType } from './grid-types';
+import { describe, it, expect } from 'vitest';
 
 function serialize(value: unknown, pretty = false) {
     return pretty ? JSON.stringify(value, undefined, ' ') : JSON.stringify(value);

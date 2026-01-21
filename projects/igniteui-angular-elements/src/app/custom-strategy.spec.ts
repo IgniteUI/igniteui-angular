@@ -6,6 +6,7 @@ import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
 import { IgcGridComponent, IgcHierarchicalGridComponent, IgcPivotGridComponent, IgcColumnComponent, IgcPaginatorComponent, IgcGridStateComponent, IgcColumnLayoutComponent, IgcActionStripComponent, IgcGridEditingActionsComponent, } from './components';
 import { defineComponents } from '../utils/register';
+import { describe, beforeAll, beforeEach, afterEach, it, expect } from 'vitest';
 
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
@@ -78,7 +79,7 @@ describe('Elements: ', () => {
             detailGrid = document.querySelector<IgcNgElement>('#child1');
             expect(detailGrid).toBeDefined();
             detailGridComponent = (await detailGrid?.ngElementStrategy[ComponentRefKey])?.instance as IgxGridComponent;
-            expect(detailGridComponent).toBeDefined("Detail child grid was destroyed on re-expand");
+            expect(detailGridComponent, "Detail child grid was destroyed on re-expand").toBeDefined();
         });
     });
 

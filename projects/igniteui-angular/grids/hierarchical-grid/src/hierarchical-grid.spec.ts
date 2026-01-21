@@ -18,6 +18,7 @@ import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ColumnType, IgxStringFilteringOperand, ɵSize, getComponentSize } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGridCreatedEventArgs } from './events';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
 

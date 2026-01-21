@@ -25,6 +25,7 @@ import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxChipComponent, IgxBadgeComponent, IgxDatePickerComponent, IgxCalendarComponent, IgxIconComponent } from 'igniteui-angular';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';

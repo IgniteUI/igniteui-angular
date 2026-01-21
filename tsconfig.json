@@ -14,7 +14,8 @@
       "target": "ES2022",
       "skipLibCheck": true,
       "typeRoots": [
-        "node_modules/@types"
+        "node_modules/@types",
+        "node_modules"
       ],
       "paths": {
         "igniteui-angular": [

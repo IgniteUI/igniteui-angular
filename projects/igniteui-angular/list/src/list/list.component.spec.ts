@@ -8,6 +8,7 @@ import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxList
 import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent } from '../../../test-utils/list-components.spec';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('List', () => {
 

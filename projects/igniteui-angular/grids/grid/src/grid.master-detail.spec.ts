@@ -15,6 +15,7 @@ import { GridSummaryCalculationMode, IgxStringFilteringOperand, SortingDirection
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { describe, it, test, expect, beforeEach, vi } from 'vitest';
 
 const DEBOUNCE_TIME = 30;
 const ROW_TAG = 'igx-grid-row';

@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree, } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Update 10.2.0', () => {
     let appTree: UnitTestTree;
@@ -45,6 +46,7 @@ export class ExpansionTestComponent {
             .runSchematic('migration-17', {}, appTree);
         const expectedContent = `import { Component, ViewChild } from '@angular/core';
 import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from 'igniteui-angular';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 @Component({
     selector: 'app-expansion-test',

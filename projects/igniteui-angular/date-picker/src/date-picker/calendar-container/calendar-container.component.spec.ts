@@ -6,6 +6,7 @@ import { IgxCalendarComponent } from '../../../../calendar/src/public_api';
 import { IgxButtonDirective } from '../../../../directives/src/directives/button/button.directive';
 import { IgxPickerActionsDirective } from '../../../../core/src/date-common/picker-icons.common';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 
 describe('Calendar Container', () => {

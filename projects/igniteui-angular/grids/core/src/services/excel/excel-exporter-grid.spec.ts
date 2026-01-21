@@ -23,6 +23,7 @@ import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { FileContentData } from './test-data.service.spec';
 import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;

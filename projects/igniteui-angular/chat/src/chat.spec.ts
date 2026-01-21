@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component';
 import { Component, signal, TemplateRef, viewChild } from '@angular/core';
 import type { IgcChatComponent, IgcChatMessage, IgcTextareaComponent } from 'igniteui-webcomponents';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Chat wrapper', () => {
 

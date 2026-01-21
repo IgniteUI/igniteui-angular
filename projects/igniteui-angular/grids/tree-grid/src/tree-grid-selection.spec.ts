@@ -10,6 +10,7 @@ import { GridSelectionMode, IgxGridCell } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
 import { IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     let fix;

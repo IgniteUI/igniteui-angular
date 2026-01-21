@@ -5,6 +5,7 @@ import { IgxInputGroupComponent } from './input-group.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';

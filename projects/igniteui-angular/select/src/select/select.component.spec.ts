@@ -4,7 +4,7 @@ import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@a
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { it } from 'vitest';
+import { describe, it, test, expect, beforeEach, afterAll, vi } from 'vitest';
 
 import { IGX_DROPDOWN_BASE, IgxDropDownItemComponent, ISelectionEventArgs } from '../../../drop-down/src/drop-down/public_api';
 import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';

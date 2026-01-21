@@ -7,7 +7,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from 'igniteui-angular/card';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
-import { vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_EXPANSION_PANEL_BODY = 'igx-expansion-panel__body';

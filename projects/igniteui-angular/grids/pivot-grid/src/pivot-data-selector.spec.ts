@@ -12,6 +12,7 @@ import { IgxGridNavigationService, IPivotDimension, IPivotValue, PivotDimensionT
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe("Pivot data selector", () => {
 

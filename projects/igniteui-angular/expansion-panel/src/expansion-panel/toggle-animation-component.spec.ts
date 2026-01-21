@@ -4,6 +4,7 @@ import { noop } from 'rxjs';
 import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
 }

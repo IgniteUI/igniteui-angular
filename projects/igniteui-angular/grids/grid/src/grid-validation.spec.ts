@@ -13,6 +13,7 @@ import { IGridFormGroupCreatedEventArgs } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
 import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxGrid - Validation #grid', () => {
 

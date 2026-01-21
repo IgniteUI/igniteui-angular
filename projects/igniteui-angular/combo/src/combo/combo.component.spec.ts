@@ -24,7 +24,7 @@ import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipe
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 import { IgxComboAPIService } from './combo.api';
-import { vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';

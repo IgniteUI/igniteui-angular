@@ -6,6 +6,7 @@ import { first } from 'rxjs/operators';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 import { IgxDragDirective, IgxDropDirective, IgxDragLocation, IDropDroppedEventArgs, DragDirection, IgxDragHandleDirective, IgxDragIgnoreDirective } from './drag-drop.directive';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;

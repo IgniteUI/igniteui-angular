@@ -8,6 +8,7 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, FormattedValuesSortingStrategy, NoopSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { By } from '@angular/platform-browser';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 

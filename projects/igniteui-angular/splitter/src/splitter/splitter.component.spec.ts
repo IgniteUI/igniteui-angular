@@ -4,6 +4,7 @@ import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from 
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
 const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';

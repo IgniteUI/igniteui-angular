@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.component';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Avatar', () => {
     const baseClass = 'igx-avatar';

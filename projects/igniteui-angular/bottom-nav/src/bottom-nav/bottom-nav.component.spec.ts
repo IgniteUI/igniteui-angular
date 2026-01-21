@@ -11,6 +11,7 @@ import { RoutingTestGuard } from '../../../test-utils/routing-test-guard.spec';
 import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../../test-utils/routing-view-components.spec';
 import { IgxBottomNavItemComponent } from './bottom-nav-item.component';
 import { IgxBottomNavComponent } from './bottom-nav.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxBottomNav', () => {
 

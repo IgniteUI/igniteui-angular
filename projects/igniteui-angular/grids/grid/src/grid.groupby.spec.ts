@@ -20,6 +20,7 @@ import { DefaultSortingStrategy, IGroupingExpression, IgxGrouping, IgxStringFilt
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - GroupBy #grid', () => {
 

@@ -6,6 +6,7 @@ import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 
 @Component({

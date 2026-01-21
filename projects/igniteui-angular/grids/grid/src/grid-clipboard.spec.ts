@@ -8,6 +8,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
 import { CancelableEventArgs } from 'igniteui-angular/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Clipboard #grid', () => {
 

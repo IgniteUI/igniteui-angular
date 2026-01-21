@@ -1,5 +1,5 @@
 import type { MockedObject } from "vitest";
-import { vi } from 'vitest';
+import { expect, vi } from 'vitest';
 import { EventEmitter, QueryList } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';

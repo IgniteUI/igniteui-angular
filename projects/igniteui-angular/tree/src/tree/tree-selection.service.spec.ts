@@ -1,5 +1,5 @@
 import type { Mock } from "vitest";
-import { vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { EventEmitter } from '@angular/core';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType, ITreeNodeSelectionEvent } from './common';
 import { TreeTestFunctions } from './tree-functions.spec';

@@ -8,6 +8,7 @@ import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingCompone
 import { FilteringExpressionsTree, FilteringLogic, IFilteringExpression, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { ExpressionUI } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     beforeEach(waitForAsync(() => {

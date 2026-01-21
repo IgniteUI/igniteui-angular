@@ -6,6 +6,7 @@ import { IgxToggleActionDirective, IgxToggleDirective } from './toggle.directive
 
 import { first } from 'rxjs/operators';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CancelableEventArgs, ConnectedPositioningStrategy, HorizontalAlignment, IgxOverlayOutletDirective, IgxOverlayService, OffsetMode, OverlaySettings } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxToggle', () => {
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';

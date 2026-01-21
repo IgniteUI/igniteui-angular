@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { IgxChatMarkdownService } from './markdown-service';
 import { MarkdownPipe } from './markdown-pipe';
 import Spy = Mock;
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Mock the Service: We only care that the pipe calls the service and gets an HTML string.
 // We provide a *known* unsafe HTML string to ensure sanitization is working.

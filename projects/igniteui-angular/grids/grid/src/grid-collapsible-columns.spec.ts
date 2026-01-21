@@ -7,6 +7,7 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { SortingDirection } from 'igniteui-angular/core';
+import { describe, it, test, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - multi-column headers #grid', () => {
     let contactInf;

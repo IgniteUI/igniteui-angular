@@ -10,6 +10,7 @@ import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../te
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
 
 const DEBOUNCE_TIME = 50;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';

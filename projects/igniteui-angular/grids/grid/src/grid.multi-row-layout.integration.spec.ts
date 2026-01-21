@@ -10,6 +10,7 @@ import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-function
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayoutHidingTestComponent | ColumnLayoutResizingTestComponent | ColumnLayoutPinningTestComponent;

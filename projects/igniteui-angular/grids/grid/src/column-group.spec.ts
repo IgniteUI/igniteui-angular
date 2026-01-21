@@ -12,6 +12,7 @@ import { DropPosition } from 'igniteui-angular/grids/core';
 import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent, BlueWhaleGridComponent, ColumnGroupTestComponent, ColumnGroupFourLevelTestComponent, ThreeGroupsThreeColumnsGridComponent, NestedColGroupsGridComponent, StegosaurusGridComponent, OneColPerGroupGridComponent, NestedColumnGroupsGridComponent, DynamicGridComponent, NestedColGroupsWithTemplatesGridComponent, DynamicColGroupsGridComponent, ColumnGroupHiddenInTemplateComponent } from '../../../test-utils/grid-mch-sample.spec';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';

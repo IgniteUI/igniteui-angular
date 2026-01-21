@@ -6,6 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxMonthPickerComponent } from './month-picker.component';
 import { IFormattingOptions, IgxCalendarView } from '../calendar';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxMonthPicker', () => {
 

@@ -11,6 +11,7 @@ import { IgxListComponent } from 'igniteui-angular/list';
 import { IgxListItemComponent } from 'igniteui-angular/list';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from './public_api';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';

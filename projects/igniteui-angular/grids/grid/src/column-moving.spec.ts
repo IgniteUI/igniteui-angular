@@ -10,7 +10,7 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { ColumnType, SortingDirection } from 'igniteui-angular/core';
-import { it } from 'vitest';
+import { describe, it, test, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';

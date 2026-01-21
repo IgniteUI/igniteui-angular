@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Update to 11.1.0', () => {
     let appTree: UnitTestTree;
@@ -33,6 +34,7 @@ describe('Update to 11.1.0', () => {
     it('should migrate updated getter names', async () => {
         appTree.create('/testSrc/appPrefix/component/icon-test.component.ts', `import { Component, ViewChild } from '@angular/core';
 import { IgxIconModule, IgxIconComponent } from 'igniteui-angular';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 @Component({
     selector: 'app-icon-test',

@@ -9,6 +9,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../../test-utils/helper-utils.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { HammerGesturesManager, PlatformUtil } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Cell component #grid', () => {
 

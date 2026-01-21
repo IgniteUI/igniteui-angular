@@ -15,6 +15,7 @@ import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
 import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const DEBOUNCETIME = 30;
 

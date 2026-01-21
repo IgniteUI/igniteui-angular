@@ -8,6 +8,7 @@ import { HammerGesturesManager, IgxNavigationService } from 'igniteui-angular/co
 import { IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
 import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular/directives';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;

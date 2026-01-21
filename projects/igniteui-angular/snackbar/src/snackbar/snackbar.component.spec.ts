@@ -7,6 +7,7 @@ import { useAnimation } from '@angular/animations';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxSnackbar', () => {
     beforeEach(waitForAsync(() => {

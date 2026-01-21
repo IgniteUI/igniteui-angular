@@ -5,7 +5,7 @@ import { SelectionWithScrollsComponent, SelectionWithTransactionsComponent, Cell
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
-import { it } from 'vitest';
+import { describe, it, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';

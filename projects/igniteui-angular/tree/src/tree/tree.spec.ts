@@ -12,7 +12,7 @@ import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeComponent } from './tree.component';
 import { IgxTreeService } from './tree.service';
 import { IGX_TREE_COMPONENT } from './common';
-import { it, vi, describe, expect } from 'vitest';
+import { describe, it, test, expect, beforeAll, beforeEach, afterEach, afterAll, vi } from 'vitest';
 
 const TREE_ROOT_CLASS = 'igx-tree__root';
 const NODE_TAG = 'igx-tree-node';

@@ -1,4 +1,5 @@
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand, IgxFilteringOperand } from './filtering-condition';
+import { describe, it, expect } from 'vitest';
 
 describe('Unit testing FilteringCondition', () => {
     it('tests string conditions', () => {

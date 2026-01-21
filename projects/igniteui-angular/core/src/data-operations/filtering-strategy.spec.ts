@@ -3,6 +3,7 @@ import { FilteringStrategy } from './filtering-strategy';
 import { FilteringExpressionsTree } from './filtering-expressions-tree';
 import { FilteringLogic } from './filtering-expression.interface';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxBooleanFilteringOperand } from './filtering-condition';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 
 describe('Unit testing FilteringStrategy', () => {

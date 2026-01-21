@@ -10,6 +10,7 @@ import { GridSelectionMode, FilterMode, IgxGridMRLNavigationService } from 'igni
 import { IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
 import { IgxGridHeaderRowComponent } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand, ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const DEBOUNCETIME = 30;
 

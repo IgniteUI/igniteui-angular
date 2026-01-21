@@ -1,6 +1,7 @@
 import { strFromU8 } from 'fflate';
 import { ExcelFileTypes } from './excel-enums';
 import { ZipFiles } from './zip-helper.spec';
+import { expect } from 'vitest';
 
 export class ZipWrapper {
     private _zip: Object;

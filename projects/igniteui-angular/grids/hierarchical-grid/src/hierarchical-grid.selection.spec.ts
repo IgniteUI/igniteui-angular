@@ -10,6 +10,7 @@ import { QueryList } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;

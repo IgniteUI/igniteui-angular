@@ -7,7 +7,7 @@ import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansio
 import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
 import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
 import { UIInteractions } from 'igniteui-angular/test-utils/ui-interactions.spec';
-import { vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const ACCORDION_CLASS = 'igx-accordion';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';

@@ -13,6 +13,7 @@ import { CellType, GridType, IgxColumnComponent, IgxColumnGroupComponent, IgxCol
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { IgxGridComponent, IgxGridExpandableCellComponent, IgxGridRowComponent } from 'igniteui-angular/grids/grid';
 import { IgxPivotRowComponent } from 'igniteui-angular/grids/pivot-grid/src/pivot-row.component';
+import { expect } from 'vitest';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';

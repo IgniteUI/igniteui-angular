@@ -7,7 +7,7 @@ import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
-import { vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Carousel', () => {
     let fixture;

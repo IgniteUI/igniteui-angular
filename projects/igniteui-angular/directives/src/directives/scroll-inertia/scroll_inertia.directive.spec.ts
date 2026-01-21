@@ -3,6 +3,7 @@ import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angul
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { wait } from '../../../../test-utils/ui-interactions.spec';
+import { describe, it, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;

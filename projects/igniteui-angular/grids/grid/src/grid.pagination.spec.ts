@@ -7,6 +7,7 @@ import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, PAGER_CLASS } from '../../../test-utils/grid-functions.spec';
 import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../../test-utils/controls-functions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const grid = fix.componentInstance.grid;

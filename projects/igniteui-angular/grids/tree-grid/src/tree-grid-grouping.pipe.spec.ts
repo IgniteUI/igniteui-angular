@@ -4,6 +4,7 @@ import { DefaultSortingStrategy, IGroupingExpression } from 'igniteui-angular/co
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 
 describe('TreeGrid Grouping Pipe', () => {

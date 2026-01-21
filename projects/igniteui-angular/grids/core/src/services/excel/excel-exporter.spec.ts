@@ -6,6 +6,7 @@ import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;

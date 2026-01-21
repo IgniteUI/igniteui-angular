@@ -1,4 +1,5 @@
 import { IPivotGridRecord } from 'igniteui-angular/grids/core';
+import { expect } from 'vitest';
 
 export class PivotGridFunctions {
 

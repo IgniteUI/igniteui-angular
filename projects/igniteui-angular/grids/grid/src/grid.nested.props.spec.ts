@@ -8,6 +8,7 @@ import { IGridEditEventArgs, IgxCellEditorTemplateDirective, IgxCellTemplateDire
 import { FormsModule } from '@angular/forms';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { cloneArray, columnFieldPath, IgxStringFilteringOperand, resolveNestedPath, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const first = <T>(array: T[]): T => array[0];
 

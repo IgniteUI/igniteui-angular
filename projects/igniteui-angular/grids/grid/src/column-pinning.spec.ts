@@ -8,6 +8,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxColumnActionsComponent } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Column Pinning UI #grid', () => {
     let fix: ComponentFixture<ColumnPinningTestComponent>;

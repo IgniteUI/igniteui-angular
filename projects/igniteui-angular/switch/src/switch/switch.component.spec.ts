@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { IgxSwitchComponent } from './switch.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxSwitch', () => {
 

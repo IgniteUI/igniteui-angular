@@ -10,6 +10,7 @@ import { CellType, DropPosition, IgxTreeGridRow } from 'igniteui-angular/grids/c
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridTransaction } from 'igniteui-angular/grids/core';
 import { HierarchicalTransaction, IgxHierarchicalTransactionService, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';

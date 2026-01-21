@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const version = '12.1.0';
 
@@ -38,6 +39,7 @@ export class SimpleComponent implements OnInit {
             .toEqual(`
 import { Component, OnInit } from '@angular/core';
 import { IgxOverlayService } from 'igniteui-angular';
+import { describe, it, expect, beforeEach } from 'vitest';
 export class SimpleComponent implements OnInit {
     constructor(@Inject(IgxOverlayService) protected overlayService: IgxOverlayService){}
 

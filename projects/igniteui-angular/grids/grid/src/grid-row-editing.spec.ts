@@ -12,6 +12,7 @@ import { IgxGridRowEditingComponent, IgxGridRowEditingTransactionComponent, IgxG
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DefaultDataCloneStrategy, DefaultSortingStrategy, IgxNumberFilteringOperand, IgxStringFilteringOperand, ɵSize, SortingDirection, Transaction, TransactionType } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';

@@ -15,6 +15,7 @@ import localeBg from "@angular/common/locales/bg";
 import { DatePart } from 'igniteui-angular/core';
 import { MaskParsingService } from '../mask/mask-parsing.service';
 import { removeUnicodeSpaces } from 'igniteui-angular/test-utils/helper-utils.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;

@@ -5,6 +5,7 @@ import { IgxButtonDirective } from './button.directive';
 
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const BUTTON_COMFORTABLE = 'igx-button';
 

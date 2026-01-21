@@ -6,6 +6,7 @@ import { CalendarDay, CustomDateRange } from 'igniteui-angular/core';
 import { IDateRangePickerResourceStrings } from '../../../../core/src/core/i18n/date-range-picker-resources';
 import { IgxChipComponent } from '../../../../chips/src/chips/chip.component';
 import { Component, ViewChild } from '@angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxPredefinedRangesAreaComponent', () => {
     let fixture: ComponentFixture<PredefinedRangesDefaultComponent>;

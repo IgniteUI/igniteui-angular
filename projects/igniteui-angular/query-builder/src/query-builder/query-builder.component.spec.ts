@@ -5,7 +5,7 @@ import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxSelectComponent } from 'igniteui-angular/select';
-import { it } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 ;
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';

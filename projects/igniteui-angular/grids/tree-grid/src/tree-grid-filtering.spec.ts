@@ -10,6 +10,7 @@ import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
 import { FilteringStrategy, GridColumnDataType, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const IGX_CHECKBOX_LABEL = '.igx-checkbox__label';
 

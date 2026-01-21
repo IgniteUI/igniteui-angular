@@ -4,6 +4,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTextHighlightDirective, IActiveHighlightInfo } from './text-highlight.directive';
 
 import { IgxTextHighlightService } from './text-highlight.service';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxHighlight', () => {
     beforeEach(waitForAsync(() => {

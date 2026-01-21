@@ -15,6 +15,7 @@ import { FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrat
 import { QueryBuilderSelectors } from 'igniteui-angular/query-builder/src/query-builder/query-builder.common';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     beforeEach(waitForAsync(() => {

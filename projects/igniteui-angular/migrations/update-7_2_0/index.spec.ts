@@ -6,6 +6,7 @@ import { workspaces } from '@angular-devkit/core';
 
 import * as addNormalize from '../../schematics/ng-add/add-normalize';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Update 7.2.0', () => {
     let appTree: UnitTestTree;

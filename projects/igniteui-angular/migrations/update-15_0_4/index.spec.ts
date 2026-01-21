@@ -3,6 +3,7 @@ import * as path from 'path';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { ProjectType } from '../../schematics/utils/util';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const version = '15.0.4';
 

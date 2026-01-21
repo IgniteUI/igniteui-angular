@@ -4,6 +4,7 @@ import { GridIDNameJobTitleComponent } from '../../../../../test-utils/grid-samp
 import { wait } from '../../../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { expect } from 'vitest';
 
 export class TestMethods {
 

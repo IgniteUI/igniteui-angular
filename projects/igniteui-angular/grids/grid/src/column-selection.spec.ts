@@ -7,6 +7,7 @@ import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { IColumnSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid-th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';

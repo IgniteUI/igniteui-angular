@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BaseProgressDirective } from './progressbar.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 @Component({
     template: ``,

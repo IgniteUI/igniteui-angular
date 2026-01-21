@@ -7,7 +7,7 @@ import { ɵDIR_DOCUMENT, ɵIgxDirectionality } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
-import { it, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const SLIDER_CLASS = '.igx-slider';
 const THUMB_TAG = 'igx-thumb';

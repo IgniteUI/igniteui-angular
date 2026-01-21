@@ -9,6 +9,7 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { SAFE_DISPOSE_COMP_ID } from '../../../test-utils/grid-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {

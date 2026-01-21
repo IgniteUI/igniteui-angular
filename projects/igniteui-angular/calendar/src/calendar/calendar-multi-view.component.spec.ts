@@ -9,7 +9,7 @@ import { ymd } from '../../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent } from './calendar.component';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
-import { vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Multi-View Calendar - ', () => {
     let fixture: ComponentFixture<any>;

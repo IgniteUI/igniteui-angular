@@ -7,6 +7,7 @@ import { GridColumnDataType } from 'igniteui-angular/core';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IGX_GRID_VALIDATION_DIRECTIVES, IgxCellEditorTemplateDirective, IgxCellValidationErrorDirective, IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+import { test } from 'vitest';
 
 @Directive({
     selector: '[igxAppForbiddenName]',

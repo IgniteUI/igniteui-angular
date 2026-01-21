@@ -10,6 +10,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 

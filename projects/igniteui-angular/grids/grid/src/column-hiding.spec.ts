@@ -9,6 +9,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSelectionMode, ColumnDisplayOrder, IgxColumnActionsComponent } from 'igniteui-angular/grids/core';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Column Hiding UI #grid', () => {
 

@@ -8,6 +8,7 @@ import { Component, inject } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
 import { By } from "@angular/platform-browser";
 import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 ;
 
 describe("Icon Service", () => {

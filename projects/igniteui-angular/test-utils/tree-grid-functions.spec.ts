@@ -5,6 +5,7 @@ import { DebugElement } from '@angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { CellType, IgxGridCellComponent, IgxRowDirective } from 'igniteui-angular/grids/core';
+import { expect } from 'vitest';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';

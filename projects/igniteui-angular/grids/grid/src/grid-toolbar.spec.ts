@@ -7,6 +7,7 @@ import { By } from "@angular/platform-browser";
 import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular/core';
 import { IgxCsvExporterService, IgxExcelExporterService, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { ExportUtilities } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';

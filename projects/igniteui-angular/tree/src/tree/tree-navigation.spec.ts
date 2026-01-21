@@ -1,5 +1,5 @@
 import type { Mock } from "vitest";
-import { vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { waitForAsync, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTreeNavigationComponent, IgxTreeScrollComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';

@@ -7,6 +7,7 @@ import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridSelectionMode, IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;

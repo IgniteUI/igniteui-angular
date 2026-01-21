@@ -1,6 +1,7 @@
 import { TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { Component, DOCUMENT, inject as inject_1 } from '@angular/core';
 import { IgxDirectionality, DIR_DOCUMENT } from './directionality';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 interface FakeDoc {
     body: {

@@ -14,6 +14,7 @@ import { IgxColumnResizerDirective } from 'igniteui-angular/grids/core';
 import { ɵSize } from 'igniteui-angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { Calendar } from 'igniteui-angular/calendar';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 

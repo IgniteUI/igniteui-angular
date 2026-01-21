@@ -20,6 +20,7 @@ import { IgxStringFilteringOperand, Point, SortingDirection } from 'igniteui-ang
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';

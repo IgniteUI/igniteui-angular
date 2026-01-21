@@ -9,6 +9,7 @@ import { PositionSettings, HorizontalAlignment, VerticalAlignment } from 'ignite
 import { IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--flex`;

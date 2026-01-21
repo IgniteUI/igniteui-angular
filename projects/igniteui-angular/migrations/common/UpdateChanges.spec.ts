@@ -5,6 +5,7 @@ import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsCha
 import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges';
 import * as tsUtils from './tsUtils';
 import { setupTestTree } from './setup.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('UpdateChanges', () => {
     let appTree: UnitTestTree;

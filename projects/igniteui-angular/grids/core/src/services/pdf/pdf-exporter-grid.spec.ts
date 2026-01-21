@@ -15,6 +15,7 @@ import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyCompo
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { PivotRowLayoutType } from 'igniteui-angular/grids/core';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;

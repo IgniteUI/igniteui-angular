@@ -7,6 +7,7 @@ import { IForOfState, IgxForOfDirective } from './for_of.directive';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';

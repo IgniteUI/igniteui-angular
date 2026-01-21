@@ -14,6 +14,7 @@ import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
 import { IgxDirectionality } from 'igniteui-angular/core/src/services/direction/directionality';
+import { describe, it, expect, beforeAll, beforeEach, afterAll, vi } from 'vitest';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';

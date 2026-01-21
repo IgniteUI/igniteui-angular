@@ -16,6 +16,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxHierarchicalRowComponent } from '../../hierarchical-grid/src/hierarchical-row.component';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { GridCellMergeMode, IgxColumnComponent, IgxGridMRLNavigationService, IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;

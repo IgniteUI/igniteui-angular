@@ -10,6 +10,7 @@ import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } 
 import { IgxRippleDirective } from '../../../../directives/src/directives/ripple/ripple.directive';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 import { IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';

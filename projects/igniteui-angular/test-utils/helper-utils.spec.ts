@@ -3,7 +3,7 @@ import { ComponentFixture } from '@angular/core/testing';
 import { GridType } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { Subscription } from 'rxjs';
-import { vi } from 'vitest';
+import { expect, beforeEach, afterEach, vi } from 'vitest';
 
 /**
  * Global beforeEach and afterEach checks to ensure test fails on specific warnings

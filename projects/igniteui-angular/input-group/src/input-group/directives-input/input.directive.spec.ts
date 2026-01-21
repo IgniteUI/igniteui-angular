@@ -10,6 +10,7 @@ import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 import { IgxLabelDirective } from '../directives-label/label.directive';
 import { IgxMaskDirective } from 'igniteui-angular/directives';
 import { IgxSuffixDirective } from '../directives-suffix/suffix.directive';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';

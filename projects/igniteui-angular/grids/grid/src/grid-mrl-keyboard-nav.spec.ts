@@ -11,6 +11,7 @@ import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-function
 import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const DEBOUNCE_TIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';

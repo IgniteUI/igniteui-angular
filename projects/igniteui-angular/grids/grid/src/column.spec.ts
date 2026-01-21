@@ -17,6 +17,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxGrid - Column properties #grid', () => {
 

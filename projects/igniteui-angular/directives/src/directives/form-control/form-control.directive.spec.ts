@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 
 import { IgcFormControlDirective } from './form-control.directive';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgcFormControlDirective - ', () => {
 

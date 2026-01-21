@@ -18,6 +18,7 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGridState - input properties #grid', () => {
     beforeEach(waitForAsync(() => {

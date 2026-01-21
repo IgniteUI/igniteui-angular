@@ -9,6 +9,7 @@ import { IgxGridComponent } from './grid.component';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 

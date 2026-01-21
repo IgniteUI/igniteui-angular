@@ -3,6 +3,7 @@ import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxDividerDirective, IgxDividerType } from './divider.directive';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Divider', () => {
     const baseClass = 'igx-divider';

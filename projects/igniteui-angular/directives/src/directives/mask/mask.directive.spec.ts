@@ -9,6 +9,7 @@ import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../../../../input-group/src/input-group/input-group.component';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { PlatformUtil } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('igxMask', () => {
     // TODO: Refactor tests to reuse components

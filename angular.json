@@ -106,7 +106,6 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "src/tsconfig.spec.json",
-            "runnerConfig": "src/vitest.config.ts",
             "browsers": ["chromium"]
           }
         },
@@ -180,7 +179,6 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
-            "runnerConfig": "src/vitest.config.ts",
             "browsers": ["chromium"],
             "exclude": [
                 "migrations",
@@ -343,7 +341,6 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
-            "runnerConfig": "src/vitest.config.ts",
             "browsers": ["chromium"]
           }
         }

@@ -10,6 +10,7 @@ import { IColumnState, IGridState } from './state-base.directive';
 import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IGroupingExpression, IgxStringFilteringOperand, IPagingState, ISortingExpression, SortingDirection } from 'igniteui-angular/core';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { describe, it, test, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;

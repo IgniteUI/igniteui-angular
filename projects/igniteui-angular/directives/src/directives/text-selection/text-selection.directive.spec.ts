@@ -3,6 +3,7 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxTextSelectionDirective } from './text-selection.directive';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxSelection', () => {
     beforeEach(waitForAsync(() => {

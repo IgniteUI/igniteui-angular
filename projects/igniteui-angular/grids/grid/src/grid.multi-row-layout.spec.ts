@@ -11,6 +11,7 @@ import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-function
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;

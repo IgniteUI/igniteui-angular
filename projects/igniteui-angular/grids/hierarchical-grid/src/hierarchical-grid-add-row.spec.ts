@@ -6,6 +6,7 @@ import { wait } from '../../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     let fixture;

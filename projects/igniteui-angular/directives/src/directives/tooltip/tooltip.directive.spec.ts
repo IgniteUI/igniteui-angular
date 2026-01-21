@@ -8,7 +8,7 @@ import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '..
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 import { Placement, PositionsMap } from './tooltip.common';
-import { vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';

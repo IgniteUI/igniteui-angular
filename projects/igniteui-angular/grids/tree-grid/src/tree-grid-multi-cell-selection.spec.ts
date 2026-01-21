@@ -6,6 +6,7 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 

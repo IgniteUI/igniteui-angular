@@ -2,6 +2,7 @@ import { IgxGrouping } from './grid-sorting-strategy';
 import { IGroupByRecord } from './groupby-record.interface';
 import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
 import { DataGenerator } from './test-util/data-generator';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Unit testing GroupingStrategy', () => {
     let dataGenerator: DataGenerator;

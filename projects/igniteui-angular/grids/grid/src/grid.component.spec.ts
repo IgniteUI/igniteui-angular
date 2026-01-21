@@ -18,6 +18,7 @@ import { AsyncPipe } from '@angular/common';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';

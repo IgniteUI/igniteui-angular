@@ -6,6 +6,7 @@ import { IgxButtonDirective } from '../../../directives/src/directives/button/bu
 import { IgxRadioComponent } from '../../../radio/src/radio/radio.component';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 import { IgxRadioGroupDirective } from 'igniteui-angular/radio';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 interface IButton {
     type?: string;

@@ -24,6 +24,7 @@ import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { PlatformUtil } from 'igniteui-angular';
+import { describe, it, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
