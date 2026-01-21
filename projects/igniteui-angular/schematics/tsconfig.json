@@ -7,8 +7,5 @@
         "declaration": true,
         "outDir": "../../../dist/igniteui-angular/schematics/",
         "skipLibCheck": true
-    },
-    "exclude": [
-        "**/*.spec.ts"
-    ]
+    }
 }
