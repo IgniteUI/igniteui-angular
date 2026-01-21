@@ -337,7 +337,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             for (let i = 13; i >= 0; i--) {
                 const expectedValue = expectedValues[i % expectedValues.length];
                 const actualCount = treeGrid.findPrev('an');
-                await wait(50);
+                await wait(60);
                 fix.detectChanges();
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
