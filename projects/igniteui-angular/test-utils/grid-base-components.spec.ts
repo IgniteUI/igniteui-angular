@@ -4,6 +4,7 @@ import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec'
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
+import { GridPagingMode } from 'igniteui-angular/grids/core';
 
 @Component({
     template: `
@@ -111,7 +112,7 @@ export class PagingComponent extends GridWithSizeComponent {
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class RemotePagingComponent extends GridWithSizeComponent {
-    public pagingMode = 'remote';
+    public pagingMode: GridPagingMode = GridPagingMode.Remote;
     public perPage = 3;
     public totalRecords = 10;
     public override data = SampleTestData.personJobDataFull();
