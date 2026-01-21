@@ -27,18 +27,15 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
-        });
-    }));
-
     describe('Flat Data', () => {
         let fix;
         let treeGrid;
         let detect;
 
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
             fix = TestBed.createComponent(IgxTreeGridSelectionKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -563,6 +560,9 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let detect;
 
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
             fix = TestBed.createComponent(IgxTreeGridSelectionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -675,6 +675,9 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let treeGrid;
 
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
             fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -805,6 +808,9 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let treeGrid;
 
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
             fix = TestBed.createComponent(IgxTreeGridFKeySelectionWithTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;

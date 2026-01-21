@@ -15,6 +15,7 @@ import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     const DEBOUNCETIME = 30;
@@ -31,6 +32,12 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 IgxTreeGridSummariesKeyScroliingComponent
             ]
         }).compileComponents();
+    }));
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+        });
     }));
 
     describe('', () => {
