@@ -71,7 +71,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getSelectorChanges()).toEqual(selectorsJson);
 
         update.applyChanges();
@@ -136,7 +136,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getOutputChanges()).toEqual(outputJson);
 
         update.applyChanges();
@@ -184,7 +184,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputJson);
 
         update.applyChanges();
@@ -253,7 +253,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
@@ -287,7 +287,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
@@ -353,7 +353,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
@@ -454,7 +454,7 @@ export class Test {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
@@ -513,7 +513,7 @@ export class Test {
         update.addCondition('igxIcon_is_material_name', () => true);
 
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputJson);
 
         update.applyChanges();
@@ -578,7 +578,7 @@ $var3: igx-comp-theme(
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getThemeChanges()).toEqual(themeChangesJson);
 
         update.applyChanges();
@@ -639,7 +639,7 @@ export class AppModule { }`;
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getImportsChanges()).toEqual(importsJson);
 
         update.applyChanges();
@@ -700,7 +700,7 @@ export class AppModule { }`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputsJson);
         update.addValueTransform('some_prop_transform', (args: BoundPropertyObject): void => {
             if (args.bindingType === InputPropertyType.EVAL) {
@@ -753,7 +753,7 @@ export class AppModule { }`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync, 'utf-8').toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputsJson);
         update.addValueTransform('prop_transform', (args: BoundPropertyObject): void => {
             if (args.bindingType === InputPropertyType.EVAL) {

@@ -1341,7 +1341,7 @@ describe('IgxDatePicker', () => {
                     id: 'mock-id'
                 };
                 datePicker.ngAfterViewChecked();
-                expect(renderer2.setAttribute, 'mock-id').toHaveBeenCalledWith(mockInputDirective.nativeElement, 'aria-labelledby');
+                expect(renderer2.setAttribute).toHaveBeenCalledWith(mockInputDirective.nativeElement, 'aria-labelledby', 'mock-id');
             });
 
             it('Should properly handle click on editor provider', () => {
