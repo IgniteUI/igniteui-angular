@@ -637,8 +637,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(true);
             vi.spyOn(console, 'warn');
             hierarchicalGrid.primaryKey = 'testField';
             fixture.componentInstance.rowIsland.primaryKey = 'testField-rowIsland';
@@ -661,8 +659,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             rowIsland = fixture.componentInstance.rowIsland2;
             expect(console.warn).toHaveBeenCalledWith(`Field "${rowIsland.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(false);
         });
 
         it('should calculate correct column headers width when rowSelection + expand indicators', () => {

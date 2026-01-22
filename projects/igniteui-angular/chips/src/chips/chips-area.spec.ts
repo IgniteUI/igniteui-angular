@@ -41,13 +41,13 @@ class TestChipComponent {
 @Component({
     template: `
         <igx-chips-area #chipsArea>
-            <igx-chip #chipElem [id]="1" [draggable]="true" [removable]="true" [selectable]="true" [selected]="true">
+            <igx-chip #chipElem [id]="'1'" [draggable]="true" [removable]="true" [selectable]="true" [selected]="true">
                 <span #label [class]="'igx-chip__text'">first chip</span>
             </igx-chip>
-            <igx-chip #chipElem [id]="2" [draggable]="false" [selectable]="false" [selected]="true">
+            <igx-chip #chipElem [id]="'2'" [draggable]="false" [selectable]="false" [selected]="true">
                 <span #label [class]="'igx-chip__text'">second chip</span>
             </igx-chip>
-            <igx-chip #chipElem [id]="3" [draggable]="true" [removable]="true" [selectable]="true" [selected]="false">
+            <igx-chip #chipElem [id]="'3'" [draggable]="true" [removable]="true" [selectable]="true" [selected]="false">
                 <span #label [class]="'igx-chip__text'">third chip</span>
             </igx-chip>
         </igx-chips-area>

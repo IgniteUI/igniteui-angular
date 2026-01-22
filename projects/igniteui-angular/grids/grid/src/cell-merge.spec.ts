@@ -933,9 +933,6 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         describe('Multi-row layout', () => {
             it('should throw warning and disallow merging with mrl.', () => {
-                // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-                jasmine.getEnv().allowRespy(true);
-                fix = TestBed.createComponent(ColumnLayoutTestComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
                 vi.spyOn(console, 'warn');
@@ -944,8 +941,6 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 expect(console.warn).toHaveBeenCalledWith('Merging is not supported with multi-row layouts.');
                 expect(console.warn).toHaveBeenCalledTimes(1);
-                // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-                jasmine.getEnv().allowRespy(false);
             });
 
         });

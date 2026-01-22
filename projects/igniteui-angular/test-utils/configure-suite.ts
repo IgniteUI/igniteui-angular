@@ -71,8 +71,6 @@ export const configureTestSuite = (configureActionOrOptions?: (() => TestBed) | 
                 return fixture;
             };
         }
-
-        jasmine.getEnv().allowRespy(true);
     });
 
     if (configureAction) {

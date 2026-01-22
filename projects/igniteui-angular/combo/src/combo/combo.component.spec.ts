@@ -100,8 +100,6 @@ describe('igxCombo', () => {
         };
         mockInjector.get.mockReturnValue(mockNgControl);
         mockSelection.get.mockReturnValue(new Set([]));
-        // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-        // jasmine.getEnv().allowRespy(true);
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -136,11 +134,6 @@ describe('igxCombo', () => {
                     })
                 };
             }
-        });
-
-        afterAll(() => {
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(false);
         });
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {

@@ -112,14 +112,6 @@ describe('IgxSimpleCombo', () => {
             combo = TestBed.inject(IgxSimpleComboComponent);
         });
 
-        // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-        jasmine.getEnv().allowRespy(true);
-
-        afterAll(() => {
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(false);
-        });
-
         it('should properly call dropdown methods on toggle', () => {
             const dropdown = {
                 open: vi.fn().mockName("IgxComboDropDownComponent.open"),
@@ -485,16 +477,12 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should delete the selection on destroy', () => {
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(true);
             const selectionService = TestBed.inject(IgxSelectionAPIService);
             const comboClearSpy = vi.spyOn(mockComboService, 'clear');
             const selectionDeleteSpy = vi.spyOn(selectionService, 'delete');
             combo.ngOnDestroy();
             expect(comboClearSpy).toHaveBeenCalled();
             expect(selectionDeleteSpy).toHaveBeenCalled();
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(false);
         });
     });
 

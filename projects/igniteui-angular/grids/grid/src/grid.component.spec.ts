@@ -676,8 +676,6 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(true);
             const warnSpy = vi.spyOn(console, 'warn');
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
@@ -701,8 +699,6 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(console.warn).toHaveBeenCalledTimes(1);
             expect(console.warn).toHaveBeenCalledWith(`Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(false);
         });
     });
 

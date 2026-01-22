@@ -331,16 +331,6 @@ describe('Rendering Tests', () => {
     });
 
     describe('Appearance', () => {
-        beforeAll(() => {
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(true);
-        });
-
-        afterAll(() => {
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(false);
-        });
-
         it('should apply the appropriate class to a stepper in horizontal mode', () => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             fix.detectChanges();
@@ -943,16 +933,6 @@ describe('Stepper service unit tests', () => {
 
     let steps: IgxStepComponent[] = [];
     let stepper: IgxStepperComponent;
-
-    beforeAll(() => {
-        // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-        jasmine.getEnv().allowRespy(true);
-    });
-
-    afterAll(() => {
-        // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-        jasmine.getEnv().allowRespy(false);
-    });
 
     beforeEach(() => {
         mockElement = {

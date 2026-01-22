@@ -58,8 +58,6 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it('Should throw a warning when [rowEditable] is set on a grid w/o [primaryKey]', () => {
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(true);
             grid.primaryKey = null;
             grid.rowEditable = false;
             fix.detectChanges();
@@ -76,8 +74,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(console.warn).toHaveBeenCalledWith('The grid must have a `primaryKey` specified when using `rowEditable`!');
             expect(console.warn).toHaveBeenCalledTimes(1);
-            // TODO: vitest-migration: Unsupported jasmine property "getEnv" found. Please migrate this manually.
-            jasmine.getEnv().allowRespy(false);
         });
 
         it('Should be able to enter edit mode on dblclick, enter and f2', () => {
