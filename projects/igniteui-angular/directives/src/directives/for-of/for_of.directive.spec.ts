@@ -952,8 +952,8 @@ describe('IgxForOf directive -', () => {
 
         it('should emit the chunkPreload/chunkLoad only when startIndex or chunkSize have changed.', async () => {
             const verticalDir = fix.componentInstance.parentVirtDir;
-            const chunkLoadSpy = vi.spyOn<any>(verticalDir.chunkLoad, 'emit');
-            const chunkPreLoadSpy = vi.spyOn<any>(verticalDir.chunkPreload, 'emit');
+            const chunkLoadSpy = vi.spyOn(verticalDir.chunkLoad, 'emit');
+            const chunkPreLoadSpy = vi.spyOn(verticalDir.chunkPreload, 'emit');
             // scroll so that start index does not change.
             fix.componentInstance.scrollTop(1);
             fix.detectChanges();

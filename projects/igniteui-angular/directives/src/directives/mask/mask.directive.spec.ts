@@ -518,7 +518,7 @@ describe('igxMask', () => {
 
         const maskDirective = fixture.componentInstance.mask;
         vi.spyOn(maskDirective, 'onFocus');
-        vi.spyOn<any>(maskDirective, 'showMask');
+        vi.spyOn(maskDirective, 'showMask');
 
         const input = fixture.debugElement.query(By.css('.igx-input-group__input'));
         input.triggerEventHandler('focus', {});

@@ -27,7 +27,7 @@ describe('Toggle animation component', () => {
     describe('Unit tests', () => {
         it('Should initialize player with give settings', () => {
             const player = TestBed.inject(MockTogglePlayer);
-            const startPlayerSpy = vi.spyOn<any>(player, 'startPlayer');
+            const startPlayerSpy = vi.spyOn(player, 'startPlayer');
             const mockEl = {
                 focus: vi.fn().mockName("mockRef.focus")
             };

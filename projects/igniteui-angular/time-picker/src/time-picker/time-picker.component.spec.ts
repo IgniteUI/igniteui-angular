@@ -493,7 +493,7 @@ describe('IgxTimePicker', () => {
             const hammerOptions: HammerOptions = { recognizers: [[HammerGesturesManager.Hammer.Pan, { direction: HammerGesturesManager.Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
             expect(touchManager.addEventListener).toHaveBeenCalledWith(elementRef.nativeElement, 'pan', (itemListDirective as any).onPanMove, hammerOptions);
 
-            vi.spyOn<any>(itemListDirective, 'onPanMove');
+            vi.spyOn(itemListDirective, 'onPanMove');
             const event = { type: 'pan' };
             (itemListDirective as any).onPanMove(event);
             expect(itemListDirective['onPanMove']).toHaveBeenCalled();

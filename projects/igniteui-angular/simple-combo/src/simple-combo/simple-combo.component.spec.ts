@@ -369,7 +369,7 @@ describe('IgxSimpleCombo', () => {
             combo.ngOnInit();
             combo.data = data;
             combo.dropdown = dropdown;
-            const matchSpy = vi.spyOn<any>(combo, 'checkMatch');
+            const matchSpy = vi.spyOn(combo, 'checkMatch');
             vi.spyOn(combo.searchInputUpdate, 'emit');
             const comboInput = {
                 value: vi.fn().mockName("IgxInputDirective.value")
@@ -407,7 +407,7 @@ describe('IgxSimpleCombo', () => {
             combo.searchInputUpdate.subscribe((e) => {
                 e.cancel = true;
             });
-            const matchSpy = vi.spyOn<any>(combo, 'checkMatch');
+            const matchSpy = vi.spyOn(combo, 'checkMatch');
             const dropdown = {
                 selectItem: vi.fn().mockName("IgxComboDropDownComponent.selectItem"),
                 collapsed: vi.fn().mockName("IgxComboDropDownComponent.collapsed"),

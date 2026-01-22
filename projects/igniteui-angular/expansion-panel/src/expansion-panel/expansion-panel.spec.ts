@@ -940,7 +940,7 @@ describe('igxExpansionPanel', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
-            const animationSpy = vi.spyOn<any>(panel, 'playCloseAnimation');
+            const animationSpy = vi.spyOn(panel, 'playCloseAnimation');
             panel.collapse();
             expect(animationSpy).not.toHaveBeenCalled();
         });
@@ -949,7 +949,7 @@ describe('igxExpansionPanel', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
-            const animationSpy = vi.spyOn<any>(panel, 'playOpenAnimation');
+            const animationSpy = vi.spyOn(panel, 'playOpenAnimation');
             panel.collapse();
             expect(animationSpy).not.toHaveBeenCalled();
         });

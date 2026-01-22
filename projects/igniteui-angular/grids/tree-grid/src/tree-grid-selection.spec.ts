@@ -956,7 +956,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             column.bodyTemplate = component.customCell;
             fix.detectChanges();
 
-            const selectionChangeSpy = vi.spyOn<any>(treeGrid.rangeSelected, 'emit');
+            const selectionChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
             const cell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
             const cellElement = cell.nativeElement;
             const span = cellElement.querySelector('span');

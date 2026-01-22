@@ -701,7 +701,7 @@ describe('igxOverlay', () => {
 
         it('Should properly call position method - AutoPosition.', () => {
             vi.spyOn(BaseFitPositionStrategy.prototype, 'position');
-            vi.spyOn<any>(ConnectedPositioningStrategy.prototype, 'setStyle');
+            vi.spyOn(ConnectedPositioningStrategy.prototype, 'setStyle');
             const mockDiv = document.createElement('div');
             const autoStrat1 = new AutoPositionStrategy();
             autoStrat1.position(mockDiv, null, document, false);
@@ -719,7 +719,7 @@ describe('igxOverlay', () => {
 
         it('Should properly call position method - ElasticPosition.', () => {
             vi.spyOn(BaseFitPositionStrategy.prototype, 'position');
-            vi.spyOn<any>(ConnectedPositioningStrategy.prototype, 'setStyle');
+            vi.spyOn(ConnectedPositioningStrategy.prototype, 'setStyle');
             const mockDiv = document.createElement('div');
             const autoStrat1 = new ElasticPositionStrategy();
 
@@ -1389,7 +1389,7 @@ describe('igxOverlay', () => {
             vi.spyOn(scrollStrat, 'initialize');
             vi.spyOn(scrollStrat, 'attach');
             vi.spyOn(scrollStrat, 'detach');
-            const scrollSpy = vi.spyOn<any>(scrollStrat, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrat, 'onScroll');
             const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
             tick();
@@ -1430,7 +1430,7 @@ describe('igxOverlay', () => {
             vi.spyOn(scrollStrat, 'initialize');
             vi.spyOn(scrollStrat, 'attach');
             vi.spyOn(scrollStrat, 'detach');
-            const scrollSpy = vi.spyOn<any>(scrollStrat, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrat, 'onScroll');
             const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(id);
             tick();
@@ -1467,7 +1467,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false
             };
             const overlay = fixture.componentInstance.overlay;
-            const scrollSpy = vi.spyOn<any>(scrollStrat, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrat, 'onScroll');
             vi.spyOn(overlay, 'reposition');
 
             const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
@@ -1512,7 +1512,7 @@ describe('igxOverlay', () => {
             vi.spyOn(scrollStrat, 'initialize');
             vi.spyOn(scrollStrat, 'attach');
             vi.spyOn(scrollStrat, 'detach');
-            const scrollSpy = vi.spyOn<any>(scrollStrat, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrat, 'onScroll');
 
             const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(id);
@@ -2593,7 +2593,7 @@ describe('igxOverlay', () => {
             vi.spyOn(scrollStrategy, 'detach');
             vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = vi.spyOn<any>(scrollStrategy, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrategy, 'onScroll');
 
             const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
@@ -2630,7 +2630,7 @@ describe('igxOverlay', () => {
             vi.spyOn(scrollStrategy, 'detach');
             vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = vi.spyOn<any>(scrollStrategy, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrategy, 'onScroll');
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
@@ -3093,7 +3093,7 @@ describe('igxOverlay', () => {
             vi.spyOn(scrollStrategy, 'detach');
             vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = vi.spyOn<any>(scrollStrategy, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrategy, 'onScroll');
 
             const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
@@ -3130,7 +3130,7 @@ describe('igxOverlay', () => {
             vi.spyOn(scrollStrategy, 'detach');
             vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = vi.spyOn<any>(scrollStrategy, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrategy, 'onScroll');
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();

@@ -364,7 +364,7 @@ describe('PDF Grid Exporter', () => {
         const expectedRows = allGrids.reduce((acc, g) => acc + g.data.length, 0);
 
         // Spy PDF row drawing to count exported rows
-        const drawDataRowSpy = vi.spyOn<any>(exporter as any, 'drawDataRow');
+        const drawDataRowSpy = vi.spyOn(exporter as any, 'drawDataRow');
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(vi.mocked(drawDataRowSpy).mock.calls.length).toBe(expectedRows);
