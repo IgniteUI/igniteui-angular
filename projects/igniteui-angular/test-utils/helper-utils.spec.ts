@@ -7,20 +7,18 @@ import { Subscription } from 'rxjs';
 import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 /**
  * Global beforeEach and afterEach checks to ensure test fails on specific warnings
- * Use direct env because karma-parallel's wrap ignores these in secondary shards
- * https://github.com/joeljeske/karma-parallel/issues/64
  */
-(jasmine.getEnv() as any).beforeEach(() => {
+beforeEach(() => {
     vi.spyOn(console, 'warn');
 });
 
-(jasmine.getEnv() as any).afterEach(() => {
+afterEach(() => {
     expect(console.warn)
         .withContext('Components & tests should be free of @for track duplicated keys warnings')
-        .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0955'));
+        .not.toHaveBeenCalledWith(expect.stringContaining('NG0955'));
     expect(console.warn)
         .withContext('Components & tests should be free of @for track DOM re-creation warnings')
-        .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0956'));
+        .not.toHaveBeenCalledWith(expect.stringContaining('NG0956'));
 });
 
 

@@ -143,7 +143,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(outputJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(outputJson));
 
         const fileContent = `<one (onReplaceMe)="a"> <comp\r\ntag (onReplaceMe)="dwdw" (onOld)=""> </other> <another (onOld)="b" />`;
         appTree.create('test.component.html', fileContent);
@@ -195,7 +195,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(inputJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(inputJson));
 
         let fileContent = `<one [replaceMe]="a"> <comp\r\ntag [replaceMe]="dwdw" [oldProp]=''> </other> <another oldProp="b" />`;
         appTree.create('test.component.html', fileContent);
@@ -273,7 +273,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
         const fileContent =
             `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
@@ -309,7 +309,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
         const fileContent =
             `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
@@ -350,7 +350,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
         const fileContent =
             `import { Component, Injectable, ViewChild } from "@angular/core";` +
@@ -438,7 +438,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
         const fileContent =
             `import { Name } from ""; import { Another } from "@space/package"; export class Test { prop: Name; prop2: Another; }`;
@@ -472,7 +472,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
         let fileContent =
 `import { Size, Type as someThg } from "igniteui-angular";
@@ -536,7 +536,7 @@ export class Test {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(inputJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(inputJson));
 
         const fileContent = `<igx-icon fontSet='material' name='phone'></igx-icon>
 <igx-icon fontSet="material-icons" name="build"></igx-icon>
@@ -594,7 +594,7 @@ export class Test {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `$var: igx-theme-func(
@@ -660,7 +660,7 @@ $var3: igx-comp-theme(
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(importsJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(importsJson));
 
         const fileContent = `
 @NgModule({
@@ -1018,7 +1018,7 @@ export class CustomGridComponent {
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `$palette: $light-material-palette;
@@ -1113,7 +1113,7 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `@use 'igniteui-angular/theming' as igniteui1;
@@ -1181,7 +1181,7 @@ $my-other-theme: my-namespace.function1($color1: igniteui2.contrast-color($palet
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `@use 'igniteui-angular/theming' as *;
@@ -1240,7 +1240,7 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `@use 'igniteui-angular/theming' as igniteui1;
@@ -1301,7 +1301,7 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+        vi.spyOn<any>(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `@use 'igniteui-angular/theming' as *;

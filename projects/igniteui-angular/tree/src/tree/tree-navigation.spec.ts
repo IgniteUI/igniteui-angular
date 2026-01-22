@@ -787,7 +787,7 @@ describe('IgxTree - Navigation #treeView', () => {
                         size: 0
                     },
                 };
-                const mockElementRef = { nativeElement: vi.fn(), nativeElement: document.createElement('div') };
+                const mockElementRef = { nativeElement: document.createElement('div') };
                 const mockSelectionService = { selectNodesWithNoEvent: vi.fn(), selectMultipleNodes: vi.fn(), deselectNode: vi.fn(), selectNode: vi.fn(), register: vi.fn() };
 
                 TestBed.resetTestingModule();

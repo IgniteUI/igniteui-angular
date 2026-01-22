@@ -5,7 +5,6 @@ export default defineConfig({
   plugins: [angular()],
   test: {
     globals: true,
-    environment: 'node',
     setupFiles: ['src/test-setup.ts'],
     include: ['**/*.spec.ts'],
     browser: {
