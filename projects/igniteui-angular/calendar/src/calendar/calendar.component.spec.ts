@@ -261,10 +261,10 @@ describe("IgxCalendar - ", () => {
                     fixture.detectChanges();
 
                     expect(calendar.formatOptions).toEqual(
-                        jasmine.objectContaining(defaultOptions),
+                        expect.objectContaining(defaultOptions),
                     );
                     expect(calendar.formatViews).toEqual(
-                        jasmine.objectContaining(defaultViews),
+                        expect.objectContaining(defaultViews),
                     );
                     expect(
                         headerTitle.nativeElement.textContent.trim(),
@@ -293,12 +293,12 @@ describe("IgxCalendar - ", () => {
                     fixture.detectChanges();
 
                     expect(calendar.formatOptions).toEqual(
-                        jasmine.objectContaining(
+                        expect.objectContaining(
                             Object.assign(defaultOptions, formatOptions),
                         ),
                     );
                     expect(calendar.formatViews).toEqual(
-                        jasmine.objectContaining(
+                        expect.objectContaining(
                             Object.assign(defaultViews, formatViews),
                         ),
                     );
@@ -327,12 +327,12 @@ describe("IgxCalendar - ", () => {
                     fixture.detectChanges();
 
                     expect(calendar.formatOptions).toEqual(
-                        jasmine.objectContaining(
+                        expect.objectContaining(
                             Object.assign(defaultOptions, formatOptions),
                         ),
                     );
                     expect(calendar.formatViews).toEqual(
-                        jasmine.objectContaining(
+                        expect.objectContaining(
                             Object.assign(defaultViews, formatViews),
                         ),
                     );
@@ -2997,10 +2997,10 @@ describe("IgxCalendar - ", () => {
                 fixture.detectChanges();
 
                 expect(calendar.formatOptions).toEqual(
-                    jasmine.objectContaining(defaultOptions),
+                    expect.objectContaining(defaultOptions),
                 );
                 expect(calendar.formatViews).toEqual(
-                    jasmine.objectContaining(defaultViews),
+                    expect.objectContaining(defaultViews),
                 );
                 expect(headerYear.nativeElement.textContent.trim()).toMatch(
                     "Select Date",

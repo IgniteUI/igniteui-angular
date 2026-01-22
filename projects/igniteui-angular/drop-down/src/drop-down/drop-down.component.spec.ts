@@ -242,7 +242,7 @@ describe('IgxDropDown ', () => {
                 fixture.detectChanges();
                 expect(toggle.open).toHaveBeenCalledTimes(1);
 
-                const appliedSettings = (toggle.open as jasmine.Spy).calls.mostRecent().args[0];
+                const appliedSettings = (toggle.open as jasmine.Spy).mock.lastCall[0];
                 expect(appliedSettings.closeOnOutsideClick).toBe(true);
                 expect(appliedSettings.modal).toBe(false);
                 expect(appliedSettings.positionStrategy instanceof ConnectedPositioningStrategy).toBe(true);
@@ -272,7 +272,7 @@ describe('IgxDropDown ', () => {
                 fixture.detectChanges();
                 expect(toggle.open).toHaveBeenCalledTimes(1);
 
-                const appliedSettings = (toggle.open as jasmine.Spy).calls.mostRecent().args[0];
+                const appliedSettings = (toggle.open as jasmine.Spy).mock.lastCall[0];
                 expect(appliedSettings.closeOnOutsideClick).toBe(customOverlaySettings.closeOnOutsideClick);
                 expect(appliedSettings.modal).toBe(customOverlaySettings.modal);
                 expect(appliedSettings.positionStrategy instanceof ConnectedPositioningStrategy).toBe(true);

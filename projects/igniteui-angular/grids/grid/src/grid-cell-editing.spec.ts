@@ -1165,7 +1165,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
 
-            const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
+            const spyDoneArgs = doneSpy.mock.lastCall[0] as IGridEditDoneEventArgs;
             expect(spyDoneArgs.rowData).toBe(grid.data[0]);
         });
 

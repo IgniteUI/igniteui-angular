@@ -617,10 +617,7 @@ describe('IgxTree - Selection #treeView', () => {
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
         const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = { emit: vi.fn() };
-        const mockTree: IgxTree = jasmine.createSpyObj('tree', [''],
-            {
-                selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: {
-                    find: () => true
+        const mockTree: IgxTree = {} => true
                 }
             });
         const mockCdr = { markForCheck: vi.fn(), detectChanges: vi.fn() };

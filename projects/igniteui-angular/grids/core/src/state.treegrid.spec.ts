@@ -55,7 +55,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         const state = fix.componentInstance.state;
 
         expect(state).toBeDefined('IgxGridState directive is initialized');
-        expect(state.options).toEqual(jasmine.objectContaining(defaultOptions));
+        expect(state.options).toEqual(expect.objectContaining(defaultOptions));
     });
 
     it('getState should return correct IGridState object when options are not default', () => {
@@ -276,25 +276,25 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
 class HelperFunctions {
     public static verifyColumns(columns: IColumnState[], gridState: IGridState) {
         columns.forEach((c, index) => {
-            expect(gridState.columns[index]).toEqual(jasmine.objectContaining(c));
+            expect(gridState.columns[index]).toEqual(expect.objectContaining(c));
         });
     }
 
     public static verifySortingExpressions(sortingExpressions: ISortingExpression[], gridState: IGridState) {
         sortingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.sorting[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.sorting[i]));
         });
     }
 
     public static verifyGroupingExpressions(groupingExpressions: IGroupingExpression[], gridState: IGridState) {
         groupingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.groupBy.expressions[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.groupBy.expressions[i]));
         });
     }
 
     public static verifyGroupingExpansion(groupingExpansion: IGroupByExpandState[], groupBy: IGroupingState) {
         groupingExpansion.forEach((exp, i) => {
-            expect(exp).toEqual(jasmine.objectContaining(groupBy.expansion[i]));
+            expect(exp).toEqual(expect.objectContaining(groupBy.expansion[i]));
         });
     }
 
@@ -302,7 +302,7 @@ class HelperFunctions {
         expect(expressions.fieldName).toBe(gridState.filtering.fieldName, 'Filtering expression field name is not correct');
         expect(expressions.operator).toBe(gridState.filtering.operator, 'Filtering expression operator value is not correct');
         expressions.filteringOperands.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.filtering.filteringOperands[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.filtering.filteringOperands[i]));
         });
     }
 
@@ -311,7 +311,7 @@ class HelperFunctions {
             expect(expressions.fieldName).toBe(gridState.advancedFiltering.fieldName, 'Filtering expression field name is not correct');
             expect(expressions.operator).toBe(gridState.advancedFiltering.operator, 'Filtering expression operator value is not correct');
             expressions.filteringOperands.forEach((expr, i) => {
-                expect(expr).toEqual(jasmine.objectContaining(gridState.advancedFiltering.filteringOperands[i]));
+                expect(expr).toEqual(expect.objectContaining(gridState.advancedFiltering.filteringOperands[i]));
             });
         } else {
             expect(expressions).toBeFalsy();
@@ -319,7 +319,7 @@ class HelperFunctions {
     }
 
     public static verifyPaging(paging: IPagingState, gridState: IGridState) {
-        expect(paging).toEqual(jasmine.objectContaining(gridState.paging));
+        expect(paging).toEqual(expect.objectContaining(gridState.paging));
     }
 
     public static verifyMoving(moving: boolean, gridState: IGridState){
@@ -334,7 +334,7 @@ class HelperFunctions {
 
     public static verifyCellSelection(selectedCells: GridSelectionRange[], gridState: IGridState) {
         selectedCells.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.cellSelection[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.cellSelection[i]));
         });
     }
 }

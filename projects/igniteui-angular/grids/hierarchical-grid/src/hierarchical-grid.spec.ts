@@ -1141,9 +1141,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
 
             expect(rowIsland.gridCreated.emit).toHaveBeenCalledTimes(1);
-            expect(rowIsland.gridCreated.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
+            expect(rowIsland.gridCreated.emit).toHaveBeenCalledWith(expect.objectContaining({ parentRowData: row.data }));
             expect(rowIsland.gridInitialized.emit).toHaveBeenCalledTimes(1);
-            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
+            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledWith(expect.objectContaining({ parentRowData: row.data }));
         });
     });
 

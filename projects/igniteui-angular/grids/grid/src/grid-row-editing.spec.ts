@@ -2388,7 +2388,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
-            const rowDoneSpyArgs = rowDoneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
+            const rowDoneSpyArgs = rowDoneSpy.mock.lastCall[0] as IGridEditDoneEventArgs;
             expect(rowDoneSpyArgs.rowData).toBe(rowDoneSpyArgs.newValue);
         });
 

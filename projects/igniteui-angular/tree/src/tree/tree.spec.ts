@@ -55,8 +55,7 @@ describe('IgxTree #treeView', () => {
 
             tree = TestBed.inject(IgxTreeComponent);
 
-            mockNodes = jasmine.createSpyObj('mockList', ['toArray'], {
-                changes: new Subject<void>(),
+            mockNodes = {},
                 get first() {
                     return mockNodesArray[0];
                 },
@@ -70,7 +69,7 @@ describe('IgxTree #treeView', () => {
                     mockNodesArray.forEach(cb);
                 },
                 find: (cb: (n: IgxTreeNodeComponent<any>) => boolean): IgxTreeNodeComponent<any> => mockNodesArray.find(cb),
-                filter: jasmine.createSpy('filter').
+                filter: vi.fn().
                     and.callFake((cb: (n: IgxTreeNodeComponent<any>) => boolean): IgxTreeNodeComponent<any>[] => mockNodesArray.filter(cb)),
             });
             vi.spyOn(mockNodes, 'toArray').mockReturnValue(mockNodesArray);
@@ -173,9 +172,7 @@ describe('IgxTree #treeView', () => {
                 tree.nodes = mockNodes;
                 const customArrayParam = [];
                 for (let i = 0; i < 5; i++) {
-                    const node = jasmine.createSpyObj('node', ['expand', 'collapse'], {
-                        _expanded: false,
-                        get expanded() {
+                    const node = {} {
                             return this._expanded;
                         },
                         set expanded(val: boolean) {
@@ -205,9 +202,7 @@ describe('IgxTree #treeView', () => {
                 tree.nodes = mockNodes;
                 const customArrayParam = [];
                 for (let i = 0; i < 5; i++) {
-                    const node = jasmine.createSpyObj('node', ['expand', 'collapse'], {
-                        _expanded: false,
-                        get expanded() {
+                    const node = {} {
                             return this._expanded;
                         },
                         set expanded(val: boolean) {
@@ -250,9 +245,7 @@ describe('IgxTree #treeView', () => {
             let treeService: IgxTreeService;
 
             beforeEach(() => {
-                mockTree = jasmine.createSpyObj<any>('mockTree', ['findNodes'],
-                    {
-                        nodeCollapsing: { emit: vi.fn() },
+                mockTree = {} },
                         nodeExpanding: { emit: vi.fn() },
                         nodeCollapsed: { emit: vi.fn() },
                         nodeExpanded: { emit: vi.fn() }
@@ -422,9 +415,7 @@ describe('IgxTree #treeView', () => {
             });
             it('Should keep a proper collection of expanded and collapsing nodes at all time, firing `expandedChange` when needed', () => {
                 const service = new IgxTreeService();
-                const mockTree = jasmine.createSpyObj<any>('tree', ['findNodes'], {
-                    _singleBranchExpand: false,
-                    get singleBranchExpand(): boolean {
+                const mockTree = {}: boolean {
                         return this._singleBranchExpand;
                     },
                     set singleBranchExpand(val: boolean) {
@@ -438,8 +429,7 @@ describe('IgxTree #treeView', () => {
                 vi.spyOn(service.collapsingNodes, 'delete');
                 expect(service.expandedNodes.size).toBe(0);
                 expect(service.collapsingNodes.size).toBe(0);
-                const mockNode = jasmine.createSpyObj<any>('node', ['collapse'], {
-                    expandedChange: { emit: vi.fn() }
+                const mockNode = {} }
                 });
                 service.expand(mockNode);
                 expect(service.collapsingNodes.delete).toHaveBeenCalledWith(mockNode);
@@ -467,9 +457,7 @@ describe('IgxTree #treeView', () => {
                 expect(service.expandedNodes.delete).toHaveBeenCalledTimes(2);
                 const mockArray = [];
                 for (let i = 0; i < 5; i++) {
-                    const node = jasmine.createSpyObj('node', ['collapse'], {
-                        _expanded: false,
-                        get expanded() {
+                    const node = {} {
                             return this._expanded;
                         },
                         set expanded(val: boolean) {

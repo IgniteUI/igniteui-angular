@@ -100,7 +100,7 @@ describe('IgxDateRangePicker', () => {
             mockCalendar = TestBed.inject(IgxCalendarComponent);
 
             mockDaysView = {
-                focusActiveDate: jasmine.createSpy()
+                focusActiveDate: vi.fn()
             } as any;
             mockCalendar.daysView = mockDaysView;
         });

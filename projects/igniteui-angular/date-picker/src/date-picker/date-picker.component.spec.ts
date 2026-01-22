@@ -1223,8 +1223,8 @@ describe('IgxDatePicker', () => {
             });
 
             it('Should call underlying dateEditor decrement and increment methods', () => {
-                mockDateEditor.decrement = jasmine.createSpy();
-                mockDateEditor.increment = jasmine.createSpy();
+                mockDateEditor.decrement = vi.fn();
+                mockDateEditor.increment = vi.fn();
                 datePicker.decrement();
                 expect(mockDateEditor.decrement).toHaveBeenCalledWith(undefined, undefined);
                 const mockDatePart = {} as DatePart;

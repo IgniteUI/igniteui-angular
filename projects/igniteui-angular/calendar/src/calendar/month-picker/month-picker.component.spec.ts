@@ -126,8 +126,8 @@ describe('IgxMonthPicker', () => {
         const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
         const month = dom.queryAll(By.css('.igx-calendar-view__item'))[0];
 
-        expect(monthPicker.formatOptions).toEqual(jasmine.objectContaining(defaultOptions));
-        expect(monthPicker.formatViews).toEqual(jasmine.objectContaining(defaultViews));
+        expect(monthPicker.formatOptions).toEqual(expect.objectContaining(defaultOptions));
+        expect(monthPicker.formatViews).toEqual(expect.objectContaining(defaultViews));
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
         expect(month.nativeElement.textContent.trim()).toMatch('Jan');
 
@@ -140,8 +140,8 @@ describe('IgxMonthPicker', () => {
 
         const march = dom.queryAll(By.css('.igx-calendar-view__item'))[2];
 
-        expect(monthPicker.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
-        expect(monthPicker.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
+        expect(monthPicker.formatOptions).toEqual(expect.objectContaining(Object.assign(defaultOptions, formatOptions)));
+        expect(monthPicker.formatViews).toEqual(expect.objectContaining(Object.assign(defaultViews, formatViews)));
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('19');
         expect(march.nativeElement.textContent.trim()).toMatch('March');
 

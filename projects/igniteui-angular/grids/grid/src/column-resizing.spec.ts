@@ -150,7 +150,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(leftSetterSpy).toHaveBeenCalled();
-            expect(parseInt(leftSetterSpy.calls.mostRecent().args[0].toFixed(0))).toEqual(200);
+            expect(parseInt(leftSetterSpy.mock.lastCall[0].toFixed(0))).toEqual(200);
             expect(parseInt(grid.columnList.get(1).headerCell.nativeElement.getBoundingClientRect().width.toFixed(0))).toEqual(173);
         }));
 

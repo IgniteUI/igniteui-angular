@@ -1779,8 +1779,8 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             expect(combo.handleInputChange).toHaveBeenCalledTimes(1);
-            expect(combo.handleInputChange).toHaveBeenCalledWith(jasmine.objectContaining({
-                target: jasmine.objectContaining({ value: target.value })
+            expect(combo.handleInputChange).toHaveBeenCalledWith(expect.objectContaining({
+                target: expect.objectContaining({ value: target.value })
             }));
             expect(combo.filteredData.length).toBeLessThan(combo.data.length)
             expect(combo.filteredData[0].field).toBe(target.value)

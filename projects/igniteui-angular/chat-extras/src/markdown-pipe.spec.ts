@@ -44,7 +44,7 @@ describe('MarkdownPipe', () => {
 
         expect(bypassSpy).toHaveBeenCalledTimes(1);
 
-        const htmlString = bypassSpy.calls.mostRecent().args[0];
+        const htmlString = bypassSpy.mock.lastCall[0];
 
         expect(htmlString).toContain('style="color: var(--shiki-fg);"');
         expect(htmlString).toContain('<pre class="shiki"');

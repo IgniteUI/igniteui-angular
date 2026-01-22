@@ -1443,7 +1443,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             expect(selectionSpy).toHaveBeenCalledTimes(1);
-            const args = selectionSpy.calls.mostRecent().args[0];
+            const args = selectionSpy.mock.lastCall[0];
             expect(args.added.length).toBe(2);
             expect(grid.selectedRows.length).toEqual(2);
 
@@ -1533,7 +1533,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             expect(selectionSpy).toHaveBeenCalledTimes(1);
-            const args = selectionSpy.calls.mostRecent().args[0];
+            const args = selectionSpy.mock.lastCall[0];
             expect(args.removed.length).toBe(2);
             expect(grid.selectedRows.length).toEqual(0);
 

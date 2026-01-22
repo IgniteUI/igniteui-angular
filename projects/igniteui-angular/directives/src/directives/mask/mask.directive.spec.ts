@@ -633,7 +633,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         // writeValue
         inputGet.mockReturnValue('formatted');
         mask.writeValue('test');
-        expect(mockParser.applyMask).toHaveBeenCalledWith('test', jasmine.objectContaining({ format }));
+        expect(mockParser.applyMask).toHaveBeenCalledWith('test', expect.objectContaining({ format }));
         expect(inputSet).toHaveBeenCalledWith('test____');
         expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
         expect(mask.valueChanged.emit).toHaveBeenCalledWith({ rawValue: 'test', formattedValue: 'formatted' });
@@ -643,7 +643,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         spyOnProperty(mask as any, 'selectionEnd').mockReturnValue(6);
         const setSelectionSpy = vi.spyOn(mask as any, 'setSelectionRange');
         mask.onInputChanged(false);
-        expect(mockParser.replaceInMask).toHaveBeenCalledWith('', 'test_2', jasmine.objectContaining({ format }), 0, 0);
+        expect(mockParser.replaceInMask).toHaveBeenCalledWith('', 'test_2', expect.objectContaining({ format }), 0, 0);
         expect(inputSet).toHaveBeenCalledWith('test_2__');
         expect(setSelectionSpy).toHaveBeenCalledWith(6);
         expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith('test2');

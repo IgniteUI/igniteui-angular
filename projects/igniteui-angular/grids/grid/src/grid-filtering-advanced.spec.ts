@@ -274,7 +274,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Ensure that filtering event was emitted with expected arguments
-            expect(grid.filtering.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+            expect(grid.filtering.emit).toHaveBeenCalledWith(expect.objectContaining({
                 owner: grid,
                 filteringExpressions: grid.advancedFilteringExpressionsTree,
                 cancel: false
@@ -312,7 +312,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Ensure that cancel flag is true
             expect(grid.filtering.emit).toHaveBeenCalled();
-            const emittedArgs: IFilteringEventArgs = (grid.filtering.emit as jasmine.Spy).calls.mostRecent().args[0];
+            const emittedArgs: IFilteringEventArgs = (grid.filtering.emit as jasmine.Spy).mock.lastCall[0];
             expect(emittedArgs.cancel).toBeTrue();
 
             // Ensure that grid.filteredData is null

@@ -631,7 +631,7 @@ describe('IgxToggle', () => {
 
             fixture.componentInstance.toggleAction.onClick();
             expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
-            const directive = toggleSpy.calls.mostRecent().args[0].outlet as IgxOverlayOutletDirective;
+            const directive = toggleSpy.mock.lastCall[0].outlet as IgxOverlayOutletDirective;
             expect(directive.nativeElement).toBe(outlet);
         });
     });

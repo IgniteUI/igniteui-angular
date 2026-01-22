@@ -769,14 +769,24 @@ describe('IgxTree - Navigation #treeView', () => {
             });
 
             it('Should update visible children on all relevant tree events', () => {
-                const mockTreeService = { register: vi.fn(), collapse: vi.fn(), expand: vi.fn(), collapsing: vi.fn(), collapsingNodes: jasmine.createSpyObj<Set<IgxTreeNodeComponent<any>>>('mockCollpasingSet',
-                        ['add', 'delete', 'has'], {
-                        size: 0 },
-                    expandedNodes: jasmine.createSpyObj<Set<IgxTreeNodeComponent<any>>>('mockExpandedSet',
-                        ['add', 'delete', 'has'], {
+                const mockTreeService = {
+                    register: vi.fn(),
+                    collapse: vi.fn(),
+                    expand: vi.fn(),
+                    collapsing: vi.fn(),
+                    collapsingNodes: {
+                        add: vi.fn(),
+                        delete: vi.fn(),
+                        has: vi.fn(),
                         size: 0
-                    }),
-                });
+                    },
+                    expandedNodes: {
+                        add: vi.fn(),
+                        delete: vi.fn(),
+                        has: vi.fn(),
+                        size: 0
+                    },
+                };
                 const mockElementRef = { nativeElement: vi.fn(), nativeElement: document.createElement('div') };
                 const mockSelectionService = { selectNodesWithNoEvent: vi.fn(), selectMultipleNodes: vi.fn(), deselectNode: vi.fn(), selectNode: vi.fn(), register: vi.fn() };
 

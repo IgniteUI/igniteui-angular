@@ -312,7 +312,7 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[3].active).toBeTruthy();
             expect(stepper.steps[3].activeChange.emit).toHaveBeenCalledOnceWith(true);
             expect(fifthActiveChangeSpy).not.toHaveBeenCalled();
-            expect(serviceExpandAPISpy.calls.mostRecent().args[0]).toBe(stepper.steps[3]);
+            expect(serviceExpandAPISpy.mock.lastCall[0]).toBe(stepper.steps[3]);
 
             fourthActiveChangeSpy.calls.reset();
             serviceExpandAPISpy.calls.reset();
@@ -778,7 +778,7 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             expect(stepper.steps[4].active).toBeTruthy();
-            expect(serviceExpandSpy.calls.mostRecent().args[0]).toBe(stepper.steps[4]);
+            expect(serviceExpandSpy.mock.lastCall[0]).toBe(stepper.steps[4]);
         }));
 
         it('should navigate to the next/previous step in horizontal orientation on Arrow Right/Left key press', fakeAsync(() => {

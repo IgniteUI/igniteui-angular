@@ -232,7 +232,7 @@ describe('PDF Grid Exporter', () => {
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            const callArgs = (ExportUtilities.saveBlobToFile as jasmine.Spy).calls.mostRecent().args;
+            const callArgs = (ExportUtilities.saveBlobToFile as jasmine.Spy).mock.lastCall;
             expect(callArgs[1]).toBe('MyCustomGrid.pdf');
             done();
         });
@@ -366,7 +366,7 @@ describe('PDF Grid Exporter', () => {
         const drawDataRowSpy = spyOn<any>(exporter as any, 'drawDataRow');
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
-            expect(drawDataRowSpy.calls.count()).toBe(expectedRows);
+            expect(drawDataRowSpy.mock.calls.length).toBe(expectedRows);
             done();
         });
 

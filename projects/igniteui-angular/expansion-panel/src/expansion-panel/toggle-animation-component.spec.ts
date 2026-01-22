@@ -55,8 +55,8 @@ describe('Toggle animation component', () => {
         it('Should not throw if called with a falsy animationSettings value', () => {
             const player = TestBed.inject(MockTogglePlayer);
             player.animationSettings = null;
-            const mockCb = jasmine.createSpy('mockCb');
-            const mockElement = jasmine.createSpy('element');
+            const mockCb = vi.fn();
+            const mockElement = vi.fn();
             vi.spyOn(player.openAnimationStart, 'emit');
             vi.spyOn(player.openAnimationDone, 'emit');
             vi.spyOn(player.closeAnimationStart, 'emit');

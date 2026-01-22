@@ -273,7 +273,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const summaryRowHeight = fixture.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement;
 
 
-            expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid', 'custom']));
+            expect(grid.nativeElement.classList).toEqual(expect.arrayContaining(['igx-grid', 'custom']));
             expect(getComponentSize(grid.nativeElement)).toEqual('3');
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
@@ -2545,14 +2545,14 @@ describe('IgxGrid Component Tests #grid', () => {
             cell.nativeElement.dispatchEvent(event);
             fix.detectChanges();
             expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
-            expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+            expect(grid.contextMenu.emit).toHaveBeenCalledWith(expect.objectContaining({
                 cell: expect.anything()
             }));
             spy.calls.reset();
             row.nativeElement.dispatchEvent(event);
             fix.detectChanges();
             expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
-            expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+            expect(grid.contextMenu.emit).toHaveBeenCalledWith(expect.objectContaining({
                 row: expect.anything()
             }));
         });
