@@ -2,7 +2,8 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
-import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+;
 import { DataParent } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
@@ -15,6 +16,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxHierarchicalRowComponent } from '../../hierarchical-grid/src/hierarchical-row.component';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { GridCellMergeMode, IgxColumnComponent, IgxGridMRLNavigationService, IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;
@@ -931,26 +933,23 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         describe('Multi-row layout', () => {
             it('should throw warning and disallow merging with mrl.', () => {
-                jasmine.getEnv().allowRespy(true);
-                fix = TestBed.createComponent(ColumnLayoutTestComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-                spyOn(console, 'warn');
+                vi.spyOn(console, 'warn');
                 grid.columns[1].merge = true;
                 fix.detectChanges();
 
                 expect(console.warn).toHaveBeenCalledWith('Merging is not supported with multi-row layouts.');
                 expect(console.warn).toHaveBeenCalledTimes(1);
-                jasmine.getEnv().allowRespy(false);
             });
 
         });
 
         describe('Sizing', () => {
             it('should size correct when size is set to anything other than large', async () => {
-                fix.componentInstance.cols = [{ field: 'ProductName', dataType: GridColumnDataType.String, merge: true }]
+                fix.componentInstance.cols = [{ field: 'ProductName', dataType: GridColumnDataType.String, merge: true }];
                 fix.detectChanges();
-                setElementSize(grid.nativeElement, ɵSize.Small)
+                setElementSize(grid.nativeElement, ɵSize.Small);
                 fix.detectChanges();
                 await wait(100);
                 fix.detectChanges();
@@ -1260,7 +1259,6 @@ export class DefaultCellMergeGridComponent extends DataParent {
             Released: true
         }
     ];
-
 }
 
 @Component({
@@ -1289,16 +1287,7 @@ export class IntegrationCellMergeGridComponent extends DefaultCellMergeGridCompo
 }
 
 class NoopMergeStrategy extends DefaultMergeStrategy {
-    public override merge(
-        data: any[],
-        field: string,
-        comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
-        result: any[],
-        activeRowIndexes: number[],
-        isDate?: boolean,
-        isTime?: boolean,
-        grid?: GridTypeBase
-    ) {
+    public override merge(data: any[], field: string, comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer, result: any[], activeRowIndexes: number[], isDate?: boolean, isTime?: boolean, grid?: GridTypeBase) {
         return data;
     }
 }

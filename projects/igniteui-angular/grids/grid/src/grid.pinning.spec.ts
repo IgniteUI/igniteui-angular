@@ -1,32 +1,15 @@
-﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridSelectionMode, IgxGridHeaderRowComponent, IgxGridMRLNavigationService, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import {
-    CELL_PINNED_CLASS,
-    GRID_MRL_BLOCK,
-    GRID_SCROLL_CLASS,
-    GridFunctions,
-    GridSelectionFunctions,
-    GridSummaryFunctions,
-    HEADER_PINNED_CLASS,
-    PINNED_SUMMARY
-} from '../../../test-utils/grid-functions.spec';
-import {
-    GridFeaturesComponent,
-    GridPinningMRLComponent,
-    MRLTestComponent,
-    MultiColumnHeadersComponent,
-    MultiColumnHeadersWithGroupingComponent,
-    PinningComponent,
-    PinOnBothSidesInitComponent,
-    PinOnInitAndSelectionComponent
-} from '../../../test-utils/grid-samples.spec';
+import { CELL_PINNED_CLASS, GRID_MRL_BLOCK, GRID_SCROLL_CLASS, GridFunctions, GridSelectionFunctions, GridSummaryFunctions, HEADER_PINNED_CLASS, PINNED_SUMMARY } from '../../../test-utils/grid-functions.spec';
+import { GridFeaturesComponent, GridPinningMRLComponent, MRLTestComponent, MultiColumnHeadersComponent, MultiColumnHeadersWithGroupingComponent, PinningComponent, PinOnBothSidesInitComponent, PinOnInitAndSelectionComponent } from '../../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 
@@ -47,7 +30,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }))
+    }));
 
     describe('To Start', () => {
 
@@ -342,7 +325,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should emit columnPin event and allow changing the insertAtIndex param.', () => {
 
-                spyOn(grid.columnPin, 'emit').and.callThrough();
+                vi.spyOn(grid.columnPin, 'emit');
 
                 const idCol = grid.getColumnByName('ID');
                 const idColIndex = idCol.index;
@@ -619,10 +602,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 fix.detectChanges();
 
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 9,
-                    ['Count'], ['27']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 10,
-                    ['Count'], ['27']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 9, ['Count'], ['27']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 10, ['Count'], ['27']);
 
                 const pinnedSummaryCells = GridSummaryFunctions.getRootPinnedSummaryCells(fix);
                 expect(pinnedSummaryCells[0].classes[`${PINNED_SUMMARY}-first`])
@@ -732,8 +713,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 // check correct headers have left border
                 const firstPinnedHeader = grid.headerGroupsList.find(group => group.isPinned);
                 // The first child of the header is the <div> wrapping the MRL block
-                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK)).toBeTrue();
-                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBeTrue();
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK)).toBe(true);
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBe(true);
             }));
 
             it('should correctly add pinned columns to the right of the already fixed one', () => {
@@ -956,7 +937,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 const elem = row.children[i + 1];
                 const rect = elem.getBoundingClientRect();
                 expect(rect.x).toBe(initialStart);
-                initialStart += rect.width
+                initialStart += rect.width;
             }
 
             // check pinnedStart cells are rendered before main display container
@@ -973,8 +954,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(pinnedHeaders.length).toBe(10);
             expect(pinnedHeaders.map(x => x.column.header || x.column.field))
                 .toEqual(['General Information', 'CompanyName', 'Person Details',
-                    'ContactName', 'ContactTitle', 'Address Information',
-                    'Country', 'Region', 'City', 'Address']);
+                'ContactName', 'ContactTitle', 'Address Information',
+                'Country', 'Region', 'City', 'Address']);
 
         });
 
@@ -1008,7 +989,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(unpinned.length).toBe(3);
 
             // check visible indexes
-            expect(rootMRLGroups.map(x => x.visibleIndex)).toEqual([0, 2, 1])
+            expect(rootMRLGroups.map(x => x.visibleIndex)).toEqual([0, 2, 1]);
         }));
     });
 

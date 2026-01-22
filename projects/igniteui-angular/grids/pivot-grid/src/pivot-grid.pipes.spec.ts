@@ -4,6 +4,7 @@ import { PivotGridFunctions } from '../../../test-utils/pivot-grid-functions.spe
 import { DATA } from 'src/app/shared/pivot-data';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from 'igniteui-angular/core';
 import { TestBed } from '@angular/core/testing';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;
@@ -31,27 +32,28 @@ describe('Pivot pipes #pivotGrid', () => {
             {
                 ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
                 Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-            }];
+            }
+        ];
         pivotConfig = {
             columns: [{
-                memberName: 'All',
-                memberFunction: () => 'All',
-                enabled: true,
-                childLevel: {
-                    memberName: 'Country',
-                    enabled: true
-                }
-            }],
+                    memberName: 'All',
+                    memberFunction: () => 'All',
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'Country',
+                        enabled: true
+                    }
+                }],
             rows: [{
-                memberName: 'AllCategory',
-                memberFunction: () => 'All',
-                enabled: true,
-                childLevel: {
-                    memberName: 'ProductCategory',
-                    memberFunction: (d) => d.ProductCategory,
-                    enabled: true
-                }
-            }],
+                    memberName: 'AllCategory',
+                    memberFunction: () => 'All',
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'ProductCategory',
+                        memberFunction: (d) => d.ProductCategory,
+                        enabled: true
+                    }
+                }],
             values: [
                 {
                     member: 'UnitsSold',
@@ -91,7 +93,8 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'ProductCategory': 'Clothing' },
             { 'ProductCategory': 'Bikes' },
             { 'ProductCategory': 'Accessories' },
-            { 'ProductCategory': 'Components' }]);
+            { 'ProductCategory': 'Components' }
+        ]);
 
         const aggregations = PivotGridFunctions.getAggregationValues(rowStatePipeResult);
         expect(aggregations).toEqual([
@@ -99,14 +102,15 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456, 'All': 1526 },
             { 'All-Uruguay': 68, 'All': 68 },
             { 'All-USA': 293, 'All': 293 },
-            { 'All-USA': 240, 'All': 240 }]);
+            { 'All-USA': 240, 'All': 240 }
+        ]);
     });
 
     it('transforms flat data to pivot data single row dimension and no children are defined', () => {
         pivotConfig.rows = [{
-            memberName: 'ProductCategory',
-            enabled: true
-        }];
+                memberName: 'ProductCategory',
+                enabled: true
+            }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, cloneStrategy, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, cloneStrategy, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
@@ -116,7 +120,8 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'ProductCategory': 'Clothing' },
             { 'ProductCategory': 'Bikes' },
             { 'ProductCategory': 'Accessories' },
-            { 'ProductCategory': 'Components' }]);
+            { 'ProductCategory': 'Components' }
+        ]);
     });
 
     it('allows setting expand/collapse state.', () => {
@@ -138,7 +143,8 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'ProductCategory': 'Clothing' },
             { 'ProductCategory': 'Bikes' },
             { 'ProductCategory': 'Accessories' },
-            { 'ProductCategory': 'Components' }]);
+            { 'ProductCategory': 'Components' }
+        ]);
     });
 
     it('transforms flat data to pivot data multiple row dimensions', () => {
@@ -156,38 +162,36 @@ describe('Pivot pipes #pivotGrid', () => {
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, cloneStrategy, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         const dimensionValues = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
-        expect(dimensionValues).toEqual(
-            [
-                { 'ProductCategory': 'Clothing', 'Date': '01/01/2021' },
-                { 'ProductCategory': 'Clothing', 'Date': '01/05/2019' },
-                { 'ProductCategory': 'Clothing', 'Date': '05/12/2020' },
-                { 'ProductCategory': 'Clothing', 'Date': '02/19/2020', },
-                { 'ProductCategory': 'Bikes', 'Date': '01/06/2020' },
-                { 'ProductCategory': 'Accessories', 'Date': '04/07/2021' },
-                { 'ProductCategory': 'Components', 'Date': '12/08/2021' }
-            ]
-        );
+        expect(dimensionValues).toEqual([
+            { 'ProductCategory': 'Clothing', 'Date': '01/01/2021' },
+            { 'ProductCategory': 'Clothing', 'Date': '01/05/2019' },
+            { 'ProductCategory': 'Clothing', 'Date': '05/12/2020' },
+            { 'ProductCategory': 'Clothing', 'Date': '02/19/2020', },
+            { 'ProductCategory': 'Bikes', 'Date': '01/06/2020' },
+            { 'ProductCategory': 'Accessories', 'Date': '04/07/2021' },
+            { 'ProductCategory': 'Components', 'Date': '12/08/2021' }
+        ]);
     });
 
     it('transforms flat data to pivot data with multiple nested row dimensions', () => {
         pivotConfig.rows = [{
-            memberName: 'AllProd',
-            memberFunction: () => 'AllProd',
-            enabled: true,
-            childLevel: {
-                memberName: 'ProductCategory',
-                enabled: true
-            }
-        },
-        {
-            memberName: 'AllDate',
-            memberFunction: () => 'AllDate',
-            enabled: true,
-            childLevel: {
-                memberName: 'Date',
-                enabled: true
-            }
-        }];
+                memberName: 'AllProd',
+                memberFunction: () => 'AllProd',
+                enabled: true,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    enabled: true
+                }
+            },
+            {
+                memberName: 'AllDate',
+                memberFunction: () => 'AllDate',
+                enabled: true,
+                childLevel: {
+                    memberName: 'Date',
+                    enabled: true
+                }
+            }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, cloneStrategy, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, cloneStrategy, expansionStates);
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
@@ -211,18 +215,19 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'ProductCategory': 'Accessories', 'AllDate': 'AllDate' },
             { 'ProductCategory': 'Accessories', 'Date': '04/07/2021' },
             { 'ProductCategory': 'Components', 'AllDate': 'AllDate' },
-            { 'ProductCategory': 'Components', 'Date': '12/08/2021' }]);
+            { 'ProductCategory': 'Components', 'Date': '12/08/2021' }
+        ]);
     });
 
     it('transforms flat data to pivot data 2 column dimensions', () => {
         pivotConfig.columns = [{
-            memberName: 'Country',
-            enabled: true
-        },
-        {
-            memberName: 'Date',
-            enabled: true
-        }];
+                memberName: 'Country',
+                enabled: true
+            },
+            {
+                memberName: 'Date',
+                enabled: true
+            }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, cloneStrategy, new Map<any, boolean>());
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, cloneStrategy, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
@@ -232,7 +237,8 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'ProductCategory': 'Clothing' },
             { 'ProductCategory': 'Bikes' },
             { 'ProductCategory': 'Accessories' },
-            { 'ProductCategory': 'Components' }]);
+            { 'ProductCategory': 'Components' }
+        ]);
         // for columns we need to check aggregations
         const aggregations = PivotGridFunctions.getAggregationValues(rowStatePipeResult);
         expect(aggregations).toEqual([
@@ -246,17 +252,17 @@ describe('Pivot pipes #pivotGrid', () => {
 
     it('transforms flat data to pivot data 3 column dimensions', () => {
         pivotConfig.columns = [{
-            memberName: 'Country',
-            enabled: true
-        },
-        {
-            memberName: 'SellerName',
-            enabled: true
-        },
-        {
-            memberName: 'Date',
-            enabled: true
-        }];
+                memberName: 'Country',
+                enabled: true
+            },
+            {
+                memberName: 'SellerName',
+                enabled: true
+            },
+            {
+                memberName: 'Date',
+                enabled: true
+            }];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, cloneStrategy, new Map<any, boolean>());
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, cloneStrategy, new Map<any, boolean>());
         const rowStateResult = rowStatePipe.transform(columnPipeResult, pivotConfig, new Map<any, boolean>(), true);
@@ -266,7 +272,8 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'Bulgaria-Stanley-01/01/2021': 282, 'Bulgaria-Stanley': 282, 'Bulgaria-Walter-02/19/2020': 492, 'Bulgaria-Walter': 492, 'Bulgaria': 774, 'USA-Elisa-01/05/2019': 296, 'USA-Elisa': 296, 'USA': 296, 'Uruguay-Larry-05/12/2020': 456, 'Uruguay-Larry': 456, 'Uruguay': 456 },
             { 'Uruguay-Lydia-01/06/2020': 68, 'Uruguay-Lydia': 68, 'Uruguay': 68 },
             { 'USA-David-04/07/2021': 293, 'USA-David': 293, 'USA': 293 },
-            { 'USA-John-12/08/2021': 240, 'USA-John': 240, 'USA': 240 }]);
+            { 'USA-John-12/08/2021': 240, 'USA-John': 240, 'USA': 240 }
+        ]);
     });
 
     it('transforms flat data to pivot data 2 value dimensions', () => {
@@ -299,7 +306,8 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86, 'All-USA-UnitsSold': 829, 'All-USA-UnitPrice': 153.28, 'All-Uruguay-UnitsSold': 524, 'All-Uruguay-UnitPrice': 71.89, 'All-UnitsSold': 2127, 'All-UnitPrice': 254.02999999999997 },
             { 'All-Bulgaria-UnitsSold': 774, 'All-Bulgaria-UnitPrice': 28.86, 'All-USA-UnitsSold': 296, 'All-USA-UnitPrice': 49.57, 'All-Uruguay-UnitsSold': 456, 'All-Uruguay-UnitPrice': 68.33, 'All-UnitsSold': 1526, 'All-UnitPrice': 146.76 },
             { 'All-Uruguay-UnitsSold': 68, 'All-Uruguay-UnitPrice': 3.56, 'All-UnitsSold': 68, 'All-UnitPrice': 3.56 }, { 'All-USA-UnitsSold': 293, 'All-USA-UnitPrice': 85.58, 'All-UnitsSold': 293, 'All-UnitPrice': 85.58 },
-            { 'All-USA-UnitsSold': 240, 'All-USA-UnitPrice': 18.13, 'All-UnitsSold': 240, 'All-UnitPrice': 18.13 }]);
+            { 'All-USA-UnitsSold': 240, 'All-USA-UnitPrice': 18.13, 'All-UnitsSold': 240, 'All-UnitPrice': 18.13 }
+        ]);
     });
 
     it('should return correct values for each pivot aggregation type', () => {
@@ -339,9 +347,11 @@ describe('Pivot pipes #pivotGrid', () => {
                     { ProductCategory: 'Clothing', All: 1526, 'All-Bulgaria': 774, 'All-USA': 296, 'All-Uruguay': 456 },
                     { ProductCategory: 'Bikes', All: 68, 'All-Uruguay': 68 },
                     { ProductCategory: 'Accessories', All: 293, 'All-USA': 293 },
-                    { ProductCategory: 'Components', All: 240, 'All-USA': 240 }]
-                , 'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524
-            }];
+                    { ProductCategory: 'Components', All: 240, 'All-USA': 240 }
+                ],
+                'All-Bulgaria': 774, 'All-USA': 829, 'All-Uruguay': 524
+            }
+        ];
         pivotConfig.columnStrategy = NoopPivotDimensionsStrategy.instance();
         pivotConfig.columns[0].memberName = 'All';
         pivotConfig.rowStrategy = NoopPivotDimensionsStrategy.instance();
@@ -359,7 +369,8 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'ProductCategory': 'Clothing' },
             { 'ProductCategory': 'Bikes' },
             { 'ProductCategory': 'Accessories' },
-            { 'ProductCategory': 'Components' }]);
+            { 'ProductCategory': 'Components' }
+        ]);
     });
 
     it('should generate correct levels when using predefined date dimension', () => {
@@ -391,37 +402,34 @@ describe('Pivot pipes #pivotGrid', () => {
             {
                 ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
                 Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
-            }];
+            }
+        ];
 
         pivotConfig.rows = [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: false
-                }
-            )
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: false
+            })
         ];
 
         const rowPipeResult = rowPipe.transform(data, pivotConfig, cloneStrategy, expansionStates);
         const rowStateResult = rowStatePipe.transform(rowPipeResult, pivotConfig, new Map<any, boolean>(), true);
         const dimensionValues = PivotGridFunctions.getDimensionValues(rowStateResult);
-        expect(dimensionValues).toEqual(
-            [
-                { 'AllPeriods': 'All Periods' },
-                { 'Years': '2021' },
-                { 'Date': '01/01/2021' },
-                { 'Date': '04/07/2021' },
-                { 'Date': '12/08/2021' },
-                { 'Years': '2019' },
-                { 'Date': '01/05/2019' },
-                { 'Years': '2020' },
-                { 'Date': '01/06/2020' },
-                { 'Date': '05/12/2020' },
-                { 'Date': '02/19/2020' }]
-        );
+        expect(dimensionValues).toEqual([
+            { 'AllPeriods': 'All Periods' },
+            { 'Years': '2021' },
+            { 'Date': '01/01/2021' },
+            { 'Date': '04/07/2021' },
+            { 'Date': '12/08/2021' },
+            { 'Years': '2019' },
+            { 'Date': '01/05/2019' },
+            { 'Years': '2020' },
+            { 'Date': '01/06/2020' },
+            { 'Date': '05/12/2020' },
+            { 'Date': '02/19/2020' }
+        ]);
     });
 
     it('should generate correct levels when using predefined date dimension with other row dimensions', () => {
@@ -453,17 +461,15 @@ describe('Pivot pipes #pivotGrid', () => {
             {
                 ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
                 Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
-            }];
+            }
+        ];
         pivotConfig.rows = [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: false
-                }
-            ),
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: false
+            }),
             {
                 memberName: 'City',
                 enabled: true
@@ -518,20 +524,18 @@ describe('Pivot pipes #pivotGrid', () => {
     it('should generate correct row data with 2 dimensions with varying depth.', () => {
         // one dimension with 4 depth and one with 1 depth
         pivotConfig.rows = [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: true,
-                    total: true
-                }
-            ),
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: true,
+                total: true
+            }),
             {
                 memberName: 'ProductCategory',
                 enabled: true
-            }];
+            }
+        ];
 
         let rowPipeResult = rowPipe.transform(data, pivotConfig, cloneStrategy, expansionStates);
         let columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, cloneStrategy, new Map<any, boolean>());
@@ -540,50 +544,45 @@ describe('Pivot pipes #pivotGrid', () => {
 
         const date_product = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
 
-        expect(date_product).toEqual(
-            [
-                { AllPeriods: 'All Periods', ProductCategory: 'Clothing' },
-                { AllPeriods: 'All Periods', ProductCategory: 'Accessories' },
-                { AllPeriods: 'All Periods', ProductCategory: 'Components' },
-                { AllPeriods: 'All Periods', ProductCategory: 'Bikes' },
-                { Years: '2021', ProductCategory: 'Clothing' },
-                { Years: '2021', ProductCategory: 'Accessories' },
-                { Years: '2021', ProductCategory: 'Components' },
-                { Months: 'January', ProductCategory: 'Clothing' },
-                { Date: '01/01/2021', ProductCategory: 'Clothing' },
-                { Months: 'April', ProductCategory: 'Accessories' },
-                { Date: '04/07/2021', ProductCategory: 'Accessories' },
-                { Months: 'December', ProductCategory: 'Components' },
-                { Date: '12/08/2021', ProductCategory: 'Components' },
-                { Years: '2019', ProductCategory: 'Clothing' },
-                { Months: 'January', ProductCategory: 'Clothing' },
-                { Date: '01/05/2019', ProductCategory: 'Clothing' },
-                { Years: '2020', ProductCategory: 'Bikes' },
-                { Years: '2020', ProductCategory: 'Clothing' },
-                { Months: 'January', ProductCategory: 'Bikes' },
-                { Date: '01/06/2020', ProductCategory: 'Bikes' },
-                { Months: 'May', ProductCategory: 'Clothing' },
-                { Date: '05/12/2020', ProductCategory: 'Clothing' },
-                { Months: 'February', ProductCategory: 'Clothing' },
-                { Date: '02/19/2020', ProductCategory: 'Clothing' }
-            ]
-        );
+        expect(date_product).toEqual([
+            { AllPeriods: 'All Periods', ProductCategory: 'Clothing' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Accessories' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Components' },
+            { AllPeriods: 'All Periods', ProductCategory: 'Bikes' },
+            { Years: '2021', ProductCategory: 'Clothing' },
+            { Years: '2021', ProductCategory: 'Accessories' },
+            { Years: '2021', ProductCategory: 'Components' },
+            { Months: 'January', ProductCategory: 'Clothing' },
+            { Date: '01/01/2021', ProductCategory: 'Clothing' },
+            { Months: 'April', ProductCategory: 'Accessories' },
+            { Date: '04/07/2021', ProductCategory: 'Accessories' },
+            { Months: 'December', ProductCategory: 'Components' },
+            { Date: '12/08/2021', ProductCategory: 'Components' },
+            { Years: '2019', ProductCategory: 'Clothing' },
+            { Months: 'January', ProductCategory: 'Clothing' },
+            { Date: '01/05/2019', ProductCategory: 'Clothing' },
+            { Years: '2020', ProductCategory: 'Bikes' },
+            { Years: '2020', ProductCategory: 'Clothing' },
+            { Months: 'January', ProductCategory: 'Bikes' },
+            { Date: '01/06/2020', ProductCategory: 'Bikes' },
+            { Months: 'May', ProductCategory: 'Clothing' },
+            { Date: '05/12/2020', ProductCategory: 'Clothing' },
+            { Months: 'February', ProductCategory: 'Clothing' },
+            { Date: '02/19/2020', ProductCategory: 'Clothing' }
+        ]);
 
         pivotConfig.rows = [
             {
                 memberName: 'ProductCategory',
                 enabled: true
             },
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: true,
-                    total: true
-                }
-            )
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: true,
+                total: true
+            })
         ];
 
         rowPipeResult = rowPipe.transform(data, pivotConfig, cloneStrategy, expansionStates);
@@ -592,48 +591,43 @@ describe('Pivot pipes #pivotGrid', () => {
         expect(rowStatePipeResult.length).toBe(24);
         const product_date = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
 
-        expect(product_date).toEqual(
-            [
-                { ProductCategory: 'Clothing', AllPeriods: 'All Periods' },
-                { ProductCategory: 'Clothing', Years: '2021' },
-                { ProductCategory: 'Clothing', Months: 'January' },
-                { ProductCategory: 'Clothing', Date: '01/01/2021' },
-                { ProductCategory: 'Clothing', Years: '2019' },
-                { ProductCategory: 'Clothing', Months: 'January' },
-                { ProductCategory: 'Clothing', Date: '01/05/2019' },
-                { ProductCategory: 'Clothing', Years: '2020' },
-                { ProductCategory: 'Clothing', Months: 'May' },
-                { ProductCategory: 'Clothing', Date: '05/12/2020' },
-                { ProductCategory: 'Clothing', Months: 'February' },
-                { ProductCategory: 'Clothing', Date: '02/19/2020' },
-                { ProductCategory: 'Bikes', AllPeriods: 'All Periods' },
-                { ProductCategory: 'Bikes', Years: '2020' },
-                { ProductCategory: 'Bikes', Months: 'January' },
-                { ProductCategory: 'Bikes', Date: '01/06/2020' },
-                { ProductCategory: 'Accessories', AllPeriods: 'All Periods' },
-                { ProductCategory: 'Accessories', Years: '2021' },
-                { ProductCategory: 'Accessories', Months: 'April' },
-                { ProductCategory: 'Accessories', Date: '04/07/2021' },
-                { ProductCategory: 'Components', AllPeriods: 'All Periods' },
-                { ProductCategory: 'Components', Years: '2021' },
-                { ProductCategory: 'Components', Months: 'December' },
-                { ProductCategory: 'Components', Date: '12/08/2021' }
-            ]
-        );
+        expect(product_date).toEqual([
+            { ProductCategory: 'Clothing', AllPeriods: 'All Periods' },
+            { ProductCategory: 'Clothing', Years: '2021' },
+            { ProductCategory: 'Clothing', Months: 'January' },
+            { ProductCategory: 'Clothing', Date: '01/01/2021' },
+            { ProductCategory: 'Clothing', Years: '2019' },
+            { ProductCategory: 'Clothing', Months: 'January' },
+            { ProductCategory: 'Clothing', Date: '01/05/2019' },
+            { ProductCategory: 'Clothing', Years: '2020' },
+            { ProductCategory: 'Clothing', Months: 'May' },
+            { ProductCategory: 'Clothing', Date: '05/12/2020' },
+            { ProductCategory: 'Clothing', Months: 'February' },
+            { ProductCategory: 'Clothing', Date: '02/19/2020' },
+            { ProductCategory: 'Bikes', AllPeriods: 'All Periods' },
+            { ProductCategory: 'Bikes', Years: '2020' },
+            { ProductCategory: 'Bikes', Months: 'January' },
+            { ProductCategory: 'Bikes', Date: '01/06/2020' },
+            { ProductCategory: 'Accessories', AllPeriods: 'All Periods' },
+            { ProductCategory: 'Accessories', Years: '2021' },
+            { ProductCategory: 'Accessories', Months: 'April' },
+            { ProductCategory: 'Accessories', Date: '04/07/2021' },
+            { ProductCategory: 'Components', AllPeriods: 'All Periods' },
+            { ProductCategory: 'Components', Years: '2021' },
+            { ProductCategory: 'Components', Months: 'December' },
+            { ProductCategory: 'Components', Date: '12/08/2021' }
+        ]);
     });
     it('should generate correct row data with 3 dimensions with varying depth.', () => {
         // one dimension with 3 depth, one with 2 and one with 1
         const dims = [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: false,
-                    total: true
-                }
-            ),
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: false,
+                total: true
+            }),
             {
                 memberName: 'AllProduct',
                 memberFunction: () => 'All Products',
@@ -646,7 +640,8 @@ describe('Pivot pipes #pivotGrid', () => {
             {
                 memberName: 'SellerName',
                 enabled: true
-            }];
+            }
+        ];
         pivotConfig.rows = [
             dims[0],
             dims[1],
@@ -770,16 +765,13 @@ describe('Pivot pipes #pivotGrid', () => {
 
         // 4 dimensions - depths 3, 2, 1, 1
         const dims = [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: false,
-                    total: true
-                }
-            ),
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: false,
+                total: true
+            }),
             {
                 memberName: 'AllProduct',
                 memberFunction: () => 'All Products',
@@ -796,7 +788,8 @@ describe('Pivot pipes #pivotGrid', () => {
             {
                 memberName: 'SellerName',
                 enabled: true
-            }];
+            }
+        ];
         // Date, Product, Country, Seller
         pivotConfig.rows = [
             dims[0],
@@ -944,19 +937,17 @@ describe('Pivot pipes #pivotGrid', () => {
             {
                 ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
                 Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492, Discontinued: false
-            }];
+            }
+        ];
         // 5 dimensions - depths 3, 2, 2, 1, 1
         const dims = [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: false,
-                    total: true
-                }
-            ),
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: false,
+                total: true
+            }),
             {
                 memberName: 'AllProduct',
                 memberFunction: () => 'All Products',
@@ -984,7 +975,8 @@ describe('Pivot pipes #pivotGrid', () => {
                 memberFunction: (rowData) => {
                     return rowData.Discontinued.toString();
                 }
-            }];
+            }
+        ];
         // Date, Product, Country, Seller, Discontinued
         pivotConfig.rows = [
             dims[0], // Date
@@ -1001,24 +993,22 @@ describe('Pivot pipes #pivotGrid', () => {
         const prod_country_date_seller_discontinued = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         const allPeriods_allProducts_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' &&
             x['AllProduct'] === 'All Products');
-        expect(allPeriods_allProducts_records).toEqual(
-            [
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Stanley', Discontinued: 'false' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Walter', Discontinued: 'false' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Elisa', Discontinued: 'true' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'David', Discontinued: 'false' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'John', Discontinued: 'false' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Larry', Discontinued: 'true' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Lydia', Discontinued: 'true' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Stanley', Discontinued: 'false' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Walter', Discontinued: 'false' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'Elisa', Discontinued: 'true' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'David', Discontinued: 'false' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'John', Discontinued: 'false' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Uruguay', SellerName: 'Larry', Discontinued: 'true' },
-                { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Uruguay', SellerName: 'Lydia', Discontinued: 'true' }
-            ]
-        );
+        expect(allPeriods_allProducts_records).toEqual([
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Stanley', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Walter', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Elisa', Discontinued: 'true' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'David', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'John', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Larry', Discontinued: 'true' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', AllCountries: 'All Countries', SellerName: 'Lydia', Discontinued: 'true' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Stanley', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Bulgaria', SellerName: 'Walter', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'Elisa', Discontinued: 'true' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'David', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'USA', SellerName: 'John', Discontinued: 'false' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Uruguay', SellerName: 'Larry', Discontinued: 'true' },
+            { AllPeriods: 'All Periods', AllProduct: 'All Products', Country: 'Uruguay', SellerName: 'Lydia', Discontinued: 'true' }
+        ]);
 
         const allPeriods_clothing_records = prod_country_date_seller_discontinued.filter(x => x['AllPeriods'] === 'All Periods' && x['ProductCategory'] === 'Clothing');
         expect(allPeriods_clothing_records).toEqual([
@@ -1228,21 +1218,19 @@ describe('Pivot pipes #pivotGrid', () => {
             {
                 ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
                 Country: 'Bulgaria', City: 'Plovdiv', Date: '02/19/2020', UnitsSold: 492
-            }];
+            }
+        ];
         pivotConfig.columns = [{
-            memberName: 'Country',
-            enabled: true
-        }];
+                memberName: 'Country',
+                enabled: true
+            }];
         pivotConfig.rows = [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: false
-                }
-            ),
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: false
+            }),
             {
                 memberName: 'City',
                 enabled: true
@@ -1283,8 +1271,7 @@ describe('Pivot pipes #pivotGrid', () => {
                 memberName: 'AllProduct',
                 memberFunction: () => 'All Products',
                 enabled: true,
-                childLevel:
-                {
+                childLevel: {
 
                     memberName: 'Product',
                     memberFunction: (recData) => recData.Product.Name,
@@ -1295,8 +1282,7 @@ describe('Pivot pipes #pivotGrid', () => {
                 memberName: 'AllSeller',
                 memberFunction: () => 'All Sellers',
                 enabled: true,
-                childLevel:
-                {
+                childLevel: {
                     memberName: 'Seller',
                     memberFunction: (recData) => recData.Seller.Name,
                     enabled: true,
@@ -1330,18 +1316,15 @@ describe('Pivot pipes #pivotGrid', () => {
         ];
         pivotConfig.columns = [];
         pivotConfig.rows = [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: true,
-                    quarters: true,
-                    fullDate: false
-                }
-            )
-        ]
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: true,
+                quarters: true,
+                fullDate: false
+            })
+        ];
         const rowPipeResult = rowPipe.transform(data, pivotConfig, cloneStrategy, expansionStates);
         const columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, cloneStrategy, new Map<any, boolean>());
         const rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);

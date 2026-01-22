@@ -4,6 +4,7 @@ import { GridIDNameJobTitleComponent } from '../../../../../test-utils/grid-samp
 import { wait } from '../../../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { expect } from 'vitest';
 
 export class TestMethods {
 
@@ -13,7 +14,7 @@ export class TestMethods {
         await wait(16);
         myGrid = fix.componentInstance.grid;
 
-        expect(myGrid.rowList.length).toEqual(10, 'Invalid number of rows initialized!');
+        expect(myGrid.rowList.length, 'Invalid number of rows initialized!').toEqual(10);
         await action(myGrid);
     }
 
@@ -26,7 +27,7 @@ export class TestMethods {
         const myGrid = fix.componentInstance.grid;
 
         filterParams = (filterParams.length === 0) ?
-                        ['JobTitle', 'Senior', IgxStringFilteringOperand.instance().condition('contains'), true] : filterParams;
+            ['JobTitle', 'Senior', IgxStringFilteringOperand.instance().condition('contains'), true] : filterParams;
 
         myGrid.filter(filterParams[0], filterParams[1], filterParams[2], filterParams[3]);
         fix.detectChanges();
@@ -50,5 +51,4 @@ export class TestMethods {
 
         return { fixture: fix, grid: myGrid };
     }
-
 }

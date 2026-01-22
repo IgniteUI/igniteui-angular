@@ -10,6 +10,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { getComponentSize } from 'igniteui-angular/core';
 import { ControlsFunction } from 'igniteui-angular/test-utils/controls-functions.spec';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 @Component({
     template: `
@@ -133,7 +134,7 @@ describe('IgxChip', () => {
             const igxChipItem = igxChip[1].nativeElement;
             const chipRemoveButton = ControlsFunction.getChipRemoveButton(igxChipItem);
 
-            expect(igxChipItem.children[0].children[2].children[0]).toHaveClass('igx-chip__remove');
+            expect(igxChipItem.children[0].children[2].children[0].classList.contains('igx-chip__remove')).toBe(true);
             expect(chipRemoveButton).toBeTruthy();
         });
 
@@ -148,7 +149,7 @@ describe('IgxChip', () => {
             fixture.detectChanges();
 
             expect(igxChip.variant).toMatch('danger');
-            expect(igxChip.nativeElement).toHaveClass('igx-chip--danger');
+            expect(igxChip.nativeElement.classList.contains('igx-chip--danger')).toBe(true);
         });
 
         it('should set text in chips correctly', () => {
@@ -219,7 +220,7 @@ describe('IgxChip', () => {
         it('should not trigger remove event when delete button is pressed when not removable', () => {
             const firstChipComp = fix.componentInstance.chips.toArray()[0];
 
-            spyOn(firstChipComp.remove, 'emit');
+            vi.spyOn(firstChipComp.remove, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Delete', firstChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
 
@@ -229,7 +230,7 @@ describe('IgxChip', () => {
         it('should trigger remove event when delete button is pressed when removable', () => {
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(secondChipComp.remove, 'emit');
+            vi.spyOn(secondChipComp.remove, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Delete', secondChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
 
@@ -290,8 +291,8 @@ describe('IgxChip', () => {
 
         it('should fire selectedChanging event when selectable is true', () => {
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
-            spyOn(secondChipComp.selectedChanging, 'emit');
-            spyOn(secondChipComp.selectedChanged, 'emit');
+            vi.spyOn(secondChipComp.selectedChanging, 'emit');
+            vi.spyOn(secondChipComp.selectedChanged, 'emit');
 
             UIInteractions.triggerKeyDownEvtUponElem(' ', secondChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
@@ -305,7 +306,7 @@ describe('IgxChip', () => {
             });
 
             expect(secondChipComp.selectedChanging.emit).toHaveBeenCalledWith({
-                originalEvent: jasmine.anything(),
+                originalEvent: expect.anything(),
                 owner: secondChipComp,
                 cancel: false,
                 selected: true
@@ -316,8 +317,8 @@ describe('IgxChip', () => {
             pending('This should be tested in the e2e test');
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(secondChipComp.selectedChanging, 'emit');
-            spyOn(secondChipComp.selectedChanged, 'emit');
+            vi.spyOn(secondChipComp.selectedChanging, 'emit');
+            vi.spyOn(secondChipComp.selectedChanged, 'emit');
             secondChipComp.chipArea.nativeElement.focus();
 
             UIInteractions.triggerKeyDownEvtUponElem(' ', secondChipComp.chipArea.nativeElement, true);
@@ -342,8 +343,8 @@ describe('IgxChip', () => {
         it('should not fire selectedChanging event when selectable is false', () => {
             const firstChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[0];
 
-            spyOn(firstChipComp.selectedChanging, 'emit');
-            spyOn(firstChipComp.selectedChanged, 'emit');
+            vi.spyOn(firstChipComp.selectedChanging, 'emit');
+            vi.spyOn(firstChipComp.selectedChanged, 'emit');
             firstChipComp.nativeElement.focus();
 
             UIInteractions.triggerKeyDownEvtUponElem(' ', firstChipComp.chipArea.nativeElement, true);
@@ -355,8 +356,8 @@ describe('IgxChip', () => {
         it('should not fire selectedChanging event when the remove button is clicked', () => {
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(secondChipComp.selectedChanging, 'emit');
-            spyOn(secondChipComp.selectedChanged, 'emit');
+            vi.spyOn(secondChipComp.selectedChanging, 'emit');
+            vi.spyOn(secondChipComp.selectedChanged, 'emit');
 
             const chipRemoveButton = ControlsFunction.getChipRemoveButton(secondChipComp.chipArea.nativeElement);
 

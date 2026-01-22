@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const version = '13.0.0';
 
@@ -17,9 +18,7 @@ describe(`Update to ${version}`, () => {
     const lineBreaksAndSpaceRegex = /\s/g;
 
     it('should rename CarouselAnimationType to HorizontalAnimationType', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `import { Component, ViewChild } from '@angular/core';
         import { CarouselAnimationType } from 'igniteui-angular';
 
         @Component({
@@ -47,16 +46,11 @@ describe(`Update to ${version}`, () => {
         }
         `;
 
-        expect(
-            tree.readContent(
-                '/testSrc/appPrefix/component/test.component.ts'
-            )
-        ).toEqual(expectedContent);
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(expectedContent);
     });
 
     it('should rename IgxComboComponent selectedItems() to selection', async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-        `import { IgxComboComponent } from 'igniteui-angular';
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `import { IgxComboComponent } from 'igniteui-angular';
         export class MyClass {
             public combo: IgxComboComponent;
             public ngAfterViewInit() {
@@ -66,10 +60,7 @@ describe(`Update to ${version}`, () => {
 
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: true }, appTree);
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
-        ).toEqual(
-        `import { IgxComboComponent } from 'igniteui-angular';
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(`import { IgxComboComponent } from 'igniteui-angular';
         export class MyClass {
             public combo: IgxComboComponent;
             public ngAfterViewInit() {
@@ -79,8 +70,7 @@ describe(`Update to ${version}`, () => {
     });
 
     it('should remove paging and paginationTemplate property and define a igx-paginator component with custom content', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `
 <div class="columnHidingContainer">
     <div *ngFor="let col of grid.columns">
         {{col.field}}
@@ -119,8 +109,7 @@ describe(`Update to ${version}`, () => {
     });
 
     it('should insert a comment when exporter services are present in module.ts files', async () => {
-        appTree.create('/testSrc/appPrefix/component/app.module.ts',
-`import { NgModule } from "@angular/core";
+        appTree.create('/testSrc/appPrefix/component/app.module.ts', `import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -151,10 +140,7 @@ export class AppModule {}
         const tree = await schematicRunner
             .runSchematic(migrationName, {}, appTree);
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/app.module.ts')
-        ).toEqual(
-`// IgxCsvExporterService and IgxExcelExporterService no longer need to be manually provided and can be safely removed.
+        expect(tree.readContent('/testSrc/appPrefix/component/app.module.ts')).toEqual(`// IgxCsvExporterService and IgxExcelExporterService no longer need to be manually provided and can be safely removed.
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
@@ -185,8 +171,7 @@ export class AppModule {}
     });
 
     it('Should properly rename rowData property to data', async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-        `
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `
         import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
@@ -216,10 +201,7 @@ export class AppModule {}
         const tree = await schematicRunner
             .runSchematic(migrationName, {}, appTree);
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
-        ).toEqual(
-        `
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(`
         import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
@@ -244,13 +226,11 @@ export class AppModule {}
                 const treeRowID = this.tgrid.getRowByIndex(0).treeRow.key;
             }
         }
-        `
-        );
+        `);
     });
 
     it('Should properly rename columnsCollection property to columns', async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-        `
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `
         import { IgxGridComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
@@ -264,10 +244,7 @@ export class AppModule {}
         const tree = await schematicRunner
             .runSchematic(migrationName, {}, appTree);
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
-        ).toEqual(
-        `
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(`
         import { IgxGridComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
@@ -276,13 +253,11 @@ export class AppModule {}
                 const columns = this.grid1.columns;
             }
         }
-        `
-        );
+        `);
     });
 
     it('Should properly rename columnsCollection property to columns - treeGrid', async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-        `
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `
         import { IgxTreeGridComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxTreeGridComponent, { read: IgxTreeGridComponent })
@@ -299,10 +274,7 @@ export class AppModule {}
         const tree = await schematicRunner
             .runSchematic(migrationName, {}, appTree);
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
-        ).toEqual(
-        `
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(`
         import { IgxTreeGridComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxTreeGridComponent, { read: IgxTreeGridComponent })
@@ -314,13 +286,11 @@ export class AppModule {}
                 const editableColumns = this.tGrid1.columns.filter(c => e.editable);
             }
         }
-        `
-        );
+        `);
     });
 
     it('should remove grid toolbar inputs and define a igx-grid-toolbar component instead', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `
         <igx-grid #grid1 [data]="data" [showToolbar]='someVal' height="300px" width="300px"
         columnHiding="'true'" [toolbarTitle]='someVal1' columnHidingTitle='hidingTitle' hiddenColumnsText='hiddenColumns'
         [columnPinning]="someVal2" [columnPinningTitle]="pinningTitle" [pinnedColumnsText]="pinnedColumns">
@@ -347,8 +317,7 @@ export class AppModule {}
     });
 
     it('should migrate row island toolbar inputs to igx-grid-toolbar component instead', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `
             <igx-hierarchical-grid [showExpandAll]='true' [data]="localData" [autoGenerate]="true" [height]="'600px'"
             [width]="'800px'" #hGrid [primaryKey]="'ID'">
             <igx-grid-toolbar>
@@ -397,8 +366,7 @@ export class AppModule {}
     });
 
     it('should update existing toolbar component', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `
         <igx-grid #grid1 [data]="data" height="300px" width="300px" [toolbarTitle]="someVal1" [hiddenColumnsText]="hiddenColumns"
         [columnPinningTitle]="pinnedColumns">
 <igx-grid-toolbar *ngIf="someVal">
@@ -430,8 +398,7 @@ export class AppModule {}
     });
 
     it('should remove grid toolbar inputs and define a igx-grid-toolbar component instead', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `
         <igx-grid #grid1 [data]="data" height="300px" width="300px"
         [pinnedColumnsText]="pinnedColumns">
             <igx-column field="Name" header="Athlete"></igx-column>
@@ -455,8 +422,7 @@ export class AppModule {}
     });
 
     it('should contain all actions from the before toolbar', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `
         <igx-grid #grid1 hiddenColumnsText="Hidden" primaryKey='id'>
 <igx-grid-toolbar *ngIf="showToolbar">
 <igx-grid-toolbar-actions>
@@ -489,8 +455,7 @@ export class AppModule {}
     });
 
     it('should remove grid toolbar exporter inputs and define a igx-grid-toolbar component instead', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `
         <igx-grid #grid1 [data]="data" height="300px" width="300px"
         [exportExcel]="true" [exportCsv]="csvExport">
         <igx-grid-toolbar>
@@ -518,7 +483,7 @@ export class AppModule {}
 </igx-grid-toolbar-exporter>
 </igx-grid-toolbar-actions>
 </igx-grid-toolbar>
-        
+
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
@@ -526,8 +491,7 @@ export class AppModule {}
     });
 
     it('should remove grid toolbar inputs but do not remove all templating inside tooblar component', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html', `
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `
         <igx-grid #grid1 [data]="data" [showToolbar]="true" [toolbarTitle]="fdasfsa" height="300px" width="300px">
 <igx-grid-toolbar>
 <igx-select [(ngModel)]="currentSortingType" (selectionChanging)="sortTypeSelection($event)">

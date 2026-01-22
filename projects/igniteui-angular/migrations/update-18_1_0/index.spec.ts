@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const version = '18.1.0';
 
@@ -16,9 +17,7 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-39';
 
     it('should migrate calendar theme', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/test.component.scss`,
-            `$my-cal: calendar-theme(
+        appTree.create(`/testSrc/appPrefix/component/test.component.scss`, `$my-cal: calendar-theme(
                 $month-hover-foreground: wheat,
                 $year-hover-foreground: red,
                 $month-hover-background: black,
@@ -57,13 +56,11 @@ describe(`Update to ${version}`, () => {
                 $selected-current-outline-hover-color: wheat,
                 $selected-current-outline-focus-color: wheat,
                 $month-year-border-radius: 2px
-            );`
-        );
+            );`);
 
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
-            `$my-cal: calendar-theme(
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(`$my-cal: calendar-theme(
                 $ym-hover-foreground: wheat,
                 $ym-hover-background: black,
                 $ym-current-foreground: wheat,
@@ -88,14 +85,11 @@ describe(`Update to ${version}`, () => {
                 $ym-selected-current-outline-hover-color: wheat,
                 $ym-selected-current-outline-focus-color: wheat,
                 $ym-border-radius: 2px
-            );`
-        );
+            );`);
     });
 
     it('Should replace deprecated `children` property of Columns', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/column-test.component.ts',
-            `import { Component } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/column-test.component.ts', `import { Component } from '@angular/core';
 import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular';
 
 @Component({
@@ -110,10 +104,9 @@ export class ColumnsTestComponent {
     public toggleColumnGroup2(columnGroup: ColumnType) {
         const columns = columnGroup.children.toArray();
     }
-}`
-        );
+}`);
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        const expectedContent =  `import { Component } from '@angular/core';
+        const expectedContent = `import { Component } from '@angular/core';
 import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular';
 
 @Component({
@@ -129,16 +122,12 @@ export class ColumnsTestComponent {
         const columns = columnGroup.childColumns;
     }
 }`;
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/column-test.component.ts')
-        ).toEqual(expectedContent);
+        expect(tree.readContent('/testSrc/appPrefix/component/column-test.component.ts')).toEqual(expectedContent);
     });
 
 
     it('Should replace deprecated `isFirstPageDisabled`/`isLastPageDisabled` on paginator', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/paginator-test.component.ts',
-            `import { Component } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/paginator-test.component.ts', `import { Component } from '@angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular';
 
 @Component({
@@ -151,10 +140,9 @@ export class PaginatorTestComponent {
     public testMethod() {
         return this.paginator.isFirstPageDisabled || this.paginator.isLastPageDisabled;
     }
-}`
-        );
+}`);
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        const expectedContent =  `import { Component } from '@angular/core';
+        const expectedContent = `import { Component } from '@angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular';
 
 @Component({
@@ -168,8 +156,6 @@ export class PaginatorTestComponent {
         return this.paginator.isFirstPage || this.paginator.isLastPage;
     }
 }`;
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/paginator-test.component.ts')
-        ).toEqual(expectedContent);
+        expect(tree.readContent('/testSrc/appPrefix/component/paginator-test.component.ts')).toEqual(expectedContent);
     });
 });

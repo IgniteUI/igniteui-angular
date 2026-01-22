@@ -9,6 +9,7 @@ import { PositionSettings, HorizontalAlignment, VerticalAlignment } from 'ignite
 import { IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--flex`;
@@ -263,11 +264,11 @@ describe('Dialog', () => {
             cancel: false
         };
 
-        spyOn(dialog.opening, 'emit');
-        spyOn(dialog.opened, 'emit');
-        spyOn(dialog.isOpenChange, 'emit');
-        spyOn(dialog.closing, 'emit');
-        spyOn(dialog.closed, 'emit');
+        vi.spyOn(dialog.opening, 'emit');
+        vi.spyOn(dialog.opened, 'emit');
+        vi.spyOn(dialog.isOpenChange, 'emit');
+        vi.spyOn(dialog.closing, 'emit');
+        vi.spyOn(dialog.closed, 'emit');
 
         dialog.open();
         tick();
@@ -293,11 +294,11 @@ describe('Dialog', () => {
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
-        spyOn(dialog.leftButtonSelect, 'emit');
+        vi.spyOn(dialog.leftButtonSelect, 'emit');
         dispatchEvent(leftButton, 'click');
         expect(dialog.leftButtonSelect.emit).toHaveBeenCalled();
 
-        spyOn(dialog.rightButtonSelect, 'emit');
+        vi.spyOn(dialog.rightButtonSelect, 'emit');
         dispatchEvent(rightButton, 'click');
         tick();
         expect(dialog.rightButtonSelect.emit).toHaveBeenCalled();
@@ -357,10 +358,10 @@ describe('Dialog', () => {
 
     it('Should initialize igx-dialog custom title and actions', () => {
         const data = [{
-            component: CustomTemplates1DialogComponent
-        }, {
-            component: CustomTemplates2DialogComponent
-        }];
+                component: CustomTemplates1DialogComponent
+            }, {
+                component: CustomTemplates2DialogComponent
+            }];
 
         data.forEach((item) => {
             const fixture = TestBed.createComponent(item.component);
@@ -457,9 +458,9 @@ describe('Dialog', () => {
             expect(dialog.isOpen).toEqual(true);
             const firstContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
             const middleDialogPosition = document.documentElement.offsetHeight / 2 - firstContentRect.height / 2;
-            expect(firstContentRect.left).toEqual(0, 'OffsetLeft position check');
-            expect(firstContentRect.top).toBeGreaterThanOrEqual(middleDialogPosition - 2, 'OffsetTop position check');
-            expect(firstContentRect.top).toBeLessThanOrEqual(middleDialogPosition + 2, 'OffsetTop position check');
+            expect(firstContentRect.left, 'OffsetLeft position check').toEqual(0);
+            expect(firstContentRect.top, 'OffsetTop position check').toBeGreaterThanOrEqual(middleDialogPosition - 2);
+            expect(firstContentRect.top, 'OffsetTop position check').toBeLessThanOrEqual(middleDialogPosition + 2);
 
             dialog.close();
             tick(16);
@@ -477,9 +478,9 @@ describe('Dialog', () => {
             expect(dialog.isOpen).toEqual(true);
             const secondContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
             const topDialogPosition = document.documentElement.offsetWidth / 2 - secondContentRect.width / 2;
-            expect(secondContentRect.top).toEqual(0, 'OffsetTop position check');
-            expect(secondContentRect.left).toBeGreaterThanOrEqual(topDialogPosition - 2, 'OffsetLeft position check');
-            expect(secondContentRect.left).toBeLessThanOrEqual(topDialogPosition + 2, 'OffsetLeft position check');
+            expect(secondContentRect.top, 'OffsetTop position check').toEqual(0);
+            expect(secondContentRect.left, 'OffsetLeft position check').toBeGreaterThanOrEqual(topDialogPosition - 2);
+            expect(secondContentRect.left, 'OffsetLeft position check').toBeLessThanOrEqual(topDialogPosition + 2);
 
             dialog.close();
             tick(16);
@@ -492,18 +493,18 @@ describe('Dialog', () => {
             const currentElement = fix.componentInstance;
 
             // Check initial animation settings
-            expect(dialog.positionSettings.openAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+            expect(dialog.positionSettings.openAnimation.animation.type, 'Animation type is set').toEqual(8);
+            expect(dialog.positionSettings.openAnimation.options.params.duration, 'Animation duration is set to 200ms').toEqual('200ms');
 
-            expect(dialog.positionSettings.closeAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+            expect(dialog.positionSettings.closeAnimation.animation.type, 'Animation type is set').toEqual(8);
+            expect(dialog.positionSettings.closeAnimation.options.params.duration, 'Animation duration is set to 200ms').toEqual('200ms');
 
             dialog.positionSettings = currentElement.animationSettings;
             fix.detectChanges();
 
             // Check the new animation settings
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('800ms', 'Animation duration is set to 800ms');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('700ms', 'Animation duration is set to 700ms');
+            expect(dialog.positionSettings.openAnimation.options.params.duration, 'Animation duration is set to 800ms').toEqual('800ms');
+            expect(dialog.positionSettings.closeAnimation.options.params.duration, 'Animation duration is set to 700ms').toEqual('700ms');
         });
     });
 
@@ -527,7 +528,8 @@ describe('Dialog', () => {
     imports: [IgxDialogComponent]
 })
 class AlertComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
     public isModal = false;
 }
 
@@ -546,7 +548,8 @@ class AlertComponent {
     imports: [IgxDialogComponent]
 })
 class DialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 
 @Component({
@@ -565,7 +568,8 @@ class DialogComponent {
     imports: [IgxDialogComponent]
 })
 class DialogTwoWayDataBindingComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
     public myDialog = false;
 }
 
@@ -587,7 +591,8 @@ class DialogTwoWayDataBindingComponent {
     imports: [IgxDialogComponent]
 })
 class DialogSampleComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 @Component({
     template: `
@@ -601,7 +606,8 @@ class DialogSampleComponent {
     imports: [IgxDialogComponent]
 })
 class CustomDialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 
 @Component({
@@ -622,8 +628,10 @@ class CustomDialogComponent {
     imports: [IgxDialogComponent]
 })
 class NestedDialogsComponent {
-    @ViewChild('child', { static: true }) public child: IgxDialogComponent;
-    @ViewChild('main', { static: true }) public main: IgxDialogComponent;
+    @ViewChild('child', { static: true })
+    public child: IgxDialogComponent;
+    @ViewChild('main', { static: true })
+    public main: IgxDialogComponent;
 }
 
 @Component({
@@ -639,7 +647,8 @@ class NestedDialogsComponent {
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates1DialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 
 @Component({
@@ -651,7 +660,8 @@ class CustomTemplates1DialogComponent {
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates2DialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 }
 
 
@@ -663,7 +673,8 @@ class CustomTemplates2DialogComponent {
     imports: [IgxDialogComponent]
 })
 class PositionSettingsDialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true })
+    public dialog: IgxDialogComponent;
 
     public positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
@@ -683,5 +694,4 @@ class PositionSettingsDialogComponent {
         openAnimation: useAnimation(slideInTop, { params: { duration: '800ms' } }),
         closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms' } })
     };
-
 }

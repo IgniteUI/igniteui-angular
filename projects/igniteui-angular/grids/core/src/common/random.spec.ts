@@ -1,4 +1,5 @@
 import { getUUID } from './random';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 describe('Random (crypto.randomUuid()) fallback unit tests', () => {
     const originalRandomUuid = crypto.randomUUID;

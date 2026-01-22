@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { IgxSwitchComponent } from './switch.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxSwitch', () => {
 
@@ -308,7 +309,8 @@ describe('IgxSwitch', () => {
     imports: [IgxSwitchComponent]
 })
 class InitSwitchComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
 }
 
 @Component({
@@ -317,7 +319,8 @@ class InitSwitchComponent {
     imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchSimpleComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
     public changeEventCalled = false;
     public subscribed = false;
     public clickCounter = 0;
@@ -334,7 +337,8 @@ class SwitchSimpleComponent {
     imports: [IgxSwitchComponent]
 })
 class SwitchRequiredComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
 }
 
 @Component({
@@ -343,7 +347,8 @@ class SwitchRequiredComponent {
     imports: [IgxSwitchComponent]
 })
 class SwitchExternalLabelComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
     public label = 'My Label';
 }
 
@@ -352,7 +357,8 @@ class SwitchExternalLabelComponent {
     imports: [IgxSwitchComponent]
 })
 class SwitchInvisibleLabelComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
     public label = 'Invisible Label';
 }
 
@@ -363,7 +369,8 @@ class SwitchInvisibleLabelComponent {
 class SwitchFormGroupComponent {
     private fb = inject(UntypedFormBuilder);
 
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
 
     public myForm = this.fb.group({ switch: ['', Validators.required] });
 }

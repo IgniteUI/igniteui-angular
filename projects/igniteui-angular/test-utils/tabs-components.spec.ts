@@ -42,8 +42,10 @@ import { IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-g
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent]
 })
 export class BasicTabsComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
-    @ViewChildren(IgxTabItemComponent) public tabItems: QueryList<IgxTabItemComponent>;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
+    @ViewChildren(IgxTabItemComponent)
+    public tabItems: QueryList<IgxTabItemComponent>;
 }
 
 @Component({
@@ -89,8 +91,10 @@ export class BasicTabsComponent {
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxIconComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective]
 })
 export class TabsTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
-    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv', { static: true })
+    public wrapperDiv: any;
 }
 
 @Component({
@@ -109,8 +113,10 @@ export class TabsTestComponent {
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTest2Component {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
-    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv', { static: true })
+    public wrapperDiv: any;
     protected collection: any[];
 
     constructor() {
@@ -192,8 +198,10 @@ export class TabsTest2Component {
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TemplatedTabsTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
-    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv', { static: true })
+    public wrapperDiv: any;
 }
 
 @Component({
@@ -211,7 +219,8 @@ export class TemplatedTabsTestComponent {
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestSelectedTabComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
     protected collection: any[];
 
     constructor() {
@@ -266,7 +275,8 @@ export class TabsTestCustomStylesComponent {
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, IgxDropDownComponent, IgxToggleActionDirective, IgxButtonDirective]
 })
 export class TabsTestBug4420Component {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
 }
 
 @Component({
@@ -406,7 +416,8 @@ export class TabsTabsOnlyModeTest1Component {
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsDisabledTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
 }
 
 @Component({
@@ -447,7 +458,8 @@ export class TabsDisabledTestComponent {
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestHtmlAttributesComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
 }
 
 @Component({
@@ -538,7 +550,8 @@ export class TabsContactsComponent extends TabsTestComponent {
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class AddingSelectedTabComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
     protected collection: any[];
     constructor() {
         this.collection = [
@@ -569,8 +582,10 @@ export class AddingSelectedTabComponent {
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsRtlComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
-    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv', { static: true })
+    public wrapperDiv: any;
     protected collection = [
         { name: 'tab1', selected: true },
         { name: 'tab2', selected: false },

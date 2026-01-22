@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const version = '20.0.0';
 
@@ -18,20 +19,15 @@ describe(`Update to ${version}`, () => {
     it('should remove the $focus-background-color property from the grid summary theme', async () => {
         const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
 
-        appTree.create(
-            testFilePath,
-            `$my-grid-theme: grid-summary-theme(
+        appTree.create(testFilePath, `$my-grid-theme: grid-summary-theme(
                 $label-color: white,
                 $focus-background-color: orange,
-            );`
-        );
+            );`);
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.readContent(testFilePath)).toEqual(
-            `$my-grid-theme: grid-summary-theme(
+        expect(tree.readContent(testFilePath)).toEqual(`$my-grid-theme: grid-summary-theme(
                 $label-color: white,
-            );`
-        );
+            );`);
     });
 });

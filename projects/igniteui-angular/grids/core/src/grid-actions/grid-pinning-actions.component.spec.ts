@@ -8,6 +8,7 @@ import { IgxColumnComponent } from '../public_api';
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 
 describe('igxGridPinningActions #grid ', () => {

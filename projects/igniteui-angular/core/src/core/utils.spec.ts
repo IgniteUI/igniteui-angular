@@ -1,5 +1,6 @@
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
 import { cloneValue, isObject, isDate } from './utils';
+import { describe, it, expect } from 'vitest';
 
 describe('Utils', () => {
     const complexObject = {
@@ -108,8 +109,18 @@ describe('Utils', () => {
         });
 
         it('Should create shallow copy of array', () => {
-            const input: { Number: any; String: any; Boolean: any; Date: any }[] = SampleTestData.differentTypesData();
-            const clone: { Number: any; String: any; Boolean: any; Date: any }[] = cloneValue(input);
+            const input: {
+                Number: any;
+                String: any;
+                Boolean: any;
+                Date: any;
+            }[] = SampleTestData.differentTypesData();
+            const clone: {
+                Number: any;
+                String: any;
+                Boolean: any;
+                Date: any;
+            }[] = cloneValue(input);
             expect(clone).not.toBe(input);
             expect(clone.length).toBe(input.length);
             expect(clone).toEqual(input);

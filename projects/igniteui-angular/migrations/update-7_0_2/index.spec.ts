@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Update 7.0.2', () => {
     let appTree: UnitTestTree;
@@ -12,9 +13,7 @@ describe('Update 7.0.2', () => {
     });
 
     it('should remove .forRoot() from imports', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/module/test.module.ts',
-            `@NgModule({
+        appTree.create('/testSrc/appPrefix/module/test.module.ts', `@NgModule({
                 declarations: components,
                 imports: [
                     IgxIconModule.forRoot(),
@@ -31,8 +30,7 @@ describe('Update 7.0.2', () => {
 
         const tree = await schematicRunner.runSchematic('migration-07', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/module/test.module.ts'))
-            .toEqual(
-            `@NgModule({
+            .toEqual(`@NgModule({
                 declarations: components,
                 imports: [
                     IgxIconModule,

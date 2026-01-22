@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const version = '19.1.4';
 const themes = [
@@ -22,23 +23,18 @@ describe(`Update to ${version}`, () => {
     it('should remove the summaries related properties from the grid theme', async () => {
         const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
 
-        appTree.create(
-            testFilePath,
-            `$my-grid-theme: grid-theme(
+        appTree.create(testFilePath, `$my-grid-theme: grid-theme(
                 $header-background: orange,
                 $root-summaries-background: orange,
                 $root-summaries-text-color: black,
                 $body-summaries-background: orange,
                 $body-summaries-text-color: black,
-            );`
-        );
+            );`);
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.readContent(testFilePath)).toEqual(
-            `$my-grid-theme: grid-theme(
+        expect(tree.readContent(testFilePath)).toEqual(`$my-grid-theme: grid-theme(
                 $header-background: orange,
-            );`
-        );
+            );`);
     });
 });

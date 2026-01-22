@@ -6,6 +6,7 @@ import { IconFamily } from './types';
 import type { IconType } from './types';
 
 import { By } from "@angular/platform-browser";
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe("Icon", () => {
 
@@ -22,9 +23,7 @@ describe("Icon", () => {
 
             fixture = TestBed.createComponent(IconTestComponent);
 
-            const debugElement = fixture.debugElement.query(
-                By.directive(IgxIconComponent),
-            );
+            const debugElement = fixture.debugElement.query(By.directive(IgxIconComponent));
 
             instance = debugElement.componentInstance;
             el = debugElement.nativeElement;
@@ -148,9 +147,7 @@ describe("Icon", () => {
             iconService.defaultFamily = fa;
 
             const fixture = TestBed.createComponent(IconTestComponent);
-            const debugElement = fixture.debugElement.query(
-                By.directive(IgxIconComponent),
-            );
+            const debugElement = fixture.debugElement.query(By.directive(IgxIconComponent));
 
             const instance = debugElement.componentInstance;
             const el = debugElement.nativeElement;
@@ -178,9 +175,7 @@ describe("Icon", () => {
             });
 
             const fixture = TestBed.createComponent(MetaIconComponent);
-            const debugElement = fixture.debugElement.query(
-                By.directive(IgxIconComponent),
-            );
+            const debugElement = fixture.debugElement.query(By.directive(IgxIconComponent));
 
             const instance = debugElement.componentInstance;
             const el = debugElement.nativeElement;
@@ -233,7 +228,8 @@ function assertRenderedIcon(el: HTMLElement, icon: ProtoIgxIcon) {
     template: `<igx-icon class="my-class" name="home"></igx-icon>`,
     imports: [IgxIconComponent]
 })
-class IconTestComponent {}
+class IconTestComponent {
+}
 
 @Component({
     template: `<igx-icon
@@ -243,4 +239,5 @@ class IconTestComponent {}
     ></igx-icon>`,
     imports: [IgxIconComponent]
 })
-class MetaIconComponent {}
+class MetaIconComponent {
+}

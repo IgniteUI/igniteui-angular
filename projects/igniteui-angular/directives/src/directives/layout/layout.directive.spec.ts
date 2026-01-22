@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFlexDirective, IgxLayoutDirective } from './layout.directive';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxLayoutDirective', () => {
     beforeEach(waitForAsync(() => {
@@ -142,6 +143,8 @@ describe('IgxLayoutDirective', () => {
     imports: [IgxLayoutDirective, IgxFlexDirective]
 })
 class TestFlexLayoutComponent {
-    @ViewChild(IgxLayoutDirective, { static: true }) public instance: IgxLayoutDirective;
-    @ViewChild(IgxFlexDirective, { static: true }) public inner: IgxFlexDirective;
+    @ViewChild(IgxLayoutDirective, { static: true })
+    public instance: IgxLayoutDirective;
+    @ViewChild(IgxFlexDirective, { static: true })
+    public inner: IgxFlexDirective;
 }

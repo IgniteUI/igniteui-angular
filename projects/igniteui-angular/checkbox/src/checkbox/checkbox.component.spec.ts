@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from './checkbox.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxCheckbox', () => {
     beforeEach(waitForAsync(() => {
@@ -417,7 +418,8 @@ describe('IgxCheckbox', () => {
     imports: [IgxCheckboxComponent]
 })
 class InitCheckboxComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true })
+    public cb: IgxCheckboxComponent;
 }
 
 @Component({
@@ -426,7 +428,8 @@ class InitCheckboxComponent {
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxSimpleComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true })
+    public cb: IgxCheckboxComponent;
     public changeEventCalled = false;
     public subscribed = false;
     public clickCounter = 0;
@@ -445,7 +448,8 @@ class CheckboxSimpleComponent {
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxIndeterminateComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true })
+    public cb: IgxCheckboxComponent;
 
     public subscribed = false;
 }
@@ -455,7 +459,8 @@ class CheckboxIndeterminateComponent {
     imports: [IgxCheckboxComponent]
 })
 class CheckboxRequiredComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true })
+    public cb: IgxCheckboxComponent;
 }
 
 @Component({
@@ -467,7 +472,8 @@ class CheckboxRequiredComponent {
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxReadonlyComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true })
+    public cb: IgxCheckboxComponent;
 
     public subscribed = false;
 }
@@ -478,7 +484,8 @@ class CheckboxReadonlyComponent {
     imports: [IgxCheckboxComponent]
 })
 class CheckboxExternalLabelComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true })
+    public cb: IgxCheckboxComponent;
     public label = 'My Label';
 }
 
@@ -487,7 +494,8 @@ class CheckboxExternalLabelComponent {
     imports: [IgxCheckboxComponent]
 })
 class CheckboxInvisibleLabelComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true })
+    public cb: IgxCheckboxComponent;
     public label = 'Invisible Label';
 }
 
@@ -496,7 +504,8 @@ class CheckboxInvisibleLabelComponent {
     imports: [IgxCheckboxComponent]
 })
 class CheckboxDisabledTransitionsComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true })
+    public cb: IgxCheckboxComponent;
 }
 
 @Component({
@@ -506,7 +515,8 @@ class CheckboxDisabledTransitionsComponent {
 class CheckboxFormGroupComponent {
     private fb = inject(UntypedFormBuilder);
 
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true })
+    public cb: IgxCheckboxComponent;
 
     public myForm = this.fb.group({ checkbox: ['', Validators.required] });
 }

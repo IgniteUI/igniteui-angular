@@ -6,6 +6,7 @@ import { IgxCalendarComponent } from '../../../../calendar/src/public_api';
 import { IgxButtonDirective } from '../../../../directives/src/directives/button/button.directive';
 import { IgxPickerActionsDirective } from '../../../../core/src/date-common/picker-icons.common';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 
 describe('Calendar Container', () => {
@@ -31,12 +32,12 @@ describe('Calendar Container', () => {
     });
 
     it('should render default actions', () => {
-        spyOn(container.calendarClose, 'emit');
-        spyOn(container.todaySelection, 'emit');
+        vi.spyOn(container.calendarClose, 'emit');
+        vi.spyOn(container.todaySelection, 'emit');
         container.closeButtonLabel = 'cancel';
         fixture.detectChanges();
         let buttons = fixture.debugElement.queryAll(By.directive(IgxButtonDirective));
-        expect(buttons).toHaveSize(1);
+        expect(buttons).toHaveLength(1);
         expect(buttons[0].nativeElement.innerText).toEqual('cancel');
         buttons[0].triggerEventHandler('click', {});
         expect(container.calendarClose.emit).toHaveBeenCalledTimes(1);
@@ -44,20 +45,20 @@ describe('Calendar Container', () => {
         container.todayButtonLabel = 'ok';
         fixture.detectChanges();
         buttons = fixture.debugElement.queryAll(By.directive(IgxButtonDirective));
-        expect(buttons).toHaveSize(2);
+        expect(buttons).toHaveLength(2);
         expect(buttons[1].nativeElement.innerText).toEqual('ok');
         buttons[1].triggerEventHandler('click', {});
         expect(container.todaySelection.emit).toHaveBeenCalledTimes(1);
     });
 
     it('should render default toggle and clear icons', () => {
-        spyOn(fixture.componentInstance, 'doWork');
+        vi.spyOn(fixture.componentInstance, 'doWork');
         container.pickerActions = fixture.componentInstance.actions;
         fixture.detectChanges();
 
         const calendar = fixture.debugElement.query(By.directive(IgxCalendarComponent)).componentInstance;
         const buttons = fixture.debugElement.queryAll(By.directive(IgxButtonDirective));
-        expect(buttons).toHaveSize(1);
+        expect(buttons).toHaveLength(1);
         expect(buttons[0].nativeElement.innerText).toEqual('action');
         buttons[0].triggerEventHandler('click', {});
         expect(fixture.componentInstance.doWork).toHaveBeenCalledWith(calendar);
@@ -75,7 +76,9 @@ describe('Calendar Container', () => {
     imports: [IgxCalendarContainerComponent, IgxPickerActionsDirective, IgxButtonDirective]
 })
 export class IgxDatePickerTestComponent {
-    @ViewChild(IgxCalendarContainerComponent) public container: IgxCalendarContainerComponent;
-    @ViewChild(IgxPickerActionsDirective) public actions: IgxPickerActionsDirective;
-    public doWork = (_calendar: any) => {};
+    @ViewChild(IgxCalendarContainerComponent)
+    public container: IgxCalendarContainerComponent;
+    @ViewChild(IgxPickerActionsDirective)
+    public actions: IgxPickerActionsDirective;
+    public doWork = (_calendar: any) => { };
 }

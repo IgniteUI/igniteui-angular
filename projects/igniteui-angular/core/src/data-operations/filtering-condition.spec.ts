@@ -1,8 +1,5 @@
-import { IgxStringFilteringOperand,
-    IgxNumberFilteringOperand,
-    IgxDateFilteringOperand,
-    IgxBooleanFilteringOperand,
-    IgxFilteringOperand} from './filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand, IgxFilteringOperand } from './filtering-condition';
+import { describe, it, expect } from 'vitest';
 
 describe('Unit testing FilteringCondition', () => {
     it('tests string conditions', () => {
@@ -61,14 +58,14 @@ describe('Unit testing FilteringCondition', () => {
         expect(!fn.condition('greaterThan').logic(1, 2) && fn.condition('greaterThan').logic(2, 1))
             .toBeTruthy('greaterThan');
         expect(!fn.condition('greaterThanOrEqualTo').logic(1, 2) && !fn.condition('greaterThanOrEqualTo').logic(1, 2) &&
-                fn.condition('greaterThanOrEqualTo').logic(1, 1))
+            fn.condition('greaterThanOrEqualTo').logic(1, 1))
             .toBeTruthy('greaterThanOrEqualTo');
         expect(fn.condition('lessThan').logic(1, 2) && !fn.condition('lessThan').logic(2, 2) &&
-                !fn.condition('lessThan').logic(3, 2))
+            !fn.condition('lessThan').logic(3, 2))
             .toBeTruthy('lessThan');
         expect(fn.condition('lessThanOrEqualTo').logic(1, 2) &&
-                fn.condition('lessThanOrEqualTo').logic(1, 1) &&
-                !fn.condition('lessThanOrEqualTo').logic(3, 2))
+            fn.condition('lessThanOrEqualTo').logic(1, 1) &&
+            !fn.condition('lessThanOrEqualTo').logic(3, 2))
             .toBeTruthy('lessThanOrEqualTo');
         expect(fn.condition('notEmpty').logic(1))
             .toBeTruthy('notEmpty');
@@ -85,11 +82,13 @@ describe('Unit testing FilteringCondition', () => {
         const cnow = new Date();
         const yesterday = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
         const lastMonth = ((d) => {
- d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1));
-})(new Date());
+            d.setDate(1);
+            return new Date(d.setMonth(d.getMonth() - 1));
+        })(new Date());
         const nextMonth = ((d) => {
- d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1));
-})(new Date());
+            d.setDate(1);
+            return new Date(d.setMonth(d.getMonth() + 1));
+        })(new Date());
         const lastYear = ((d) => new Date(d.setFullYear(d.getFullYear() - 1)))(new Date());
         const nextYear = ((d) => new Date(d.setFullYear(d.getFullYear() + 1)))(new Date());
 

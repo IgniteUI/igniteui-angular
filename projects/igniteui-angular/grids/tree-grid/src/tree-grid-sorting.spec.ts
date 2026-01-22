@@ -5,6 +5,7 @@ import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec'
 import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { describe, it, test, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxTreeGrid - Sorting #tGrid', () => {
     let fix;
@@ -111,8 +112,10 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
         });
 
-        it('should sort treeGrid by multiple expressions through API', () => {
-            pending('figure out how was this passing before');
+        it.skip('should sort treeGrid by multiple expressions through API', () => {
+            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
+            // pending('figure out how was this passing before');
+            ;
             // Test prerequisites (need to have multiple records with the same name on every level)
             treeGrid.data[0].Name = 'Ana Sanders';
             treeGrid.data[0].Employees[1].Name = 'Michael Langdon';
@@ -199,7 +202,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
 
     describe('UI sorting', () => {
         it('should sort descending all treeGrid levels by column name through UI', () => {
-            const header =  TreeGridFunctions.getHeaderCell(fix, 'Name');
+            const header = TreeGridFunctions.getHeaderCell(fix, 'Name');
             GridFunctions.clickHeaderSortIcon(header);
             GridFunctions.clickHeaderSortIcon(header);
             fix.detectChanges();
@@ -222,7 +225,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
         });
 
         it('should sort ascending all treeGrid levels by column name through UI', () => {
-            const header =  TreeGridFunctions.getHeaderCell(fix, 'Age');
+            const header = TreeGridFunctions.getHeaderCell(fix, 'Age');
             GridFunctions.clickHeaderSortIcon(header);
             fix.detectChanges();
 
@@ -250,7 +253,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
 
             // Click header once
-            const header =  TreeGridFunctions.getHeaderCell(fix, 'Age');
+            const header = TreeGridFunctions.getHeaderCell(fix, 'Age');
             GridFunctions.clickHeaderSortIcon(header);
             fix.detectChanges();
 
@@ -279,8 +282,8 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             fix.detectChanges();
 
             // Sort by 'Name' in asc order and by 'Age' in desc order
-            const headerName =  TreeGridFunctions.getHeaderCell(fix, 'Name');
-            const headerAge =  TreeGridFunctions.getHeaderCell(fix, 'Age');
+            const headerName = TreeGridFunctions.getHeaderCell(fix, 'Name');
+            const headerAge = TreeGridFunctions.getHeaderCell(fix, 'Age');
             GridFunctions.clickHeaderSortIcon(headerName);
             fix.detectChanges();
             GridFunctions.clickHeaderSortIcon(headerAge);
@@ -329,8 +332,8 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             fix.detectChanges();
 
             // Sort by 'Name' in asc order and by 'Age' in desc order
-            const headerName =  TreeGridFunctions.getHeaderCell(fix, 'Name');
-            const headerAge =  TreeGridFunctions.getHeaderCell(fix, 'Age');
+            const headerName = TreeGridFunctions.getHeaderCell(fix, 'Name');
+            const headerAge = TreeGridFunctions.getHeaderCell(fix, 'Age');
             GridFunctions.clickHeaderSortIcon(headerName);
             fix.detectChanges();
             GridFunctions.clickHeaderSortIcon(headerAge);

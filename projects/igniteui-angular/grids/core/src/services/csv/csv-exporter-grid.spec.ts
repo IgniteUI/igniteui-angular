@@ -5,12 +5,7 @@ import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
-import { ReorderedColumnsComponent,
-        GridIDNameJobTitleComponent,
-        ProductsComponent,
-        ColumnsAddedOnInitComponent,
-        EmptyGridComponent,
-        GridCustomSummaryComponent } from '../../../../../test-utils/grid-samples.spec';
+import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent, ColumnsAddedOnInitComponent, EmptyGridComponent, GridCustomSummaryComponent } from '../../../../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,6 +18,7 @@ import { IgxGridNavigationService, IgxPivotNumericAggregate } from 'igniteui-ang
 import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { OneGroupThreeColsGridComponent } from '../../../../../test-utils/grid-mch-sample.spec';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -49,7 +45,7 @@ describe('CSV Grid Exporter', () => {
         options = new IgxCsvExporterOptions('CsvGridExport', CsvFileTypes.CSV);
 
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities as any, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities as any, 'saveBlobToFile');
     });
 
     afterEach(() => {
@@ -96,7 +92,7 @@ describe('CSV Grid Exporter', () => {
 
         grid.filter('JobTitle', 'Director', IgxStringFilteringOperand.instance().condition('equals'), true);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(2, 'Invalid number of rows after filtering!');
+        expect(grid.rowList.length, 'Invalid number of rows after filtering!').toEqual(2);
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridTwoDirectors, 'Two rows should have been exported!');
     });
@@ -110,7 +106,7 @@ describe('CSV Grid Exporter', () => {
         options.ignoreColumnsVisibility = false;
 
         fix.detectChanges();
-        expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(2);
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridNameJobTitle, 'Two columns data should have been exported!');
 
@@ -128,25 +124,25 @@ describe('CSV Grid Exporter', () => {
         options.ignoreColumnsOrder = true;
         fix.detectChanges();
 
-        expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
 
         grid.columnList.get(0).hidden = true;
         fix.detectChanges();
-        expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(2);
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridNameJobTitle, 'Two columns data should have been exported!');
 
         grid.columnList.get(0).hidden = false;
         fix.detectChanges();
-        expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
 
         grid.columnList.get(0).hidden = undefined;
         fix.detectChanges();
-        expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
     });
@@ -164,7 +160,7 @@ describe('CSV Grid Exporter', () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
+        grid.sort({ fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true });
         fix.detectChanges();
 
         const wrapper = await getExportedData(grid, options);
@@ -176,18 +172,18 @@ describe('CSV Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
+        grid.sort({ fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true });
         fix.detectChanges();
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.sortedSimpleGridData);
 
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
+        grid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true });
         fix.detectChanges();
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.sortedDescSimpleGridData);
 
         grid.clearSort();
-        grid.sort({fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true});
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true });
         fix.detectChanges();
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData);
@@ -414,7 +410,7 @@ describe('CSV Grid Exporter', () => {
         const wrapper = await getExportedData(grid, options);
         const exportedData = wrapper['_data'];
 
-        expect(exportedData.includes('[object Object]')).toBe(false, 'CSV export should not contain [object Object]');
+        expect(exportedData.includes('[object Object]'), 'CSV export should not contain [object Object]').toBe(false);
 
         const lines = exportedData.split('\r\n');
 
@@ -422,11 +418,9 @@ describe('CSV Grid Exporter', () => {
         const summaryLines = lines.slice(-4);
 
         // Verify at least one summary line contains proper formatting (label: value pattern)
-        const hasProperlySummary = summaryLines.some(line =>
-            line.includes(':') && !line.includes('[object Object]')
-        );
+        const hasProperlySummary = summaryLines.some(line => line.includes(':') && !line.includes('[object Object]'));
 
-        expect(hasProperlySummary).toBe(true, 'Summary data should be formatted as "label: value"');
+        expect(hasProperlySummary, 'Summary data should be formatted as "label: value"').toBe(true);
     });
 
     describe('Tree Grid CSV export', () => {
@@ -444,7 +438,7 @@ describe('CSV Grid Exporter', () => {
         });
 
         it('should export sorted tree grid properly.', async () => {
-            treeGrid.sort({fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             options.ignoreSorting = true;
             fix.detectChanges();
 
@@ -486,7 +480,7 @@ describe('CSV Grid Exporter', () => {
         it('should export filtered and sorted tree grid properly.', async () => {
             treeGrid.filter('ID', 3, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
-            treeGrid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            treeGrid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             const wrapper = await getExportedData(treeGrid, options);
@@ -511,8 +505,7 @@ describe('CSV Grid Exporter', () => {
 
         it('should skip the column formatter when columnExportinging skipFormatter is true.', async () => {
             treeGrid.columnList.get(3).formatter = ((val: string) => val.toLowerCase());
-            treeGrid.columnList.get(4).formatter = ((val: number) =>
-                 val * 12 // months
+            treeGrid.columnList.get(4).formatter = ((val: number) => val * 12 // months
             );
             treeGrid.cdr.detectChanges();
             let wrapper = await getExportedData(treeGrid, options);

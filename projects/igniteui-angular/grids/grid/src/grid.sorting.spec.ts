@@ -8,6 +8,7 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, FormattedValuesSortingStrategy, NoopSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { By } from '@angular/platform-browser';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 
@@ -36,8 +37,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     describe('API tests', () => {
 
         it('Should sort grid ascending by column name', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit').and.callThrough();
-            spyOn(grid.sortingDone, 'emit').and.callThrough();
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
             const currentColumn = 'Name';
             const lastNameColumn = 'LastName';
             const nameHeaderCell = GridFunctions.getColumnHeader(currentColumn, fixture);
@@ -225,9 +226,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         it('Should sort grid by current column by expression (Ascending)', () => {
             const currentColumn = 'ID';
             grid.sortingExpressions = [{
-                fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }];
+                    fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }];
 
             fixture.detectChanges();
 
@@ -238,9 +239,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const currentColumn = 'Name';
 
             grid.sortingExpressions = [{
-                fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }];
+                    fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }];
 
             fixture.detectChanges();
 
@@ -358,11 +359,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         it(`Should allow sorting using a custom Sorting Strategy.`, () => {
             fixture = TestBed.createComponent(SortByParityComponent);
             grid = fixture.componentInstance.grid;
-            fixture.componentInstance.data.push(
-                { ID: 8, Name: 'Brad', LastName: 'Walker', Region: 'DD' },
-                { ID: 9, Name: 'Mary', LastName: 'Smith', Region: 'OC' },
-                { ID: 10, Name: 'Brad', LastName: 'Smith', Region: 'BD' },
-            );
+            fixture.componentInstance.data.push({ ID: 8, Name: 'Brad', LastName: 'Walker', Region: 'DD' }, { ID: 9, Name: 'Mary', LastName: 'Smith', Region: 'OC' }, { ID: 10, Name: 'Brad', LastName: 'Smith', Region: 'BD' });
             fixture.detectChanges();
             grid.sort({
                 fieldName: 'ID',
@@ -390,7 +387,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             column.groupingComparer = (a: any, b: any, currRec: any, groupRec: any) => {
                 return currRec.Name === groupRec.Name ? 0 : -1;
-            }
+            };
 
             fixture.detectChanges();
             grid.sortingExpressions = [
@@ -466,8 +463,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     describe('UI tests', () => {
 
         it('Should sort grid ascending by clicking once on first header cell UI', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit');
-            spyOn(grid.sortingDone, 'emit');
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
@@ -496,8 +493,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         }));
 
         it('Should sort grid descending by clicking twice on sort icon UI', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit').and.callThrough();
-            spyOn(grid.sortingDone, 'emit').and.callThrough();
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
 
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
@@ -538,8 +535,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         }));
 
         it('Should sort grid none when we click three time on header sort icon UI', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit');
-            spyOn(grid.sortingDone, 'emit');
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
@@ -588,7 +585,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, false);
         });
 
-        it('Should sort grid on sorting icon click when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
+        it('Should sort grid on sorting icon click when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */ () => {
             grid.allowFiltering = true;
             fixture.detectChanges();
 
@@ -617,8 +614,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         }));
 
         it('Should disable sorting feature when using NoopSortingStrategy.', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit');
-            spyOn(grid.sortingDone, 'emit');
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
             grid.sortStrategy = NoopSortingStrategy.instance();
             fixture.detectChanges();
 

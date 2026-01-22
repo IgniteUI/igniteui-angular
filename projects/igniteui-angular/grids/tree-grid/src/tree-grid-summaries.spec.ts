@@ -1,13 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxTreeGridSummariesComponent,
-    IgxTreeGridSummariesKeyComponent,
-    IgxTreeGridCustomSummariesComponent,
-    IgxTreeGridSummariesTransactionsComponent,
-    IgxTreeGridSummariesScrollingComponent,
-    IgxTreeGridSummariesKeyScroliingComponent
-} from '../../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridSummariesComponent, IgxTreeGridSummariesKeyComponent, IgxTreeGridCustomSummariesComponent, IgxTreeGridSummariesTransactionsComponent, IgxTreeGridSummariesScrollingComponent, IgxTreeGridSummariesKeyScroliingComponent } from '../../../test-utils/tree-grid-components.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -15,6 +8,7 @@ import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     const DEBOUNCETIME = 30;
@@ -237,21 +231,19 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
-						const gridSummaryRow = treeGrid.getRowByIndex(4);
-						expect(gridSummaryRow.index).toEqual(4);
-						expect(gridSummaryRow.viewIndex).toEqual(4);
-						expect(gridSummaryRow instanceof IgxSummaryRow).toBe(true);
+            const gridSummaryRow = treeGrid.getRowByIndex(4);
+            expect(gridSummaryRow.index).toEqual(4);
+            expect(gridSummaryRow.viewIndex).toEqual(4);
+            expect(gridSummaryRow instanceof IgxSummaryRow).toBe(true);
 
             summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
             expect(summaries.length).toBe(4);
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
 
             treeGrid.summaryPosition = 'top';
             fix.detectChanges();
@@ -260,12 +252,10 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(summaries.length).toBe(4);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
         });
 
         it('should position correctly summary row for collapsed rows -- top position', async () => {
@@ -293,12 +283,10 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(summaries.length).toBe(4);
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
         });
 
         it('should be able to enable/disable summaries at runtime', () => {
@@ -390,8 +378,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             });
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
 
             treeGrid.enableSummaries([{ fieldName: 'Age' }, { fieldName: 'ID' }]);
             fix.detectChanges();
@@ -408,12 +395,10 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             });
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
         });
 
         it('should be able to change summary operant at runtime', () => {
@@ -428,16 +413,13 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifyVisibleSummariesHeight(fix, 6);
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Test'], ['3', '29', '43', '103', '34.333', '2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Test'], ['3', '29', '43', '103', '34.333', '2']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Test'], ['2', '35', '44', '79', '39.5', '1']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Test'], ['2', '35', '44', '79', '39.5', '1']);
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Test'], ['4', '42', '61', '207', '51.75', '0']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Test'], ['4', '42', '61', '207', '51.75', '0']);
         });
 
         it('should be able to change summary operant with API', () => {
@@ -514,8 +496,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 2);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['1']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['1', 'Dec 18, 2007', 'Dec 18, 2007']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['1', 'Dec 18, 2007', 'Dec 18, 2007']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '50', '50', '50', '50']);
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
@@ -539,8 +520,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['1']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['1', 'Dec 18, 2007', 'Dec 18, 2007']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['1', 'Dec 18, 2007', 'Dec 18, 2007']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '50', '50', '50', '50']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 2);
@@ -660,10 +640,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['5', 'Apr 20, 2008', 'Apr 3, 2019']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['5', '19', '61', '226', '45.2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['5', 'Apr 20, 2008', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['5', '19', '61', '226', '45.2']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['5']);
 
             verifySummaryForRow147(fix, 7);
@@ -685,8 +663,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 8);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['4', 'Jul 19, 2009', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['4', 'Jul 19, 2009', 'Apr 3, 2019']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['4']);
 
             verifyTreeBaseSummaries(fix);
@@ -725,10 +702,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['3', 'Feb 1, 2010', 'Feb 22, 2014']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '42', '61', '152', '50.667']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['3', 'Feb 1, 2010', 'Feb 22, 2014']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '42', '61', '152', '50.667']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['3']);
 
             verifySummaryForRow847(fix, 5);
@@ -787,8 +762,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Jul 19, 2009', 'Jul 3, 2011']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['2', 'Jul 19, 2009', 'Jul 3, 2011']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '29', '43', '72', '36']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['2']);
 
@@ -817,8 +791,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['4', 'Feb 1, 2010', 'Apr 3, 2019']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '19', '61', '171', '42.75']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '19', '61', '171', '42.75']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['4']);
         });
 
@@ -845,15 +818,13 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['2', 'May 4, 2014', 'Apr 3, 2019']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '19', '44', '63', '31.5']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '19', '44', '63', '31.5']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['2']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['1']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['1', 'Apr 22, 2010', 'Apr 22, 2010']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['1', 'Apr 22, 2010', 'Apr 22, 2010']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '39', '39', '39', '39']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['1']);
         });
@@ -1417,8 +1388,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 5);
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['4']);
 
             for (let i = 5; i > 0; i--) {
@@ -1457,8 +1427,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 5);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['4']);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridFooter, false, false, true);
@@ -1486,8 +1455,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 fix.detectChanges();
             }
 
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
 
             for (let i = 5; i > 0; i--) {
@@ -1498,8 +1466,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             }
 
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '147', '147', '441', '147']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '147', '147', '441', '147']);
         });
 
         it('Should not change active summary cell when press Ctrl+ArrowUp/Down', async () => {
@@ -1563,8 +1530,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '317', '317', '634', '317']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '317', '317', '634', '317']);
         });
 
         it('Should navigate with arrow keys from treeGrid cell to summary row ', () => {
@@ -1730,8 +1696,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
-        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-            ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['3']);
     };
 

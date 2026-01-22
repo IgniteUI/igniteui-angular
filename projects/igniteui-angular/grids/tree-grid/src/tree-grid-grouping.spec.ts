@@ -6,6 +6,7 @@ import { IgxTreeGridGroupByAreaComponent } from 'igniteui-angular/grids/tree-gri
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DefaultSortingStrategy } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('IgxTreeGrid', () => {
 
@@ -24,7 +25,7 @@ describe('IgxTreeGrid', () => {
     let groupByArea: IgxTreeGridGroupByAreaComponent;
 
     const DROP_AREA_MSG = 'Drag a column header and drop it here to group by that column.';
-    describe(' GroupByArea Standalone', ()=> {
+    describe(' GroupByArea Standalone', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridGroupByAreaTestComponent);
@@ -53,14 +54,14 @@ describe('IgxTreeGrid', () => {
             expect(spanElement.innerText).toEqual(DROP_AREA_MSG);
         }));
 
-        it ('has the expected default properties\' values', fakeAsync(() => {
+        it('has the expected default properties\' values', fakeAsync(() => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.grid).toEqual(treeGrid);
             expect(groupByArea.expressions).toEqual([]);
-            expect(groupByArea.hideGroupedColumns).toBeFalse();
+            expect(groupByArea.hideGroupedColumns).toBe(false);
             expect(groupByArea.dropAreaMessage).toMatch(DROP_AREA_MSG);
             expect(groupByArea.dropAreaTemplate).toBeUndefined();
-            expect(groupByArea.dropAreaVisible).toBeTrue();
+            expect(groupByArea.dropAreaVisible).toBe(true);
         }));
 
         it('allows changing the drop area message', fakeAsync(() => {
@@ -78,7 +79,7 @@ describe('IgxTreeGrid', () => {
             fix.detectChanges();
             tick();
 
-            expect(groupByArea.hideGroupedColumns).toBeTrue();
+            expect(groupByArea.hideGroupedColumns).toBe(true);
         }));
     });
 
@@ -97,14 +98,14 @@ describe('IgxTreeGrid', () => {
             clearGridSubs();
         });
 
-        it ('GroupByArea has the expected properties\' values set', fakeAsync(() => {
+        it('GroupByArea has the expected properties\' values set', fakeAsync(() => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.expressions.length).toEqual(2);
             expect(groupByArea.grid).toEqual(treeGrid);
-            expect(groupByArea.hideGroupedColumns).toBeFalse();
+            expect(groupByArea.hideGroupedColumns).toBe(false);
             expect(groupByArea.dropAreaMessage).toMatch(DROP_AREA_MSG);
             expect(groupByArea.dropAreaTemplate).toBeUndefined();
-            expect(groupByArea.dropAreaVisible).toBeFalse();
+            expect(groupByArea.dropAreaVisible).toBe(false);
         }));
 
         it('is loaded grouped by two fields.', fakeAsync(() => {
@@ -132,7 +133,7 @@ describe('IgxTreeGrid', () => {
             expect(chips[0].id).toEqual('OnPTO');
             expect(chips[1].id).toEqual('HireDate');
 
-            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
             tick();
 
@@ -151,41 +152,41 @@ describe('IgxTreeGrid', () => {
         }));
 
         it('group columns stay visible by default', fakeAsync(() => {
-            expect(treeGrid.getColumnByName('OnPTO').hidden).toBeFalse();
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('OnPTO').hidden).toBe(false);
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBe(false);
 
         }));
 
         it('keeps the group columns visible by default', fakeAsync(() => {
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBe(false);
 
             groupingExpressions.pop();
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
 
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBe(false);
         }));
 
         it('hides/shows the grouped by column when hideGroupedColumns=true', fakeAsync(() => {
             groupByArea.hideGroupedColumns = true;
             fix.detectChanges();
 
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeTrue();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBe(true);
 
             groupingExpressions.pop();
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
 
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBe(false);
 
-            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
 
-            expect(treeGrid.getColumnByName('JobTitle').hidden).toBeTrue();
+            expect(treeGrid.getColumnByName('JobTitle').hidden).toBe(true);
         }));
 
         it('shows aggregated values in parent records properly', fakeAsync(() => {
@@ -193,10 +194,10 @@ describe('IgxTreeGrid', () => {
             expect(treeGrid.getCellByColumn(1, 'HireDate').value).toBeUndefined();
 
             const aggregations = [{
-                field: 'HireDate',
-                aggregate: (parent: any, children: any[]) => children.map((c) => c.HireDate)
-                            .reduce((min, c) => min < c ? min : c, new Date())
-            }];
+                    field: 'HireDate',
+                    aggregate: (parent: any, children: any[]) => children.map((c) => c.HireDate)
+                        .reduce((min, c) => min < c ? min : c, new Date())
+                }];
 
             fix.componentInstance.aggregations = aggregations;
             fix.detectChanges();
