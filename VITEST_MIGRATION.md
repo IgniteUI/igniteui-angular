@@ -49,7 +49,8 @@ Added official Angular Vitest builder to projects:
       "options": {
         "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
         "include": ["**/*.spec.ts"],
-        "exclude": ["migrations/**/*.spec.ts", "schematics/**/*.spec.ts"]
+        "exclude": ["migrations/**/*.spec.ts", "schematics/**/*.spec.ts"],
+        "coverage": true
       }
     }
   }
@@ -61,20 +62,21 @@ This uses Angular's official Vitest integration, which:
 - Integrates seamlessly with Angular CLI
 - Provides better type checking and build optimization
 - Supports all standard Vitest features
+- **Enables code coverage by default with V8 provider**
 
 ### 4. Test Scripts (package.json)
 
 ```json
 {
   "test": "ng test igniteui-angular",
-  "test:lib": "ng test igniteui-angular --code-coverage",
+  "test:lib": "ng test igniteui-angular --coverage",
   "test:lib:watch": "ng test igniteui-angular --watch",
-  "test:elements": "ng test igniteui-angular-elements --code-coverage",
+  "test:elements": "ng test igniteui-angular-elements --coverage",
   "test:elements:watch": "ng test igniteui-angular-elements --watch"
 }
 ```
 
-**Note:** Test scripts now use `ng test` which leverages the `@angular/build:unit-test` builder.
+**Note:** Test scripts now use `ng test` which leverages the `@angular/build:unit-test` builder. The `--coverage` flag enables code coverage reporting using the V8 provider configured in `vitest.config.ts`.
 
 ### 5. Spec File Conversions (260 files, 2,500+ transformations)
 
@@ -124,35 +126,40 @@ This will install all the new Vitest and Playwright dependencies.
 ```bash
 # Run all tests for a project
 npm test              # igniteui-angular tests
-npm run test:lib      # With coverage
+npm run test:lib      # With coverage (V8 provider)
 
 # Run in watch mode
 npm run test:lib:watch
 
 # Run elements tests
-npm run test:elements
+npm run test:elements       # With coverage
 npm run test:elements:watch
 
 # Using Angular CLI directly
-ng test igniteui-angular
-ng test igniteui-angular-elements
+ng test igniteui-angular --coverage
+ng test igniteui-angular-elements --coverage
 ```
 
 ### 3. Expected Issues & Solutions
 
-#### Angular Builder Configuration
-The `@angular/build:unit-test` builder handles most configuration automatically. If you need to customize:
+#### Code Coverage Configuration
+Code coverage is configured through three layers:
 
-1. **Browser settings**: Configure in `vitest.config.ts`
-2. **Coverage settings**: Configure in `vitest.config.ts`
-3. **Include/Exclude patterns**: Configure in `angular.json` test options
+1. **angular.json**: `"coverage": true` enables coverage by default
+2. **Command-line**: `--coverage` flag explicitly enables coverage
+3. **vitest.config.ts**: Configures V8 provider and output format
 
-#### Vitest Configuration
-The minimal `vitest.config.ts` is used for settings that the Angular builder doesn't handle:
-- Browser provider (Playwright)
-- Custom reporters
-- Global test timeouts
-- Coverage providers and reporters
+The coverage configuration in `vitest.config.ts`:
+```typescript
+coverage: {
+  provider: 'v8',
+  reporter: ['text', 'lcov', 'html'],
+  reportsDirectory: './coverage',
+  exclude: ['node_modules/', 'src/test-setup.ts', '**/*.spec.ts', 'dist/']
+}
+```
+
+Coverage reports are generated in `./coverage/` directory.
 
 #### Angular Testing Environment
 If tests fail to initialize Angular components, check that `src/test-setup.ts` is being loaded correctly.
