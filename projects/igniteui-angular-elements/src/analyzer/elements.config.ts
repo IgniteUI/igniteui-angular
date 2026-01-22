@@ -900,8 +900,6 @@ export var registerConfig = [
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
       { name: "columns" },
-      { name: "pinnedStartColumns" },
-      { name: "pinnedEndColumns" },
       { name: "pinnedRows" },
     ],
     methods: [

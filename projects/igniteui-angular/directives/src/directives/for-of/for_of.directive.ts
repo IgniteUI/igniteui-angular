@@ -397,6 +397,25 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         return this.scrollComponent.size > parseInt(this.igxForContainerSize, 10);
     }
 
+    private get embeddedViewNodes() {
+        const result = new Array(this._embeddedViews.length);
+        for (let i = 0; i < this._embeddedViews.length; i++) {
+            const view = this._embeddedViews[i];
+            for (const node of view.rootNodes) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    result[i] = node;
+                    break;
+                } else {
+                    const nextElem = node.nextElementSibling;
+                    if (nextElem) {
+                        result[i] = nextElem;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     /**
      * @hidden
      */
@@ -773,8 +792,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     public isIndexOutsideView(index: number) {
         const targetNode = index >= this.state.startIndex && index <= this.state.startIndex + this.state.chunkSize ?
-            this._embeddedViews.map(view =>
-                view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling)[index - this.state.startIndex] : null;
+            this.embeddedViewNodes[index - this.state.startIndex] : null;
         const rowHeight = this.getSizeAt(index);
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const containerOffset = -(this.scrollPosition - this.sizesCache[this.state.startIndex]);
@@ -793,8 +811,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const diffs = [];
         let totalDiff = 0;
         const l = this._embeddedViews.length;
-        const rNodes = this._embeddedViews.map(view =>
-            view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling);
+        const rNodes = this.embeddedViewNodes;
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
@@ -1209,15 +1226,15 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         let size = 0;
         const dimension = this.igxForSizePropName || 'height';
         let i = 0;
-        this.sizesCache = [];
-        this.individualSizeCache = [];
-        this.sizesCache.push(0);
         const count = this.isRemote ? this.totalItemCount : items.length;
+        this.sizesCache = new Array(count + 1);
+        this.sizesCache[0] = 0;
+        this.individualSizeCache = new Array(count);
         for (i; i < count; i++) {
             size = this._getItemSize(items[i], dimension);
-            this.individualSizeCache.push(size);
+            this.individualSizeCache[i] = size;
             totalSize += size;
-            this.sizesCache.push(totalSize);
+            this.sizesCache[i + 1] = totalSize;
         }
         return totalSize;
     }
@@ -1717,15 +1734,15 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         let totalSize = 0;
         let size = 0;
         let i = 0;
-        this.sizesCache = [];
-        this.individualSizeCache = [];
-        this.sizesCache.push(0);
         const count = this.isRemote ? this.totalItemCount : items.length;
+        this.sizesCache = new Array(count + 1);
+        this.sizesCache[0] = 0;
+        this.individualSizeCache = new Array(count);
         for (i; i < count; i++) {
             size = this.getItemSize(items[i]);
-            this.individualSizeCache.push(size);
+            this.individualSizeCache[i] = size;
             totalSize += size;
-            this.sizesCache.push(totalSize);
+            this.sizesCache[ i + 1] = totalSize;
         }
         return totalSize;
     }
