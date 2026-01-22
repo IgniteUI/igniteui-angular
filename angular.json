@@ -163,19 +163,6 @@
             }
           }
         },
-        "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
-            "include": ["**/*.spec.ts"],
-            "exclude": [
-              "migrations/**/*.spec.ts",
-              "schematics/**/*.spec.ts",
-              "cypress/**/*.spec.ts"
-            ],
-            "coverage": true
-          }
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
