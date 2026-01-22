@@ -398,8 +398,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get applyButtonDisabled(): boolean {
-        return (this._selectAllItem && !this._selectAllItem.isSelected && !this._selectAllItem.indeterminate) ||
-            (this.displayedListData && this.displayedListData.length === 0);
+        return ((this._selectAllItem && !this._selectAllItem.isSelected && !this._selectAllItem.indeterminate) ||
+            (this.displayedListData && this.displayedListData.length === 0)) && !this._addToCurrentFilterItem?.isSelected;
     }
 
     /**
@@ -528,11 +528,29 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
             selectedItems = this._hierarchicalSelectedItems;
         } else {
-            const item = this.displayedListData[1];
-            const addToCurrentFilterOptionVisible = item === this.addToCurrentFilterItem;
-            selectedItems = addToCurrentFilterOptionVisible && item.isSelected ?
-                this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected || el.isFiltered) :
-                this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected);
+            const addToCurrentFilter = this._addToCurrentFilterItem?.isSelected;
+            const displayedSet = new Set(this.displayedListData);
+            const listData = this.esf.listData;
+
+            for (let i = 1; i < listData.length; i++) {
+                const el = listData[i];
+                const isDisplayed = displayedSet.has(el);
+
+                if (isDisplayed) {
+                    // Visible items: only include if selected
+                    if (el.isSelected) {
+                        selectedItems.push(el);
+                    }
+                } else if (addToCurrentFilter) {
+                    // Hidden items with "add to current filter": include if selected or filtered
+                    if (el.isSelected || el.isFiltered) {
+                        selectedItems.push(el);
+                    }
+                } else if (el.isSelected) {
+                    // Hidden items without "add to current filter": include if selected
+                    selectedItems.push(el);
+                }
+            }
         }
 
         let unselectedItem;
