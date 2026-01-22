@@ -1264,7 +1264,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             const bundle = this.projectedInputs.first?.nativeElement.querySelector('.igx-input-group__bundle');
             this._dropDownOverlaySettings.target = bundle || this.element.nativeElement;
         } else {
-            const bundle = this.inputGroup?.element.nativeElement.querySelector('.igx-input-group__bundle');
+            const bundle = this.element.nativeElement.querySelector('.igx-input-group__bundle');
             this._dropDownOverlaySettings.target = bundle || this.element.nativeElement;
         }
     }
