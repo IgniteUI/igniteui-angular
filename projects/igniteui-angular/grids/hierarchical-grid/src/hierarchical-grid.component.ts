@@ -49,8 +49,11 @@ let NEXT_ID = 0;
     imports: [NgClass]
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
+    /* blazorSuppress */
     public readonly gridAPI = inject<IgxHierarchicalGridAPIService>(IGX_GRID_SERVICE_BASE);
+    /* blazorSuppress */
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    /* blazorSuppress */
     public cdr = inject(ChangeDetectorRef);
 
     @Input()
