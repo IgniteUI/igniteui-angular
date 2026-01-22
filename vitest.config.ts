@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config';
+import { playwright } from '@vitest/browser-playwright'
 
 export default defineConfig({
   test: {
@@ -6,10 +7,9 @@ export default defineConfig({
     setupFiles: ['src/test-setup.ts'],
     include: ['**/*.spec.ts'],
     browser: {
-      enabled: true,
-      name: 'chromium',
-      provider: 'playwright',
       headless: true,
+      provider: playwright(),
+      instances: [{ browser: 'chromium' }]
     },
     coverage: {
       provider: 'v8',
