@@ -8,6 +8,7 @@ import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
+import { IgxGridComponent } from './grid/grid.component';
 
 abstract class BaseRow implements RowType {
     public index: number;
@@ -185,8 +186,12 @@ abstract class BaseRow implements RowType {
         return false;
     }
 
+    /**
+     * Gets whether the row is disabled.
+     * A disabled row represents a ghost placeholder created by row pinning.
+     */
     public get disabled(): boolean {
-        return this.grid.isGhostRecord(this.data);
+        return (this.grid as IgxGridComponent).isGhostRecordAtIndex(this.index);
     }
 
     /**
