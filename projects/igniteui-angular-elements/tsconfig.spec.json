@@ -5,7 +5,9 @@
     "allowJs": true,
     "outDir": "../../out-tsc/spec",
     "types": [
-      "jasmine"
+      "vitest/globals",
+      "node",
+      "@vitest/browser/providers/playwright"
     ]
   },
   "files": [
