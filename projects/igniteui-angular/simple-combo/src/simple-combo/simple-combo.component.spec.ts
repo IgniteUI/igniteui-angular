@@ -17,6 +17,7 @@ import { RemoteDataService } from 'igniteui-angular/combo/src/combo/combo.compon
 
 
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
+import { verify } from 'crypto';
 const CSS_CLASS_COMBO = 'igx-combo';
 const SIMPLE_COMBO_ELEMENT = 'igx-simple-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -59,9 +60,7 @@ describe('IgxSimpleCombo', () => {
             { country: 'Italy', city: 'Rome' }
         ];
         const elementRef = { nativeElement: null };
-        const mockSelection: {
-            [key: string]: jasmine.Spy;
-        } = { get: vi.fn(), set: vi.fn(), add_items: vi.fn(), select_items: vi.fn(), delete: vi.fn() };
+        const mockSelection = { get: vi.fn(), set: vi.fn(), add_items: vi.fn(), select_items: vi.fn(), delete: vi.fn() };
         const mockCdr = { markForCheck: vi.fn(), detectChanges: vi.fn() };
         const mockComboService = { register: vi.fn(), clear: vi.fn() };
         const mockNgControl = { registerOnChangeCb: vi.fn(), registerOnTouchedCb: vi.fn() };
@@ -70,11 +69,12 @@ describe('IgxSimpleCombo', () => {
         };
         mockSelection.get.mockReturnValue(new Set([]));
         const platformUtil = null;
-        const mockDocument = { 'body': document.createElement('div'),
+        const mockDocument = {
+            'body': document.createElement('div'),
             'defaultView': {
-                getComputedStyle: () => ({ }
+                getComputedStyle: () => ({})
             }
-        });
+        };
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -99,28 +99,28 @@ describe('IgxSimpleCombo', () => {
             });
 
         it('should properly call dropdown methods on toggle', () => {
-            const dropdown = { open: vi.fn(), close: vi.fn(), toggle: vi.fn() };
+            const dropdown = { open: vi.fn(), close: vi.fn(), toggle: vi.fn() } as unknown as IgxComboDropDownComponent;
             combo.ngOnInit();
-            combo.dropdown = dropdown;
-            dropdown.collapsed = true;
+            combo.dropdown = dropdown as any;
+            (dropdown as any).collapsed = true;
 
             combo.open();
-            dropdown.collapsed = false;
+            (dropdown as any).collapsed = false;
             expect(combo.dropdown.open).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBe(false);
 
             combo.close();
-            dropdown.collapsed = true;
+            (dropdown as any).collapsed = true;
             expect(combo.dropdown.close).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBe(true);
 
             combo.toggle();
-            dropdown.collapsed = false;
+            (dropdown as any).collapsed = false;
             expect(combo.dropdown.toggle).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBe(false);
         });
         it('should call dropdown toggle with correct overlaySettings', () => {
-            const dropdown = { toggle: vi.fn() };
+            const dropdown = { toggle: vi.fn() } as unknown as IgxComboDropDownComponent;
             combo.ngOnInit();
             combo.dropdown = dropdown;
             const defaultSettings = (combo as any)._overlaySettings;
@@ -144,14 +144,14 @@ describe('IgxSimpleCombo', () => {
             expect(combo.displayKey === combo.valueKey).toBeFalsy();
         });
         it('should select items through select method', () => {
-            const dropdown = { selectItem: vi.fn() };
-            const comboInput = { value: vi.fn() };
+            const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
+            const comboInput = { value: vi.fn() } as any;
             combo.ngOnInit();
-            combo.comboInput = comboInput;
+            combo.comboInput = comboInput as any;
             combo.data = complexData;
             combo.valueKey = 'country'; // with valueKey
             combo.dropdown = dropdown;
-            spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+            vi.spyOn(combo, 'totalItemCount', 'get').mockReturnValue(combo.data.length);
 
             let selectedItem = combo.data[0];
             let selectedValue = combo.data[0].country;
@@ -215,11 +215,10 @@ describe('IgxSimpleCombo', () => {
             const dropdown = { selectItem: vi.fn() };
             combo.ngOnInit();
             combo.data = data;
-            combo.dropdown = dropdown;
-            const comboInput = { value: vi.fn() };
-            comboInput.value = 'test';
-            combo.comboInput = comboInput;
-            spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+            combo.dropdown = dropdown as any;
+            const comboInput = { value: vi.fn().mockReturnValue('test') };
+            combo.comboInput = comboInput as any;
+            vi.spyOn(combo, 'totalItemCount', 'get').mockReturnValue(combo.data.length);
             vi.spyOn(combo.selectionChanging, 'emit');
 
             let oldSelection = undefined;

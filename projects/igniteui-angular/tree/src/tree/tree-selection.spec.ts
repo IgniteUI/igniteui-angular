@@ -549,12 +549,11 @@ describe('IgxTree - Selection #treeView', () => {
 
     describe('IgxTree - API Tests', () => {
         let mockNodes: IgxTreeNodeComponent<any>[];
-        let mockQuery: jasmine.SpyObj<QueryList<any>>;
+        let mockQuery;
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
         const elementRef = { nativeElement: null };
-        const mockPlatform = { isBrowser: vi.fn(), isServer: vi.fn() };
-        mockPlatform.isBrowser = true;
+        const mockPlatform = { isBrowser: vi.fn().mockReturnValue(true), isServer: vi.fn() };
         let navService: IgxTreeNavigationService;
         let tree: IgxTreeComponent;
 
@@ -616,10 +615,14 @@ describe('IgxTree - Selection #treeView', () => {
         const elementRef = { nativeElement: null };
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
-        const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = { emit: vi.fn() };
-        const mockTree: IgxTree = {} => true
-                }
-            });
+        const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = { emit: vi.fn() } as unknown as EventEmitter<ITreeNodeSelectionEvent>;
+        const mockTree: IgxTree = {
+            selection: IgxTreeSelectionType.BiState,
+            nodeSelection: mockEmitter,
+            nodes: {
+                find: () => true
+            }
+        } as unknown as IgxTree;
         const mockCdr = { markForCheck: vi.fn(), detectChanges: vi.fn() };
 
         selectionService.register(mockTree);
@@ -670,7 +673,7 @@ describe('IgxTree - Selection #treeView', () => {
             vi.spyOn(selectionService, 'isNodeSelected');
             const isSelected = node.selected;
 
-            expect(isSelected).toBeFalse();
+            expect(isSelected).toBeFalsy();
             expect((node as any).selectionService.isNodeSelected).toHaveBeenCalled();
             expect((node as any).selectionService.isNodeSelected).toHaveBeenCalledWith(node);
         });
@@ -679,7 +682,7 @@ describe('IgxTree - Selection #treeView', () => {
             vi.spyOn(selectionService, 'isNodeIndeterminate');
             const isIndeterminate = node.indeterminate;
 
-            expect(isIndeterminate).toBeFalse();
+            expect(isIndeterminate).toBeFalsy();
             expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalled();
             expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalledWith(node);
         });

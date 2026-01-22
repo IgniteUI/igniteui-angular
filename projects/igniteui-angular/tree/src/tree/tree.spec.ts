@@ -27,18 +27,12 @@ describe('IgxTree #treeView', () => {
         let mockNodesArray: IgxTreeNodeComponent<any>[] = [];
         let tree: IgxTreeComponent = null;
 
-        beforeAll(() => {
-            });
-
-        afterAll(() => {
-            });
-
         beforeEach(() => {
             mockNodesArray = [];
-            mockNavService = { register: vi.fn(), update_disabled_cache: vi.fn(), update_visible_cache: vi.fn(), init_invisible_cache: vi.fn(), setFocusedAndActiveNode: vi.fn(), handleKeydown: vi.fn() };
-            mockTreeService = { register: vi.fn(), collapse: vi.fn(), expand: vi.fn(), collapsing: vi.fn(), isExpanded: vi.fn() };
-            mockSelectionService = { register: vi.fn(), deselectNodesWithNoEvent: vi.fn(), ensureStateOnNodeDelete: vi.fn(), selectNodesWithNoEvent: vi.fn() };
-            mockElementRef = { nativeElement: document.createElement('div') };
+            mockNavService = { register: vi.fn(), update_disabled_cache: vi.fn(), update_visible_cache: vi.fn(), init_invisible_cache: vi.fn(), setFocusedAndActiveNode: vi.fn(), handleKeydown: vi.fn() } as unknown as IgxTreeNavigationService;
+            mockTreeService = { register: vi.fn(), collapse: vi.fn(), expand: vi.fn(), collapsing: vi.fn(), isExpanded: vi.fn() } as unknown as IgxTreeService;
+            mockSelectionService = { register: vi.fn(), deselectNodesWithNoEvent: vi.fn(), ensureStateOnNodeDelete: vi.fn(), selectNodesWithNoEvent: vi.fn() } as unknown as IgxTreeSelectionService;
+            mockElementRef = { nativeElement: document.createElement('div') } as unknown as ElementRef<any>;
 
             TestBed.configureTestingModule({
                 providers: [
@@ -50,12 +44,11 @@ describe('IgxTree #treeView', () => {
                 ]
             });
 
-            const mockPlatform = { isBrowser: vi.fn(), isServer: vi.fn() };
-            mockPlatform.isBrowser = true;
+            const mockPlatform = { isBrowser: vi.fn().mockReturnValue(true), isServer: vi.fn() };
 
             tree = TestBed.inject(IgxTreeComponent);
 
-            mockNodes = {},
+            mockNodes = {
                 get first() {
                     return mockNodesArray[0];
                 },
@@ -69,14 +62,15 @@ describe('IgxTree #treeView', () => {
                     mockNodesArray.forEach(cb);
                 },
                 find: (cb: (n: IgxTreeNodeComponent<any>) => boolean): IgxTreeNodeComponent<any> => mockNodesArray.find(cb),
-                filter: vi.fn().
-                    and.callFake((cb: (n: IgxTreeNodeComponent<any>) => boolean): IgxTreeNodeComponent<any>[] => mockNodesArray.filter(cb)),
-            });
+                filter: vi.fn()
+                    .and.callFake((cb: (n: IgxTreeNodeComponent<any>) => boolean): IgxTreeNodeComponent<any>[] => mockNodesArray.filter(cb)),
+            } as any as QueryList<IgxTreeNodeComponent<any>>;
             vi.spyOn(mockNodes, 'toArray').mockReturnValue(mockNodesArray);
         });
         afterEach(() => {
             tree?.ngOnDestroy();
         });
+
         describe('IgxTreeComponent', () => {
             it('Should update nav children cache when events are fired', fakeAsync(() => {
                 expect(mockNavService.init_invisible_cache).toHaveBeenCalledTimes(0);
@@ -172,13 +166,14 @@ describe('IgxTree #treeView', () => {
                 tree.nodes = mockNodes;
                 const customArrayParam = [];
                 for (let i = 0; i < 5; i++) {
-                    const node = {} {
+                    const node = {
+                        get expanded(): boolean {
                             return this._expanded;
                         },
                         set expanded(val: boolean) {
                             this._expanded = val;
                         }
-                    });
+                    };
                     node.spyProp = spyOnProperty(node, 'expanded', 'set');
                     mockNodesArray.push(node);
                     if (i > 3) {
@@ -202,13 +197,14 @@ describe('IgxTree #treeView', () => {
                 tree.nodes = mockNodes;
                 const customArrayParam = [];
                 for (let i = 0; i < 5; i++) {
-                    const node = {} {
+                    const node = {
+                        get expanded(): boolean {
                             return this._expanded;
                         },
                         set expanded(val: boolean) {
                             this._expanded = val;
                         }
-                    });
+                    };
                     node.spyProp = spyOnProperty(node, 'expanded', 'set');
                     mockNodesArray.push(node);
                     if (i > 3) {
@@ -245,12 +241,12 @@ describe('IgxTree #treeView', () => {
             let treeService: IgxTreeService;
 
             beforeEach(() => {
-                mockTree = {} },
-                        nodeExpanding: { emit: vi.fn() },
-                        nodeCollapsed: { emit: vi.fn() },
-                        nodeExpanded: { emit: vi.fn() }
-                    });
-                mockCdr = { detectChanges: vi.fn(), markForCheck: vi.fn() };
+                mockTree = {
+                    nodeExpanding: { emit: vi.fn() },
+                    nodeCollapsed: { emit: vi.fn() },
+                    nodeExpanded: { emit: vi.fn() }
+                } as unknown as IgxTreeComponent;
+                mockCdr = { detectChanges: vi.fn(), markForCheck: vi.fn() } as unknown as ChangeDetectorRef;
                 mockAnimationService = { buildAnimation: vi.fn() };
                 treeService = new IgxTreeService();
 
@@ -325,14 +321,14 @@ describe('IgxTree #treeView', () => {
             });
             it('Should call service expand/collapse methods when calling API state methods', () => {
                 treeService.register(mockTree);
-                node.expandedChange = { emit: vi.fn() }
+                node.expandedChange = { emit: vi.fn() } as unknown as EventEmitter<boolean>;
                 const openAnimationSpy = vi.spyOn(node, 'playOpenAnimation');
                 const closeAnimationSpy = vi.spyOn(node, 'playCloseAnimation');
                 const mockObj = { focus: vi.fn() };
                 vi.spyOn(treeService, 'collapse');
                 vi.spyOn(treeService, 'collapsing');
                 vi.spyOn(treeService, 'expand');
-                vi.spyOn(node, 'expandedChange');
+                vi.spyOn(node.expandedChange, 'emit');
                 const ingArgs = {
                     owner: mockTree,
                     cancel: false,
@@ -354,7 +350,7 @@ describe('IgxTree #treeView', () => {
                 expect(mockTree.nodeCollapsing.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeCollapsed.emit).not.toHaveBeenCalledWith();
-                expect(node.expandedChange).not.toHaveBeenCalled();
+                expect(node.expandedChange.emit).not.toHaveBeenCalled();
                 node.ngOnInit();
                 node.expand();
                 expect(openAnimationSpy).toHaveBeenCalledWith(mockObj);
@@ -410,28 +406,35 @@ describe('IgxTree #treeView', () => {
                 const service = new IgxTreeService();
                 expect((service as any).tree).toBe(undefined);
                 const mockTree = { findNodes: vi.fn() };
-                service.register(mockTree);
+                service.register(mockTree as any);
                 expect((service as any).tree).toBe(mockTree);
             });
             it('Should keep a proper collection of expanded and collapsing nodes at all time, firing `expandedChange` when needed', () => {
                 const service = new IgxTreeService();
-                const mockTree = {}: boolean {
+                const mockTree = {
+                    findNodes: vi.fn().mockName("tree.findNodes"),
+                    _singleBranchExpand: false,
+                    get singleBranchExpand(): boolean {
                         return this._singleBranchExpand;
                     },
                     set singleBranchExpand(val: boolean) {
                         this._singleBranchExpand = val;
                     }
-                });
-                service.register(mockTree);
+                };
+                service.register(mockTree as any);
                 vi.spyOn(service.expandedNodes, 'add');
                 vi.spyOn(service.expandedNodes, 'delete');
                 vi.spyOn(service.collapsingNodes, 'add');
                 vi.spyOn(service.collapsingNodes, 'delete');
                 expect(service.expandedNodes.size).toBe(0);
                 expect(service.collapsingNodes.size).toBe(0);
-                const mockNode = {} }
-                });
-                service.expand(mockNode);
+                const mockNode = {
+                    collapse: vi.fn().mockName("node.collapse"),
+                    expandedChange: {
+                        emit: vi.fn().mockName("emitter.emit")
+                    }
+                };
+                service.expand(mockNode as any);
                 expect(service.collapsingNodes.delete).toHaveBeenCalledWith(mockNode);
                 expect(service.collapsingNodes.delete).toHaveBeenCalledTimes(1);
                 expect(service.expandedNodes.add).toHaveBeenCalledWith(mockNode);
@@ -439,11 +442,11 @@ describe('IgxTree #treeView', () => {
                 expect(mockNode.expandedChange.emit).toHaveBeenCalledWith(true);
                 expect(service.expandedNodes.size).toBe(1);
                 expect(mockNode.collapse).not.toHaveBeenCalled();
-                service.expand(mockNode);
+                service.expand(mockNode as any);
                 expect(service.collapsingNodes.delete).toHaveBeenCalledTimes(2);
                 expect(mockNode.expandedChange.emit).toHaveBeenCalledTimes(1);
                 expect(service.expandedNodes.size).toBe(1);
-                service.collapse(mockNode);
+                service.collapse(mockNode as any);
                 expect(mockNode.expandedChange.emit).toHaveBeenCalledTimes(2);
                 expect(mockNode.expandedChange.emit).toHaveBeenCalledWith(false);
                 expect(service.collapsingNodes.delete).toHaveBeenCalledWith(mockNode);
@@ -451,42 +454,45 @@ describe('IgxTree #treeView', () => {
                 expect(service.expandedNodes.delete).toHaveBeenCalledTimes(1);
                 expect(service.expandedNodes.delete).toHaveBeenCalledWith(mockNode);
                 expect(service.expandedNodes.size).toBe(0);
-                service.collapse(mockNode);
+                service.collapse(mockNode as any);
                 expect(mockNode.expandedChange.emit).toHaveBeenCalledTimes(2);
                 expect(service.collapsingNodes.delete).toHaveBeenCalledTimes(4);
                 expect(service.expandedNodes.delete).toHaveBeenCalledTimes(2);
                 const mockArray = [];
                 for (let i = 0; i < 5; i++) {
-                    const node = {} {
+                    const node = {
+                        collapse: vi.fn().mockName("node.collapse"),
+                        _expanded: false,
+                        get expanded() {
                             return this._expanded;
                         },
                         set expanded(val: boolean) {
                             this._expanded = val;
                         }
-                    });
-                    node.spyProp = spyOnProperty(node, 'expanded', 'set');
+                    };
+                    (node as any).spyProp = vi.spyOn(node, 'expanded', 'set');
                     mockArray.push(node);
                 }
                 vi.spyOn(mockTree, 'findNodes').mockReturnValue(mockArray);
-                spyOnProperty(mockTree, 'singleBranchExpand', 'get').mockReturnValue(true);
-                service.expand(mockNode);
+                vi.spyOn(mockTree, 'singleBranchExpand', 'get').mockReturnValue(true);
+                service.expand(mockNode as any);
                 mockArray.forEach(n => {
                     expect((n as any).spyProp).toHaveBeenCalledWith(false);
                     expect(n.collapse).not.toHaveBeenCalled();
                 });
-                service.collapse(mockNode);
-                service.expand(mockNode, true);
+                service.collapse(mockNode as any);
+                service.expand(mockNode as any, true);
                 mockArray.forEach(n => {
                     expect(n.collapse).toHaveBeenCalled();
                     expect(n.collapse).toHaveBeenCalledTimes(1);
                 });
                 expect(service.collapsingNodes.size).toBe(0);
-                service.collapsing(mockNode);
+                service.collapsing(mockNode as any);
                 expect(service.collapsingNodes.size).toBe(1);
-                service.collapse(mockNode);
-                spyOnProperty(mockTree, 'singleBranchExpand', 'get').mockReturnValue(true);
+                service.collapse(mockNode as any);
+                vi.spyOn(mockTree, 'singleBranchExpand', 'get').mockReturnValue(true);
                 vi.spyOn(mockTree, 'findNodes').mockReturnValue(null);
-                service.expand(mockNode, true);
+                service.expand(mockNode as any, true);
                 expect(mockTree.findNodes).toHaveBeenCalledWith(mockNode, (service as any).siblingComparer);
                 mockArray.forEach(n => {
                     expect(n.collapse).toHaveBeenCalledTimes(1);
@@ -541,8 +547,7 @@ describe('IgxTree #treeView', () => {
                 });
             });
 
-            it('Should apply proper node classes depending on tree displayDensity', () => {
-                pending('Test not implemented');
+            it.skip('Should apply proper node classes depending on tree displayDensity', () => {
             });
 
             it('Should do nothing when calling expand()/collapse() on expanded/collapsed node', fakeAsync(() => {
@@ -621,8 +626,7 @@ describe('IgxTree #treeView', () => {
                 unsub$.complete();
             }));
 
-            it('Should collapse all sibling nodes when `singleBranchExpand` is set and node is toggled', fakeAsync(() => {
-                pending('Causes jasmine to hang');
+            it.skip('Should collapse all sibling nodes when `singleBranchExpand` is set and node is toggled', fakeAsync(() => {
                 tree.rootNodes.forEach((n, index) => index > 0 ? n.expanded = true : n.expanded = false);
                 fix.detectChanges();
                 expect(tree.nodes.filter(n => n.expanded).length).toBe(4);
@@ -688,15 +692,11 @@ describe('IgxTree #treeView', () => {
             }));
         });
         describe('ARIA', () => {
-            it('Should render proper roles for tree and nodes', () => {
-                pending('Test not implemented');
+            it.skip('Should render proper roles for tree and nodes', () => {
             });
-            it('Should render proper label for expand/collapse indicator, depending on node state', () => {
-                pending('Test not implemented');
-
+            it.skip('Should render proper label for expand/collapse indicator, depending on node state', () => {
             });
-            it('Should render proper roles for nodes containing link children', () => {
-                pending('Test not implemented');
+            it.skip('Should render proper roles for nodes containing link children', () => {
             });
         });
     });

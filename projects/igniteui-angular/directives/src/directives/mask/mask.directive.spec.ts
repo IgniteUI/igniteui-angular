@@ -271,8 +271,7 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('(___) 4569-_12');
     }));
 
-    it('Enter incorrect value with a preset mask', fakeAsync(() => {
-        pending('This must be remade into a typing test.');
+    it.skip('Enter incorrect value with a preset mask', fakeAsync(() => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
         const input = fixture.componentInstance.input;
@@ -518,7 +517,7 @@ describe('igxMask', () => {
 
         const maskDirective = fixture.componentInstance.mask;
         vi.spyOn(maskDirective, 'onFocus');
-        spyOn<any>(maskDirective, 'showMask');
+        vi.spyOn(maskDirective as any, 'showMask');
 
         const input = fixture.debugElement.query(By.css('.igx-input-group__input'));
         input.triggerEventHandler('focus', {});
@@ -603,14 +602,14 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         };
 
         const mockParser = {
-            applyMask: vi.fn(),
-            replaceInMask: vi.fn() value: vi.fn(), end: vi.fn() } as Replaced,
-            parseValueFromMask: vi.fn()
+            applyMask: vi.fn().mockReturnValue('test____'),
+            replaceInMask: vi.fn().mockReturnValue({ value: 'test_2__', end: 6 } as Replaced),
+            parseValueFromMask: vi.fn().mockReturnValue('test2')
         };
         const format = 'CCCCCCCC';
 
         // init
-        renderer2 = { setAttribute: vi.fn() };
+        renderer2 = { setAttribute: vi.fn() } as unknown as Renderer2;
 
         TestBed.configureTestingModule({
             providers: [
@@ -627,8 +626,8 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         mask.registerOnChange(mockNgControl.registerOnChangeCb);
         mask.registerOnTouched(mockNgControl.registerOnTouchedCb);
         vi.spyOn(mask.valueChanged, 'emit');
-        const inputGet = spyOnProperty(mask as any, 'inputValue', 'get');
-        const inputSet = spyOnProperty(mask as any, 'inputValue', 'set');
+        const inputGet = vi.spyOn(mask as any, 'inputValue', 'get');
+        const inputSet = vi.spyOn(mask as any, 'inputValue', 'set');
 
         // writeValue
         inputGet.mockReturnValue('formatted');
@@ -640,7 +639,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
 
         // OnChange callback
         inputGet.mockReturnValue('test_2___');
-        spyOnProperty(mask as any, 'selectionEnd').mockReturnValue(6);
+        vi.spyOn(mask as any, 'selectionEnd', 'get').mockReturnValue(6);
         const setSelectionSpy = vi.spyOn(mask as any, 'setSelectionRange');
         mask.onInputChanged(false);
         expect(mockParser.replaceInMask).toHaveBeenCalledWith('', 'test_2', expect.objectContaining({ format }), 0, 0);
