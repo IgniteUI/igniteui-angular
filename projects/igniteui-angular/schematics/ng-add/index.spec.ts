@@ -5,6 +5,7 @@ import { scssImport, cssImport } from './add-normalize';
 import { DEPENDENCIES_MAP, PackageTarget, PackageEntry } from '../utils/dependency-handler';
 import { ProjectType } from '../utils/util';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('ng-add schematics', () => {
   const collectionPath = path.join(__dirname, '../collection.json');
   const runner: SchematicTestRunner = new SchematicTestRunner('cli-schematics', collectionPath);
@@ -62,7 +63,7 @@ describe('ng-add schematics', () => {
     for (const key of Object.keys(allDependencies)) {
       const expectedPackages: PackageEntry = {
         name: key,
-        target: jasmine.anything() as any
+        target: expect.anything() as any
       };
       expect(DEPENDENCIES_MAP).toContain(expectedPackages, `Dependency ${key} missing in dependencies map!`);
     }

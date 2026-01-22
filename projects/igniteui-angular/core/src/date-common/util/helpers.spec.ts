@@ -14,6 +14,7 @@ import {
 } from "./helpers";
 import { CalendarDay } from "./model";
 
+import { describe, it, expect } from 'vitest';
 describe("Calendar Helpers", () => {
     const date = new Date(2020, 0, 1);
     const disabledDates = [

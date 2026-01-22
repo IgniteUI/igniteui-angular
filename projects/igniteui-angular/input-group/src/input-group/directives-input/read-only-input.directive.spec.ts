@@ -6,6 +6,7 @@ import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';;
 import { By } from '@angular/platform-browser';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxReadOnlyInputDirective', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

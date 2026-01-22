@@ -10,6 +10,7 @@ import { IgxToggleDirective } from '../../../directives/src/directives/toggle/to
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--flex`;
 const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--modal`;
@@ -263,11 +264,11 @@ describe('Dialog', () => {
             cancel: false
         };
 
-        spyOn(dialog.opening, 'emit');
-        spyOn(dialog.opened, 'emit');
-        spyOn(dialog.isOpenChange, 'emit');
-        spyOn(dialog.closing, 'emit');
-        spyOn(dialog.closed, 'emit');
+        vi.spyOn(dialog.opening, 'emit');
+        vi.spyOn(dialog.opened, 'emit');
+        vi.spyOn(dialog.isOpenChange, 'emit');
+        vi.spyOn(dialog.closing, 'emit');
+        vi.spyOn(dialog.closed, 'emit');
 
         dialog.open();
         tick();
@@ -293,11 +294,11 @@ describe('Dialog', () => {
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
-        spyOn(dialog.leftButtonSelect, 'emit');
+        vi.spyOn(dialog.leftButtonSelect, 'emit');
         dispatchEvent(leftButton, 'click');
         expect(dialog.leftButtonSelect.emit).toHaveBeenCalled();
 
-        spyOn(dialog.rightButtonSelect, 'emit');
+        vi.spyOn(dialog.rightButtonSelect, 'emit');
         dispatchEvent(rightButton, 'click');
         tick();
         expect(dialog.rightButtonSelect.emit).toHaveBeenCalled();

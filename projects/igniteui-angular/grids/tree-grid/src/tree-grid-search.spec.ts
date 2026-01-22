@@ -9,6 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 

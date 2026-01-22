@@ -4,6 +4,7 @@ import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { wait } from '../../../../test-utils/ui-interactions.spec';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 

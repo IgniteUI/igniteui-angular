@@ -18,6 +18,7 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridTransaction } from 'igniteui-angular/grids/core';
 import { HierarchicalTransaction, IgxHierarchicalTransactionService, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
@@ -584,14 +585,14 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             const cancelBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[0] as DebugElement;
             const doneBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[1];
-            spyOn(cancelBtn.nativeElement, 'focus').and.callThrough();
-            spyOn<any>(grid.rowEditTabs.first, 'move').and.callThrough();
-            spyOn<any>(grid.rowEditTabs.last, 'move').and.callThrough();
+            vi.spyOn(cancelBtn.nativeElement, 'focus');
+            spyOn<any>(grid.rowEditTabs.first, 'move');
+            spyOn<any>(grid.rowEditTabs.last, 'move');
 
             await TreeGridFunctions.moveGridCellWithTab(fix, grid.gridAPI.get_cell_by_index(2, 'Age'));
             expect(cancelBtn.nativeElement.focus).toHaveBeenCalled();
 
-            const mockObj = jasmine.createSpyObj('mockObj', ['stopPropagation', 'preventDefault']);
+            const mockObj = { stopPropagation: vi.fn(), preventDefault: vi.fn() };
             cancelBtn.triggerEventHandler('keydown.tab', mockObj);
             await wait(30);
             fix.detectChanges();
@@ -895,7 +896,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid = fix.componentInstance.treeGrid;
             const initialDataLength = treeGrid.data.length;
             const trans = treeGrid.transactions;
-            spyOn(trans, 'add').and.callThrough();
+            vi.spyOn(trans, 'add');
 
             const addedRowId_1 = treeGrid.rowList.length;
             const newRow = {
@@ -1030,7 +1031,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.batchEditing = true;
             fix.detectChanges();
             const trans = treeGrid.transactions;
-            spyOn(trans, 'add').and.callThrough();
+            vi.spyOn(trans, 'add');
             treeGrid.foreignKey = 'ParentID';
 
             const addedRowId = treeGrid.data.length;
@@ -1079,7 +1080,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             const trans = treeGrid.transactions;
-            spyOn(trans, 'add').and.callThrough();
+            vi.spyOn(trans, 'add');
 
             const parentRow = treeGrid.getRowByIndex(0);
             const addedRowId = treeGrid.rowList.length;
@@ -1133,7 +1134,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.batchEditing = true;
             fix.detectChanges();
             const trans = treeGrid.transactions;
-            spyOn(trans, 'add').and.callThrough();
+            vi.spyOn(trans, 'add');
             treeGrid.foreignKey = 'ParentID';
 
             const addedRowId = treeGrid.data.length;
@@ -1178,7 +1179,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             const trans = treeGrid.transactions;
-            spyOn(trans, 'add').and.callThrough();
+            vi.spyOn(trans, 'add');
 
             const parentRow = treeGrid.getRowByIndex(1);
             const addedRowId = treeGrid.rowList.length;

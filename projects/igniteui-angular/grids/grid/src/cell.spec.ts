@@ -11,6 +11,7 @@ import { TestNgZone } from '../../../test-utils/helper-utils.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { HammerGesturesManager, PlatformUtil } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Cell component #grid', () => {
 
     describe('Test events', () => {
@@ -52,11 +53,11 @@ describe('IgxGrid - Cell component #grid', () => {
         it('selection and selection events', () => {
             expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('false');
 
-            spyOn(grid.selected, 'emit').and.callThrough();
+            vi.spyOn(grid.selected, 'emit');
             UIInteractions.simulateClickAndSelectEvent(cellElem);
             const args: IGridCellEventArgs = {
                 cell: grid.getCellByColumn(0, 'ID'),
-                event: jasmine.anything() as any
+                event: expect.anything() as any
             };
             fix.detectChanges();
 
@@ -75,7 +76,7 @@ describe('IgxGrid - Cell component #grid', () => {
             grid.getColumnByName('ID').editable = true;
             fix.detectChanges();
 
-            spyOn(grid.selected, 'emit').and.callThrough();
+            vi.spyOn(grid.selected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(cellElem);
             fix.detectChanges();
@@ -92,7 +93,7 @@ describe('IgxGrid - Cell component #grid', () => {
         });
 
         it('Should trigger onCellClick event when click into cell', () => {
-            spyOn(grid.cellClick, 'emit').and.callThrough();
+            vi.spyOn(grid.cellClick, 'emit');
             const event = new Event('click');
             firstCellElem.nativeElement.dispatchEvent(event);
             const args: IGridCellEventArgs = {
@@ -108,7 +109,7 @@ describe('IgxGrid - Cell component #grid', () => {
         it('Should trigger doubleClick event', () => {
             grid.columnList.get(0).editable = true;
             fix.detectChanges();
-            spyOn(grid.doubleClick, 'emit').and.callThrough();
+            vi.spyOn(grid.doubleClick, 'emit');
 
             cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
             fix.detectChanges();
@@ -120,22 +121,22 @@ describe('IgxGrid - Cell component #grid', () => {
         });
 
         it('Should trigger contextMenu event when right click into cell', () => {
-            spyOn(grid.contextMenu, 'emit').and.callThrough();
+            vi.spyOn(grid.contextMenu, 'emit');
             const event = new Event('contextmenu', { bubbles: true });
             cellElem.nativeElement.dispatchEvent(event);
 
             fix.detectChanges();
             expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
             expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
-                cell: jasmine.anything(),
-                row: jasmine.anything()
+                cell: expect.anything(),
+                row: expect.anything()
             }));
         });
 
         it('Should trigger doubleClick event when double click into cell', () => {
-            spyOn(grid.doubleClick, 'emit').and.callThrough();
+            vi.spyOn(grid.doubleClick, 'emit');
             const event = new Event('dblclick');
-            spyOn(event, 'preventDefault');
+            vi.spyOn(event, 'preventDefault');
             cellElem.nativeElement.dispatchEvent(event);
             const args: IGridCellEventArgs = {
                 cell: grid.getCellByColumn(0, 'ID'),
@@ -275,20 +276,20 @@ describe('IgxGrid - Cell component #grid', () => {
         }));
 
         it('Should not attach doubletap handler for non-iOS', () => {
-            const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+            const addListenerSpy = vi.spyOn(HammerGesturesManager.prototype, 'addEventListener');
             const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
             platformUtil.isIOS = false;
             const fix = TestBed.createComponent(NoScrollsComponent);
             fix.detectChanges();
-            // spyOnProperty(PlatformUtil.prototype, 'isIOS').and.returnValue(false);
+            // spyOnProperty(PlatformUtil.prototype, 'isIOS').mockReturnValue(false);
             expect(addListenerSpy).not.toHaveBeenCalled();
 
             platformUtil.isIOS = oldIsIOS;
         });
 
         it('Should handle doubletap on iOS, trigger doubleClick event', () => {
-            const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+            const addListenerSpy = vi.spyOn(HammerGesturesManager.prototype, 'addEventListener');
             const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
             platformUtil.isIOS = true;
@@ -303,7 +304,7 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(addListenerSpy).toHaveBeenCalledWith(firstCellElem.nativeElement, 'doubletap', firstCellElem.onDoubleClick,
                 { cssProps: {} as any });
 
-            spyOn(grid.doubleClick, 'emit').and.callThrough();
+            vi.spyOn(grid.doubleClick, 'emit');
 
             const event = {
                 type: 'doubletap',

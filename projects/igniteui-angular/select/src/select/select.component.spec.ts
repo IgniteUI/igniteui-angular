@@ -17,6 +17,7 @@ import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 import { addScrollDivToElement } from 'igniteui-angular/core/src/services/overlay/overlay.spec';
 
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
@@ -215,7 +216,7 @@ describe('igxSelect', () => {
         }));
 
         it('should close dropdown on clicking selected item', fakeAsync(() => {
-            spyOn(select.selectionChanging, 'emit');
+            vi.spyOn(select.selectionChanging, 'emit');
             select.items[1].selected = true;
             select.open();
             fixture.detectChanges();
@@ -289,13 +290,13 @@ describe('igxSelect', () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             expect(select).toBeTruthy();
 
-            spyOn(select.opening, 'emit');
-            spyOn(select.opened, 'emit');
-            spyOn(select.closing, 'emit');
-            spyOn(select.closed, 'emit');
-            spyOn(select, 'toggle').and.callThrough();
-            spyOn(select, 'open').and.callThrough();
-            spyOn(select, 'close').and.callThrough();
+            vi.spyOn(select.opening, 'emit');
+            vi.spyOn(select.opened, 'emit');
+            vi.spyOn(select.closing, 'emit');
+            vi.spyOn(select.closed, 'emit');
+            vi.spyOn(select, 'toggle');
+            vi.spyOn(select, 'open');
+            vi.spyOn(select, 'close');
 
             inputGroup.nativeElement.click();
             tick();
@@ -328,8 +329,8 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
-            spyOn(select.closing, 'emit');
-            spyOn(select.closed, 'emit');
+            vi.spyOn(select.closing, 'emit');
+            vi.spyOn(select.closed, 'emit');
 
             selectedItemEl.nativeElement.click();
             tick();
@@ -342,13 +343,13 @@ describe('igxSelect', () => {
             const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             expect(select).toBeTruthy();
 
-            spyOn(select.opening, 'emit');
-            spyOn(select.opened, 'emit');
-            spyOn(select.closing, 'emit');
-            spyOn(select.closed, 'emit');
-            spyOn(select, 'toggle').and.callThrough();
-            spyOn(select, 'open').and.callThrough();
-            spyOn(select, 'close').and.callThrough();
+            vi.spyOn(select.opening, 'emit');
+            vi.spyOn(select.opened, 'emit');
+            vi.spyOn(select.closing, 'emit');
+            vi.spyOn(select.closed, 'emit');
+            vi.spyOn(select, 'toggle');
+            vi.spyOn(select, 'open');
+            vi.spyOn(select, 'close');
 
             toggleBtn.nativeElement.click();
             tick();
@@ -363,8 +364,8 @@ describe('igxSelect', () => {
 
         it('should emit closing events on input blur when closeOnOutsideClick: true (default value)', fakeAsync(() => {
             const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
-            spyOn(select.closing, 'emit');
-            spyOn(select.closed, 'emit');
+            vi.spyOn(select.closing, 'emit');
+            vi.spyOn(select.closed, 'emit');
 
             expect(select).toBeDefined();
             select.toggle();
@@ -385,8 +386,8 @@ describe('igxSelect', () => {
 
         it('should NOT emit closing events on input blur when closeOnOutsideClick: false', fakeAsync(() => {
             const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
-            spyOn(select.closing, 'emit');
-            spyOn(select.closed, 'emit');
+            vi.spyOn(select.closing, 'emit');
+            vi.spyOn(select.closed, 'emit');
 
             const customOverlaySettings = {
                 closeOnOutsideClick: false
@@ -774,8 +775,8 @@ describe('igxSelect', () => {
             select = fix.componentInstance.select;
             const input = fix.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
 
-            spyOn(select, 'onFocus');
-            spyOn(select, 'onBlur');
+            vi.spyOn(select, 'onFocus');
+            vi.spyOn(select, 'onBlur');
 
             input.triggerEventHandler('focus', {});
             expect(select.onFocus).toHaveBeenCalled();
@@ -1239,8 +1240,8 @@ describe('igxSelect', () => {
             it('should properly emit selectionChanging event on item click', fakeAsync(() => {
                 let selectedItemEl = selectList.children[5];
                 let selectedItem = select.items[5];
-                spyOn(select.selectionChanging, 'emit');
-                spyOn(select, 'selectItem').and.callThrough();
+                vi.spyOn(select.selectionChanging, 'emit');
+                vi.spyOn(select, 'selectItem');
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
@@ -1275,8 +1276,8 @@ describe('igxSelect', () => {
 
             it('should properly emit selectionChanging event on item selected property setting', () => {
                 let selectedItem = select.items[3];
-                spyOn(select.selectionChanging, 'emit');
-                spyOn(select, 'selectItem').and.callThrough();
+                vi.spyOn(select.selectionChanging, 'emit');
+                vi.spyOn(select, 'selectItem');
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
@@ -1302,13 +1303,13 @@ describe('igxSelect', () => {
 
             it('should properly emit selectionChanging/close events on key interaction', fakeAsync(() => {
                 let selectedItem = select.items[3];
-                spyOn(select.opening, 'emit');
-                spyOn(select.opened, 'emit');
-                spyOn(select.closing, 'emit');
-                spyOn(select.closed, 'emit');
-                spyOn(select, 'close').and.callThrough();
-                spyOn(select.selectionChanging, 'emit');
-                spyOn(select, 'selectItem').and.callThrough();
+                vi.spyOn(select.opening, 'emit');
+                vi.spyOn(select.opened, 'emit');
+                vi.spyOn(select.closing, 'emit');
+                vi.spyOn(select.closed, 'emit');
+                vi.spyOn(select, 'close');
+                vi.spyOn(select.selectionChanging, 'emit');
+                vi.spyOn(select, 'selectItem');
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
@@ -1358,8 +1359,8 @@ describe('igxSelect', () => {
             }));
 
             // it('should properly emit selecting event on value setting', fakeAsync(() => {
-            //     spyOn(select.selectionChanging, 'emit');
-            //     spyOn(select, 'selectItem').and.callThrough();
+            //     vi.spyOn(select.selectionChanging, 'emit');
+            //     vi.spyOn(select, 'selectItem');
 
             //     select.value = select.items[4].value.toString();
             //     fixture.detectChanges();
@@ -1383,7 +1384,7 @@ describe('igxSelect', () => {
 
             it('should properly emit selectionChanging event using selectItem method', () => {
                 let selectedItem = select.items[4];
-                spyOn(select.selectionChanging, 'emit');
+                vi.spyOn(select.selectionChanging, 'emit');
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
@@ -1407,7 +1408,7 @@ describe('igxSelect', () => {
 
             it('should not emit selectionChanging when selection does not change', () => {
                 const item = select.items[5];
-                spyOn(select.selectionChanging, 'emit');
+                vi.spyOn(select.selectionChanging, 'emit');
                 select.selectItem(item);
                 expect(select.selectionChanging.emit).toHaveBeenCalledTimes(1);
                 select.selectItem(item);
@@ -1420,7 +1421,7 @@ describe('igxSelect', () => {
 
             it('should not select header items passed through selectItem method', () => {
                 const item = select.items[5];
-                spyOn(select.selectionChanging, 'emit');
+                vi.spyOn(select.selectionChanging, 'emit');
                 expect(select.selectedItem).toBeFalsy();
                 item.isHeader = true;
                 select.selectItem(item);
@@ -1667,13 +1668,13 @@ describe('igxSelect', () => {
         }));
 
         it('should properly emit opening/closing events on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
-            spyOn(select.opening, 'emit');
-            spyOn(select.opened, 'emit');
-            spyOn(select.closing, 'emit');
-            spyOn(select.closed, 'emit');
-            spyOn(select, 'toggle').and.callThrough();
-            spyOn(select, 'open').and.callThrough();
-            spyOn(select, 'close').and.callThrough();
+            vi.spyOn(select.opening, 'emit');
+            vi.spyOn(select.opened, 'emit');
+            vi.spyOn(select.closing, 'emit');
+            vi.spyOn(select.closed, 'emit');
+            vi.spyOn(select, 'toggle');
+            vi.spyOn(select, 'open');
+            vi.spyOn(select, 'close');
 
             inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
             tick();
@@ -1687,13 +1688,13 @@ describe('igxSelect', () => {
         }));
 
         it('should properly emit opening/closing events on ENTER/ESC key interaction', fakeAsync(() => {
-            spyOn(select.opening, 'emit');
-            spyOn(select.opened, 'emit');
-            spyOn(select.closing, 'emit');
-            spyOn(select.closed, 'emit');
-            spyOn(select, 'open').and.callThrough();
-            spyOn(select, 'close').and.callThrough();
-            spyOn(select, 'toggle').and.callThrough();
+            vi.spyOn(select.opening, 'emit');
+            vi.spyOn(select.opened, 'emit');
+            vi.spyOn(select.closing, 'emit');
+            vi.spyOn(select.closed, 'emit');
+            vi.spyOn(select, 'open');
+            vi.spyOn(select, 'close');
+            vi.spyOn(select, 'toggle');
 
             inputElement.triggerEventHandler('keydown', enterKeyEvent);
             tick();
@@ -1707,13 +1708,13 @@ describe('igxSelect', () => {
         }));
 
         it('should properly emit opening/closing events on SPACE/ESC key interaction', fakeAsync(() => {
-            spyOn(select.opening, 'emit');
-            spyOn(select.opened, 'emit');
-            spyOn(select.closing, 'emit');
-            spyOn(select.closed, 'emit');
-            spyOn(select, 'open').and.callThrough();
-            spyOn(select, 'close').and.callThrough();
-            spyOn(select, 'toggle').and.callThrough();
+            vi.spyOn(select.opening, 'emit');
+            vi.spyOn(select.opened, 'emit');
+            vi.spyOn(select.closing, 'emit');
+            vi.spyOn(select.closed, 'emit');
+            vi.spyOn(select, 'open');
+            vi.spyOn(select, 'close');
+            vi.spyOn(select, 'toggle');
 
             inputElement.triggerEventHandler('keydown', spaceKeyEvent);
             tick();
@@ -2194,7 +2195,7 @@ describe('igxSelect', () => {
         it('Should navigate through items when dropdown is closed and initial value is passed', fakeAsync(() => {
             select.close();
             fixture.detectChanges();
-            spyOn(select, 'navigateNext').and.callThrough();
+            vi.spyOn(select, 'navigateNext');
             const choices = select.children.toArray();
             select.value = choices[5].value;
             fixture.detectChanges();
@@ -2650,13 +2651,13 @@ describe('igxSelect', () => {
 describe('igxSelect ControlValueAccessor Unit', () => {
     let select: IgxSelectComponent;
     it('Should correctly implement interface methods', () => {
-        const mockSelection = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'clear', 'delete', 'first_item']);
-        const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-        const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
-        const mockInjector = jasmine.createSpyObj('Injector', {
+        const mockSelection = { get: vi.fn(), set: vi.fn(), clear: vi.fn(), delete: vi.fn(), first_item: vi.fn() };
+        const mockCdr = { detectChanges: vi.fn() };
+        const mockNgControl = { registerOnChangeCb: vi.fn(), registerOnTouchedCb: vi.fn() };
+        const mockInjector = {
             get: mockNgControl
-        });
-        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        };
+        const mockDocument = { 'defaultView': { getComputedStyle: () => null }};
 
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule],
@@ -2703,7 +2704,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
         select.input = {} as any;
-        spyOnProperty(select, 'collapsed').and.returnValue(true);
+        spyOnProperty(select, 'collapsed').mockReturnValue(true);
         select.onBlur();
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
 

@@ -11,6 +11,7 @@ import { IgxRippleDirective } from '../../../../directives/src/directives/ripple
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 import { IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
@@ -121,9 +122,9 @@ describe('IgxAutocomplete', () => {
         }));
         it('Should close the dropdown when no items match the filter', fakeAsync(() => {
             expect((autocomplete as any).collapsed).toEqual(true);
-            spyOn(autocomplete.target, 'close').and.callThrough();
-            spyOn(autocomplete, 'open').and.callThrough();
-            spyOn(autocomplete.target, 'open').and.callThrough();
+            vi.spyOn(autocomplete.target, 'close');
+            vi.spyOn(autocomplete, 'open');
+            vi.spyOn(autocomplete.target, 'open');
             expect(autocomplete.target.close).not.toHaveBeenCalled();
             UIInteractions.setInputElementValue(input, 'a', fixture);
             tick();
@@ -150,8 +151,8 @@ describe('IgxAutocomplete', () => {
 
         }));
         it('Should close the dropdown when disabled dynamically', fakeAsync(() => {
-            spyOn(autocomplete.target, 'open').and.callThrough();
-            spyOn(autocomplete.target, 'close').and.callThrough();
+            vi.spyOn(autocomplete.target, 'open');
+            vi.spyOn(autocomplete.target, 'close');
 
             UIInteractions.setInputElementValue(input, 's', fixture);
             tick();
@@ -312,7 +313,7 @@ describe('IgxAutocomplete', () => {
         });
         it('Should not open dropdown when disabled', fakeAsync(() => {
             fixture.detectChanges();
-            spyOn(autocomplete.target, 'open').and.callThrough();
+            vi.spyOn(autocomplete.target, 'open');
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
 
             autocomplete.disabled = true;
@@ -585,7 +586,7 @@ describe('IgxAutocomplete', () => {
         it('Should trigger selectionChanging event on item selection', fakeAsync(() => {
             let startsWith = 'st';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
-            spyOn(autocomplete.selectionChanging, 'emit').and.callThrough();
+            vi.spyOn(autocomplete.selectionChanging, 'emit');
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             tick();
 
@@ -616,7 +617,7 @@ describe('IgxAutocomplete', () => {
             expect(fixture.componentInstance.townSelected).toBe('s');
         }));
         it('Should trigger selectionChanging only once when the event is cancelled (issue #7483)', fakeAsync(() => {
-            spyOn(autocomplete.selectionChanging, 'emit').and.callThrough();
+            vi.spyOn(autocomplete.selectionChanging, 'emit');
 
             fixture.componentInstance.selectionChanging = (args) => {
                 args.cancel = true;
@@ -646,12 +647,12 @@ describe('IgxAutocomplete', () => {
         }));
         it('Should call onInput/open/close methods properly', fakeAsync(() => {
             let startsWith = 'g';
-            spyOn(autocomplete, 'onInput').and.callThrough();
-            spyOn(autocomplete, 'handleKeyDown').and.callThrough();
-            spyOn(autocomplete, 'close').and.callThrough();
-            spyOn(autocomplete.target, 'close').and.callThrough();
-            spyOn(autocomplete.target, 'open').and.callThrough();
-            spyOn(autocomplete.target.opening, 'emit').and.callThrough();
+            vi.spyOn(autocomplete, 'onInput');
+            vi.spyOn(autocomplete, 'handleKeyDown');
+            vi.spyOn(autocomplete, 'close');
+            vi.spyOn(autocomplete.target, 'close');
+            vi.spyOn(autocomplete.target, 'open');
+            vi.spyOn(autocomplete.target.opening, 'emit');
 
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             tick();
@@ -681,7 +682,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.target.close).toHaveBeenCalledTimes(2);
 
             // IgxDropDownItemNavigationDirective handleKeyDown is not called when dropdown is closed
-            spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown').and.callThrough();
+            vi.spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown');
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             fixture.detectChanges();
             tick();
@@ -728,7 +729,7 @@ describe('IgxAutocomplete', () => {
                 code: 'Home',
                 preventDefault: () => {}
             };
-            spyOn(mockObj, 'preventDefault');
+            vi.spyOn(mockObj, 'preventDefault');
             const inputDebug = fixture.debugElement.queryAll(By.css('.' + INPUT_CSS_CLASS))[0];
             inputDebug.triggerEventHandler('keydown', mockObj);
             expect(mockObj.preventDefault).not.toHaveBeenCalled();

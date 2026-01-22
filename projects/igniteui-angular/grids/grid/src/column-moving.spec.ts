@@ -16,6 +16,7 @@ import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { ColumnType, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
@@ -117,7 +118,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             let columnsList = grid.columns;
             const column = columnsList[0] as IgxColumnComponent;
 
-            spyOn(grid.columnMovingEnd, 'emit').and.callThrough();
+            vi.spyOn(grid.columnMovingEnd, 'emit');
 
             column.move(2);
             tick();

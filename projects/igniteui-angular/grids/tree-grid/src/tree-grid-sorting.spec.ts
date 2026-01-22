@@ -6,6 +6,7 @@ import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxTreeGrid - Sorting #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;

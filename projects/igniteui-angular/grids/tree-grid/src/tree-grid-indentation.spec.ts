@@ -8,6 +8,7 @@ import { DropPosition } from 'igniteui-angular/grids/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 
 describe('IgxTreeGrid - Indentation #tGrid', () => {

@@ -7,6 +7,7 @@ import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxMonthPickerComponent } from './month-picker.component';
 import { IFormattingOptions, IgxCalendarView } from '../calendar';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxMonthPicker', () => {
 
     beforeEach(() => {
@@ -178,7 +179,7 @@ describe('IgxMonthPicker', () => {
 
         const months = dom.queryAll(By.css('.igx-calendar-view__item'));
 
-        spyOn(monthPicker.selected, 'emit');
+        vi.spyOn(monthPicker.selected, 'emit');
 
         UIInteractions.simulateMouseDownEvent(months[2].nativeElement.firstChild);
         fixture.detectChanges();
@@ -329,7 +330,7 @@ describe('IgxMonthPicker', () => {
 
         const dom = fixture.debugElement;
         const monthPicker = fixture.componentInstance.monthPicker;
-        spyOn(monthPicker.selected, 'emit').and.callThrough();
+        vi.spyOn(monthPicker.selected, 'emit');
 
         const next = dom.query(By.css('.igx-calendar-picker__next'));
         let yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
@@ -352,7 +353,7 @@ describe('IgxMonthPicker', () => {
 
         const dom = fixture.debugElement;
         const monthPicker = fixture.componentInstance.monthPicker;
-        spyOn(monthPicker.selected, 'emit').and.callThrough();
+        vi.spyOn(monthPicker.selected, 'emit');
 
         const prev = dom.query(By.css('.igx-calendar-picker__prev'));
         let yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
@@ -375,7 +376,7 @@ describe('IgxMonthPicker', () => {
 
         const dom = fixture.debugElement;
         const monthPicker = fixture.componentInstance.monthPicker;
-        spyOn(monthPicker.selected, 'emit').and.callThrough();
+        vi.spyOn(monthPicker.selected, 'emit');
 
         let yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
@@ -477,7 +478,7 @@ describe('IgxMonthPicker', () => {
     it('should update the view date and throw viewDateChanged event on page changes', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         const monthPicker = fixture.componentInstance.monthPicker;
-        spyOn(monthPicker.viewDateChanged, 'emit');
+        vi.spyOn(monthPicker.viewDateChanged, 'emit');
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -504,7 +505,7 @@ describe('IgxMonthPicker', () => {
     it('should emit an activeViewChanged event whenever the view changes', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         const monthPicker = fixture.componentInstance.monthPicker;
-        spyOn(monthPicker.activeViewChanged, 'emit');
+        vi.spyOn(monthPicker.activeViewChanged, 'emit');
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -527,7 +528,7 @@ describe('IgxMonthPicker', () => {
     it('should emit viewDateChanged event when changing year with arrow buttons', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         const monthPicker = fixture.componentInstance.monthPicker;
-        spyOn(monthPicker.viewDateChanged, 'emit');
+        vi.spyOn(monthPicker.viewDateChanged, 'emit');
 
         fixture.detectChanges();
 

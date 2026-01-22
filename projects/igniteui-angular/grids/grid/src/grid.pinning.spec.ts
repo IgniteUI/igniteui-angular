@@ -28,6 +28,7 @@ import { DropPosition } from 'igniteui-angular/grids/core';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Column Pinning #grid', () => {
 
     const DEBOUNCETIME = 30;
@@ -342,7 +343,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should emit columnPin event and allow changing the insertAtIndex param.', () => {
 
-                spyOn(grid.columnPin, 'emit').and.callThrough();
+                vi.spyOn(grid.columnPin, 'emit');
 
                 const idCol = grid.getColumnByName('ID');
                 const idColIndex = idCol.index;

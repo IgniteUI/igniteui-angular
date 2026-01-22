@@ -7,6 +7,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { Component, inject } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
 import { By } from "@angular/platform-browser";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';;
 
 describe("Icon Service", () => {
@@ -130,8 +131,8 @@ describe("Icon Service", () => {
         const iconName = "test";
         const familyName = "svg-icons";
 
-        spyOn(XMLHttpRequest.prototype, "open").and.callThrough();
-        spyOn(XMLHttpRequest.prototype, "send");
+        vi.spyOn(XMLHttpRequest.prototype, "open");
+        vi.spyOn(XMLHttpRequest.prototype, "send");
 
         iconService.addSvgIcon(iconName, "test.svg", familyName);
 
@@ -203,8 +204,8 @@ describe("Icon Service", () => {
         const iconName = "test";
         const familyName = "svg-icons";
 
-        spyOn(XMLHttpRequest.prototype, "open").and.callThrough();
-        spyOn(XMLHttpRequest.prototype, "send").and.callFake(() => {
+        vi.spyOn(XMLHttpRequest.prototype, "open");
+        vi.spyOn(XMLHttpRequest.prototype, "send").mockImplementation(() => {
             (iconService as any)._iconLoaded.next({
                 name: iconName,
                 value: svgText,

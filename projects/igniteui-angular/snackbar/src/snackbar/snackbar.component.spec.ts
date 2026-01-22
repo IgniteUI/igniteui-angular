@@ -8,6 +8,7 @@ import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'ignite
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxSnackbar', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -45,7 +46,7 @@ describe('IgxSnackbar', () => {
     });
 
     it('should auto hide 1 second after is open', fakeAsync(() => {
-        spyOn(snackbar.closing, 'emit');
+        vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         fixture.detectChanges();
@@ -62,7 +63,7 @@ describe('IgxSnackbar', () => {
     }));
 
     it('should not auto hide 1 second after is open', fakeAsync(() => {
-        spyOn(snackbar.closing, 'emit');
+        vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         snackbar.autoHide = false;
@@ -82,7 +83,7 @@ describe('IgxSnackbar', () => {
     it('should trigger on action', fakeAsync(() => {
         snackbar.actionText = 'undo';
         snackbar.displayTime = 100;
-        spyOn(snackbar.clicked, 'emit');
+        vi.spyOn(snackbar.clicked, 'emit');
 
         snackbar.open();
         tick(100);
@@ -95,7 +96,7 @@ describe('IgxSnackbar', () => {
     }));
 
     it('should emit opening when snackbar is shown', fakeAsync(() => {
-        spyOn(snackbar.opening, 'emit');
+        vi.spyOn(snackbar.opening, 'emit');
         snackbar.open();
         tick(100);
         expect(snackbar.opening.emit).toHaveBeenCalled();
@@ -105,7 +106,7 @@ describe('IgxSnackbar', () => {
     it('should emit onOpened when snackbar is opened', fakeAsync(() => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
-        spyOn(snackbar.opened, 'emit');
+        vi.spyOn(snackbar.opened, 'emit');
         snackbar.open();
         tick(100);
         fixture.detectChanges();
@@ -114,7 +115,7 @@ describe('IgxSnackbar', () => {
     }));
 
     it('should emit closing when snackbar is hidden', () => {
-        spyOn(snackbar.closing, 'emit');
+        vi.spyOn(snackbar.closing, 'emit');
         snackbar.open();
         snackbar.close();
         expect(snackbar.closing.emit).toHaveBeenCalled();
@@ -123,7 +124,7 @@ describe('IgxSnackbar', () => {
     it('should emit onClosed when snackbar is closed', fakeAsync(() => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
-        spyOn(snackbar.closed, 'emit');
+        vi.spyOn(snackbar.closed, 'emit');
         snackbar.open();
         snackbar.close();
         tick(100);

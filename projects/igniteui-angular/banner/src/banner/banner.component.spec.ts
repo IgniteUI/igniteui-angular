@@ -8,6 +8,7 @@ import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from 'igniteui-angular/card';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_EXPANSION_PANEL_BODY = 'igx-expansion-panel__body';
 const CSS_CLASS_BANNER = 'igx-banner';
@@ -231,12 +232,12 @@ describe('igxBanner', () => {
             const banner = fixture.componentInstance.banner;
             expect(banner.collapsed).toBeTruthy();
 
-            spyOn(banner.opened, 'emit');
-            spyOn(banner.closed, 'emit');
-            spyOn(banner, 'onExpansionPanelClose').and.callThrough();
-            spyOn(banner, 'onExpansionPanelOpen').and.callThrough();
-            spyOn(banner, 'open').and.callThrough();
-            spyOn(banner, 'close').and.callThrough();
+            vi.spyOn(banner.opened, 'emit');
+            vi.spyOn(banner.closed, 'emit');
+            vi.spyOn(banner, 'onExpansionPanelClose');
+            vi.spyOn(banner, 'onExpansionPanelOpen');
+            vi.spyOn(banner, 'open');
+            vi.spyOn(banner, 'close');
 
             banner.open();
             tick();
@@ -337,10 +338,10 @@ describe('igxBanner', () => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
-            spyOn(banner.closed, 'emit');
-            spyOn(banner.closing, 'emit');
-            spyOn(banner.opened, 'emit');
-            spyOn(banner.opening, 'emit');
+            vi.spyOn(banner.closed, 'emit');
+            vi.spyOn(banner.closing, 'emit');
+            vi.spyOn(banner.opened, 'emit');
+            vi.spyOn(banner.opening, 'emit');
             expect(banner.collapsed).toEqual(true);
             expect(banner.opening.emit).toHaveBeenCalledTimes(0);
             expect(banner.opened.emit).toHaveBeenCalledTimes(0);
@@ -364,10 +365,10 @@ describe('igxBanner', () => {
             const fixture = TestBed.createComponent(SimpleBannerEventsComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
-            spyOn(banner.closing, 'emit').and.callThrough();
-            spyOn(banner.opening, 'emit').and.callThrough();
-            spyOn(banner.closed, 'emit').and.callThrough();
-            spyOn(banner.opened, 'emit').and.callThrough();
+            vi.spyOn(banner.closing, 'emit');
+            vi.spyOn(banner.opening, 'emit');
+            vi.spyOn(banner.closed, 'emit');
+            vi.spyOn(banner.opened, 'emit');
             expect(banner.collapsed).toEqual(true);
             fixture.componentInstance.cancelFlag = true;
             banner.toggle();

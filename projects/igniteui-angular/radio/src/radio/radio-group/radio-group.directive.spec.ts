@@ -7,6 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from '../../radio/radio.component';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxRadioGroupDirective', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -106,7 +107,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toBeDefined();
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
 
-        spyOn(radioInstance.change, 'emit');
+        vi.spyOn(radioInstance.change, 'emit');
 
         radioInstance.value = 'Foo';
         fixture.detectChanges();
@@ -129,7 +130,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toBeDefined();
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
 
-        spyOn(radioInstance.change, 'emit');
+        vi.spyOn(radioInstance.change, 'emit');
 
         radioInstance.selected = radioInstance.radioButtons.first;
         fixture.detectChanges();
@@ -548,7 +549,7 @@ describe('IgxRadioGroupDirective', () => {
             fixture.detectChanges();
             tick();
 
-            spyOn(radioGroup.radioButtons.toArray()[1].nativeElement, 'focus');
+            vi.spyOn(radioGroup.radioButtons.toArray()[1].nativeElement, 'focus');
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
@@ -571,7 +572,7 @@ describe('IgxRadioGroupDirective', () => {
             fixture.detectChanges();
             tick();
 
-            spyOn(firstButton.nativeElement, 'blur');
+            vi.spyOn(firstButton.nativeElement, 'blur');
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
@@ -595,7 +596,7 @@ describe('IgxRadioGroupDirective', () => {
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown', cancelable: true });
-            spyOn(event, 'preventDefault');
+            vi.spyOn(event, 'preventDefault');
 
             groupElement.dispatchEvent(event);
             fixture.detectChanges();

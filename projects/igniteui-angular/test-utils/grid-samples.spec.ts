@@ -18,6 +18,7 @@ import { IgxButtonDirective, IgxFocusDirective } from 'igniteui-angular/directiv
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { CellType, IGridCellEventArgs, IgxAdvancedFilteringDialogComponent, IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxDateSummaryOperand, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleSearchComponent, IgxExcelStyleSelectingComponent, IgxFilterCellTemplateDirective, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowSelectorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from 'igniteui-angular/grids/core';
 
+import { it } from 'vitest';
 @Component({
     template: GridTemplateStrings.declareGrid('', '', `<igx-column field="ID" [hidden]="true"></igx-column>`),
     imports: [IgxGridComponent, IgxColumnComponent]

@@ -5,11 +5,12 @@ import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 class MockTogglePlayer extends ToggleAnimationPlayer {
 }
 
 describe('Toggle animation component', () => {
-    const mockBuilder = jasmine.createSpyObj<any>('mockBuilder', ['build'], {});
+    const mockBuilder = { build: vi.fn() };
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -25,7 +26,7 @@ describe('Toggle animation component', () => {
         it('Should initialize player with give settings', () => {
             const player = TestBed.inject(MockTogglePlayer);
             const startPlayerSpy = spyOn<any>(player, 'startPlayer');
-            const mockEl = jasmine.createSpyObj('mockRef', ['focus'], {});
+            const mockEl = { focus: vi.fn() };
             player.playOpenAnimation(mockEl);
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.OPEN, mockEl, noop);
             player.playCloseAnimation(mockEl);
@@ -56,10 +57,10 @@ describe('Toggle animation component', () => {
             player.animationSettings = null;
             const mockCb = jasmine.createSpy('mockCb');
             const mockElement = jasmine.createSpy('element');
-            spyOn(player.openAnimationStart, 'emit');
-            spyOn(player.openAnimationDone, 'emit');
-            spyOn(player.closeAnimationStart, 'emit');
-            spyOn(player.closeAnimationDone, 'emit');
+            vi.spyOn(player.openAnimationStart, 'emit');
+            vi.spyOn(player.openAnimationDone, 'emit');
+            vi.spyOn(player.closeAnimationStart, 'emit');
+            vi.spyOn(player.closeAnimationDone, 'emit');
 
             player.playOpenAnimation({ nativeElement: mockElement }, mockCb);
             expect(player.openAnimationStart.emit).toHaveBeenCalledTimes(1);

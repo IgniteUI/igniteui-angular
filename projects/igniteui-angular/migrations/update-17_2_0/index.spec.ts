@@ -3,6 +3,7 @@ import * as path from 'path';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 const version = '17.2.0';
 
 describe(`Update to ${version}`, () => {

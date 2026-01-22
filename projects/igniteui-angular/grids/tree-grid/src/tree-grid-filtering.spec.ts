@@ -11,6 +11,7 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
 import { FilteringStrategy, GridColumnDataType, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const IGX_CHECKBOX_LABEL = '.igx-checkbox__label';
 
 describe('IgxTreeGrid - Filtering actions #tGrid', () => {
@@ -751,7 +752,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
         it('Should not throw console error when number column with dataType string is filtered.', fakeAsync(() => {
             tGrid.columns[0].dataType = GridColumnDataType.String;
             fix.detectChanges();
-            spyOn(console, 'error');
+            vi.spyOn(console, 'error');
 
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
             fix.detectChanges();

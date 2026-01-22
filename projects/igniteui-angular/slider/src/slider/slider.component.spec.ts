@@ -8,6 +8,7 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 const SLIDER_CLASS = '.igx-slider';
 const THUMB_TAG = 'igx-thumb';
 const THUMB_TO_CLASS = '.igx-slider-thumb-to';
@@ -333,9 +334,9 @@ describe('IgxSlider', () => {
         });
 
         it('should not set value if value is nullish but not zero', () => {
-            spyOn(slider as any, 'isNullishButNotZero').and.returnValue(true);
-            const setValueSpy = spyOn(slider, 'setValue');
-            const positionHandlersAndUpdateTrackSpy = spyOn(slider as any, 'positionHandlersAndUpdateTrack');
+            vi.spyOn(slider as any, 'isNullishButNotZero').mockReturnValue(true);
+            const setValueSpy = vi.spyOn(slider, 'setValue');
+            const positionHandlersAndUpdateTrackSpy = vi.spyOn(slider as any, 'positionHandlersAndUpdateTrack');
 
             slider.writeValue(null);
             fixture.detectChanges();
@@ -351,9 +352,9 @@ describe('IgxSlider', () => {
         });
 
         it('should set value and update track when value is not nullish and not zero', () => {
-            spyOn(slider as any, 'isNullishButNotZero').and.returnValue(false);
-            const setValueSpy = spyOn(slider, 'setValue');
-            const positionHandlersAndUpdateTrackSpy = spyOn(slider as any, 'positionHandlersAndUpdateTrack');
+            vi.spyOn(slider as any, 'isNullishButNotZero').mockReturnValue(false);
+            const setValueSpy = vi.spyOn(slider, 'setValue');
+            const positionHandlersAndUpdateTrackSpy = vi.spyOn(slider as any, 'positionHandlersAndUpdateTrack');
 
             const value = 10;
             slider.writeValue(value);
@@ -364,8 +365,8 @@ describe('IgxSlider', () => {
         });
 
         it('should normalize value by step', () => {
-            spyOn(slider as any, 'isNullishButNotZero').and.returnValue(false);
-            const normalizeByStepSpy = spyOn(slider as any, 'normalizeByStep');
+            vi.spyOn(slider as any, 'isNullishButNotZero').mockReturnValue(false);
+            const normalizeByStepSpy = vi.spyOn(slider as any, 'normalizeByStep');
 
             const value = 10;
             slider.writeValue(value);
@@ -845,9 +846,9 @@ describe('IgxSlider', () => {
 
             expect(slider).toBeDefined();
             expect(slider.upperLabel).toEqual('Winter');
-            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
-            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit').and.callThrough();
-            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit').and.callThrough();
+            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit');
+            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit');
+            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
             fixture.detectChanges();
@@ -1136,9 +1137,9 @@ describe('IgxSlider', () => {
             expect(fromThumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
-            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
-            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit').and.callThrough();
-            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit').and.callThrough();
+            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit');
+            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit');
+            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
@@ -1456,7 +1457,7 @@ describe('IgxSlider', () => {
             fix.detectChanges();
 
             const instance = fix.componentInstance;
-            const spyOnDragFinished = spyOn<any>(instance.slider.dragFinished, 'emit').and.callThrough();
+            const spyOnDragFinished = spyOn<any>(instance.slider.dragFinished, 'emit');
             const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS));
             const thumbTo = fix.debugElement.query(By.css(THUMB_TO_CLASS));
             thumbTo.triggerEventHandler('focus', null);

@@ -24,6 +24,7 @@ import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNu
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { OneGroupThreeColsGridComponent } from '../../../../../test-utils/grid-mch-sample.spec';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;
@@ -49,7 +50,7 @@ describe('CSV Grid Exporter', () => {
         options = new IgxCsvExporterOptions('CsvGridExport', CsvFileTypes.CSV);
 
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities as any, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities as any, 'saveBlobToFile');
     });
 
     afterEach(() => {

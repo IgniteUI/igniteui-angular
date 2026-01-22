@@ -16,6 +16,7 @@ import { IgxButtonDirective } from '../../../directives/src/directives/button/bu
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxIconButtonDirective } from '../../../directives/src/directives/button/icon-button.directive';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('Card', () => {
     // TODO: Refactor card tests to reuse components
     const baseClass = 'igx-card';

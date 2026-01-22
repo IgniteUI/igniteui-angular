@@ -5,6 +5,7 @@ import { wait } from '../../../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
 
+import { it, expect } from 'vitest';
 export class TestMethods {
 
     public static async testRawData(myGrid: IgxGridComponent, action: (grid) => Promise<void>) {

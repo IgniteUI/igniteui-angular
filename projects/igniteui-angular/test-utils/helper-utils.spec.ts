@@ -4,13 +4,14 @@ import { GridType } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { Subscription } from 'rxjs';
 
+import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 /**
  * Global beforeEach and afterEach checks to ensure test fails on specific warnings
  * Use direct env because karma-parallel's wrap ignores these in secondary shards
  * https://github.com/joeljeske/karma-parallel/issues/64
  */
 (jasmine.getEnv() as any).beforeEach(() => {
-    spyOn(console, 'warn').and.callThrough();
+    vi.spyOn(console, 'warn');
 });
 
 (jasmine.getEnv() as any).afterEach(() => {

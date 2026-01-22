@@ -5,6 +5,7 @@ import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec'
 import { first } from 'rxjs/operators';
 import { ExportRecordType, ExportHeaderType, DEFAULT_OWNER, IExportRecord, IColumnInfo, IColumnList, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('PDF Exporter', () => {
     let exporter: IgxPdfExporterService;
     let options: IgxPdfExporterOptions;
@@ -17,7 +18,7 @@ describe('PDF Exporter', () => {
         (exporter as any)._ownersMap.clear();
 
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities, 'saveBlobToFile');
     });
 
     it('should be created', () => {

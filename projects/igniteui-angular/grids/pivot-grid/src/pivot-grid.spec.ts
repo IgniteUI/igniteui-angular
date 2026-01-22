@@ -23,6 +23,7 @@ import { IgxGridCell } from 'igniteui-angular/grids/core';
 import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
 import { getI18nManager } from 'igniteui-i18n-core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
@@ -1265,7 +1266,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(filtersChip).not.toBeUndefined();
                 const filterIcon = filtersChip.querySelectorAll('igx-icon')[0];
 
-                spyOn(headerRow, 'onFilteringIconPointerDown').and.callThrough();
+                vi.spyOn(headerRow, 'onFilteringIconPointerDown');
                 filterIcon.dispatchEvent(new Event('pointerdown'));
                 expect(headerRow.onFilteringIconPointerDown).toHaveBeenCalledTimes(1);
             });
@@ -1273,7 +1274,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             it('should apply sorting for dimension via row chip', () => {
                 fixture.detectChanges();
                 const pivotGrid = fixture.componentInstance.pivotGrid;
-                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
+                vi.spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
                 rowChip.click();
@@ -1306,7 +1307,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const colChip = headerRow.querySelector('igx-chip[id="Country"]');
-                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
+                vi.spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 // sort
                 colChip.click();
                 fixture.detectChanges();
@@ -1345,7 +1346,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const colChip = headerRow.querySelector('igx-chip[id="Country"]');
-                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
+                vi.spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 // sort
                 colChip.click();
                 fixture.detectChanges();
@@ -2138,7 +2139,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             it('should have the correct IGridCellEventArgs when clicking on a cell', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
-                spyOn(pivotGrid.cellClick, 'emit').and.callThrough();
+                vi.spyOn(pivotGrid.cellClick, 'emit');
                 fixture.detectChanges();
 
                 const cell = pivotGrid.gridAPI.get_cell_by_index(0, 'Bulgaria-UnitsSold');

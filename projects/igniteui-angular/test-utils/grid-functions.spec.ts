@@ -14,6 +14,7 @@ import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { IgxGridComponent, IgxGridExpandableCellComponent, IgxGridRowComponent } from 'igniteui-angular/grids/grid';
 import { IgxPivotRowComponent } from 'igniteui-angular/grids/pivot-grid/src/pivot-row.component';
 
+import { it, expect } from 'vitest';
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
 const SUMMARY_CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';

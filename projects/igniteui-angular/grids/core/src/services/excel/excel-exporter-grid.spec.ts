@@ -50,6 +50,7 @@ import { FileContentData } from './test-data.service.spec';
 import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
@@ -99,7 +100,7 @@ describe('Excel Exporter', () => {
         actualData = new FileContentData();
 
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities as any, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities as any, 'saveBlobToFile');
     }));
 
     afterEach(waitForAsync(() => {

@@ -163,6 +163,7 @@ import { AppComponent } from "./app.component";
 import { IgxCsvExporterService, IgxExcelExporterService } from "igniteui-angular";
 import { ExcelExportComponent } from "./services/export-excel/excel-export.component";
 
+import { describe, it, expect, beforeEach } from 'vitest';
 @NgModule({
 bootstrap: [AppComponent],
 declarations: [

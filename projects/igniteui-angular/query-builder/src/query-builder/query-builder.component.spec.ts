@@ -18,6 +18,7 @@ import { IgxQueryBuilderComponent } from './query-builder.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxQueryBuilder', () => {
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
@@ -172,7 +173,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it(`Should discard newly added group when clicking on the 'cancel' button of its initial condition.`, fakeAsync(() => {
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
       expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
 
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
@@ -197,7 +198,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
 
       // Verify group's children count before adding a new child.
       let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -235,7 +236,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
 
       // Verify group's children count before adding a new child.
       let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -285,7 +286,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
 
       // Verify group's children count before adding a new child.
       let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -334,7 +335,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
 
       // Verify tree layout before deleting chips.
       QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
@@ -2071,7 +2072,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
     }));
 
     it(`Should commit the changes in a valid edited condition when the 'commit' method is called.`, fakeAsync(() => {
@@ -2228,7 +2229,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Should NOT throw errors when an invalid condition is committed through API.', fakeAsync(() => {
-      spyOn(console, 'error');
+      vi.spyOn(console, 'error');
       // Click the existing chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [2]);
       tick(50);
@@ -2750,7 +2751,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
       fix.detectChanges();
 
-      spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
+      vi.spyOn(dragDir.ghostElement, 'dispatchEvent');
 
       const addConditionButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
       const addConditionButtonCenter = QueryBuilderFunctions.getElementCenter(addConditionButton);
@@ -2975,7 +2976,7 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.triggerEventHandler('focus', {});
       draggedIndicator.nativeElement.focus();
 
-      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      vi.spyOn(tree.nativeElement, 'dispatchEvent');
       const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
 
       //pass 1 down to bottom
@@ -3109,7 +3110,7 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.triggerEventHandler('focus', {});
       draggedIndicator.nativeElement.focus();
 
-      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      vi.spyOn(tree.nativeElement, 'dispatchEvent');
 
       tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       tick(20);
@@ -3216,7 +3217,7 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.triggerEventHandler('focus', {});
       draggedIndicator.nativeElement.focus();
 
-      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      vi.spyOn(tree.nativeElement, 'dispatchEvent');
 
       tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       tick(20);

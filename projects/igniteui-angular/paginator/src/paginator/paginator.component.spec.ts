@@ -8,6 +8,7 @@ import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxPaginator with default settings', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -147,8 +148,8 @@ describe('IgxPaginator with default settings', () => {
 
         const paginator = fix.componentInstance.paginator;
 
-        spyOn(paginator.paging, 'emit').and.callThrough();
-        spyOn(paginator.pagingDone, 'emit').and.callThrough();
+        vi.spyOn(paginator.paging, 'emit');
+        vi.spyOn(paginator.pagingDone, 'emit');
         const allBtns = fix.debugElement.queryAll(By.css('.igx-icon-button'));
 
         const prevBtn = allBtns[1];
@@ -182,7 +183,7 @@ describe('IgxPaginator with default settings', () => {
         fix.detectChanges();
 
         const paginator = fix.componentInstance.paginator;
-        spyOn(paginator.pageChange, 'emit').and.callThrough();
+        vi.spyOn(paginator.pageChange, 'emit');
         const allBtns = fix.debugElement.queryAll(By.css('.igx-icon-button '));
         const nextBtn = allBtns[2];
 
@@ -206,7 +207,7 @@ describe('IgxPaginator with default settings', () => {
         fix.detectChanges();
 
         const paginator = fix.componentInstance.paginator;
-        spyOn(paginator.perPageChange, 'emit').and.callThrough();
+        vi.spyOn(paginator.perPageChange, 'emit');
 
         paginator.perPage = 3;
 

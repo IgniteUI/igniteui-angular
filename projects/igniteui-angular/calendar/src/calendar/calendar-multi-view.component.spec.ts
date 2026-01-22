@@ -10,6 +10,7 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent } from './calendar.component';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('Multi-View Calendar - ', () => {
     let fixture: ComponentFixture<any>
     let calendar: any;
@@ -146,7 +147,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('selected event should be fired when selecting a date', () => {
-            spyOn(calendar.selected, 'emit');
+            vi.spyOn(calendar.selected, 'emit');
             const viewDate = ymd('2019-09-06');
             calendar.viewDate = viewDate;
             fixture.detectChanges();
@@ -725,7 +726,7 @@ describe('Multi-View Calendar - ', () => {
 
 
         it('should select the days in only in of the months in single/multi selection mode', () => {
-            spyOn(calendar.selected, 'emit');
+            vi.spyOn(calendar.selected, 'emit');
 
             const fistMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
@@ -759,7 +760,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('Multi Selection - select/deselect date in the view', () => {
-            spyOn(calendar.selected, 'emit');
+            vi.spyOn(calendar.selected, 'emit');
             calendar.selection = 'multi';
             fixture.detectChanges();
 
@@ -968,7 +969,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('outside days should NOT be selected in all month views, when hideOutsideDays is false and selection is range', () => {
-            spyOn(calendar.selected, 'emit');
+            vi.spyOn(calendar.selected, 'emit');
             calendar.selection = 'range';
             fixture.detectChanges();
 

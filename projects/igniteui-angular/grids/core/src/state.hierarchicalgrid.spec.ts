@@ -11,6 +11,7 @@ import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IG
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;

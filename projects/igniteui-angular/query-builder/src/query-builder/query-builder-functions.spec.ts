@@ -8,6 +8,7 @@ import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { QueryBuilderSelectors } from './query-builder.common';
 
+import { expect, vi } from 'vitest';
 export const SampleEntities = [
     {
         name: 'Products', fields: [
@@ -951,7 +952,7 @@ export class QueryBuilderFunctions {
         QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
         fix.detectChanges();
 
-        spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
+        vi.spyOn(dragDir.ghostElement, 'dispatchEvent');
 
         const target = moveDown ? 350 : 0;
         const shift = moveDown ? 1 : -1

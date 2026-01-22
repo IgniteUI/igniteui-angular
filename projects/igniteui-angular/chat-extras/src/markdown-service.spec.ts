@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { IgxChatMarkdownService } from './markdown-service';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxChatMarkdownService', () => {
     let service: IgxChatMarkdownService;
 

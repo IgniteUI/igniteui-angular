@@ -19,6 +19,7 @@ import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe("Pivot data selector", () => {
 
     beforeEach(waitForAsync(() => {
@@ -74,10 +75,10 @@ describe("Pivot data selector integration", () => {
     });
 
     it("should set through API expand states for panels with two way data binding", () => {
-        spyOn(selector.filtersExpandedChange, "emit");
-        spyOn(selector.columnsExpandedChange, "emit");
-        spyOn(selector.rowsExpandedChange, "emit");
-        spyOn(selector.valuesExpandedChange, "emit");
+        vi.spyOn(selector.filtersExpandedChange, "emit");
+        vi.spyOn(selector.columnsExpandedChange, "emit");
+        vi.spyOn(selector.rowsExpandedChange, "emit");
+        vi.spyOn(selector.valuesExpandedChange, "emit");
 
         const expansionPanels = fixture.debugElement.queryAll(By.directive(IgxExpansionPanelComponent));
         expect(expansionPanels.length).toEqual(4);
@@ -324,10 +325,10 @@ describe("Pivot data selector integration", () => {
         // Get all value items
         const items = getPanelItemsByDimensionType(null);
 
-        spyOn(selector, "ghostCreated");
-        spyOn(selector, "onItemDragMove");
-        spyOn(selector, "onItemDragEnd");
-        spyOn(selector, "onItemDropped");
+        vi.spyOn(selector, "ghostCreated");
+        vi.spyOn(selector, "onItemDragMove");
+        vi.spyOn(selector, "onItemDragEnd");
+        vi.spyOn(selector, "onItemDropped");
 
         // Get the drag handle of the last item in the panel
         const dragHandle = items[0].parentNode
@@ -398,7 +399,7 @@ describe("Pivot data selector integration", () => {
     });
 
     it("should call filtering menu on column and row filter click", () => {
-        spyOn(grid.filteringService, "toggleFilterDropdown");
+        vi.spyOn(grid.filteringService, "toggleFilterDropdown");
 
         const columnItems = getPanelItemsByDimensionType(
             PivotDimensionType.Column

@@ -7,6 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/time-picker.component';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('igxFocusTrap', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

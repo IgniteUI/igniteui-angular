@@ -8,6 +8,7 @@ import { IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 @Component({
     template: `
         <igx-chips-area #chipsArea class="customClass">
@@ -177,7 +178,7 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
             chipArea = fix.componentInstance.chipsArea;
 
-            spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
 
             fix.detectChanges();
 
@@ -235,7 +236,7 @@ describe('IgxChipsArea ', () => {
 
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
             const chipAreaComp: IgxChipsAreaComponent = fix.debugElement.query(By.directive(IgxChipsAreaComponent)).componentInstance;
-            spyOn(chipAreaComp.selectionChange, 'emit');
+            vi.spyOn(chipAreaComp.selectionChange, 'emit');
 
             secondChipComp.onChipKeyDown(spaceKeyEvent);
             fix.detectChanges();
@@ -273,7 +274,7 @@ describe('IgxChipsArea ', () => {
             chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
             fix.detectChanges();
 
-            spyOn(chipAreaComponent.chipsArea.selectionChange, `emit`);
+            vi.spyOn(chipAreaComponent.chipsArea.selectionChange, `emit`);
             chipAreaComponent.chipsArea.chipsList.toArray()[1].selected = true;
             fix.detectChanges();
             chipAreaComponent.chipsArea.chipsList.toArray()[2].selected = true;
@@ -306,7 +307,7 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
             chipArea = fix.componentInstance.chipsArea;
 
-            spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
 
             fix.detectChanges();
 
@@ -340,10 +341,10 @@ describe('IgxChipsArea ', () => {
             chipArea = fix.componentInstance.chipsArea;
             const secondChip = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(chipArea.reorder, 'emit');
-            spyOn(chipArea.selectionChange, 'emit');
-            spyOn(chipArea.moveStart, 'emit');
-            spyOn(chipArea.moveEnd, 'emit');
+            vi.spyOn(chipArea.reorder, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.moveStart, 'emit');
+            vi.spyOn(chipArea.moveEnd, 'emit');
 
 
             secondChip.onChipKeyDown(spaceKeyEvent);
@@ -363,7 +364,7 @@ describe('IgxChipsArea ', () => {
             const secondChip = fix.componentInstance.chips.toArray()[1];
             const pointerUpEvt = new PointerEvent('pointerup');
 
-            spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
             fix.detectChanges();
 
             secondChip.onChipDragClicked({
@@ -529,11 +530,11 @@ describe('IgxChipsArea ', () => {
             chipArea = fix.componentInstance.chipsArea;
             const secondChip = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(chipArea.reorder, 'emit');
-            spyOn(chipArea.selectionChange, 'emit');
-            spyOn(chipArea.moveStart, 'emit');
-            spyOn(chipArea.moveEnd, 'emit');
-            spyOn(secondChip.remove, 'emit');
+            vi.spyOn(chipArea.reorder, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.moveStart, 'emit');
+            vi.spyOn(chipArea.moveEnd, 'emit');
+            vi.spyOn(secondChip.remove, 'emit');
 
             secondChip.onChipKeyDown(deleteKeyEvent);
             fix.detectChanges();
@@ -640,7 +641,7 @@ describe('IgxChipsArea ', () => {
             fix.detectChanges();
 
             const firstChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
-            spyOn(firstChipComp.chipClick, 'emit');
+            vi.spyOn(firstChipComp.chipClick, 'emit');
 
             UIInteractions.clickDragDirective(fix, firstChipComp.dragDirective);
 

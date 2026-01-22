@@ -10,6 +10,7 @@ import { GridSelectionMode, ColumnDisplayOrder, IgxColumnActionsComponent } from
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('Column Hiding UI #grid', () => {
 
     let fix: ComponentFixture<ColumnHidingTestComponent>;
@@ -113,8 +114,8 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('"hiddenColumnsCount" reflects properly the number of hidden columns.', fakeAsync(() => {
-            spyOn(grid.columnVisibilityChanged, 'emit');
-            spyOn(grid.columnVisibilityChanging, 'emit');
+            vi.spyOn(grid.columnVisibilityChanged, 'emit');
+            vi.spyOn(grid.columnVisibilityChanging, 'emit');
 
             expect(fix.componentInstance.hiddenColumnsCount).toBe(3);
 
@@ -144,9 +145,9 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('columnToggled, columnVisibilityChanged, onColumnVisibilityChanging event is fired on toggling checkboxes.', () => {
-            spyOn(columnChooser.columnToggled, 'emit');
-            spyOn(grid.columnVisibilityChanged, 'emit');
-            spyOn(grid.columnVisibilityChanging, 'emit');
+            vi.spyOn(columnChooser.columnToggled, 'emit');
+            vi.spyOn(grid.columnVisibilityChanged, 'emit');
+            vi.spyOn(grid.columnVisibilityChanging, 'emit');
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
 
@@ -210,8 +211,8 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('reflects properly grid column hidden value changes.', () => {
-            spyOn(grid.columnVisibilityChanged, 'emit');
-            spyOn(grid.columnVisibilityChanging, 'emit');
+            vi.spyOn(grid.columnVisibilityChanged, 'emit');
+            vi.spyOn(grid.columnVisibilityChanging, 'emit');
 
             const name = 'ReleaseDate';
             verifyCheckbox(name, true, false, columnChooserElement);
@@ -448,8 +449,8 @@ describe('Column Hiding UI #grid', () => {
         }));
 
         it('- Hide All button operates over the filtered in columns only', fakeAsync(() => {
-            spyOn(grid.columnVisibilityChanged, 'emit');
-            spyOn(grid.columnVisibilityChanging, 'emit');
+            vi.spyOn(grid.columnVisibilityChanged, 'emit');
+            vi.spyOn(grid.columnVisibilityChanging, 'emit');
 
             grid.columnList.get(1).disableHiding = false;
             columnChooser.filterCriteria = 're';
@@ -556,8 +557,8 @@ describe('Column Hiding UI #grid', () => {
         }));
 
         it('- Show All button operates over the filtered in columns only', fakeAsync(() => {
-            spyOn(grid.columnVisibilityChanged, 'emit');
-            spyOn(grid.columnVisibilityChanging, 'emit');
+            vi.spyOn(grid.columnVisibilityChanged, 'emit');
+            vi.spyOn(grid.columnVisibilityChanging, 'emit');
 
             grid.columnList.get(1).disableHiding = false;
             fix.detectChanges();

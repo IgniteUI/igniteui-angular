@@ -8,6 +8,7 @@ import { IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective, IgxNavDra
 import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular/directives';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
 
@@ -31,8 +32,8 @@ describe('Navigation Drawer', () => {
 
         // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
         // so for tests just force override the the `getWindowWidth`
-        widthSpyOverride = spyOn(IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
-            .and.returnValue(915 /* chosen at random by fair dice roll*/);
+        widthSpyOverride = vi.spyOn(IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
+            .mockReturnValue(915 /* chosen at random by fair dice roll*/);
     }));
 
     it('should initialize without DI service', waitForAsync(() => {
@@ -154,10 +155,10 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
             drawer = fixture.componentInstance.navDrawer;
 
-            spyOn(drawer.closing, 'emit');
-            spyOn(drawer.closed, 'emit');
-            spyOn(drawer.opening, 'emit');
-            spyOn(drawer.opened, 'emit');
+            vi.spyOn(drawer.closing, 'emit');
+            vi.spyOn(drawer.closed, 'emit');
+            vi.spyOn(drawer.opening, 'emit');
+            vi.spyOn(drawer.opened, 'emit');
 
             const _re = drawer.open(true);
             fixture.detectChanges();
@@ -204,7 +205,7 @@ describe('Navigation Drawer', () => {
     it('should update with dynamic min template', waitForAsync(() => {
 
         // immediate requestAnimationFrame for testing
-        spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
+        vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => {
             callback(0); return 0;
         });
         const template = `<igx-nav-drawer [miniWidth]="'56px'">
@@ -560,7 +561,7 @@ describe('Navigation Drawer', () => {
         fixture.componentInstance.pin = true;
         fixture.detectChanges();
 
-        widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
+        widthSpyOverride.mockReturnValue(fixture.componentInstance.pinThreshold);
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
@@ -568,7 +569,7 @@ describe('Navigation Drawer', () => {
         expect(fixture.componentInstance.navDrawer.pin).toBe(true, 'Should pin on window resize over threshold');
         expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on window resize over threshold');
 
-        widthSpyOverride.and.returnValue(768);
+        widthSpyOverride.mockReturnValue(768);
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
@@ -587,7 +588,7 @@ describe('Navigation Drawer', () => {
         const drawer = TestBed.inject(IgxNavigationDrawerComponent);
 
         // re-enable `getWindowWidth`
-        const widthSpy = (widthSpyOverride as jasmine.Spy).and.callThrough();
+        const widthSpy = (widthSpyOverride as jasmine.Spy);
         let width = widthSpy.call(drawer);
         expect(width).toEqual(originalWidth);
 

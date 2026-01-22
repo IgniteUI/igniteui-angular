@@ -26,6 +26,7 @@ import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxGrid - Column properties #grid', () => {
 
     registerLocaleData(localeFr);

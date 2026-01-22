@@ -7,6 +7,7 @@ import { workspaces } from '@angular-devkit/core';
 import * as addNormalize from '../../schematics/ng-add/add-normalize';
 import { setupTestTree } from '../common/setup.spec';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('Update 7.2.0', () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
@@ -74,13 +75,13 @@ describe('Update 7.2.0', () => {
     it(`should add minireset css package and import`, async () => {
         appTree.create('/testSrc/styles.scss', '');
         appTree.create('package.json', '{}');
-        spyOn(addNormalize, 'addResetCss').and.callThrough();
+        vi.spyOn(addNormalize, 'addResetCss');
         const tree = await schematicRunner.runSchematic('migration-08', {}, appTree);
 
         expect(addNormalize.addResetCss).toHaveBeenCalledWith(
             jasmine.objectContaining<workspaces.WorkspaceDefinition>({
-                extensions: jasmine.anything(),
-                projects: jasmine.anything()
+                extensions: expect.anything(),
+                projects: expect.anything()
             }), appTree);
         expect(tree.readContent('/testSrc/styles.scss')).toContain(addNormalize.scssImport);
         expect(JSON.parse(tree.readContent('package.json'))).toEqual({

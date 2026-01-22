@@ -5,6 +5,7 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
 
+import { it } from 'vitest';
 @Component({
     template: `
         <igx-grid

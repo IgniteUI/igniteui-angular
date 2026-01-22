@@ -15,6 +15,7 @@ import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { PivotRowLayoutType } from 'igniteui-angular/grids/core';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
     let options: IgxPdfExporterOptions;
@@ -35,7 +36,7 @@ describe('PDF Grid Exporter', () => {
         options = new IgxPdfExporterOptions('PdfGridExport');
 
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities as any, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities as any, 'saveBlobToFile');
     });
 
     it('should export grid as displayed.', (done) => {
@@ -362,7 +363,7 @@ describe('PDF Grid Exporter', () => {
         const expectedRows = allGrids.reduce((acc, g) => acc + g.data.length, 0);
 
         // Spy PDF row drawing to count exported rows
-        const drawDataRowSpy = spyOn<any>(exporter as any, 'drawDataRow').and.callThrough();
+        const drawDataRowSpy = spyOn<any>(exporter as any, 'drawDataRow');
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(drawDataRowSpy.calls.count()).toBe(expectedRows);

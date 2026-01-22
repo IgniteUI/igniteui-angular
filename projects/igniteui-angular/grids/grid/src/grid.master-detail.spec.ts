@@ -16,6 +16,7 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 const DEBOUNCE_TIME = 30;
 const ROW_TAG = 'igx-grid-row';
 const GROUP_ROW_TAG = 'igx-grid-groupby-row';
@@ -839,7 +840,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             it('Should exclude expanded detail views when doing range cell selection', fakeAsync(() => {
                 grid.expandRow(fix.componentInstance.data[2].ID);
-                const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+                const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit');
                 const startCell = grid.gridAPI.get_cell_by_index(1, 'ContactName');
                 const endCell = grid.gridAPI.get_cell_by_index(6, 'CompanyName');
                 const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };

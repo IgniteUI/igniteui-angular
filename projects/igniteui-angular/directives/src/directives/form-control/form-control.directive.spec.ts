@@ -6,6 +6,7 @@ import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 
 import { IgcFormControlDirective } from './form-control.directive';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgcFormControlDirective - ', () => {
 
     let fixture: ComponentFixture<any>;
@@ -29,18 +30,9 @@ describe('IgcFormControlDirective - ', () => {
 
         const elementRef = { nativeElement: document.createElement('igc-rating') };
 
-        const mockNgControl = jasmine.createSpyObj('NgControl', [
-            'writeValue',
-            'onChange',
-            'setDisabledState',
-            'onChange',
-            'registerOnChangeCb',
-            'registerOnTouchedCb'
-        ]);
+        const mockNgControl = { writeValue: vi.fn(), onChange: vi.fn(), setDisabledState: vi.fn(), onChange: vi.fn(), registerOnChangeCb: vi.fn(), registerOnTouchedCb: vi.fn() };
 
-        const renderer2Mock = jasmine.createSpyObj('renderer2Mock', [
-            'setProperty'
-        ]);
+        const renderer2Mock = { setProperty: vi.fn() };
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             directive = TestBed.inject(IgcFormControlDirective);

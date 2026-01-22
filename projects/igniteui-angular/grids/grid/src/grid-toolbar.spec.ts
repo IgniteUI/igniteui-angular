@@ -8,6 +8,7 @@ import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular
 import { IgxCsvExporterService, IgxExcelExporterService, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { ExportUtilities } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';
 const TOOLBAR_ACTIONS_TAG = 'igx-grid-toolbar-actions';
@@ -224,7 +225,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             exporterButton.click();
             fixture.detectChanges();
 
-            spyOn(instance.exporterAction, 'export');
+            vi.spyOn(instance.exporterAction, 'export');
             $('#pdfEntry').click();
             fixture.detectChanges();
 
@@ -241,7 +242,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             exporterButton.click();
             fixture.detectChanges();
 
-            spyOn(ExportUtilities, 'saveBlobToFile');
+            vi.spyOn(ExportUtilities, 'saveBlobToFile');
             $('#pdfEntry').click();
             fixture.detectChanges();
 
@@ -303,7 +304,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
         }));
 
         it('should emit columnToggle event when a column is shown/hidden via the column hiding action', fakeAsync(() => {
-            const spy = spyOn(instance.hidingAction.columnToggle, 'emit');
+            const spy = vi.spyOn(instance.hidingAction.columnToggle, 'emit');
             const hidingUI = $(TOOLBAR_HIDING_TAG);
             const grid = fixture.componentInstance.grid;
             fixture.detectChanges();

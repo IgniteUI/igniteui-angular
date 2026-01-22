@@ -19,6 +19,7 @@ import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
@@ -675,8 +676,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
-            jasmine.getEnv().allowRespy(true);
-            const warnSpy = spyOn(console, 'warn');
+            const warnSpy = vi.spyOn(console, 'warn');
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
             grid.primaryKey = 'testField';
@@ -703,8 +703,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
-            jasmine.getEnv().allowRespy(false);
-        });
+            });
     });
 
     describe('IgxGrid - virtualization tests', () => {
@@ -2472,7 +2471,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.width = '300px';
             fix.detectChanges();
 
-            spyOn(grid.gridScroll, 'emit').and.callThrough();
+            vi.spyOn(grid.gridScroll, 'emit');
             let verticalScrollEvent;
             let horizontalScrollEvent;
             grid.verticalScrollContainer.getScroll().addEventListener('scroll', (evt) => verticalScrollEvent = evt);
@@ -2514,7 +2513,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 ignoreCase: false
             });
             fix.detectChanges();
-            spyOn(fix.componentInstance.grid.rowClick, 'emit').and.callThrough();
+            vi.spyOn(fix.componentInstance.grid.rowClick, 'emit');
             const event = new Event('click');
             const grow = grid.rowList.get(0);
             const row = grid.rowList.get(1);
@@ -2539,7 +2538,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             grid.columnList.forEach(c => c.width = '100px');
             fix.detectChanges();
-            const spy = spyOn(grid.contextMenu, 'emit').and.callThrough();
+            const spy = vi.spyOn(grid.contextMenu, 'emit');
             const event = new Event('contextmenu', { bubbles: true });
             const row = grid.rowList.get(0);
             const cell = row.cells.get(0);
@@ -2547,14 +2546,14 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
             expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
-                cell: jasmine.anything()
+                cell: expect.anything()
             }));
             spy.calls.reset();
             row.nativeElement.dispatchEvent(event);
             fix.detectChanges();
             expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
             expect(grid.contextMenu.emit).toHaveBeenCalledWith(jasmine.objectContaining({
-                row: jasmine.anything()
+                row: expect.anything()
             }));
         });
 

@@ -3,6 +3,7 @@ import { html } from 'lit';
 import { AsyncDirective, directive } from 'lit/async-directive.js';
 import { TemplateWrapperComponent } from './wrapper.component';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 const directiveLog = [];
 class ToLowerAsyncDirective extends AsyncDirective {
     public override render(text: string) {

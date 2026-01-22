@@ -33,6 +33,7 @@ import { IgxDayItemComponent } from "./days-view/day-item.component";
 import { HelperTestFunctions } from "../../../test-utils/calendar-helper-utils";
 import { WEEKDAYS } from "../../../core/src/core/enums";
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe("IgxCalendar - ", () => {
     registerLocaleData(localeFr);
 
@@ -731,7 +732,7 @@ describe("IgxCalendar - ", () => {
                         new Date(2017, 5, 13).toDateString(),
                     );
 
-                    spyOn(calendar.selected, "emit");
+                    vi.spyOn(calendar.selected, "emit");
 
                     // Select 14th
                     const dateElement = weekDays[3].nativeElement.firstChild;
@@ -2384,7 +2385,7 @@ describe("IgxCalendar - ", () => {
 
                     expect(year.nativeElement).toBe(document.activeElement);
 
-                    spyOn(calendar.activeViewChanged, "emit").and.callThrough();
+                    vi.spyOn(calendar.activeViewChanged, "emit");
 
                     UIInteractions.triggerKeyDownEvtUponElem(
                         "Enter",
@@ -2444,7 +2445,7 @@ describe("IgxCalendar - ", () => {
 
                     const previousValue =
                         fixture.componentInstance.calendar.viewDate;
-                    spyOn(calendar.viewDateChanged, "emit").and.callThrough();
+                    vi.spyOn(calendar.viewDateChanged, "emit");
 
                     // Should open the year view
                     UIInteractions.triggerKeyDownEvtUponElem(
@@ -2471,7 +2472,7 @@ describe("IgxCalendar - ", () => {
                         By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS),
                     )[0];
                     month.nativeElement.focus();
-                    spyOn(calendar.activeViewChanged, "emit").and.callThrough();
+                    vi.spyOn(calendar.activeViewChanged, "emit");
 
                     expect(month.nativeElement).toBe(document.activeElement);
 
@@ -2545,7 +2546,7 @@ describe("IgxCalendar - ", () => {
 
                     const previousValue =
                         fixture.componentInstance.calendar.viewDate;
-                    spyOn(calendar.viewDateChanged, "emit").and.callThrough();
+                    vi.spyOn(calendar.viewDateChanged, "emit");
 
                     UIInteractions.triggerKeyDownEvtUponElem(
                         "Enter",

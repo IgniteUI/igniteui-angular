@@ -10,6 +10,7 @@ import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('igxGridPinningActions #grid ', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;

@@ -21,6 +21,7 @@ import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ColumnPinningPosition, DefaultSortingStrategy, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;

@@ -5,6 +5,7 @@ import localeBg from "@angular/common/locales/bg";
 import { BaseFormatter } from '../../core/i18n/formatters/formatter-base';
 import { DatePart, DatePartInfo } from '../date-parts';
 
+import { describe, it, expect, vi } from 'vitest';
 const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
     obj[x.type] = x;
     return obj;
@@ -217,7 +218,7 @@ describe(`DateTimeUtil Unit tests`, () => {
     });
 
     it('should properly build input formats based on locale', () => {
-        spyOn(DateTimeUtil, 'getDefaultInputFormat').and.callThrough();
+        vi.spyOn(DateTimeUtil, 'getDefaultInputFormat');
         let result = DateTimeUtil.getDefaultInputFormat('en-US', angularFormatter);
         expect(result).toEqual('MM/dd/yyyy');
 

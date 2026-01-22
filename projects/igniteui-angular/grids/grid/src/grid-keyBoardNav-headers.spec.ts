@@ -15,6 +15,7 @@ import { IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
 import { IgxGridHeaderRowComponent } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand, ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Headers Keyboard navigation #grid', () => {
@@ -79,7 +80,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('should emit when activeNode ref is changed', () => {
-            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+            vi.spyOn(grid.activeNodeChange, 'emit');
 
             const args: IActiveNodeChangeEventArgs = {
                 row: -1,
@@ -289,8 +290,8 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('Sorting: Should be able to sort a column with the keyboard', fakeAsync (() => {
-            spyOn(grid.sorting, 'emit').and.callThrough();
-            spyOn(grid.sortingDone, 'emit').and.callThrough();
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
             grid.getColumnByName('ID').sortable = true;
             fix.detectChanges();
 
@@ -567,7 +568,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('Column selection: Should be able to select columns when columnSelection is single', () => {
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             const columnID = grid.getColumnByName('ID');
             const columnParentID = grid.getColumnByName('ParentID');
             const columnName = grid.getColumnByName('Name');
@@ -614,7 +615,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('Group by: Should be able group columns with keyboard', () => {
-            spyOn(grid.groupingDone, 'emit').and.callThrough();
+            vi.spyOn(grid.groupingDone, 'emit');
             grid.getColumnByName('ID').groupable = true;
             grid.getColumnByName('Name').groupable = true;
 

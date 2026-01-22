@@ -23,6 +23,7 @@ import { QueryBuilderSelectors } from 'igniteui-angular/query-builder/src/query-
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -246,7 +247,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
 
         it('Should emit the filtering event when applying filters.', fakeAsync(() => {
-            spyOn(grid.filtering, 'emit');
+            vi.spyOn(grid.filtering, 'emit');
 
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
@@ -281,7 +282,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
 
         it('Should cancel filtering if cancel is set to true.', fakeAsync(() => {
-            spyOn(grid.filtering, 'emit').and.callFake((args: IFilteringEventArgs) => {
+            vi.spyOn(grid.filtering, 'emit').mockImplementation((args: IFilteringEventArgs) => {
                 args.cancel = true;
             });
 
@@ -319,7 +320,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
 
         it('Should emit the filteringDone event when applying filters.', fakeAsync(() => {
-            spyOn(grid.filteringDone, 'emit');
+            vi.spyOn(grid.filteringDone, 'emit');
 
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
@@ -1181,7 +1182,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             flush();
 
             // Spy for error messages in the console
-            const consoleSpy = spyOn(console, 'error');
+            const consoleSpy = vi.spyOn(console, 'error');
 
             // Open Advanced Filtering dialog
             GridFunctions.clickAdvancedFilteringButton(fixture);
@@ -1415,7 +1416,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix = TestBed.createComponent(IgxHierGridExternalAdvancedFilteringComponent);
             const hgrid: IgxHierarchicalGridComponent = fix.componentInstance.hgrid;
             fix.detectChanges();
-            spyOn(console, 'error');
+            vi.spyOn(console, 'error');
 
             const advFilterDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
             const applyFilterButton: any = Array.from(advFilterDialog.querySelectorAll('button'))
@@ -1493,7 +1494,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
 
         it('should correctly filter with a deserialized expression tree.', fakeAsync(() => {
-            const errorSpy = spyOn(console, 'error');
+            const errorSpy = vi.spyOn(console, 'error');
 
             expect(errorSpy).not.toHaveBeenCalled();
 
@@ -1503,7 +1504,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
 
         it('should correctly filter with a declared IFilteringExpressionsTree object.', fakeAsync(() => {
-            const errorSpy = spyOn(console, 'error');
+            const errorSpy = vi.spyOn(console, 'error');
             fix.componentInstance.grid.advancedFilteringExpressionsTree = fix.componentInstance.filterTreeObject;
             fix.detectChanges();
             expect(errorSpy).not.toHaveBeenCalled();
@@ -1514,7 +1515,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
 
         it('should correctly filter when binding to a declared IFilteringExpressionsTree object.', fakeAsync(() => {
-            const errorSpy = spyOn(console, 'error');
+            const errorSpy = vi.spyOn(console, 'error');
             fix.componentInstance.filterTree = fix.componentInstance.filterTreeObject;
             fix.detectChanges();
 
@@ -1688,7 +1689,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(200);
             fix.detectChanges();
             // Spy for error messages in the console
-            const consoleSpy = spyOn(console, 'error');
+            const consoleSpy = vi.spyOn(console, 'error');
             // Apply advanced filter through API.
             const innerTree = new FilteringExpressionsTree(0, undefined, 'childData', ['ID']);
             innerTree.filteringOperands.push({
@@ -1720,7 +1721,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(200);
             fix.detectChanges();
             // Spy for error messages in the console
-            const consoleSpy = spyOn(console, 'error');
+            const consoleSpy = vi.spyOn(console, 'error');
 
             const innerTree = new FilteringExpressionsTree(0, undefined, 'childData', ['ID']);
             innerTree.filteringOperands.push({

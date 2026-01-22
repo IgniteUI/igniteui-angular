@@ -20,6 +20,7 @@ import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
@@ -1092,7 +1093,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             const ci = fixture.componentInstance;
             grid = ci.grid;
 
-            spyOn(grid.columnInit, 'emit').and.callThrough();
+            vi.spyOn(grid.columnInit, 'emit');
             fixture.detectChanges();
             const colsCount = 4;
             const colGroupsCount = 3;
@@ -1106,7 +1107,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             grid = componentInstance.grid;
             fixture.detectChanges();
 
-            spyOn(grid.columnInit, 'emit').and.callThrough();
+            vi.spyOn(grid.columnInit, 'emit');
             componentInstance.mchCount.push({});
             fixture.detectChanges();
             const colsCount = grid.unpinnedColumns.length; // all

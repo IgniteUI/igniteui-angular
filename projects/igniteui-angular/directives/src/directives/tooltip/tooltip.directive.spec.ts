@@ -9,6 +9,7 @@ import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 import { Placement, PositionsMap } from './tooltip.common';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 const SHOW_DELAY = 200;
@@ -306,8 +307,8 @@ describe('IgxTooltip', () => {
 
         describe('Tooltip events', () => {
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
-                spyOn(tooltipTarget.tooltipShow, 'emit');
-                spyOn(tooltipTarget.tooltipHide, 'emit');
+                vi.spyOn(tooltipTarget.tooltipShow, 'emit');
+                vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 hoverElement(button);
                 expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalled();
@@ -320,8 +321,8 @@ describe('IgxTooltip', () => {
             }));
 
             it('should emit the proper events when showing/hiding tooltip through API', fakeAsync(() => {
-                spyOn(tooltipTarget.tooltipShow, 'emit');
-                spyOn(tooltipTarget.tooltipHide, 'emit');
+                vi.spyOn(tooltipTarget.tooltipShow, 'emit');
+                vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 tooltipTarget.showTooltip();
                 expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalled();
@@ -334,8 +335,8 @@ describe('IgxTooltip', () => {
             }));
 
             it('should emit the proper events with correct eventArgs when hover/unhover', fakeAsync(() => {
-                spyOn(tooltipTarget.tooltipShow, 'emit');
-                spyOn(tooltipTarget.tooltipHide, 'emit');
+                vi.spyOn(tooltipTarget.tooltipShow, 'emit');
+                vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 const tooltipShowArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
                 const tooltipHideArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
@@ -351,8 +352,8 @@ describe('IgxTooltip', () => {
             }));
 
             it('should emit the proper events with correct eventArgs when show/hide through API', fakeAsync(() => {
-                spyOn(tooltipTarget.tooltipShow, 'emit');
-                spyOn(tooltipTarget.tooltipHide, 'emit');
+                vi.spyOn(tooltipTarget.tooltipShow, 'emit');
+                vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 const tooltipShowArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
                 const tooltipHideArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
@@ -748,8 +749,8 @@ describe('IgxTooltip', () => {
         }));
 
         it('should not emit tooltipHide event multiple times', fakeAsync(() => {
-            spyOn(targetOne.tooltipHide, 'emit');
-            spyOn(targetTwo.tooltipHide, 'emit');
+            vi.spyOn(targetOne.tooltipHide, 'emit');
+            vi.spyOn(targetTwo.tooltipHide, 'emit');
 
             hoverElement(buttonOne);
             flush();

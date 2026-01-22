@@ -30,6 +30,7 @@ import {
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('List', () => {
 
     beforeEach(waitForAsync(() => {
@@ -129,9 +130,9 @@ describe('List', () => {
 
         fixture.detectChanges();
 
-        spyOn(list.leftPan, 'emit').and.callThrough();
-        spyOn(list.panStateChange, 'emit').and.callThrough();
-        spyOn(list.rightPan, 'emit').and.callThrough();
+        vi.spyOn(list.leftPan, 'emit');
+        vi.spyOn(list.panStateChange, 'emit');
+        vi.spyOn(list.rightPan, 'emit');
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const listItems = list.items;
@@ -155,8 +156,8 @@ describe('List', () => {
 
         fixture.detectChanges();
 
-        spyOn(list.startPan, 'emit').and.callThrough();
-        spyOn(list.endPan, 'emit').and.callThrough();
+        vi.spyOn(list.startPan, 'emit');
+        vi.spyOn(list.endPan, 'emit');
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
 
@@ -178,9 +179,9 @@ describe('List', () => {
 
         const list: IgxListComponent = fixture.componentInstance.list;
 
-        spyOn(list.leftPan, 'emit').and.callThrough();
-        spyOn(list.panStateChange, 'emit').and.callThrough();
-        spyOn(list.rightPan, 'emit').and.callThrough();
+        vi.spyOn(list.leftPan, 'emit');
+        vi.spyOn(list.panStateChange, 'emit');
+        vi.spyOn(list.rightPan, 'emit');
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const listItems = list.items;
@@ -205,9 +206,9 @@ describe('List', () => {
 
         const list: IgxListComponent = fixture.componentInstance.list;
 
-        spyOn(list.leftPan, 'emit').and.callThrough();
-        spyOn(list.panStateChange, 'emit').and.callThrough();
-        spyOn(list.rightPan, 'emit').and.callThrough();
+        vi.spyOn(list.leftPan, 'emit');
+        vi.spyOn(list.panStateChange, 'emit');
+        vi.spyOn(list.rightPan, 'emit');
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const listItems = list.items;
@@ -309,7 +310,7 @@ describe('List', () => {
         const list: IgxListComponent = fixture.componentInstance.list;
         fixture.detectChanges();
 
-        spyOn(list.itemClicked, 'emit').and.callThrough();
+        vi.spyOn(list.itemClicked, 'emit');
 
         const event = new Event('click');
         list.items[0].element.dispatchEvent(event);
@@ -336,7 +337,7 @@ describe('List', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
 
-        spyOn(list.itemClicked, 'emit').and.callThrough();
+        vi.spyOn(list.itemClicked, 'emit');
 
         fixture.detectChanges();
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
@@ -354,7 +355,7 @@ describe('List', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
 
-        spyOn(list.itemClicked, 'emit').and.callThrough();
+        vi.spyOn(list.itemClicked, 'emit');
 
         fixture.detectChanges();
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
@@ -431,9 +432,9 @@ describe('List', () => {
 
         const item = list.items[0] as IgxListItemComponent;
 
-        spyOn(list.leftPan, 'emit').and.callThrough();
-        spyOn(list.rightPan, 'emit').and.callThrough();
-        spyOn(list.panStateChange, 'emit').and.callThrough();
+        vi.spyOn(list.leftPan, 'emit');
+        vi.spyOn(list.rightPan, 'emit');
+        vi.spyOn(list.panStateChange, 'emit');
 
         elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
         panItem(elementRefCollection[1], 0.8);
@@ -488,9 +489,9 @@ describe('List', () => {
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
 
-        spyOn(list.startPan, 'emit').and.callThrough();
-        spyOn(list.endPan, 'emit').and.callThrough();
-        spyOn(list.resetPan, 'emit').and.callThrough();
+        vi.spyOn(list.startPan, 'emit');
+        vi.spyOn(list.endPan, 'emit');
+        vi.spyOn(list.resetPan, 'emit');
 
         /* Pan item left */
         panItem(itemNativeElements[1], -0.3);
@@ -539,8 +540,8 @@ describe('List', () => {
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
 
-        spyOn(list.startPan, 'emit').and.callThrough();
-        spyOn(list.endPan, 'emit').and.callThrough();
+        vi.spyOn(list.startPan, 'emit');
+        vi.spyOn(list.endPan, 'emit');
 
         const firstItem = list.items[0] as IgxListItemComponent;
         const leftPanTmpl = firstItem.leftPanningTemplateElement;
@@ -563,8 +564,8 @@ describe('List', () => {
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
 
-        spyOn(list.startPan, 'emit').and.callThrough();
-        spyOn(list.endPan, 'emit').and.callThrough();
+        vi.spyOn(list.startPan, 'emit');
+        vi.spyOn(list.endPan, 'emit');
 
         const firstItem = list.items[0] as IgxListItemComponent;
         const leftPanTmpl = firstItem.leftPanningTemplateElement;

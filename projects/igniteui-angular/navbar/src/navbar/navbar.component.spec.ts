@@ -6,6 +6,7 @@ import { IgxNavbarComponent, IgxNavbarTitleDirective, IgxNavbarActionDirective }
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
 describe('IgxNavbar', () => {
@@ -66,7 +67,7 @@ describe('IgxNavbar', () => {
             component.actionButtonIcon = 'home';
             fixture.detectChanges();
 
-            spyOn(component.navbar.action, 'emit');
+            vi.spyOn(component.navbar.action, 'emit');
             fixture.debugElement.nativeElement.querySelector('igx-icon').click();
             fixture.detectChanges();
 

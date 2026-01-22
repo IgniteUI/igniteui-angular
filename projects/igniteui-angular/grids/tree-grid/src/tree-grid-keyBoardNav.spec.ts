@@ -10,6 +10,7 @@ import { DebugElement } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CellType } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 const DEBOUNCETIME = 30;
 
 describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
@@ -36,7 +37,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should navigate with arrow keys', () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -71,7 +72,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the top/bottom cell when navigate with Ctrl + arrow Up/Down keys', () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(5, 'ID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -105,7 +106,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the leftmost/rightmost cell when navigate with Ctrl + arrow Left/Right keys', () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(0, 'HireDate');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -139,7 +140,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(4, 'Name');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -173,7 +174,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should expand/collapse row when Alt + arrow Left/Right keys are pressed', () => {
-            spyOn(treeGrid.rowToggle, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowToggle, 'emit');
             const cell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
@@ -221,7 +222,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should expand/collapse row when Alt + arrow Up/Down keys are pressed', () => {
-            spyOn(treeGrid.rowToggle, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowToggle, 'emit');
             const cell = treeGrid.gridAPI.get_cell_by_index(3, 'HireDate');
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
@@ -269,7 +270,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should not change selection when press Alt + arrow Left/Right keys on a cell in a row without children', () => {
-            spyOn(treeGrid.rowToggle, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowToggle, 'emit');
             const cell = treeGrid.gridAPI.get_cell_by_index(1, 'Name');
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
@@ -408,7 +409,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should navigate with arrow Up and Down keys', async () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             const firstCell: CellType = treeGrid.gridAPI.get_cell_by_index(5, 'ID');
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -443,7 +444,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
         it('should navigate with arrow Left and Right', async () => {
             const firstCell = treeGrid.gridAPI.get_cell_by_index(3, treeColumns[0]);
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -491,7 +492,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the top/bottom cell when navigate with Ctrl + arrow Up/Down', async () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(1, 'Name');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -518,7 +519,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the leftmost/rightmost cell when navigate with Ctrl + arrow Left/Right keys', async () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(4, treeColumns[1]);
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -552,7 +553,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', async () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(2, treeColumns[2]);
 
             UIInteractions.simulateClickAndSelectEvent(cell);

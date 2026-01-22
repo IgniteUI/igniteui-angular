@@ -15,6 +15,7 @@ import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -145,7 +146,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit rowPinning on pin/unpin.', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
 
             let row = grid.getRowByIndex(0);
             const rowID = row.key;
@@ -173,7 +174,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit correct rowPinning arguments on pin/unpin.', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
 
             const row = grid.getRowByIndex(5);
             const rowID = row.key;
@@ -229,7 +230,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit rowPinned on pin/unpin.', () => {
-            spyOn(grid.rowPinned, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinned, 'emit');
 
             const row = grid.getRowByIndex(0);
             const rowID = row.key;
@@ -256,7 +257,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it(`Should be able to cancel rowPinning on pin/unpin event.`, () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
             let sub = grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
                 e.cancel = true;
             });

@@ -16,6 +16,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Keyboard navigation #grid', () => {
@@ -126,7 +127,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
 
         it('Should emit when activeNode ref is changed', () => {
-            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+            vi.spyOn(grid.activeNodeChange, 'emit');
 
             const args: IActiveNodeChangeEventArgs = {
                 row: 0,
@@ -164,7 +165,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
 
         it('should emit activeNodeChange once when you click over the same element', () => {
-            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+            vi.spyOn(grid.activeNodeChange, 'emit');
 
             gridContent.triggerEventHandler('focus', null);
             fix.detectChanges();
@@ -684,7 +685,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit').and.callThrough();
+            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit');
 
             const cell = grid.gridAPI.get_cell_by_index(1, '2');
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -1021,7 +1022,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(rowEl);
             fix.detectChanges();
 
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit').and.callThrough();
+            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Enter', rowEl.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();

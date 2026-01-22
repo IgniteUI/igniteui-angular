@@ -15,6 +15,7 @@ import { firstValueFrom } from 'rxjs';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -386,8 +387,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
 
 
-        spyOn(ri.gridScroll, 'emit').and.callThrough();
-        spyOn(ri.dataPreLoad, 'emit').and.callThrough();
+        vi.spyOn(ri.gridScroll, 'emit');
+        vi.spyOn(ri.dataPreLoad, 'emit');
 
 
         // scroll down

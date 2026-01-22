@@ -9,6 +9,7 @@ import { CalendarDay } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { DayDigitPipe } from "igniteui-angular/calendar/src/calendar/day-digit.pipe";
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const TODAY = new Date(2024, 6, 12);
 
 describe("Days View Component", () => {
@@ -236,8 +237,8 @@ describe("Days View Component", () => {
         });
 
         it("should select the activeDate when pressing the enter key", () => {
-            spyOn(instance.dateSelected, "emit");
-            spyOn(instance.selected, "emit");
+            vi.spyOn(instance.dateSelected, "emit");
+            vi.spyOn(instance.selected, "emit");
 
             instance.activeDate = firstDay.add("day", 4).native;
             fixture.detectChanges();
@@ -290,7 +291,7 @@ describe("Days View Component", () => {
         });
 
         it("should emit pageChaged event when the active date is in the previous/next months", () => {
-            spyOn(instance.pageChanged, "emit");
+            vi.spyOn(instance.pageChanged, "emit");
             instance.activeDate = firstDay.native;
             fixture.detectChanges();
 
@@ -338,8 +339,8 @@ describe("Days View Component", () => {
         }));
 
         it("should select the clicked date", () => {
-            spyOn(instance.dateSelected, "emit");
-            spyOn(instance.selected, "emit");
+            vi.spyOn(instance.dateSelected, "emit");
+            vi.spyOn(instance.selected, "emit");
 
             const day = fixture.debugElement.query(
                 By.css(
@@ -362,7 +363,7 @@ describe("Days View Component", () => {
         });
 
         it("should emit pageChanged when clicking on a date outside the previous/next months", () => {
-            spyOn(instance.pageChanged, "emit");
+            vi.spyOn(instance.pageChanged, "emit");
 
             let days = fixture.debugElement.queryAll(
                 By.css(".igx-days-view__date--inactive"),

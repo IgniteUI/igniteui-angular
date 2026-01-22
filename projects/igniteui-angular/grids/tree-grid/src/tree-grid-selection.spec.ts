@@ -26,6 +26,7 @@ import { By } from '@angular/platform-browser';
 import { IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxTreeGrid - Selection #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -320,7 +321,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('Header checkbox should NOT select/deselect all rows when selectionMode is single', () => {
-            spyOn(treeGrid.rowSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowSelectionChanging, 'emit');
             treeGrid.rowSelection = GridSelectionMode.single;
             fix.detectChanges();
 
@@ -970,7 +971,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             column.bodyTemplate = component.customCell;
             fix.detectChanges();
 
-            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit');
             const cell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
             const cellElement = cell.nativeElement;
             const span = cellElement.querySelector('span');
@@ -1690,7 +1691,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 e.cancel = true;
             });
 
-            spyOn(treeGrid.rowSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowSelectionChanging, 'emit');
 
             treeGrid.selectionService.selectRowsWithNoEvent([317]);
             fix.detectChanges();
@@ -1768,7 +1769,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('selectRowById event SHOULD be emitted correctly with valid arguments.', () => {
-            spyOn(treeGrid.rowSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowSelectionChanging, 'emit');
             treeGrid.selectionService.selectRowsWithNoEvent([317]);
             fix.detectChanges();
 
@@ -1812,7 +1813,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.rowSelectionChanging.subscribe((e: IRowSelectionEventArgs) => {
                 e.newSelection = [treeGrid.getRowData(847), treeGrid.getRowData(663)];
             });
-            spyOn(treeGrid.rowSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowSelectionChanging, 'emit');
 
             treeGrid.selectionService.selectRowsWithNoEvent([317], true);
             fix.detectChanges();
@@ -2198,7 +2199,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             const firstCheckbox = firstRow.nativeElement.querySelector('.igx-checkbox__composite');
             const context = { index: 0, rowID: 1, key: 1, selected: false };
             const contextUnselect = { index: 0, rowID: 1, key: 1, selected: true };
-            spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
+            vi.spyOn(fix.componentInstance, 'onRowCheckboxClick');
             (firstCheckbox as HTMLElement).click();
             fix.detectChanges();
 
@@ -2217,7 +2218,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             const context = { selectedCount: 0, totalCount: 8 };
             const contextUnselect = { selectedCount: 8, totalCount: 8 };
             const headerCheckbox = treeGrid.theadRow.nativeElement.querySelector('.igx-checkbox__composite') as HTMLElement;
-            spyOn(fix.componentInstance, 'onHeaderCheckboxClick').and.callThrough();
+            vi.spyOn(fix.componentInstance, 'onHeaderCheckboxClick');
             headerCheckbox.click();
             fix.detectChanges();
 

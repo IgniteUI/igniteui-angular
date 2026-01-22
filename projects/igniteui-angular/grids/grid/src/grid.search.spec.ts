@@ -13,6 +13,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { firstValueFrom } from 'rxjs';
 import { DefaultSortingStrategy, GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('IgxGrid - search API #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const HIGHLIGHT_CSS_CLASS = '.igx-highlight';

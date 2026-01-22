@@ -21,6 +21,7 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - GroupBy #grid', () => {
 
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
@@ -716,7 +717,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         let groupsRecordsLength;
 
-        spyOn(grid.groupingDone, 'emit').and.callThrough();
+        vi.spyOn(grid.groupingDone, 'emit');
         grid.groupingDone.subscribe(() => {
             groupsRecordsLength = grid.groupsRecords.length;
         });
@@ -806,7 +807,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        spyOn(grid.groupingExpressionsChange, 'emit');
+        vi.spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
         const firstCellElem = grid.gridAPI.get_cell_by_index(2, 'Downloads');
         UIInteractions.simulateClickAndSelectEvent(firstCellElem);
@@ -825,7 +826,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        spyOn(grid.groupingExpressionsChange, 'emit');
+        vi.spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
         const chips = grid.groupArea.chips;
         grid.groupArea.handleClick(chips.first.id);
@@ -1437,7 +1438,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
-            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
+            const selectionSpy = vi.spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
 
@@ -1527,7 +1528,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
-            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
+            const selectionSpy = vi.spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
 
@@ -2160,7 +2161,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
         const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
 
-        spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
+        vi.spyOn(fix.componentInstance, 'onGroupByRowClick');
 
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
         fix.detectChanges();

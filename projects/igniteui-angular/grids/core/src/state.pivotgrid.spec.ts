@@ -10,6 +10,7 @@ import { IgxPivotRowDimensionHeaderComponent } from 'igniteui-angular/grids/pivo
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxPivotGridState #pivotGrid :', () => {
     let fixture;
     let pivotGrid;

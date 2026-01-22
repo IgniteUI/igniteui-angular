@@ -2,6 +2,7 @@ import { DataGenerator } from './test-util/data-generator';
 import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
 import { IgxSorting } from './grid-sorting-strategy';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('Unit testing SortingStrategy', () => {
     let dataGenerator: DataGenerator;
     let data: any[];

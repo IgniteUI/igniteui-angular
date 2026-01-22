@@ -6,6 +6,7 @@ import {
     fakeAsync,
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
     IgxToastComponent
 } from './toast.component';
@@ -53,7 +54,7 @@ describe('IgxToast', () => {
     });
 
     it('should properly toggle and emit isVisibleChange', fakeAsync(() => {
-        spyOn(toast.isVisibleChange, 'emit').and.callThrough();
+        vi.spyOn(toast.isVisibleChange, 'emit');
         expect(toast.isVisible).toBe(false);
         expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(0);
 

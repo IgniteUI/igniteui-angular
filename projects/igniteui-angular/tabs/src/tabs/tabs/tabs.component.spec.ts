@@ -20,6 +20,7 @@ import { IgxTabContentComponent } from './tab-content.component';
 import { RoutingTestGuard } from '../../../../test-utils/routing-test-guard.spec';
 import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../../../test-utils/routing-view-components.spec';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
 const KEY_HOME_EVENT = new KeyboardEvent('keydown', { key: 'Home', bubbles: true });
@@ -913,9 +914,9 @@ describe('IgxTabs', () => {
                 tabs = fixture.componentInstance.tabs;
                 tabItems = tabs.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
-                itemChangeSpy = spyOn(tabs.selectedItemChange, 'emit').and.callThrough();
-                indexChangeSpy = spyOn(tabs.selectedIndexChange, 'emit').and.callThrough();
-                indexChangingSpy = spyOn(tabs.selectedIndexChanging, 'emit').and.callThrough();
+                itemChangeSpy = vi.spyOn(tabs.selectedItemChange, 'emit');
+                indexChangeSpy = vi.spyOn(tabs.selectedIndexChange, 'emit');
+                indexChangingSpy = vi.spyOn(tabs.selectedIndexChanging, 'emit');
             }));
 
             it('Validate the fired events on clicking tab headers.', fakeAsync(() => {
@@ -1054,9 +1055,9 @@ describe('IgxTabs', () => {
                 fixture.detectChanges();
                 tabItems = tabs.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
-                itemChangeSpy = spyOn(tabs.selectedItemChange, 'emit');
-                indexChangeSpy = spyOn(tabs.selectedIndexChange, 'emit');
-                indexChangingSpy = spyOn(tabs.selectedIndexChanging, 'emit');
+                itemChangeSpy = vi.spyOn(tabs.selectedItemChange, 'emit');
+                indexChangeSpy = vi.spyOn(tabs.selectedIndexChange, 'emit');
+                indexChangingSpy = vi.spyOn(tabs.selectedIndexChanging, 'emit');
             }));
 
             it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', fakeAsync(() => {

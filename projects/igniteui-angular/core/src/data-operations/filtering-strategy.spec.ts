@@ -5,6 +5,7 @@ import { FilteringLogic } from './filtering-expression.interface';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxBooleanFilteringOperand } from './filtering-condition';
 
 
+import { describe, expect, beforeEach } from 'vitest';
 describe('Unit testing FilteringStrategy', () => {
     let dataGenerator: DataGenerator;
     let data: any[];

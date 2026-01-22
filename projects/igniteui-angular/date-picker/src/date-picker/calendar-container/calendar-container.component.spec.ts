@@ -8,6 +8,7 @@ import { IgxPickerActionsDirective } from '../../../../core/src/date-common/pick
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('Calendar Container', () => {
     let fixture: ComponentFixture<IgxDatePickerTestComponent>;
     let container: IgxCalendarContainerComponent;
@@ -31,8 +32,8 @@ describe('Calendar Container', () => {
     });
 
     it('should render default actions', () => {
-        spyOn(container.calendarClose, 'emit');
-        spyOn(container.todaySelection, 'emit');
+        vi.spyOn(container.calendarClose, 'emit');
+        vi.spyOn(container.todaySelection, 'emit');
         container.closeButtonLabel = 'cancel';
         fixture.detectChanges();
         let buttons = fixture.debugElement.queryAll(By.directive(IgxButtonDirective));
@@ -51,7 +52,7 @@ describe('Calendar Container', () => {
     });
 
     it('should render default toggle and clear icons', () => {
-        spyOn(fixture.componentInstance, 'doWork');
+        vi.spyOn(fixture.componentInstance, 'doWork');
         container.pickerActions = fixture.componentInstance.actions;
         fixture.detectChanges();
 

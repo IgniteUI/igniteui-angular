@@ -41,6 +41,7 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxChipComponent, IgxBadgeComponent, IgxDatePickerComponent, IgxCalendarComponent, IgxIconComponent } from 'igniteui-angular';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
@@ -2340,7 +2341,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should not throw error when pressing Backspace in empty dateTime filter.', fakeAsync(() => {
-            spyOn(console, 'error');
+            vi.spyOn(console, 'error');
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
             tick(DEBOUNCE_TIME);
@@ -2359,7 +2360,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should not throw error when pressing Arrow keys in filter when focus is outside of input.', fakeAsync(() => {
-            spyOn(console, 'error');
+            vi.spyOn(console, 'error');
 
             GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
             fix.detectChanges();
@@ -2682,7 +2683,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('UI focusing grid\'s body content does not throw a console error after filtering. (issue 8930)', fakeAsync(() => {
-            spyOn(console, 'error');
+            vi.spyOn(console, 'error');
             GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
             fix.detectChanges();
 
@@ -2898,7 +2899,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const input = filterCell.query(By.css('input')).nativeElement;
 
             const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
-            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
+            const preventDefaultSpy = vi.spyOn(mousedownEvent, 'preventDefault');
             input.dispatchEvent(mousedownEvent, { bubbles: true });
             fix.detectChanges();
 
@@ -2910,7 +2911,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const firstCell = filteringCells[0].nativeElement;
 
             const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
-            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
+            const preventDefaultSpy = vi.spyOn(mousedownEvent, 'preventDefault');
             firstCell.dispatchEvent(mousedownEvent);
             fix.detectChanges();
 
@@ -3007,8 +3008,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
 
-            spyOn(grid.filtering, 'emit');
-            spyOn(grid.filteringDone, 'emit');
+            vi.spyOn(grid.filtering, 'emit');
+            vi.spyOn(grid.filteringDone, 'emit');
         }));
 
         it('Should emit filteringDone when we clicked reset - Date column type', fakeAsync(() => {
@@ -3436,8 +3437,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should hide column when click on button.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
-            spyOn(grid.columnVisibilityChanged, 'emit');
-            spyOn(grid.columnVisibilityChanging, 'emit');
+            vi.spyOn(grid.columnVisibilityChanged, 'emit');
+            vi.spyOn(grid.columnVisibilityChanging, 'emit');
             GridFunctions.getExcelFilteringHideContainer(fix).click();
             fix.detectChanges();
 
@@ -3931,8 +3932,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             setElementSize(grid.nativeElement, ɵSize.Small);
             tick(200);
             fix.detectChanges();
-            spyOn(grid.columnVisibilityChanging, 'emit');
-            spyOn(grid.columnVisibilityChanged, 'emit');
+            vi.spyOn(grid.columnVisibilityChanging, 'emit');
+            vi.spyOn(grid.columnVisibilityChanged, 'emit');
 
             const column = grid.columnList.find((col) => col.field === 'ProductName');
             GridFunctions.verifyColumnIsHidden(column, false, 8);
@@ -6581,7 +6582,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            spyOn(grid.columnSelectionChanging, 'emit');
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
             fix.detectChanges();
@@ -7129,7 +7130,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            spyOn(grid.columnSelectionChanging, 'emit');
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
             tick();
@@ -7204,7 +7205,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should not throw console error on opening the drop-down.', async () => {
-            spyOn(console, 'error');
+            vi.spyOn(console, 'error');
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
             fix.detectChanges();
             await wait(100);

@@ -12,6 +12,7 @@ import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
 
+import { describe, it, expect, beforeEach } from 'vitest';
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayoutHidingTestComponent | ColumnLayoutResizingTestComponent
     | ColumnLayoutPinningTestComponent;
 interface ColGroupsType {

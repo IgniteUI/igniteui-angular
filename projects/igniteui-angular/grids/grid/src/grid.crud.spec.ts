@@ -6,6 +6,7 @@ import { wait } from '../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridEditEventArgs } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 describe('IgxGrid - CRUD operations #grid', () => {

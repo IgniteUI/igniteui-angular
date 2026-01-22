@@ -10,6 +10,7 @@ import { DebugElement } from '@angular/core';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxGridNavigationService, PivotRowLayoutType } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 const DEBOUNCE_TIME = 250;
 const PIVOT_TBODY_CSS_CLASS = '.igx-grid__tbody';
 const PIVOT_ROW_DIMENSION_CONTENT = 'igx-pivot-row-dimension-content';

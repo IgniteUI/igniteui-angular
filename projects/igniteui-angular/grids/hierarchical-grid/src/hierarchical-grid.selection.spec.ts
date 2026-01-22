@@ -18,6 +18,7 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -80,7 +81,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
-            const parentSpy = spyOn<any>(hierarchicalGrid.selected, 'emit').and.callThrough();
+            const parentSpy = spyOn<any>(hierarchicalGrid.selected, 'emit');
             firstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
             GridFunctions.focusCell(fix, fCell);
@@ -498,7 +499,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             column.bodyTemplate = component.customCell;
             fix.detectChanges();
 
-            const selectionChangeSpy = spyOn<any>(hierarchicalGrid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(hierarchicalGrid.rangeSelected, 'emit');
             const cell = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ID');
             const cellElement = cell.nativeElement;
             const span = cellElement.querySelector('span');
@@ -648,9 +649,9 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const secondChildGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[1];
-            const parentSpy = spyOn<any>(hierarchicalGrid.rowSelectionChanging, 'emit').and.callThrough();
-            const childSpy = spyOn<any>(childGrid.rowSelectionChanging, 'emit').and.callThrough();
-            const secondChildSpy = spyOn<any>(secondChildGrid.rowSelectionChanging, 'emit').and.callThrough();
+            const parentSpy = spyOn<any>(hierarchicalGrid.rowSelectionChanging, 'emit');
+            const childSpy = spyOn<any>(childGrid.rowSelectionChanging, 'emit');
+            const secondChildSpy = spyOn<any>(secondChildGrid.rowSelectionChanging, 'emit');
             const mockEvent = new MouseEvent('click');
 
             // Click on a row in child grid
@@ -1518,7 +1519,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('Should have the correct properties in the custom row selector header template context', () => {
-            spyOn(fix.componentInstance, 'handleHeadSelectorClick').and.callThrough();
+            vi.spyOn(fix.componentInstance, 'handleHeadSelectorClick');
 
             GridSelectionFunctions.headerCheckboxClick(hGrid);
             fix.detectChanges();
@@ -1526,13 +1527,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(fix.componentInstance.handleHeadSelectorClick).toHaveBeenCalledWith({
                 selectedCount: 0,
                 totalCount: hGrid.data.length,
-                selectAll: jasmine.anything(),
-                deselectAll: jasmine.anything()
+                selectAll: expect.anything(),
+                deselectAll: expect.anything()
             });
         });
 
         it('Should have the correct properties in the custom row selector template context', () => {
-            spyOn(fix.componentInstance, 'handleRowSelectorClick').and.callThrough();
+            vi.spyOn(fix.componentInstance, 'handleRowSelectorClick');
 
             GridSelectionFunctions.rowCheckboxClick(hGrid.gridAPI.get_row_by_index(1));
             fix.detectChanges();
@@ -1542,8 +1543,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 rowID: '1',
                 key: '1',
                 selected: false,
-                select: jasmine.anything(),
-                deselect: jasmine.anything()
+                select: expect.anything(),
+                deselect: expect.anything()
             });
         });
 

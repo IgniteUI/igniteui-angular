@@ -6,6 +6,7 @@ import { IgxRadioComponent } from './radio.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxRadio', () => {
 
     beforeEach(waitForAsync(() => {

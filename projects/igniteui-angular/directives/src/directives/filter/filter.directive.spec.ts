@@ -3,6 +3,7 @@ import { ComponentFixtureAutoDetect, TestBed, waitForAsync } from '@angular/core
 import { IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
 import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('Filter', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

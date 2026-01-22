@@ -19,6 +19,7 @@ import { IgxGridComponent } from './grid.component';
 import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('IgxGrid - Validation #grid', () => {
 
     beforeEach(waitForAsync(() => {
@@ -264,7 +265,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should trigger the validationStatusChange event on grid when validation status changes', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
-            spyOn(grid.validationStatusChange, "emit").and.callThrough();
+            vi.spyOn(grid.validationStatusChange, "emit");
 
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);

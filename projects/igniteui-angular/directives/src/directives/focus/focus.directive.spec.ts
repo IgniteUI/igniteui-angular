@@ -10,6 +10,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxRadioComponent } from '../../../../radio/src/radio/radio.component';
 import { IgxSwitchComponent } from '../../../../switch/src/switch/switch.component';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('igxFocus', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

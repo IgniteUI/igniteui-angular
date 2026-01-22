@@ -18,6 +18,7 @@ import { Subject } from 'rxjs';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
 import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Adding #grid', () => {
@@ -348,14 +349,14 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should emit all events in the correct order', () => {
-            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
-            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-            spyOn(grid.cellEdit, 'emit').and.callThrough();
-            spyOn(grid.cellEditDone, 'emit').and.callThrough();
-            spyOn(grid.cellEditExit, 'emit').and.callThrough();
-            spyOn(grid.rowEdit, 'emit').and.callThrough();
-            spyOn(grid.rowEditDone, 'emit').and.callThrough();
-            spyOn(grid.rowEditExit, 'emit').and.callThrough();
+            vi.spyOn(grid.rowEditEnter, 'emit');
+            vi.spyOn(grid.cellEditEnter, 'emit');
+            vi.spyOn(grid.cellEdit, 'emit');
+            vi.spyOn(grid.cellEditDone, 'emit');
+            vi.spyOn(grid.cellEditExit, 'emit');
+            vi.spyOn(grid.rowEdit, 'emit');
+            vi.spyOn(grid.rowEditDone, 'emit');
+            vi.spyOn(grid.rowEditExit, 'emit');
 
             grid.rowEditEnter.pipe(takeUntil($destroyer)).subscribe(() => {
                 expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -417,10 +418,10 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should emit all grid editing events as per row editing specification', () => {
-            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-            spyOn(grid.cellEditDone, 'emit').and.callThrough();
-            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
-            spyOn(grid.rowEditDone, 'emit').and.callThrough();
+            vi.spyOn(grid.cellEditEnter, 'emit');
+            vi.spyOn(grid.cellEditDone, 'emit');
+            vi.spyOn(grid.rowEditEnter, 'emit');
+            vi.spyOn(grid.rowEditDone, 'emit');
 
             const row = grid.gridAPI.get_row_by_index(0);
             row.beginAddRow();
@@ -481,7 +482,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it(`Should emit 'rowEditEnter' only once while adding a new row`, () => {
-            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
+            vi.spyOn(grid.rowEditEnter, 'emit');
             const row = grid.gridAPI.get_row_by_index(0);
             row.beginAddRow();
             fixture.detectChanges();
@@ -716,7 +717,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should exit add row mode on filter applied and discard', () => {
-            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
+            vi.spyOn(grid.gridAPI.crudService, 'endEdit');
 
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
@@ -788,7 +789,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should exit add row mode and discard on sorting', () => {
-            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
+            vi.spyOn(grid.gridAPI.crudService, 'endEdit');
 
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
@@ -958,7 +959,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should exit add row mode when moving a column', fakeAsync(() => {
-            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
+            vi.spyOn(grid.gridAPI.crudService, 'endEdit');
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();
@@ -979,7 +980,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should exit add row mode when pinning/unpinning a column', () => {
-            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
+            vi.spyOn(grid.gridAPI.crudService, 'endEdit');
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();
@@ -1008,7 +1009,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should exit add row mode when resizing a column', async () => {
-            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
+            vi.spyOn(grid.gridAPI.crudService, 'endEdit');
 
             fixture.detectChanges();
 
@@ -1039,7 +1040,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should exit add row mode when hiding a column', () => {
-            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
+            vi.spyOn(grid.gridAPI.crudService, 'endEdit');
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();

@@ -19,6 +19,7 @@ import { ColumnType, IgxStringFilteringOperand, ɵSize, getComponentSize } from 
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGridCreatedEventArgs } from './events';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     beforeEach(waitForAsync(() => {
@@ -626,7 +627,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
 
         it('should emit columnInit when a column is added runtime.', async () => {
-            spyOn(hierarchicalGrid.columnInit, 'emit').and.callThrough();
+            vi.spyOn(hierarchicalGrid.columnInit, 'emit');
             fixture.detectChanges();
             fixture.componentInstance.showAnotherCol = true;
             fixture.detectChanges();
@@ -636,8 +637,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
-            jasmine.getEnv().allowRespy(true);
-            spyOn(console, 'warn');
+            vi.spyOn(console, 'warn');
             hierarchicalGrid.primaryKey = 'testField';
             fixture.componentInstance.rowIsland.primaryKey = 'testField-rowIsland';
             fixture.componentInstance.rowIsland2.primaryKey = 'testField-rowIsland2';
@@ -665,8 +665,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${rowIsland.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
-            jasmine.getEnv().allowRespy(false);
-        });
+            });
 
         it('should calculate correct column headers width when rowSelection + expand indicators', () => {
             hierarchicalGrid.rowSelection = 'multiple';
@@ -912,7 +911,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(cell.active).toBeFalse();
             expect(cell.selected).toBeFalse();
 
-            spyOn(ri1.cellClick, 'emit').and.callThrough();
+            vi.spyOn(ri1.cellClick, 'emit');
 
             const event = new Event('click');
             cellElem.nativeElement.dispatchEvent(event);
@@ -1120,7 +1119,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(summaryCell).toBeDefined();
             expect(summaryCell.textContent.trim().length).toBeGreaterThan(0);
 
-            const getterSpy = spyOnProperty(column, 'disabledSummaries', 'get').and.callThrough();
+            const getterSpy = spyOnProperty(column, 'disabledSummaries', 'get');
 
             column.disabledSummaries = ['count'];
             fixture.detectChanges();
@@ -1135,8 +1134,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             const rowIsland = fixture.componentInstance.rowIsland1;
 
-            spyOn(rowIsland.gridCreated, 'emit').and.callThrough();
-            spyOn(rowIsland.gridInitialized, 'emit').and.callThrough();
+            vi.spyOn(rowIsland.gridCreated, 'emit');
+            vi.spyOn(rowIsland.gridInitialized, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
@@ -1592,7 +1591,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             const firstHeaderIcon = childHeader1.query(By.css('.igx-icon'));
 
-            spyOn(child1Grid.componentInstance.columns[0].pinnedChange, 'emit').and.callThrough();
+            vi.spyOn(child1Grid.componentInstance.columns[0].pinnedChange, 'emit');
 
             expect(GridFunctions.isHeaderPinned(childHeader1.parent)).toBeFalsy();
             expect(child1Grid.componentInstance.columns[0].pinned).toBeFalsy();
@@ -1611,7 +1610,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const secondHeaderIcon = childHeader2.query(By.css('.igx-icon'));
 
             const lastIndex = child1Grid.componentInstance.columns.length - 1;
-            spyOn(child1Grid.componentInstance.columns[lastIndex].hiddenChange, 'emit').and.callThrough();
+            vi.spyOn(child1Grid.componentInstance.columns[lastIndex].hiddenChange, 'emit');
 
             expect(child1Grid.componentInstance.columns[lastIndex].hidden).toBeFalsy();
             expect(secondHeaderIcon).toBeDefined();

@@ -2,6 +2,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
 import { IgxChatMarkdownService } from './markdown-service';
 import { MarkdownPipe } from './markdown-pipe';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import Spy = jasmine.Spy;
 
 // Mock the Service: We trust the service to provide safe HTML from Shiki.
@@ -31,7 +32,7 @@ describe('MarkdownPipe', () => {
 
         pipe = TestBed.inject(MarkdownPipe);
         sanitizer = TestBed.inject(DomSanitizer);
-        bypassSpy = spyOn(sanitizer, 'bypassSecurityTrustHtml').and.callThrough();
+        bypassSpy = vi.spyOn(sanitizer, 'bypassSecurityTrustHtml');
     });
 
     it('should be created', () => {

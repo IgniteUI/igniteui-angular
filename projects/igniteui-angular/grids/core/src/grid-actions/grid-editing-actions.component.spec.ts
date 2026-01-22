@@ -19,6 +19,7 @@ import { IRowDataCancelableEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridNavigationService } from 'igniteui-angular';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
@@ -194,7 +195,7 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should emit correct rowPinning arguments with pinning actions', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
             const row = grid.getRowByIndex(1);
 
             actionStrip.show(grid.rowList.toArray()[1]);
@@ -404,8 +405,8 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should allow deleting row', () => {
-            spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
-            spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowDelete, 'emit');
+            vi.spyOn(treeGrid.rowDeleted, 'emit');
             const row = treeGrid.rowList.toArray()[0];
             actionStrip.show(row);
             fixture.detectChanges();

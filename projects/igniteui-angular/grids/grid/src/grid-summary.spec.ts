@@ -19,6 +19,7 @@ import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridSummaryCalculationMode, IColumnPipeArgs, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('IgxGrid - Summaries #grid', () => {
 
     const SUMMARY_CLASS = '.igx-grid-summary';

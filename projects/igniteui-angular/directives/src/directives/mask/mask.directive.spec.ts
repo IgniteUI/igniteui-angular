@@ -10,6 +10,7 @@ import { IgxInputGroupComponent } from '../../../../input-group/src/input-group/
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { PlatformUtil } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('igxMask', () => {
     // TODO: Refactor tests to reuse components
     beforeEach(waitForAsync(() => {
@@ -516,8 +517,8 @@ describe('igxMask', () => {
         fixture.detectChanges();
 
         const maskDirective = fixture.componentInstance.mask;
-        spyOn(maskDirective, 'onFocus').and.callThrough();
-        spyOn<any>(maskDirective, 'showMask').and.callThrough();
+        vi.spyOn(maskDirective, 'onFocus');
+        spyOn<any>(maskDirective, 'showMask');
 
         const input = fixture.debugElement.query(By.css('.igx-input-group__input'));
         input.triggerEventHandler('focus', {});
@@ -590,7 +591,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
     let mask: IgxMaskDirective;
     let renderer2: Renderer2;
     it('Should correctly implement interface methods', () => {
-        const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
+        const mockNgControl = { registerOnChangeCb: vi.fn(), registerOnTouchedCb: vi.fn() };
         const platformMock = {
             isIE: false,
             KEYMAP: {
@@ -601,15 +602,15 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
             }
         };
 
-        const mockParser = jasmine.createSpyObj('MaskParsingService', {
-            applyMask: 'test____',
-            replaceInMask: { value: 'test_2__', end: 6 } as Replaced,
-            parseValueFromMask: 'test2'
-        });
+        const mockParser = {
+            applyMask: vi.fn(),
+            replaceInMask: vi.fn() value: vi.fn(), end: vi.fn() } as Replaced,
+            parseValueFromMask: vi.fn()
+        };
         const format = 'CCCCCCCC';
 
         // init
-        renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
+        renderer2 = { setAttribute: vi.fn() };
 
         TestBed.configureTestingModule({
             providers: [
@@ -625,12 +626,12 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         mask.mask = format;
         mask.registerOnChange(mockNgControl.registerOnChangeCb);
         mask.registerOnTouched(mockNgControl.registerOnTouchedCb);
-        spyOn(mask.valueChanged, 'emit');
+        vi.spyOn(mask.valueChanged, 'emit');
         const inputGet = spyOnProperty(mask as any, 'inputValue', 'get');
         const inputSet = spyOnProperty(mask as any, 'inputValue', 'set');
 
         // writeValue
-        inputGet.and.returnValue('formatted');
+        inputGet.mockReturnValue('formatted');
         mask.writeValue('test');
         expect(mockParser.applyMask).toHaveBeenCalledWith('test', jasmine.objectContaining({ format }));
         expect(inputSet).toHaveBeenCalledWith('test____');
@@ -638,9 +639,9 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         expect(mask.valueChanged.emit).toHaveBeenCalledWith({ rawValue: 'test', formattedValue: 'formatted' });
 
         // OnChange callback
-        inputGet.and.returnValue('test_2___');
-        spyOnProperty(mask as any, 'selectionEnd').and.returnValue(6);
-        const setSelectionSpy = spyOn(mask as any, 'setSelectionRange');
+        inputGet.mockReturnValue('test_2___');
+        spyOnProperty(mask as any, 'selectionEnd').mockReturnValue(6);
+        const setSelectionSpy = vi.spyOn(mask as any, 'setSelectionRange');
         mask.onInputChanged(false);
         expect(mockParser.replaceInMask).toHaveBeenCalledWith('', 'test_2', jasmine.objectContaining({ format }), 0, 0);
         expect(inputSet).toHaveBeenCalledWith('test_2__');

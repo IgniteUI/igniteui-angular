@@ -18,6 +18,7 @@ import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
 
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
     let fix;
@@ -152,8 +153,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
-            jasmine.getEnv().allowRespy(true);
-            const warnSpy = spyOn(console, 'warn');
+            const warnSpy = vi.spyOn(console, 'warn');
             grid.primaryKey = 'testField';
             fix.detectChanges();
 
@@ -177,8 +177,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
-            jasmine.getEnv().allowRespy(false);
-        });
+            });
     });
 
     describe('Auto-generated columns', () => {

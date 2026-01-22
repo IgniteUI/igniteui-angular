@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IgSizeDirective } from './ig-size.directive';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 @Component({
   template: `<div [igSize]="size">Test Element</div>`,
   imports: [IgSizeDirective],

@@ -8,6 +8,7 @@ import { GridFunctions, PAGER_CLASS } from '../../../test-utils/grid-functions.s
 import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../../test-utils/controls-functions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const grid = fix.componentInstance.grid;
 
@@ -86,7 +87,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             // Goto page 3 through API and listen for event
-            spyOn(paginator.pagingDone, 'emit');
+            vi.spyOn(paginator.pagingDone, 'emit');
             paginator.paginate(2);
 
             fix.detectChanges();

@@ -15,6 +15,7 @@ import {
 } from './drag-drop.directive';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
     let dropArea: IgxDropDirective;
@@ -61,8 +62,8 @@ describe('General igxDrag/igxDrop', () => {
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
         const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
 
-        spyOn(firstDrag.ghostCreate, 'emit');
-        spyOn(firstDrag.ghostDestroy, 'emit');
+        vi.spyOn(firstDrag.ghostCreate, 'emit');
+        vi.spyOn(firstDrag.ghostDestroy, 'emit');
         expect(document.getElementsByClassName('dragElem').length).toEqual(3);
 
         // Step 1.
@@ -103,9 +104,9 @@ describe('General igxDrag/igxDrop', () => {
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
         const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
 
-        spyOn(firstDrag.dragStart, 'emit');
-        spyOn(firstDrag.dragMove, 'emit');
-        spyOn(firstDrag.dragEnd, 'emit');
+        vi.spyOn(firstDrag.dragStart, 'emit');
+        vi.spyOn(firstDrag.dragMove, 'emit');
+        vi.spyOn(firstDrag.dragEnd, 'emit');
 
         // Step 1.
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
@@ -151,9 +152,9 @@ describe('General igxDrag/igxDrop', () => {
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
         const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
 
-        spyOn(firstDrag.dragStart, 'emit');
-        spyOn(firstDrag.dragMove, 'emit');
-        spyOn(firstDrag.dragEnd, 'emit');
+        vi.spyOn(firstDrag.dragStart, 'emit');
+        vi.spyOn(firstDrag.dragMove, 'emit');
+        vi.spyOn(firstDrag.dragEnd, 'emit');
 
         // Step 1.
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
@@ -200,9 +201,9 @@ describe('General igxDrag/igxDrop', () => {
         const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
         firstDrag.dragTolerance = 15;
 
-        spyOn(firstDrag.ghostCreate, 'emit');
-        spyOn(firstDrag.ghostDestroy, 'emit');
-        spyOn(firstDrag.dragClick, 'emit');
+        vi.spyOn(firstDrag.ghostCreate, 'emit');
+        vi.spyOn(firstDrag.ghostDestroy, 'emit');
+        vi.spyOn(firstDrag.dragClick, 'emit');
         expect(document.getElementsByClassName('dragElem').length).toEqual(3);
 
         // Step 1.
@@ -537,9 +538,9 @@ describe('General igxDrag/igxDrop', () => {
         const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
         firstDrag.ghost = false;
 
-        spyOn(firstDrag.dragStart, 'emit');
-        spyOn(firstDrag.dragMove, 'emit');
-        spyOn(firstDrag.dragEnd, 'emit');
+        vi.spyOn(firstDrag.dragStart, 'emit');
+        vi.spyOn(firstDrag.dragMove, 'emit');
+        vi.spyOn(firstDrag.dragEnd, 'emit');
 
         // Step 1.
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
@@ -676,8 +677,8 @@ describe('General igxDrag/igxDrop', () => {
         firstDrag.ghost = false;
         firstDrag.dragTolerance = 25;
 
-        spyOn(firstDrag.dragStart, 'emit');
-        spyOn(firstDrag.dragClick, 'emit');
+        vi.spyOn(firstDrag.dragStart, 'emit');
+        vi.spyOn(firstDrag.dragClick, 'emit');
 
         // Step 1.
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
@@ -727,7 +728,7 @@ describe('General igxDrag/igxDrop', () => {
         firstDrag.ghost = false;
         firstDrag.dragTolerance = 0;
 
-        spyOn(firstDrag.dragStart, 'emit');
+        vi.spyOn(firstDrag.dragStart, 'emit');
 
         // Step 1.
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
@@ -906,7 +907,7 @@ describe('General igxDrag/igxDrop', () => {
         thirdDrag.ghost = false;
         thirdDrag.dragTolerance = 0;
 
-        spyOn(thirdDrag.dragStart, 'emit');
+        vi.spyOn(thirdDrag.dragStart, 'emit');
 
         // Check if drag element itself is not draggable.
         UIInteractions.simulatePointerEvent('pointerdown', thirdElement, startingX, startingY);
@@ -965,9 +966,9 @@ describe('General igxDrag/igxDrop', () => {
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
         const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1151,7 +1152,7 @@ describe('General igxDrag/igxDrop', () => {
     it('should not create ghost element when executing transitionToOrigin() when no dragging is performed without start.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
 
-        spyOn(firstDrag.transitioned, 'emit');
+        vi.spyOn(firstDrag.transitioned, 'emit');
 
         expect(firstDrag.ghostElement).not.toBeTruthy();
 
@@ -1416,9 +1417,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1459,9 +1460,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1503,9 +1504,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1546,9 +1547,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1594,9 +1595,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1640,9 +1641,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1687,9 +1688,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1733,8 +1734,8 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
 
         fix.componentInstance.dropArea.dropped.pipe(first()).subscribe(((e: IDropDroppedEventArgs) => e.cancel = true));
 
@@ -1790,9 +1791,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1839,9 +1840,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         const dropArea = fix.componentInstance.dropArea;
         const dropAreaRects = getElemRects(dropArea.element.nativeElement);
 
-        spyOn(dropArea.enter, 'emit');
-        spyOn(dropArea.leave, 'emit');
-        spyOn(dropArea.dropped, 'emit');
+        vi.spyOn(dropArea.enter, 'emit');
+        vi.spyOn(dropArea.leave, 'emit');
+        vi.spyOn(dropArea.dropped, 'emit');
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
@@ -1892,9 +1893,9 @@ describe('Nested igxDrag elements', () => {
         firstMovie.ghost = false;
         firstMovie.dragTolerance = 0;
 
-        spyOn(rootList.dragStart, 'emit');
-        spyOn(firstCategory.dragStart, 'emit');
-        spyOn(firstMovie.dragStart, 'emit');
+        vi.spyOn(rootList.dragStart, 'emit');
+        vi.spyOn(firstCategory.dragStart, 'emit');
+        vi.spyOn(firstMovie.dragStart, 'emit');
 
         const dragHandle = thirdElement.children[0].children[0];
         const dragHandleRects = dragHandle.getBoundingClientRect();
