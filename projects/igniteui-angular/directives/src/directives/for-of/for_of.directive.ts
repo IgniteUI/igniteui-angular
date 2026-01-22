@@ -262,7 +262,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected _bScrollInternal = false;
     // End properties related to virtual height handling
     protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
-    protected contentResizeNotify = new Subject<void>();
+    protected contentResizeNotify = new Subject<ResizeObserverEntry[]>();
     protected contentObserver: ResizeObserver;
     /** Size that is being virtualized. */
     protected _virtSize = 0;
@@ -460,9 +460,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(
                 filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
-                throttleTime(40, undefined, { leading: false, trailing: true }),
                 destructor
-            ).subscribe(() => this._zone.runTask(() => this.updateSizes()));
+            ).subscribe((entries: ResizeObserverEntry[]) => this._zone.runTask(() => this.updateSizes(entries)));
         }
 
         if (this.igxForScrollOrientation === 'horizontal') {
@@ -487,11 +486,15 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     public ngAfterViewInit(): void {
+
+    }
+
+    protected subscribeToObserver(target: Element) {
         if (this.igxForScrollOrientation === 'vertical') {
             this._zone.runOutsideAngular(() => {
                 if (this.platformUtil.isBrowser) {
-                    this.contentObserver = new (getResizeObserver())(() => this.contentResizeNotify.next());
-                    this.contentObserver.observe(this.dc.instance._viewContainer.element.nativeElement);
+                    this.contentObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => this.contentResizeNotify.next(entries));
+                    this.contentObserver.observe(target);
                 }
             });
         }
@@ -801,6 +804,48 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             || containerSize && endTopOffset - containerSize > 5;
     }
 
+    public updateSizeAtIndex(index: number, newSize: number) {
+        const oldSize = this.individualSizeCache[index];
+        const sizeDiff = newSize - oldSize;
+        this.individualSizeCache[index] = newSize;
+        if (sizeDiff === 0) {
+            return;
+        }
+        for (let j = index + 1; j < this.sizesCache.length; j++) {
+            this.sizesCache[j] = (this.sizesCache[j] || 0) + sizeDiff;
+        }
+
+        // update scrBar heights/widths
+        const reducer = (acc, val) => acc + val;
+
+        const hSum = this.individualSizeCache.reduce(reducer);
+        if (hSum > this._maxSize) {
+            this._virtRatio = hSum / this._maxSize;
+        }
+        this.scrollComponent.size = Math.min(this.scrollComponent.size + sizeDiff, this._maxSize);
+        this._virtSize = hSum;
+        if (!this.scrollComponent.destroyed) {
+            this.scrollComponent.cdr.detectChanges();
+        }
+        const scrToBottom = this._isScrolledToBottom && !this.dc.instance.notVirtual;
+        if (scrToBottom && !this._isAtBottomIndex) {
+            const containerSize = parseInt(this.igxForContainerSize, 10);
+            const maxVirtScrollTop = this._virtSize - containerSize;
+            this._bScrollInternal = true;
+            this._virtScrollPosition = maxVirtScrollTop;
+            this.scrollPosition = maxVirtScrollTop;
+            return;
+        }
+        if (this._adjustToIndex) {
+            // in case scrolled to specific index where after scroll heights are changed
+            // need to adjust the offsets so that item is last in view.
+            if (sizeDiff !== 0) {
+                this.addScroll(sizeDiff);
+            }
+            this._adjustToIndex = null;
+        }
+    }
+
     /**
      * @hidden
      * Function that recalculates and updates cache sizes.
@@ -934,10 +979,17 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
     }
 
-    protected updateSizes() {
+    protected updateSizes(entries:ResizeObserverEntry[] ) {
         if (!this.scrollComponent.nativeElement.isConnected) return;
         const scrollable = this.isScrollable();
-        this.recalcUpdateSizes();
+        entries.forEach((entry) => {
+            if (entry.target.isConnected) {
+                const index = parseInt(entry.target.getAttribute('data-index'), 0);
+                this.updateSizeAtIndex(index, entry.contentRect.height);
+
+                console.log(`Index: ${index}, New Size: ${entry.contentRect.height}`);
+            }
+        });
         this._applyChanges();
         this._updateScrollOffset();
         if (scrollable !== this.isScrollable()) {
@@ -1389,6 +1441,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
         this.beforeViewDestroyed.emit(oldElem);
+        this.contentObserver.unobserve(oldElem.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || oldElem.rootNodes[0].nextElementSibling);
         // also detach from ViewContainerRef to make absolutely sure this is removed from the view container.
         this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
         oldElem.destroy();
@@ -1689,7 +1742,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        // this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
         this.cdr.markForCheck();
     }
 
@@ -1816,6 +1869,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         );
 
         this._embeddedViews.push(embeddedView);
+        this.subscribeToObserver(embeddedView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || embeddedView.rootNodes[0].nextElementSibling);
         this.state.chunkSize++;
     }
 
