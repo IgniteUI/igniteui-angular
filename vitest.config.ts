@@ -22,5 +22,19 @@ export default defineConfig({
         'dist/',
       ],
     },
+    projects: [{
+      extends: './vitest.config.ts',
+      test: {
+        name: 'igniteui-angular',
+        root: './projects/igniteui-angular',
+        include: ['**/*.spec.ts'],
+        exclude: [
+          'migrations/**/*.spec.ts',
+          'schematics/**/*.spec.ts',
+          'cypress/**/*.spec.ts',
+        ],
+      },
+    },
+    ]
   },
 });

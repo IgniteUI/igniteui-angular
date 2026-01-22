@@ -115,8 +115,8 @@ describe('igxActionStrip', () => {
             expect(dropDownItems.length).toBe(3);
         });
 
-        it('should emit onMenuOpen/onMenuOpening when toggling the menu', () => {
-            pending('implementation');
+        it.skip('should emit onMenuOpen/onMenuOpening when toggling the menu', () => {
+            // pending('implementation');
         });
 
         it('should allow combining content outside and inside the menu', () => {
