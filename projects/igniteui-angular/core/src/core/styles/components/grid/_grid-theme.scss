@@ -2376,6 +2376,7 @@
     %igx-grid__filtering-cell {
         display: flex;
         align-items: center;
+        background-clip: border-box;
         border-inline-end: $grid-header-border;
         border-top: $grid-header-border;
         height: var(--header-size);
