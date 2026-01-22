@@ -35,21 +35,43 @@ All code changes have been completed. The migration is ready for testing and val
 
 **Deleted:**
 - All 9 Karma configuration files (karma.conf.js, karma.grid.conf.js, etc.)
-- `vitest.workspace.ts` - Not needed with Angular builder (workspace handled by angular.json)
+- `vitest.workspace.ts` - Workspace configuration for library projects
 
-### 3. Angular.json Test Configuration
+### 3. Test Configuration Architecture
 
-Added official Angular Vitest builder to projects:
+This migration uses **different testing approaches** for libraries vs applications:
 
+#### Library Projects (igniteui-angular)
+**Uses vitest directly** via `vitest.workspace.ts`:
+- Library projects use `@angular/build:ng-packagr` which doesn't have "development" build configurations
+- The `@angular/build:unit-test` builder expects application-style build targets
+- Solution: Run vitest directly with workspace configuration
+
+Configuration in `vitest.workspace.ts`:
+```typescript
+{
+  name: 'igniteui-angular',
+  root: './projects/igniteui-angular',
+  include: ['**/*.spec.ts'],
+  exclude: ['migrations/**/*.spec.ts', 'schematics/**/*.spec.ts', 'cypress/**/*.spec.ts']
+}
+```
+
+#### Application Projects (igniteui-angular-elements)
+**Uses official Angular builder** via `@angular/build:unit-test`:
+- Application projects have proper build configurations
+- Can leverage Angular's official Vitest integration
+- Better integration with Angular CLI for applications
+
+Configuration in `angular.json`:
 ```json
 {
   "architect": {
     "test": {
       "builder": "@angular/build:unit-test",
       "options": {
-        "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
+        "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
         "include": ["**/*.spec.ts"],
-        "exclude": ["migrations/**/*.spec.ts", "schematics/**/*.spec.ts"],
         "coverage": true
       }
     }
@@ -58,7 +80,7 @@ Added official Angular Vitest builder to projects:
 ```
 
 This uses Angular's official Vitest integration, which:
-- Handles Angular-specific setup automatically
+- Handles Angular-specific setup automatically for applications
 - Integrates seamlessly with Angular CLI
 - Provides better type checking and build optimization
 - Supports all standard Vitest features
@@ -68,15 +90,18 @@ This uses Angular's official Vitest integration, which:
 
 ```json
 {
-  "test": "ng test igniteui-angular",
-  "test:lib": "ng test igniteui-angular --coverage",
-  "test:lib:watch": "ng test igniteui-angular --watch",
+  "test": "vitest --project=igniteui-angular",
+  "test:lib": "vitest run --coverage --project=igniteui-angular",
+  "test:lib:watch": "vitest --project=igniteui-angular",
   "test:elements": "ng test igniteui-angular-elements --coverage",
   "test:elements:watch": "ng test igniteui-angular-elements --watch"
 }
 ```
 
-**Note:** Test scripts now use `ng test` which leverages the `@angular/build:unit-test` builder. The `--coverage` flag enables code coverage reporting using the V8 provider configured in `vitest.config.ts`.
+**Note:** 
+- **Library tests** use vitest directly with the `--project` flag
+- **Application tests** use `ng test` which leverages the `@angular/build:unit-test` builder
+- The `--coverage` flag enables code coverage reporting using the V8 provider configured in `vitest.config.ts`
 
 ### 5. Spec File Conversions (260 files, 2,500+ transformations)
 
@@ -192,15 +217,49 @@ After running tests with coverage, check that reports are generated:
 
 ## Migration Approach
 
-This migration uses the **official Angular Vitest support** introduced in Angular v21+ through the `@angular/build:unit-test` builder.
+This migration uses a **hybrid approach** optimized for both library and application projects:
 
-### Key Benefits of Official Support
+### Architecture Decision
 
-1. **Native Integration**: Angular CLI handles Vitest configuration automatically
+**Library Projects (`igniteui-angular`):**
+- Use vitest directly via `vitest.workspace.ts`
+- Reason: Libraries use `@angular/build:ng-packagr` which doesn't have "development" build configurations
+- The `@angular/build:unit-test` builder expects application-style build targets and fails with: _"Could not load build target options for igniteui-angular:build:development"_
+- Solution: Run vitest directly with workspace configuration for full control
+
+**Application Projects (`igniteui-angular-elements`):**
+- Use `@angular/build:unit-test` builder (official Angular support)
+- Reason: Applications have proper build configurations and can leverage Angular's official Vitest integration
+- Benefits: Better Angular CLI integration, automatic setup, optimized builds
+
+### Benefits of This Approach
+
+**For Libraries:**
+- ✅ Direct control over test execution
+- ✅ No dependency on build configurations
+- ✅ Workspace feature allows multiple library projects
+- ✅ Simpler configuration for library-specific needs
+
+**For Applications:**
+- ✅ Native Angular CLI integration
+- ✅ Official support from Angular team
+- ✅ Automatic Angular-specific setup
+- ✅ Better type safety and build optimization
+- ✅ Future-proof official support
+
+### Common Benefits:
+- ✅ Latest Vitest v4.0.17 with all performance improvements
+- ✅ V8 coverage provider for fast, accurate reports
+- ✅ Playwright browser testing
+- ✅ All spec files use identical Vitest syntax
+
+### Key Benefits of Vitest
+
+1. **Performance**: Vite-powered test runner for fast execution
 2. **Type Safety**: Better TypeScript integration with Angular testing utilities
-3. **Optimized Builds**: Leverages Angular's build system for faster test compilation
-4. **Official Support**: Maintained by the Angular team, future-proof
-5. **Simplified Configuration**: Most settings handled by the builder
+3. **Optimized**: Leverages Vite's build system for faster test compilation
+4. **Modern**: Latest testing framework with active development
+5. **Flexible**: Works with both libraries and applications
 
 ### Automated Conversion Scripts
 
@@ -227,6 +286,30 @@ Manual fixes applied for:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
+│                    Library Projects                          │
+│                 (igniteui-angular)                           │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Vitest v4.0.17 (Direct Execution)               │
+│  - vitest.workspace.ts configuration                         │
+│  - No dependency on Angular build system                     │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 V8 Coverage + Playwright                     │
+└─────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                  Application Projects                        │
+│            (igniteui-angular-elements)                       │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
 │                     Angular CLI (ng test)                    │
 └──────────────────────────┬──────────────────────────────────┘
                            │
@@ -235,15 +318,13 @@ Manual fixes applied for:
 │          @angular/build:unit-test (Official Builder)         │
 │  - Handles Angular-specific setup                            │
 │  - Configures Vitest with Angular context                    │
-│  - Manages TypeScript compilation                            │
 └──────────────────────────┬──────────────────────────────────┘
                            │
                            ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    Vitest Test Runner                        │
+│                    Vitest v4.0.17                            │
 │  - Executes tests with browser support (Playwright)          │
-│  - Generates coverage reports                                 │
-│  - Custom config from vitest.config.ts                        │
+│  - Generates coverage reports (V8)                            │
 └─────────────────────────────────────────────────────────────┘
 ```
 
