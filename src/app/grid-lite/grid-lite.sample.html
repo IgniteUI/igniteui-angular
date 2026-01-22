@@ -1,1 +1,47 @@
-<igx-grid-lite [data]="data" [autoGenerate]="false"></igx-grid-lite>
+<igx-grid-lite [data]="data" [autoGenerate]="false">
+  <igx-grid-lite-column
+    field="firstName"
+    dataType="string"
+    header="First Name"
+    [width]="'250px'"
+    [sortable]="true"
+    [sortingCaseSensitive]="true"
+    [filterable]="true"
+    [filteringCaseSensitive]="false"
+    [headerTemplate]="headerTemplate"
+  ></igx-grid-lite-column>
+  <igx-grid-lite-column
+    field="lastName"
+    dataType="string"
+    header="Last Name"
+    [cellTemplate]="cellTemplate"
+  ></igx-grid-lite-column>
+
+  <igx-grid-lite-column
+    field="age"
+    dataType="number"
+    header="Age"
+    [resizable]="true"
+    [sortable]="true"
+  ></igx-grid-lite-column>
+  <igx-grid-lite-column
+    field="active"
+    dataType="boolean"
+    header="Active"
+  ></igx-grid-lite-column>
+</igx-grid-lite>
+
+<ng-template igxHeaderTemplate let-column #headerTemplate>
+  <div>{{column.header}} Templated</div>
+</ng-template>
+
+<ng-template
+  #cellTemplate
+  igxCellTemplate
+  let-value
+  let-rowIndex="rowIndex"
+  let-column="column"
+  let-data="data"
+>
+  <div>Cell [{{rowIndex}}, {{column.field}}]: {{value}} {{data}}</div>
+</ng-template>

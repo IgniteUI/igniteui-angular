@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
-import { IgxGridLiteComponent } from "igniteui-angular/grids/lite";
+import { IgxColumnConfiguration, IgxGridLiteColumnComponent, IgxGridLiteComponent } from "igniteui-angular/grids/lite";
 import { GridLiteDataService } from './data.service';
 
 
@@ -10,7 +10,7 @@ import { GridLiteDataService } from './data.service';
     templateUrl: 'grid-lite.sample.html',
     styleUrls: ['grid-lite.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxGridLiteComponent]
+    imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent]
 })
 export class GridLiteSampleComponent {
     protected data = [];

@@ -12,11 +12,19 @@ import { IgcGridLite } from 'igniteui-grid-lite';
 export class IgxGridLiteComponent implements OnInit {
 
     //#region Inputs
+
+    /** The data source for the grid. */
     public readonly data = input<any>([]);
 
-    public readonly autoGenerate = input<boolean>(true);
+    /**
+     * Whether the grid will try to "resolve" its column configuration based on the passed
+     * data source.
+     *
+     * @remarks
+     * This property is ignored if any existing column configuration already exists in the grid.
+     */
+    public readonly autoGenerate = input<boolean>(false);
 
-    // public readonly columns = input<
     //#endregion
 
     /**
