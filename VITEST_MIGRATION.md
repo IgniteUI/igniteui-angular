@@ -14,9 +14,9 @@ All code changes have been completed. The migration is ready for testing and val
 - `jasmine-core`, `@types/jasmine`, `@types/jasminewd2`
 
 **Added:**
-- `vitest` (v2.1.8) - Modern test runner
-- `@vitest/ui` (v2.1.8) - UI test runner
-- `@vitest/browser` (v2.1.8) - Browser mode support
+- `vitest` (v4.0.17) - Modern test runner
+- `@vitest/ui` (v4.0.17) - UI test runner
+- `@vitest/browser` (v4.0.17) - Browser mode support
 - `playwright` (v1.49.1) - Browser automation
 - **Uses `@angular/build` (v21.0.1)** - Official Angular Vitest integration (already installed)
 
