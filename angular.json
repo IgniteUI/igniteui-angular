@@ -163,6 +163,18 @@
             }
           }
         },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
+            "include": ["**/*.spec.ts"],
+            "exclude": [
+              "migrations/**/*.spec.ts",
+              "schematics/**/*.spec.ts",
+              "cypress/**/*.spec.ts"
+            ]
+          }
+        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
@@ -311,6 +323,13 @@
           "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "igniteui-angular-elements:build"
+          }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
+            "include": ["**/*.spec.ts"]
           }
         }
       }
