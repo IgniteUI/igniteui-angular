@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, contentChild, CUSTOM_ELEMENTS_SCHEMA, Directive, effect, EmbeddedViewRef, inject, input, TemplateRef, viewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, CUSTOM_ELEMENTS_SCHEMA, Directive, effect, EmbeddedViewRef, inject, input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ColumnConfiguration, ColumnSortConfiguration, IgcCellContext, IgcHeaderContext, Keys } from 'igniteui-grid-lite';
 
 /** Configuration object for grid columns. */
