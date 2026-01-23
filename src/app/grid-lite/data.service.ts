@@ -43,7 +43,10 @@ export class GridLiteDataService {
     private priorities: ('Low' | 'Standard' | 'High')[] = ['Low', 'Standard', 'High'];
 
     private randomInt(min: number, max: number): number {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        const array = new Uint32Array(1);
+        window.crypto.getRandomValues(array);
+        const random01 = array[0] / 2 ** 32;
+        return Math.floor(random01 * (max - min + 1)) + min;
     }
 
     private randomFloat(min: number, max: number, precision = 2): number {
