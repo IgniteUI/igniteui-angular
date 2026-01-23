@@ -1260,13 +1260,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         };
         this._dropDownOverlaySettings.positionStrategy = new AutoPositionStrategy(this._positionSettings);
 
-        if (this.hasProjectedInputs) {
-            const bundle = this.projectedInputs.first?.nativeElement.querySelector('.igx-input-group__bundle');
-            this._dropDownOverlaySettings.target = bundle || this.element.nativeElement;
-        } else {
-            const bundle = this.element.nativeElement.querySelector('.igx-input-group__bundle');
-            this._dropDownOverlaySettings.target = bundle || this.element.nativeElement;
-        }
+        const bundle = this.hasProjectedInputs
+            ? this.projectedInputs.first?.nativeElement.querySelector('.igx-input-group__bundle')
+            : this.element.nativeElement.querySelector('.igx-input-group__bundle');
+        this._dropDownOverlaySettings.target = bundle || this.element.nativeElement;
     }
 
     private configOverlaySettings(): void {
