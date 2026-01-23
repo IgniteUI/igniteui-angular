@@ -1,6 +1,7 @@
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
+import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 import {
     SelectionWithScrollsComponent,
     SelectionWithTransactionsComponent,
@@ -979,6 +980,9 @@ describe('IgxGrid - Cell selection #grid', () => {
         let gridContent: DebugElement;
 
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1587,14 +1591,14 @@ describe('IgxGrid - Cell selection #grid', () => {
                     obj = grid.gridAPI.get_row_by_index(i);
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
-                await wait(50);
+                await wait(100);
                 fix.detectChanges();
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             cell = grid.gridAPI.get_cell_by_index(10, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
-            await wait(50);
+            await wait(60);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
@@ -1708,7 +1712,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                     }
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
-                await wait(50);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -1718,7 +1722,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 const summaryCell = grid.summariesRowList.find(row => row.index === 8)
                     .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
                 UIInteractions.triggerKeyDownEvtUponElem('arrowright', summaryCell.nativeElement, true);
-                await wait(50);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -1727,7 +1731,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const sumCell = grid.summariesRowList.find(row => row.index === 8)
                 .summaryCells.find(sCell => sCell.visibleColumnIndex === 5);
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', sumCell.nativeElement, true);
-            await wait(50);
+            await wait(60);
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 7, 7, 5, 5);

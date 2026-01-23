@@ -9,9 +9,11 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CellType } from 'igniteui-angular/grids/core';
+import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-const DEBOUNCETIME = 30;
+
+const DEBOUNCETIME = 60;
 
 describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     beforeEach(waitForAsync(() => {
@@ -397,6 +399,9 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
 
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;

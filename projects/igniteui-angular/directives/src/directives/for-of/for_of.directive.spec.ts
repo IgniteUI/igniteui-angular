@@ -250,15 +250,17 @@ describe('IgxForOf directive -', () => {
         it('should update vertical scroll offsets if igxForOf changes. ', () => {
             fix.componentInstance.scrollTop(5);
             fix.detectChanges();
+            let transform = displayContainer.style.transform;
 
-            expect(parseInt(displayContainer.style.top, 10)).toEqual(-5);
+            expect(parseInt(transform.slice(transform.indexOf('(') + 1, transform.indexOf(')')), 10)).toEqual(-5);
 
             vi.spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             fix.componentInstance.data = [{ 1: 1, 2: 2, 3: 3, 4: 4 }];
             fix.detectChanges();
 
-            expect(parseInt(displayContainer.style.top, 10)).toEqual(0);
+            transform = displayContainer.style.transform;
+            expect(parseInt(transform.slice(transform.indexOf('(') + 1, transform.indexOf(')')), 10)).toEqual(0);
             expect(fix.componentInstance.parentVirtDir.chunkLoad.emit).toHaveBeenCalledTimes(1);
         });
 

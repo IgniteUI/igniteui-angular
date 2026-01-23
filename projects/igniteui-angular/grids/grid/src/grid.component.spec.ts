@@ -18,6 +18,7 @@ import { AsyncPipe } from '@angular/common';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
+import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('IgxGrid Component Tests #grid', () => {
@@ -41,6 +42,12 @@ describe('IgxGrid Component Tests #grid', () => {
             })
             .compileComponents();
         }));
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
+        });
 
         it('should initialize a grid with columns from markup', () => {
             const fix = TestBed.createComponent(IgxGridMarkupDeclarationComponent);
@@ -2021,7 +2028,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.navigateTo(50, 16);
             fix.detectChanges();
-            await wait();
+            await wait(60);
             fix.detectChanges();
 
             expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');

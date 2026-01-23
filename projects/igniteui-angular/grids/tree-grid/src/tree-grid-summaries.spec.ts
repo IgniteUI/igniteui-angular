@@ -15,6 +15,7 @@ import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('IgxTreeGrid - Summaries #tGrid', () => {
@@ -32,6 +33,12 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 IgxTreeGridSummariesKeyScroliingComponent
             ]
         }).compileComponents();
+    }));
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+        });
     }));
 
     describe('', () => {
@@ -1707,7 +1714,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         fix.detectChanges();
         (treeGrid as any).scrollTo(23, 0, 0);
         fix.detectChanges();
-        await wait(30);
+        await wait(60);
         fix.detectChanges();
 
         let row = treeGrid.getRowByKey(15);

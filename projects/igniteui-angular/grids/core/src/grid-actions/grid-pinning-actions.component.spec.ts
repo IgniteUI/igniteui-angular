@@ -8,9 +8,9 @@ import { IgxColumnComponent } from '../public_api';
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-
-
 import { describe, it, expect, beforeEach } from 'vitest';
+
+const DEBOUNCETIME = 60;
 describe('igxGridPinningActions #grid ', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
@@ -66,7 +66,7 @@ describe('igxGridPinningActions #grid ', () => {
             jumpButton.triggerEventHandler('click', new Event('click'));
             await wait();
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCETIME);
             fixture.detectChanges();
 
             const secondToLastVisible = grid.rowList.toArray()[grid.rowList.length - 2];
