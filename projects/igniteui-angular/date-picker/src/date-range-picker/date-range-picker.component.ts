@@ -1,8 +1,27 @@
 import {
-    AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
-    EventEmitter, HostBinding, HostListener, Injector, Input,
-    OnChanges, OnDestroy, OnInit, Output, QueryList,
-    SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject
+    AfterViewInit,
+    booleanAttribute,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Injector,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation,
+    inject
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -13,7 +32,13 @@ import {
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { CalendarSelection, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
+import {
+    CalendarSelection,
+    IgxCalendarComponent,
+    IgxCalendarHeaderTemplateDirective,
+    IgxCalendarHeaderTitleTemplateDirective,
+    IgxCalendarSubheaderTemplateDirective
+} from 'igniteui-angular/calendar';
 import {
     DateRangeDescriptor,
     DateRangeType,
@@ -90,6 +115,8 @@ const SingleInputDatesConcatenationString = ' - ';
 @Component({
     selector: 'igx-date-range-picker',
     templateUrl: './date-range-picker.component.html',
+    styleUrls: ['../date-picker/date-picker.component.css', 'date-range-picker.component.css'],
+    encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
@@ -1154,8 +1181,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private toRangeOfDates(range: DateRange): { start: Date; end: Date } {
-        let start;
-        let end;
+        let start: Date;
+        let end: Date;
+
         if (!isDate(range.start)) {
             start = DateTimeUtil.parseIsoDate(range.start);
         }
