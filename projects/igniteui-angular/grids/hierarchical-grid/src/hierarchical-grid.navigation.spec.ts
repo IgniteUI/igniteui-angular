@@ -22,7 +22,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
-    const defaultTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -37,7 +36,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout * 2;
     }));
 
     beforeEach(waitForAsync(() => {
@@ -45,8 +43,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
             providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
         });
     }));
-
-    afterAll(() => jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout);
 
     describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 

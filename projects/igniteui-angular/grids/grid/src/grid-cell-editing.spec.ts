@@ -922,7 +922,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
-            emitSpy.calls.reset();
+            emitSpy.mockClear();
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
@@ -937,7 +937,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(nextCell.editMode).toBe(false);
 
             // activate the new cell
-            emitSpy.calls.reset();
+            emitSpy.mockClear();
             grid.gridAPI.get_cell_by_index(0, 'age').activate(new FocusEvent('focus'));
             fixture.detectChanges();
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
@@ -947,7 +947,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(true);
             expect(document.activeElement).toBe(editInput);
 
-            emitSpy.calls.reset();
+            emitSpy.mockClear();
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 

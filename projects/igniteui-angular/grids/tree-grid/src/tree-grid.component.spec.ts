@@ -161,7 +161,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
-            warnSpy.calls.reset();
+            warnSpy.mockClear();
 
             const oldData = fix.componentInstance.data;
             const newData = fix.componentInstance.data.map(rec => Object.assign({}, rec, { testField: 0 }));

@@ -388,7 +388,7 @@ describe('Navigation Drawer', () => {
         let navDrawer;
         let fixture: ComponentFixture<TestComponentDIComponent>;
 
-        // Using bare minimum of timeouts, jasmine.DEFAULT_TIMEOUT_INTERVAL can be modified only in beforeEach
+        // Using bare minimum of timeouts
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();

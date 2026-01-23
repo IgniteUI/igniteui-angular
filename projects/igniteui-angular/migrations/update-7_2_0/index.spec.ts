@@ -79,7 +79,7 @@ describe('Update 7.2.0', () => {
         const tree = await schematicRunner.runSchematic('migration-08', {}, appTree);
 
         expect(addNormalize.addResetCss).toHaveBeenCalledWith(
-            jasmine.objectContaining<workspaces.WorkspaceDefinition>({
+            expect.objectContaining<workspaces.WorkspaceDefinition>({
                 extensions: expect.anything(),
                 projects: expect.anything()
             }), appTree);

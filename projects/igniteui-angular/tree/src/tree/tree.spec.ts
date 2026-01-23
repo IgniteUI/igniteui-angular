@@ -63,7 +63,7 @@ describe('IgxTree #treeView', () => {
                 },
                 find: (cb: (n: IgxTreeNodeComponent<any>) => boolean): IgxTreeNodeComponent<any> => mockNodesArray.find(cb),
                 filter: vi.fn()
-                    .and.callFake((cb: (n: IgxTreeNodeComponent<any>) => boolean): IgxTreeNodeComponent<any>[] => mockNodesArray.filter(cb)),
+                    .mockImplementation((cb: (n: IgxTreeNodeComponent<any>) => boolean): IgxTreeNodeComponent<any>[] => mockNodesArray.filter(cb)),
             } as any as QueryList<IgxTreeNodeComponent<any>>;
             vi.spyOn(mockNodes, 'toArray').mockReturnValue(mockNodesArray);
         });

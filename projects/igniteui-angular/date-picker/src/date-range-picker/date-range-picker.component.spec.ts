@@ -242,7 +242,7 @@ describe('IgxDateRangePicker', () => {
 
             dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
-            mockNgControl.registerOnValidatorChangeCb.calls.reset();
+            mockNgControl.registerOnValidatorChangeCb.mockClear();
             spyOnProperty((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
 
             const start = new Date(new Date().getFullYear(), new Date().getMonth(), 10);

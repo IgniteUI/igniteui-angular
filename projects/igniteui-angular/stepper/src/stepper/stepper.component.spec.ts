@@ -64,7 +64,7 @@ const testAnimationBehavior = (
     fix.detectChanges();
     const previousActiveStep = stepper.steps[0];
     const activeChangeSpy = vi.spyOn(previousActiveStep.activeChange, 'emit');
-    activeChangeSpy.calls.reset();
+    activeChangeSpy.mockClear();
     stepper.next();
     fix.detectChanges();
     tick(1000);
@@ -73,7 +73,7 @@ const testAnimationBehavior = (
     } else {
         expect(previousActiveStep.activeChange.emit).withContext(val).not.toHaveBeenCalled();
     }
-    activeChangeSpy.calls.reset();
+    activeChangeSpy.mockClear();
 };
 
 describe('Rendering Tests', () => {
@@ -129,8 +129,8 @@ describe('Rendering Tests', () => {
             expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[2]);
             expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
 
-            serviceExpandSpy.calls.reset();
-            serviceCollapseSpy.calls.reset();
+            serviceExpandSpy.mockClear();
+            serviceCollapseSpy.mockClear();
 
             stepper.orientation = IgxStepperOrientation.Vertical;
             stepper.steps[0].active = true;
@@ -314,8 +314,8 @@ describe('Rendering Tests', () => {
             expect(fifthActiveChangeSpy).not.toHaveBeenCalled();
             expect(serviceExpandAPISpy.mock.lastCall[0]).toBe(stepper.steps[3]);
 
-            fourthActiveChangeSpy.calls.reset();
-            serviceExpandAPISpy.calls.reset();
+            fourthActiveChangeSpy.mockClear();
+            serviceExpandAPISpy.mockClear();
 
             stepper.steps[4].active = true;
             fix.detectChanges();
@@ -1236,7 +1236,7 @@ describe('Stepper service unit tests', () => {
         expect(result).toEqual(false);
         expect(activeChangingSpy).toHaveBeenCalledOnceWith(activeChangingEventArgs);
 
-        activeChangingSpy.calls.reset();
+        activeChangingSpy.mockClear();
 
         stepperService.activeStep = steps[1];
         stepperService.previousActiveStep = steps[0];

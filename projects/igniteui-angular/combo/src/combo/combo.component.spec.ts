@@ -229,7 +229,7 @@ describe('igxCombo', () => {
 
             combo.ngOnInit();
             combo.data = data;
-            mockSelection.select_items.calls.reset();
+            mockSelection.select_items.mockClear();
             spyOnProperty(combo, 'isRemote').mockReturnValue(false);
             combo.writeValue(['EXAMPLE']);
             expect(mockSelection.select_items).toHaveBeenCalledTimes(1);

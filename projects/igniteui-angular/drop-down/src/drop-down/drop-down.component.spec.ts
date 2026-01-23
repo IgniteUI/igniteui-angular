@@ -308,8 +308,8 @@ describe('IgxDropDown ', () => {
 
                 toggle.close();
                 fixture.detectChanges();
-                onOpeningSpy.calls.reset();
-                onOpenedSpy.calls.reset();
+                onOpeningSpy.mockClear();
+                onOpenedSpy.mockClear();
 
                 dropdown.opening.pipe(take(1)).subscribe((e: CancelableEventArgs) => e.cancel = true);
                 dropdown.toggle();

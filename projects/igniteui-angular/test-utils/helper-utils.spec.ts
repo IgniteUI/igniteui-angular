@@ -124,5 +124,5 @@ if (shardLogging) {
                 console.log( '--------------------Heap Size limit reached!!!-------------------');
         },
     };
-    jasmine.getEnv().addReporter(myReporter);
+    // Reporter functionality removed - not applicable to Vitest
 }

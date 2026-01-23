@@ -693,7 +693,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
-            warnSpy.calls.reset();
+            warnSpy.mockClear();
 
             // update data to include the 'testField'
             fixture.componentInstance.data = [{ index: 1, value: 1, testField: 1 }];
@@ -2555,7 +2555,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.contextMenu.emit).toHaveBeenCalledWith(expect.objectContaining({
                 cell: expect.anything()
             }));
-            spy.calls.reset();
+            spy.mockClear();
             row.nativeElement.dispatchEvent(event);
             fix.detectChanges();
             expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);

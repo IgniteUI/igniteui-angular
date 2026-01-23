@@ -323,7 +323,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 { column: grid.getColumnByName('ProductID'), checked: false });
 
             // test after closing and reopening the hiding UI
-            spy.calls.reset();
+            spy.mockClear();
             hidingActionButton.click();
             tick();
             fixture.detectChanges();
