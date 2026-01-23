@@ -1,4 +1,10 @@
-<igx-grid-lite [data]="data" [autoGenerate]="false">
+<igx-grid-lite
+  #grid
+  [data]="data"
+  [autoGenerate]="false"
+  [sortingOptions]="sortingOptions"
+  [sortingExpressions]="sortingExpressions"
+>
   <igx-grid-lite-column
     field="firstName"
     dataType="string"
@@ -9,39 +15,57 @@
     [filterable]="true"
     [filteringCaseSensitive]="false"
     [headerTemplate]="headerTemplate"
-  ></igx-grid-lite-column>
+  >
+  </igx-grid-lite-column>
   <igx-grid-lite-column
     field="lastName"
     dataType="string"
     header="Last Name"
     [cellTemplate]="cellTemplate"
-  ></igx-grid-lite-column>
+    [sortable]="true"
+  >
+    <ng-template igxGridLiteHeaderTemplate let-column let-parent="parent">
+      <div>{{column.header}} Templated inline</div>
+    </ng-template>
+  </igx-grid-lite-column>
 
   <igx-grid-lite-column
     field="age"
     dataType="number"
     header="Age"
+    [filterable]="true"
     [resizable]="true"
     [sortable]="true"
   ></igx-grid-lite-column>
-  <igx-grid-lite-column
-    field="active"
-    dataType="boolean"
-    header="Active"
-  ></igx-grid-lite-column>
+  <igx-grid-lite-column field="active" dataType="boolean" header="Active">
+    <ng-template
+      igxGridLiteCellTemplate
+      let-value
+      let-row="row"
+      let-column="column"
+      let-parent="parent"
+    >
+      <div>Cell {{value}}</div>
+    </ng-template>
+  </igx-grid-lite-column>
 </igx-grid-lite>
 
-<ng-template igxHeaderTemplate let-column #headerTemplate>
+<ng-template
+  igxGridLiteHeaderTemplate
+  let-column
+  let-parent="parent"
+  #headerTemplate
+>
   <div>{{column.header}} Templated</div>
 </ng-template>
 
 <ng-template
   #cellTemplate
-  igxCellTemplate
+  igxGridLiteCellTemplate
   let-value
-  let-rowIndex="rowIndex"
+  let-row="row"
   let-column="column"
-  let-data="data"
+  let-parent="parent"
 >
-  <div>Cell [{{rowIndex}}, {{column.field}}]: {{value}} {{data}}</div>
+  <div>Cell [{{row.index}}, {{column.field}}]: {{value}} {{row.data}}</div>
 </ng-template>

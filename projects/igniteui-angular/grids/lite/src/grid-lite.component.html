@@ -1,3 +1,15 @@
-<igc-grid-lite [data]="data()" [autoGenerate]="autoGenerate()">
-    <ng-content></ng-content>
+<igc-grid-lite
+  #grid
+  [data]="data()"
+  [autoGenerate]="autoGenerate()"
+  [sortingOptions]="sortingOptions()"
+  [dataPipelineConfiguration]="dataPipelineConfiguration()"
+  [sortingExpressions]="_sortingExpressions()"
+  [filterExpressions]="_filteringExpressions()"
+  (sorting)="(sorting)"
+  (sorted)="(sorted)"
+  (filtering)="(filtering)"
+  (filtered)="(filtered)"
+>
+  <ng-content></ng-content>
 </igc-grid-lite>

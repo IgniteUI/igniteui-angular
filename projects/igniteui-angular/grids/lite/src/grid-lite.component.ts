@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, OnInit } from '@angular/core';
-import { IgcGridLite } from 'igniteui-grid-lite';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, input, OnInit, output, signal, viewChild } from '@angular/core';
+import { DataPipelineConfiguration, FilterExpression, GridLiteSortingOptions, IgcGridLite, Keys, SortingExpression } from 'igniteui-grid-lite';
+import { IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
+
+export type IgxGridLiteSortingOptions = GridLiteSortingOptions;
+export type IgxGridLiteDataPipelineConfiguration<T extends object = any> = DataPipelineConfiguration<T>;
+export type IgxGridLiteSortingExpression<T extends object = any> = SortingExpression<T>;
+export type IgxGridLiteFilteringExpression<T extends object = any> = FilterExpression<T>;
 
 @Component({
     selector: 'igx-grid-lite',
@@ -9,7 +15,17 @@ import { IgcGridLite } from 'igniteui-grid-lite';
     templateUrl: './grid-lite.component.html'
 })
 
-export class IgxGridLiteComponent implements OnInit {
+export class IgxGridLiteComponent<T extends object = any> implements OnInit {
+
+    //#region Internal state
+
+    private readonly gridRef = viewChild<ElementRef<IgcGridLite<T>>>('grid');
+
+    protected _sortingExpressions = signal<IgxGridLiteSortingExpression[]>([]);
+    protected _filteringExpressions = signal<IgxGridLiteFilteringExpression[]>([]);
+
+
+    //#endregion
 
     //#region Inputs
 
@@ -25,6 +41,126 @@ export class IgxGridLiteComponent implements OnInit {
      */
     public readonly autoGenerate = input<boolean>(false);
 
+    /** Sort configuration property for the grid. */
+    public readonly sortingOptions = input<IgxGridLiteSortingOptions>({
+        mode: 'multiple'
+    });
+
+    /**
+     * Configuration object which controls remote data operations for the grid.
+     */
+    public readonly dataPipelineConfiguration = input<IgxGridLiteDataPipelineConfiguration>();
+
+    //#endregion
+
+    //#region Events
+
+    /**
+     * Emitted when sorting is initiated through the UI.
+     * Returns the sort expression which will be used for the operation.
+     *
+     * @remarks
+     * The event is cancellable which prevents the operation from being applied.
+     * The expression can be modified prior to the operation running.
+     *
+     * @event
+     */
+    public readonly sorting = output<CustomEvent<IgxGridLiteSortingExpression<T>>>();
+
+    /**
+     * Emitted when a sort operation initiated through the UI has completed.
+     * Returns the sort expression used for the operation.
+     *
+     * @event
+     */
+    public readonly sorted = output<CustomEvent<IgxGridLiteSortingExpression<T>>>();
+
+    /**
+     * Emitted when filtering is initiated through the UI.
+     *
+     * @remarks
+     * The event is cancellable which prevents the operation from being applied.
+     * The expression can be modified prior to the operation running.
+     *
+     * @event
+     */
+    public readonly filtering = output<CustomEvent<IgxGridLiteFilteringExpression<T>>>();
+
+    /**
+     * Emitted when a filter operation initiated through the UI has completed.
+     * Returns the filter state for the affected column.
+     *
+     * @event
+     */
+    public readonly filtered = output<CustomEvent<IgxGridLiteFilteringExpression<T>>>();
+
+    //#endregion
+
+    //#region Getters / Setters
+
+    /**
+     * Get the current sort state from the grid.
+     */
+    public get sortingExpressions(): IgxGridLiteSortingExpression[] {
+        return this.gridRef()?.nativeElement.sortingExpressions ?? [];
+    }
+
+    /**
+     * Set the sort state for the grid.
+     */
+    @Input()
+    public set sortingExpressions(value: IgxGridLiteSortingExpression[]) {
+        this._sortingExpressions.set(value);
+    }
+
+    /**
+     * Get the filter state for the grid.
+     */
+    public get filteringExpressions(): IgxGridLiteFilteringExpression[] {
+        return this.gridRef()?.nativeElement.filterExpressions ?? [];
+    }
+
+    /**
+     * Set the filter state for the grid.
+     */
+    @Input()
+    public set filteringExpressions(value: IgxGridLiteFilteringExpression[]) {
+        this._filteringExpressions.set(value);
+    }
+
+    /**
+     * Get the column configuration of the grid.
+     */
+    public get columns(): IgxGridLiteColumnConfiguration<T>[] {
+        return this.gridRef()?.nativeElement.columns ?? [];
+    }
+
+    /**
+     * Returns the collection of rendered row elements in the grid.
+     *
+     * @remarks
+     * Since the grid has virtualization, this property returns only the currently rendered
+     * chunk of elements in the DOM.
+     */
+    public get rows() {
+        return this.gridRef()?.nativeElement.rows ?? [];
+    }
+
+    /**
+     * Returns the state of the data source after sort/filter operations
+     * have been applied.
+     */
+    public get dataView(): ReadonlyArray<T> {
+        return this.gridRef()?.nativeElement.dataView ?? [];
+    }
+
+    /**
+     * The total number of items in the dataView collection.
+     */
+    public get totalItems(): number {
+        return this.gridRef()?.nativeElement.totalItems ?? 0;
+    }
+
     //#endregion
 
     /**
@@ -33,4 +169,56 @@ export class IgxGridLiteComponent implements OnInit {
     public ngOnInit(): void {
         IgcGridLite.register();
     }
+
+    //#region Public API
+
+    /**
+     * Performs a filter operation in the grid based on the passed expression(s).
+     */
+    public filter(config: IgxGridLiteFilteringExpression | IgxGridLiteFilteringExpression[]): void {
+        this.gridRef()?.nativeElement.filter(config as FilterExpression<T> | FilterExpression<T>[]);
+    }
+
+    /**
+     * Performs a sort operation in the grid based on the passed expression(s).
+     */
+    public sort(expressions: IgxGridLiteSortingExpression<T> | IgxGridLiteSortingExpression<T>[]) {
+        this.gridRef()?.nativeElement.sort(expressions);
+    }
+
+    /**
+     * Resets the current sort state of the control.
+     */
+    public clearSort(key?: Keys<T>): void {
+        this.gridRef()?.nativeElement.clearSort(key);
+    }
+
+    /**
+     * Resets the current filter state of the control.
+     */
+    public clearFilter(key?: Keys<T>): void {
+        this.gridRef()?.nativeElement.clearFilter(key);
+    }
+
+    /**
+     * Navigates to a position in the grid based on provided row index and column field.
+     * @param row The row index to navigate to
+     * @param column The column field to navigate to, if any
+     * @param activate Optionally also activate the navigated cell
+     */
+    public async navigateTo(row: number, column?: Keys<T>, activate = false) {
+        await this.gridRef()?.nativeElement.navigateTo(row, column, activate);
+    }
+
+    /**
+     * Returns a {@link IgxGridLiteColumnConfiguration} for a given column.
+     */
+    public getColumn(id: Keys<T> | number): IgxGridLiteColumnConfiguration<T> | undefined {
+        return this.gridRef()?.nativeElement.getColumn(id);
+    }
+
+    //#endregion
+
+
+
 }
