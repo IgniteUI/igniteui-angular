@@ -1,0 +1,183 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/themes/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+@use 'animations' as *;
+
+$theme: $base;
+
+@include layer(base) {
+    // TODO change this once Not selector can be added to the block
+    .igx-linear-bar:not(.igx-linear-bar--indeterminate) {
+        .igx-linear-bar__indicator {
+            animation: igx-initial-width var(--_transition-duration) linear;
+            background-color: var-get($theme, 'fill-color-default')
+        }
+    }
+
+    @include b(igx-linear-bar) {
+        position: relative;
+        display: flex;
+        width: 100%;
+        flex: 1 1 100%;
+        flex-direction: column;
+
+        @include e(base) {
+            --stripe-size: #{var-get($theme, 'strip-size')};
+            --linear-animation-duration: 2000ms;
+
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: inherit;
+            height: var-get($theme, 'track-height');
+            background: var-get($theme, 'track-color');
+            overflow: hidden;
+            border-radius: var-get($theme, 'track-border-radius');
+            z-index: 0;
+        }
+
+        @include e(indicator) {
+            width: calc(var(--_progress-whole) * 1%);
+            position: absolute;
+            height: 100%;
+            transition: width var(--_transition-duration) linear;
+        }
+
+        @include e(value) {
+            @include type-style(subtitle-2) {
+                margin: 0;
+            }
+        ;
+
+            color: var-get($theme, 'text-color');
+            animation: initial-counter var(--_transition-duration) ease-in-out;
+            counter-reset: progress-integer var(--_progress-integer, 0) progress-fraction var(--_progress-fraction, 0);
+            transition: --_progress-integer var(--_transition-duration) ease-in-out,
+            --_progress-fraction var(--_transition-duration) ease-in-out;
+        }
+
+        @each $modifier in ('start', 'center', 'end') {
+            @include e(value, $m: $modifier) {
+                @if $modifier == 'center' {
+                    align-self: #{$modifier};
+                } @else {
+                    align-self: flex-#{$modifier};
+                }
+            }
+        }
+
+        @include e(value, $m: top) {
+            order: -1;
+        }
+
+        @include e(value, $m: hidden) {
+            display: none;
+        }
+
+        @include e(value, $m: fraction) {
+            &::before {
+                content: counter(progress-integer) '.' counter(progress-fraction, decimal-leading-zero) '%';
+            }
+        }
+
+        @include e(value, $not: ('fraction')) {
+            &::before {
+                content: counter(progress-integer) '%';
+            }
+        }
+
+        @each $modifier in ('danger', 'warning', 'info', 'success') {
+            @include m($modifier, $not: ('indeterminate')) {
+                @include e(indicator) {
+                    background-color: var-get($theme, 'fill-color-#{$modifier}');
+                }
+
+                @include e(indicator-secondary) {
+                    background-color: var-get($theme, 'fill-color-#{$modifier}');
+                }
+            }
+
+            @include mx($modifier) {
+                /* stylelint-disable max-nesting-depth */
+                @include e(indicator) {
+                    &::after {
+                        background-color: var-get($theme, 'fill-color-#{$modifier}');
+                    }
+                }
+
+                @include e(indicator-secondary) {
+                    &::after {
+                        background-color: var-get($theme, 'fill-color-#{$modifier}');
+                    }
+                }
+                /* stylelint-enable max-nesting-depth */
+            }
+        }
+
+        @include m(indeterminate, $not: ('danger', 'warning', 'info', 'success')) {
+            @include e(indicator) {
+                &::after {
+                    background-color: var-get($theme, 'fill-color-default');
+                }
+            }
+
+            @include e(indicator-secondary) {
+                &::after {
+                    background-color: var-get($theme, 'fill-color-default');
+                }
+            }
+        }
+
+        @include m(striped, $not: ('indeterminate')) {
+            --linear-strips-orientation: -45deg;
+
+            &:dir(rtl) {
+                --linear-strips-orientation: 45deg
+            }
+
+            @include e(indicator) {
+                @include striped-gradient(
+                    map.get($theme, 'variant'),
+                    var(--linear-strips-orientation),
+                    var-get($theme, 'stripes-color')
+                );
+            }
+        }
+
+        @include m(indeterminate) {
+            @include e(indicator) {
+                animation-name: igx-indeterminate-bar-fluent-rtl;
+            }
+
+            @include e(indicator-secondary) {
+                animation: igx-indeterminate-secondary var(--linear-animation-duration) infinite linear;
+                left: -54.8888%;
+
+                &::after {
+                    animation: igx-indeterminate-secondary-scale var(--linear-animation-duration) infinite linear;
+                    width: 100%;
+                    height: inherit;
+                }
+            }
+
+            @include e(value) {
+                display: none;
+            }
+        }
+
+        @include m(animation-none, $not: ('indeterminate')) {
+            --_transition-duration: 0s !important;
+        }
+
+        @include m(hide-counter) {
+            @include e(value) {
+                &::before {
+                    display: none;
+                }
+            }
+        }
+    }
+}

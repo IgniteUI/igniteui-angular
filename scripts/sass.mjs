@@ -11,10 +11,10 @@ import { writeFile } from 'fs/promises';
 import report from './report.mjs';
 
 const THEMES = {
-  SRC: 'projects/igniteui-angular/src/lib/core/styles/themes/presets',
+  SRC: 'projects/igniteui-angular/core/src/core/styles/themes/presets',
   DIST: '../dist/igniteui-angular/styles',
   THEMING: {
-    SRC: 'projects/igniteui-angular/src/lib/core/styles/',
+    SRC: 'projects/igniteui-angular/core/src/core/styles/',
     DIST: 'dist/igniteui-angular/lib/core/styles/',
   },
   CONFIG: {
@@ -22,18 +22,20 @@ const THEMES = {
     loadPaths: ['node_modules'],
     sourceMap: true,
     sourceMapEmbed: true,
+    silenceDeprecations: ['if-function'],
   },
 };
 
 const STYLES = {
-  SRC: 'projects/igniteui-angular/src/lib/**/*.component.scss',
+  SRC: 'projects/igniteui-angular/**/*.component.scss',
   DIST: './',
-  IGNORE: '!projects/igniteui-angular/src/lib/core/styles/**/*.scss',
+  IGNORE: '!projects/igniteui-angular/core/src/core/styles/**/*.scss',
   CONFIG: {
     style: 'compressed',
-    loadPaths: ['node_modules', 'projects/igniteui-angular/src/lib/core/'],
+    loadPaths: ['node_modules', 'projects/igniteui-angular/core/src/core/'],
     sourceMap: true,
     sourceMapEmbed: true,
+    silenceDeprecations: ['if-function'],
   },
 };
 

@@ -1,9 +1,7 @@
-import { writeFile } from 'node:fs/promises';
 import watch from 'node-watch';
 import * as sass from 'sass-embedded';
 import report from './report.mjs';
 import { buildComponentStyles } from './sass.mjs';
-import { globby } from 'globby';
 
 const watchOptions = {
   recursive: true,

@@ -1,0 +1,96 @@
+@use 'sass:map';
+@use '../../base' as *;
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin date-range-picker($theme) {
+    @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'theme');
+
+    %igx-date-range-picker {
+        @include sizable();
+        --input-group-size: #{map.get($theme, 'size')};
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        display: flex;
+
+        > igx-icon {
+            cursor: pointer;
+        }
+
+        igx-input-group {
+            flex: 1;
+        }
+
+        igx-calendar {
+            box-shadow: none;
+        }
+    }
+
+    igx-date-range-start,
+    igx-date-range-end {
+        min-width: 0;
+    }
+
+    igx-date-range-start,
+    igx-date-range-end,
+    %igx-date-range-picker__start,
+    %igx-date-range-picker__end {
+        --size: var(--input-group-size) !important;
+
+        flex: 1 0 0%;
+    }
+
+    %igx-date-range-picker__label {
+        display: flex;
+        align-items: center;
+        color: var-get($theme, 'label-color');
+        margin: 0 rem(8px);
+        height: var(--input-group-size);
+
+        @if $variant != 'material' {
+            align-self: flex-end;
+
+            &.input-has-hint {
+                align-self: center;
+            }
+        } @else {
+            align-self: flex-start;
+        }
+    }
+
+    %igx-date-range-picker-buttons {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 rem(16px) rem(16px);
+
+        > * {
+            margin-inline-end: rem(8px);
+
+            &:last-of-type {
+                margin-inline-end: 0;
+            }
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+}
+
+/// Adds typography styles for the igx-date-range-picker component.
+/// Uses the 'caption'
+/// categories from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(label: 'caption')] - The categories from the typographic scale used for type styles.
+@mixin date-range-typography(
+    $categories: (
+        label: 'caption',
+    )
+) {
+    $label: map.get($categories, 'label');
+
+    %igx-date-range-picker__label {
+        @include type-style($label);
+    }
+}

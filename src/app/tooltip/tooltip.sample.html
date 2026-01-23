@@ -53,6 +53,20 @@
     </article>
 
     <article class="column">
+        <h4 class="sample-title">WebComponents tooltip</h4>
+        <div style="margin: 10dvh 5dvw">
+            <igc-button id="basic-tooltip"> Hover over me </igc-button>
+        </div>
+
+        <igc-tooltip
+            anchor="basic-tooltip"
+        >
+        Hello from the tooltip!
+        <button class="my-close-btn">Close Me</button>
+        </igc-tooltip>
+    </article>
+
+    <article class="column">
         <h4 class="sample-title">Rich tooltip</h4>
         <article class="card-wrapper">
             <igx-card>

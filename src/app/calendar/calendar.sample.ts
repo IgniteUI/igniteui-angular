@@ -20,6 +20,7 @@ import {
     DateRangeDescriptor,
     DateRangeType,
     IgSizeDirective,
+    IFormattingViews,
 } from 'igniteui-angular';
 import {
     Properties,
@@ -64,6 +65,12 @@ export class CalendarSampleComponent implements OnInit {
         year: 'numeric',
     };
 
+    protected formatViews: IFormattingViews = {
+        day: true,
+        month: true,
+        year: true
+    };
+
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -96,6 +103,10 @@ export class CalendarSampleComponent implements OnInit {
                     {
                         value: 'ja-JP',
                         label: 'JP'
+                    },
+                    {
+                        value: 'zh-CN',
+                        label: 'CN'
                     }
                 ],
                 defaultValue: 'en-US'
