@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, Directive, effect, EmbeddedViewRef, inject, input, TemplateRef, ViewContainerRef, untracked, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, Directive, effect, EmbeddedViewRef, inject, input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ColumnConfiguration, ColumnSortConfiguration, IgcCellContext, IgcHeaderContext, Keys } from 'igniteui-grid-lite';
 
 /** Configuration object for grid columns. */
@@ -78,9 +78,12 @@ export class IgxGridLiteColumnComponent<T extends object> {
             if (template) {
                 this.headerTemplateFunc = (ctx: IgcHeaderContext<T>) => {
                     if (!this.headerViewRef) {
-                        this.headerViewRef = this._view.createEmbeddedView(template, {
-                            $implicit: ctx.column
-                        });
+                        const { column, ...rest } = ctx;
+                        const angularContext = {
+                            ...rest,
+                            $implicit: column
+                        }
+                        this.headerViewRef = this._view.createEmbeddedView(template, angularContext);
                     }
                     return this.headerViewRef.rootNodes;
                 };
@@ -98,19 +101,17 @@ export class IgxGridLiteColumnComponent<T extends object> {
             if (template) {
                 this.cellTemplateFunc = (ctx: IgcCellContext<T>) => {
                     const oldViewRef = this.cellViewRefs.get(ctx.row.data);
+                    const { value, ...restContext } = ctx;
+                    const angularContext = {
+                        ...restContext,
+                        $implicit: value,
+                    } as IgxCellTemplateContext<T>;
                     if (!oldViewRef) {
-                        const newViewRef = this._view.createEmbeddedView(template, {
-                            $implicit: ctx.value,
-                            column: ctx.column,
-                            rowIndex: ctx.row.index,
-                            data: ctx.row.data
-                        });
+                        const newViewRef = this._view.createEmbeddedView(template, angularContext);
                         this.cellViewRefs.set(ctx.row.data, newViewRef);
                         return newViewRef.rootNodes;
                     }
-                    // Update the context in case of sorting/filtering and change in data row order
-                    oldViewRef.context.$implicit = ctx.value;
-                    oldViewRef.context.rowIndex = ctx.row.index;
+                    oldViewRef.context = angularContext;
                     return oldViewRef.rootNodes;
                 };
             }
@@ -127,34 +128,22 @@ export class IgxGridLiteColumnComponent<T extends object> {
 /**
  * Context provided to the header template.
  */
-export interface IgxHeaderTemplateContext<T extends object> {
+export type IgxHeaderTemplateContext<T extends object> = Omit<IgcHeaderContext<T>, 'column'> & {
     /**
      * The current configuration for the column.
      */
-    $implicit: ColumnConfiguration<T>;
+    $implicit: IgcHeaderContext<T>['column'];
 }
 
 /**
  * Context provided to the header template.
  */
-export interface IgxCellTemplateContext<T extends object> {
+export type IgxCellTemplateContext<T extends object> = Omit<IgcCellContext<T>, 'value'> & {
     /**
      * The value from the data source for this cell.
      */
-    $implicit: any;
-    /**
-     * The current configuration for the column.
-     */
-    column: ColumnConfiguration<T>;
-    /**
-     * The index of the current row
-     */
-    rowIndex: number;
-    /**
-     *  The data item for the current row.
-     */
-    data: any;
-}
+    $implicit: IgcCellContext<T>['value'];
+};
 
 
 
@@ -170,9 +159,9 @@ export interface IgxCellTemplateContext<T extends object> {
  * ```
  */
 @Directive({ selector: '[igxHeaderTemplate]' })
-export class IgxHeaderTemplateDirective<T extends object> {
+export class IgxHeaderTemplateDirective<T extends object = any> {
 
-    public static ngTemplateContextGuard<T extends object>(_: IgxHeaderTemplateDirective<T>, ctx: unknown): ctx is IgxHeaderTemplateContext<T> {
+    public static ngTemplateContextGuard<T extends object>(_: IgxHeaderTemplateDirective<T>, ctx: any): ctx is IgxHeaderTemplateContext<T> {
         return true;
     }
 }
