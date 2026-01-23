@@ -160,8 +160,22 @@
             "production": {
               "project": "projects/igniteui-angular/ng-package.prod.json",
               "tsConfig": "projects/igniteui-angular/tsconfig.lib.prod.json"
+            },
+            "test": {
+              "project": "projects/igniteui-angular/ng-package.json",
+              "tsConfig": "projects/igniteui-angular/tsconfig.lib.json"
             }
           }
+
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+            "options": {
+             
+              "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
+              "buildTarget": "::test",
+              "runnerConfig": "./vitest.config.ts"
+            }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",

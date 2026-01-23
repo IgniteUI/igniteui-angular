@@ -1,7 +1,24 @@
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright'
+import path from 'path';
 
 export default defineConfig({
+  resolve: {
+    alias: [
+      {
+        find: /^igniteui-angular\/(.*)$/,
+        replacement: path.resolve(__dirname, 'projects/igniteui-angular/$1')
+      },
+      {
+        find: 'igniteui-angular',
+        replacement: path.resolve(__dirname, 'projects/igniteui-angular/src/public_api.ts')
+      },
+      {
+        find: 'igniteui-angular-i18n',
+        replacement: path.resolve(__dirname, 'projects/igniteui-angular-i18n/src/index.ts')
+      }
+    ]
+  },
   test: {
     globals: true,
     setupFiles: ['src/test-setup.ts'],
@@ -9,7 +26,7 @@ export default defineConfig({
     browser: {
       headless: true,
       provider: playwright(),
-      instances: [{ browser: 'chromium' }]
+      instances: [{ browser: 'chromium' }],
     },
     coverage: {
       provider: 'v8',
