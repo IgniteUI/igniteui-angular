@@ -10,7 +10,7 @@
     "test": "ng test igniteui-angular",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "test:lib": "vitest run --coverage --project=igniteui-angular",
+    "test:lib": "ng test igniteui-angular",
     "test:lib:watch": "vitest --project=igniteui-angular",
     "test:elements": "ng test igniteui-angular-elements --coverage",
     "test:elements:watch": "ng test igniteui-angular-elements --watch",
