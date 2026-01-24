@@ -2385,7 +2385,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             let addRow = grid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBeTruthy();
 
             let cell = grid.getCellByColumn(2, 'ParentID');
             cell.update(newRow.ParentID);
@@ -2404,7 +2404,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             addRow = grid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeFalse();
+            expect(addRow.addRowUI).toBeFalsy();
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);

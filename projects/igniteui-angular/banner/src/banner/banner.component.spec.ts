@@ -405,24 +405,24 @@ describe('igxBanner', () => {
             tick();
             fixture.detectChanges();
 
-            expect(banner.expanded).toBeFalse();
+            expect(banner.expanded).toBeFalsy();
 
             banner.expanded = true;
             tick();
             fixture.detectChanges();
-            expect(banner.expanded).toBeTrue();
+            expect(banner.expanded).toBeTruthy();
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
 
             banner.expanded = false;
             tick();
             fixture.detectChanges();
-            expect(banner.expanded).toBeFalse();
+            expect(banner.expanded).toBeFalsy();
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
 
             banner.expanded = true;
             tick();
             fixture.detectChanges();
-            expect(banner.expanded).toBeTrue();
+            expect(banner.expanded).toBeTruthy();
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
         }));
     });
@@ -520,7 +520,7 @@ describe('igxBanner', () => {
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
 
-            expect(banner.expanded).toBeTrue();
+            expect(banner.expanded).toBeTruthy();
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
             expect(banner.elementRef.nativeElement.querySelector('.' + CSS_CLASS_BANNER)).not.toBeNull();
         }));

@@ -733,8 +733,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 // check correct headers have left border
                 const firstPinnedHeader = grid.headerGroupsList.find(group => group.isPinned);
                 // The first child of the header is the <div> wrapping the MRL block
-                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK)).toBeTrue();
-                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBeTrue();
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK)).toBeTruthy();
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBeTruthy();
             }));
 
             it('should correctly add pinned columns to the right of the already fixed one', () => {

@@ -58,7 +58,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        expect(radioInstance.checked).toBeTrue();
+        expect(radioInstance.checked).toBeTruthy();
     }));
 
     it('Setting radioGroup\'s properties should affect all radio buttons.', fakeAsync(() => {

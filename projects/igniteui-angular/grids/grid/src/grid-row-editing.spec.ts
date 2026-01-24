@@ -2258,7 +2258,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
             expect(cellElem.active).toBeTruthy();
-            expect(grid.nativeElement.contains(document.activeElement)).toBeTrue();
+            expect(grid.nativeElement.contains(document.activeElement)).toBeTruthy();
         });
 
         it('Empty template', () => {

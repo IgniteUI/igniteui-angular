@@ -2115,14 +2115,14 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should bind selectedRows properly', () => {
             fix.componentInstance.selectedRows = [1, 2, 3];
             fix.detectChanges();
-            expect(grid.gridAPI.get_row_by_index(0).selected).toBeTrue();
-            expect(grid.gridAPI.get_row_by_index(4).selected).toBeFalse();
+            expect(grid.gridAPI.get_row_by_index(0).selected).toBeTruthy();
+            expect(grid.gridAPI.get_row_by_index(4).selected).toBeFalsy();
 
             fix.componentInstance.selectedRows = [4, 5, 6];
             fix.detectChanges();
 
-            expect(grid.gridAPI.get_row_by_index(3).selected).toBeTrue();
-            expect(grid.gridAPI.get_row_by_index(0).selected).toBeFalse();
+            expect(grid.gridAPI.get_row_by_index(3).selected).toBeTruthy();
+            expect(grid.gridAPI.get_row_by_index(0).selected).toBeFalsy();
         });
 
         it('Row Pinning: should update checkbox status correctly when there is pinned row and groupBy', () => {

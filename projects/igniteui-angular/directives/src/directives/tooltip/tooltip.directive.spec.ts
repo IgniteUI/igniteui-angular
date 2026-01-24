@@ -90,7 +90,7 @@ describe('IgxTooltip', () => {
         }));
 
         it('should not render a default arrow', fakeAsync(() => {
-            expect(tooltipTarget.hasArrow).toBeFalse();
+            expect(tooltipTarget.hasArrow).toBeFalsy();
 
             hoverElement(button);
             flush();
@@ -103,7 +103,7 @@ describe('IgxTooltip', () => {
         }));
 
         it('should show/hide the arrow via the `hasArrow` property', fakeAsync(() => {
-            expect(tooltipTarget.hasArrow).toBeFalse();
+            expect(tooltipTarget.hasArrow).toBeFalsy();
 
             tooltipTarget.hasArrow = true;
             fix.detectChanges();
@@ -113,7 +113,7 @@ describe('IgxTooltip', () => {
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-            expect(tooltipTarget.hasArrow).toBeTrue();
+            expect(tooltipTarget.hasArrow).toBeTruthy();
             const arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
             expect(arrow.style.display).toEqual("");
 
@@ -604,7 +604,7 @@ describe('IgxTooltip', () => {
             const arrowTopOffset = '-4px';
             const arrowLeftOffset = getArrowLeftOffset(tooltip) + 'px';
 
-            expect(tooltip.arrow.classList.contains(arrowClassName)).toBeTrue();
+            expect(tooltip.arrow.classList.contains(arrowClassName)).toBeTruthy();
             expect(tooltip.arrow.style.top).toBe(arrowTopOffset);
             expect(tooltip.arrow.style.left).toBe(arrowLeftOffset);
         };
@@ -626,19 +626,19 @@ describe('IgxTooltip', () => {
             hoverElement(tooltipTarget1);
             flush();
             verifyTooltipVisibility(tooltip1.element, tooltipTarget1, true);
-            expect(tooltipTarget1.hasArrow).toBeTrue();
+            expect(tooltipTarget1.hasArrow).toBeTruthy();
             verifyTooltipArrowAlignment(tooltip1);
 
             hoverElement(tooltipTarget2);
             flush();
             verifyTooltipVisibility(tooltip2.element, tooltipTarget2, true);
-            expect(tooltipTarget2.hasArrow).toBeTrue();
+            expect(tooltipTarget2.hasArrow).toBeTruthy();
             verifyTooltipArrowAlignment(tooltip2);
 
             hoverElement(tooltipTarget3);
             flush();
             verifyTooltipVisibility(tooltip3.element, tooltipTarget3, true);
-            expect(tooltipTarget3.hasArrow).toBeTrue();
+            expect(tooltipTarget3.hasArrow).toBeTruthy();
             verifyTooltipArrowAlignment(tooltip3);
 
         }));

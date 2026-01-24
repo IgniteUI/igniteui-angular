@@ -178,8 +178,8 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             $('#excelEntry').click();
             fixture.detectChanges();
 
-            expect(instance.exporterAction.isExporting).toBeFalse();
-            expect(instance.exporterAction.toolbar.showProgress).toBeFalse();
+            expect(instance.exporterAction.isExporting).toBeFalsy();
+            expect(instance.exporterAction.toolbar.showProgress).toBeFalsy();
         });
 
         it('toolbar exporter should include PDF option by default', () => {
@@ -259,8 +259,8 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             $('#pdfEntry').click();
             fixture.detectChanges();
 
-            expect(instance.exporterAction.isExporting).toBeFalse();
-            expect(instance.exporterAction.toolbar.showProgress).toBeFalse();
+            expect(instance.exporterAction.isExporting).toBeFalsy();
+            expect(instance.exporterAction.toolbar.showProgress).toBeFalsy();
         });
 
         it('Setting overlaySettings for each toolbar columns action', () => {

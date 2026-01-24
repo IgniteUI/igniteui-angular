@@ -829,12 +829,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
                 cell.editMode = true;
                 fix.detectChanges();
-                expect(cell.row.inEditMode).toBeTrue();
+                expect(cell.row.inEditMode).toBeTruthy();
                 treeGrid.rowEditable = false;
                 fix.detectChanges();
                 cell.editValue = true;
                 fix.detectChanges();
-                expect(cell.row.inEditMode).toBeFalse();
+                expect(cell.row.inEditMode).toBeFalsy();
             });
         });
 

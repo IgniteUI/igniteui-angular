@@ -851,7 +851,7 @@ describe('IgxTimePicker', () => {
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
-                expect(timePicker.collapsed).toBeTrue();
+                expect(timePicker.collapsed).toBeTruthy();
 
                 expect((timePicker.value as Date).getHours()).toEqual(expectedValuedHour);
                 expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
@@ -902,7 +902,7 @@ describe('IgxTimePicker', () => {
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
-                expect(timePicker.collapsed).toBeTrue();
+                expect(timePicker.collapsed).toBeTruthy();
 
                 expect((timePicker.value as Date).getHours()).toEqual(expectedValuedHour);
                 expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
@@ -1132,7 +1132,7 @@ describe('IgxTimePicker', () => {
 
                 // ensure there is content in each element of the spinners
                 // '08', '09', '10', '11', '12', '01', '02'
-                expect(hourColumn.queryAll(By.css('span')).every(e => !!e.nativeElement.innerText)).toBeTrue();
+                expect(hourColumn.queryAll(By.css('span')).every(e => !!e.nativeElement.innerText)).toBeTruthy();
 
                 // '00', '15', '30', '45', '', '', '' - three empty elements to align the minutes spinner length with the hours spinner length
                 expect(minutesColumn.queryAll(By.css('span')).filter(e => !!e.nativeElement.innerText).length).toEqual(4);
@@ -1646,7 +1646,7 @@ describe('IgxTimePicker', () => {
                 vi.spyOn(timePicker.closing, 'emit');
                 vi.spyOn(timePicker.closed, 'emit');
                 expect(timePicker.collapsed).toBeTruthy();
-                expect(timePicker.isFocused).toBeFalse();
+                expect(timePicker.isFocused).toBeFalsy();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', timePickerDebElement, true);
 
@@ -1658,8 +1658,8 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.opened.emit).toHaveBeenCalledTimes(1);
                 expect(hourColumn.nativeElement.contains(document.activeElement))
                     .withContext('focus should move to hour column for KB nav')
-                    .toBeTrue();
-                expect(timePicker.isFocused).toBeTrue();
+                    .toBeTruthy();
+                expect(timePicker.isFocused).toBeTruthy();
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', timePickerElement, true, true);
                 tick();
@@ -1669,8 +1669,8 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.closed.emit).toHaveBeenCalledTimes(1);
                 expect(inputGroup.nativeElement.contains(document.activeElement))
                     .withContext('focus should return to the picker input')
-                    .toBeTrue();
-                expect(timePicker.isFocused).toBeTrue();
+                    .toBeTruthy();
+                expect(timePicker.isFocused).toBeTruthy();
             }));
 
             it('should open the dropdown with SPACE key', fakeAsync(() => {

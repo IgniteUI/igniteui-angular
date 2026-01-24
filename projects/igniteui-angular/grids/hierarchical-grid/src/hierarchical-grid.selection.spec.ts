@@ -155,8 +155,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(cell.nativeElement, true);
             fix.detectChanges();
 
-            expect(cell.active).toBeTrue();
-            expect(cell.selected).toBeFalse();
+            expect(cell.active).toBeTruthy();
+            expect(cell.selected).toBeFalsy();
             expect(childGridLevel1.getSelectedRanges().length).toBe(0);
 
             cell = hierarchicalGrid.gridAPI.get_cell_by_index(2, 'ID');
@@ -290,7 +290,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell, true);
-            expect(cell.active).toBeFalse();
+            expect(cell.active).toBeFalsy();
             GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 3, 1, 2);
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 3, 1, 2);
         }));
@@ -325,7 +325,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell, true);
-            expect(cell.active).toBeFalse();
+            expect(cell.active).toBeFalsy();
             GridSelectionFunctions.verifyCellsRegionSelected(childGridLevel1, 1, 3, 1, 2);
             GridSelectionFunctions.verifySelectedRange(childGridLevel1, 1, 3, 1, 2);
         }));
@@ -343,8 +343,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
-            expect(cell.selected).toBeTrue();
-            expect(cell.active).toBeTrue();
+            expect(cell.selected).toBeTruthy();
+            expect(cell.active).toBeTruthy();
 
             hierarchicalGrid.navigateTo(5, -1);
             fix.detectChanges();
@@ -354,7 +354,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell, true);
-            expect(cell.active).toBeTrue();
+            expect(cell.active).toBeTruthy();
             GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 5, 1, 2);
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 5, 1, 2);
         });
@@ -372,8 +372,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
-            expect(cell.selected).toBeTrue();
-            expect(cell.active).toBeTrue();
+            expect(cell.selected).toBeTruthy();
+            expect(cell.active).toBeTruthy();
 
             hierarchicalGrid.navigateTo(5, -1);
             fix.detectChanges();
@@ -383,7 +383,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell, true);
-            expect(cell.active).toBeTrue();
+            expect(cell.active).toBeTruthy();
             GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 5, 1, 2);
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 5, 1, 2);
 
@@ -414,7 +414,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             expect(hierarchicalGrid.getSelectedRanges().length).toBe(0);
-            expect(cell.selected).toBeTrue();
+            expect(cell.selected).toBeTruthy();
             GridSelectionFunctions.verifySelectedRange(childGridLevel1, 0, 0, 2, 2);
 
             cell = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ProductName');
@@ -439,8 +439,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
-            expect(cell.selected).toBeTrue();
-            expect(cell.active).toBeTrue();
+            expect(cell.selected).toBeTruthy();
+            expect(cell.active).toBeTruthy();
 
             cell = hierarchicalGrid.gridAPI.get_cell_by_index(4, 'ChildLevels');
 
@@ -1299,21 +1299,21 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.componentInstance.selectedRows = ['0', '2', '3'];
             fix.detectChanges();
 
-            expect(hierarchicalGrid.getRowByKey('0').selected).toBeTrue();
-            expect(hierarchicalGrid.getRowByKey('1').selected).toBeFalse();
+            expect(hierarchicalGrid.getRowByKey('0').selected).toBeTruthy();
+            expect(hierarchicalGrid.getRowByKey('1').selected).toBeFalsy();
 
             fix.componentInstance.selectedRows = ['2'];
             fix.detectChanges();
 
-            expect(hierarchicalGrid.getRowByKey('2').selected).toBeTrue();
-            expect(hierarchicalGrid.getRowByKey('0').selected).toBeFalse();
+            expect(hierarchicalGrid.getRowByKey('2').selected).toBeTruthy();
+            expect(hierarchicalGrid.getRowByKey('0').selected).toBeFalsy();
         });
 
         it('Should not clear root selection state when changing selection mode of child grid', () => {
             rowIsland1.rowSelection = GridSelectionMode.multiple;
             fix.componentInstance.selectedRows = ['0', '1'];
             fix.detectChanges();
-            expect(hierarchicalGrid.getRowByKey('0').selected).toBeTrue();
+            expect(hierarchicalGrid.getRowByKey('0').selected).toBeTruthy();
 
             const thirdRow = hierarchicalGrid.gridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;
             thirdRow.toggle();

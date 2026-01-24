@@ -119,7 +119,7 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             //the name should be correct email
             GridFunctions.verifyCellValid(cell, false);
-            expect(cell.formControl.errors.email).toBeTrue();
+            expect(cell.formControl.errors.email).toBeTruthy();
 
             cell.editMode = true;
             cell.update('m@in.com');
@@ -223,13 +223,13 @@ describe('IgxGrid - Validation #grid', () => {
             cell.errorTooltip.first.close();
             tick();
             fixture.detectChanges();
-            expect(cell.errorTooltip.first.collapsed).toBeTrue();
+            expect(cell.errorTooltip.first.collapsed).toBeTruthy();
 
             const element = fixture.debugElement.query(By.directive(IgxTooltipTargetDirective)).nativeElement;
             element.dispatchEvent(new MouseEvent('pointerenter'));
             flush();
             fixture.detectChanges();
-            expect(cell.errorTooltip.first.collapsed).toBeFalse();
+            expect(cell.errorTooltip.first.collapsed).toBeFalsy();
         }));
 
         it('should allow preventing edit mode for cell/row to end by canceling the related event if isValid event argument is false', () => {

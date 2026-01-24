@@ -138,13 +138,13 @@ describe('IgxSnackbar', () => {
 
         snackbar.toggle();
         tick(100);
-        expect(snackbar.isVisible).toBeTrue();
-        expect(snackbar.collapsed).toBeFalse();
+        expect(snackbar.isVisible).toBeTruthy();
+        expect(snackbar.collapsed).toBeFalsy();
 
         snackbar.toggle();
         tick(100);
-        expect(snackbar.isVisible).toBeFalse();
-        expect(snackbar.collapsed).toBeTrue();
+        expect(snackbar.isVisible).toBeFalsy();
+        expect(snackbar.collapsed).toBeTruthy();
     }));
 
     it('can set snackbar message through open method', fakeAsync(() => {

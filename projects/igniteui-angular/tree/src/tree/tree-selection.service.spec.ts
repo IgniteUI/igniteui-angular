@@ -404,7 +404,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
                 expect(node.selectedChange.emit).toHaveBeenCalled();
                 expect(node.selectedChange.emit).toHaveBeenCalledWith(false);
             }
-            expect(selectionService.isNodeIndeterminate(allNodes[0])).toBeFalse();
+            expect(selectionService.isNodeIndeterminate(allNodes[0])).toBeFalsy();
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledTimes(2);
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
         });

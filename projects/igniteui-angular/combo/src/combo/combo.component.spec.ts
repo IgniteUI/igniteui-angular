@@ -3370,9 +3370,9 @@ describe('igxCombo', () => {
                     tick();
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
-                    expect(model.valid).toBeFalse();
-                    expect(model.dirty).toBeFalse();
-                    expect(model.touched).toBeFalse();
+                    expect(model.valid).toBeFalsy();
+                    expect(model.dirty).toBeFalsy();
+                    expect(model.touched).toBeFalsy();
 
                     fixture.componentInstance.values = ['Missouri'];
                     fixture.detectChanges();
@@ -3382,8 +3382,8 @@ describe('igxCombo', () => {
                     expect(combo.selection).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
                     expect(combo.value).toEqual(['Missouri']);
                     expect(combo.displayValue).toEqual('Missouri');
-                    expect(model.valid).toBeTrue();
-                    expect(model.touched).toBeFalse();
+                    expect(model.valid).toBeTruthy();
+                    expect(model.touched).toBeFalsy();
 
                     fixture.componentInstance.values = ['Missouri', 'Missouri'];
                     fixture.detectChanges();
@@ -3392,8 +3392,8 @@ describe('igxCombo', () => {
                     expect(combo.selection).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
                     expect(combo.value).toEqual(['Missouri']);
                     expect(combo.displayValue).toEqual('Missouri');
-                    expect(model.valid).toBeTrue();
-                    expect(model.touched).toBeFalse();
+                    expect(model.valid).toBeTruthy();
+                    expect(model.touched).toBeFalsy();
 
                     fixture.componentInstance.values = null;
                     fixture.detectChanges();
@@ -3403,17 +3403,17 @@ describe('igxCombo', () => {
                     expect(combo.selection).toEqual([]);
                     expect(combo.value).toEqual([]);
                     expect(combo.displayValue).toEqual('');
-                    expect(model.valid).toBeFalse();
-                    expect(model.touched).toBeFalse();
-                    expect(model.dirty).toBeFalse();
+                    expect(model.valid).toBeFalsy();
+                    expect(model.touched).toBeFalsy();
+                    expect(model.dirty).toBeFalsy();
 
                     combo.onBlur();
                     fixture.detectChanges();
                     expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
-                    expect(model.valid).toBeFalse();
-                    expect(model.touched).toBeTrue();
-                    expect(model.dirty).toBeFalse();
+                    expect(model.valid).toBeFalsy();
+                    expect(model.touched).toBeTruthy();
+                    expect(model.dirty).toBeFalsy();
 
                     fixture.componentInstance.values = ['New Jersey'];
                     fixture.detectChanges();
@@ -3423,9 +3423,9 @@ describe('igxCombo', () => {
                     expect(combo.selection).toEqual([{ field: 'New Jersey', region: 'Mid-Atlan' }]);
                     expect(combo.value).toEqual(['New Jersey']);
                     expect(combo.displayValue).toEqual('New Jersey');
-                    expect(model.valid).toBeTrue();
-                    expect(model.touched).toBeTrue();
-                    expect(model.dirty).toBeFalse();
+                    expect(model.valid).toBeTruthy();
+                    expect(model.touched).toBeTruthy();
+                    expect(model.dirty).toBeFalsy();
                 }));
                 it('should have correctly bound blur handler', () => {
                     vi.spyOn(combo, 'onBlur');
@@ -3449,12 +3449,12 @@ describe('igxCombo', () => {
                     const ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
-                    expect(ngModel.touched).toBeFalse();
+                    expect(ngModel.touched).toBeFalsy();
 
                     combo.open();
                     input.triggerEventHandler('focus', {});
                     fixture.detectChanges();
-                    expect(ngModel.touched).toBeFalse();
+                    expect(ngModel.touched).toBeFalsy();
                     combo.searchInput.nativeElement.focus();
                     fixture.detectChanges();
                     const documentClickEvent = new MouseEvent('click', { bubbles: true });
@@ -3466,7 +3466,7 @@ describe('igxCombo', () => {
                     tick();
                     expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
-                    expect(ngModel.touched).toBeTrue();
+                    expect(ngModel.touched).toBeTruthy();
                 }));
             });
         });

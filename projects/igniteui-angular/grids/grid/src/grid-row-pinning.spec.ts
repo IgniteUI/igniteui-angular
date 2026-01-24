@@ -406,8 +406,8 @@ describe('Row Pinning #grid', () => {
             const rowType = grid.getRowByIndex(1);
 
             expect(renderedRow).toBeDefined();
-            expect(renderedRow.disabled).toBeTrue();
-            expect(rowType.disabled).toBeTrue();
+            expect(renderedRow.disabled).toBeTruthy();
+            expect(rowType.disabled).toBeTruthy();
         });
 
         it('should search in both pinned and unpinned rows.', () => {
@@ -1367,7 +1367,7 @@ describe('Row Pinning #grid', () => {
 
         it('should pin rows on OnInit.', () => {
             fix.detectChanges();
-            expect(grid.hasPinnedRecords).toBeTrue();
+            expect(grid.hasPinnedRecords).toBeTruthy();
         });
     });
 
@@ -1385,10 +1385,10 @@ describe('Row Pinning #grid', () => {
             const fourthRow = grid.gridAPI.get_row_by_index(3);
 
             expect(firstRow).toBeDefined();
-            expect(firstRow.nativeElement.classList.contains('eventRow')).toBeTrue();
-            expect(firstRow.nativeElement.classList.contains('oddRow')).toBeFalse();
-            expect(fourthRow.nativeElement.classList.contains('eventRow')).toBeFalse();
-            expect(fourthRow.nativeElement.classList.contains('oddRow')).toBeTrue();
+            expect(firstRow.nativeElement.classList.contains('eventRow')).toBeTruthy();
+            expect(firstRow.nativeElement.classList.contains('oddRow')).toBeFalsy();
+            expect(fourthRow.nativeElement.classList.contains('eventRow')).toBeFalsy();
+            expect(fourthRow.nativeElement.classList.contains('oddRow')).toBeTruthy();
         });
 
         it('Should apply custom CSS bindings to the grid cells/rows. Check the style attribute to match each binding', () => {

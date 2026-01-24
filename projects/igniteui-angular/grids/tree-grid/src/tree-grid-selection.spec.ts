@@ -282,16 +282,16 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.componentInstance.selectedRows = [147, 19, 957];
             fix.detectChanges();
 
-            expect(treeGrid.gridAPI.get_row_by_index(0).selected).toBeTrue();
-            expect(treeGrid.gridAPI.get_row_by_index(7).selected).toBeTrue();
-            expect(treeGrid.gridAPI.get_row_by_index(4).selected).toBeFalse();
+            expect(treeGrid.gridAPI.get_row_by_index(0).selected).toBeTruthy();
+            expect(treeGrid.gridAPI.get_row_by_index(7).selected).toBeTruthy();
+            expect(treeGrid.gridAPI.get_row_by_index(4).selected).toBeFalsy();
 
             fix.componentInstance.selectedRows = [847, 711];
             fix.detectChanges();
 
-            expect(treeGrid.gridAPI.get_row_by_index(0).selected).toBeFalse();
-            expect(treeGrid.gridAPI.get_row_by_index(4).selected).toBeTrue();
-            expect(treeGrid.gridAPI.get_row_by_index(8).selected).toBeTrue();
+            expect(treeGrid.gridAPI.get_row_by_index(0).selected).toBeFalsy();
+            expect(treeGrid.gridAPI.get_row_by_index(4).selected).toBeTruthy();
+            expect(treeGrid.gridAPI.get_row_by_index(8).selected).toBeTruthy();
         });
     });
 
@@ -1267,7 +1267,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             endTransition();
 
             const addRow = treeGrid.gridAPI.get_row_by_index(9);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBeTruthy();
 
             treeGrid.gridAPI.crudService.endEdit(true);
             await wait(100);
@@ -1937,7 +1937,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             endTransition();
 
             const addRow = treeGrid.gridAPI.get_row_by_index(9);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBeTruthy();
 
             treeGrid.gridAPI.crudService.endEdit(true);
             await wait(100);

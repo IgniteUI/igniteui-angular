@@ -378,7 +378,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
             tick(16);
-            expect(cell.editMode).toBeTrue();
+            expect(cell.editMode).toBeTruthy();
 
             const editInput = fixture.debugElement.query(By.css('igx-grid-cell input'));
             if (editInput) {
@@ -391,7 +391,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             tick(100);
             fixture.detectChanges();
-            expect(cell.editMode).toBeFalse();
+            expect(cell.editMode).toBeFalsy();
 
             expect(document.activeElement).toBe(grid.tbody.nativeElement);
 

@@ -775,7 +775,7 @@ describe('IgxGridState - input properties #grid', () => {
 
         const gridColumnState = state.getState(false, 'columns') as IGridState;
         const group1 = gridColumnState.columns.find(x => x.field === 'group1');
-        expect(group1.columnLayout).toBeTrue();
+        expect(group1.columnLayout).toBeTruthy();
 
         const prodId = gridColumnState.columns.find(x => x.field === 'ProductID');
         expect(prodId.columnLayout).toBeFalsy();
@@ -793,10 +793,10 @@ describe('IgxGridState - input properties #grid', () => {
 
         const group1Column = grid.getColumnByName("group1");
         const prodIdColumn = grid.getColumnByName("ProductID");
-        expect(group1Column.columnLayout).toBeTrue();
-        expect(group1Column.pinned).toBeTrue();
-        expect(prodIdColumn.pinned).toBeTrue();
-        expect(prodIdColumn.columnLayoutChild).toBeTrue();
+        expect(group1Column.columnLayout).toBeTruthy();
+        expect(group1Column.pinned).toBeTruthy();
+        expect(prodIdColumn.pinned).toBeTruthy();
+        expect(prodIdColumn.columnLayoutChild).toBeTruthy();
         expect(prodIdColumn.parent).toBe(group1Column);
         expect(prodIdColumn.rowStart).toBe(1);
         expect(prodIdColumn.rowEnd).toBe(4);

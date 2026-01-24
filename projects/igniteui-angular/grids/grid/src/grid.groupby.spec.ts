@@ -863,7 +863,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // no such column initially, so chip is disabled.
         const chips = grid.groupArea.chips;
-        expect(chips.first.disabled).toBeTrue();
+        expect(chips.first.disabled).toBeTruthy();
         const newCols = [...fix.componentInstance.columns];
         newCols.push({
             field: "NewColumn",
@@ -873,7 +873,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // column now exists and has groupable=true, so chip should be enabled.
-        expect(chips.first.disabled).toBeFalse();
+        expect(chips.first.disabled).toBeFalsy();
     });
 
     it('should update chip state on column groupable prop change', () => {
@@ -889,12 +889,12 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // initially should not be disabled.
         const chips = grid.groupArea.chips;
-        expect(chips.first.disabled).toBeFalse();
+        expect(chips.first.disabled).toBeFalsy();
 
         // should get disabled on groupable=false
         column.groupable = false;
         fix.detectChanges();
-        expect(chips.first.disabled).toBeTrue();
+        expect(chips.first.disabled).toBeTruthy();
     });
 
     // GroupBy + Sorting integration

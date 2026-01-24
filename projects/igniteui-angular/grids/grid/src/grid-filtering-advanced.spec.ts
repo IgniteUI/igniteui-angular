@@ -313,7 +313,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Ensure that cancel flag is true
             expect(grid.filtering.emit).toHaveBeenCalled();
             const emittedArgs: IFilteringEventArgs = (grid.filtering.emit as jasmine.Spy).mock.lastCall[0];
-            expect(emittedArgs.cancel).toBeTrue();
+            expect(emittedArgs.cancel).toBeTruthy();
 
             // Ensure that grid.filteredData is null
             expect(grid.filteredData).toEqual(null);

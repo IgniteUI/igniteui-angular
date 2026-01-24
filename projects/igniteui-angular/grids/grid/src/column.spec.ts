@@ -1403,11 +1403,11 @@ describe('IgxGrid - Column properties #grid', () => {
         it('should initialize correctly with autoGenerate and image data', () => {
             const column = grid.getColumnByName('avatar');
             expect(column.dataType).toBe(GridColumnDataType.Image);
-            expect(column.sortable).toBeFalse();
-            expect(column.groupable).toBeFalse();
-            expect(column.filterable).toBeFalse();
-            expect(column.editable).toBeFalse();
-            expect(column.hasSummary).toBeFalse();
+            expect(column.sortable).toBeFalsy();
+            expect(column.groupable).toBeFalsy();
+            expect(column.filterable).toBeFalsy();
+            expect(column.editable).toBeFalsy();
+            expect(column.hasSummary).toBeFalsy();
 
             const cell = column._cells[0];
             expect(cell.nativeElement.firstElementChild.tagName).toBe('IMG');

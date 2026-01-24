@@ -2662,25 +2662,25 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(secondRow.viewIndex).toBe(1);
 
             // select group row
-            expect(firstRow.selected).toBeFalse();
-            expect(secondRow.selected).toBeFalse();
+            expect(firstRow.selected).toBeFalsy();
+            expect(secondRow.selected).toBeFalsy();
             firstRow.children.forEach(row => {
-                expect(row.selected).toBeFalse();
+                expect(row.selected).toBeFalsy();
             });
             firstRow.selected = !firstRow.selected;
 
-            expect(firstRow.selected).toBeTrue();
-            expect(secondRow.selected).toBeTrue();
+            expect(firstRow.selected).toBeTruthy();
+            expect(secondRow.selected).toBeTruthy();
             firstRow.children.forEach(row => {
-                expect(row.selected).toBeTrue();
+                expect(row.selected).toBeTruthy();
             });
 
             firstRow.selected = !firstRow.selected;
 
-            expect(firstRow.selected).toBeFalse();
-            expect(secondRow.selected).toBeFalse();
+            expect(firstRow.selected).toBeFalsy();
+            expect(secondRow.selected).toBeFalsy();
             firstRow.children.forEach(row => {
-                expect(row.selected).toBeFalse();
+                expect(row.selected).toBeFalsy();
             });
 
             (firstRow as IgxGroupByRow).toggle();
@@ -2715,7 +2715,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(secondRow.key).toBeUndefined();
             expect(secondRow.data).toBeUndefined();
             expect(secondRow.pinned).toBeUndefined();
-            expect(secondRow.selected).toBeFalse();
+            expect(secondRow.selected).toBeFalsy();
             expect(thirdRow.key).toBeTruthy();
             expect(thirdRow.data).toBeTruthy();
             expect(thirdRow.pinned).toBe(false);

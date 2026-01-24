@@ -908,8 +908,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const cell = childGrid.getRowByIndex(0).cells[0] as CellType;
             const ri1 = fixture.componentInstance.rowIsland1;
 
-            expect(cell.active).toBeFalse();
-            expect(cell.selected).toBeFalse();
+            expect(cell.active).toBeFalsy();
+            expect(cell.selected).toBeFalsy();
 
             vi.spyOn(ri1.cellClick, 'emit');
 
@@ -928,7 +928,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             cell.selected = true;
             fixture.detectChanges();
 
-            expect(cell.selected).toBeTrue();
+            expect(cell.selected).toBeTruthy();
             expect(childGrid.selectedCells[0].row.index).toEqual(cell.row.index);
             expect(childGrid.selectedCells[0].column.field).toEqual(cell.column.field);
         });
@@ -1092,8 +1092,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             const childGrid1 = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
-            expect(childGrid1.columns[0].editable).toBeTrue();
-            expect(childGrid1.columns[1].editable).toBeTrue();
+            expect(childGrid1.columns[0].editable).toBeTruthy();
+            expect(childGrid1.columns[1].editable).toBeTruthy();
         });
 
         it('should update the row island summary UI when disabledSummaries is changed at runtime', fakeAsync(() => {
@@ -1942,25 +1942,25 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const expandIcon = columnGroup2Header.queryAll(By.css('.igx-icon'))[0];
             const pinIcon = columnGroup2Header.queryAll(By.css('.igx-icon'))[1];
 
-            expect(columnGroup2.expanded).toBeFalse();
-            expect(columnGroup2.pinned).toBeFalse();
+            expect(columnGroup2.expanded).toBeFalsy();
+            expect(columnGroup2.pinned).toBeFalsy();
 
             UIInteractions.simulateClickEvent(expandIcon.nativeElement);
             fixture.detectChanges();
 
-            expect(columnGroup2.expanded).toBeTrue();
+            expect(columnGroup2.expanded).toBeTruthy();
 
             expect(fixture.componentInstance.expandedArgs).toBeDefined();
-            expect(fixture.componentInstance.expandedArgs.args).toBeTrue();
+            expect(fixture.componentInstance.expandedArgs.args).toBeTruthy();
             expect(fixture.componentInstance.hiddenArgs).toBeDefined();
-            expect(fixture.componentInstance.hiddenArgs.args).toBeTrue();
+            expect(fixture.componentInstance.hiddenArgs.args).toBeTruthy();
 
             UIInteractions.simulateClickEvent(pinIcon.nativeElement);
             fixture.detectChanges();
 
-            expect(columnGroup2.pinned).toBeTrue();
+            expect(columnGroup2.pinned).toBeTruthy();
             expect(fixture.componentInstance.pinnedArgs).toBeDefined();
-            expect(fixture.componentInstance.pinnedArgs.args).toBeTrue();
+            expect(fixture.componentInstance.pinnedArgs.args).toBeTruthy();
         });
     });
 });

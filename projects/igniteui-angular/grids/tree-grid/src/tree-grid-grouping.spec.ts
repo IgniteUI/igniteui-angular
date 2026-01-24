@@ -58,10 +58,10 @@ describe('IgxTreeGrid', () => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.grid).toEqual(treeGrid);
             expect(groupByArea.expressions).toEqual([]);
-            expect(groupByArea.hideGroupedColumns).toBeFalse();
+            expect(groupByArea.hideGroupedColumns).toBeFalsy();
             expect(groupByArea.dropAreaMessage).toMatch(DROP_AREA_MSG);
             expect(groupByArea.dropAreaTemplate).toBeUndefined();
-            expect(groupByArea.dropAreaVisible).toBeTrue();
+            expect(groupByArea.dropAreaVisible).toBeTruthy();
         }));
 
         it('allows changing the drop area message', fakeAsync(() => {
@@ -79,7 +79,7 @@ describe('IgxTreeGrid', () => {
             fix.detectChanges();
             tick();
 
-            expect(groupByArea.hideGroupedColumns).toBeTrue();
+            expect(groupByArea.hideGroupedColumns).toBeTruthy();
         }));
     });
 
@@ -102,10 +102,10 @@ describe('IgxTreeGrid', () => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.expressions.length).toEqual(2);
             expect(groupByArea.grid).toEqual(treeGrid);
-            expect(groupByArea.hideGroupedColumns).toBeFalse();
+            expect(groupByArea.hideGroupedColumns).toBeFalsy();
             expect(groupByArea.dropAreaMessage).toMatch(DROP_AREA_MSG);
             expect(groupByArea.dropAreaTemplate).toBeUndefined();
-            expect(groupByArea.dropAreaVisible).toBeFalse();
+            expect(groupByArea.dropAreaVisible).toBeFalsy();
         }));
 
         it('is loaded grouped by two fields.', fakeAsync(() => {
@@ -152,41 +152,41 @@ describe('IgxTreeGrid', () => {
         }));
 
         it('group columns stay visible by default', fakeAsync(() => {
-            expect(treeGrid.getColumnByName('OnPTO').hidden).toBeFalse();
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('OnPTO').hidden).toBeFalsy();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalsy();
 
         }));
 
         it('keeps the group columns visible by default', fakeAsync(() => {
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalsy();
 
             groupingExpressions.pop();
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
 
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalsy();
         }));
 
         it('hides/shows the grouped by column when hideGroupedColumns=true', fakeAsync(() => {
             groupByArea.hideGroupedColumns = true;
             fix.detectChanges();
 
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeTrue();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeTruthy();
 
             groupingExpressions.pop();
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
 
-            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalsy();
 
             groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
 
-            expect(treeGrid.getColumnByName('JobTitle').hidden).toBeTrue();
+            expect(treeGrid.getColumnByName('JobTitle').hidden).toBeTruthy();
         }));
 
         it('shows aggregated values in parent records properly', fakeAsync(() => {

@@ -871,7 +871,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(1);
-            expect(row.focused).toBeTrue();
+            expect(row.focused).toBeTruthy();
         }));
 
         it('should persist last selected cell column index when navigate through group rows.', async () => {

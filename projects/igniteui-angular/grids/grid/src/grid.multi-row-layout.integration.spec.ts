@@ -341,8 +341,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
 
                 // verify checked state
-                expect(checkboxes[0].componentInstance.checked).toBeFalse();
-                expect(checkboxes[1].componentInstance.checked).toBeTrue();
+                expect(checkboxes[0].componentInstance.checked).toBeFalsy();
+                expect(checkboxes[1].componentInstance.checked).toBeTruthy();
             }));
 
         it(`UI - toggling column checkbox checked state successfully changes the column's hidden state. `, waitForAsync(async () => {
@@ -362,7 +362,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             verifyCheckbox('group1', false, false, columnChooserElement);
 
             const column = grid.getColumnByName('group1');
-            expect(column.hidden).toBeTrue();
+            expect(column.hidden).toBeTruthy();
 
             let gridFirstRow = grid.rowList.first;
 
@@ -374,7 +374,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(true);
-            expect(column.hidden).toBeFalse();
+            expect(column.hidden).toBeFalsy();
 
             gridFirstRow = grid.rowList.first;
             GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
@@ -384,7 +384,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(false);
-            expect(column.hidden).toBeTrue();
+            expect(column.hidden).toBeTruthy();
         }));
 
     });
@@ -505,19 +505,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(allArgs.length).toBe(5);
 
             expect(allArgs[0].column instanceof IgxColumnLayoutComponent).toBeTruthy();
-            expect(allArgs[0].isPinned).toBeTrue();
+            expect(allArgs[0].isPinned).toBeTruthy();
 
             expect(allArgs[1].column.field).toBe('PostalCode');
-            expect(allArgs[1].isPinned).toBeTrue();
+            expect(allArgs[1].isPinned).toBeTruthy();
 
             expect(allArgs[2].column.field).toBe('City');
-            expect(allArgs[2].isPinned).toBeTrue();
+            expect(allArgs[2].isPinned).toBeTruthy();
 
             expect(allArgs[3].column.field).toBe('Country');
-            expect(allArgs[3].isPinned).toBeTrue();
+            expect(allArgs[3].isPinned).toBeTruthy();
 
             expect(allArgs[4].column.field).toBe('Address');
-            expect(allArgs[4].isPinned).toBeTrue();
+            expect(allArgs[4].isPinned).toBeTruthy();
 
             allArgs = [];
             grid.pinColumn('ID');
@@ -526,19 +526,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(allArgs.length).toBe(5);
 
             expect(allArgs[0].column instanceof IgxColumnLayoutComponent).toBeTruthy();
-            expect(allArgs[0].isPinned).toBeFalse();
+            expect(allArgs[0].isPinned).toBeFalsy();
 
             expect(allArgs[1].column.field).toBe('ID');
-            expect(allArgs[1].isPinned).toBeFalse();
+            expect(allArgs[1].isPinned).toBeFalsy();
 
             expect(allArgs[2].column.field).toBe('CompanyName');
-            expect(allArgs[2].isPinned).toBeFalse();
+            expect(allArgs[2].isPinned).toBeFalsy();
 
             expect(allArgs[3].column.field).toBe('ContactName');
-            expect(allArgs[3].isPinned).toBeFalse();
+            expect(allArgs[3].isPinned).toBeFalsy();
 
             expect(allArgs[4].column.field).toBe('ContactTitle');
-            expect(allArgs[4].isPinned).toBeFalse();
+            expect(allArgs[4].isPinned).toBeFalsy();
 
         });
 

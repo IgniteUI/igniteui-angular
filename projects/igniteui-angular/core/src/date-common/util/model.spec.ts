@@ -30,26 +30,26 @@ describe("Calendar Day Model", () => {
 
             // 2024/01/01 is a Monday
             expect(firstOfJan.day).toEqual(1);
-            expect(firstOfJan.weekend).toBeFalse();
+            expect(firstOfJan.weekend).toBeFalsy();
         });
 
         it("comparators", () => {
             const today = CalendarDay.today;
 
-            expect(today.greaterThan(firstOfJan)).toBeTrue();
-            expect(firstOfJan.lessThan(today)).toBeTrue();
+            expect(today.greaterThan(firstOfJan)).toBeTruthy();
+            expect(firstOfJan.lessThan(today)).toBeTruthy();
             expect(today.equalTo(new Date(Date.now())));
         });
 
         describe("Deltas", () => {
             it("day", () => {
-                expect(firstOfJan.add("day", 0).equalTo(firstOfJan)).toBeTrue();
-                expect(firstOfJan.add("day", 1).greaterThan(firstOfJan)).toBeTrue();
-                expect(firstOfJan.add("day", -1).lessThan(firstOfJan)).toBeTrue();
+                expect(firstOfJan.add("day", 0).equalTo(firstOfJan)).toBeTruthy();
+                expect(firstOfJan.add("day", 1).greaterThan(firstOfJan)).toBeTruthy();
+                expect(firstOfJan.add("day", -1).lessThan(firstOfJan)).toBeTruthy();
             });
 
             it("quarters", () => {
-                expect(firstOfJan.add("quarter", 0).equalTo(firstOfJan)).toBeTrue();
+                expect(firstOfJan.add("quarter", 0).equalTo(firstOfJan)).toBeTruthy();
                 const nextQ = firstOfJan.add("quarter", 1);
                 expect(nextQ.month).toEqual(3);
                 const prevQ = firstOfJan.add("quarter", -1);
@@ -268,7 +268,7 @@ describe("Calendar Day Model", () => {
                 isDateInRanges(start, [
                     { type: DateRangeType.After, dateRange: [dayBefore] },
                 ]),
-            ).toBeTrue();
+            ).toBeTruthy();
         });
 
         it("Before", () => {
@@ -276,7 +276,7 @@ describe("Calendar Day Model", () => {
                 isDateInRanges(start, [
                     { type: DateRangeType.Before, dateRange: [dayAfter] },
                 ]),
-            ).toBeTrue();
+            ).toBeTruthy();
         });
 
         it("Between", () => {
@@ -287,7 +287,7 @@ describe("Calendar Day Model", () => {
                         dateRange: [begin, end],
                     },
                 ]),
-            ).toBeTrue();
+            ).toBeTruthy();
         });
 
         it("Specific", () => {
@@ -298,13 +298,13 @@ describe("Calendar Day Model", () => {
                         dateRange: [],
                     },
                 ]),
-            ).toBeFalse();
+            ).toBeFalsy();
         });
 
         it("Weekday", () => {
             expect(
                 isDateInRanges(start, [{ type: DateRangeType.Weekdays }]),
-            ).toBeTrue();
+            ).toBeTruthy();
         });
 
         it("Weekends", () => {
@@ -314,7 +314,7 @@ describe("Calendar Day Model", () => {
                         type: DateRangeType.Weekends,
                     },
                 ]),
-            ).toBeFalse();
+            ).toBeFalsy();
         });
     });
 });

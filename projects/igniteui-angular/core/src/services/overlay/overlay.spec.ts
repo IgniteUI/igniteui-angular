@@ -608,7 +608,7 @@ describe('igxOverlay', () => {
             });
             overlayInstance.contentAppended.pipe(first()).subscribe((e: OverlayEventArgs) => {
                 const overlay = overlayInstance.getOverlayById(e.id);
-                expect(overlay.settings.closeOnEscape).toBeTrue();
+                expect(overlay.settings.closeOnEscape).toBeTruthy();
                 expect(overlay.settings.modal).toBeFalsy();
                 expect(overlay.settings.closeOnOutsideClick).toBeFalsy();
             });

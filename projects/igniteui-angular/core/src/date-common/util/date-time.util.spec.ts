@@ -264,17 +264,17 @@ describe(`DateTimeUtil Unit tests`, () => {
     });
 
     it('should correctly distinguish date from time characters', () => {
-        expect(DateTimeUtil.isDateOrTimeChar('d')).toBeTrue();
-        expect(DateTimeUtil.isDateOrTimeChar('M')).toBeTrue();
-        expect(DateTimeUtil.isDateOrTimeChar('y')).toBeTrue();
-        expect(DateTimeUtil.isDateOrTimeChar('H')).toBeTrue();
-        expect(DateTimeUtil.isDateOrTimeChar('h')).toBeTrue();
-        expect(DateTimeUtil.isDateOrTimeChar('m')).toBeTrue();
-        expect(DateTimeUtil.isDateOrTimeChar('s')).toBeTrue();
-        expect(DateTimeUtil.isDateOrTimeChar('S')).toBeTrue();
-        expect(DateTimeUtil.isDateOrTimeChar(':')).toBeFalse();
-        expect(DateTimeUtil.isDateOrTimeChar('/')).toBeFalse();
-        expect(DateTimeUtil.isDateOrTimeChar('.')).toBeFalse();
+        expect(DateTimeUtil.isDateOrTimeChar('d')).toBeTruthy();
+        expect(DateTimeUtil.isDateOrTimeChar('M')).toBeTruthy();
+        expect(DateTimeUtil.isDateOrTimeChar('y')).toBeTruthy();
+        expect(DateTimeUtil.isDateOrTimeChar('H')).toBeTruthy();
+        expect(DateTimeUtil.isDateOrTimeChar('h')).toBeTruthy();
+        expect(DateTimeUtil.isDateOrTimeChar('m')).toBeTruthy();
+        expect(DateTimeUtil.isDateOrTimeChar('s')).toBeTruthy();
+        expect(DateTimeUtil.isDateOrTimeChar('S')).toBeTruthy();
+        expect(DateTimeUtil.isDateOrTimeChar(':')).toBeFalsy();
+        expect(DateTimeUtil.isDateOrTimeChar('/')).toBeFalsy();
+        expect(DateTimeUtil.isDateOrTimeChar('.')).toBeFalsy();
     });
 
     it('should spin date portions correctly', () => {
@@ -501,72 +501,72 @@ describe(`DateTimeUtil Unit tests`, () => {
         // base
         let minValue = new Date(2010, 3, 2);
         let maxValue = new Date(2010, 3, 7);
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 3), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 1), minValue)).toBeTrue();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 3), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 1), minValue)).toBeTruthy();
 
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 7), maxValue)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 6), maxValue)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 8), maxValue)).toBeTrue();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 7), maxValue)).toBeFalsy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 6), maxValue)).toBeFalsy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 8), maxValue)).toBeTruthy();
 
         // time variations
         minValue = new Date(2010, 3, 2, 11, 10, 10);
         maxValue = new Date(2010, 3, 2, 15, 15, 15);
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 11), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 9), minValue)).toBeTrue();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 11), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 9), minValue)).toBeTruthy();
 
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 11, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 9, 10), minValue)).toBeTrue();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 11, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 9, 10), minValue)).toBeTruthy();
 
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 12, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 10, 10, 10), minValue)).toBeTrue();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 12, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 10, 10, 10), minValue)).toBeTruthy();
 
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 3, 11, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 1, 11, 10, 10), minValue)).toBeTrue();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 3, 11, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 1, 11, 10, 10), minValue)).toBeTruthy();
 
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 4, 2, 11, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 2, 2, 11, 10, 10), minValue)).toBeTrue();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 4, 2, 11, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 2, 2, 11, 10, 10), minValue)).toBeTruthy();
 
-        expect(DateTimeUtil.lessThanMinValue(new Date(2011, 3, 2, 11, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(2009, 3, 2, 11, 10, 10), minValue)).toBeTrue();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2011, 3, 2, 11, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2010, 3, 2, 11, 10, 10), minValue)).toBeFalsy();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2009, 3, 2, 11, 10, 10), minValue)).toBeTruthy();
 
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 16), maxValue)).toBeTrue();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 14), maxValue)).toBeFalse();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 16), maxValue)).toBeTruthy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalsy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 14), maxValue)).toBeFalsy();
 
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 16, 15), maxValue)).toBeTrue();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 14, 15), maxValue)).toBeFalse();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 16, 15), maxValue)).toBeTruthy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalsy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 14, 15), maxValue)).toBeFalsy();
 
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 16, 15, 15), maxValue)).toBeTrue();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 14, 15, 15), maxValue)).toBeFalse();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 16, 15, 15), maxValue)).toBeTruthy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalsy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 14, 15, 15), maxValue)).toBeFalsy();
 
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 3, 15, 15, 15), maxValue)).toBeTrue();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 1, 15, 15, 15), maxValue)).toBeFalse();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 3, 15, 15, 15), maxValue)).toBeTruthy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalsy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 1, 15, 15, 15), maxValue)).toBeFalsy();
 
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 4, 2, 15, 15, 15), maxValue)).toBeTrue();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 2, 2, 15, 15, 15), maxValue)).toBeFalse();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 4, 2, 15, 15, 15), maxValue)).toBeTruthy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalsy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 2, 2, 15, 15, 15), maxValue)).toBeFalsy();
 
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2011, 3, 2, 15, 15, 15), maxValue)).toBeTrue();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2009, 3, 2, 15, 15, 15), maxValue)).toBeFalse();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2011, 3, 2, 15, 15, 15), maxValue)).toBeTruthy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalsy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2009, 3, 2, 15, 15, 15), maxValue)).toBeFalsy();
 
         // date excluded
-        expect(DateTimeUtil.lessThanMinValue(new Date(2030, 3, 2, 11, 10, 9), minValue, true, false)).toBeTrue();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2000, 3, 2, 15, 15, 16), minValue, true, false)).toBeTrue();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2030, 3, 2, 11, 10, 9), minValue, true, false)).toBeTruthy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2000, 3, 2, 15, 15, 16), minValue, true, false)).toBeTruthy();
 
         // time excluded
-        expect(DateTimeUtil.lessThanMinValue(new Date(2009, 3, 2, 11, 10, 10), minValue, false, true)).toBeTrue();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(2011, 3, 2, 15, 15, 15), minValue, true, false)).toBeTrue();
+        expect(DateTimeUtil.lessThanMinValue(new Date(2009, 3, 2, 11, 10, 10), minValue, false, true)).toBeTruthy();
+        expect(DateTimeUtil.greaterThanMaxValue(new Date(2011, 3, 2, 15, 15, 15), minValue, true, false)).toBeTruthy();
     });
 
     it('should return ValidationErrors for minValue and maxValue', () => {
@@ -647,16 +647,16 @@ describe(`DateTimeUtil Unit tests`, () => {
     });
 
     it('isValidDate should properly determine if a date is valid or not', () => {
-        expect(DateTimeUtil.isValidDate(new Date())).toBeTrue();
-        expect(DateTimeUtil.isValidDate(new Date(NaN))).toBeFalse();
-        expect(DateTimeUtil.isValidDate(new Date().getTime())).toBeFalse();
-        expect(DateTimeUtil.isValidDate('')).toBeFalse();
-        expect(DateTimeUtil.isValidDate({})).toBeFalse();
-        expect(DateTimeUtil.isValidDate([])).toBeFalse();
-        expect(DateTimeUtil.isValidDate(null)).toBeFalse();
-        expect(DateTimeUtil.isValidDate(undefined)).toBeFalse();
-        expect(DateTimeUtil.isValidDate(false)).toBeFalse();
-        expect(DateTimeUtil.isValidDate(true)).toBeFalse();
+        expect(DateTimeUtil.isValidDate(new Date())).toBeTruthy();
+        expect(DateTimeUtil.isValidDate(new Date(NaN))).toBeFalsy();
+        expect(DateTimeUtil.isValidDate(new Date().getTime())).toBeFalsy();
+        expect(DateTimeUtil.isValidDate('')).toBeFalsy();
+        expect(DateTimeUtil.isValidDate({})).toBeFalsy();
+        expect(DateTimeUtil.isValidDate([])).toBeFalsy();
+        expect(DateTimeUtil.isValidDate(null)).toBeFalsy();
+        expect(DateTimeUtil.isValidDate(undefined)).toBeFalsy();
+        expect(DateTimeUtil.isValidDate(false)).toBeFalsy();
+        expect(DateTimeUtil.isValidDate(true)).toBeFalsy();
     });
 
     it('should correctly identify formats that would resolve to only numeric parts (and period) for the date/time parts', () => {
@@ -670,14 +670,14 @@ describe(`DateTimeUtil Unit tests`, () => {
             'dd/MM/yyyy test hh:mm'
         ];
         numericFormats.forEach(format => {
-            expect(DateTimeUtil.isFormatNumeric(locale, format, angularFormatter)).withContext(`Format: ${format}`).toBeTrue();
+            expect(DateTimeUtil.isFormatNumeric(locale, format, angularFormatter)).withContext(`Format: ${format}`).toBeTruthy();
         });
 
         const nonNumericFormats = ['MMM', 'MMMM', 'MMMMM', 'medium', 'long', 'full', 'mediumDate',
             'longDate', 'fullDate', 'longTime', 'fullTime', 'dd-MMM-yyyy', 'E', 'EE'];
 
         nonNumericFormats.forEach(format => {
-            expect(DateTimeUtil.isFormatNumeric(locale, format, angularFormatter)).withContext(`Format: ${format}`).toBeFalse();
+            expect(DateTimeUtil.isFormatNumeric(locale, format, angularFormatter)).withContext(`Format: ${format}`).toBeFalsy();
         });
     });
 

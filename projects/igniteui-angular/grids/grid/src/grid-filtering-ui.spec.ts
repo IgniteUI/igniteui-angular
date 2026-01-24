@@ -5689,8 +5689,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
-            expect(checkboxes[0].indeterminate).toBeTrue();
-            expect(checkboxes[1].checked).toBeFalse();
+            expect(checkboxes[0].indeterminate).toBeTruthy();
+            expect(checkboxes[1].checked).toBeFalsy();
             const listItemsCheckboxes = checkboxes.slice(2, checkboxes.length - 1);
             for (const checkboxItem of listItemsCheckboxes) {
                 ControlsFunction.verifyCheckboxState(checkboxItem.parentElement);
@@ -5806,7 +5806,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Should ignore duplicate records when column\'s filteringIgnoreCase is true', fakeAsync(() => {
             const column = grid.getColumnByName('AnotherField');
-            expect(column.filteringIgnoreCase).toBeTrue();
+            expect(column.filteringIgnoreCase).toBeTruthy();
 
             GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
             tick(100);
@@ -5820,7 +5820,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should not ignore duplicate records when column\'s filteringIgnoreCase is false', fakeAsync(() => {
             const column = grid.getColumnByName('AnotherField');
             column.filteringIgnoreCase = false;
-            expect(column.filteringIgnoreCase).toBeFalse();
+            expect(column.filteringIgnoreCase).toBeFalsy();
 
             GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
             tick(100);
@@ -5955,41 +5955,41 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const listItems = list.querySelectorAll('igx-list-item');
 
             // we expect only the first list item to be active when the list is focused
-            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
-            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTruthy();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalsy();
 
             // on arrow down the second item should be active
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
             fix.detectChanges();
-            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeFalse();
-            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeFalsy();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeTruthy();
 
             // on arrow up the first item should be active again
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', list, true);
             fix.detectChanges();
-            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
-            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTruthy();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalsy();
 
             // on home the first item should be active
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
             fix.detectChanges();
-            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeTruthy();
             UIInteractions.triggerKeyDownEvtUponElem('home', list, true);
             fix.detectChanges();
-            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTruthy();
 
             // on space key on the first item (select all) all the checkbox should deselect
             let checkboxes = list.querySelectorAll('igx-checkbox');
             let checkboxesStatus = Array.from(checkboxes).map((checkbox: Element) => checkbox.querySelector('input').checked);
             checkboxesStatus.forEach(status => {
-                expect(status).toBeTrue();
+                expect(status).toBeTruthy();
             });
             UIInteractions.triggerKeyDownEvtUponElem('space', list, true);
             fix.detectChanges();
             checkboxes = list.querySelectorAll('igx-checkbox');
             checkboxesStatus = Array.from(checkboxes).map((checkbox: Element) => checkbox.querySelector('input').checked);
             checkboxesStatus.forEach(status => {
-                expect(status).toBeFalse();
+                expect(status).toBeFalsy();
             });
         }));
 
@@ -6003,13 +6003,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const listItems = list.querySelectorAll('igx-list-item');
 
             // we expect only the first list item to be active when the list is focused
-            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
-            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalse();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTruthy();
+            expect(listItems[1].classList.contains("igx-list__item-base--active")).toBeFalsy();
 
             // on arrow up the focus should stay on the first element and not on the search input
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', list, true);
             fix.detectChanges();
-            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTrue();
+            expect(listItems[0].classList.contains("igx-list__item-base--active")).toBeTruthy();
         }));
 
         it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
@@ -6088,7 +6088,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Get checkboxes and verify 'Select All' is indeterminate.
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
-            expect(checkboxes[0].indeterminate).toBeTrue();
+            expect(checkboxes[0].indeterminate).toBeTruthy();
         }));
 
         it('Should enable the `Apply` button & filter properly when "Add to current filter selection" is the only selected option.', fakeAsync(() => {
@@ -6112,7 +6112,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'apply' button to apply filter.
             const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix, excelMenu);
-            expect(applyButton.disabled).toBeFalse();
+            expect(applyButton.disabled).toBeFalsy();
             applyButton.click();
             fix.detectChanges();
             tick();

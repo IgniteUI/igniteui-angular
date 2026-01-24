@@ -111,9 +111,9 @@ describe('IgxPaginator with default settings', () => {
         const currPage = fix.debugElement.query(By.css('.currPage'));
 
         expect(customPaging).toBeDefined();
-        expect(prevBtn.properties.disabled).toBeTrue();
+        expect(prevBtn.properties.disabled).toBeTruthy();
         expect(currPage.nativeElement.innerText).toEqual('0');
-        expect(nextBtn.properties.disabled).toBeFalse();
+        expect(nextBtn.properties.disabled).toBeFalsy();
     });
 
     it('should be able to operate correctly with paging api from custom template', () => {
@@ -131,7 +131,7 @@ describe('IgxPaginator with default settings', () => {
         let currPage = fix.debugElement.query(By.css('.currPage'));
 
         expect(currPage.nativeElement.innerText).toEqual('1');
-        expect(nextBtn.properties.disabled).toBeFalse();
+        expect(nextBtn.properties.disabled).toBeFalsy();
 
         nextBtn.nativeElement.click();
         fix.detectChanges();
@@ -139,7 +139,7 @@ describe('IgxPaginator with default settings', () => {
         currPage = fix.debugElement.query(By.css('.currPage'));
 
         expect(currPage.nativeElement.innerText).toEqual('2');
-        expect(nextBtn.properties.disabled).toBeTrue();
+        expect(nextBtn.properties.disabled).toBeTruthy();
     });
 
     it('paging and pagingDone events should be emitted correctly', () => {

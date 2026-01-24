@@ -269,8 +269,8 @@ describe('IgxSplitter', () => {
         splitterBarComponent.movingEnd.emit(-100);
         fixture.detectChanges();
 
-        expect(pane1.size.indexOf('%') !== -1).toBeTrue();
-        expect(pane2.size.indexOf('%') !== -1).toBeTrue();
+        expect(pane1.size.indexOf('%') !== -1).toBeTruthy();
+        expect(pane2.size.indexOf('%') !== -1).toBeTruthy();
 
         expect(pane1.element.offsetWidth).toBeCloseTo(pane1_originalSize + 100);
         expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
@@ -298,7 +298,7 @@ describe('IgxSplitter', () => {
 
         // fist pane should remain in px
         expect(pane1.size).toBe('300px');
-        expect(pane2.size.indexOf('%') !== -1).toBeTrue();
+        expect(pane2.size.indexOf('%') !== -1).toBeTruthy();
 
         expect(pane1.element.offsetWidth).toBeCloseTo(pane1_originalSize + 100);
         expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);

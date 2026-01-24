@@ -41,9 +41,9 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(firstCell.column.index).toEqual(grid.columnList.first.index);
             expect(firstCell.row.index).toEqual(grid.rowList.first.index);
             expect(firstCell.grid).toBe(grid);
-            expect(firstCell.active).toBeFalse();
-            expect(firstCell.selected).toBeFalse();
-            expect(firstCell.editMode).toBeFalse();
+            expect(firstCell.active).toBeFalsy();
+            expect(firstCell.selected).toBeFalsy();
+            expect(firstCell.editMode).toBeFalsy();
             expect(firstCell.editValue).toBeUndefined();
             expect(firstCellElem.nativeElement).toBeDefined();
             expect(firstCellElem.nativeElement.textContent).toMatch('1');

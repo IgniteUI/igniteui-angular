@@ -1797,20 +1797,20 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             // Check getRowByIndex expanded, children and parent members
             expect(firstRow.expanded).toBe(true);
             expect(firstRow.hasChildren).toBe(true);
-            expect(firstRow.children[0].hasChildren).toBeFalse();
+            expect(firstRow.children[0].hasChildren).toBeFalsy();
             // children.length equals the filtered our chidlren!
             expect(firstRow.children.length).toEqual(1);
-            expect(firstRow.children[0] instanceof IgxTreeGridRow).toBeTrue();
-            expect(firstRow.children[0].parent instanceof IgxTreeGridRow).toBeTrue();
+            expect(firstRow.children[0] instanceof IgxTreeGridRow).toBeTruthy();
+            expect(firstRow.children[0].parent instanceof IgxTreeGridRow).toBeTruthy();
             expect(firstRow.children[0].parent.key).toBe(firstRow.key);
             expect(treeGrid.getRowByIndex(1).parent.key).toEqual(147);
 
             firstRow.expanded = false;
             expect(firstRow.expanded).toBe(false);
 
-            expect(firstRow.pinned).toBeFalse();
+            expect(firstRow.pinned).toBeFalsy();
             firstRow.pinned = true;
-            expect(firstRow.pinned).toBeTrue();
+            expect(firstRow.pinned).toBeTruthy();
         });
 
         it('should delete pinned row without errors', () => {
@@ -1819,7 +1819,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const firstRow = treeGrid.pinnedRows[0];
 
             expect(firstRow.isRoot).toBe(true);
-            expect(firstRow.pinned).toBeTrue();
+            expect(firstRow.pinned).toBeTruthy();
             expect(firstRow.data.ID).toEqual(147);
 
             treeGrid.deleteRowById(147);

@@ -225,9 +225,9 @@ describe("Icon Service", () => {
 
         expect(fixture.componentInstance.themeToken.theme).toBe('material');
         expect(arrow_prev).toBeTruthy();
-        expect(arrow_prev.classes['material-icons']).toBeTrue();
+        expect(arrow_prev.classes['material-icons']).toBeTruthy();
         expect(expand_more).toBeTruthy();
-        expect(expand_more.classes['material-icons']).toBeTrue();
+        expect(expand_more.classes['material-icons']).toBeTruthy();
 
         fixture.componentInstance.setTheme('indigo');
         fixture.detectChanges();
@@ -239,11 +239,11 @@ describe("Icon Service", () => {
 
         // The class change should be reflected as the family changes
         expect(arrow_prev).toBeTruthy();
-        expect(arrow_prev.classes['internal_indigo']).toBeTrue();
+        expect(arrow_prev.classes['internal_indigo']).toBeTruthy();
 
         // The expand_more shouldn't change as its reference is set explicitly
         expect(expand_more).toBeTruthy();
-        expect(expand_more.classes['material-icons']).toBeTrue();
+        expect(expand_more.classes['material-icons']).toBeTruthy();
     });
 });
 

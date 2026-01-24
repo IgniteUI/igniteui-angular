@@ -81,7 +81,7 @@ describe('IgxDatePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(datePicker['_calendar'].hasHeader).toBeFalse();
+                expect(datePicker['_calendar'].hasHeader).toBeFalsy();
                 const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
                 expect(calendarHeader).toBeFalsy('Calendar header should not be present');
             }));
@@ -250,7 +250,7 @@ describe('IgxDatePicker', () => {
                 vi.spyOn(datePicker.closing, 'emit');
                 vi.spyOn(datePicker.closed, 'emit');
                 expect(datePicker.collapsed).toBeTruthy();
-                expect(datePicker.isFocused).toBeFalse();
+                expect(datePicker.isFocused).toBeFalsy();
 
                 const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', picker, true);
@@ -265,8 +265,8 @@ describe('IgxDatePicker', () => {
                 const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(calendarWrapper.contains(document.activeElement))
                     .withContext('focus should move to calendar for KB nav')
-                    .toBeTrue();
-                expect(datePicker.isFocused).toBeTrue();
+                    .toBeTruthy();
+                expect(datePicker.isFocused).toBeTruthy();
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                 tick(350);
@@ -276,8 +276,8 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
                 expect(inputGroup.nativeElement.contains(document.activeElement))
                     .withContext('focus should return to the picker input')
-                    .toBeTrue();
-                expect(datePicker.isFocused).toBeTrue();
+                    .toBeTruthy();
+                expect(datePicker.isFocused).toBeTruthy();
             }));
 
             it('should open the calendar with SPACE key', fakeAsync(() => {
@@ -313,8 +313,8 @@ describe('IgxDatePicker', () => {
                 const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(calendarWrapper.contains(document.activeElement))
                     .withContext('focus should move to calendar for KB nav')
-                    .toBeTrue();
-                expect(datePicker.isFocused).toBeTrue();
+                    .toBeTruthy();
+                expect(datePicker.isFocused).toBeTruthy();
 
 
                 UIInteractions.triggerKeyDownEvtUponElem('Escape', calendarWrapper, true);
@@ -326,8 +326,8 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
                 expect(inputGroup.nativeElement.contains(document.activeElement))
                     .withContext('focus should return to the picker input')
-                    .toBeTrue();
-                expect(datePicker.isFocused).toBeTrue();
+                    .toBeTruthy();
+                expect(datePicker.isFocused).toBeTruthy();
             }));
 
             it('should update the calendar selection on typing', fakeAsync(() => {
@@ -732,7 +732,7 @@ describe('IgxDatePicker', () => {
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
                 expect(wrapper.contains(document.activeElement))
                     .withContext('focus should move to calendar for KB nav')
-                    .toBeTrue();
+                    .toBeTruthy();
             }));
 
             it('should focus today\'s date when an invalid date is selected', fakeAsync(() => {
@@ -751,7 +751,7 @@ describe('IgxDatePicker', () => {
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
                 expect(wrapper.contains(document.activeElement))
                     .withContext('focus should move to calendar for KB nav')
-                    .toBeTrue();
+                    .toBeTruthy();
             }));
 
             it('should return focus to date picker input after calendar click select', fakeAsync(() => {
@@ -772,7 +772,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.value).toEqual(today);
                 expect(inputGroup.contains(document.activeElement))
                     .withContext('focus should return to the picker input')
-                    .toBeTrue();
+                    .toBeTruthy();
             }));
         });
 
@@ -1388,16 +1388,16 @@ describe('IgxDatePicker', () => {
                 datePicker.ngAfterViewInit();
 
                 datePicker.open();
-                expect(datePicker.collapsed).toBeFalse();
+                expect(datePicker.collapsed).toBeFalsy();
 
                 datePicker.close();
-                expect(datePicker.collapsed).toBeTrue();
+                expect(datePicker.collapsed).toBeTruthy();
 
                 datePicker.toggle();
-                expect(datePicker.collapsed).toBeFalse();
+                expect(datePicker.collapsed).toBeFalsy();
 
                 datePicker.toggle();
-                expect(datePicker.collapsed).toBeTrue();
+                expect(datePicker.collapsed).toBeTruthy();
             });
 
             it('should update the picker\'s value with the select method', () => {
