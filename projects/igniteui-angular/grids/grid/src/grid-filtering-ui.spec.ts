@@ -1547,8 +1547,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             let chip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0].nativeElement;
             let chipRect = chip.getBoundingClientRect();
             let gridRect = grid.nativeElement.getBoundingClientRect();
-            expect(chipRect.right > gridRect.right).toBe(true,
-                'chip should not be fully visible and thus not within grid');
+            expect(chipRect.right > gridRect.right, 'chip should not be fully visible and thus not within grid').toBe(true);
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDate');
             await wait(100);
@@ -1562,8 +1561,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             chip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0].nativeElement;
             chipRect = chip.getBoundingClientRect();
             gridRect = grid.nativeElement.getBoundingClientRect();
-            expect(chipRect.left > gridRect.left && chipRect.right < gridRect.right).toBe(true,
-                'chip should be fully visible and within grid');
+            expect(chipRect.left > gridRect.left && chipRect.right < gridRect.right, 'chip should be fully visible and within grid').toBe(true);
         });
 
         it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
@@ -1858,7 +1856,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Verify chips count.
-            expect(GridFunctions.getFilterChipsForColumn('ProductName', fix).length).toBe(3, 'incorrect chips count');
+            expect(GridFunctions.getFilterChipsForColumn('ProductName', fix).length, 'incorrect chips count').toBe(3);
 
             // Verify last chip text.
             let lastFilterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[2];
@@ -1870,7 +1868,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Verify chips count.
-            expect(GridFunctions.getFilterChipsForColumn('ProductName', fix).length).toBe(2, 'incorrect chips count');
+            expect(GridFunctions.getFilterChipsForColumn('ProductName', fix).length, 'incorrect chips count').toBe(2);
             // Verify new last chip text.
             lastFilterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[1];
             expect(GridFunctions.getChipText(lastFilterCellChip)).toBe('e');
@@ -1906,7 +1904,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Verify first chip is selected (in edit mode).
             const chipDiv = GridFunctions.getFilterConditionChip(fix, 0).querySelector('.igx-chip__item');
-            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
+            expect(chipDiv.classList.contains('igx-chip__item--selected'), 'chip is not selected').toBe(true);
         }));
 
         it('Should not throw error when deleting the last chip', (async () => {
@@ -2055,7 +2053,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Verify the ESF icons are visible.
             const thead = grid.theadRow.nativeElement;
             const filterIcons = thead.querySelectorAll('.igx-excel-filter__icon');
-            expect(filterIcons.length).toEqual(6, 'incorrect esf filter icons count');
+            expect(filterIcons.length, 'incorrect esf filter icons count').toEqual(6);
 
             // Verify the condition was submitted.
             const header = GridFunctions.getColumnHeader('ProductName', fix);
@@ -2108,7 +2106,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const chip = GridFunctions.getFilterConditionChip(fix, 0);
             const chipDiv = chip.querySelector('.igx-chip__item');
 
-            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'initial chip is committed');
+            expect(chipDiv.classList.contains('igx-chip__item--selected'), 'initial chip is committed').toBe(true);
 
             // Focus out
             grid.nativeElement.focus();
@@ -2116,8 +2114,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(200);
             fix.detectChanges();
 
-            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'initial chip is not committed');
-            expect(input.value).toBe('', 'initial input value is present and not committed');
+            expect(chipDiv.classList.contains('igx-chip__item--selected'), 'initial chip is not committed').toBe(false);
+            expect(input.value, 'initial input value is present and not committed').toBe('');
 
             chip.click();
             tick(200);
@@ -2156,21 +2154,21 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(200);
             fix.detectChanges();
 
-            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is committed');
+            expect(chipDiv.classList.contains('igx-chip__item--selected'), 'chip is committed').toBe(true);
 
             // Focus out
             grid.nativeElement.focus();
             grid.filteringRow.onInputGroupFocusout();
             tick(200);
             fix.detectChanges();
-            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
+            expect(chipDiv.classList.contains('igx-chip__item--selected'), 'chip is selected').toBe(false);
 
             // Check if we still have only one committed chip
             const chipsLength = GridFunctions.getAllFilterConditionChips(fix).length;
 
-            expect(chipsLength).toBe(1, 'there is more than one chip');
-            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is not committed');
-            expect(input.value).toBe('', 'input value is present and not committed');
+            expect(chipsLength, 'there is more than one chip').toBe(1);
+            expect(chipDiv.classList.contains('igx-chip__item--selected'), 'chip is not committed').toBe(false);
+            expect(input.value, 'input value is present and not committed').toBe('');
         }));
 
         it('should not retain expression values in cell filter after calling grid clearFilter() method.', fakeAsync(() => {
@@ -2337,7 +2335,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const chips = filterRow.queryAll(By.directive(IgxChipComponent));
-            expect(chips.length).toEqual(0, 'No chips should be present');
+            expect(chips.length, 'No chips should be present').toEqual(0);
         }));
 
         it('Should not throw error when pressing Backspace in empty dateTime filter.', fakeAsync(() => {
@@ -2465,7 +2463,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Check that the filterRow is closed
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).toBeNull();
-            expect(grid.rowList.length).toBe(3, 'filter is not applied');
+            expect(grid.rowList.length, 'filter is not applied').toBe(3);
         }));
 
         it('Should keep existing column filter after hiding another column.', fakeAsync(() => {
@@ -4031,7 +4029,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(100);
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(6);
 
             // Type string in search box.
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
@@ -4040,7 +4038,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(100);
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(4);
 
             // Clear filtering of ESF search.
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
@@ -4049,7 +4047,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(6);
         });
 
         it('Should allow to input commas in excel search component input field when column dataType is number.', async () => {
@@ -4066,7 +4064,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(100);
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(3);
 
             // Type non-numerical symbol in search box.
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'a', fix);
@@ -4074,8 +4072,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(100);
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(inputNativeElement.value).toBe('', 'incorrect rendered list items count');
-            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+            expect(inputNativeElement.value, 'incorrect rendered list items count').toBe('');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(8);
         });
 
         it('Should enable/disable the apply button correctly.', async () => {
@@ -4085,7 +4083,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify there are filtered-in results and that apply button is enabled.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             let applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix) as HTMLElement;
-            expect(listItems.length).toBe(6, 'ESF search result should NOT be empty');
+            expect(listItems.length, 'ESF search result should NOT be empty').toBe(6);
             ControlsFunction.verifyButtonIsDisabled(applyButton, false);
 
             // Verify the apply button is disabled when all items are unchecked (when unchecking 'Select All').
@@ -4349,7 +4347,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify that the first item is 'Select All' and the third item is 'false'.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(3);
             expect(listItems[0].innerText).toBe('Select all search results');
             expect(listItems[2].innerText).toBe('False');
         }));
@@ -4393,7 +4391,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const listHeight = searchComponent.querySelector('igx-list').getBoundingClientRect().height;
             const itemHeight = displayContainer.querySelector('igx-list-item').getBoundingClientRect().height;
-            expect(displayContainerRect.height > listHeight + itemHeight && displayContainerRect.height < listHeight + (itemHeight * 2)).toBe(true, 'incorrect search display container height');
+            expect(displayContainerRect.height > listHeight + itemHeight && displayContainerRect.height < listHeight + (itemHeight * 2), 'incorrect search display container height').toBe(true);
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
             expect(listItems.length).toBe(Math.ceil(listHeight / itemHeight) + 1, 'incorrect rendered list items count');
@@ -4438,8 +4436,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const listNativeElement = searchComponent.querySelector('.igx-list');
             const listRect = listNativeElement.getBoundingClientRect();
-            expect(displayContainerRect.top >= listRect.top).toBe(true, 'displayContainer starts above list');
-            expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
+            expect(displayContainerRect.top >= listRect.top, 'displayContainer starts above list').toBe(true);
+            expect(displayContainerRect.bottom <= listRect.bottom, 'displayContainer ends below list').toBe(true);
         }));
 
         it('Should not treat \'Select All\' as a search result.', async () => {
@@ -4500,18 +4498,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const lastExpression = expressions[expressions.length - 1];
             const lastExpressionRect = lastExpression.getBoundingClientRect();
             const expressionsContainerRect = expressionsContainer.getBoundingClientRect();
-            expect(lastExpressionRect.top >= expressionsContainerRect.top).toBe(true,
-                'lastExpression starts above expressionsContainer');
-            expect(lastExpressionRect.bottom <= expressionsContainerRect.bottom).toBe(true,
-                'lastExpression ends below expressionsContainer');
+            expect(lastExpressionRect.top >= expressionsContainerRect.top, 'lastExpression starts above expressionsContainer').toBe(true);
+            expect(lastExpressionRect.bottom <= expressionsContainerRect.bottom, 'lastExpression ends below expressionsContainer').toBe(true);
 
             // Verify addFilter button is currently in view beneath the last expression.
             const addFilterButton = GridFunctions.getAddFilterExcelStyleCustomFiltering(fix);
             const addFilterButtonRect = addFilterButton.getBoundingClientRect();
-            expect(addFilterButtonRect.top >= lastExpressionRect.bottom).toBe(true,
-                'addFilterButton overlaps lastExpression');
-            expect(addFilterButtonRect.bottom <= expressionsContainerRect.bottom).toBe(true,
-                'addFilterButton ends below expressionsContainer');
+            expect(addFilterButtonRect.top >= lastExpressionRect.bottom, 'addFilterButton overlaps lastExpression').toBe(true);
+            expect(addFilterButtonRect.bottom <= expressionsContainerRect.bottom, 'addFilterButton ends below expressionsContainer').toBe(true);
         }));
 
         it('Should generate "equals" conditions when selecting two values.', fakeAsync(() => {
@@ -4635,7 +4629,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            expect(isExcelSearchScrollBarVisible(fix)).toBe(true, 'excel search scrollbar should be visible');
+            expect(isExcelSearchScrollBarVisible(fix), 'excel search scrollbar should be visible').toBe(true);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
@@ -4648,7 +4642,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
+            expect(isExcelSearchScrollBarVisible(fix), 'excel search scrollbar should NOT be visible').toBe(false);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
@@ -4661,7 +4655,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
+            expect(isExcelSearchScrollBarVisible(fix), 'excel search scrollbar should NOT be visible').toBe(false);
         }));
 
         it('Should cascade filter the available filter options.', fakeAsync(() => {
@@ -4850,9 +4844,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const gridRect = gridNativeElement.getBoundingClientRect();
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const excelMenuRect = excelMenu.getBoundingClientRect();
-            expect(excelMenuRect.left >= gridRect.left).toBe(true, 'ESF spans outside the grid on the left');
-            expect(excelMenuRect.top >= gridRect.top).toBe(true, 'ESF spans outside the grid on the top');
-            expect(excelMenuRect.right <= gridRect.right).toBe(true, 'ESF spans outside the grid on the right');
+            expect(excelMenuRect.left >= gridRect.left, 'ESF spans outside the grid on the left').toBe(true);
+            expect(excelMenuRect.top >= gridRect.top, 'ESF spans outside the grid on the top').toBe(true);
+            expect(excelMenuRect.right <= gridRect.right, 'ESF spans outside the grid on the right').toBe(true);
         });
 
         it('Should add/remove expressions in custom filter dialog through UI correctly.', fakeAsync(() => {
@@ -5681,7 +5675,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cell1 = GridFunctions.getRowCells(fix, 0)[4].nativeElement;
             const cell2 = GridFunctions.getRowCells(fix, 3)[4].nativeElement;
             expect(cell1.textContent.toString()).toEqual(cell2.textContent.toString());
-            expect(rows.length).toBe(6, 'incorrect number of rows');
+            expect(rows.length, 'incorrect number of rows').toBe(6);
 
             //Check if checkboxes have correct state on ESF menu reopening
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
@@ -5725,7 +5719,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(0);
         }));
 
         it('Should filter ISO 8601 date by input string', fakeAsync(() => {
@@ -5763,7 +5757,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(0);
         }));
 
         it('Should filter milliseconds date by input string', fakeAsync(() => {
@@ -5801,7 +5795,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(0);
         }));
 
         it('Should ignore duplicate records when column\'s filteringIgnoreCase is true', fakeAsync(() => {
@@ -5843,7 +5837,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify that the second item is 'Add to current filter selection'.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(6);
             expect(listItems[1].innerText).toBe('Add current selection to filter');
         }));
 
@@ -6222,14 +6216,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'Net', fix);
 
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(3);
 
             GridFunctions.clickClearFilterInExcelStyleFiltering(fix);
             flush();
             expect(grid.filteredData).toBeNull();
 
             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
-            expect(inputNativeElement.value).toBe('', 'search criteria is not cleared');
+            expect(inputNativeElement.value, 'search criteria is not cleared').toBe('');
 
             checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             const listItemsCheckboxes = checkboxes.slice(1, checkboxes.length);
@@ -6290,9 +6284,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
 
-            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
-            expect(listItems[2].innerText).toBe('False', 'incorrect list item label');
-            expect(listItems[3].innerText).toBe('True', 'incorrect list item label');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(4);
+            expect(listItems[2].innerText, 'incorrect list item label').toBe('False');
+            expect(listItems[3].innerText, 'incorrect list item label').toBe('True');
 
             const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxes[3].click();
@@ -6318,9 +6312,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
 
-            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
-            expect(listItems[2].innerText).toBe('No', 'incorrect list item label');
-            expect(listItems[3].innerText).toBe('Yes', 'incorrect list item label');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(4);
+            expect(listItems[2].innerText, 'incorrect list item label').toBe('No');
+            expect(listItems[3].innerText, 'incorrect list item label').toBe('Yes');
         });
 
         it('Should sort items in excel style search correctly', fakeAsync(() => {
@@ -6518,7 +6512,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(6);
 
             // Type string in search box.
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
@@ -6527,7 +6521,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(4);
 
             // Clear filtering of ESF search.
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
@@ -6536,7 +6530,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(6);
             tick(100);
         }));
 
@@ -6626,7 +6620,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 20, fix);
 
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(3);
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             flush();
@@ -6708,7 +6702,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Update scrollbar
             scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
-            expect(scrollbar.scrollTop).toBe(0, 'search scrollbar did not reset');
+            expect(scrollbar.scrollTop, 'search scrollbar did not reset').toBe(0);
         });
     });
 
@@ -6729,7 +6723,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
 
@@ -6738,7 +6732,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(6);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -6755,7 +6749,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
 
@@ -6764,7 +6758,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(6);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -6777,7 +6771,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
 
@@ -6786,7 +6780,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(7);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -6806,7 +6800,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
 
@@ -6815,7 +6809,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(7);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -6835,7 +6829,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
 
@@ -6844,7 +6838,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(7);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -6874,7 +6868,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(7);
 
             for (let i = 2; i < listItems.length; i++) {
                 const label = datePipe.transform(dates[i - 2], formatOptions.format);
@@ -6891,7 +6885,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(7);
 
             listItems.forEach((item, ind) => {
                 expect(item.innerText).toBe(downloads[ind]);
@@ -6922,7 +6916,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(7);
 
             expect(listItems[1].innerText).toBe('(Blanks)');
             for (let i = 2; i < listItems.length; i++) {
@@ -6955,7 +6949,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(7);
 
             const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxElements[2].click();
@@ -6971,7 +6965,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(7);
 
             expect(listItems[1].innerText).toBe('(Blanks)');
             for (let i = 2; i < listItems.length; i++) {
@@ -6992,18 +6986,18 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify items in search have loaded and that the loading indicator is not visible.
-            expect(compInstance.doneCallbackCounter).toBe(1, 'Incorrect done callback execution count');
+            expect(compInstance.doneCallbackCounter, 'Incorrect done callback execution count').toBe(1);
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(6);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
 
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
             tick(1000);
             fix.detectChanges();
-            expect(compInstance.doneCallbackCounter).toBe(2, 'Incorrect done callback execution count');
+            expect(compInstance.doneCallbackCounter, 'Incorrect done callback execution count').toBe(2);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(7);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -7438,14 +7432,11 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: ɵSiz
 
     if (expectedSize === ɵSize.Large) {
         // Verify icons in header are not present.
-        expect(headerAreaPinIcon === null || headerAreaPinIcon === undefined).toBe(true,
-            'headerArea pin icon is present');
-        expect(headerAreaUnpinIcon === null || headerAreaUnpinIcon === undefined).toBe(true,
-            'headerArea unpin icon is present');
-        expect(headerAreaColumnHidingIcon === null || headerAreaColumnHidingIcon === undefined).toBe(true,
-            'headerArea column hiding icon is present');
+        expect(headerAreaPinIcon === null || headerAreaPinIcon === undefined, 'headerArea pin icon is present').toBe(true);
+        expect(headerAreaUnpinIcon === null || headerAreaUnpinIcon === undefined, 'headerArea unpin icon is present').toBe(true);
+        expect(headerAreaColumnHidingIcon === null || headerAreaColumnHidingIcon === undefined, 'headerArea column hiding icon is present').toBe(true);
         // Verify icons in actions area are present.
-        expect(actionsPinArea !== null).toBe(true, 'actionsArea pin/unpin icon is  NOT present');
+        expect(actionsPinArea !== null, 'actionsArea pin/unpin icon is  NOT present').toBe(true);
         expect(actionsAreaColumnHidingIcon).not.toBeNull('actionsArea column hiding icon is  NOT present');
     } else {
         // Verify icons in header are present.
@@ -7460,10 +7451,8 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: ɵSiz
         const pinUnpinIconRect = ((headerAreaPinIcon !== null) ? headerAreaPinIcon : headerAreaUnpinIcon).getBoundingClientRect();
         const columnHidingRect = headerAreaColumnHidingIcon.getBoundingClientRect();
 
-        expect(pinUnpinIconRect.left >= headerTitleRect.right).toBe(true,
-            'pinUnpin icon is NOT on the right of top header');
-        expect(columnHidingRect.left > headerTitleRect.right).toBe(true,
-            'columnHiding icon is NOT on the right of top header');
+        expect(pinUnpinIconRect.left >= headerTitleRect.right, 'pinUnpin icon is NOT on the right of top header').toBe(true);
+        expect(columnHidingRect.left > headerTitleRect.right, 'columnHiding icon is NOT on the right of top header').toBe(true);
     }
 };
 
@@ -7484,24 +7473,16 @@ const verifySortMoveSize = (fix: ComponentFixture<any>, expectedSize: ɵSize) =>
     const isSmall = expectedSize === ɵSize.Small;
     // Verify sort buttons are on right of the sort title if size is 'small'
     // or that they are under the sort title if size is not 'small'.
-    expect(sortHeaderRect.right <= sortButtons[0].getBoundingClientRect().left).toBe(isSmall,
-        'incorrect sort button horizontal position based on the sort title');
-    expect(sortHeaderRect.right <= sortButtons[1].getBoundingClientRect().left).toBe(isSmall,
-        'incorrect sort button horizontal position based on the sort title');
-    expect(sortHeaderRect.bottom <= sortButtons[0].getBoundingClientRect().top).toBe(!isSmall,
-        'incorrect sort button vertical position based on the sort title');
-    expect(sortHeaderRect.bottom <= sortButtons[1].getBoundingClientRect().top).toBe(!isSmall,
-        'incorrect sort button vertical position based on the sort title');
+    expect(sortHeaderRect.right <= sortButtons[0].getBoundingClientRect().left, 'incorrect sort button horizontal position based on the sort title').toBe(isSmall);
+    expect(sortHeaderRect.right <= sortButtons[1].getBoundingClientRect().left, 'incorrect sort button horizontal position based on the sort title').toBe(isSmall);
+    expect(sortHeaderRect.bottom <= sortButtons[0].getBoundingClientRect().top, 'incorrect sort button vertical position based on the sort title').toBe(!isSmall);
+    expect(sortHeaderRect.bottom <= sortButtons[1].getBoundingClientRect().top, 'incorrect sort button vertical position based on the sort title').toBe(!isSmall);
     // Verify move buttons are on right of the move title if size is 'small'
     // or that they are under the sort title if size is not 'small'.
-    expect(moveHeaderRect.right < moveButtons[0].getBoundingClientRect().left).toBe(isSmall,
-        'incorrect move button horizontal position based on the sort title');
-    expect(moveHeaderRect.right < moveButtons[1].getBoundingClientRect().left).toBe(isSmall,
-        'incorrect move button horizontal position based on the sort title');
-    expect(moveHeaderRect.bottom <= moveButtons[0].getBoundingClientRect().top).toBe(!isSmall,
-        'incorrect move button vertical position based on the sort title');
-    expect(moveHeaderRect.bottom <= moveButtons[1].getBoundingClientRect().top).toBe(!isSmall,
-        'incorrect move button vertical position based on the sort title');
+    expect(moveHeaderRect.right < moveButtons[0].getBoundingClientRect().left, 'incorrect move button horizontal position based on the sort title').toBe(isSmall);
+    expect(moveHeaderRect.right < moveButtons[1].getBoundingClientRect().left, 'incorrect move button horizontal position based on the sort title').toBe(isSmall);
+    expect(moveHeaderRect.bottom <= moveButtons[0].getBoundingClientRect().top, 'incorrect move button vertical position based on the sort title').toBe(!isSmall);
+    expect(moveHeaderRect.bottom <= moveButtons[1].getBoundingClientRect().top, 'incorrect move button vertical position based on the sort title').toBe(!isSmall);
 };
 
 const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: ɵSize) => {
@@ -7521,7 +7502,7 @@ const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: �
     // Verify size of all input groups in custom filter dialog.
     const inputGroups = customFilterMenu.querySelectorAll('igx-input-group');
     inputGroups.forEach((inputGroup) => {
-        expect(getComponentSize(inputGroup)).toBe(expectedSize, 'incorrect inputGroup size in custom filter dialog');
+        expect(getComponentSize(inputGroup), 'incorrect inputGroup size in custom filter dialog').toBe(expectedSize);
     });
 };
 
@@ -7532,7 +7513,7 @@ const verifyGridSubmenuSize = (gridNativeElement: HTMLElement, expectedSize: ɵS
     const dropdownItems = visibleDropdown.querySelectorAll('igx-drop-down-item');
 
     dropdownItems.forEach((dropdownItem) => {
-        expect(getComponentSize(dropdownItem)).toBe(expectedSize, 'incorrect dropdown item size');
+        expect(getComponentSize(dropdownItem), 'incorrect dropdown item size').toBe(expectedSize);
     });
 };
 
@@ -7547,7 +7528,7 @@ const verifyExcelStyleFilterAvailableOptions = (fix, labels: string[], checked: 
     const labelElements: any[] = Array.from(GridFunctions.getExcelStyleSearchComponentListItems(fix, excelMenu));
     const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
-    expect(labelElements.length).toBe(labels.length, 'incorrect rendered list items count');
+    expect(labelElements.length, 'incorrect rendered list items count').toBe(labels.length);
     labels.forEach((l, index) => {
         expect(l).toEqual(labelElements[index].innerText.normalize("NFKD"));
     });
@@ -7595,8 +7576,7 @@ const verifyChipVisibility = (fix, index: number, shouldBeFullyVisible: boolean)
     const chip = GridFunctions.getFilterConditionChip(fix, index);
     const chipRect = chip.getBoundingClientRect();
 
-    expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right)
-        .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
+    expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right, 'chip[' + index + '] visibility is incorrect').toBe(shouldBeFullyVisible);
 };
 
 const emitFilteringDoneOnResetClick = (fix, grid, filterVal: any, columnName: string, condition) => {

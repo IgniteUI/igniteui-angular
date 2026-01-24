@@ -389,8 +389,7 @@ const testFilter = () => {
             ];
 
             let res = FilterUtil.filter(data, state);
-            expect(dataGenerator.getValuesForColumn(res, 'number'))
-                .toEqual(dataGenerator.getValuesForColumn(data, 'number'));
+            expect(dataGenerator.getValuesForColumn(res, 'number', 'number').toEqual(dataGenerator.getValuesForColumn(data)
             (res[0] as { string: string }).string = 'ROW';
             // case-sensitive
             res = FilterUtil.filter(res, stateIgnoreCase);

@@ -57,8 +57,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
 
             expect(grid).toBeDefined('Grid initializing through markup failed');
-            expect(grid.columnList.length).toEqual(2, 'Invalid number of columns initialized');
-            expect(grid.rowList.length).toEqual(3, 'Invalid number of rows initialized');
+            expect(grid.columnList.length, 'Invalid number of columns initialized').toEqual(2);
+            expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(3);
 
             expect(grid.id).toContain('igx-grid-');
             expect(domGrid.id).toContain('igx-grid-');
@@ -85,14 +85,12 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
 
             expect(grid).toBeDefined('Grid initializing through autoGenerate failed');
-            expect(grid.columns.length).toEqual(4, 'Invalid number of columns initialized');
-            expect(grid.rowList.length).toEqual(1, 'Invalid number of rows initialized');
-            expect(grid.columns[0].dataType).toEqual(GridColumnDataType.Number, 'Invalid dataType set on column');
-            expect(grid.columns.find((col) => col.index === 1).dataType)
-                .toEqual(GridColumnDataType.String, 'Invalid dataType set on column');
-            expect(grid.columns.find((col) => col.index === 2).dataType)
-                .toEqual(GridColumnDataType.Boolean, 'Invalid dataType set on column');
-            expect(grid.columns[grid.columns.length - 1].dataType).toEqual(GridColumnDataType.Date, 'Invalid dataType set on column');
+            expect(grid.columns.length, 'Invalid number of columns initialized').toEqual(4);
+            expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(1);
+            expect(grid.columns[0].dataType, 'Invalid dataType set on column').toEqual(GridColumnDataType.Number);
+            expect(grid.columns.find((col, 'Invalid dataType set on column').toEqual(GridColumnDataType.String)
+            expect(grid.columns.find((col, 'Invalid dataType set on column').toEqual(GridColumnDataType.Boolean)
+            expect(grid.columns[grid.columns.length - 1].dataType, 'Invalid dataType set on column').toEqual(GridColumnDataType.Date);
             expect(fix.componentInstance.columnEventCount).toEqual(4);
         });
 

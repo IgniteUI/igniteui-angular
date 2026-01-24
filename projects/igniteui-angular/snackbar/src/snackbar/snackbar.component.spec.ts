@@ -223,12 +223,12 @@ describe('IgxSnackbar with custom content', () => {
         // Verify the message is displayed on the left side of the custom content
         const messageElRect = messageEl.nativeElement.getBoundingClientRect();
         const customContentRect = customContent.nativeElement.getBoundingClientRect();
-        expect(messageElRect.left <= customContentRect.left).toBe(true, 'The message is not on the left of the custom content');
+        expect(messageElRect.left <= customContentRect.left, 'The message is not on the left of the custom content').toBe(true);
 
         // Verify the custom content element is on the left side of the button
         const buttonRect = button.nativeElement.getBoundingClientRect();
-        expect(customContentRect.right <= buttonRect.left).toBe(true, 'The custom element is not on the left of the button');
-        expect(messageElRect.right <= buttonRect.left).toBe(true, 'The button is not on the right side of the snackbar content');
+        expect(customContentRect.right <= buttonRect.left, 'The custom element is not on the left of the button').toBe(true);
+        expect(messageElRect.right <= buttonRect.left, 'The button is not on the right side of the snackbar content').toBe(true);
         snackbar.close();
     });
 

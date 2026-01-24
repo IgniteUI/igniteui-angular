@@ -1050,7 +1050,7 @@ describe('IgxQueryBuilder', () => {
 
       //Check for the active element
       const searchValueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
-      expect(document.activeElement).toBe(searchValueInput, 'The input should be the active element.');
+      expect(document.activeElement, 'The input should be the active element.').toBe(searchValueInput);
     }));
 
     it('Should display add button when hovering a chip.', fakeAsync(() => {

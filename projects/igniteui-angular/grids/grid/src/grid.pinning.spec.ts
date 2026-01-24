@@ -776,11 +776,10 @@ describe('IgxGrid - Column Pinning #grid', () => {
             // verify DOM
             // ContactName first, CompanyName last
             const companyNameCell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
-            expect(companyNameCell.visibleColumnIndex)
-                .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length);
+            expect(companyNameCell.visibleColumnIndex, 'ContactName').toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length);
             expect(GridFunctions.isCellPinned(companyNameCell)).toBe(true);
 
-            const contactNameCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+            const contactNameCell = grid.gridAPI.get_cell_by_index(0);
             expect(contactNameCell.visibleColumnIndex).toEqual(0);
             expect(GridFunctions.isCellPinned(contactNameCell)).toBe(true);
 
@@ -817,11 +816,10 @@ describe('IgxGrid - Column Pinning #grid', () => {
             GridFunctions.verifyUnpinnedAreaWidth(grid, 200);
 
             expect(col.pinned).toBe(true);
-            expect(col.visibleIndex)
-                .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
+            expect(col.visibleIndex, 'ID').toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
             expect(col.pinningPosition).toBe(ColumnPinningPosition.End);
 
-            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0);
             expect(cell.visibleColumnIndex)
                 .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
             expect(GridFunctions.isCellPinned(cell)).toBe(true);

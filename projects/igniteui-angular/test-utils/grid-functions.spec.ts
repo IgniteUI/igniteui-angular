@@ -311,7 +311,7 @@ export class GridFunctions {
         expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
 
         const visibleColumns = column.grid.visibleColumns;
-        expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
+        expect(visibleColumns.length, 'Unexpected visible columns count!').toBe(visibleColumnsCount);
         expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
     }
 
@@ -319,17 +319,16 @@ export class GridFunctions {
         const visibleColumns = columns[0].grid.visibleColumns;
         columns.forEach(column => {
             expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
-            expect(visibleColumns.findIndex((col) => col === column) > -1)
-                .toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+            expect(visibleColumns.findIndex((col, 'Unexpected result for visibleColumns collection!').toBe(!isHidden)
         });
-        expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
+        expect(visibleColumns.length, 'Unexpected visible columns count!').toBe(visibleColumnsCount);
     }
 
     public static verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
         expect(column.pinned).toBe(isPinned, 'Pinned is not ' + isPinned);
 
         const pinnedColumns = column.grid.pinnedColumns;
-        expect(pinnedColumns.length).toBe(pinnedColumnsCount, 'Unexpected pinned columns count!');
+        expect(pinnedColumns.length, 'Unexpected pinned columns count!').toBe(pinnedColumnsCount);
         expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
     }
 

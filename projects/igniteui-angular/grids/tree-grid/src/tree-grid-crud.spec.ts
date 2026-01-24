@@ -563,28 +563,28 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
+                expect(cell.editMode, 'cannot enter edit mode with double click').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
+                expect(cell.editMode, 'cannot exit edit mode after entering with double click').toBe(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
+                expect(cell.editMode, 'cannot enter edit mode with enter').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
+                expect(cell.editMode, 'cannot exit edit mode after entering with enter').toBe(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('f2', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
+                expect(cell.editMode, 'cannot enter edit mode with F2').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
+                expect(cell.editMode, 'cannot exit edit mode after entering with F2').toBe(false);
             });
 
             it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', () => {
@@ -592,27 +592,27 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'Name'));
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
+                expect(cell.editMode, 'cannot enter edit mode with double click').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
+                expect(cell.editMode, 'cannot exit edit mode after entering with double click').toBe(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
+                expect(cell.editMode, 'cannot enter edit mode with enter').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
+                expect(cell.editMode, 'cannot exit edit mode after entering with enter').toBe(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('f2', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
+                expect(cell.editMode, 'cannot enter edit mode with F2').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
+                expect(cell.editMode, 'cannot exit edit mode after entering with F2').toBe(false);
             });
 
             it('should be able to edit a tree-grid cell through UI', () => {
@@ -704,27 +704,27 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
+                expect(cell.editMode, 'cannot enter edit mode with double click').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
+                expect(cell.editMode, 'cannot exit edit mode after entering with double click').toBe(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
+                expect(cell.editMode, 'cannot enter edit mode with enter').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
+                expect(cell.editMode, 'cannot exit edit mode after entering with enter').toBe(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('f2', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
+                expect(cell.editMode, 'cannot enter edit mode with F2').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
+                expect(cell.editMode, 'cannot exit edit mode after entering with F2').toBe(false);
             });
 
             it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', () => {
@@ -732,27 +732,27 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'Name'));
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
+                expect(cell.editMode, 'cannot enter edit mode with double click').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
+                expect(cell.editMode, 'cannot exit edit mode after entering with double click').toBe(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
+                expect(cell.editMode, 'cannot enter edit mode with enter').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
+                expect(cell.editMode, 'cannot exit edit mode after entering with enter').toBe(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('f2', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
+                expect(cell.editMode, 'cannot enter edit mode with F2').toBe(true);
 
                 UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
-                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
+                expect(cell.editMode, 'cannot exit edit mode after entering with F2').toBe(false);
             });
 
             it('should be able to edit a tree-grid cell through UI', () => {
@@ -1115,9 +1115,9 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
 const verifyRowsCount = (fix, expectedRootRowsCount, expectedVisibleRowsCount) => {
     const treeGrid = fix.componentInstance.treeGrid;
-    expect(TreeGridFunctions.getAllRows(fix).length).toBe(expectedVisibleRowsCount, 'Incorrect DOM rows length.');
-    expect(treeGrid.data.length).toBe(expectedRootRowsCount, 'Incorrect data length.');
-    expect(treeGrid.dataRowList.length).toBe(expectedVisibleRowsCount, 'Incorrect dataRowList length.');
+    expect(TreeGridFunctions.getAllRows(fix).length, 'Incorrect DOM rows length.').toBe(expectedVisibleRowsCount);
+    expect(treeGrid.data.length, 'Incorrect data length.').toBe(expectedRootRowsCount);
+    expect(treeGrid.dataRowList.length, 'Incorrect dataRowList length.').toBe(expectedVisibleRowsCount);
 };
 
 const verifyTreeGridRecordsCount = (fix, expectedRootRecordsCount, expectedFlatRecordsCount) => {
@@ -1136,6 +1136,6 @@ const verifyCellValue = (fix, rowIndex, columnKey, expectedCellValue) => {
     const treeGrid = fix.componentInstance.treeGrid;
     const actualValue = TreeGridFunctions.getCellValue(fix, rowIndex, columnKey);
     const actualAPIValue = treeGrid.gridAPI.get_row_by_index(rowIndex).cells.filter((c) => c.column.field === columnKey)[0].value;
-    expect(actualValue.toString()).toBe(expectedCellValue, 'incorrect cell value');
-    expect(actualAPIValue.toString()).toBe(expectedCellValue, 'incorrect api cell value');
+    expect(actualValue.toString(), 'incorrect cell value').toBe(expectedCellValue);
+    expect(actualAPIValue.toString(), 'incorrect api cell value').toBe(expectedCellValue);
 };

@@ -219,44 +219,44 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             // expand a root level row
             let aRow = treeGrid.gridAPI.get_row_by_index(0);
             let cells = (aRow.cells as QueryList<CellType>).toArray();
-            expect(cells[0].value).toBe(147, 'wrong root level row');
+            expect(cells[0].value, 'wrong root level row').toBe(147);
             expect(aRow.expanded).toBe(false);
             aRow.expanded = true;
             fix.detectChanges();
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(7, 'root level row expanding problem');
+            expect(rows.length, 'root level row expanding problem').toBe(7);
 
             // expand a second level row
             aRow = treeGrid.gridAPI.get_row_by_index(3);
             cells = (aRow.cells as QueryList<CellType>).toArray();
-            expect(cells[0].value).toBe(317, 'wrong second level row');
+            expect(cells[0].value, 'wrong second level row').toBe(317);
             expect(aRow.expanded).toBe(false);
             aRow.expanded = true;
             fix.detectChanges();
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(9, 'second level row expanding problem');
+            expect(rows.length, 'second level row expanding problem').toBe(9);
 
             // check third level rows are having the correct values
             aRow = treeGrid.gridAPI.get_row_by_index(4);
             cells = (aRow.cells as QueryList<CellType>).toArray();
-            expect(cells[0].value).toBe(711, 'wrong third level row');
+            expect(cells[0].value, 'wrong third level row').toBe(711);
             aRow = treeGrid.gridAPI.get_row_by_index(5);
             cells = (aRow.cells as QueryList<CellType>).toArray();
-            expect(cells[0].value).toBe(998, 'wrong third level row');
+            expect(cells[0].value, 'wrong third level row').toBe(998);
 
             // collapse a second level row
             aRow = treeGrid.gridAPI.get_row_by_index(3);
             aRow.expanded = false;
             fix.detectChanges();
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(7, 'second level row collapsing problem');
+            expect(rows.length, 'second level row collapsing problem').toBe(7);
 
             // collapse a root level row
             aRow = treeGrid.gridAPI.get_row_by_index(0);
             aRow.expanded = false;
             fix.detectChanges();
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(4, 'root level row collapsing problem');
+            expect(rows.length, 'root level row collapsing problem').toBe(4);
         });
 
         it('should expand/collapse when using \'expandAll\' and \'collapseAll\' methods', () => {
@@ -660,32 +660,32 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             // expand a root level row
             let aRow = treeGrid.gridAPI.get_row_by_index(0);
             let cells = (aRow.cells as QueryList<CellType>).toArray();
-            expect(cells[0].value).toBe(1, 'wrong root level row');
+            expect(cells[0].value, 'wrong root level row').toBe(1);
             expect(aRow.expanded).toBe(false);
             aRow.expanded = true;
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(5, 'root level row expanding problem');
+            expect(rows.length, 'root level row expanding problem').toBe(5);
 
             // expand a second level row
             aRow = treeGrid.gridAPI.get_row_by_index(1);
             cells = (aRow.cells as QueryList<CellType>).toArray();
-            expect(cells[0].value).toBe(2, 'wrong second level row');
+            expect(cells[0].value, 'wrong second level row').toBe(2);
             expect(aRow.expanded).toBe(false);
             aRow.expanded = true;
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(7, 'second level row expanding problem');
+            expect(rows.length, 'second level row expanding problem').toBe(7);
 
             // check third level rows are having the correct values
             aRow = treeGrid.gridAPI.get_row_by_index(2);
             cells = (aRow.cells as QueryList<CellType>).toArray();
-            expect(cells[0].value).toBe(3, 'wrong third level row');
+            expect(cells[0].value, 'wrong third level row').toBe(3);
             aRow = treeGrid.gridAPI.get_row_by_index(3);
             cells = (aRow.cells as QueryList<CellType>).toArray();
-            expect(cells[0].value).toBe(7, 'wrong third level row');
+            expect(cells[0].value, 'wrong third level row').toBe(7);
 
             // collapse a second level row
             aRow = treeGrid.gridAPI.get_row_by_index(1);
@@ -693,7 +693,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(5, 'second level row collapsing problem');
+            expect(rows.length, 'second level row collapsing problem').toBe(5);
 
             // collapse a root level row
             aRow = treeGrid.gridAPI.get_row_by_index(0);
@@ -701,7 +701,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(3, 'root level row collapsing problem');
+            expect(rows.length, 'root level row collapsing problem').toBe(3);
         });
 
         it('should expand/collapse when using \'expandAll\' and \'collapseAll\' methods', () => {
@@ -1408,7 +1408,7 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
     const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
     expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
-    expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
+    expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(rowsCount);
 
     if (pagerText != null) {
         expect(gridElement.querySelector('igx-page-nav')).toBeDefined();

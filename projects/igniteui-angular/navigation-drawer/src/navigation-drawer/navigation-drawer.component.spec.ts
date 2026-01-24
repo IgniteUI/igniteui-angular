@@ -367,12 +367,11 @@ describe('Navigation Drawer', () => {
             return swipe(document.body, 80, 10, 100, 250, 0);
         })
             .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen)
-                    .toEqual(false, 'should ignore swipes too far away from the edge');
+                expect(fixture.componentInstance.navDrawer.isOpen, 'should ignore swipes too far away from the edge').toEqual(false)
                 return swipe(document.body, 10, 10, 150, 250, 0);
             })
             .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen).toEqual(true, 'Should accept edge swipe');
+                expect(fixture.componentInstance.navDrawer.isOpen, 'Should accept edge swipe').toEqual(true);
                 return swipe(document.body, 180, 10, 150, -180, 0);
             })
             .then(() => {
@@ -411,22 +410,22 @@ describe('Navigation Drawer', () => {
             return pan(document.body, 10, 10, 150, 20, 0);
         })
             .then(() => {
-                expect(navDrawer.isOpen).toEqual(false, 'should ignore too short pan');
+                expect(navDrawer.isOpen, 'should ignore too short pan').toEqual(false);
 
                 // valid pan
                 return pan(document.body, 10, 10, 100, 200, 0);
             }).then(() => {
-                expect(navDrawer.isOpen).toEqual(true, 'should open on valid pan');
+                expect(navDrawer.isOpen, 'should open on valid pan').toEqual(true);
 
                 // not enough distance, closing
                 return pan(document.body, 200, 10, 100, -20, 0);
             }).then(() => {
-                expect(navDrawer.isOpen).toEqual(true, 'should remain open on too short pan');
+                expect(navDrawer.isOpen, 'should remain open on too short pan').toEqual(true);
 
                 // close
                 return pan(document.body, 250, 10, 100, -200, 0);
             }).then(() => {
-                expect(navDrawer.isOpen).toEqual(false, 'should close on valid pan');
+                expect(navDrawer.isOpen, 'should close on valid pan').toEqual(false);
                 done();
             }).catch(() => {
                 done();
@@ -546,8 +545,8 @@ describe('Navigation Drawer', () => {
         await fixture.whenStable();
 
         // defaults:
-        expect(fixture.componentInstance.navDrawer.pin).toBe(false, 'Should be initially unpinned');
-        expect(fixture.componentInstance.pin).toBe(false, 'Parent component pin should update initially');
+        expect(fixture.componentInstance.navDrawer.pin, 'Should be initially unpinned').toBe(false);
+        expect(fixture.componentInstance.pin, 'Parent component pin should update initially').toBe(false);
 
         // manual pin override
         fixture.componentInstance.pin = true;
@@ -557,7 +556,7 @@ describe('Navigation Drawer', () => {
         // wait for debounce
         await wait(200);
         expect(fixture.componentInstance.navDrawer.pin).toBe(false, `Shouldn't change state on resize if window width is the same`);
-        expect(fixture.componentInstance.pin).toBe(true, 'Parent component pin remain on resize if window width is the same');
+        expect(fixture.componentInstance.pin, 'Parent component pin remain on resize if window width is the same').toBe(true);
         fixture.componentInstance.pin = true;
         fixture.detectChanges();
 
@@ -566,21 +565,21 @@ describe('Navigation Drawer', () => {
 
         // wait for debounce
         await wait(200);
-        expect(fixture.componentInstance.navDrawer.pin).toBe(true, 'Should pin on window resize over threshold');
-        expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on window resize over threshold');
+        expect(fixture.componentInstance.navDrawer.pin, 'Should pin on window resize over threshold').toBe(true);
+        expect(fixture.componentInstance.pin, 'Parent pin update on window resize over threshold').toBe(true);
 
         widthSpyOverride.mockReturnValue(768);
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
         await wait(200);
-        expect(fixture.componentInstance.navDrawer.pin).toBe(false, 'Should un-pin on window resize below threshold');
-        expect(fixture.componentInstance.pin).toBe(false, 'Parent pin update on window resize below threshold');
+        expect(fixture.componentInstance.navDrawer.pin, 'Should un-pin on window resize below threshold').toBe(false);
+        expect(fixture.componentInstance.pin, 'Parent pin update on window resize below threshold').toBe(false);
         fixture.componentInstance.pinThreshold = 500;
         expect(() => fixture.detectChanges()).not.toThrow();
         await fixture.whenStable();
-        expect(fixture.componentInstance.navDrawer.pin).toBe(true, 'Should re-pin on window resize over threshold');
-        expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on re-pin');
+        expect(fixture.componentInstance.navDrawer.pin, 'Should re-pin on window resize over threshold').toBe(true);
+        expect(fixture.componentInstance.pin, 'Parent pin update on re-pin').toBe(true);
     });
 
     it('should get correct window width', (done) => {

@@ -97,7 +97,7 @@ describe('CSV Grid Exporter', () => {
 
         grid.filter('JobTitle', 'Director', IgxStringFilteringOperand.instance().condition('equals'), true);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(2, 'Invalid number of rows after filtering!');
+        expect(grid.rowList.length, 'Invalid number of rows after filtering!').toEqual(2);
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridTwoDirectors, 'Two rows should have been exported!');
     });
@@ -111,7 +111,7 @@ describe('CSV Grid Exporter', () => {
         options.ignoreColumnsVisibility = false;
 
         fix.detectChanges();
-        expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(2);
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridNameJobTitle, 'Two columns data should have been exported!');
 
@@ -129,25 +129,25 @@ describe('CSV Grid Exporter', () => {
         options.ignoreColumnsOrder = true;
         fix.detectChanges();
 
-        expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
 
         grid.columnList.get(0).hidden = true;
         fix.detectChanges();
-        expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(2);
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridNameJobTitle, 'Two columns data should have been exported!');
 
         grid.columnList.get(0).hidden = false;
         fix.detectChanges();
-        expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
 
         grid.columnList.get(0).hidden = undefined;
         fix.detectChanges();
-        expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+        expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
     });
@@ -415,7 +415,7 @@ describe('CSV Grid Exporter', () => {
         const wrapper = await getExportedData(grid, options);
         const exportedData = wrapper['_data'];
 
-        expect(exportedData.includes('[object Object]')).toBe(false, 'CSV export should not contain [object Object]');
+        expect(exportedData.includes('[object Object]'), 'CSV export should not contain [object Object]').toBe(false);
 
         const lines = exportedData.split('\r\n');
 

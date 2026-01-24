@@ -809,7 +809,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const colSum = pivotGrid.featureColumnsWidth() + pivotGrid.columns.filter(x => !x.columnGroup).map(x => x.calcPixelWidth).reduce((x, y) => x + y);
             const expectedSize = Math.min(window.innerWidth, colSum);
-            expect(pivotGrid.nativeElement.clientWidth - expectedSize).toBeLessThan(50, "should take sum of columns as width.");
+            expect(pivotGrid.nativeElement.clientWidth - expectedSize, "should take sum of columns as width.").toBeLessThan(50);
         });
 
         it('should render cell values for dimension columns containing dots - issue #16445', () => {

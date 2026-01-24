@@ -530,11 +530,11 @@ export class QueryBuilderFunctions {
         expect(operator === 'and' || operator === 'or').toBe(true, 'operator must be \'and\' or \'or\'');
 
         if (operator === 'and') {
-            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND)).toBe(true, 'incorrect operator line');
-            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR)).toBe(false, 'incorrect operator line');
+            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND), 'incorrect operator line').toBe(true);
+            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR), 'incorrect operator line').toBe(false);
         } else {
-            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND)).toBe(false, 'incorrect operator line');
-            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR)).toBe(true, 'incorrect operator line');
+            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND), 'incorrect operator line').toBe(false);
+            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR), 'incorrect operator line').toBe(true);
         }
     }
 
@@ -548,12 +548,10 @@ export class QueryBuilderFunctions {
         level = 0) {
         // Verify the entity select state.
         const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('igx-input-group');
-        expect(!entityInputGroup.classList.contains('igx-input-group--disabled')).toBe(entitySelectEnabled,
-            'incorrect entity select state');
+        expect(!entityInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect entity select state').toBe(entitySelectEnabled);
         // Verify the fields combo state.
         const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('igx-input-group');
-        expect(!fieldInputGroup.classList.contains('igx-input-group--disabled')).toBe(fieldComboEnabled,
-            'incorrect fields combo state');
+        expect(!fieldInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect fields combo state').toBe(fieldComboEnabled);
 
         if (columnSelectEnabled || operatorSelectEnabled || valueInputEnabled || commitButtonEnabled) {
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled, level);
@@ -568,19 +566,16 @@ export class QueryBuilderFunctions {
         level = 0) {
         // Verify the column select state.
         const columnInputGroup = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix, level).querySelector('igx-input-group');
-        expect(!columnInputGroup.classList.contains('igx-input-group--disabled')).toBe(columnSelectEnabled,
-            'incorrect column select state');
+        expect(!columnInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect column select state').toBe(columnSelectEnabled);
 
         // Verify the operator select state.
         const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, level).querySelector('igx-input-group');
-        expect(!operatorInputGroup.classList.contains('igx-input-group--disabled')).toBe(operatorSelectEnabled,
-            'incorrect operator select state');
+        expect(!operatorInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect operator select state').toBe(operatorSelectEnabled);
 
         // Verify the value input state.
         const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false, level);
         const valueInputGroup = Array.from(editModeContainer.querySelectorAll('igx-input-group'))[2];
-        expect(!valueInputGroup.classList.contains('igx-input-group--disabled')).toBe(valueInputEnabled,
-            'incorrect value input state');
+        expect(!valueInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect value input state').toBe(valueInputEnabled);
 
         // Verify commit expression button state
         const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, level);
@@ -733,19 +728,19 @@ export class QueryBuilderFunctions {
         const andLines = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.FILTER_TREE_LINE_AND}`));
         const orLines = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.FILTER_TREE_LINE_OR}`));
 
-        if (andLineCount) expect(andLines.length).toBe(andLineCount, "AND groups not the right count");
-        if (orLineCount) expect(orLines.length).toBe(orLineCount, "OR groups not the right count");
+        if (andLineCount) expect(andLines.length, "AND groups not the right count").toBe(andLineCount);
+        if (orLineCount) expect(orLines.length, "OR groups not the right count").toBe(orLineCount);
     };
 
     public static verifyRootAndSubGroupExpressionsCount(fix: ComponentFixture<any>, rootDirect: number, rootTotal: number = null, subGroupPath: number[] = null, subGroupDirect: number = null, subGroupTotal: number = null) {
         const rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
         expect(rootGroup).not.toBeNull('There is no root group.');
-        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length).toBe(rootDirect, 'Root direct condition count not correct');
-        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length).toBe(rootTotal, 'Root direct + child condition count not correct');
+        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length, 'Root direct condition count not correct').toBe(rootDirect);
+        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length, 'Root direct + child condition count not correct').toBe(rootTotal);
         if (subGroupPath) {
             const subGroup = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, subGroupPath) as HTMLElement;
-            if (subGroupDirect) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, true).length).toBe(subGroupDirect, 'Child direct condition count not correct');
-            if (subGroupTotal) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, false).length).toBe(subGroupTotal, 'Child direct + child condition count not correct');
+            if (subGroupDirect) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, true).length, 'Child direct condition count not correct').toBe(subGroupDirect);
+            if (subGroupTotal) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, false).length, 'Child direct + child condition count not correct').toBe(subGroupTotal);
         }
     };
 

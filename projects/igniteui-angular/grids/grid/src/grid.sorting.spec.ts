@@ -407,8 +407,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
                 },
             ];
             fixture.detectChanges();
-            expect(grid.getCellByKey(6, 'LastName').row.index).toBeGreaterThan(grid.getCellByKey(7, 'LastName').row.index);
-            expect(grid.getCellByKey(4, 'LastName').row.index).toBeGreaterThan(grid.getCellByKey(5, 'LastName').row.index);
+            expect(grid.getCellByKey(6, 'LastName').row.index, 'LastName').toBeGreaterThan(grid.getCellByKey(7).row.index);
+            expect(grid.getCellByKey(4, 'LastName').row.index, 'LastName').toBeGreaterThan(grid.getCellByKey(5).row.index);
         });
 
         it('Should sort grid by formatted values using FormattedValuesSortingStrategy', fakeAsync(() => {

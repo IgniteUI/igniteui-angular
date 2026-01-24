@@ -92,7 +92,7 @@ describe('IgxNavbar', () => {
             expect(defaultIcon).not.toBeNull('Default icon is not found on the left.');
             const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
             const defaultIconLeft = defaultIcon.nativeElement.getBoundingClientRect().left;
-            expect(leftAreaLeft).toBe(defaultIconLeft, 'Default icon is not first on the left.');
+            expect(leftAreaLeft, 'Default icon is not first on the left.').toBe(defaultIconLeft);
         });
     });
 
@@ -112,7 +112,7 @@ describe('IgxNavbar', () => {
             expect(customContent).not.toBeNull('Custom action icon content is not found on the left.');
             const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
             const customContentLeft = customContent.nativeElement.getBoundingClientRect().left;
-            expect(leftAreaLeft).toBe(customContentLeft, 'Custom action icon content is not first on the left.');
+            expect(leftAreaLeft, 'Custom action icon content is not first on the left.').toBe(customContentLeft);
         });
 
         it('should have vertically-centered custom action icon content', (async () => {
@@ -131,7 +131,7 @@ describe('IgxNavbar', () => {
             const navbarMidpoint = Math.round(navbarRect.top + (navbarRect.height / 2));
             const iconMidpoint = Math.round(iconRect.top + (iconRect.height / 2));
 
-            expect(navbarMidpoint).toBe(iconMidpoint, 'Custom icon is not exactly vertically centered within the navbar.');
+            expect(navbarMidpoint, 'Custom icon is not exactly vertically centered within the navbar.').toBe(iconMidpoint);
         }));
 
         it('action icon via directive', (async () => {
@@ -144,7 +144,7 @@ describe('IgxNavbar', () => {
 
             const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
             const customContentLeft = customContent.nativeElement.getBoundingClientRect().left;
-            expect(leftAreaLeft).toBe(customContentLeft, 'Custom action icon content is not first on the left.');
+            expect(leftAreaLeft, 'Custom action icon content is not first on the left.').toBe(customContentLeft);
         }));
     });
 
@@ -164,7 +164,7 @@ describe('IgxNavbar', () => {
 
             // Verify there is no default icon on the left.
             const customTitle = midArea.query(By.css('igx-navbar-title'));
-            expect(customTitle.nativeElement.textContent).toBe('Custom Title', 'Custom title is missing');
+            expect(customTitle.nativeElement.textContent, 'Custom title is missing').toBe('Custom Title');
 
             const defaultTitle = midArea.query(By.css('igx-navbar__title'));
             expect(defaultTitle).toBeNull('Default title should not be present');
@@ -178,8 +178,8 @@ describe('IgxNavbar', () => {
 
             // Verify there is no default icon on the left.
             const customTitle = midArea.query(By.directive(IgxNavbarTitleDirective));
-            expect(customTitle.nativeElement.children[0].textContent).toBe('Custom', 'Custom title is missing');
-            expect(customTitle.nativeElement.children[1].textContent).toBe('Title', 'Custom title is missing');
+            expect(customTitle.nativeElement.children[0].textContent, 'Custom title is missing').toBe('Custom');
+            expect(customTitle.nativeElement.children[1].textContent, 'Custom title is missing').toBe('Title');
 
             const defaultTitle = midArea.query(By.css('igx-navbar__title'));
             expect(defaultTitle).toBeNull('Default title should not be present');

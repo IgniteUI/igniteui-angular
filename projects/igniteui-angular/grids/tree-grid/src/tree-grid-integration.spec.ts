@@ -161,14 +161,14 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
 
-            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(225, 'incorrect column width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width, 'incorrect column width').toBe(225);
             expect(parseInt(column.width, 10)).toBe(225);
 
             // API autosizing
             column.autosize();
             fix.detectChanges();
 
-            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(148, 'incorrect headerCell width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width, 'incorrect headerCell width').toBe(148);
             expect(parseInt(column.width, 10)).toBe(148);
         });
 
@@ -178,7 +178,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             column.resizable = true;
             treeGrid.cdr.detectChanges();
 
-            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(225, 'incorrect column width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width, 'incorrect column width').toBe(225);
             expect(parseInt(column.width, 10)).toBe(225);
 
             // UI autosizing
@@ -186,7 +186,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
             fix.detectChanges();
 
-            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(148, 'incorrect headerCell width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width, 'incorrect headerCell width').toBe(148);
             expect(parseInt(column.width, 10)).toBe(148);
         });
     });
@@ -345,14 +345,14 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
 
-            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(180, 'incorrect column width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width, 'incorrect column width').toBe(180);
             expect(parseInt(column.width, 10)).toBe(180);
 
             // API autosizing
             column.autosize();
             fix.detectChanges();
 
-            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(135, 'incorrect headerCell width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width, 'incorrect headerCell width').toBe(135);
             expect(parseInt(column.width, 10)).toBe(135);
         });
 
@@ -362,7 +362,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             column.resizable = true;
             treeGrid.cdr.detectChanges();
 
-            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(180, 'incorrect column width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width, 'incorrect column width').toBe(180);
             expect(parseInt(column.width, 10)).toBe(180);
 
             // UI autosizing
@@ -370,7 +370,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
             fix.detectChanges();
 
-            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(135, 'incorrect headerCell width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width, 'incorrect headerCell width').toBe(135);
             expect(parseInt(column.width, 10)).toBe(135);
         });
     });
