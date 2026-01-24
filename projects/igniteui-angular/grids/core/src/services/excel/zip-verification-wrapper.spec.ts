@@ -1,3 +1,4 @@
+import { expect } from 'vitest';
 import { strFromU8 } from 'fflate';
 import { ExcelFileTypes } from './excel-enums';
 import { ZipFiles } from './zip-helper.spec';

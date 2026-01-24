@@ -1,3 +1,4 @@
+import { expect } from 'vitest';
 
 export class CSVWrapper {
     private _data: string;
