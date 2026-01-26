@@ -211,7 +211,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, customOptions);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            const callArgs = (ExportUtilities.saveBlobToFile as jasmine.Spy).mock.lastCall;
+            const callArgs = (ExportUtilities.saveBlobToFile as any).mock.lastCall;
             expect(callArgs[1]).toBe('MyCustomGrid.pdf');
         });
 

@@ -663,17 +663,17 @@ describe('IgxTree - Navigation #treeView', () => {
                 navService.init_invisible_cache();
                 expect(navService.visibleChildren.length).toEqual(3);
 
-                (Object.getOwnPropertyDescriptor(allNodes[0], 'expanded').get as jasmine.Spy<any>)
+                (Object.getOwnPropertyDescriptor(allNodes[0], 'expanded').get as any)
                     .mockReturnValue(true);
                 navService.init_invisible_cache();
                 expect(navService.visibleChildren.length).toEqual(5);
 
-                (Object.getOwnPropertyDescriptor(allNodes[0], 'disabled').get as jasmine.Spy<any>)
+                (Object.getOwnPropertyDescriptor(allNodes[0], 'disabled').get as any)
                     .mockReturnValue(true);
                 navService.update_disabled_cache(allNodes[0]);
                 expect(navService.visibleChildren.length).toEqual(4);
                 allNodes.forEach(e => {
-                    (Object.getOwnPropertyDescriptor(e, 'disabled').get as jasmine.Spy<any>)
+                    (Object.getOwnPropertyDescriptor(e, 'disabled').get as any)
                         .mockReturnValue(true);
                     navService.update_disabled_cache(e);
                 });

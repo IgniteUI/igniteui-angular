@@ -78,7 +78,7 @@ describe('igxCombo', () => {
         ];
         const elementRef = { nativeElement: null };
         const mockSelection: {
-            [key: string]: jasmine.Spy;
+            [key: string]: any;
         } = { get: vi.fn(), set: vi.fn(), add_items: vi.fn(), select_items: vi.fn(), delete: vi.fn() };
         const mockCdr = { markForCheck: vi.fn(), detectChanges: vi.fn() };
         const mockComboService = { register: vi.fn(), clear: vi.fn() };

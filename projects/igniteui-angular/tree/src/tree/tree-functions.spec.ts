@@ -68,7 +68,7 @@ export class TreeTestFunctions {
 
     public static createNodeSpy(
         properties: { [key: string]: any } = null,
-        methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): jasmine.SpyObj<IgxTreeNode<any>> {
+        methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): any {
         if (!properties) {
             const spy: any = {};
             methodNames.forEach(m => spy[m] = vi.fn());
@@ -104,7 +104,7 @@ export class TreeTestFunctions {
         return nodesArr;
     }
 
-    public static createQueryListSpy(nodes: IgxTreeNodeComponent<any>[]): jasmine.SpyObj<QueryList<IgxTreeNodeComponent<any>>> {
+    public static createQueryListSpy(nodes: IgxTreeNodeComponent<any>[]): any {
         const mockQuery: any = {
             toArray: vi.fn(() => nodes),
             filter: vi.fn((cb) => nodes.filter(cb)),

@@ -13,7 +13,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 declare let Simulator: any;
 
 describe('Navigation Drawer', () => {
-    let widthSpyOverride: jasmine.Spy;
+    let widthSpyOverride: any;
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -567,7 +567,7 @@ describe('Navigation Drawer', () => {
         const drawer = TestBed.inject(IgxNavigationDrawerComponent);
 
         // re-enable `getWindowWidth`
-        const widthSpy = (widthSpyOverride as jasmine.Spy);
+        const widthSpy = (widthSpyOverride as any);
         let width = widthSpy.call(drawer);
         expect(width).toEqual(originalWidth);
 

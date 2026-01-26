@@ -100,14 +100,14 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             const mockNode = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
             // None
-            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>).mockReturnValue(IgxTreeSelectionType.None);
+            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as any).mockReturnValue(IgxTreeSelectionType.None);
             selectionService.selectNode(mockNode);
             expect(selectionService.isNodeSelected(mockNode)).toBeFalsy();
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
             expect(mockNode.selectedChange.emit).not.toHaveBeenCalled();
 
             // BiState
-            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>)
+            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as any)
                 .mockReturnValue(IgxTreeSelectionType.BiState);
             let expected: ITreeNodeSelectionEvent = {
                 oldSelection: [], newSelection: [mockNode],
@@ -125,7 +125,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             // Cascading
             selectionService.deselectNode(mockNode);
 
-            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>)
+            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as any)
                 .mockReturnValue(IgxTreeSelectionType.Cascading);
             selectionService.selectNode(allNodes[1]);
 

@@ -511,7 +511,7 @@ describe('igxOverlay', () => {
             expect(overlayInstance.opening.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.opening.emit)
                 .toHaveBeenCalledWith({ id: firstCallId, componentRef: expect.any(ComponentRef) as any, cancel: false });
-            const args: OverlayEventArgs = (overlayInstance.opening.emit as jasmine.Spy).mock.lastCall[0];
+            const args: OverlayEventArgs = (overlayInstance.opening.emit as any).mock.lastCall[0];
             expect(args.componentRef.instance).toEqual(expect.any(SimpleDynamicComponent));
             expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);

@@ -19,8 +19,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
-        let maskParsingService: jasmine.SpyObj<MaskParsingService>;
-        let renderer2: jasmine.SpyObj<Renderer2>;
+        let maskParsingService: any;
+        let renderer2: any;
         let elementRef: ElementRef;
         let inputFormat: string;
         let displayFormat: string;

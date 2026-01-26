@@ -302,7 +302,7 @@ describe('IgxTimePicker', () => {
             timePicker.open();
             expect(mockToggleDirective.open).toHaveBeenCalledTimes(1);
 
-            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as jasmine.Spy<() => boolean>).mockReturnValue(false);
+            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as any).mockReturnValue(false);
             timePicker.close();
             expect(mockToggleDirective.close).toHaveBeenCalledTimes(1);
         });
@@ -316,7 +316,7 @@ describe('IgxTimePicker', () => {
             timePicker.toggle();
             expect(mockToggleDirective.open).toHaveBeenCalledTimes(1);
 
-            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as jasmine.Spy<() => boolean>).mockReturnValue(false);
+            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as any).mockReturnValue(false);
             timePicker.toggle();
             expect(mockToggleDirective.close).toHaveBeenCalledTimes(1);
         });

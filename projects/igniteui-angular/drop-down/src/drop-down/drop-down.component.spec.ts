@@ -42,7 +42,7 @@ describe('IgxDropDown ', () => {
             { value: 'Item4', index: 4 } as IgxDropDownItemComponent,
             { value: 'Item5', index: 5 } as IgxDropDownItemComponent];
         const mockSelection: {
-            [key: string]: jasmine.Spy;
+            [key: string]: any;
         } = { get: vi.fn(), set: vi.fn(), add_items: vi.fn(), select_items: vi.fn(), delete: vi.fn() };
         const mockCdr = { markForCheck: vi.fn(), detectChanges: vi.fn() };
         mockSelection.get.mockReturnValue(new Set([]));
@@ -162,8 +162,7 @@ describe('IgxDropDown ', () => {
         });
         it('toggle should call close method when dropdown is opened', () => {
             (dropdown as any).virtDir = mockForOf;
-            const mockToggle = { open: vi.fn() };
-            mockToggle.isClosing = false;
+            const mockToggle = { open: vi.fn(), isClosing: vi.fn().mockResolvedValue(false) };
             (dropdown as any).toggleDirective = mockToggle;
             vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
             vi.spyOn(dropdown, 'collapsed', 'get').mockReturnValue(false);
@@ -242,7 +241,7 @@ describe('IgxDropDown ', () => {
                 fixture.detectChanges();
                 expect(toggle.open).toHaveBeenCalledTimes(1);
 
-                const appliedSettings = (toggle.open as jasmine.Spy).mock.lastCall[0];
+                const appliedSettings = (toggle.open as any).mock.lastCall[0];
                 expect(appliedSettings.closeOnOutsideClick).toBe(true);
                 expect(appliedSettings.modal).toBe(false);
                 expect(appliedSettings.positionStrategy instanceof ConnectedPositioningStrategy).toBe(true);
@@ -272,7 +271,7 @@ describe('IgxDropDown ', () => {
                 fixture.detectChanges();
                 expect(toggle.open).toHaveBeenCalledTimes(1);
 
-                const appliedSettings = (toggle.open as jasmine.Spy).mock.lastCall[0];
+                const appliedSettings = (toggle.open as any).mock.lastCall[0];
                 expect(appliedSettings.closeOnOutsideClick).toBe(customOverlaySettings.closeOnOutsideClick);
                 expect(appliedSettings.modal).toBe(customOverlaySettings.modal);
                 expect(appliedSettings.positionStrategy instanceof ConnectedPositioningStrategy).toBe(true);
