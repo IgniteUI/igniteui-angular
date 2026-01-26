@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/grid' as *;
+
+$material: digest-schema($dark-material-grid);
+$bootstrap: digest-schema($dark-bootstrap-grid);
+$fluent: digest-schema($dark-fluent-grid);
+$indigo: digest-schema($dark-indigo-grid);

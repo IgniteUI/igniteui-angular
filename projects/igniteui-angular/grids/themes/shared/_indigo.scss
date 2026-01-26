@@ -1,0 +1,93 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-grid-th, indigo) {
+    @include e(title) {
+      font-weight: 600;
+    }
+
+    @include e(icons) {
+        .sort-icon igx-icon {
+            --component-size: 2;
+        }
+    }
+}
+
+@include themed-block(igx-grid, indigo) {
+    --cell-height: #{sizable(rem(32px), rem(40px), rem(48px))};
+    --header-size: #{sizable(rem(32px), rem(40px), rem(48px))};
+    --grouparea-size: #{sizable(rem(40px), rem(48px), rem(55px))};
+    --indicator-icon-width: #{rem(16px)};
+    --_hierarchical-action-icon: #{rem(16px)};
+
+
+    @include e(td, $m: bool) {
+        --component-size: 2;
+
+        .igx-icon--error {
+            color: color($color: 'gray', $variant: 500);
+        }
+    }
+
+    @include e(tr, $m: edited) {
+        &::before {
+            width: rem(4px);
+        }
+    }
+
+    @include e(tr, $m: header) {
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(tr-action) {
+        &:last-of-type {
+            min-height: sizable(rem(32px), rem(40px), rem(48px));
+        }
+    }
+
+    @include e(tree-grouping-indicator) {
+        margin-inline-end: rem(4px);
+
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(hierarchical-expander) {
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(header-indentation) {
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(group-content) {
+        padding-inline-start: 0;
+    }
+
+    @include e(grouping-indicator) {
+        padding-inline-end: rem(16px);
+
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(tr-pivot) {
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+}
+
+@include themed-block(igx-grid-thead, indigo) {
+    @include e(title) {
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+}

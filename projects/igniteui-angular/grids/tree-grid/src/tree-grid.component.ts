@@ -1,5 +1,21 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, TemplateRef, ContentChild, AfterContentInit, ViewChild, DoCheck, AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, inject } from '@angular/core';
-import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
+import {
+    AfterContentInit,
+    AfterViewInit,
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    ContentChild,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DoCheck,
+    HostBinding,
+    inject,
+    Input,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
+import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective, IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
 import {
@@ -36,17 +52,48 @@ import {
     IRowDataCancelableEventArgs,
     IRowDataEventArgs,
     IRowToggleEventArgs,
-    RowType
+    RowType,
 } from 'igniteui-angular/grids/core';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
-import { DefaultTreeGridMergeStrategy, HierarchicalState, HierarchicalTransaction, HierarchicalTransactionService, IGridMergeStrategy, IgxHierarchicalTransactionFactory, IgxOverlayOutletDirective, ITreeGridRecord, mergeObjects, StateUpdateEvent, TransactionEventOrigin, TransactionType, TreeGridFilteringStrategy } from 'igniteui-angular/core';
+import {
+    DefaultTreeGridMergeStrategy,
+    HierarchicalState,
+    HierarchicalTransaction,
+    HierarchicalTransactionService,
+    IGridMergeStrategy,
+    IgxHierarchicalTransactionFactory,
+    IgxOverlayOutletDirective,
+    ITreeGridRecord,
+    mergeObjects,
+    StateUpdateEvent,
+    TransactionEventOrigin,
+    TransactionType,
+    TreeGridFilteringStrategy,
+} from 'igniteui-angular/core';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
-import { IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe } from './tree-grid.pipes';
+import {
+    IgxTreeGridAddRowPipe,
+    IgxTreeGridFlatteningPipe,
+    IgxTreeGridHierarchizingPipe,
+    IgxTreeGridNormalizeRecordsPipe,
+    IgxTreeGridPagingPipe,
+    IgxTreeGridSortingPipe,
+    IgxTreeGridTransactionPipe,
+} from './tree-grid.pipes';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
-import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import {
+    IgxButtonDirective,
+    IgxForOfScrollSyncService,
+    IgxForOfSyncService,
+    IgxGridForOfDirective,
+    IgxRippleDirective,
+    IgxScrollInertiaDirective,
+    IgxTemplateOutletDirective,
+    IgxToggleDirective,
+} from 'igniteui-angular/directives';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -89,6 +136,8 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
+    styleUrl: 'tree-grid.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxGridCRUDService,
         IgxGridValidationService,

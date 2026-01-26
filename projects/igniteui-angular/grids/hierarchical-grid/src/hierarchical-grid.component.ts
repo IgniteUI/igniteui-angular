@@ -1,4 +1,28 @@
-import { AfterContentInit, AfterViewInit, booleanAttribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, DoCheck, ElementRef, HostBinding, Input, OnDestroy, OnInit, QueryList, reflectComponentType, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, inject } from '@angular/core';
+import {
+    AfterContentInit,
+    AfterViewInit,
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DoCheck,
+    ElementRef,
+    HostBinding,
+    Input,
+    OnDestroy,
+    OnInit,
+    QueryList,
+    reflectComponentType,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    ViewContainerRef,
+    inject,
+    ViewEncapsulation,
+} from '@angular/core';
 import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
@@ -46,6 +70,8 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-child-grid-row',
     templateUrl: './child-grid-row.component.html',
+    styleUrl: 'hierarchical-grid.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [NgClass]
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
@@ -273,6 +299,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
+    styleUrl: 'hierarchical-grid.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxGridCRUDService,
         IgxGridValidationService,
