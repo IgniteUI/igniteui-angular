@@ -48,7 +48,7 @@ describe('UpdateChanges', () => {
         });
     });
 
-    it('should replace/remove components', done => {
+    it('should replace/remove components', () => {
         const selectorsJson: SelectorChanges = {
             changes: [
                 { type: 'component' as any, selector: 'igx-component', replaceWith: 'igx-replaced' },
@@ -88,10 +88,9 @@ describe('UpdateChanges', () => {
         expect(appTree.readContent('test3.component.html')).toEqual(
             '<igx-remove-me-not attr></igx-remove-me-not> <igx-replaced> <igx-component-child></igx-component-child> </igx-replaced>'
         );
-        done();
     });
 
-    it('should replace/remove directives', done => {
+    it('should replace/remove directives', () => {
         const selectorsJson: SelectorChanges = {
             changes: [
                 { type: 'directive' as any, selector: 'igxDirective', replaceWith: 'igxReplaced' },
@@ -120,10 +119,9 @@ describe('UpdateChanges', () => {
         expect(appTree.readContent('test.component.html')).toEqual(
             `<igx-component [igxReplaced]="val"> <content igxReplaced> </igx-component>` +
             `<igx-component2> <content> </igx-component2>`);
-        done();
     });
 
-    it('should replace/remove outputs', done => {
+    it('should replace/remove outputs', () => {
         const outputJson: BindingChanges = {
             changes: [
                 {
@@ -172,10 +170,9 @@ describe('UpdateChanges', () => {
         update2.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual(
             `<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw"> </other> <another (onOld)="b" />`);
-        done();
     });
 
-    it('should replace/remove inputs', done => {
+    it('should replace/remove inputs', () => {
         const inputJson: BindingChanges = {
             changes: [
                 {
@@ -251,11 +248,9 @@ describe('UpdateChanges', () => {
         expect(appTree.readContent('test.component.html')).toEqual(
             `<comp [replaced]="dwdw"> <comp-not-same [replaceMe]="..NOT"> <another /> <another-diff oldProp="toKeep" />`
         );
-
-        done();
     });
 
-    it('should replace class identifiers', done => {
+    it('should replace class identifiers', () => {
         const classJson: ClassChanges = {
             changes: [
                 {
@@ -287,11 +282,9 @@ describe('UpdateChanges', () => {
         update.applyChanges();
         expect(appTree.readContent('test.component.ts')).toEqual(
             `import { igxReplace, igxSecond } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxSecond; }`);
-
-        done();
     });
 
-    it('should replace multiple class identifier with the same value', done => {
+    it('should replace multiple class identifier with the same value', () => {
         const classJson: ClassChanges = {
             changes: [
                 {
@@ -323,11 +316,9 @@ describe('UpdateChanges', () => {
         update.applyChanges();
         expect(appTree.readContent('test.component.ts')).toEqual(
             `import { igxReplace } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxReplace; }`);
-
-        done();
     });
 
-    it('should replace class identifiers (complex file)', done => {
+    it('should replace class identifiers (complex file)', () => {
         const classJson: ClassChanges = {
             changes: [
                 { name: 'IgxGridComponent', replaceWith: 'IgxGridReplace' },
@@ -420,8 +411,6 @@ describe('UpdateChanges', () => {
             `    }` +
             `}`
         );
-
-        done();
     });
 
     it('should correctly ignore types not from igniteui-angular', () => {
@@ -518,7 +507,7 @@ export class Test {
         expect(appTree.readContent('test.component.ts')).toEqual(expectedFileContent);
     });
 
-    it('should move property value between element tags', done => {
+    it('should move property value between element tags', () => {
         const inputJson: BindingChanges = {
             changes: [
                 {
@@ -563,11 +552,9 @@ export class Test {
         expect(appTree.readContent('test1.component.html')).toEqual(
 `<igx-icon fontSet="material">{{'phone'}}</igx-icon>
 <igx-icon fontSet="material-icons">{{getName()}}</igx-icon>`);
-
-        done();
     });
 
-    it('should replace/remove properties', done => {
+    it('should replace/remove properties', () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -639,10 +626,9 @@ $var3: igx-comp-theme(
 );`);
         expect(appTree.readContent('src/app/app.component.scss')).toEqual(`igx-comp-theme($replace-me: not, $prop3: 2);`);
         expect(appTree.readContent('test.component.scss')).toEqual(`igx-theme-func($replaced: 10px, $old-prop: 3, $prop3: 2);`);
-        done();
     });
 
-    it('should replace imports', done => {
+    it('should replace imports', () => {
         const importsJson: ImportsChanges = {
             changes: [
                 {
@@ -700,11 +686,9 @@ export class AppModule { }`;
     bootstrap: [AppComponent]
 })
 export class AppModule { }`);
-
-        done();
     });
 
-    it('should handle changes with valueTransform functions', done => {
+    it('should handle changes with valueTransform functions', () => {
         const inputsJson: BindingChanges = {
             changes: [{
                 name: 'someProp',
@@ -773,10 +757,9 @@ export class AppModule { }`);
 `<igx-component [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'"><igx-component>
 <igx-component someOtherProp="trueValue"><igx-component>
 <igx-component someOtherProp="falseValue"><igx-component>`);
-        done();
     });
 
-    it('Should be able to change binding type via transform function', done => {
+    it('Should be able to change binding type via transform function', () => {
         const inputsJson: BindingChanges = {
             changes: [{
                 name: 'prop',
@@ -844,7 +827,6 @@ export class AppModule { }`);
         expect(appTree.readContent('test-string-to-bound.component.html')).toEqual(
 `<igx-component [newProp]="true">BOUND</igx-component>
 <igx-component newProp="leaveMeBe">STRING</igx-component>`);
-        done();
     });
 
     describe('Project loading', () => {

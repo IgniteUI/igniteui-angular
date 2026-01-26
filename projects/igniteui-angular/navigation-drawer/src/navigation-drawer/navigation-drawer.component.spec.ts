@@ -355,81 +355,61 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should toggle on edge swipe gesture', (done) => {
+    it('should toggle on edge swipe gesture', async () => {
         let fixture: ComponentFixture<TestComponentDIComponent>;
 
-        TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TestComponentDIComponent);
-            fixture.detectChanges();
-            expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
+        await TestBed.compileComponents();
+        fixture = TestBed.createComponent(TestComponentDIComponent);
+        fixture.detectChanges();
+        expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
-            // timeouts are +50 on the gesture to allow the swipe to be detected and triggered after the touches:
-            return swipe(document.body, 80, 10, 100, 250, 0);
-        })
-            .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen, 'should ignore swipes too far away from the edge').toEqual(false)
-                return swipe(document.body, 10, 10, 150, 250, 0);
-            })
-            .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen, 'Should accept edge swipe').toEqual(true);
-                return swipe(document.body, 180, 10, 150, -180, 0);
-            })
-            .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
-                done();
-            })
-            .catch(() => {
-                done();
-            });
+        // timeouts are +50 on the gesture to allow the swipe to be detected and triggered after the touches:
+        await swipe(document.body, 80, 10, 100, 250, 0);
+        expect(fixture.componentInstance.navDrawer.isOpen, 'should ignore swipes too far away from the edge').toEqual(false)
+        await swipe(document.body, 10, 10, 150, 250, 0);
+        expect(fixture.componentInstance.navDrawer.isOpen, 'Should accept edge swipe').toEqual(true);
+        await swipe(document.body, 180, 10, 150, -180, 0);
+        expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
     }, 10000);
 
-    it('should toggle on edge pan gesture', (done) => {
+    it('should toggle on edge pan gesture', async () => {
         let navDrawer;
         let fixture: ComponentFixture<TestComponentDIComponent>;
 
         // Using bare minimum of timeouts
-        TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TestComponentDIComponent);
-            fixture.detectChanges();
-            navDrawer = fixture.componentInstance.navDrawer;
-            navDrawer.width = '280px';
-            navDrawer.miniWidth = '68px';
-            fixture.detectChanges();
+        await TestBed.compileComponents();
+        fixture = TestBed.createComponent(TestComponentDIComponent);
+        fixture.detectChanges();
+        navDrawer = fixture.componentInstance.navDrawer;
+        navDrawer.width = '280px';
+        navDrawer.miniWidth = '68px';
+        fixture.detectChanges();
 
-            expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
+        expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
-            const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
+        const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
 
-                // mid gesture
-                expect(navDrawer.drawer.classList).toContain('panning');
-                expect(navDrawer.drawer.style.transform)
-                    .toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/, 'Drawer should be moving with the pan');
-                listener();
-            });
+            // mid gesture
+            expect(navDrawer.drawer.classList).toContain('panning');
+            expect(navDrawer.drawer.style.transform)
+                .toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/, 'Drawer should be moving with the pan');
+            listener();
+        });
 
-            return pan(document.body, 10, 10, 150, 20, 0);
-        })
-            .then(() => {
-                expect(navDrawer.isOpen, 'should ignore too short pan').toEqual(false);
+        await pan(document.body, 10, 10, 150, 20, 0);
+        expect(navDrawer.isOpen, 'should ignore too short pan').toEqual(false);
 
-                // valid pan
-                return pan(document.body, 10, 10, 100, 200, 0);
-            }).then(() => {
-                expect(navDrawer.isOpen, 'should open on valid pan').toEqual(true);
+        // valid pan
+        await pan(document.body, 10, 10, 100, 200, 0);
+        expect(navDrawer.isOpen, 'should open on valid pan').toEqual(true);
 
-                // not enough distance, closing
-                return pan(document.body, 200, 10, 100, -20, 0);
-            }).then(() => {
-                expect(navDrawer.isOpen, 'should remain open on too short pan').toEqual(true);
+        // not enough distance, closing
+        await pan(document.body, 200, 10, 100, -20, 0);
+        expect(navDrawer.isOpen, 'should remain open on too short pan').toEqual(true);
 
-                // close
-                return pan(document.body, 250, 10, 100, -200, 0);
-            }).then(() => {
-                expect(navDrawer.isOpen, 'should close on valid pan').toEqual(false);
-                done();
-            }).catch(() => {
-                done();
-            });
+        // close
+        await pan(document.body, 250, 10, 100, -200, 0);
+        expect(navDrawer.isOpen, 'should close on valid pan').toEqual(false);
     }, 10000);
 
     it('should update edge zone with mini width', waitForAsync(() => {
@@ -582,7 +562,7 @@ describe('Navigation Drawer', () => {
         expect(fixture.componentInstance.pin, 'Parent pin update on re-pin').toBe(true);
     });
 
-    it('should get correct window width', (done) => {
+    it('should get correct window width', () => {
         const originalWidth = window.innerWidth;
         const drawer = TestBed.inject(IgxNavigationDrawerComponent);
 
@@ -595,7 +575,6 @@ describe('Navigation Drawer', () => {
         width = widthSpy.call(drawer);
         expect(width).toEqual(screen.width);
         (window as any).innerWidth = originalWidth;
-        done();
     });
 
     it('should retain classes added in markup, fix for #6508', () => {

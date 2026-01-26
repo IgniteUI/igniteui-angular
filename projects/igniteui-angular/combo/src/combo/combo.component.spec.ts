@@ -1014,14 +1014,14 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 verifyDropdownItemHeight();
             }));
-            it('should render grouped items properly', (done) => {
+            it('should render grouped items properly', async () => {
                 let dropdownContainer;
                 let dropdownItems;
                 let scrollIndex = 0;
                 const headers: Array<string> = Array.from(new Set(combo.data.map(item => item.region)));
                 combo.toggle();
                 fixture.detectChanges();
-                const checkGroupedItemsClass = () => {
+                const checkGroupedItemsClass = async () => {
                     fixture.detectChanges();
                     dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     dropdownItems = dropdownContainer.children;
@@ -1034,15 +1034,12 @@ describe('igxCombo', () => {
                     scrollIndex += 10;
                     if (scrollIndex < combo.data.length) {
                         combo.virtualScrollContainer.scrollTo(scrollIndex);
-                        combo.virtualScrollContainer.chunkLoad.pipe(take(1)).subscribe(async () => {
-                            await wait(30);
-                            checkGroupedItemsClass();
-                        });
-                    } else {
-                        done();
+                        await firstValueFrom(combo.virtualScrollContainer.chunkLoad.pipe(take(1)));
+                        await wait(30);
+                        await checkGroupedItemsClass();
                     }
                 };
-                checkGroupedItemsClass();
+                await checkGroupedItemsClass();
             });
             it('should render selected items properly', () => {
                 combo.toggle();

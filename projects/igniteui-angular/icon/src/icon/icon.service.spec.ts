@@ -3,6 +3,7 @@ import { IconFamily, IconMeta } from "./types";
 import { IgxIconService } from './icon.service';
 
 import { first } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Component, inject } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
@@ -139,12 +140,10 @@ describe("Icon Service", () => {
         expect(XMLHttpRequest.prototype.open).toHaveBeenCalledTimes(1);
         expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
 
-        iconService.iconLoaded.pipe().subscribe(() => {
-            expect(
-                iconService.isSvgIconCached(iconName, familyName),
-            ).toBeTruthy();
-            done();
-        });
+        await firstValueFrom(iconService.iconLoaded.pipe());
+        expect(
+            iconService.isSvgIconCached(iconName, familyName),
+        ).toBeTruthy();
     }));
 
     it("should add custom svg icon from text", () => {
@@ -194,15 +193,11 @@ describe("Icon Service", () => {
         expect(svgText).toContain(svg.innerHTML);
     });
 
-    it("should emit loading event for a custom svg icon from url", (done) => {
-        iconService.iconLoaded.pipe(first()).subscribe((event) => {
-            expect(event.name).toMatch("test");
-            expect(event.family).toMatch("svg-icons");
-            done();
-        });
-
+    it("should emit loading event for a custom svg icon from url", async () => {
         const iconName = "test";
         const familyName = "svg-icons";
+
+        const loadedPromise = firstValueFrom(iconService.iconLoaded.pipe(first()));
 
         vi.spyOn(XMLHttpRequest.prototype, "open");
         vi.spyOn(XMLHttpRequest.prototype, "send").mockImplementation(() => {
@@ -214,6 +209,10 @@ describe("Icon Service", () => {
         });
 
         iconService.addSvgIcon(iconName, "test.svg", familyName);
+        
+        const event = await loadedPromise;
+        expect(event.name).toMatch("test");
+        expect(event.family).toMatch("svg-icons");
     });
 
     it('should change icon references dynamically when the value of THEME_TOKEN changes', () => {

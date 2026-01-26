@@ -3065,7 +3065,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 .toBeLessThan(MAX_GROUPED_RENDER);
         });
 
-        it.skip('should scroll (optimized delta) the grid vertically in a certain amount of time', async (done) => {
+        it.skip('should scroll (optimized delta) the grid vertically in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -3075,33 +3075,36 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeOldValue: true,
                 attributeFilter: ['ng-reflect-value']
             };
-            const callback = () => {
-                let ready = true;
-                const rows = fix.componentInstance.grid.rowList.toArray();
-                for (let i = 0; i < 4; i++) {
-                    if (rows[i].cells.first.nativeElement.attributes['ng-reflect-value'].nodeValue !== String(i + 3)) {
-                        ready = false;
-                        break;
+            
+            await new Promise<void>((resolve) => {
+                const callback = () => {
+                    let ready = true;
+                    const rows = fix.componentInstance.grid.rowList.toArray();
+                    for (let i = 0; i < 4; i++) {
+                        if (rows[i].cells.first.nativeElement.attributes['ng-reflect-value'].nodeValue !== String(i + 3)) {
+                            ready = false;
+                            break;
+                        }
                     }
-                }
-                if (ready) {
-                    const delta = new Date().getTime() - startTime;
-                    expect(delta,
-                        'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_O + 'ms')
-                        .toBeLessThan(MAX_VER_SCROLL_O);
-                    observer.disconnect();
-                    done();
-                }
+                    if (ready) {
+                        const delta = new Date().getTime() - startTime;
+                        expect(delta,
+                            'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_O + 'ms')
+                            .toBeLessThan(MAX_VER_SCROLL_O);
+                        observer.disconnect();
+                        resolve();
+                    }
 
-            };
-            observer = new MutationObserver(callback);
-            observer.observe(fix.componentInstance.grid.rowList.first.cells.first.nativeElement, config);
-            fix.componentInstance.verticalScroll.scrollTop = 120;
+                };
+                observer = new MutationObserver(callback);
+                observer.observe(fix.componentInstance.grid.rowList.first.cells.first.nativeElement, config);
+                fix.componentInstance.verticalScroll.scrollTop = 120;
+            });
             await wait(100);
             fix.detectChanges();
         });
 
-        it.skip('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async (done) => {
+        it.skip('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -3111,26 +3114,29 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeOldValue: true,
                 attributeFilter: ['ng-reflect-value']
             };
-            const callback = (mutationsList) => {
-                const cellMutated = mutationsList.filter(mutation =>
-                    mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84').length === 1;
-                if (cellMutated) {
-                    const delta = new Date().getTime() - startTime;
-                    expect(delta,
-                        'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_U + 'ms')
-                        .toBeLessThan(MAX_VER_SCROLL_U);
-                    observer.disconnect();
-                    done();
-                }
-            };
-            observer = new MutationObserver(callback);
-            observer.observe(fix.componentInstance.grid.rowList.last.cells.first.nativeElement, config);
-            fix.componentInstance.verticalScroll.scrollTop = 800;
+            
+            await new Promise<void>((resolve) => {
+                const callback = (mutationsList) => {
+                    const cellMutated = mutationsList.filter(mutation =>
+                        mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84').length === 1;
+                    if (cellMutated) {
+                        const delta = new Date().getTime() - startTime;
+                        expect(delta,
+                            'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_U + 'ms')
+                            .toBeLessThan(MAX_VER_SCROLL_U);
+                        observer.disconnect();
+                        resolve();
+                    }
+                };
+                observer = new MutationObserver(callback);
+                observer.observe(fix.componentInstance.grid.rowList.last.cells.first.nativeElement, config);
+                fix.componentInstance.verticalScroll.scrollTop = 800;
+            });
             await wait(100);
             fix.detectChanges();
         });
 
-        it.skip('should scroll (optimized delta) the grid horizontally in a certain amount of time', async (done) => {
+        it.skip('should scroll (optimized delta) the grid horizontally in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -3140,26 +3146,29 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeOldValue: true,
                 attributeFilter: ['ng-reflect-value']
             };
-            const callback = mutationsList => {
-                const cellMutated = mutationsList.filter(mutation =>
-                    mutation.oldValue === '1' && mutation.target.attributes['ng-reflect-value'].nodeValue === '22').length === 1;
-                if (cellMutated) {
-                    const delta = new Date().getTime() - startTime;
-                    expect(delta,
-                        'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
-                        .toBeLessThan(MAX_HOR_SCROLL_O);
-                    observer.disconnect();
-                    done();
-                }
-            };
-            observer = new MutationObserver(callback);
-            observer.observe(fix.componentInstance.grid.rowList.last.cells.toArray()[1].nativeElement, config);
-            fix.componentInstance.horizontalScroll.scrollLeft = 250;
+            
+            await new Promise<void>((resolve) => {
+                const callback = mutationsList => {
+                    const cellMutated = mutationsList.filter(mutation =>
+                        mutation.oldValue === '1' && mutation.target.attributes['ng-reflect-value'].nodeValue === '22').length === 1;
+                    if (cellMutated) {
+                        const delta = new Date().getTime() - startTime;
+                        expect(delta,
+                            'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
+                            .toBeLessThan(MAX_HOR_SCROLL_O);
+                        observer.disconnect();
+                        resolve();
+                    }
+                };
+                observer = new MutationObserver(callback);
+                observer.observe(fix.componentInstance.grid.rowList.last.cells.toArray()[1].nativeElement, config);
+                fix.componentInstance.horizontalScroll.scrollLeft = 250;
+            });
             await wait(100);
             fix.detectChanges();
         });
 
-        it.skip('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async (done) => {
+        it.skip('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -3169,26 +3178,29 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeOldValue: true,
                 attributeFilter: ['ng-reflect-value']
             };
-            const callback = mutationsList => {
-                const cellMutated = mutationsList.filter(mutation =>
-                    mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '8').length === 1;
-                if (cellMutated) {
-                    const delta = new Date().getTime() - startTime;
-                    expect(delta,
-                        'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_U + 'ms')
-                        .toBeLessThan(MAX_HOR_SCROLL_U);
-                    observer.disconnect();
-                    done();
-                }
-            };
-            observer = new MutationObserver(callback);
-            observer.observe(fix.componentInstance.grid.rowList.last.cells.first.nativeElement, config);
-            fix.componentInstance.horizontalScroll.scrollLeft = 800;
+            
+            await new Promise<void>((resolve) => {
+                const callback = mutationsList => {
+                    const cellMutated = mutationsList.filter(mutation =>
+                        mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '8').length === 1;
+                    if (cellMutated) {
+                        const delta = new Date().getTime() - startTime;
+                        expect(delta,
+                            'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_U + 'ms')
+                            .toBeLessThan(MAX_HOR_SCROLL_U);
+                        observer.disconnect();
+                        resolve();
+                    }
+                };
+                observer = new MutationObserver(callback);
+                observer.observe(fix.componentInstance.grid.rowList.last.cells.first.nativeElement, config);
+                fix.componentInstance.horizontalScroll.scrollLeft = 800;
+            });
             await wait(100);
             fix.detectChanges();
         });
 
-        it.skip('should focus a cell in a certain amount of time', async (done) => {
+        it.skip('should focus a cell in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -3198,20 +3210,23 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeOldValue: true,
                 attributeFilter: ['aria-selected']
             };
-            const callback = mutationsList => {
-                const cellMutated = mutationsList.filter(mutation =>
-                    mutation.oldValue === 'false' && mutation.target.attributes['aria-selected'].nodeValue === 'true').length === 1;
-                if (cellMutated) {
-                    const delta = new Date().getTime() - startTime;
-                    expect(delta,
-                        'Focusing took: ' + delta + 'ms but should have taken at most: ' + MAX_FOCUS + 'ms')
-                        .toBeLessThan(MAX_FOCUS);
-                    observer.disconnect();
-                    done();
-                }
-            };
-            observer = new MutationObserver(callback);
-            observer.observe(fix.componentInstance.grid.rowList.first.cells.first.nativeElement, config);
+            
+            await new Promise<void>((resolve) => {
+                const callback = mutationsList => {
+                    const cellMutated = mutationsList.filter(mutation =>
+                        mutation.oldValue === 'false' && mutation.target.attributes['aria-selected'].nodeValue === 'true').length === 1;
+                    if (cellMutated) {
+                        const delta = new Date().getTime() - startTime;
+                        expect(delta,
+                            'Focusing took: ' + delta + 'ms but should have taken at most: ' + MAX_FOCUS + 'ms')
+                            .toBeLessThan(MAX_FOCUS);
+                        observer.disconnect();
+                        resolve();
+                    }
+                };
+                observer = new MutationObserver(callback);
+                observer.observe(fix.componentInstance.grid.rowList.first.cells.first.nativeElement, config);
+            });
             // UIInteractions.simulateClickAndSelectEvent(fix.componentInstance.grid.rowList.first.cells.first.nativeElement);
             await wait(16);
             fix.detectChanges();

@@ -11,6 +11,7 @@ import {
 } from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { CellType, GridSelectionMode } from 'igniteui-angular/grids/core';
@@ -278,60 +279,56 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(rows.length).toBe(4);
         });
 
-        it('should emit an event when expanding rows (API)', (done) => {
+        it('should emit an event when expanding rows (API)', async () => {
             const aRow = treeGrid.gridAPI.get_row_by_index(0);
-            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
-                expect(args.cancel).toBe(false);
-                expect(args.event).toBeUndefined();
-                expect(args.expanded).toBe(true);
-                expect(args.rowID.ID).toBe(147);
-                done();
-            });
+            const togglePromise = firstValueFrom(treeGrid.rowToggle.pipe(first()));
             aRow.expanded = true;
+            const args = await togglePromise;
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeUndefined();
+            expect(args.expanded).toBe(true);
+            expect(args.rowID.ID).toBe(147);
         });
 
-        it('should emit an event when collapsing rows (API)', (done) => {
+        it('should emit an event when collapsing rows (API)', async () => {
             const aRow = treeGrid.gridAPI.get_row_by_index(0);
             aRow.expanded = true;
             fix.detectChanges();
-            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
-                expect(args.cancel).toBe(false);
-                expect(args.event).toBeUndefined();
-                expect(args.expanded).toBe(false);
-                expect(args.rowID.ID).toBe(147);
-                done();
-            });
+            const togglePromise = firstValueFrom(treeGrid.rowToggle.pipe(first()));
             aRow.expanded = false;
             fix.detectChanges();
+            const args = await togglePromise;
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeUndefined();
+            expect(args.expanded).toBe(false);
+            expect(args.rowID.ID).toBe(147);
         });
 
-        it('should emit an event when expanding rows (UI)', (done) => {
-            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
-                expect(args.cancel).toBe(false);
-                expect(args.event).toBeDefined();
-                expect(args.expanded).toBe(true);
-                expect(args.rowID.ID).toBe(147);
-                done();
-            });
+        it('should emit an event when expanding rows (UI)', async () => {
+            const togglePromise = firstValueFrom(treeGrid.rowToggle.pipe(first()));
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
             const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
+            const args = await togglePromise;
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeDefined();
+            expect(args.expanded).toBe(true);
+            expect(args.rowID.ID).toBe(147);
         });
 
-        it('should emit an event when collapsing rows (UI)', (done) => {
+        it('should emit an event when collapsing rows (UI)', async () => {
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
             const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
-            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
-                expect(args.cancel).toBe(false);
-                expect(args.event).toBeDefined();
-                expect(args.expanded).toBe(false);
-                expect(args.rowID.ID).toBe(147);
-                done();
-            });
+            const togglePromise = firstValueFrom(treeGrid.rowToggle.pipe(first()));
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
+            const args = await togglePromise;
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeDefined();
+            expect(args.expanded).toBe(false);
+            expect(args.rowID.ID).toBe(147);
         });
 
         it('should update current page when \'collapseAll\' ', () => {
@@ -720,60 +717,56 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(rows.length).toBe(3);
         });
 
-        it('should emit an event when expanding rows (API)', (done) => {
+        it('should emit an event when expanding rows (API)', async () => {
             const aRow = treeGrid.getRowByIndex(0);
-            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
-                expect(args.cancel).toBe(false);
-                expect(args.event).toBeUndefined();
-                expect(args.expanded).toBe(true);
-                expect(args.rowID).toBe(1);
-                done();
-            });
+            const togglePromise = firstValueFrom(treeGrid.rowToggle.pipe(first()));
             aRow.expanded = true;
+            const args = await togglePromise;
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeUndefined();
+            expect(args.expanded).toBe(true);
+            expect(args.rowID).toBe(1);
         });
 
-        it('should emit an event when collapsing rows (API)', (done) => {
+        it('should emit an event when collapsing rows (API)', async () => {
             const aRow = treeGrid.getRowByIndex(0);
             aRow.expanded = true;
             fix.detectChanges();
 
-            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
-                expect(args.cancel).toBe(false);
-                expect(args.event).toBeUndefined();
-                expect(args.expanded).toBe(false);
-                expect(args.rowID).toBe(1);
-                done();
-            });
+            const togglePromise = firstValueFrom(treeGrid.rowToggle.pipe(first()));
             aRow.expanded = false;
+            const args = await togglePromise;
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeUndefined();
+            expect(args.expanded).toBe(false);
+            expect(args.rowID).toBe(1);
         });
 
-        it('should emit an event when expanding rows (UI)', (done) => {
-            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
-                expect(args.cancel).toBe(false);
-                expect(args.event).toBeDefined();
-                expect(args.expanded).toBe(true);
-                expect(args.rowID).toBe(1);
-                done();
-            });
+        it('should emit an event when expanding rows (UI)', async () => {
+            const togglePromise = firstValueFrom(treeGrid.rowToggle.pipe(first()));
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
             const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
+            const args = await togglePromise;
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeDefined();
+            expect(args.expanded).toBe(true);
+            expect(args.rowID).toBe(1);
         });
 
-        it('should emit an event when collapsing rows (UI)', (done) => {
+        it('should emit an event when collapsing rows (UI)', async () => {
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
             const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
-            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
-                expect(args.cancel).toBe(false);
-                expect(args.event).toBeDefined();
-                expect(args.expanded).toBe(false);
-                expect(args.rowID).toBe(1);
-                done();
-            });
+            const togglePromise = firstValueFrom(treeGrid.rowToggle.pipe(first()));
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
+            const args = await togglePromise;
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeDefined();
+            expect(args.expanded).toBe(false);
+            expect(args.rowID).toBe(1);
         });
 
         it('should update current page when \'collapseAll\' ', () => {
