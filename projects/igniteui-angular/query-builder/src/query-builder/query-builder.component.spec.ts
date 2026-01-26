@@ -2634,7 +2634,7 @@ describe('IgxQueryBuilder', () => {
     });
 
     // TODO: Currently doesn't work as expected. The drop ghost is not shown on the first action.
-    xit('Should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', () => {
+    it.skip('Should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate Today" chip
       const dragDir = draggedChip.dragDirective;
       UIInteractions.moveDragDirective(fix, dragDir, -50, 10, false);

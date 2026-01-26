@@ -3101,7 +3101,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
         });
 
-        xit('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async (done) => {
+        it.skip('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -3130,7 +3130,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
         });
 
-        xit('should scroll (optimized delta) the grid horizontally in a certain amount of time', async (done) => {
+        it.skip('should scroll (optimized delta) the grid horizontally in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -3159,7 +3159,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
         });
 
-        xit('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async (done) => {
+        it.skip('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -3188,7 +3188,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
         });
 
-        xit('should focus a cell in a certain amount of time', async (done) => {
+        it.skip('should focus a cell in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);

@@ -1033,7 +1033,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe(initialValue);
         });
 
-        xit(`Should emit the committed/new rowData cellEditDone`, () => {
+        it.skip(`Should emit the committed/new rowData cellEditDone`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;

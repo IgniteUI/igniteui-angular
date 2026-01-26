@@ -1450,7 +1450,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             // xit-ing because of https://github.com/IgniteUI/igniteui-angular/issues/10546
-            xit('should sort on column for all sibling dimensions.', () => {
+            it.skip('should sort on column for all sibling dimensions.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.height = '1500px';
                 pivotGrid.pivotConfiguration.rows = [

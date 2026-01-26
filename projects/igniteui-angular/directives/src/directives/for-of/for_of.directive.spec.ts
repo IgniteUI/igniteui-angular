@@ -776,7 +776,7 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        xit('should apply inertia when swiping via touch interaction.', async () => {
+        it.skip('should apply inertia when swiping via touch interaction.', async () => {
             const dcElem = fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
             // vi.spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
             await UIInteractions.simulateTouchStartEvent(

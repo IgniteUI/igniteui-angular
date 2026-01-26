@@ -521,7 +521,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.gridAPI.get_row_by_index(0).addRowUI).toBeTruthy();
         });
 
-        xit('Should scroll and start adding a row as for a row that is not in view', async () => {
+        it.skip('Should scroll and start adding a row as for a row that is not in view', async () => {
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
 

@@ -621,7 +621,7 @@ describe('IgxSimpleCombo', () => {
             expect(footerHTMLElement.parentNode).toEqual(dropdownList);
             expect(footerHTMLElement.textContent).toEqual('This is a footer');
         });
-        xit('should initialize the component with empty data and bindings', () => {
+        it.skip('should initialize the component with empty data and bindings', () => {
             fixture = TestBed.createComponent(IgxSimpleComboEmptyComponent);
             expect(() => {
                 fixture.detectChanges();

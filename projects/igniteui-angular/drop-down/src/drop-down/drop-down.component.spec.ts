@@ -957,8 +957,8 @@ describe('IgxDropDown ', () => {
             expect(firstItemElement.textContent.trim()).toEqual('Item 1990');
             expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
         });
-        xit('Should properly handle keyboard navigation when virtualized', async () => {
-            pending('does not have time to focus last item on navigateLast()');
+        it.skip('Should properly handle keyboard navigation when virtualized', async () => {
+            // pending('does not have time to focus last item on navigateLast()');
             // dropdown.toggle();
             // fixture.detectChanges();
             // dropdown.navigateFirst();

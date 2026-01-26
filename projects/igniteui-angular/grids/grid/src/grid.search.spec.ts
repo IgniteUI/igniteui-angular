@@ -281,7 +281,7 @@ describe('IgxGrid - search API #grid', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        xit('Should scroll properly when using paging', () => {
+        it.skip('Should scroll properly when using paging', () => {
             fix.componentInstance.paging = true;
             grid.height = '240px';
             grid.paginator.perPage = 7;
