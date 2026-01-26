@@ -2026,7 +2026,7 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect(dateRange['_calendar'].orientation).toEqual(PickerCalendarOrientation.Horizontal.toString());
-                expect(dateRange['_calendar'].wrapper.nativeElement).not.toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                expect(dateRange['_calendar'].wrapper.nativeElement.classList.contains(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL)).toBe(false);
                 dateRange.close();
                 tick();
                 fixture.detectChanges();
@@ -2037,7 +2037,7 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect(dateRange['_calendar'].orientation).toEqual(PickerCalendarOrientation.Vertical.toString());
-                expect(dateRange['_calendar'].wrapper.nativeElement).toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                expect(dateRange['_calendar'].wrapper.nativeElement.classList.contains(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL)).toBe(true);
             }));
 
             it('should limit the displayMonthsCount property between 1 and 2', fakeAsync(() => {

@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
@@ -330,7 +330,7 @@ describe('IgxChipsArea ', () => {
             fix.detectChanges();
 
             expect(igxChip.selected).toBe(true);
-            expect(igxChipItem).toHaveClass(`igx-chip__item--selected`);
+            expect(igxChipItem.classList.contains(`igx-chip__item--selected`)).toBe(true);
         });
 
         it('should fire only onSelection event for chip area when selecting a chip using spacebar', () => {

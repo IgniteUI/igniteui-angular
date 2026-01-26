@@ -49,13 +49,13 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilderElement.children.length).toEqual(1);
 
       const queryTreeElement = queryBuilderElement.children[0];
-      expect(queryTreeElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
+      expect(queryTreeElement.classList.contains(QueryBuilderSelectors.QUERY_BUILDER_TREE)).toBe(true);
 
       expect(queryBuilder.expressionTree).toBeUndefined();
 
       expect(queryTreeElement.children.length).toEqual(3);
       const bodyElement = queryTreeElement.children[0];
-      expect(bodyElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_BODY);
+      expect(bodyElement.classList.contains(QueryBuilderSelectors.QUERY_BUILDER_BODY)).toBe(true);
       expect(bodyElement.children.length).toEqual(1);
 
       QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false);
@@ -76,19 +76,19 @@ describe('IgxQueryBuilder', () => {
 
       const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE))[0].nativeElement;
       const bodyElement = queryTreeElement.children[0];
-      expect(bodyElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_BODY);
+      expect(bodyElement.classList.contains(QueryBuilderSelectors.QUERY_BUILDER_BODY)).toBe(true);
       expect(bodyElement.children.length).toEqual(2);
 
       // Verify the operator line of the root group is an 'And' line.
       QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
       // all inputs should be displayed correctly
       const selectFromContainer = bodyElement.children[0];
-      expect(selectFromContainer).toHaveClass('igx-filter-tree__inputs');
+      expect(selectFromContainer.classList.contains('igx-filter-tree__inputs')).toBe(true);
       expect(selectFromContainer.children[0].children[1].tagName).toEqual('IGX-SELECT');
       expect(selectFromContainer.children[1].children[1].tagName).toEqual('IGX-COMBO');
       const queryTreeExpressionContainer = bodyElement.children[1].children[1];
-      expect(queryTreeExpressionContainer).toHaveClass('igx-filter-tree');
-      expect(queryTreeExpressionContainer.children[1]).toHaveClass('igx-filter-tree__expressions');
+      expect(queryTreeExpressionContainer.classList.contains('igx-filter-tree')).toBe(true);
+      expect(queryTreeExpressionContainer.children[1].classList.contains('igx-filter-tree__expressions')).toBe(true);
 
       const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
       expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalsy();
@@ -1280,7 +1280,7 @@ describe('IgxQueryBuilder', () => {
       // Show again checkbox should be unchecked
       const checkbox = dialogOutlet.querySelector('igx-checkbox');
       expect(checkbox).toBeDefined();
-      expect(checkbox).not.toHaveClass('igx-checkbox--checked');
+      expect(checkbox.classList.contains('igx-checkbox--checked')).toBe(false);
       expect(queryBuilder.showEntityChangeDialog).toBeTruthy();
 
       // Close dialog
@@ -1325,7 +1325,7 @@ describe('IgxQueryBuilder', () => {
       checkbox.click();
       tick(100);
       fix.detectChanges();
-      expect(checkbox).toHaveClass('igx-checkbox--checked');
+      expect(checkbox.classList.contains('igx-checkbox--checked')).toBe(true);
       expect(queryBuilder.showEntityChangeDialog).toBeFalsy();
 
       // Close dialog
@@ -1822,7 +1822,7 @@ describe('IgxQueryBuilder', () => {
       const bodyElement = queryBuilderElement.children[0].children[0];
       const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
       expect(actionArea).toBeNull();
-      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1]).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
+      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].classList.contains(QueryBuilderSelectors.QUERY_BUILDER_TREE)).toBe(true);
       expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].children.length).toEqual(3);
       const tree = bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].querySelector('.igx-filter-tree__expression');
       expect(tree).toBeNull();

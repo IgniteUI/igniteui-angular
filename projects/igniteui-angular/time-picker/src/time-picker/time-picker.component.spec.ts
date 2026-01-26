@@ -1926,7 +1926,7 @@ describe('IgxTimePicker', () => {
 
                 // no validator, but there is a set error
                 expect((timePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
-                expect((timePicker as any).inputGroup.element.nativeElement).toHaveClass(CSS_CLASS_INPUT_GROUP_INVALID);
+                expect((timePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
                 expect((timePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
             });
         });

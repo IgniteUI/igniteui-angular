@@ -134,7 +134,7 @@ describe('IgxChip', () => {
             const igxChipItem = igxChip[1].nativeElement;
             const chipRemoveButton = ControlsFunction.getChipRemoveButton(igxChipItem);
 
-            expect(igxChipItem.children[0].children[2].children[0]).toHaveClass('igx-chip__remove');
+            expect(igxChipItem.children[0].children[2].children[0].classList.contains('igx-chip__remove')).toBe(true);
             expect(chipRemoveButton).toBeTruthy();
         });
 
@@ -149,7 +149,7 @@ describe('IgxChip', () => {
             fixture.detectChanges();
 
             expect(igxChip.variant).toMatch('danger');
-            expect(igxChip.nativeElement).toHaveClass('igx-chip--danger');
+            expect(igxChip.nativeElement.classList.contains('igx-chip--danger')).toBe(true);
         });
 
         it('should set text in chips correctly', () => {

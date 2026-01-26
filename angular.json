@@ -171,7 +171,6 @@
         "test": {
           "builder": "@angular/build:unit-test",
             "options": {
-             
               "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
               "buildTarget": "::test",
               "runnerConfig": "./vitest.config.ts"

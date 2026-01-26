@@ -21,7 +21,7 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    setupFiles: ['src/test-setup.ts'],
+    setupFiles: ['./projects/igniteui-angular/test-setup.ts'],
     include: ['**/*.spec.ts'],
     browser: {
       headless: true,

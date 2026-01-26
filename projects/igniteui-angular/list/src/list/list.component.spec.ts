@@ -705,9 +705,9 @@ describe('List', () => {
 
         expect(thumbnail).toBeDefined();
         // Check if the directive removes the classes from the target element
-        expect(thumbnail.nativeElement).toHaveClass('igx-icon');
+        expect(thumbnail.nativeElement.classList.contains('igx-icon')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(thumbnail.parent.nativeElement).toHaveClass('igx-list__item-thumbnail');
+        expect(thumbnail.parent.nativeElement.classList.contains('igx-list__item-thumbnail')).toBe(true);
     });
 
     it('Initializes igxListLine directive', () => {
@@ -717,9 +717,9 @@ describe('List', () => {
 
         expect(listLine).toBeDefined();
         // Check if the directive removes the classes from the target element
-        expect(listLine.nativeElement).toHaveClass('text-line');
+        expect(listLine.nativeElement.classList.contains('text-line')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+        expect(listLine.parent.nativeElement.classList.contains('igx-list__item-lines')).toBe(true);
     });
 
     it('Initializes igxListAction directive', () => {
@@ -729,9 +729,9 @@ describe('List', () => {
 
         expect(listLine).toBeDefined();
         // Check if the directive removes the classes from the target element
-        expect(listLine.nativeElement).toHaveClass('action-icon');
+        expect(listLine.nativeElement.classList.contains('action-icon')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-actions');
+        expect(listLine.parent.nativeElement.classList.contains('igx-list__item-actions')).toBe(true);
     });
 
     it('Initializes igxListLineTitle directive', () => {
@@ -741,11 +741,11 @@ describe('List', () => {
 
         expect(listLine).toBeDefined();
         // Check if the directive removes the custom classes from the target element
-        expect(listLine.nativeElement).toHaveClass('custom');
+        expect(listLine.nativeElement.classList.contains('custom')).toBe(true);
         // Check if the directive add the correct class on the target element
-        expect(listLine.nativeElement).toHaveClass('igx-list__item-line-title');
+        expect(listLine.nativeElement.classList.contains('igx-list__item-line-title')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+        expect(listLine.parent.nativeElement.classList.contains('igx-list__item-lines')).toBe(true);
     });
 
     it('Initializes igxListLineSubTitle directive', () => {
@@ -755,11 +755,11 @@ describe('List', () => {
 
         expect(listLine).toBeDefined();
         // Check if the directive removes the custom classes from the target element
-        expect(listLine.nativeElement).toHaveClass('custom');
+        expect(listLine.nativeElement.classList.contains('custom')).toBe(true);
         // Check if the directive add the correct class on the target element
-        expect(listLine.nativeElement).toHaveClass('igx-list__item-line-subtitle');
+        expect(listLine.nativeElement.classList.contains('igx-list__item-line-subtitle')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+        expect(listLine.parent.nativeElement.classList.contains('igx-list__item-lines')).toBe(true);
     });
 
     /* factorX - the coefficient used to calculate deltaX.

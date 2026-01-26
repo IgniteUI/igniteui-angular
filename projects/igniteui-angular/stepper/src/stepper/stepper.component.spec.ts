@@ -117,7 +117,7 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
             tick();
 
-            expect(stepper.steps[1].nativeElement).toHaveClass('igx-stepper__step--disabled');
+            expect(stepper.steps[1].nativeElement.classList.contains('igx-stepper__step--disabled')).toBe(true);
 
             stepper.next();
             fix.detectChanges();
@@ -340,7 +340,7 @@ describe('Rendering Tests', () => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             fix.detectChanges();
 
-            expect(stepper.nativeElement).toHaveClass('igx-stepper--horizontal');
+            expect(stepper.nativeElement.classList.contains('igx-stepper--horizontal')).toBe(true);
             // no css class is applied when the stepper is in vertical mode
         });
 
@@ -352,7 +352,7 @@ describe('Rendering Tests', () => {
             stepper.steps[0].active = true;
             fix.detectChanges();
 
-            expect(step0Header).toHaveClass(CURRENT_CLASS);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(true);
 
             stepper.steps[1].active = true;
             stepper.steps[1].nativeElement.focus();
@@ -361,8 +361,8 @@ describe('Rendering Tests', () => {
             UIInteractions.triggerKeyDownEvtUponElem(' ', stepper.steps[1].nativeElement);
             fix.detectChanges();
 
-            expect(step0Header).not.toHaveClass(CURRENT_CLASS);
-            expect(step1Header).toHaveClass(CURRENT_CLASS);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
+            expect(step1Header.classList.contains(CURRENT_CLASS)).toBe(true);
             expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[1]);
         });
 
@@ -371,17 +371,17 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             expect(stepper.steps[0].completed).toBeFalsy();
-            expect(stepper.steps[0].nativeElement).not.toHaveClass(COMPLETED_CLASS);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(false);
 
             stepper.steps[0].completed = true;
             fix.detectChanges();
 
-            expect(stepper.steps[0].nativeElement).toHaveClass(COMPLETED_CLASS);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(true);
 
             stepper.steps[1].completed = true;
             fix.detectChanges();
 
-            expect(stepper.steps[1].nativeElement).toHaveClass(COMPLETED_CLASS);
+            expect(stepper.steps[1].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(true);
         });
 
         it('should indicate that a step is invalid', () => {
@@ -389,24 +389,24 @@ describe('Rendering Tests', () => {
             stepper.steps[0].isValid = true;
             fix.detectChanges();
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
 
             stepper.steps[0].isValid = false;
             fix.detectChanges();
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
 
             stepper.steps[1].active = true;
             fix.detectChanges();
 
-            expect(step0Header).toHaveClass(INVALID_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(true);
 
             //indicate that a step is disabled without indicating that it is also invalid
             stepper.steps[0].disabled = true;
             fix.detectChanges();
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
-            expect(stepper.steps[0].nativeElement).toHaveClass(DISABLED_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
+            expect(stepper.steps[0].nativeElement.classList.contains(DISABLED_CLASS)).toBe(true);
         });
 
         it('should render the visual step element according to the specified stepType', () => {
@@ -470,7 +470,7 @@ describe('Rendering Tests', () => {
             for (const step of stepper.steps) {
                 expect(step.titlePosition).toBe(stepper._defaultTitlePosition);
                 expect(step.titlePosition).toBe(IgxStepperTitlePosition.Bottom);
-                expect(step.nativeElement).toHaveClass(`igx-stepper__step--${stepper._defaultTitlePosition}`);
+                expect(step.nativeElement.classList.contains(`igx-stepper__step--${stepper._defaultTitlePosition}`)).toBe(true);
             }
 
             const positions = getStepperPositions();
@@ -479,7 +479,7 @@ describe('Rendering Tests', () => {
                 fix.detectChanges();
 
                 for (const step of stepper.steps) {
-                    expect(step.nativeElement).toHaveClass(`igx-stepper__step--${pos}`);
+                    expect(step.nativeElement.classList.contains(`igx-stepper__step--${pos}`)).toBe(true);
                 }
             });
 
@@ -491,7 +491,7 @@ describe('Rendering Tests', () => {
             for (const step of stepper.steps) {
                 expect(step.titlePosition).toBe(stepper._defaultTitlePosition);
                 expect(step.titlePosition).toBe(IgxStepperTitlePosition.End);
-                expect(step.nativeElement).toHaveClass(`igx-stepper__step--${stepper._defaultTitlePosition}`);
+                expect(step.nativeElement.classList.contains(`igx-stepper__step--${stepper._defaultTitlePosition}`)).toBe(true);
             }
 
             positions.forEach((pos: IgxStepperTitlePosition) => {
@@ -499,7 +499,7 @@ describe('Rendering Tests', () => {
                 fix.detectChanges();
 
                 for (const step of stepper.steps) {
-                    expect(step.nativeElement).toHaveClass(`igx-stepper__step--${pos}`);
+                    expect(step.nativeElement.classList.contains(`igx-stepper__step--${pos}`)).toBe(true);
                 }
             });
         });
@@ -527,9 +527,9 @@ describe('Rendering Tests', () => {
             const step0Header = stepper.steps[0].nativeElement.querySelector(`.${STEP_HEADER}`);
             let indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
-            expect(step0Header).toHaveClass(CURRENT_CLASS);
-            expect(stepper.steps[0].nativeElement).not.toHaveClass(COMPLETED_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(true);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(false);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('edit');
 
@@ -540,9 +540,9 @@ describe('Rendering Tests', () => {
 
             indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header).toHaveClass(INVALID_CLASS);
-            expect(step0Header).not.toHaveClass(CURRENT_CLASS);
-            expect(stepper.steps[0].nativeElement).not.toHaveClass(COMPLETED_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(true);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(false);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('error');
 
@@ -552,9 +552,9 @@ describe('Rendering Tests', () => {
 
             indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
-            expect(step0Header).not.toHaveClass(CURRENT_CLASS);
-            expect(stepper.steps[0].nativeElement).toHaveClass(COMPLETED_CLASS);
+            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
+            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
+            expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(true);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('check');
         });
@@ -564,14 +564,14 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
             expect(stepper.contentTop).toBeFalsy();
 
-            expect(stepper.nativeElement.children[0]).toHaveClass(STEPPER_HEADER);
-            expect(stepper.nativeElement.children[1]).toHaveClass(STEPPER_BODY);
+            expect(stepper.nativeElement.children[0].classList.contains(STEPPER_HEADER)).toBe(true);
+            expect(stepper.nativeElement.children[1].classList.contains(STEPPER_BODY)).toBe(true);
 
             stepper.contentTop = true;
             fix.detectChanges();
 
-            expect(stepper.nativeElement.children[0]).toHaveClass(STEPPER_BODY);
-            expect(stepper.nativeElement.children[1]).toHaveClass(STEPPER_HEADER);
+            expect(stepper.nativeElement.children[0].classList.contains(STEPPER_BODY)).toBe(true);
+            expect(stepper.nativeElement.children[1].classList.contains(STEPPER_HEADER)).toBe(true);
         });
 
         it('should allow modifying animationSettings that are used for transitioning between steps ', fakeAsync(() => {

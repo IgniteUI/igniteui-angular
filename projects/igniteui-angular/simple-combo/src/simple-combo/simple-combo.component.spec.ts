@@ -1263,7 +1263,7 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', input);
             tick();
             fixture.detectChanges();
-            expect(document.activeElement).toHaveClass('igx-combo__content');
+            expect(document.activeElement.classList.contains('igx-combo__content')).toBe(true);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', input, true, true);
             fixture.detectChanges();

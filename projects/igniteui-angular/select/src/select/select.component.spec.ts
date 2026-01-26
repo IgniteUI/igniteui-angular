@@ -684,7 +684,7 @@ describe('igxSelect', () => {
 
             // no validator, but there is a set error
             expect(selectComp.input.valid).toBe(IgxInputState.INVALID);
-            expect((selectComp as any).inputGroup.element.nativeElement).toHaveClass(CSS_CLASS_INPUT_GROUP_INVALID);
+            expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
             expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
         }));
 
@@ -2572,10 +2572,10 @@ describe('igxSelect', () => {
             expect(selectHeader).toBeDefined();
             expect(selectFooter).toBeDefined();
             // elements structure is correct
-            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_HEADER);
-            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_FOOTER);
-            expect(selectList.nativeElement.previousElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_HEADER);
-            expect(selectList.nativeElement.nextElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_FOOTER);
+            expect(selectListWrapper.nativeElement.firstElementChild.classList.contains(CSS_CLASS_DROPDOWN_SELECT_HEADER)).toBe(true);
+            expect(selectListWrapper.nativeElement.lastElementChild.classList.contains(CSS_CLASS_DROPDOWN_SELECT_FOOTER)).toBe(true);
+            expect(selectList.nativeElement.previousElementSibling.classList.contains(CSS_CLASS_DROPDOWN_SELECT_HEADER)).toBe(true);
+            expect(selectList.nativeElement.nextElementSibling.classList.contains(CSS_CLASS_DROPDOWN_SELECT_FOOTER)).toBe(true);
         });
 
         it('Should NOT render header and footer elements, if template is not defined', fakeAsync(() => {
@@ -2589,8 +2589,8 @@ describe('igxSelect', () => {
             expect(selectHeader).toBeNull();
             expect(selectFooter).toBeNull();
             // elements structure is correct
-            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST_SCROLL);
-            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST_SCROLL);
+            expect(selectListWrapper.nativeElement.firstElementChild.classList.contains(CSS_CLASS_DROPDOWN_LIST_SCROLL)).toBe(true);
+            expect(selectListWrapper.nativeElement.lastElementChild.classList.contains(CSS_CLASS_DROPDOWN_LIST_SCROLL)).toBe(true);
             expect(selectList.nativeElement.previousElementSibling).toBeNull();
             expect(selectList.nativeElement.nextElementSibling).toBeNull();
         }));

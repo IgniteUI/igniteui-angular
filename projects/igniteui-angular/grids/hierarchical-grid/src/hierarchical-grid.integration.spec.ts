@@ -221,10 +221,10 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             const rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
             const lastRow = rows[rows.length - 1];
-            expect(lastRow.query(By.css('igx-icon')).nativeElement).toHaveClass('igx-icon--inactive');
+            expect(lastRow.query(By.css('igx-icon')).nativeElement.classList.contains('igx-icon--inactive')).toBe(true);
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
             fixture.detectChanges();
-            expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
+            expect(lastRow.query(By.css('igx-icon')).nativeElement.classList.contains('igx-icon--inactive')).toBe(false);
         }));
 
         it('should now allow expanding uncommitted added rows', fakeAsync(() => {

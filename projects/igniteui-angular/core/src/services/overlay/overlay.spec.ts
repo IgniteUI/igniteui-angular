@@ -339,7 +339,7 @@ describe('igxOverlay', () => {
             const overlayDiv = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
             expect(overlayDiv).toBeDefined();
-            expect(overlayDiv).toHaveClass(CLASS_OVERLAY_MAIN);
+            expect(overlayDiv.classList.contains(CLASS_OVERLAY_MAIN)).toBe(true);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -398,12 +398,12 @@ describe('igxOverlay', () => {
 
             const wrapperElement = overlayElement.children[0];
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER_MODAL);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER_MODAL)).toBe(true);
             expect(wrapperElement.children[0].localName).toEqual('div');
 
             const contentElement = wrapperElement.children[0];
             expect(contentElement).toBeDefined();
-            expect(contentElement).toHaveClass(CLASS_OVERLAY_CONTENT_MODAL);
+            expect(contentElement.classList.contains(CLASS_OVERLAY_CONTENT_MODAL)).toBe(true);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -940,17 +940,17 @@ describe('igxOverlay', () => {
 
                 const contentElement = componentElement.parentElement;
                 expect(contentElement).toBeDefined();
-                expect(contentElement).toHaveClass(CLASS_OVERLAY_CONTENT_MODAL);
-                expect(contentElement).toHaveClass(CLASS_OVERLAY_CONTENT_RELATIVE);
+                expect(contentElement.classList.contains(CLASS_OVERLAY_CONTENT_MODAL)).toBe(true);
+                expect(contentElement.classList.contains(CLASS_OVERLAY_CONTENT_RELATIVE)).toBe(true);
 
                 const wrapperElement = contentElement.parentElement;
                 expect(wrapperElement).toBeDefined();
-                expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER_MODAL);
-                expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER_FLEX);
+                expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER_MODAL)).toBe(true);
+                expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER_FLEX)).toBe(true);
 
                 const overlayElement = wrapperElement.parentElement;
                 expect(overlayElement).toBeDefined();
-                expect(overlayElement).toHaveClass(CLASS_OVERLAY_MAIN);
+                expect(overlayElement.classList.contains(CLASS_OVERLAY_MAIN)).toBe(true);
 
                 overlay.detachAll();
             }));
@@ -1577,7 +1577,7 @@ describe('igxOverlay', () => {
             const overlayElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
             const wrapperElement = overlayElement.children[0];
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER)).toBe(true);
 
             overlay.detachAll();
         }));
@@ -1801,7 +1801,7 @@ describe('igxOverlay', () => {
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER)).toBe(true);
 
             overlay.detachAll();
         }));
@@ -2203,7 +2203,7 @@ describe('igxOverlay', () => {
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER)).toBe(true);
 
             overlay.detachAll();
         }));
@@ -2689,7 +2689,7 @@ describe('igxOverlay', () => {
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER)).toBe(true);
 
             overlay.detachAll();
         }));

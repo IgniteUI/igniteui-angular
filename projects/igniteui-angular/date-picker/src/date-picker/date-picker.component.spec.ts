@@ -94,7 +94,7 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 expect(datePicker['_calendar'].orientation).toEqual(PickerCalendarOrientation.Horizontal.toString());
-                expect(datePicker['_calendar'].wrapper.nativeElement).not.toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                expect(datePicker['_calendar'].wrapper.nativeElement.classList.contains(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL)).toBe(false);
                 datePicker.close();
                 tick();
                 fixture.detectChanges();
@@ -105,7 +105,7 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 expect(datePicker['_calendar'].orientation).toEqual(PickerCalendarOrientation.Vertical.toString());
-                expect(datePicker['_calendar'].wrapper.nativeElement).toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                expect(datePicker['_calendar'].wrapper.nativeElement.classList.contains(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL)).toBe(true);
             }));
 
             it('should initialize activeDate with current date, when not set', fakeAsync(() => {

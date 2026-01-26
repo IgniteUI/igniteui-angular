@@ -622,23 +622,23 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-combo__toggle-button'); break;
-                case 3: expect(element).toHaveClass('igx-button');
+                case 0: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 1: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 2: expect(element.classList.contains('igx-combo__toggle-button')).toBe(true); break;
+                case 3: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('and'); break;
-                case 4: expect(element).toHaveClass('igx-chip'); break;
-                case 5: expect(element).toHaveClass('igx-icon'); break;
-                case 6: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 7: expect(element).toHaveClass('igx-chip'); break;
-                case 8: expect(element).toHaveClass('igx-icon'); break;
-                case 9: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 10: expect(element).toHaveClass('igx-chip'); break;
-                case 11: expect(element).toHaveClass('igx-icon'); break;
-                case 12: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 13: expect(element).toHaveClass('igx-button');
+                case 4: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 5: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 6: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 7: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 8: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 9: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 10: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 11: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 12: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 13: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Condition'); break;
-                case 14: expect(element).toHaveClass('igx-button');
+                case 14: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Group'); break;
             }
             i++;
@@ -651,7 +651,7 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element.firstChild).toHaveClass('igx-icon');
+                case 0: expect((element.firstChild as HTMLElement).classList.contains('igx-icon')).toBe(true);
                     expect(element.firstChild.textContent).toContain('add');
                     break;
             }
@@ -676,10 +676,10 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-icon-button'); break;
-                case 3: expect(element).toHaveClass('igx-icon-button'); break;
+                case 0: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 1: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 2: expect(element.classList.contains('igx-icon-button')).toBe(true); break;
+                case 3: expect(element.classList.contains('igx-icon-button')).toBe(true); break;
             }
             i++;
         });
@@ -691,19 +691,19 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-button'); break;
-                case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-icon'); break;
-                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 6: expect(element).toHaveClass('igx-chip'); break;
-                case 7: expect(element).toHaveClass('igx-icon'); break;
-                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 9: expect(element).toHaveClass('igx-button');
+                case 0: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 1: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 2: expect(element.classList.contains('igx-button')).toBe(true); break;
+                case 3: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 4: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 5: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 6: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 7: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 8: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 9: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Condition');
                     break;
-                case 10: expect(element).toHaveClass('igx-button');
+                case 10: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Group');
                     break;
             }
