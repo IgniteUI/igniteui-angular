@@ -1,5 +1,5 @@
 ﻿import { NgForOfContext } from '@angular/common';
-import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, AfterViewInit, booleanAttribute, DOCUMENT, inject, afterNextRender, runInInjectionContext, EnvironmentInjector } from '@angular/core';
+import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, booleanAttribute, DOCUMENT, inject, afterNextRender, runInInjectionContext, EnvironmentInjector } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
@@ -84,7 +84,7 @@ export abstract class IgxForOfToken<T, U extends T[] = T[]> {
     ],
     standalone: true
 })
-export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U> implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U> implements OnInit, OnChanges, OnDestroy {
     private _viewContainer = inject(ViewContainerRef);
     protected _template = inject<TemplateRef<NgForOfContext<T>>>(TemplateRef);
     protected _differs = inject(IterableDiffers);
@@ -496,10 +496,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         this._differ = this._differs.find(this.igxForOf || []).create(this.igxForTrackBy);
         this.resolveDataDiff();
-    }
-
-    public ngAfterViewInit(): void {
-
     }
 
     protected subscribeToObserver(target: Element) {
