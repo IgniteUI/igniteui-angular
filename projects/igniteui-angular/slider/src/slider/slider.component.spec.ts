@@ -1163,7 +1163,8 @@ describe('IgxSlider', () => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(3);
-            expect(upperValueChangeSpy).toHaveBeenCalledOnceWith(5);
+            expect(upperValueChangeSpy).toHaveBeenCalledOnce();
+            expect(upperValueChangeSpy).toHaveBeenCalledWith(5);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 2, upper: 6}, value: {lower: 2, upper: 5}});
         });
 

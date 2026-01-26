@@ -760,7 +760,8 @@ describe('IgxTooltip', () => {
 
             unhoverElement(buttonOne);
             tick(500);
-            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnce();
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgsTargetOne);
             expect(targetTwo.tooltipHide.emit).not.toHaveBeenCalled();
             flush();
 
@@ -769,8 +770,10 @@ describe('IgxTooltip', () => {
 
             unhoverElement(buttonTwo);
             tick(500);
-            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
-            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetTwo);
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnce();
+            expect(targetOne.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgsTargetOne);
+            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledOnce();
+            expect(targetTwo.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgsTargetTwo);
             flush();
         }));
 

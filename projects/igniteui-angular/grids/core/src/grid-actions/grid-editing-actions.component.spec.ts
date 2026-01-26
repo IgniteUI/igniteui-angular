@@ -438,8 +438,10 @@ describe('igxGridEditingActions #grid ', () => {
             deleteChildBtn.actionClick.emit();
             fixture.detectChanges();
 
-            expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
-            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnce();
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnce();
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith(rowDeletedArgs);
             expect(treeGrid.rowList.first.data['ID']).toBe(6);
         });
     });

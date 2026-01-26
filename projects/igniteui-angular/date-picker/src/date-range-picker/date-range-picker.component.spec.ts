@@ -437,7 +437,8 @@ describe('IgxDateRangePicker', () => {
                         expect(dateRange.value).toBeNull();
                         suffix = inputGroup.query(By.directive(IgxSuffixDirective));
                         expect(suffix).toBeNull();
-                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnceWith(null);
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnce();
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledWith(null);
                     }));
 
                     it('should not clear the value when clicking element in the suffix that is not the clear icon', fakeAsync(() => {
@@ -493,7 +494,8 @@ describe('IgxDateRangePicker', () => {
                         fixture.detectChanges();
 
                         expect(dateRange.value).toBeNull();
-                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnceWith(null);
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnce();
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledWith(null);
                     }));
                 });
             });

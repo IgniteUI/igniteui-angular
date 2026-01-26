@@ -319,7 +319,8 @@ describe('List', () => {
             event: event,
             direction: IgxListPanState.NONE
         };
-        expect(list.itemClicked.emit).toHaveBeenCalledOnceWith(args);
+        expect(list.itemClicked.emit).toHaveBeenCalledOnce();
+        expect(list.itemClicked.emit).toHaveBeenCalledWith(args);
 
         // Click the same item again and verify click is fired again
         list.items[0].element.dispatchEvent(event);
@@ -348,7 +349,8 @@ describe('List', () => {
             event: null,
             direction: IgxListPanState.LEFT
         };
-        expect(list.itemClicked.emit).toHaveBeenCalledOnceWith(args);
+        expect(list.itemClicked.emit).toHaveBeenCalledOnce();
+        expect(list.itemClicked.emit).toHaveBeenCalledWith(args);
     });
 
     it('should emit ItemClicked with correct direction argument when swiping right', () => {
@@ -366,7 +368,8 @@ describe('List', () => {
             event: null,
             direction: IgxListPanState.RIGHT
         };
-        expect(list.itemClicked.emit).toHaveBeenCalledOnceWith(args);
+        expect(list.itemClicked.emit).toHaveBeenCalledOnce();
+        expect(list.itemClicked.emit).toHaveBeenCalledWith(args);
     });
 
     it('should display multiple headers properly.', () => {

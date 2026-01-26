@@ -966,8 +966,10 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.deleteRow(someRow.key);
                 fix.detectChanges();
 
-                expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnce();
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
+                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnce();
+                expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith(rowDeletedArgs);
 
                 someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.key).toBe(2);
@@ -1005,7 +1007,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.deleteRow(someRow.key);
                 fix.detectChanges();
 
-                expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnce();
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
                 expect(treeGrid.rowDeleted.emit).toHaveBeenCalledTimes(0);
 
                 someRow = treeGrid.getRowByIndex(0);

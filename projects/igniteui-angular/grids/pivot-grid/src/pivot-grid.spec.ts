@@ -2151,7 +2151,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const expectedCell = new IgxGridCell(pivotGrid, 0, cell.column);
 
                 const cellClickArgs: IGridCellEventArgs = { cell: expectedCell, event };
-                expect(pivotGrid.cellClick.emit).toHaveBeenCalledOnceWith(cellClickArgs);
+                expect(pivotGrid.cellClick.emit).toHaveBeenCalledOnce();
+                expect(pivotGrid.cellClick.emit).toHaveBeenCalledWith(cellClickArgs);
             });
         });
     });

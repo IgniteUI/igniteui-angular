@@ -69,9 +69,10 @@ const testAnimationBehavior = (
     fix.detectChanges();
     tick(1000);
     if (!isHorAnimTypeInvalidTest) {
-        expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledOnceWith(false);
+        expect(previousActiveStep.activeChange.emit).toHaveBeenCalledOnce();
+        expect(previousActiveStep.activeChange.emit).toHaveBeenCalledWith(false);
     } else {
-        expect(previousActiveStep.activeChange.emit, val).not.toHaveBeenCalled();
+        expect(previousActiveStep.activeChange.emit).not.toHaveBeenCalled();
     }
     activeChangeSpy.mockClear();
 };
@@ -126,8 +127,10 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[1].active).toBeFalsy();
             expect(stepper.steps[2].isAccessible).toBeTruthy();
             expect(stepper.steps[2].active).toBeTruthy();
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[2]);
-            expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
+            expect(serviceExpandSpy).toHaveBeenCalledOnce();
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[2]);
+            expect(serviceCollapseSpy).toHaveBeenCalledOnce();
+            expect(serviceCollapseSpy).toHaveBeenCalledWith(stepper.steps[0]);
 
             serviceExpandSpy.mockClear();
             serviceCollapseSpy.mockClear();
@@ -145,8 +148,10 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[1].active).toBeFalsy();
             expect(stepper.steps[2].isAccessible).toBeTruthy();
             expect(stepper.steps[2].active).toBeTruthy();
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[2]);
-            expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
+            expect(serviceExpandSpy).toHaveBeenCalledOnce();
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[2]);
+            expect(serviceCollapseSpy).toHaveBeenCalledOnce();
+            expect(serviceCollapseSpy).toHaveBeenCalledWith(stepper.steps[0]);
         }));
 
         it('should calculate disabled steps properly when the stepper is initially in linear mode', fakeAsync(() => {
@@ -258,10 +263,14 @@ describe('Rendering Tests', () => {
             tick();
 
             expect(stepper.steps[1].active).toBeTruthy();
-            expect(changingSpy).toHaveBeenCalledOnceWith(argsIng);
-            expect(changedSpy).toHaveBeenCalledOnceWith(argsEd);
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[1]);
-            expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
+            expect(changingSpy).toHaveBeenCalledOnce();
+            expect(changingSpy).toHaveBeenCalledWith(argsIng);
+            expect(changedSpy).toHaveBeenCalledOnce();
+            expect(changedSpy).toHaveBeenCalledWith(argsEd);
+            expect(serviceExpandSpy).toHaveBeenCalledOnce();
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[1]);
+            expect(serviceCollapseSpy).toHaveBeenCalledOnce();
+            expect(serviceCollapseSpy).toHaveBeenCalledWith(stepper.steps[0]);
         }));
 
         it('should be able to cancel the activeStepChanging event', fakeAsync(() => {
@@ -288,8 +297,10 @@ describe('Rendering Tests', () => {
 
             expect(stepper.steps[1].active).toBeFalsy();
             expect(stepper.steps[0].active).toBeTruthy();
-            expect(changingSpy).toHaveBeenCalledOnceWith(argsIng);
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[1]);
+            expect(changingSpy).toHaveBeenCalledOnce();
+            expect(changingSpy).toHaveBeenCalledWith(argsIng);
+            expect(serviceExpandSpy).toHaveBeenCalledOnce();
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[1]);
             expect(serviceCollapseSpy).not.toHaveBeenCalled();
         }));
 
@@ -303,14 +314,16 @@ describe('Rendering Tests', () => {
 
             stepper.steps[0].active = true;
             fix.detectChanges();
-            expect(serviceExpandAPISpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
+            expect(serviceExpandAPISpy).toHaveBeenCalledOnce();
+            expect(serviceExpandAPISpy).toHaveBeenCalledWith(stepper.steps[0]);
 
             stepper.steps[3].active = true;
             fix.detectChanges();
             tick();
 
             expect(stepper.steps[3].active).toBeTruthy();
-            expect(stepper.steps[3].activeChange.emit).toHaveBeenCalledOnceWith(true);
+            expect(stepper.steps[3].activeChange.emit).toHaveBeenCalledOnce();
+            expect(stepper.steps[3].activeChange.emit).toHaveBeenCalledWith(true);
             expect(fifthActiveChangeSpy).not.toHaveBeenCalled();
             expect(serviceExpandAPISpy.mock.lastCall[0]).toBe(stepper.steps[3]);
 
@@ -323,9 +336,12 @@ describe('Rendering Tests', () => {
 
             expect(stepper.steps[4].active).toBeTruthy();
             expect(stepper.steps[3].active).toBeFalsy();
-            expect(fifthActiveChangeSpy).toHaveBeenCalledOnceWith(true);
-            expect(fourthActiveChangeSpy).toHaveBeenCalledOnceWith(false);
-            expect(serviceExpandAPISpy).toHaveBeenCalledOnceWith(stepper.steps[4]);
+            expect(fifthActiveChangeSpy).toHaveBeenCalledOnce();
+            expect(fifthActiveChangeSpy).toHaveBeenCalledWith(true);
+            expect(fourthActiveChangeSpy).toHaveBeenCalledOnce();
+            expect(fourthActiveChangeSpy).toHaveBeenCalledWith(false);
+            expect(serviceExpandAPISpy).toHaveBeenCalledOnce();
+            expect(serviceExpandAPISpy).toHaveBeenCalledWith(stepper.steps[4]);
         }));
     });
 
@@ -363,7 +379,8 @@ describe('Rendering Tests', () => {
 
             expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
             expect(step1Header.classList.contains(CURRENT_CLASS)).toBe(true);
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[1]);
+            expect(serviceExpandSpy).toHaveBeenCalledOnce();
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[1]);
         });
 
         it('should indicate that a step is completed', () => {
@@ -766,7 +783,8 @@ describe('Rendering Tests', () => {
 
             expect(stepper.steps[3].nativeElement as Element).toBe(document.activeElement);
             expect(stepper.steps[3].active).toBeTruthy();
-            expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[3]);
+            expect(serviceExpandSpy).toHaveBeenCalledOnce();
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[3]);
 
             stepper.steps[4].nativeElement.focus();
             fix.detectChanges();
@@ -1058,7 +1076,8 @@ describe('Stepper service unit tests', () => {
         stepperService.expand(steps[0]);
 
         expect(stepperService.activeStep).toBe(steps[0]);
-        expect(steps[0].activeChange.emit).toHaveBeenCalledOnceWith(true);
+        expect(steps[0].activeChange.emit).toHaveBeenCalledOnce();
+        expect(steps[0].activeChange.emit).toHaveBeenCalledWith(true);
 
         const testValues = [null, undefined, [], {}, 'sampleString'];
 
@@ -1081,8 +1100,10 @@ describe('Stepper service unit tests', () => {
         stepperService.expandThroughApi(steps[1]);
 
         expect(stepperService.activeStep).toBe(steps[1]);
-        expect(steps[0].activeChange.emit).toHaveBeenCalledOnceWith(false);
-        expect(steps[1].activeChange.emit).toHaveBeenCalledOnceWith(true);
+        expect(steps[0].activeChange.emit).toHaveBeenCalledOnce();
+        expect(steps[0].activeChange.emit).toHaveBeenCalledWith(false);
+        expect(steps[1].activeChange.emit).toHaveBeenCalledOnce();
+        expect(steps[1].activeChange.emit).toHaveBeenCalledWith(true);
 
         vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Vertical);
         stepperService.expandThroughApi(steps[0]);
@@ -1121,7 +1142,8 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.collapsingSteps).not.toContain(steps[0]);
         expect(stepperService.activeStep).not.toBe(steps[0]);
         expect(stepperService.activeStep).toBe(steps[1]);
-        expect(steps[0].activeChange.emit).toHaveBeenCalledOnceWith(false);
+        expect(steps[0].activeChange.emit).toHaveBeenCalledOnce();
+        expect(steps[0].activeChange.emit).toHaveBeenCalledWith(false);
         expect(steps[1].activeChange.emit).not.toHaveBeenCalled();
 
         vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Vertical);
@@ -1139,7 +1161,8 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.activeStep).not.toBe(steps[1]);
         expect(stepperService.activeStep).toBe(steps[0]);
 
-        expect(steps[1].activeChange.emit).toHaveBeenCalledOnceWith(false);
+        expect(steps[1].activeChange.emit).toHaveBeenCalledOnce();
+        expect(steps[1].activeChange.emit).toHaveBeenCalledWith(false);
         expect(steps[0].activeChange.emit).not.toHaveBeenCalledTimes(2);
 
         const testValues = [null, undefined, [], {}, 'sampleString'];
@@ -1234,7 +1257,8 @@ describe('Stepper service unit tests', () => {
 
         let result: boolean = stepperService.emitActivatingEvent(steps[1]);
         expect(result).toEqual(false);
-        expect(activeChangingSpy).toHaveBeenCalledOnceWith(activeChangingEventArgs);
+        expect(activeChangingSpy).toHaveBeenCalledOnce();
+        expect(activeChangingSpy).toHaveBeenCalledWith(activeChangingEventArgs);
 
         activeChangingSpy.mockClear();
 

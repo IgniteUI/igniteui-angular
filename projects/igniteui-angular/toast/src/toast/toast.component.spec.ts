@@ -61,7 +61,8 @@ describe('IgxToast', () => {
         toast.toggle();
         expect(toast.isVisible).toBe(true);
         flushMicrotasks();
-        expect(toast.isVisibleChange.emit).toHaveBeenCalledOnceWith({ owner: toast, id: '0' });
+        expect(toast.isVisibleChange.emit).toHaveBeenCalledOnce();
+        expect(toast.isVisibleChange.emit).toHaveBeenCalledWith({ owner: toast, id: '0' });
 
         toast.toggle();
         flushMicrotasks();
