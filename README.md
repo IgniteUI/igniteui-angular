@@ -333,6 +333,10 @@ Developer support is provided as part of the commercial, paid-for license via [I
 
 Community support for open source usage of this product is available at [StackOverflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular).
 
+## Attributions
+
+This project uses the [Noto Sans](https://fonts.google.com/noto/specimen/Noto+Sans) font, which is licensed under the [SIL Open Font License, Version 1.1](http://scripts.sil.org/OFL).
+
 ## License
 This is a commercial product, requiring a valid paid-for license for commercial use.
 This product is free to use for non-commercial educational use for students in K through 12 grades or University programs, and for educators to use in a classroom setting as examples / tools in their curriculum.
