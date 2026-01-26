@@ -1165,10 +1165,10 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
-                expect(prefix).toHaveSize(1);
+                expect(prefix).toHaveLength(1);
                 expect(prefix[0].nativeElement.innerText).toEqual(TIME_PICKER_TOGGLE_ICON);
                 const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
-                expect(suffix).toHaveSize(1);
+                expect(suffix).toHaveLength(1);
                 expect(suffix[0].nativeElement.innerText).toEqual(TIME_PICKER_CLEAR_ICON);
             });
 
@@ -1724,18 +1724,18 @@ describe('IgxTimePicker', () => {
                 inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
 
                 const label = inputGroup.queryAll(By.directive(IgxLabelDirective));
-                expect(label).toHaveSize(1);
+                expect(label).toHaveLength(1);
                 expect(label[0].nativeElement.innerText).toEqual('Label');
                 const hint = inputGroup.queryAll(By.directive(IgxHintDirective));
-                expect(hint).toHaveSize(1);
+                expect(hint).toHaveLength(1);
                 expect(hint[0].nativeElement.innerText).toEqual('Hint');
 
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
-                expect(prefix).toHaveSize(2);
+                expect(prefix).toHaveLength(2);
                 expect(prefix[0].nativeElement.innerText).toEqual(TIME_PICKER_TOGGLE_ICON);
                 expect(prefix[1].nativeElement.innerText).toEqual('Prefix');
                 const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
-                expect(suffix).toHaveSize(2);
+                expect(suffix).toHaveLength(2);
                 expect(suffix[0].nativeElement.innerText).toEqual(TIME_PICKER_CLEAR_ICON);
                 expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
             });
@@ -1748,11 +1748,11 @@ describe('IgxTimePicker', () => {
                 inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
 
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
-                expect(prefix).toHaveSize(2);
+                expect(prefix).toHaveLength(2);
                 expect(prefix[0].nativeElement.innerText).toEqual('CustomToggle');
                 expect(prefix[1].nativeElement.innerText).toEqual('Prefix');
                 const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
-                expect(suffix).toHaveSize(2);
+                expect(suffix).toHaveLength(2);
                 expect(suffix[0].nativeElement.innerText).toEqual('CustomClear');
                 expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
             });
@@ -1772,8 +1772,8 @@ describe('IgxTimePicker', () => {
                 let toggle = fixture.componentInstance.customToggle;
                 let clear = fixture.componentInstance.customClear;
 
-                expect(toggle.clicked.observers).toHaveSize(1);
-                expect(clear.clicked.observers).toHaveSize(1);
+                expect(toggle.clicked.observers).toHaveLength(1);
+                expect(clear.clicked.observers).toHaveLength(1);
                 const event = { stopPropagation: vi.fn() };
                 toggleElem.triggerEventHandler('click', event);
                 expect(timePicker.open).toHaveBeenCalledTimes(1);
@@ -1783,12 +1783,12 @@ describe('IgxTimePicker', () => {
                 // hide
                 fixture.componentInstance.showCustomToggle = false;
                 fixture.detectChanges();
-                expect(toggle.clicked.observers).toHaveSize(0);
-                expect(clear.clicked.observers).toHaveSize(1);
+                expect(toggle.clicked.observers).toHaveLength(0);
+                expect(clear.clicked.observers).toHaveLength(1);
                 fixture.componentInstance.showCustomClear = false;
                 fixture.detectChanges();
-                expect(toggle.clicked.observers).toHaveSize(0);
-                expect(clear.clicked.observers).toHaveSize(0);
+                expect(toggle.clicked.observers).toHaveLength(0);
+                expect(clear.clicked.observers).toHaveLength(0);
 
                 // show again
                 fixture.componentInstance.showCustomClear = true;
@@ -1796,12 +1796,12 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 toggle = fixture.componentInstance.customToggle;
                 clear = fixture.componentInstance.customClear;
-                expect(toggle.clicked.observers).toHaveSize(1);
-                expect(clear.clicked.observers).toHaveSize(1);
+                expect(toggle.clicked.observers).toHaveLength(1);
+                expect(clear.clicked.observers).toHaveLength(1);
 
                 timePicker.ngOnDestroy();
-                expect(toggle.clicked.observers).toHaveSize(0);
-                expect(clear.clicked.observers).toHaveSize(0);
+                expect(toggle.clicked.observers).toHaveLength(0);
+                expect(clear.clicked.observers).toHaveLength(0);
             });
         });
 

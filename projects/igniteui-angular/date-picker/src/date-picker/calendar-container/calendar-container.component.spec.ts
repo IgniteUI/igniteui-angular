@@ -37,7 +37,7 @@ describe('Calendar Container', () => {
         container.closeButtonLabel = 'cancel';
         fixture.detectChanges();
         let buttons = fixture.debugElement.queryAll(By.directive(IgxButtonDirective));
-        expect(buttons).toHaveSize(1);
+        expect(buttons).toHaveLength(1);
         expect(buttons[0].nativeElement.innerText).toEqual('cancel');
         buttons[0].triggerEventHandler('click', {});
         expect(container.calendarClose.emit).toHaveBeenCalledTimes(1);
@@ -45,7 +45,7 @@ describe('Calendar Container', () => {
         container.todayButtonLabel = 'ok';
         fixture.detectChanges();
         buttons = fixture.debugElement.queryAll(By.directive(IgxButtonDirective));
-        expect(buttons).toHaveSize(2);
+        expect(buttons).toHaveLength(2);
         expect(buttons[1].nativeElement.innerText).toEqual('ok');
         buttons[1].triggerEventHandler('click', {});
         expect(container.todaySelection.emit).toHaveBeenCalledTimes(1);
@@ -58,7 +58,7 @@ describe('Calendar Container', () => {
 
         const calendar = fixture.debugElement.query(By.directive(IgxCalendarComponent)).componentInstance;
         const buttons = fixture.debugElement.queryAll(By.directive(IgxButtonDirective));
-        expect(buttons).toHaveSize(1);
+        expect(buttons).toHaveLength(1);
         expect(buttons[0].nativeElement.innerText).toEqual('action');
         buttons[0].triggerEventHandler('click', {});
         expect(fixture.componentInstance.doWork).toHaveBeenCalledWith(calendar);
