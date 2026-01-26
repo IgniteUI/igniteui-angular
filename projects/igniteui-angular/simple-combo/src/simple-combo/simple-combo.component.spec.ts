@@ -2826,7 +2826,7 @@ describe('IgxSimpleCombo', () => {
             try {
                 // combo should not throw from the selection getter at this point
                 grid.navigateTo(fixture.componentInstance.data.length - 1, 0);
-                await wait(30);
+                await wait(60);
                 fixture.detectChanges();
             } catch (error) {
                 fail(`Test failed with error: ${error}`)

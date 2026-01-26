@@ -190,6 +190,8 @@
                 &:not(:nth-child(1)) {
                     margin: 0;
                 }
+
+                @include type-style('button');
             }
         }
 
@@ -804,10 +806,6 @@
         %cbx-label {
             @include type-style('body-2');
         }
-    }
-
-    %igx-group-item {
-        @include type-style('button');
     }
 
     %grid-excel-menu__secondary--cosy {
