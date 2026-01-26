@@ -1911,7 +1911,7 @@ describe('IgxDateRangePicker', () => {
             it('should invoke AutoPositionStrategy by default with proper arguments', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
-                spyOn<any>(AutoPositionStrategy.prototype, 'position');
+                vi.spyOn(AutoPositionStrategy.prototype, 'position');
 
                 dateRange = fixture.componentInstance.dateRange;
                 dateRange.open();
@@ -2532,3 +2532,5 @@ export class DateRangeReactiveFormComponent {
         this.form.disable();
     }
 }
+
+

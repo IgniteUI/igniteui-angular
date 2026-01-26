@@ -329,7 +329,7 @@ describe('IgxSimpleCombo', () => {
             combo.ngOnInit();
             combo.data = data;
             combo.dropdown = dropdown;
-            const matchSpy = spyOn<any>(combo, 'checkMatch');
+            const matchSpy = vi.spyOn(combo, 'checkMatch');
             vi.spyOn(combo.searchInputUpdate, 'emit');
             const comboInput = { value: vi.fn() };
             comboInput.value = 'test';
@@ -365,7 +365,7 @@ describe('IgxSimpleCombo', () => {
             combo.searchInputUpdate.subscribe((e) => {
                 e.cancel = true;
             });
-            const matchSpy = spyOn<any>(combo, 'checkMatch');
+            const matchSpy = vi.spyOn(combo, 'checkMatch');
             const dropdown = { selectItem: vi.fn(), collapsed: vi.fn(), open: vi.fn(), navigateFirst: vi.fn() };
             combo.dropdown = dropdown;
             vi.spyOn(combo.searchInputUpdate, 'emit');
@@ -3439,3 +3439,5 @@ export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {
         ];
     }
 }
+
+

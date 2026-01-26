@@ -81,7 +81,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
-            const parentSpy = spyOn<any>(hierarchicalGrid.selected, 'emit');
+            const parentSpy = vi.spyOn(hierarchicalGrid.selected, 'emit');
             firstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
             GridFunctions.focusCell(fix, fCell);
@@ -499,7 +499,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             column.bodyTemplate = component.customCell;
             fix.detectChanges();
 
-            const selectionChangeSpy = spyOn<any>(hierarchicalGrid.rangeSelected, 'emit');
+            const selectionChangeSpy = vi.spyOn(hierarchicalGrid.rangeSelected, 'emit');
             const cell = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ID');
             const cellElement = cell.nativeElement;
             const span = cellElement.querySelector('span');
@@ -649,9 +649,9 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const secondChildGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[1];
-            const parentSpy = spyOn<any>(hierarchicalGrid.rowSelectionChanging, 'emit');
-            const childSpy = spyOn<any>(childGrid.rowSelectionChanging, 'emit');
-            const secondChildSpy = spyOn<any>(secondChildGrid.rowSelectionChanging, 'emit');
+            const parentSpy = vi.spyOn(hierarchicalGrid.rowSelectionChanging, 'emit');
+            const childSpy = vi.spyOn(childGrid.rowSelectionChanging, 'emit');
+            const secondChildSpy = vi.spyOn(secondChildGrid.rowSelectionChanging, 'emit');
             const mockEvent = new MouseEvent('click');
 
             // Click on a row in child grid
@@ -1572,3 +1572,5 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         }));
     });
 });
+
+

@@ -688,7 +688,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit');
+            const gridKeydown = vi.spyOn(grid.gridKeydown, 'emit');
 
             const cell = grid.gridAPI.get_cell_by_index(1, '2');
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -1025,7 +1025,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(rowEl);
             fix.detectChanges();
 
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit');
+            const gridKeydown = vi.spyOn(grid.gridKeydown, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Enter', rowEl.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -1046,3 +1046,5 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
     });
 });
+
+

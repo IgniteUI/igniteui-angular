@@ -330,7 +330,7 @@ describe('PDF Grid Exporter', () => {
         const expectedRows = allGrids.reduce((acc, g) => acc + g.data.length, 0);
 
         // Spy PDF row drawing to count exported rows
-        const drawDataRowSpy = spyOn<any>(exporter as any, 'drawDataRow');
+        const drawDataRowSpy = vi.spyOn(exporter as any, 'drawDataRow');
 
         const exportPromise = firstValueFrom(exporter.exportEnded);
         exporter.export(hGrid, options);
@@ -501,3 +501,5 @@ describe('PDF Grid Exporter', () => {
         });
     });
 });
+
+

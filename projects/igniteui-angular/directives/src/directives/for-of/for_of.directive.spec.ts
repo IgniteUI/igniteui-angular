@@ -1,4 +1,4 @@
-﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
+import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -958,8 +958,8 @@ describe('IgxForOf directive -', () => {
 
         it('should emit the chunkPreload/chunkLoad only when startIndex or chunkSize have changed.', async () => {
             const verticalDir = fix.componentInstance.parentVirtDir;
-            const chunkLoadSpy = spyOn<any>(verticalDir.chunkLoad, 'emit');
-            const chunkPreLoadSpy = spyOn<any>(verticalDir.chunkPreload, 'emit');
+            const chunkLoadSpy = vi.spyOn(verticalDir.chunkLoad, 'emit');
+            const chunkPreLoadSpy = vi.spyOn(verticalDir.chunkPreload, 'emit');
             // scroll so that start index does not change.
             fix.componentInstance.scrollTop(1);
             fix.detectChanges();
@@ -1911,3 +1911,5 @@ export class LocalVariablesAsComponent {
         }
     }
 }
+
+

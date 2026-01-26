@@ -49,7 +49,7 @@ describe('IgxRipple', () => {
         expect(initialWidth).toBeGreaterThan(0);
         expect(initialHeight).toBeGreaterThan(0);
 
-        const setStylesSpy = spyOn<any>(rippleDirective, 'setStyles').and.callThrough();
+        const setStylesSpy = vi.spyOn(rippleDirective, 'setStyles').and.callThrough();
         const rect = button.getBoundingClientRect();
         const mouseEvent = new MouseEvent('mousedown', {
             clientX: rect.left + 50,
@@ -101,7 +101,7 @@ describe('IgxRipple', () => {
 
         const buttonDebug = fixture.debugElement.query(By.css('button'));
         const rippleDirective = buttonDebug.injector.get(IgxRippleDirective);
-        const setStylesSpy = spyOn<any>(rippleDirective, 'setStyles');
+        const setStylesSpy = vi.spyOn(rippleDirective, 'setStyles');
         const button = buttonDebug.nativeElement;
         const rect = button.getBoundingClientRect();
         const mouseEvent = new MouseEvent('mousedown', {
@@ -261,3 +261,5 @@ class RippleColorComponent { }
     standalone: true
 })
 class RippleTargetComponent { }
+
+

@@ -25,7 +25,7 @@ describe('Toggle animation component', () => {
     describe('Unit tests', () => {
         it('Should initialize player with give settings', () => {
             const player = TestBed.inject(MockTogglePlayer);
-            const startPlayerSpy = spyOn<any>(player, 'startPlayer');
+            const startPlayerSpy = vi.spyOn(player, 'startPlayer');
             const mockEl = { focus: vi.fn() };
             player.playOpenAnimation(mockEl);
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.OPEN, mockEl, noop);
@@ -81,3 +81,5 @@ describe('Toggle animation component', () => {
         });
     });
 });
+
+

@@ -317,7 +317,7 @@ describe('igxCombo', () => {
                 value: '',
             } as any;
             combo.disableFiltering = false;
-            const matchSpy = spyOn<any>(combo, 'checkMatch');
+            const matchSpy = vi.spyOn(combo, 'checkMatch');
             vi.spyOn(combo.searchInputUpdate, 'emit');
 
             combo.handleInputChange();
@@ -353,7 +353,7 @@ describe('igxCombo', () => {
             combo.searchInputUpdate.subscribe((e) => {
                 e.cancel = true;
             });
-            const matchSpy = spyOn<any>(combo, 'checkMatch');
+            const matchSpy = vi.spyOn(combo, 'checkMatch');
             vi.spyOn(combo.searchInputUpdate, 'emit');
 
             combo.handleInputChange('Item1');
@@ -1555,8 +1555,8 @@ describe('igxCombo', () => {
                     expect(combo.virtualScrollContainer).toBeDefined();
                     combo.allowCustomValues = true;
                     const mockClick = { preventDefault: vi.fn(), stopPropagation: vi.fn() };
-                    const virtualMockUP = spyOn<any>(dropdown, 'navigatePrev');
-                    const virtualMockDOWN = spyOn<any>(dropdown, 'navigateNext');
+                    const virtualMockUP = vi.spyOn(dropdown, 'navigatePrev');
+                    const virtualMockDOWN = vi.spyOn(dropdown, 'navigateNext');
                     expect(dropdown.focusedItem).toEqual(null);
                     expect(combo.collapsed).toBeTruthy();
                     combo.toggle();
@@ -3928,3 +3928,5 @@ export class ComboWithIdComponent {
         ];
     }
 }
+
+

@@ -586,8 +586,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const cancelBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[0] as DebugElement;
             const doneBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[1];
             vi.spyOn(cancelBtn.nativeElement, 'focus');
-            spyOn<any>(grid.rowEditTabs.first, 'move');
-            spyOn<any>(grid.rowEditTabs.last, 'move');
+            vi.spyOn(grid.rowEditTabs.first, 'move');
+            vi.spyOn(grid.rowEditTabs.last, 'move');
 
             await TreeGridFunctions.moveGridCellWithTab(fix, grid.gridAPI.get_cell_by_index(2, 'Age'));
             expect(cancelBtn.nativeElement.focus).toHaveBeenCalled();
@@ -1829,3 +1829,5 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
     });
 });
+
+

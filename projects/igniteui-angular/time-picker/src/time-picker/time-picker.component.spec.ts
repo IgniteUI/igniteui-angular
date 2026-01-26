@@ -467,7 +467,7 @@ describe('IgxTimePicker', () => {
                 (itemListDirective as any).onPanMove,
                 hammerOptions);
 
-            spyOn<any>(itemListDirective, 'onPanMove');
+            vi.spyOn(itemListDirective, 'onPanMove');
             const event = { type: 'pan' };
             (itemListDirective as any).onPanMove(event);
             expect(itemListDirective['onPanMove']).toHaveBeenCalled();
@@ -2035,3 +2035,5 @@ export class IgxTimePickerReactiveFormComponent {
         this.form.disable();
     }
 }
+
+

@@ -848,7 +848,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             it('Should exclude expanded detail views when doing range cell selection', fakeAsync(() => {
                 grid.expandRow(fix.componentInstance.data[2].ID);
-                const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit');
+                const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
                 const startCell = grid.gridAPI.get_cell_by_index(1, 'ContactName');
                 const endCell = grid.gridAPI.get_cell_by_index(6, 'CompanyName');
                 const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };
@@ -1413,3 +1413,5 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
 
 const getDetailAddressText = (detailElem) => detailElem.querySelector('.addressArea').innerText;
+
+

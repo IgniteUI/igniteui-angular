@@ -846,9 +846,9 @@ describe('IgxSlider', () => {
 
             expect(slider).toBeDefined();
             expect(slider.upperLabel).toEqual('Winter');
-            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit');
-            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit');
-            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit');
+            const valueChangeSpy = vi.spyOn(slider.valueChange, 'emit');
+            const upperValueChangeSpy = vi.spyOn(slider.upperValueChange, 'emit');
+            const lowerValueChangeSpy = vi.spyOn(slider.lowerValueChange, 'emit');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
             fixture.detectChanges();
@@ -1137,9 +1137,9 @@ describe('IgxSlider', () => {
             expect(fromThumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
-            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit');
-            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit');
-            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit');
+            const valueChangeSpy = vi.spyOn(slider.valueChange, 'emit');
+            const lowerValueChangeSpy = vi.spyOn(slider.lowerValueChange, 'emit');
+            const upperValueChangeSpy = vi.spyOn(slider.upperValueChange, 'emit');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
@@ -1458,7 +1458,7 @@ describe('IgxSlider', () => {
             fix.detectChanges();
 
             const instance = fix.componentInstance;
-            const spyOnDragFinished = spyOn<any>(instance.slider.dragFinished, 'emit');
+            const spyOnDragFinished = vi.spyOn(instance.slider.dragFinished, 'emit');
             const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS));
             const thumbTo = fix.debugElement.query(By.css(THUMB_TO_CLASS));
             thumbTo.triggerEventHandler('focus', null);
@@ -2255,3 +2255,5 @@ export class SliderWithValueAdjustmentComponent {
         upper: 20
     };
 }
+
+
