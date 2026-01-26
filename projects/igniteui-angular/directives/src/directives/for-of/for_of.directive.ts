@@ -1643,7 +1643,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         return this.igxForSizePropName || 'height';
     }
 
-    public override recalcUpdateSizes(prevState: IForOfState) {
+    public override recalcUpdateSizes(prevState?: IForOfState) {
         if (this.igxGridForOfVariableSizes && this.igxForScrollOrientation === 'vertical') {
             super.recalcUpdateSizes(prevState);
         }
