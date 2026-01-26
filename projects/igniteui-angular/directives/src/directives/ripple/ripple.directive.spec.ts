@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -77,7 +78,7 @@ describe('IgxRipple', () => {
 
         const buttonDebug = fixture.debugElement.query(By.css('button'));
         const rippleDirective = buttonDebug.injector.get(IgxRippleDirective);
-        const setStyleSpy = spyOn(rippleDirective['renderer'], 'setStyle').and.callThrough();
+        const setStyleSpy = vi.spyOn(rippleDirective['renderer'], 'setStyle');
         const button = buttonDebug.nativeElement;
         const rect = button.getBoundingClientRect();
         const mouseEvent = new MouseEvent('mousedown', {
@@ -119,7 +120,7 @@ describe('IgxRipple', () => {
 
         const buttonDebug = fixture.debugElement.query(By.css('button'));
         const rippleDirective = buttonDebug.injector.get(IgxRippleDirective);
-        const setStyleSpy = spyOn(rippleDirective['renderer'], 'setStyle').and.callThrough();
+        const setStyleSpy = vi.spyOn(rippleDirective['renderer'], 'setStyle');
         const button = buttonDebug.nativeElement;
         const rect = button.getBoundingClientRect();
         const mouseEvent = new MouseEvent('mousedown', {
@@ -142,7 +143,7 @@ describe('IgxRipple', () => {
 
         const buttonDebug = fixture.debugElement.query(By.css('button'));
         const rippleDirective = buttonDebug.injector.get(IgxRippleDirective);
-        const setStyleSpy = spyOn(rippleDirective['renderer'], 'setStyle').and.callThrough();
+        const setStyleSpy = vi.spyOn(rippleDirective['renderer'], 'setStyle');
         const button = buttonDebug.nativeElement;
         const rect = button.getBoundingClientRect();
         const mouseEvent = new MouseEvent('mousedown', {
@@ -171,7 +172,7 @@ describe('IgxRipple', () => {
         const containerDebug = fixture.debugElement.query(By.css('.container'));
         const rippleDirective = containerDebug.injector.get(IgxRippleDirective);
         const targetButton = fixture.debugElement.query(By.css('#target')).nativeElement;
-        const appendChildSpy = spyOn(rippleDirective['renderer'], 'appendChild').and.callThrough();
+        const appendChildSpy = vi.spyOn(rippleDirective['renderer'], 'appendChild');
         const container = containerDebug.nativeElement;
         const rect = container.getBoundingClientRect();
         const mouseEvent = new MouseEvent('mousedown', {
@@ -196,7 +197,7 @@ describe('IgxRipple', () => {
         button.style.width = '100px';
         button.style.height = '50px';
 
-        const setStyleSpy = spyOn(rippleDirective['renderer'], 'setStyle').and.callThrough();
+        const setStyleSpy = vi.spyOn(rippleDirective['renderer'], 'setStyle');
         const rect = button.getBoundingClientRect();
         const mouseEvent = new MouseEvent('mousedown', {
             clientX: rect.left + 25,
