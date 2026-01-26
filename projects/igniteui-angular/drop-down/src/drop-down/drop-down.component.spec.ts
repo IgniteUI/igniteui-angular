@@ -64,7 +64,7 @@ describe('IgxDropDown ', () => {
         });
         it('should notify when selection has changed', () => {
             (dropdown as any).virtDir = mockForOf;
-            spyOnProperty(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
             vi.spyOn(dropdown.selectionChanging, 'emit');
 
             dropdown.selectItem(data[0]);
@@ -77,7 +77,7 @@ describe('IgxDropDown ', () => {
         });
         it('should fire selectionChanging with correct args', () => {
             (dropdown as any).virtDir = mockForOf;
-            spyOnProperty(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
             vi.spyOn(dropdown.selectionChanging, 'emit');
 
             const selectionArgs: ISelectionEventArgs = {
@@ -100,7 +100,7 @@ describe('IgxDropDown ', () => {
         });
         it('should notify when selection is cleared', () => {
             (dropdown as any).virtDir = mockForOf;
-            spyOnProperty(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
             vi.spyOn(dropdown.selectionChanging, 'emit');
             vi.spyOn(dropdown.closed, 'emit');
 
@@ -130,7 +130,7 @@ describe('IgxDropDown ', () => {
         it('setSelectedItem should return selected item', () => {
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
-            spyOnProperty(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
 
             expect(dropdown.selectedItem).toBeNull();
 
@@ -142,7 +142,7 @@ describe('IgxDropDown ', () => {
         it('setSelectedItem should return null when selection is cleared', () => {
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
-            spyOnProperty(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
 
             dropdown.setSelectedItem(3);
             expect(dropdown.selectedItem).toBeTruthy();
@@ -153,8 +153,8 @@ describe('IgxDropDown ', () => {
         });
         it('toggle should call open method when dropdown is collapsed', () => {
             (dropdown as any).virtDir = mockForOf;
-            spyOnProperty(dropdown, 'items', 'get').mockReturnValue(data);
-            spyOnProperty(dropdown, 'collapsed', 'get').mockReturnValue(true);
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown, 'collapsed', 'get').mockReturnValue(true);
             vi.spyOn(dropdown, 'open');
 
             dropdown.toggle();
@@ -165,8 +165,8 @@ describe('IgxDropDown ', () => {
             const mockToggle = { open: vi.fn() };
             mockToggle.isClosing = false;
             (dropdown as any).toggleDirective = mockToggle;
-            spyOnProperty(dropdown, 'items', 'get').mockReturnValue(data);
-            spyOnProperty(dropdown, 'collapsed', 'get').mockReturnValue(false);
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown, 'collapsed', 'get').mockReturnValue(false);
             vi.spyOn(dropdown, 'close');
 
             dropdown.toggle();

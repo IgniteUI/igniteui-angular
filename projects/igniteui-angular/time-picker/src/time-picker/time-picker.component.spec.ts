@@ -228,13 +228,13 @@ describe('IgxTimePicker', () => {
         it('should properly subscribe to ngControl status changes', () => {
             timePicker.ngOnInit();
             timePicker.ngAfterViewInit();
-            const touchedSpy = spyOnProperty(mockControlInstance, 'touched', 'get');
-            const dirtySpy = spyOnProperty(mockControlInstance, 'dirty', 'get');
-            const validatorSpy = spyOnProperty(mockControlInstance, 'validator');
-            const asyncValidatorSpy = spyOnProperty(mockControlInstance, 'asyncValidator');
-            const inputGroupFocusedSpy = spyOnProperty(mockInputGroup, 'isFocused', 'get');
-            const inputGroupRequiredGet = spyOnProperty(mockInputGroup, 'isRequired', 'get');
-            const inputGroupRequiredSet = spyOnProperty(mockInputGroup, 'isRequired', 'set');
+            const touchedSpy = vi.spyOn(mockControlInstance, 'touched', 'get');
+            const dirtySpy = vi.spyOn(mockControlInstance, 'dirty', 'get');
+            const validatorSpy = vi.spyOn(mockControlInstance, 'validator');
+            const asyncValidatorSpy = vi.spyOn(mockControlInstance, 'asyncValidator');
+            const inputGroupFocusedSpy = vi.spyOn(mockInputGroup, 'isFocused', 'get');
+            const inputGroupRequiredGet = vi.spyOn(mockInputGroup, 'isRequired', 'get');
+            const inputGroupRequiredSet = vi.spyOn(mockInputGroup, 'isRequired', 'set');
             inputGroupRequiredGet.mockReturnValue(false);
             inputGroupFocusedSpy.mockReturnValue(false);
             expect(touchedSpy).not.toHaveBeenCalled();

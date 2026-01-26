@@ -256,7 +256,7 @@ describe('IgxSimpleCombo', () => {
             combo.data = complexData;
             combo.valueKey = 'country';
             combo.dropdown = dropdown;
-            spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+            vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
             const selectionSpy = vi.spyOn(combo.selectionChanging, 'emit');
             const expectedResults: ISimpleComboSelectionChangingEventArgs = {
                 newValue: combo.data[0][combo.valueKey],
@@ -287,7 +287,7 @@ describe('IgxSimpleCombo', () => {
             combo.ngOnInit();
             combo.data = data;
             combo.dropdown = dropdown;
-            spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+            vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
             vi.spyOn(combo.selectionChanging, 'emit').mockImplementation((event: IComboSelectionChangingEventArgs) => event.newValue = undefined);
             const comboInput = { value: vi.fn() };
             combo.comboInput = comboInput;
@@ -401,7 +401,7 @@ describe('IgxSimpleCombo', () => {
             const comboInput = { value: vi.fn(), focus: vi.fn() };
             comboInput.value = 'test';
             combo.comboInput = comboInput;
-            spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+            vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
 
             const item = combo.data.slice(0, 1);
             combo.select(item);

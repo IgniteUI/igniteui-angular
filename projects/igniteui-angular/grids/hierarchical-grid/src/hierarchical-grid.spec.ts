@@ -1119,7 +1119,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(summaryCell).toBeDefined();
             expect(summaryCell.textContent.trim().length).toBeGreaterThan(0);
 
-            const getterSpy = spyOnProperty(column, 'disabledSummaries', 'get');
+            const getterSpy = vi.spyOn(column, 'disabledSummaries', 'get');
 
             column.disabledSummaries = ['count'];
             fixture.detectChanges();

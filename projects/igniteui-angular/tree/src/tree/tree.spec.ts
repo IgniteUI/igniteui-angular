@@ -103,7 +103,7 @@ describe('IgxTree #treeView', () => {
                     mockNode
                 );
 
-                spyOnProperty(mockNodes, 'first', 'get').mockReturnValue(mockNode);
+                vi.spyOn(mockNodes, 'first', 'get').mockReturnValue(mockNode);
                 tree.ngAfterViewInit();
                 tick();
                 expect(mockNavService.init_invisible_cache).toHaveBeenCalledTimes(1);
@@ -174,7 +174,7 @@ describe('IgxTree #treeView', () => {
                             this._expanded = val;
                         }
                     };
-                    node.spyProp = spyOnProperty(node, 'expanded', 'set');
+                    node.spyProp = vi.spyOn(node, 'expanded', 'set');
                     mockNodesArray.push(node);
                     if (i > 3) {
                         customArrayParam.push(node);
@@ -205,7 +205,7 @@ describe('IgxTree #treeView', () => {
                             this._expanded = val;
                         }
                     };
-                    node.spyProp = spyOnProperty(node, 'expanded', 'set');
+                    node.spyProp = vi.spyOn(node, 'expanded', 'set');
                     mockNodesArray.push(node);
                     if (i > 3) {
                         customArrayParam.push(node);

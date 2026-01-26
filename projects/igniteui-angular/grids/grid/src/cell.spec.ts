@@ -282,7 +282,7 @@ describe('IgxGrid - Cell component #grid', () => {
             platformUtil.isIOS = false;
             const fix = TestBed.createComponent(NoScrollsComponent);
             fix.detectChanges();
-            // spyOnProperty(PlatformUtil.prototype, 'isIOS').mockReturnValue(false);
+            // vi.spyOn(PlatformUtil.prototype, 'isIOS').mockReturnValue(false);
             expect(addListenerSpy).not.toHaveBeenCalled();
 
             platformUtil.isIOS = oldIsIOS;

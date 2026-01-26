@@ -133,7 +133,7 @@ describe('igxCombo', () => {
             // writeValue
             expect(combo.displayValue).toEqual('');
             mockSelection.get.mockReturnValue(new Set(['test']));
-            spyOnProperty(combo, 'isRemote').mockReturnValue(false);
+            vi.spyOn(combo, 'isRemote').mockReturnValue(false);
             combo.writeValue(['test']);
             expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
             expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['test'], true);
@@ -154,8 +154,8 @@ describe('igxCombo', () => {
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(['simpleValue']);
 
             // OnTouched callback
-            spyOnProperty(combo, 'collapsed').mockReturnValue(true);
-            spyOnProperty(combo, 'valid', 'set');
+            vi.spyOn(combo, 'collapsed').mockReturnValue(true);
+            vi.spyOn(combo, 'valid', 'set');
 
             combo.onBlur();
             expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
@@ -230,7 +230,7 @@ describe('igxCombo', () => {
             combo.ngOnInit();
             combo.data = data;
             mockSelection.select_items.mockClear();
-            spyOnProperty(combo, 'isRemote').mockReturnValue(false);
+            vi.spyOn(combo, 'isRemote').mockReturnValue(false);
             combo.writeValue(['EXAMPLE']);
             expect(mockSelection.select_items).toHaveBeenCalledTimes(1);
 
@@ -413,7 +413,7 @@ describe('igxCombo', () => {
                 combo.data = complexData;
                 combo.valueKey = 'country';
                 combo.dropdown = dropdown;
-                spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
 
                 const selectedItems = [combo.data[0]];
                 const selectedValues = [combo.data[0].country];
@@ -455,7 +455,7 @@ describe('igxCombo', () => {
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
 
                 combo.select([], false);
                 expect(combo.selection).toEqual([]);
@@ -483,7 +483,7 @@ describe('igxCombo', () => {
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo.selectionChanging, 'emit');
 
                 let oldValue = [];
@@ -573,7 +573,7 @@ describe('igxCombo', () => {
                 combo.data = complexData;
                 combo.valueKey = 'country';
                 combo.dropdown = dropdown;
-                spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
                 const selectionSpy = vi.spyOn(combo.selectionChanging, 'emit');
                 const expectedResults: IComboSelectionChangingEventArgs = {
                     newValue: [combo.data[0][combo.valueKey]],
@@ -608,7 +608,7 @@ describe('igxCombo', () => {
                 combo.valueKey = 'country';
                 combo.displayKey = 'city';
                 combo.dropdown = dropdown;
-                spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
                 const selectionSpy = vi.spyOn(combo.selectionChanging, 'emit');
 
                 let oldSelection = [];
@@ -661,7 +661,7 @@ describe('igxCombo', () => {
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo, 'selectAllItems');
                 vi.spyOn(combo, 'deselectAllItems');
 
@@ -678,7 +678,7 @@ describe('igxCombo', () => {
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo.selectionChanging, 'emit');
 
                 combo.selectAllItems(true);
@@ -720,7 +720,7 @@ describe('igxCombo', () => {
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo.selectionChanging, 'emit').mockImplementation((event: IComboSelectionChangingEventArgs) => event.newValue = []);
                 // No items are initially selected
                 expect(combo.selection).toEqual([]);
@@ -736,7 +736,7 @@ describe('igxCombo', () => {
                 combo.data = data;
                 combo.dropdown = dropdown;
                 combo.disabled = true;
-                spyOnProperty(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
 
                 const item = combo.data.slice(0, 1);
                 combo.select(item, true);
@@ -1665,7 +1665,7 @@ describe('igxCombo', () => {
                     expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(0);
                     combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'Enter'));
                     expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
-                    spyOnProperty(combo, 'filteredData', 'get').mockReturnValue([1]);
+                    vi.spyOn(combo, 'filteredData', 'get').mockReturnValue([1]);
                     combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'Enter'));
                     expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
                     combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
@@ -2482,7 +2482,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
 
                 const mockObj = { focus: vi.fn() };
-                spyOnProperty(combo.dropdown, 'focusedItem', 'get').mockReturnValue({ element: { nativeElement: mockObj } } as IgxDropDownItemBaseDirective);
+                vi.spyOn(combo.dropdown, 'focusedItem', 'get').mockReturnValue({ element: { nativeElement: mockObj } } as IgxDropDownItemBaseDirective);
                 (combo.dropdown.headers[0] as IgxComboItemComponent).clicked(null);
                 fixture.detectChanges();
                 expect(mockObj.focus).not.toHaveBeenCalled(); // Focus only if `allowItemFocus === true`

@@ -2704,7 +2704,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
         select.input = {} as any;
-        spyOnProperty(select, 'collapsed').mockReturnValue(true);
+        vi.spyOn(select, 'collapsed').mockReturnValue(true);
         select.onBlur();
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
 

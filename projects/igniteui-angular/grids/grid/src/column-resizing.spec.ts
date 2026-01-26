@@ -144,7 +144,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             const resizer = GridFunctions.getResizer(fixture);
             const resizerDirective = resizer.componentInstance.resizer as IgxColumnResizerDirective;
-            const leftSetterSpy = spyOnProperty(resizerDirective, 'left', 'set');
+            const leftSetterSpy = vi.spyOn(resizerDirective, 'left', 'set');
             UIInteractions.simulateMouseEvent('mousemove', resizer.nativeElement, 200, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer.nativeElement, 200, 5);
             fixture.detectChanges();
