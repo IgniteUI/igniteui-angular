@@ -29,7 +29,8 @@ import {
     ViewChildren,
     ViewContainerRef,
     DOCUMENT,
-    inject
+    inject,
+    InjectionToken
 } from '@angular/core';
 import {
     areEqualArrays,
@@ -111,6 +112,15 @@ import { CharSeparatedValueData, DropPosition, FilterMode, getUUID, GridCellMerg
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from 'igniteui-i18n-core';
 import { I18N_FORMATTER } from 'igniteui-angular/core';
 
+/**
+ * Injection token for setting the throttle time used in grid virtual scroll.
+ * @hidden
+ */
+export const SCROLL_THROTTLE_TIME = /*@__PURE__*/new InjectionToken<number>('SCROLL_THROTTLE_TIME', {
+    factory: () => 40
+});
+
+
 interface IMatchInfoCache {
     row: any;
     index: number;
@@ -136,21 +146,25 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 export abstract class IgxGridBaseDirective implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
 
+    /* blazorSuppress */
     public readonly validation = inject(IgxGridValidationService);
     /** @hidden @internal */
     public readonly selectionService = inject(IgxGridSelectionService);
     protected colResizingService = inject(IgxColumnResizingService);
+    /* blazorSuppress */
     public readonly gridAPI = inject<GridServiceType>(IGX_GRID_SERVICE_BASE);
     protected transactionFactory = inject(IgxFlatTransactionFactory);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected zone = inject(NgZone);
     /** @hidden @internal */
     public document = inject(DOCUMENT);
+    /* blazorSuppress */
     public readonly cdr = inject(ChangeDetectorRef);
     protected differs = inject(IterableDiffers);
     protected viewRef = inject(ViewContainerRef);
     protected injector = inject(Injector);
     protected envInjector = inject(EnvironmentInjector);
+    /* blazorSuppress */
     public navigation = inject(IgxGridNavigationService);
     /** @hidden @internal */
     public filteringService = inject(IgxFilteringService);
@@ -163,6 +177,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _diTransactions = inject(IgxGridTransaction, { optional: true });
     /** @hidden @internal */
     public i18nFormatter = inject(I18N_FORMATTER);
+    private readonly THROTTLE_TIME = inject(SCROLL_THROTTLE_TIME);
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
@@ -2275,7 +2290,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (value !== this._pinning) {
             this.resetCaches();
         }
-        this._pinning = value;
+
+        this._pinning = Object.assign({}, this._pinning, value);
     }
 
     /**
@@ -2458,7 +2474,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._sortingStrategy = value;
     }
 
-
+    /* csSuppress */
     /**
      * Gets/Sets the merge strategy of the grid.
      *
@@ -2998,6 +3014,9 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /** @hidden @internal */
     public resizeNotify = new Subject<void>();
+
+    /** @hidden @internal */
+    public scrollNotify = new Subject<any>();
 
     /** @hidden @internal */
     public rowAddedNotifier = new Subject<IRowDataEventArgs>();
@@ -3710,6 +3729,15 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.subscribeToTransactions();
 
+        this.scrollNotify.pipe(
+            filter(() => !this._init),
+            throttleTime(this.THROTTLE_TIME, animationFrameScheduler, { leading: false, trailing: true }),
+            destructor
+        )
+            .subscribe((event) => {
+                this.verticalScrollHandler(event);
+            });
+
         this.resizeNotify.pipe(
             filter(() => !this._init),
             throttleTime(40, animationFrameScheduler, { leading: true, trailing: true }),
@@ -4154,7 +4182,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.zone.runOutsideAngular(() => {
             this.verticalScrollHandler = this.verticalScrollHandler.bind(this);
             this.horizontalScrollHandler = this.horizontalScrollHandler.bind(this);
-            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler);
+            this.verticalScrollContainer.getScroll().addEventListener('scroll', (event) => this.scrollNotify.next(event));
             this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -7722,13 +7750,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
 
-        this.zone.run(() => {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
-                if (this.rowEditable) {
-                    this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
-                }
-            });
+        this.zone.onStable.pipe(first()).subscribe(() => {
+            this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
+            if (this.rowEditable) {
+                this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
+            }
         });
         this.disableTransitions = false;
 
@@ -7874,8 +7900,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If record is pinned but is not in pinned area then it is a ghost record.
      *
      * @param dataViewIndex The index of that record in the data view.
+     * @hidden
+     * @internal
      */
-    private isGhostRecordAtIndex(dataViewIndex) {
+    public isGhostRecordAtIndex(dataViewIndex) {
         const isPinned = this.isRecordPinned(this.dataView[dataViewIndex]);
         const isInPinnedArea = this.isRecordPinnedByViewIndex(dataViewIndex);
         return isPinned && !isInPinnedArea;
