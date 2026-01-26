@@ -874,7 +874,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             // nothing changed
             return;
         }
-        console.log('Recalculating sizes...');
         const diffs = [];
         let totalDiff = 0;
 
@@ -1010,7 +1009,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 this.updateSizeAtIndex(index, entry.contentRect.height);
                 const embView = this._embeddedViews[index - this.state.startIndex];
                 this._embeddedViewSizesCache.set(embView, entry.contentRect.height);
-                console.log(`Index: ${index}, New Size: ${entry.contentRect.height}`);
             }
         });
         this._applyChanges();
