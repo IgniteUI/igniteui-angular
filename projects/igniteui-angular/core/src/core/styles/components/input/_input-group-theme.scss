@@ -1216,6 +1216,10 @@
             &:has(%igx-input-group__notch:not(:empty)) {
                 --textarea-box-padding: #{pad-block(rem(16px), rem(20px), rem(24px))};
             }
+
+            %form-group-textarea {
+                margin-block-end: rem(2px);
+            }
         }
 
         %textarea-group:not(%suffixed) {
@@ -1285,7 +1289,7 @@
 
         %textarea-group-label--focused {
             transform: translateY(0);
-            top: calc(#{$material-box-top-padding} / 4);
+            top: calc(#{$textarea-padding} / 4);
         }
 
         %textarea-group-label--filled--border,
