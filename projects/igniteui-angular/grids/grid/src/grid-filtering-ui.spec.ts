@@ -1474,7 +1474,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const chipArea = filteringRow.query(By.css('igx-chip-area'));
             expect(GridFunctions.getFilterRowLeftArrowButton(fix)).toBeNull();
             expect(GridFunctions.getFilterRowRightArrowButton(fix)).toBeNull();
-            expect(chipArea).toBeNull('chipArea is present');
+            expect(chipArea, 'chipArea is present').toBeNull();
         }));
 
         it('Should remove first chip and filter by the remaining ones.', fakeAsync(() => {
@@ -2037,7 +2037,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Verify the the filterRow is closed.
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            expect(filterUIRow).toBeNull('filterRow is visible');
+            expect(filterUIRow, 'filterRow is visible').toBeNull();
 
             // Verify the ESF icons are visible.
             const thead = grid.theadRow.nativeElement;
@@ -2878,7 +2878,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Expect the filter row is closed
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            expect(filterUIRow).toBeNull('Default filter template was found on a column with custom filtering.');
+            expect(filterUIRow, 'Default filter template was found on a column with custom filtering.').toBeNull();
         }));
 
         it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
@@ -6714,7 +6714,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+            expect(loadingIndicator, 'esf loading indicator is not visible').not.toBeNull();
 
             // Wait for items to load.
             tick(650);
@@ -6723,7 +6723,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(6);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
         }));
 
         it('Verify unique values are loaded correctly in ESF search component when using filtering strategy.', fakeAsync(() => {
@@ -6740,7 +6740,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+            expect(loadingIndicator, 'esf loading indicator is not visible').not.toBeNull();
 
             // Wait for items to load.
             tick(650);
@@ -6749,7 +6749,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(6);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
         }));
 
         it('Verify unique date values are loaded correctly in ESF search component.', fakeAsync(() => {
@@ -6762,7 +6762,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+            expect(loadingIndicator, 'esf loading indicator is not visible').not.toBeNull();
 
             // Wait for items to load.
             tick(650);
@@ -6771,7 +6771,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(7);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
         }));
 
         it('Verify unique ISO 8601 date values are loaded correctly in ESF search component.', fakeAsync(() => {
@@ -6791,7 +6791,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+            expect(loadingIndicator, 'esf loading indicator is not visible').not.toBeNull();
 
             // Wait for items to load.
             tick(650);
@@ -6800,7 +6800,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(7);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
         }));
 
         it('Verify unique milliseconds date values are loaded correctly in ESF search component.', fakeAsync(() => {
@@ -6820,7 +6820,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(0);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+            expect(loadingIndicator, 'esf loading indicator is not visible').not.toBeNull();
 
             // Wait for items to load.
             tick(650);
@@ -6829,7 +6829,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(7);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
         }));
 
         it('Verify date values are displayed in correct format according to column pipeArgs', fakeAsync(() => {
@@ -6865,7 +6865,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }
 
             const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
 
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
@@ -6915,7 +6915,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }
 
             const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
         }));
 
         it('Verify date values are displayed in correct format according to column formatter after filtering', fakeAsync(() => {
@@ -6964,7 +6964,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }
 
             const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
         }));
 
         it('Done callback should be executed only once per column', fakeAsync(() => {
@@ -6979,7 +6979,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(6);
             let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
 
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
             tick(1000);
@@ -6988,7 +6988,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length, 'incorrect rendered list items count').toBe(7);
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
-            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+            expect(loadingIndicator, 'esf loading indicator is visible').toBeNull();
         }));
 
         it('Should not execute done callback for null column', fakeAsync(() => {
@@ -7426,15 +7426,15 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: ɵSiz
         expect(headerAreaColumnHidingIcon === null || headerAreaColumnHidingIcon === undefined, 'headerArea column hiding icon is present').toBe(true);
         // Verify icons in actions area are present.
         expect(actionsPinArea !== null, 'actionsArea pin/unpin icon is  NOT present').toBe(true);
-        expect(actionsAreaColumnHidingIcon).not.toBeNull('actionsArea column hiding icon is  NOT present');
+        expect(actionsAreaColumnHidingIcon, 'actionsArea column hiding icon is  NOT present').not.toBeNull();
     } else {
         // Verify icons in header are present.
         expect((headerAreaPinIcon !== null) || (headerAreaUnpinIcon !== null)).toBe(true,
             'headerArea pin/unpin icon is  NOT present');
-        expect(headerAreaColumnHidingIcon).not.toBeNull('headerArea column hiding icon is  NOT present');
+        expect(headerAreaColumnHidingIcon, 'headerArea column hiding icon is  NOT present').not.toBeNull();
         // Verify icons in actions area are not present.
-        expect(actionsPinArea).toBeNull('actionsArea pin icon is present');
-        expect(actionsAreaColumnHidingIcon).toBeNull('headerArea column hiding icon is present');
+        expect(actionsPinArea, 'actionsArea pin icon is present').toBeNull();
+        expect(actionsAreaColumnHidingIcon, 'headerArea column hiding icon is present').toBeNull();
         // Verify icons are on right of the title
         const headerTitleRect = headerTitle.getBoundingClientRect();
         const pinUnpinIconRect = ((headerAreaPinIcon !== null) ? headerAreaPinIcon : headerAreaUnpinIcon).getBoundingClientRect();

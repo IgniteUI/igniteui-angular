@@ -182,7 +182,7 @@ describe('IgxQueryBuilder', () => {
 
       // Verify there is a new root group, which is empty.
       const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
-      expect(group).not.toBeNull('There is no root group.');
+      expect(group, 'There is no root group.').not.toBeNull();
 
       // Click on the 'cancel' button
       const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
@@ -1058,22 +1058,19 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Verify actions container is not visible. (This container contains the 'add' button.)
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-        .toBeNull('actions container is visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is visible').toBeNull();
 
       // Hover the first chip and verify actions container is visible.
       UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
       tick(50);
       fix.detectChanges();
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-        .not.toBeNull('actions container is not visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is not visible').not.toBeNull();
 
       // Unhover the first chip and verify actions container is not visible.
       UIInteractions.unhoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
       tick(50);
       fix.detectChanges();
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-        .toBeNull('actions container is visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is visible').toBeNull();
     }));
 
     it('Should have disabled adding buttons when an expression is in edit mode.', fakeAsync(() => {
@@ -1246,15 +1243,13 @@ describe('IgxQueryBuilder', () => {
       UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
       tick(50);
       fix.detectChanges();
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-        .not.toBeNull('actions container is not visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is not visible').not.toBeNull();
 
       // Hover the second chip and verify actions container is visible.
       UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [1]) as HTMLElement);
       tick(50);
       fix.detectChanges();
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [1]))
-        .not.toBeNull('actions container is not visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [1]), 'actions container is not visible').not.toBeNull();
     }));
 
     it('Should display an alert dialog when the entity is changed and showEntityChangeDialog is true.', fakeAsync(() => {

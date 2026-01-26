@@ -734,7 +734,7 @@ export class QueryBuilderFunctions {
 
     public static verifyRootAndSubGroupExpressionsCount(fix: ComponentFixture<any>, rootDirect: number, rootTotal: number = null, subGroupPath: number[] = null, subGroupDirect: number = null, subGroupTotal: number = null) {
         const rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-        expect(rootGroup).not.toBeNull('There is no root group.');
+        expect(rootGroup, 'There is no root group.').not.toBeNull();
         expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length, 'Root direct condition count not correct').toBe(rootDirect);
         expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length, 'Root direct + child condition count not correct').toBe(rootTotal);
         if (subGroupPath) {

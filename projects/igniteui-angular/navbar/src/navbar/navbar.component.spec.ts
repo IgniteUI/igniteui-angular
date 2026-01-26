@@ -85,11 +85,11 @@ describe('IgxNavbar', () => {
 
             // Verify there is no custom content on the left
             const customContent = leftArea.query(By.css('igx-navbar-action'));
-            expect(customContent).toBeNull('Custom action icon content is found on the left.');
+            expect(customContent, 'Custom action icon content is found on the left.').toBeNull();
 
             // Verify there is a default icon on the left.
             const defaultIcon = leftArea.query(By.css('igx-icon'));
-            expect(defaultIcon).not.toBeNull('Default icon is not found on the left.');
+            expect(defaultIcon, 'Default icon is not found on the left.').not.toBeNull();
             const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
             const defaultIconLeft = defaultIcon.nativeElement.getBoundingClientRect().left;
             expect(leftAreaLeft, 'Default icon is not first on the left.').toBe(defaultIconLeft);
@@ -105,11 +105,11 @@ describe('IgxNavbar', () => {
 
             // Verify there is no default icon on the left.
             const defaultIcon = leftArea.query(By.css('igx-icon'));
-            expect(defaultIcon).toBeNull('Default icon is found on the left.');
+            expect(defaultIcon, 'Default icon is found on the left.').toBeNull();
 
             // Verify there is a custom content on the left.
             const customContent = leftArea.query(By.css('igx-navbar-action'));
-            expect(customContent).not.toBeNull('Custom action icon content is not found on the left.');
+            expect(customContent, 'Custom action icon content is not found on the left.').not.toBeNull();
             const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
             const customContentLeft = customContent.nativeElement.getBoundingClientRect().left;
             expect(leftAreaLeft, 'Custom action icon content is not first on the left.').toBe(customContentLeft);
@@ -140,7 +140,7 @@ describe('IgxNavbar', () => {
 
             const leftArea = fixture.debugElement.query(By.css(LEFT_AREA_CSS_CLAS));
             const customContent = leftArea.query(By.directive(IgxNavbarActionDirective));
-            expect(customContent).not.toBeNull('Custom action icon content is not found on the left.');
+            expect(customContent, 'Custom action icon content is not found on the left.').not.toBeNull();
 
             const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
             const customContentLeft = customContent.nativeElement.getBoundingClientRect().left;
@@ -167,7 +167,7 @@ describe('IgxNavbar', () => {
             expect(customTitle.nativeElement.textContent, 'Custom title is missing').toBe('Custom Title');
 
             const defaultTitle = midArea.query(By.css('igx-navbar__title'));
-            expect(defaultTitle).toBeNull('Default title should not be present');
+            expect(defaultTitle, 'Default title should not be present').toBeNull();
         });
 
         it('Custom content should override the default title property', () => {
@@ -182,7 +182,7 @@ describe('IgxNavbar', () => {
             expect(customTitle.nativeElement.children[1].textContent, 'Custom title is missing').toBe('Title');
 
             const defaultTitle = midArea.query(By.css('igx-navbar__title'));
-            expect(defaultTitle).toBeNull('Default title should not be present');
+            expect(defaultTitle, 'Default title should not be present').toBeNull();
         });
     });
 });
