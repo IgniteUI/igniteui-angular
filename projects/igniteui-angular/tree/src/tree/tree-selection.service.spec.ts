@@ -366,8 +366,8 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
     describe('IgxTreeSelectionService - Cascading', () => {
         beforeEach(() => {
-            mockEmitter = { emit: vi.fn() };
-            mockTree = { selection: IgxTreeSelectionType.Cascading, nodeSelection: mockEmitter, nodes: mockQuery1 };
+            mockEmitter = { emit: vi.fn() } as unknown as EventEmitter<ITreeNodeSelectionEvent>;
+            mockTree = { selection: IgxTreeSelectionType.Cascading, nodeSelection: mockEmitter, nodes: mockQuery1 } as unknown as IgxTree;
             selectionService.register(mockTree);
         });
 

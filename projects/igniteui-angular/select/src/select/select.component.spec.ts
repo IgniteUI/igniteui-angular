@@ -1340,10 +1340,14 @@ describe('igxSelect', () => {
                 expect(select.close).toHaveBeenCalledTimes(1);
 
                 // Correct event order
-                expect(select.opening.emit).toHaveBeenCalledBefore(select.opened.emit);
-                expect(select.opened.emit).toHaveBeenCalledBefore(select.selectionChanging.emit);
-                expect(select.selectionChanging.emit).toHaveBeenCalledBefore(select.closing.emit);
-                expect(select.closing.emit).toHaveBeenCalledBefore(select.closed.emit);
+                expect(vi.mocked(select.opening.emit).mock.invocationCallOrder[0])
+                    .toBeLessThan(vi.mocked(select.opened.emit).mock.invocationCallOrder[0]);
+                expect(vi.mocked(select.opened.emit).mock.invocationCallOrder[0])
+                    .toBeLessThan(vi.mocked(select.selectionChanging.emit).mock.invocationCallOrder[0]);
+                expect(vi.mocked(select.selectionChanging.emit).mock.invocationCallOrder[0])
+                    .toBeLessThan(vi.mocked(select.closing.emit).mock.invocationCallOrder[0]);
+                expect(vi.mocked(select.closing.emit).mock.invocationCallOrder[0])
+                    .toBeLessThan(vi.mocked(select.closed.emit).mock.invocationCallOrder[0]);
 
                 args.oldSelection = selectedItem;
                 selectedItem = select.items[9];
@@ -2704,7 +2708,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
         select.input = {} as any;
-        vi.spyOn(select, 'collapsed').mockReturnValue(true);
+        vi.spyOn(select as any, 'collapsed').mockReturnValue(true);
         select.onBlur();
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
 

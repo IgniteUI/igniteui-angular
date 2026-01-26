@@ -4373,8 +4373,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 660 && scrollbar.scrollTop <= 700).toBe(true,
-                'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop);
+            expect(scrollbar.scrollTop >= 660 && scrollbar.scrollTop <= 700,
+                'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop).toBe(true);
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
@@ -4383,7 +4383,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(displayContainerRect.height > listHeight + itemHeight && displayContainerRect.height < listHeight + (itemHeight * 2), 'incorrect search display container height').toBe(true);
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(Math.ceil(listHeight / itemHeight) + 1, 'incorrect rendered list items count');
+            expect(listItems.length, 'incorrect rendered list items count').toBe(Math.ceil(listHeight / itemHeight) + 1);
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {

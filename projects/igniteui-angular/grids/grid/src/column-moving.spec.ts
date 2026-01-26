@@ -210,14 +210,14 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait(100);
             fixture.detectChanges();
 
-            expect(grid.columns[0].cells[3].value).toBeTruthy(7);
+            expect(grid.columns[0].cells[3].value).toEqual(7);
 
             // step 3 - verify horizontal scrolling is not broken
             grid.headerContainer.getScroll().scrollLeft = 200;
             await wait(100);
             fixture.detectChanges();
 
-            expect(grid.columns[2].cells[3].value, 'BRown').toBeTruthy();
+            expect(grid.columns[2].cells[3].value).toEqual('BRown');
         }));
 
         it('Should be able to reorder columns programmatically when a column is grouped.', (async () => {

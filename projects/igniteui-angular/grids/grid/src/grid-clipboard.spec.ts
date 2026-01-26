@@ -9,7 +9,7 @@ import { IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
 import { CancelableEventArgs } from 'igniteui-angular/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Clipboard #grid', () => {
 
     let fix: ComponentFixture<IgxGridClipboardComponent>;

@@ -54,7 +54,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
 
         const state = fix.componentInstance.state;
 
-        expect(state).toBeDefined('IgxGridState directive is initialized');
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
         expect(state.options).toEqual(expect.objectContaining(defaultOptions));
     });
 
@@ -124,7 +124,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         const filtering = grid.filteringExpressionsTree;
 
         let gridState = state.getState(true, 'filtering');
-        expect(gridState).toBe('{"filtering":{"filteringOperands":[],"operator":0}}', 'JSON string');
+        expect(gridState, 'JSON string').toBe('{"filtering":{"filteringOperands":[],"operator":0}}');
 
         gridState = state.getState(false, ['filtering']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);

@@ -13,7 +13,7 @@ import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
     beforeEach(waitForAsync(() => {

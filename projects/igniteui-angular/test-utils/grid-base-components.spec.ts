@@ -129,7 +129,7 @@ export class SelectionComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true" [exportExcel]="exportExcel" [exportCsv]="exportCsv"`, '', ''),
+    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true"`, '', ''),
     imports: [IgxGridComponent]
 })
 export class GridWithToolbarComponent extends GridWithSizeComponent {

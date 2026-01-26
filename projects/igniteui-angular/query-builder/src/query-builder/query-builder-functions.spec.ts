@@ -720,7 +720,8 @@ export class QueryBuilderFunctions {
         expect(columnSpan.textContent.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
         expect(operatorSpan.textContent.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
         if (valueSpan != undefined && valueText != undefined) {
-            expect(valueSpan.textContent.toLowerCase().trim().replaceAll(/\s/g, '')).toBe(valueText.toLowerCase().replaceAll(/\s/g, ''), 'incorrect chip filter value');
+            expect(valueSpan.textContent.toLowerCase().trim().replaceAll(/\s/g, ''), 'incorrect chip filter value')
+                .toBe(valueText.toLowerCase().replaceAll(/\s/g, ''));
         }
     };
 
@@ -997,7 +998,8 @@ export class QueryBuilderFunctions {
         }
 
         //When dragged to the end, check results
-        expect(ghostPositionVisits).not.toContain(false,
-            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()}`);
+        expect(ghostPositionVisits, 
+            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()}`)
+            .not.toContain(false);
     }
 }

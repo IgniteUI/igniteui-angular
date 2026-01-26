@@ -31,7 +31,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
 
     it('getState should return correct JSON string.', () => {
         const state = fixture.componentInstance.state;
-        expect(state).toBeDefined('IgxGridState directive is initialized');
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
         const jsonString = state.getState(true);
         const expectedObj = {
             "columns": [
@@ -232,7 +232,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
     it('should successfully restore the selected rows.', () => {
         pivotGrid.rowSelection = 'single';
         const state = fixture.componentInstance.state;
-        expect(state).toBeDefined('IgxGridState directive is initialized');
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
         const headerRow = fixture.nativeElement.querySelectorAll('igx-pivot-row-dimension-content')[2];
         const header = headerRow.querySelector('igx-pivot-row-dimension-header');
         header.click();

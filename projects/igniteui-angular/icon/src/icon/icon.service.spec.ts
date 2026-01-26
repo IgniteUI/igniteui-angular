@@ -126,9 +126,7 @@ describe("Icon Service", () => {
         );
     });
 
-    it("should add custom svg icon from url", fakeAsync((
-        done: () => object,
-    ) => {
+    it("should add custom svg icon from url", async () => {
         const iconName = "test";
         const familyName = "svg-icons";
 
@@ -144,7 +142,7 @@ describe("Icon Service", () => {
         expect(
             iconService.isSvgIconCached(iconName, familyName),
         ).toBeTruthy();
-    }));
+    });
 
     it("should add custom svg icon from text", () => {
         const iconName = "test";

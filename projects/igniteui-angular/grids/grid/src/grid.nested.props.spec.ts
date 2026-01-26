@@ -383,9 +383,9 @@ describe('Grid nested data advanced editing #grid', () => {
 
         expect(cell3.editMode).toBe(false);
 
-        expect(cell1.value).toBeDefined(true);
-        expect(cell2.value).toBeDefined(true);
-        expect(cell3.value).toBeDefined(true);
+        expect(cell1.value).toBeDefined();
+        expect(cell2.value).toBeDefined();
+        expect(cell3.value).toBeDefined();
         // related to issue #0000, comment out the below line after fixing the issue
         expect(first(copiedData).user.name.first).toMatch('John');
         expect(first(copiedData).user.name.last).toMatch('Doe');
@@ -409,7 +409,7 @@ describe('Grid nested data advanced editing #grid', () => {
 
         expect(cell2.editMode).toBe(false);
         expect(cell3.editMode).toBe(true);
-        expect(cell1.value).toBeDefined(true);
+        expect(cell1.value).toBeDefined();
     });
 
     it('updating values of multiple cells in a row should update the data correctly', () => {
@@ -442,9 +442,9 @@ describe('Grid nested data advanced editing #grid', () => {
         UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
         fixture.detectChanges();
 
-        expect(cell1.value).toBeDefined(true);
-        expect(cell2.value).toBeDefined(true);
-        expect(cell3.value).toBeDefined(true);
+        expect(cell1.value).toBeDefined();
+        expect(cell2.value).toBeDefined();
+        expect(cell3.value).toBeDefined();
         expect(first(copiedData).user.name.last).toMatch('Petrov');
     });
 

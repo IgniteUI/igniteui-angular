@@ -53,7 +53,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         };
 
         const state = fix.componentInstance.state;
-        expect(state).toBeDefined('IgxGridState directive is initialized');
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
         expect(state.options).toEqual(expect.objectContaining(defaultOptions));
     });
 
