@@ -263,8 +263,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
 
                 const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                expect(calendarWrapper.contains(document.activeElement))
-                    .withContext('focus should move to calendar for KB nav')
+                expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav')
                     .toBeTruthy();
                 expect(datePicker.isFocused).toBeTruthy();
 
@@ -274,8 +273,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
-                expect(inputGroup.nativeElement.contains(document.activeElement))
-                    .withContext('focus should return to the picker input')
+                expect(inputGroup.nativeElement.contains(document.activeElement), 'focus should return to the picker input')
                     .toBeTruthy();
                 expect(datePicker.isFocused).toBeTruthy();
             }));
@@ -311,8 +309,8 @@ describe('IgxDatePicker', () => {
 
                 expect(datePicker.collapsed).toBeFalsy();
                 const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                expect(calendarWrapper.contains(document.activeElement))
-                    .withContext('focus should move to calendar for KB nav')
+                expect(calendarWrapper.contains(document.activeElement),
+                    'focus should move to calendar for KB nav')
                     .toBeTruthy();
                 expect(datePicker.isFocused).toBeTruthy();
 
@@ -324,8 +322,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
-                expect(inputGroup.nativeElement.contains(document.activeElement))
-                    .withContext('focus should return to the picker input')
+                expect(inputGroup.nativeElement.contains(document.activeElement), 'focus should return to the picker input')
                     .toBeTruthy();
                 expect(datePicker.isFocused).toBeTruthy();
             }));
@@ -730,8 +727,7 @@ describe('IgxDatePicker', () => {
                 const today = new Date(new Date().setHours(0, 0, 0, 0)).getTime().toString();
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
-                expect(wrapper.contains(document.activeElement))
-                    .withContext('focus should move to calendar for KB nav')
+                expect(wrapper.contains(document.activeElement), 'focus should move to calendar for KB nav')
                     .toBeTruthy();
             }));
 
@@ -749,8 +745,7 @@ describe('IgxDatePicker', () => {
                 const today = new Date(new Date().setHours(0, 0, 0, 0)).getTime().toString();
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
-                expect(wrapper.contains(document.activeElement))
-                    .withContext('focus should move to calendar for KB nav')
+                expect(wrapper.contains(document.activeElement), 'focus should move to calendar for KB nav')
                     .toBeTruthy();
             }));
 
@@ -770,8 +765,8 @@ describe('IgxDatePicker', () => {
                 tick();
                 fixture.detectChanges();
                 expect(datePicker.value).toEqual(today);
-                expect(inputGroup.contains(document.activeElement))
-                    .withContext('focus should return to the picker input')
+                expect(inputGroup.contains(document.activeElement),
+                    'focus should return to the picker input')
                     .toBeTruthy();
             }));
         });

@@ -3046,8 +3046,8 @@ describe('IgxGrid Component Tests #grid', () => {
         it('should render the grid in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
-            expect(fix.componentInstance.delta)
-                .withContext('Rendering took: ' + fix.componentInstance.delta +
+            expect(fix.componentInstance.delta,
+                'Rendering took: ' + fix.componentInstance.delta +
                     'ms but should have taken at most: ' + MAX_RAW_RENDER + 'ms')
                 .toBeLessThan(MAX_RAW_RENDER);
         });
@@ -3059,8 +3059,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 dir: SortingDirection.Asc
             });
             fix.detectChanges();
-            expect(fix.componentInstance.delta)
-                .withContext('Rendering took: ' + fix.componentInstance.delta +
+            expect(fix.componentInstance.delta,
+                'Rendering took: ' + fix.componentInstance.delta +
                     'ms but should have taken at most: ' + MAX_GROUPED_RENDER + 'ms')
                 .toBeLessThan(MAX_GROUPED_RENDER);
         });
@@ -3086,8 +3086,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
                 if (ready) {
                     const delta = new Date().getTime() - startTime;
-                    expect(delta)
-                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_O + 'ms')
+                    expect(delta,
+                        'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_O + 'ms')
                         .toBeLessThan(MAX_VER_SCROLL_O);
                     observer.disconnect();
                     done();
@@ -3116,8 +3116,8 @@ describe('IgxGrid Component Tests #grid', () => {
                     mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
-                    expect(delta)
-                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_U + 'ms')
+                    expect(delta,
+                        'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_U + 'ms')
                         .toBeLessThan(MAX_VER_SCROLL_U);
                     observer.disconnect();
                     done();
@@ -3145,8 +3145,8 @@ describe('IgxGrid Component Tests #grid', () => {
                     mutation.oldValue === '1' && mutation.target.attributes['ng-reflect-value'].nodeValue === '22').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
-                    expect(delta)
-                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
+                    expect(delta,
+                        'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
                         .toBeLessThan(MAX_HOR_SCROLL_O);
                     observer.disconnect();
                     done();
@@ -3174,8 +3174,8 @@ describe('IgxGrid Component Tests #grid', () => {
                     mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '8').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
-                    expect(delta)
-                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_U + 'ms')
+                    expect(delta,
+                        'Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_U + 'ms')
                         .toBeLessThan(MAX_HOR_SCROLL_U);
                     observer.disconnect();
                     done();
@@ -3203,8 +3203,8 @@ describe('IgxGrid Component Tests #grid', () => {
                     mutation.oldValue === 'false' && mutation.target.attributes['aria-selected'].nodeValue === 'true').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
-                    expect(delta)
-                        .withContext('Focusing took: ' + delta + 'ms but should have taken at most: ' + MAX_FOCUS + 'ms')
+                    expect(delta,
+                        'Focusing took: ' + delta + 'ms but should have taken at most: ' + MAX_FOCUS + 'ms')
                         .toBeLessThan(MAX_FOCUS);
                     observer.disconnect();
                     done();

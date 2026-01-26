@@ -13,11 +13,11 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-    expect(console.warn)
-        .withContext('Components & tests should be free of @for track duplicated keys warnings')
+    expect(console.warn,
+        'Components & tests should be free of @for track duplicated keys warnings')
         .not.toHaveBeenCalledWith(expect.stringContaining('NG0955'));
-    expect(console.warn)
-        .withContext('Components & tests should be free of @for track DOM re-creation warnings')
+    expect(console.warn,
+        'Components & tests should be free of @for track DOM re-creation warnings')
         .not.toHaveBeenCalledWith(expect.stringContaining('NG0956'));
 });
 

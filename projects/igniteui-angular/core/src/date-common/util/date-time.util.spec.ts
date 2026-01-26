@@ -670,14 +670,14 @@ describe(`DateTimeUtil Unit tests`, () => {
             'dd/MM/yyyy test hh:mm'
         ];
         numericFormats.forEach(format => {
-            expect(DateTimeUtil.isFormatNumeric(locale, format, angularFormatter)).withContext(`Format: ${format}`).toBeTruthy();
+            expect(DateTimeUtil.isFormatNumeric(locale, format, angularFormatter), `Format: ${format}`).toBeTruthy();
         });
 
         const nonNumericFormats = ['MMM', 'MMMM', 'MMMMM', 'medium', 'long', 'full', 'mediumDate',
             'longDate', 'fullDate', 'longTime', 'fullTime', 'dd-MMM-yyyy', 'E', 'EE'];
 
         nonNumericFormats.forEach(format => {
-            expect(DateTimeUtil.isFormatNumeric(locale, format, angularFormatter)).withContext(`Format: ${format}`).toBeFalsy();
+            expect(DateTimeUtil.isFormatNumeric(locale, format, angularFormatter), `Format: ${format}`).toBeFalsy();
         });
     });
 

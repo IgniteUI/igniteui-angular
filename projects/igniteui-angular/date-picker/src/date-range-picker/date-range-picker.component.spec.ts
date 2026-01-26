@@ -779,8 +779,8 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
                     const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
 
@@ -790,8 +790,8 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.inputDirective.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
+                    expect(dateRange.inputDirective.nativeElement.contains(document.activeElement),
+                        'focus should return to the picker input')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
                 }));
@@ -808,8 +808,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeFalsy();
 
                     const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
+                    expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
 
@@ -820,8 +819,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.inputDirective.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
+                    expect(dateRange.inputDirective.nativeElement.contains(document.activeElement), 'focus should return to the picker input')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
                 }));
@@ -1304,8 +1302,8 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
                     let calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
 
@@ -1315,8 +1313,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
-                    expect(startInput.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
+                    expect(startInput.nativeElement.contains(document.activeElement), 'focus should return to the picker input')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
 
@@ -1326,15 +1323,15 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
 
                     calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
                         .toBeTruthy();
                     UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                     tick();
                     fixture.detectChanges();
 
-                    expect(startInput.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
+                    expect(startInput.nativeElement.contains(document.activeElement),
+                        'focus should return to the picker input')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
                 }));
@@ -1380,8 +1377,8 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeFalsy();
 
                     let calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
 
@@ -1392,8 +1389,8 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
-                    expect(startInput.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
+                    expect(startInput.nativeElement.contains(document.activeElement),
+                        'focus should return to the picker input')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
 
@@ -1403,15 +1400,15 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
 
                     calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
                         .toBeTruthy();
 
                     UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                     tick();
                     fixture.detectChanges();
-                    expect(startInput.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
+                    expect(startInput.nativeElement.contains(document.activeElement),
+                        'focus should return to the picker input')
                         .toBeTruthy();
                     expect(dateRange.isFocused).toBeTruthy();
                 }));

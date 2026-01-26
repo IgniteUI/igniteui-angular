@@ -1855,40 +1855,40 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Entity selected').toBeTruthy();
+      expect(queryBuilder.canCommit(), 'Entity selected').toBeTruthy();
 
       // Click the 'Add condition' button.
       QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Add condition clicked').toBeTruthy();
+      expect(queryBuilder.canCommit(), 'Add condition clicked').toBeTruthy();
 
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
-      expect(queryBuilder.canCommit()).withContext('Column selected').toBeFalsy();
+      expect(queryBuilder.canCommit(), 'Column selected').toBeFalsy();
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
-      expect(queryBuilder.canCommit()).withContext('Operator contains selected').toBeFalsy();
+      expect(queryBuilder.canCommit(), 'Operator contains selected').toBeFalsy();
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       UIInteractions.clickAndSendInputElementValue(input, 'a');
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Search value filled').toBeTruthy();
+      expect(queryBuilder.canCommit(), 'Search value filled').toBeTruthy();
 
       // Click on the 'cancel' button
       const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
       UIInteractions.simulateClickEvent(closeButton);
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Entity remains selected').toBeTruthy();
+      expect(queryBuilder.canCommit(), 'Entity remains selected').toBeTruthy();
 
       // Verify the Query Builder validity state for UNARY condition.
       QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Add condition clicked again').toBeTruthy();
+      expect(queryBuilder.canCommit(), 'Add condition clicked again').toBeTruthy();
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
-      expect(queryBuilder.canCommit()).withContext('Column selected again').toBeTruthy();
+      expect(queryBuilder.canCommit(), 'Column selected again').toBeTruthy();
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
-      expect(queryBuilder.canCommit()).withContext('Unary operator selected').toBeTruthy();
+      expect(queryBuilder.canCommit(), 'Unary operator selected').toBeTruthy();
     }));
 
     it('Should be able to commit nested query without where condition.', fakeAsync(() => {

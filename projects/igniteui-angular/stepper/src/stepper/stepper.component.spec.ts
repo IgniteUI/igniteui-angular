@@ -69,9 +69,9 @@ const testAnimationBehavior = (
     fix.detectChanges();
     tick(1000);
     if (!isHorAnimTypeInvalidTest) {
-        expect(previousActiveStep.activeChange.emit).withContext(val).toHaveBeenCalledOnceWith(false);
+        expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledOnceWith(false);
     } else {
-        expect(previousActiveStep.activeChange.emit).withContext(val).not.toHaveBeenCalled();
+        expect(previousActiveStep.activeChange.emit, val).not.toHaveBeenCalled();
     }
     activeChangeSpy.mockClear();
 };

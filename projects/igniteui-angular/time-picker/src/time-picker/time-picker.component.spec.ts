@@ -1656,8 +1656,8 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.collapsed).toBeFalsy();
                 expect(timePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.opened.emit).toHaveBeenCalledTimes(1);
-                expect(hourColumn.nativeElement.contains(document.activeElement))
-                    .withContext('focus should move to hour column for KB nav')
+                expect(hourColumn.nativeElement.contains(document.activeElement),
+                    'focus should move to hour column for KB nav')
                     .toBeTruthy();
                 expect(timePicker.isFocused).toBeTruthy();
 
@@ -1667,8 +1667,8 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.closed.emit).toHaveBeenCalledTimes(1);
-                expect(inputGroup.nativeElement.contains(document.activeElement))
-                    .withContext('focus should return to the picker input')
+                expect(inputGroup.nativeElement.contains(document.activeElement),
+                    'focus should return to the picker input')
                     .toBeTruthy();
                 expect(timePicker.isFocused).toBeTruthy();
             }));
