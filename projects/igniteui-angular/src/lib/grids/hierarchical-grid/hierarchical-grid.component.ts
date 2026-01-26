@@ -307,6 +307,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
+    styleUrl: 'hierarchical-grid.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxGridCRUDService,
         IgxGridValidationService,

@@ -7,7 +7,7 @@ import {
     ViewChildren,
     QueryList,
     ViewChild,
-    TemplateRef
+    TemplateRef, ViewEncapsulation
 } from '@angular/core';
 import { IgxRowDirective } from '../row.directive';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
@@ -23,6 +23,7 @@ import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid-row',
     templateUrl: './hierarchical-row.component.html',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }],
     imports: [NgTemplateOutlet, IgxIconComponent, IgxRowDragDirective, NgClass, IgxGridForOfDirective, IgxHierarchicalGridCellComponent, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe]
 })

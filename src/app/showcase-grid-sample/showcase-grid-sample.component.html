@@ -1,0 +1,103 @@
+<div class="sidebar-sample">
+    <div class="preview sample-min-width">
+        <div class="preview__sample">
+            <igx-grid
+                #grid
+                [data]="data"
+                [igSize]="properties.size"
+                [rowSelection]="properties.rowSelection"
+                [columnSelection]="properties.columnSelection"
+                [cellSelection]="properties.cellSelection"
+                [allowFiltering]="properties.allowFiltering"
+                [filterMode]="properties.filterMode"
+                [moving]="properties.moving"
+                [allowAdvancedFiltering]="true"
+                [rowEditable]="true"
+                [primaryKey]="'ID'"
+                [pinning]="pinningConfig"
+                [detailTemplate]="properties.masterDetail ? detailTemplate : null"
+                height="600px"
+            >
+                @if (properties.toolbar) {
+                    <igx-grid-toolbar>
+                        <igx-grid-toolbar-title>Grid Showcase</igx-grid-toolbar-title>
+                        <igx-grid-toolbar-actions>
+                            <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                            <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+                            <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                        </igx-grid-toolbar-actions>
+                    </igx-grid-toolbar>
+                }
+
+                @if (properties.paging) {
+                    <igx-paginator></igx-paginator>
+                }
+
+                @if (properties.mrl) {
+                    <ng-container>
+                        <igx-column-layout field="group1">
+                            <igx-column field="ID" [rowStart]="1" [colStart]="1" [rowEnd]="3" [hidden]="properties.hideID" [pinned]="properties.columnPinning"></igx-column>
+                        </igx-column-layout>
+                        <igx-column-layout field="group2">
+                            <igx-column field="Name" [rowStart]="1" [colStart]="1" [colEnd]="3" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                            <igx-column field="Age" [rowStart]="2" [colStart]="1" [sortable]="properties.sorting" [resizable]="properties.resizing" [dataType]="'number'" [hasSummary]="properties.summaries"></igx-column>
+                            <igx-column field="City" [rowStart]="2" [colStart]="2" [sortable]="properties.sorting" [resizable]="properties.resizing" [groupable]="properties.grouping" [hasSummary]="properties.summaries"></igx-column>
+                        </igx-column-layout>
+                        <igx-column-layout field="group3">
+                            <igx-column field="Country" [rowStart]="1" [colStart]="1" [colEnd]="3" [sortable]="properties.sorting" [resizable]="properties.resizing" [groupable]="properties.grouping" [hasSummary]="properties.summaries"></igx-column>
+                            <igx-column field="Phone" [rowStart]="2" [colStart]="1" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                            <igx-column field="Email" [rowStart]="2" [colStart]="2" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                        </igx-column-layout>
+                        <igx-column-layout field="group4">
+                            <igx-column field="Address" [rowStart]="1" [colStart]="1" [colEnd]="3" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                            <igx-column field="PostalCode" [rowStart]="2" [colStart]="1" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                            <igx-column field="Company" [rowStart]="2" [colStart]="2" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                        </igx-column-layout>
+                        <igx-column-layout field="group5">
+                            <igx-column field="JobTitle" [rowStart]="1" [colStart]="1" [colEnd]="3" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                            <igx-column field="Salary" [rowStart]="2" [colStart]="1" [sortable]="properties.sorting" [resizable]="properties.resizing" [dataType]="'number'" [hasSummary]="properties.summaries"></igx-column>
+                            <igx-column field="HireDate" [rowStart]="2" [colStart]="2" [sortable]="properties.sorting" [resizable]="properties.resizing" [dataType]="'date'" [hasSummary]="properties.summaries"></igx-column>
+                        </igx-column-layout>
+                        <igx-column-layout field="group6">
+                            <igx-column field="IsActive" [rowStart]="1" [colStart]="1" [rowEnd]="3" [sortable]="properties.sorting" [resizable]="properties.resizing" [dataType]="'boolean'" [hasSummary]="properties.summaries"></igx-column>
+                        </igx-column-layout>
+                    </ng-container>
+                } @else {
+                    <ng-container>
+                        <igx-column field="ID" [hidden]="properties.hideID" [pinned]="properties.columnPinning"></igx-column>
+                        <igx-column field="Name" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="Age" [sortable]="properties.sorting" [resizable]="properties.resizing" [dataType]="'number'" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="City" [sortable]="properties.sorting" [resizable]="properties.resizing" [groupable]="properties.grouping" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="Country" [sortable]="properties.sorting" [resizable]="properties.resizing" [groupable]="properties.grouping" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="Phone" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="Email" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="Address" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="PostalCode" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="Company" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="JobTitle" [sortable]="properties.sorting" [resizable]="properties.resizing" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="Salary" [sortable]="properties.sorting" [resizable]="properties.resizing" [dataType]="'number'" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="HireDate" [sortable]="properties.sorting" [resizable]="properties.resizing" [dataType]="'date'" [hasSummary]="properties.summaries"></igx-column>
+                        <igx-column field="IsActive" [sortable]="properties.sorting" [resizable]="properties.resizing" [dataType]="'boolean'" [hasSummary]="properties.summaries"></igx-column>
+                    </ng-container>
+                }
+
+                <ng-template #detailTemplate let-dataItem>
+                    <div class="detail-container">
+                        <p><strong>Details for {{ dataItem.Name }}</strong></p>
+                        <p>City: {{ dataItem.City }}</p>
+                        <p>Country: {{ dataItem.Country }}</p>
+                        <p>Phone: {{ dataItem.Phone }}</p>
+                    </div>
+                </ng-template>
+
+                @if (properties.actionStrip) {
+                    <igx-action-strip #actionstrip>
+                        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                        <igx-grid-editing-actions></igx-grid-editing-actions>
+                    </igx-action-strip>
+                }
+            </igx-grid>
+        </div>
+    </div>
+</div>

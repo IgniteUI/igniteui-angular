@@ -1,0 +1,32 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+.sidebar-sample {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.preview {
+    flex: 1 1 auto;
+    padding: 24px;
+    overflow: auto;
+}
+
+.preview__sample {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.detail-container {
+    padding: 16px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+
+    p {
+        margin: 4px 0;
+    }
+}

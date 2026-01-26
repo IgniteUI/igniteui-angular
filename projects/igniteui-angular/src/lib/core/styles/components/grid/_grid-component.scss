@@ -632,21 +632,21 @@
         // @include header-row();
     }
 
-    @include b(igx-drop-area) {
-        @extend %igx-drop-area !optional;
-
-        @include m(hover) {
-            @extend %igx-drop-area--hover !optional;
-        }
-
-        @include e(icon) {
-            @extend %igx-drop-area__icon !optional;
-        }
-
-        @include e(text) {
-            @extend %igx-drop-area__text !optional;
-        }
-    }
+    //@include b(igx-drop-area) {
+    //    @extend %igx-drop-area !optional;
+    //
+    //    @include m(hover) {
+    //        @extend %igx-drop-area--hover !optional;
+    //    }
+    //
+    //    @include e(icon) {
+    //        @extend %igx-drop-area__icon !optional;
+    //    }
+    //
+    //    @include e(text) {
+    //        @extend %igx-drop-area__text !optional;
+    //    }
+    //}
 
     @include b(igx-group-label) {
         @extend %igx-group-label !optional;
@@ -668,9 +668,9 @@
         }
     }
 
-    @include b(igx-grid-summary) {
-        @include m(active) {
-            @extend %igx-grid-summary--active !optional;
-        }
-    }
+    //@include b(igx-grid-summary) {
+    //    @include m(active) {
+    //        @extend %igx-grid-summary--active !optional;
+    //    }
+    //}
 }

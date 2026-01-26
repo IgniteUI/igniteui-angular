@@ -109,6 +109,7 @@ import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sam
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
+import { ShowcaseGridSampleComponent } from './showcase-grid-sample/showcase-grid-sample.component';
 import {
     HierarchicalGridRemoteVirtualizationComponent
 } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
@@ -431,6 +432,10 @@ export const appRoutes: Routes = [
     {
         path: 'grid',
         component: GridSampleComponent
+    },
+    {
+        path: 'showcaseGrid',
+        component: ShowcaseGridSampleComponent
     },
     {
         path: 'gridAddRow',

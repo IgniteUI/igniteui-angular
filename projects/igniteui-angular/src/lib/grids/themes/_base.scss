@@ -10,6 +10,15 @@ $theme: $material;
 $cell-font-size: rem(13px);
 $cell-line-height: rem(16px);
 $cell-editing-outline-width: rem(2px);
+$grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+
+$cell-padding-comfortable: rem(24px);
+$cell-padding-cosy: rem(16px);
+$cell-padding-compact: rem(12px);
+
+// The shadow size that simulates border glueth to the pinned border to make it thicker
+$pinned-shadow-size: #{rem(1px)};
+
 
 @include layer(base) {
     // Base cell display - used for both data cells and header cells
@@ -24,7 +33,6 @@ $cell-editing-outline-width: rem(2px);
         // TODO: Verify if this is needed, commenting out for now
         background-clip: border-box !important;
         min-height: var(--cell-height);
-        clip-path: inset(0 1px 0 0);
         overflow: hidden;
 
         // Font size for the cell is different in the ingigo theme -> it simply uses the detail-1 styles for all cells
@@ -34,18 +42,6 @@ $cell-editing-outline-width: rem(2px);
         padding-block: 0;
         // The inline padding styles should be different in the indigo theme -> 8px, 12px, 16px
         padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
-    }
-
-    // Text content wrapper inside cells
-    %cell-text {
-        @include ellipsis();
-        pointer-events: none;
-    }
-
-    // Fixed width columns (non-resizable)
-    %cell-fixed-width {
-        flex-grow: 0;
-        outline-style: none;
     }
 
     %cell-header {
@@ -58,9 +54,7 @@ $cell-editing-outline-width: rem(2px);
         padding-block: 0;
         font-size: rem(12px);
         font-weight: 600;
-        border-inline-end: var-get($theme, 'header-border-width')
-            var-get($theme, 'header-border-style')
-            var-get($theme, 'header-border-color');
+        border-inline-end: $grid-header-border;
         overflow: hidden;
         transition: color 250ms ease-in-out;
         outline-style: none;
@@ -73,12 +67,20 @@ $cell-editing-outline-width: rem(2px);
         // TODO: This should be declared in the theme tokens
         --grid-size: var(--component-size);
 
-        // The cell size should be different in the indigo theme -> 32px, 40px, 48px
+        --_expander-icon-width: #{rem(24px)};
+        --_hierarchical-action-icon: #{rem(24px)};
+
+        --_hierarchical-indent-small: #{rem(12px)};
+        --_hierarchical-indent-medium: #{rem(16px)};
+        --_hierarchical-indent-large: #{rem(24px)};
+
         --cell-height: #{sizable(rem(32px), rem(40px), rem(50px))};
 
         // Derived size variables for header, group area, and tree indentation
-        --header-size: #{sizable(rem(50px), rem(40px), rem(32px))};
-        --grouparea-size: #{sizable(rem(57px), rem(49px), rem(41px))};
+        --header-size: #{sizable(rem(32px), rem(40px), rem(50px))};
+
+        --grouparea-size: #{sizable(rem(41px), rem(49px), rem(57px))};
+
         --igx-tree-indent-size: #{sizable(rem(24px), rem(16px), rem(12px))};
 
         // Core grid structure
@@ -146,8 +148,7 @@ $cell-editing-outline-width: rem(2px);
         // Table body scrollbar
         @include e(tbody-scrollbar) {
             background: var-get($theme, 'content-background');
-            border-inline-start: rem(1px) solid
-                var-get($theme, 'row-border-color');
+            border-inline-start: rem(1px) solid var-get($theme, 'row-border-color') ;
             position: relative;
         }
 
@@ -197,9 +198,7 @@ $cell-editing-outline-width: rem(2px);
             overflow: hidden;
             outline-style: none;
             grid-row: 5;
-            border-top: var-get($theme, 'header-border-width')
-                var-get($theme, 'header-border-style')
-                var-get($theme, 'header-border-color');
+            border-top: $grid-header-border;
             z-index: 10001;
 
             .igx-grid__tr {
@@ -229,34 +228,11 @@ $cell-editing-outline-width: rem(2px);
             top: 0;
             inset-inline-end: 0;
             background: var-get($theme, 'header-background');
-            border-inline-start: rem(1px) solid
-                var-get($theme, 'header-border-color');
         }
 
         // Grid footer
         @include e(footer) {
             grid-row: 7;
-        }
-
-        @include e(td) {
-            @extend %cell-display;
-
-            &::after {
-                content: '';
-                position: absolute;
-                inset: 0;
-                width: calc(100% - 1px);
-                height: 100%;
-                pointer-events: none;
-            }
-        }
-
-        @include e(td, $m: fw) {
-            @extend %cell-fixed-width;
-        }
-
-        @include e(td-text) {
-            @extend %cell-text;
         }
 
         // Base row element
@@ -267,11 +243,16 @@ $cell-editing-outline-width: rem(2px);
             border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
             // TODO: Why is this needed?
             background-clip: content-box !important;
+
+
+            .igx-display-container {
+                overflow: visible !important;
+                flex: 1;
+                min-width: 0;
+            }
         }
 
         @include e(tr, $not: (header, selected)) {
-            background: var-get($theme, 'content-background');
-
             &:hover {
                 background: var-get($theme, 'row-hover-background');
                 color: var-get($theme, 'row-hover-text-color');
@@ -374,11 +355,19 @@ $cell-editing-outline-width: rem(2px);
             position: relative;
             background: inherit;
             z-index: 10000;
+
+            .igx-grid__hierarchical-expander--empty {
+                border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+            }
         }
 
         // Pinned row at top
         @include e(tr, $m: pinned-top) {
             border-bottom: rem(2px) solid var-get($theme, 'pinned-border-color') !important;
+
+            .igx-grid__tr:last-of-type {
+                border-bottom: none;
+            }
         }
 
         // Pinned row at bottom
@@ -404,6 +393,67 @@ $cell-editing-outline-width: rem(2px);
             .igx-grid__td-text {
                 color: var-get($theme, 'cell-disabled-color');
             }
+        }
+
+        // Cell (idle)
+        @include e(td) {
+            @extend %cell-display;
+
+            // TODO the body column border shodu be transparent by default we shoud create new variables for it
+            border-inline-end: $grid-header-border;
+
+            // Used for the active cell indicator
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+            }
+        }
+
+        @include e(td, $m: centered) {
+            justify-content: center;
+        }
+
+        @include e(td, $m: image) {
+            justify-content: center;
+        }
+
+
+        @include e(td, $m: bool) {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+
+            .igx-icon {
+                --component-size: 1;
+            }
+
+            .igx-icon--error {
+                color: color($color: 'gray', $variant: 600);
+            }
+        }
+
+        @include e(td, $m: bool-true) {
+            .igx-icon--success {
+             color: color($color: 'gray', $variant: 700);
+            }
+        }
+
+        // Cell for fixed width columns (non-resizable)
+        @include e(td, $m: fw) {
+            flex-grow: 0;
+            outline-style: none;
+
+            .igx-icon {
+                --component-size: 3;
+            }
+        }
+
+        // Cell (text wrapper)
+        @include e(td-text) {
+            @include ellipsis();
+            pointer-events: none;
         }
 
         // New cell (newly added)
@@ -459,18 +509,42 @@ $cell-editing-outline-width: rem(2px);
             position: relative;
             background: inherit;
             z-index: 9999;
-        }
 
-        // Last pinned column (right border)
-        @include e(td, $m: pinned-last) {
-            border-inline-end: rem(2px) solid
-                var-get($theme, 'pinned-border-color') !important;
+            &::after {
+                width: calc(100% - $pinned-shadow-size);
+            }
         }
 
         // First pinned column (left border)
         @include e(td, $m: pinned-first) {
-            border-inline-start: rem(2px) solid
-                var-get($theme, 'pinned-border-color') !important;
+            border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+
+            &:dir(ltr) {
+                box-shadow: inset $pinned-shadow-size 0 0 0 var-get($theme, 'pinned-border-color');
+            }
+
+            &:dir(rtl) {
+                box-shadow: inset calc($pinned-shadow-size * -1) 0 0 0 var-get($theme, 'pinned-border-color');
+            }
+
+            &::after {
+                width: calc(100% - $pinned-shadow-size);
+                inset-inline-end: 0;
+                inset-inline-start: unset;
+            }
+        }
+
+        // Last pinned column (right border)
+        @include e(td, $m: pinned-last) {
+            border-inline-end: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+
+            &:dir(ltr) {
+                box-shadow: inset calc($pinned-shadow-size * -1) 0 0 0 var-get($theme, 'pinned-border-color');
+            }
+
+            &:dir(rtl) {
+                box-shadow: inset $pinned-shadow-size 0 0 0 var-get($theme, 'pinned-border-color');
+            }
         }
 
         // Pinned cell when selected
@@ -543,7 +617,6 @@ $cell-editing-outline-width: rem(2px);
         }
 
         @include e(td, $m: editing) {
-            border-width: 0;
             background: var-get($theme, 'cell-editing-background') !important;
             padding-inline: rem(4px);
 
@@ -704,10 +777,8 @@ $cell-editing-outline-width: rem(2px);
         // Action row (for row actions like edit, delete buttons)
         @include e(tr-action) {
             &:last-of-type {
-                border-inline-end: var-get($theme, 'header-border-width')
-                    var-get($theme, 'header-border-style')
-                    var-get($theme, 'header-border-color');
-                min-height: sizable(rem(32px), rem(40px), rem(50px));
+                border-inline-end: $grid-header-border;
+                min-height: var(--cell-height);
             }
         }
 
@@ -767,7 +838,7 @@ $cell-editing-outline-width: rem(2px);
         @include e(hierarchical-expander) {
             user-select: none;
             background: inherit;
-            padding-inline: pad-inline(rem(12px), rem(16px), rem(18px));
+            padding-inline: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -804,6 +875,8 @@ $cell-editing-outline-width: rem(2px);
         @include e(hierarchical-expander, $m: empty) {
             cursor: default;
             pointer-events: none;
+            padding-inline: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
+
         }
 
         // Hierarchical expander in header
@@ -830,15 +903,32 @@ $cell-editing-outline-width: rem(2px);
             }
         }
 
+        $hierarchical-grid-indent: (
+            comfortable: rem(24px),
+            cosy: rem(16px),
+            compact: rem(12px)
+        );
+
         // Hierarchical indent spacing
         @include e(hierarchical-indent) {
+            $indent-small: calc(2 * var(--_hierarchical-indent-small) + var(--_hierarchical-action-icon));
+            $indent-medium: calc(2 * var(--_hierarchical-indent-medium) + var(--_hierarchical-action-icon));
+            $indent-large: calc(2 * var(--_hierarchical-indent-large) + var(--_hierarchical-action-icon));
+
             display: flex;
-            margin-inline-start: pad-inline(rem(24px), rem(32px), rem(36px));
+            margin-inline-start: pad-inline($indent-small, $indent-medium, $indent-large);
+            margin-inline-end: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
+            margin-block: pad-block(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
         }
 
         // Hierarchical indent when scrolling
         @include e(hierarchical-indent, $m: scroll) {
-            margin-inline-start: 0;
+            $indent-scroll-small: calc(var(--_hierarchical-indent-small) + 18px);
+            $indent-scroll-medium: calc(var(--_hierarchical-indent-medium) + 18px);
+            $indent-scroll-large: calc(var(--_hierarchical-indent-large) + 18px);
+
+
+            margin-inline-end: pad-inline($indent-scroll-small, $indent-scroll-medium, $indent-scroll-large);
         }
 
         // Row indentation levels for tree/grouping (1-10)
@@ -849,9 +939,9 @@ $cell-editing-outline-width: rem(2px);
                 $level-comfortable: $i * rem(36px);
 
                 padding-inline-start: pad-inline(
-                    $level-compact,
-                    $level-cosy,
-                    $level-comfortable
+                    #{$level-compact},
+                    #{$level-cosy},
+                    #{$level-comfortable}
                 );
             }
         }
@@ -859,11 +949,11 @@ $cell-editing-outline-width: rem(2px);
         // Header indentation for tree/grouping
         @include e(header-indentation) {
             position: relative;
-            padding-inline-end: sizable(rem(12px), rem(16px), rem(18px));
-            border-inline-end: rem(1px) solid
-                var-get($theme, 'header-border-color');
+            padding-inline-end: sizable($cell-padding-cosy, $cell-padding-compact, $cell-padding-comfortable);
+            border-inline-end: $grid-header-border;
             background: var-get($theme, 'header-background');
             z-index: 4;
+            height: 100%;
 
             igx-icon {
                 --component-size: 3;
@@ -880,7 +970,7 @@ $cell-editing-outline-width: rem(2px);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+            padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
         }
 
         // Checkbox selection cell
@@ -929,7 +1019,7 @@ $cell-editing-outline-width: rem(2px);
             align-items: center;
             justify-content: flex-start;
             flex: 1 1 auto;
-            padding-inline-start: pad-inline(rem(12px), rem(16px), rem(18px));
+            padding-inline-start: sizable(rem(12px), rem(16px), rem(24px));
             min-height: sizable(rem(40px), rem(48px), rem(56px));
 
             &:focus {
@@ -947,7 +1037,7 @@ $cell-editing-outline-width: rem(2px);
             z-index: 1;
             cursor: pointer;
             padding-inline-end: rem(12px);
-            margin-inline-start: sizable(rem(12px), rem(16px), rem(18px));
+            margin-inline-start: sizable(rem(12px), rem(16px), rem(24px));
             min-height: var(--header-size);
 
             igx-icon {
@@ -974,8 +1064,8 @@ $cell-editing-outline-width: rem(2px);
             position: absolute;
             cursor: pointer;
             user-select: none;
-            inset-block-start: calc(50% - rem(12px) / 2);
-            inset-inline-start: var(--indicator-inline-inset);
+            inset-block-start: calc(50% - var(--_expander-icon-width) / 2);
+            inset-inline-start: var(--_indicator-inline-inset);
 
             &:hover {
                 color: var-get($theme, 'expand-icon-hover-color');
@@ -1000,9 +1090,9 @@ $cell-editing-outline-width: rem(2px);
 
                 .igx-grid__grouping-indicator {
                     margin-inline-start: sizable(
-                        $indicator-padding-compact,
-                        $indicator-padding-cosy,
-                        $indicator-padding-comfortable
+                        #{$indicator-padding-compact},
+                        #{$indicator-padding-cosy},
+                        #{$indicator-padding-comfortable}
                     );
                 }
             }
@@ -1013,6 +1103,15 @@ $cell-editing-outline-width: rem(2px);
             display: grid !important;
             background: inherit;
             position: relative;
+
+            .igx-grid__td {
+                border-inline-end: $grid-header-border;
+            }
+
+            .igx-grid-th,
+            .igx-grid__td {
+                border-block-end: $grid-header-border;
+            }
         }
 
         // Pivot grid super-compact mode
@@ -1031,12 +1130,8 @@ $cell-editing-outline-width: rem(2px);
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
             padding-block: 0;
             background-clip: border-box !important;
-            border-inline-start: var-get($theme, 'header-border-width')
-                var-get($theme, 'header-border-style')
-                var-get($theme, 'header-border-color');
-            border-bottom: var-get($theme, 'header-border-width')
-                var-get($theme, 'header-border-style')
-                var-get($theme, 'header-border-color');
+            border-inline-start: $grid-header-border;
+            border-bottom: $grid-header-border;
 
             igx-chips-area {
                 flex-wrap: nowrap;
@@ -1112,9 +1207,7 @@ $cell-editing-outline-width: rem(2px);
             height: var(--header-size);
             border-inline-start: 0;
             border-inline-end: 0;
-            border-bottom: var-get($theme, 'header-border-width')
-                var-get($theme, 'header-border-style')
-                var-get($theme, 'header-border-color');
+            border-bottom: $grid-header-border;
         }
 
         // Pivot group
@@ -1170,8 +1263,8 @@ $cell-editing-outline-width: rem(2px);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding-inline: pad-inline(rem(24px), rem(16px), rem(12px));
-            min-height: sizable(rem(50px), rem(40px), rem(32px));
+            padding-inline: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
+            min-height: var(--cell-height);
             padding-block: 0;
             flex: 0 0 auto;
             background: inherit;
@@ -1187,9 +1280,7 @@ $cell-editing-outline-width: rem(2px);
 
         // Drag indicator in header
         @include e(drag-indicator, $m: header) {
-            border-inline-end: var-get($theme, 'header-border-width')
-                var-get($theme, 'header-border-style')
-                var-get($theme, 'header-border-color');
+            border-inline-end: $grid-header-border;
         }
 
         // Drag indicator off/disabled state
@@ -1199,11 +1290,11 @@ $cell-editing-outline-width: rem(2px);
 
         // Ghost image shown while dragging
         @include e(drag-ghost-image) {
-            position: absolute;
-            display: flex;
-            align-items: center;
+            position: absolute !important;
+            align-items: center !important;
             background: var-get($theme, 'ghost-header-background') !important;
             color: var-get($theme, 'ghost-header-text-color') !important;
+            border-inline-end: transparent !important;
             min-width: rem(168px);
             max-width: rem(320px);
             height: var(--header-size);
@@ -1293,97 +1384,104 @@ $cell-editing-outline-width: rem(2px);
 
         // Filtering row
         @include e(filtering-row) {
+            // Container styles
             display: flex;
             flex-flow: row nowrap;
             align-items: center;
+            justify-content: space-between;
+
+            // Position styles
+            position: absolute;
+            inset-inline-start: 0;
+            bottom: 0;
+            z-index: 3;
             grid-row: 2;
-            background: var-get($theme, 'filtering-row-background');
+
+            // size & spacing styles
+            width: 100%;
+            height: var(--cell-height);
+            padding-inline: pad-inline($cell-padding-compact, $cell-padding-cosy, $cell-padding-comfortable);
+
+            // Color styles
             color: var-get($theme, 'filtering-row-text-color');
-            z-index: 10001;
+            background: var-get($theme, 'filtering-row-background');
             border-bottom: rem(1px) solid var-get($theme, 'header-border-color');
 
-            // Nested input group styles
+            // Compound components overrides
             igx-input-group {
-                flex: 1 1 auto;
-                width: 100%;
-                max-width: rem(200px);
-                min-width: rem(140px);
-                --ig-size: var(--grid-size) !important;
-                --size: calc(var(--header-size) - #{rem(8px)});
-                border: rem(1px) solid var-get($theme, 'row-border-color');
-                color: var-get($theme, 'filtering-row-text-color');
+                // TODO USE FOR INDIGO
+                //--size: calc(sizable(rem(32px), rem(40px), rem(48px)) - #{rem(8px)});
 
-                &:hover {
-                    border-color: var-get($theme, 'cell-active-border-color');
-                }
+                --size: calc(var(--cell-height) - #{rem(8px)}) !important;
+
+                width: 100% !important;
+                max-width: rem(200px) !important;
+                min-width: rem(140px) !important;
+                border: rem(1px) solid color($color: 'gray', $variant: 300) !important;
 
                 .igx-input-group__bundle,
                 .igx-input-group__bundle-start,
-                .igx-input-group__bundle-main,
                 .igx-input-group__bundle-end,
                 igx-prefix,
                 igx-suffix {
-                    background: transparent;
-                    border-radius: 0;
-                    border: 0;
+                    align-items: center;
+                    background: transparent !important;
+                    border-radius: 0 !important;
 
+                    /* stylelint-disable-next-line */
                     &:hover {
-                        background: transparent;
-                        border: 0;
-                        box-shadow: none;
+                        background: transparent !important;
                     }
-                }
-
-                .igx-input-group__bundle-main {
-                    padding-inline-start: 0;
-                }
-
-                .igx-input-group__bundle::after {
-                    display: none;
                 }
 
                 igx-prefix,
                 igx-suffix {
                     height: 100% !important;
-                    padding: 0 pad-inline(rem(4px), rem(6px), rem(8px));
-
-                    &:focus {
-                        color: var-get($theme, 'edit-mode-color');
-                    }
+                    padding: 0 sizable(rem(4px), rem(6px), rem(8px)) !important;
                 }
 
                 .igx-input-group__input {
-                    font-size: sizable(rem(12px), rem(14px), rem(16px));
-                    padding-inline-start: 0;
-                    padding-block: 0;
-                    height: 100%;
-                    border: 0;
+                    font-size: sizable(rem(12px), rem(14px), rem(16px)) !important;
+                    padding-inline-start: 0 !important;
+                    padding-block: 0 !important;
+                    height: 100% !important;
+                }
 
+                .igx-input-group__bundle,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end,
+                .igx-input-group__input {
+                    border: 0 !important;
+
+                    /* stylelint-disable-next-line */
                     &:hover {
-                        border: 0;
-                        box-shadow: none;
+                        border: 0 !important;
+                        box-shadow: none !important;
                     }
                 }
 
-                .igx-input-group__line {
-                    display: none;
+                .igx-input-group__bundle::after,
+                .igx-input-group__bundle::before {
+                    display: none !important;
                 }
 
-                igx-suffix igx-icon {
-                    outline-style: none;
+                .igx-input-group__bundle-main {
+                    padding-inline-start: 0 !important;
+                }
 
-                    &:focus {
-                        color: var-get($theme, 'edit-mode-color');
-                    }
+                color: var-get($theme, 'filtering-row-text-color') !important;
 
-                    + igx-icon {
-                        margin-inline-start: rem(4px);
-                    }
+                &:hover{
+                    color: var-get($theme, 'filtering-row-text-color') !important;
+                    border-color: color($color: 'primary', $variant: 500) !important;
                 }
             }
 
             .igx-input-group--focused {
-                border-color: var-get($theme, 'cell-active-border-color');
+                border-color: color($color: 'primary', $variant: 500) !important;
+                border-width: rem(1px) !important;
+
+                color: var-get($theme, 'filtering-row-text-color');
 
                 .igx-input-group__bundle,
                 .igx-input-group__bundle-start,
@@ -1404,9 +1502,30 @@ $cell-editing-outline-width: rem(2px);
                 .igx-input-group__bundle-end,
                 igx-prefix,
                 igx-suffix {
-                    color: var-get($theme, 'filtering-row-text-color');
                     background: transparent !important;
-                    border-radius: 0;
+                    border-radius: 0 !important;
+                }
+            }
+
+            .igx-input-group__line {
+                display: none !important;
+            }
+
+            igx-prefix:focus {
+                color: color($color: 'secondary', $variant: 500) !important;
+            }
+
+            igx-suffix {
+                igx-icon {
+                    outline-style: none !important;
+
+                    &:focus {
+                        color: color($color: 'secondary') !important;
+                    }
+
+                    + igx-icon {
+                        margin-inline-start: rem(4px) !important;
+                    }
                 }
             }
 
@@ -1427,6 +1546,10 @@ $cell-editing-outline-width: rem(2px);
 
             igx-chips-area {
                 flex-wrap: nowrap;
+
+                // Can't uae gap on the parent because dropdown container is present in the dom
+                // TODO for indigo use rem(12px)
+                margin-inline: rem(8px);
                 gap: rem(4px);
             }
         }
@@ -1463,6 +1586,8 @@ $cell-editing-outline-width: rem(2px);
         // Filtering row scroll start
         @include e(filtering-row-scroll-start) {
             position: relative;
+            margin-inline: rem(8px);
+            overflow: visible;
 
             &::after {
                 display: block;
@@ -1482,6 +1607,8 @@ $cell-editing-outline-width: rem(2px);
         // Filtering row scroll end
         @include e(filtering-row-scroll-end) {
             position: relative;
+            margin-inline: rem(8px);
+            overflow: visible;
 
             &::after {
                 display: block;
@@ -1514,7 +1641,6 @@ $cell-editing-outline-width: rem(2px);
             igx-chips-area {
                 width: 100%;
                 flex-wrap: nowrap;
-                overflow: hidden;
 
                 .igx-filtering-chips__connector {
                     font-size: rem(12px);
@@ -1563,18 +1689,13 @@ $cell-editing-outline-width: rem(2px);
 
         // Filtering dropdown items
         @include e(filtering-dropdown-items) {
-            max-height: rem(320px);
-            overflow-y: auto;
+            display: flex;
+            align-items: center;
         }
 
         // Filtering dropdown text
         @include e(filtering-dropdown-text) {
-            padding: rem(8px) rem(16px);
-            cursor: pointer;
-
-            &:hover {
-                background: var-get($theme, 'row-hover-background');
-            }
+            margin-inline-start: rem(16px);
         }
 
         // ============================================================================
@@ -1589,8 +1710,7 @@ $cell-editing-outline-width: rem(2px);
             background-color: var-get($theme, 'summaries-patch-background');
 
             igx-display-container {
-                width: 100%;
-                overflow: visible;
+                overflow: visible !important;
                 flex: 1;
                 min-width: 0;
             }
@@ -1598,7 +1718,11 @@ $cell-editing-outline-width: rem(2px);
 
         // Summaries body (in grid body)
         @include e(summaries, $m: body) {
-            --summaries-patch-background: var-get($theme, 'content-background');
+            --summaries-patch-background: #{var-get($theme, 'group-row-background')};
+
+            display: flex;
+            overflow: hidden;
+            outline-style: none;
             border-bottom: rem(1px) dashed var-get($theme, 'row-border-color');
             background-color: var-get($theme, 'summaries-patch-background');
 
@@ -1608,11 +1732,17 @@ $cell-editing-outline-width: rem(2px);
 
             // Override summary component colors when in body context
             .igx-grid-summary {
-                --background-color: inherit;
+                --background-color: inherit !important;
                 --result-color: hsla(
                     from color(from var(--background-color) var(--y-contrast)) h
                         0 l / 1
-                );
+                ) !important;
+            }
+
+            .igx-display-container {
+                overflow: visible !important;
+                flex: 1;
+                min-width: 0;
             }
         }
 
@@ -1692,6 +1822,48 @@ $cell-editing-outline-width: rem(2px);
         }
     }
 
+    @include b(igx-grid-grouparea) {
+        grid-row: 2;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        border-bottom: $grid-header-border;
+        background: var-get($theme, 'grouparea-background');
+        color: var-get($theme, 'grouparea-color');
+        min-height: var(--grouparea-size);
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+        padding-block: 0;
+        z-index: 2;
+        height: 100%;
+        overflow: hidden;
+
+        &:focus {
+            outline-style: none;
+        }
+
+        %igx-chip {
+            margin-block: pad-block(rem(4px), rem(8px), rem(8px));
+        }
+
+        @include e(connector) {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 rem(4px);
+
+            igx-icon {
+                width: var(--igx-icon-size, #{rem(16px)}) !important;
+                height: var(--igx-icon-size, #{rem(16px)}) !important;
+                font-size: var(--igx-icon-size, #{rem(16px)}) !important;
+            }
+
+            [dir='rtl'] & {
+                transform: scaleX(-1);
+            }
+        }
+    }
+
     @include b(igx-grid-th) {
         position: relative;
         display: flex;
@@ -1713,9 +1885,7 @@ $cell-editing-outline-width: rem(2px);
         padding-block: 0;
         font-size: rem(12px);
         font-weight: 600;
-        border-inline-end: var-get($theme, 'header-border-width')
-            var-get($theme, 'header-border-style')
-            var-get($theme, 'header-border-color');
+        border-inline-end: $grid-header-border;
         overflow: hidden;
         transition: color 250ms ease-in-out;
         outline-style: none;
@@ -1865,11 +2035,18 @@ $cell-editing-outline-width: rem(2px);
                 content: '';
                 position: absolute;
                 inset: 0;
-                width: calc(100% - 1px);
+                width: 100%;
                 height: 100%;
-                box-shadow: inset 0 0 0 rem(1px)
-                    var-get($theme, 'cell-active-border-color');
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
                 pointer-events: none;
+            }
+        }
+
+        @include mx(active, pinned) {
+            &::after {
+                inset-block-start: 0;
+                inset-inline-start: rem(2px);
+                width: calc(100% - rem(3px));
             }
         }
 
@@ -1951,19 +2128,32 @@ $cell-editing-outline-width: rem(2px);
         @include m(pinned) {
             position: relative;
             background: inherit;
-            z-index: 9999;
         }
 
-        @include m(pinned-last) {
-            border-inline-end: var-get($theme, 'pinned-border-width')
-                var-get($theme, 'pinned-border-style')
-                var-get($theme, 'pinned-border-color');
-        }
-
+        // Pinned header (first pinned column)
         @include m(pinned-first) {
-            border-inline-start: var-get($theme, 'pinned-border-width')
-                var-get($theme, 'pinned-border-style')
-                var-get($theme, 'pinned-border-color');
+            border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+
+            &:dir(ltr) {
+                box-shadow: inset rem(1px) 0 0 0 var-get($theme, 'pinned-border-color');
+            }
+
+            &:dir(rtl) {
+                box-shadow: inset rem(-1px) 0 0 0 var-get($theme, 'pinned-border-color');
+            }
+        }
+
+        // Pinned header (last pinned column)
+        @include m(pinned-last) {
+            border-inline-end: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+
+            &:dir(ltr) {
+                box-shadow: inset rem(-1px) 0 0 0 var-get($theme, 'pinned-border-color');
+            }
+
+            &:dir(rtl) {
+                box-shadow: inset rem(1px) 0 0 0 var-get($theme, 'pinned-border-color');
+            }
         }
 
         @include m(fw) {
@@ -2085,9 +2275,7 @@ $cell-editing-outline-width: rem(2px);
         overflow: hidden;
         background: var-get($theme, 'header-background');
         color: var-get($theme, 'header-text-color');
-        border-block-end: var-get($theme, 'header-border-width')
-            var-get($theme, 'header-border-style')
-            var-get($theme, 'header-border-color');
+        border-block-end: $grid-header-border;
 
         // TODO: This is completely upside down - doesn't follow BEM at all
         // Rows inside thead should not have hover effects
@@ -2157,16 +2345,9 @@ $cell-editing-outline-width: rem(2px);
 
             flex-basis: auto !important;
             align-items: center !important;
-            border-bottom: var-get($theme, 'header-border-width')
-                var-get($theme, 'header-border-style')
-                var-get($theme, 'header-border-color');
+            border-block-end: $grid-header-border;
+            border-inline-end: $grid-header-border;
             height: var(--header-size);
-        }
-
-        // Pinned header title (last pinned column)
-        @include e(title, $m: pinned-last) {
-            border-inline-end: rem(2px) solid
-                var-get($theme, 'pinned-border-color') !important;
         }
 
         // Header group (contains multiple columns)
@@ -2178,6 +2359,22 @@ $cell-editing-outline-width: rem(2px);
         // Header subgroup (nested column headers)
         @include e(subgroup) {
             position: relative;
+
+            &::after {
+                width: calc(100% - var-get($theme, 'header-border-width'));
+            }
+
+            &:not(:last-of-type) {
+                &::after {
+                    height: calc(100% - var-get($theme, 'header-border-width'));
+                }
+            }
+
+            &:last-of-type {
+                .igx-grid-th {
+                    border-block-end: none;
+                }
+            }
         }
 
         // Header item (column header wrapper)
@@ -2207,9 +2404,7 @@ $cell-editing-outline-width: rem(2px);
             display: flex;
 
             :where(.igx-grid-thead--virtualizationWrapper) {
-                border-inline-start: var-get($theme, 'header-border-width')
-                    var-get($theme, 'header-border-style')
-                    var-get($theme, 'header-border-color');
+                border-inline-start: $grid-header-border;
             }
         }
 
@@ -2225,11 +2420,52 @@ $cell-editing-outline-width: rem(2px);
         }
     }
 
+
+    @include b(igx-drop-area) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        min-width: rem(80px);
+        height: sizable(rem(24px), rem(24px), rem(32px));
+
+        // TODO Move this in indigo
+        //@if $variant != 'indigo' {
+        //    padding-inline: pad-inline(
+        //            map.get($grid-cell-padding-inline, 'compact'),
+        //            map.get($grid-cell-padding-inline, 'cosy'),
+        //            map.get($grid-cell-padding-inline, 'comfortable')
+        //    );
+        //}
+
+        padding-block: 0;
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        flex: 1 0 0%;
+        background: var-get($theme, 'drop-area-background');
+        border-radius: var-get($theme, 'drop-area-border-radius');
+
+        &:hover {
+            background: var-get($theme, 'drop-area-on-drop-background');
+        }
+
+        @include e(icon) {
+            color: var-get($theme, 'drop-area-icon-color');
+            width: rem(16px);
+            height: rem(16px);
+            font-size: rem(16px);
+            margin-inline-end: rem(8px);
+        }
+
+        @include e(text) {
+            @include ellipsis();
+            color: var-get($theme, 'drop-area-text-color');
+            font-size: rem(13px);
+        }
+    }
+
     // ============================================================================
     // NOTE: Context-Specific Nested Rules
     // These rules handle nested contexts that don't fit cleanly into the BEM model
     // ============================================================================
-
     // Thead context - elements styled differently when inside thead
     .igx-grid-thead {
         .igx-grid__header-indentation {
@@ -2260,25 +2496,19 @@ $cell-editing-outline-width: rem(2px);
         }
     }
 
-    // MRL block context - multi-row layout grid structure
+     //MRL block context - multi-row layout grid structure
     .igx-grid__mrl-block {
         .igx-grid-thead__item {
             display: flex;
         }
 
-        .igx-grid-thead__title,
-        .igx-grid-th {
+        .igx-grid-thead__title {
             border-inline-end: 0;
-        }
-
-        .igx-grid__td,
-        .igx-grid-thead__title,
-        .igx-grid-th {
             border-bottom: 0;
         }
     }
 
-    // MRL row context - rows in multi-row layout
+    //// MRL row context - rows in multi-row layout
     .igx-grid__tr--mrl {
         .igx-grid__cbx-selection,
         .igx-grid__hierarchical-expander,
@@ -2297,7 +2527,7 @@ $cell-editing-outline-width: rem(2px);
             .igx-checkbox__composite-wrapper {
                 width: var(--cbx-size, #{rem(20px)});
                 height: var(--cbx-size, #{rem(20px)});
-                padding: 0;
+                padding: 0 !important;
             }
 
             .igx-checkbox__label {
@@ -2312,6 +2542,31 @@ $cell-editing-outline-width: rem(2px);
             .igx-checkbox__label--before:empty {
                 padding: 0;
                 margin: 0;
+            }
+        }
+    }
+
+    @for $i from 1 through 10 {
+        $level--comfortable: calc(#{$i * $cell-padding-comfortable} + var(--_expander-icon-width));
+        $level--cosy: calc(#{$i * $cell-padding-cosy} + var(--_expander-icon-width));
+        $level--compact: calc(#{$i * $cell-padding-compact} + var(--_expander-icon-width));
+
+        .igx-grid__row-indentation--level-#{$i} {
+            --_indicator-inline-inset: #{sizable(
+                $cell-padding-compact,
+                $cell-padding-cosy,
+                $cell-padding-comfortable
+            )};
+            padding-inline-start: pad-inline($level--compact, $level--cosy, $level--comfortable);
+        }
+
+        $indicator-padding--comfortable: #{$i * $cell-padding-comfortable};
+        $indicator-padding--cosy: #{$i * $cell-padding-cosy};
+        $indicator-padding--compact: #{$i * $cell-padding-compact};
+
+        .igx-grid__group-row--padding-level-#{$i} {
+            %igx-grid__grouping-indicator {
+                padding-inline-start: pad-inline($indicator-padding--compact, $indicator-padding--cosy, $indicator-padding--comfortable);
             }
         }
     }

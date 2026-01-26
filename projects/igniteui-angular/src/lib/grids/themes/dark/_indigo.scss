@@ -17,6 +17,12 @@
 }
 
 @include themed-block(igx-grid, indigo, dark) {
+    @include e(td, $m: bool) {
+        .igx-icon--error {
+            color: color($color: 'gray', $variant: 500);
+        }
+    }
+
     @include e(pivot-empty-chip-area) {
         color: contrast-color($color: 'gray', $variant: 50, $opacity: .6);
     }

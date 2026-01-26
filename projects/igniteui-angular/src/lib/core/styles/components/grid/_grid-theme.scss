@@ -1001,7 +1001,7 @@
         flex-grow: 1;
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 1)};
+            --component-size: 1;
         }
 
         %igx-icon--error {
@@ -2177,50 +2177,50 @@
         }
     }
 
-    %igx-drop-area {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        min-width: rem(80px);
-        height: sizable(
-            map.get($drop-area-height, 'compact'),
-            map.get($drop-area-height, 'cosy'),
-            map.get($drop-area-height, 'comfortable')
-        );
-
-        @if $variant != 'indigo' {
-            padding-inline: pad-inline(
-                map.get($grid-cell-padding-inline, 'compact'),
-                map.get($grid-cell-padding-inline, 'cosy'),
-                map.get($grid-cell-padding-inline, 'comfortable')
-            );
-        } @else {
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
-        }
-
-        padding-block: 0;
-        flex: 1 0 0%;
-        background: var-get($theme, 'drop-area-background');
-        border-radius: var-get($theme, 'drop-area-border-radius');
-
-        %igx-drop-area__icon {
-            color: var-get($theme, 'drop-area-icon-color');
-            width: rem(16px);
-            height: rem(16px);
-            font-size: rem(16px);
-            margin-inline-end: rem(8px);
-        }
-    }
-
-    %igx-drop-area--hover {
-        background: var-get($theme, 'drop-area-on-drop-background');
-    }
-
-    %igx-drop-area__text {
-        @include ellipsis();
-        color: var-get($theme, 'drop-area-text-color');
-        font-size: rem(13px);
-    }
+    //%igx-drop-area {
+    //    display: flex;
+    //    align-items: center;
+    //    justify-content: flex-start;
+    //    min-width: rem(80px);
+    //    height: sizable(
+    //        map.get($drop-area-height, 'compact'),
+    //        map.get($drop-area-height, 'cosy'),
+    //        map.get($drop-area-height, 'comfortable')
+    //    );
+    //
+    //    @if $variant != 'indigo' {
+    //        padding-inline: pad-inline(
+    //            map.get($grid-cell-padding-inline, 'compact'),
+    //            map.get($grid-cell-padding-inline, 'cosy'),
+    //            map.get($grid-cell-padding-inline, 'comfortable')
+    //        );
+    //    } @else {
+    //        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    //    }
+    //
+    //    padding-block: 0;
+    //    flex: 1 0 0%;
+    //    background: var-get($theme, 'drop-area-background');
+    //    border-radius: var-get($theme, 'drop-area-border-radius');
+    //
+    //    %igx-drop-area__icon {
+    //        color: var-get($theme, 'drop-area-icon-color');
+    //        width: rem(16px);
+    //        height: rem(16px);
+    //        font-size: rem(16px);
+    //        margin-inline-end: rem(8px);
+    //    }
+    //}
+    //
+    //%igx-drop-area--hover {
+    //    background: var-get($theme, 'drop-area-on-drop-background');
+    //}
+    //
+    //%igx-drop-area__text {
+    //    @include ellipsis();
+    //    color: var-get($theme, 'drop-area-text-color');
+    //    font-size: rem(13px);
+    //}
 
     %igx-grid__grouping-indicator {
         position: relative;

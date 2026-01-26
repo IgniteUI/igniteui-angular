@@ -197,7 +197,7 @@ $_theme: $material;
                     border-color: color($color: 'primary', $variant: 800);
                 }
             }
-    
+
             &:hover {
                 @include e(item) {
                     color: contrast-color($color: 'primary', $variant: 600);
@@ -221,7 +221,7 @@ $_theme: $material;
                     border-color: color($color: 'info', $variant: 800);
                 }
             }
-    
+
             &:hover {
                 @include e(item) {
                     color: contrast-color($color: 'info', $variant: 600);
@@ -245,7 +245,7 @@ $_theme: $material;
                     border-color: color($color: 'success', $variant: 800);
                 }
             }
-    
+
             &:hover {
                 @include e(item) {
                     color: contrast-color($color: 'success', $variant: 600);
@@ -269,7 +269,7 @@ $_theme: $material;
                     border-color: color($color: 'warn', $variant: 800);
                 }
             }
-    
+
             &:hover {
                 @include e(item) {
                     color: contrast-color($color: 'warn', $variant: 600);
@@ -293,7 +293,7 @@ $_theme: $material;
                     border-color: color($color: 'error', $variant: 800);
                 }
             }
-    
+
             &:hover {
                 @include e(item) {
                     color: contrast-color($color: 'error', $variant: 600);

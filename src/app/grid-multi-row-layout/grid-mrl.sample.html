@@ -1,6 +1,6 @@
 <section style="height: 800px" class="sample-content">
     <div class="density-chooser" style="margin-bottom: 16px">
-        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
     <igx-grid #grid [data]="data" [rowEditable]="true" [rowSelection]="selectionMode"
             primaryKey="PostalCode" [width]="'100%'" [height]="'500px'" [moving]="true">
