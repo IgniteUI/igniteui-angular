@@ -346,7 +346,8 @@ const verifyCellsContentAlignment = (fix, columnKey, shouldBeLeftAligned: boolea
     const cells = TreeGridFunctions.getColumnCells(fix, columnKey);
     if (shouldBeLeftAligned) {
         cells.forEach((cell) => {
-            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS, 'cell has number css class').toBe(false)
+            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS), 'cell has number css class')
+                .toBe(false);
 
             // TreeCells have either 2 or 3 div children (2 for root rows and 3 for child rows).
             const cellDivChildren = cell.queryAll(By.css('div'));
@@ -354,7 +355,8 @@ const verifyCellsContentAlignment = (fix, columnKey, shouldBeLeftAligned: boolea
         });
     } else { // Should be right-aligned
         cells.forEach((cell) => {
-            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS, 'cell does not have number css class').toBe(true)
+            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS), 'cell does not have number css class')
+                .toBe(true);
 
             // NormalCells have 1 div child (no div for indentation and no div for expander).
             const cellDivChildren = cell.queryAll(By.css('div'));

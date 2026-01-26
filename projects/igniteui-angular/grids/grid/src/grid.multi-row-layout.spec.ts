@@ -135,11 +135,13 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.offsetWidth).toBe(200);
         expect(grid.gridAPI.get_cell_by_index(0, 'CompanyName').nativeElement.offsetWidth).toBe(200);
         expect(grid.gridAPI.get_cell_by_index(0, 'ContactName').nativeElement.offsetWidth).toBe(200);
-        expect(+grid.gridAPI.get_cell_by_index(0, 'ContactTitle', 'ID').toBe(+(grid.gridAPI.get_cell_by_index(0)
+        expect(+grid.gridAPI.get_cell_by_index(0, 'ContactTitle').nativeElement.getBoundingClientRect().width.toFixed(3))
+            .toBe(+(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.getBoundingClientRect().width * 3).toFixed(3));
 
         // check group blocks
         let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid-thead')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
-        expect(+groupHeaderBlocks[0].nativeElement.getBoundingClientRect(, 'ID').toBe(+(grid.gridAPI.get_cell_by_index(0)
+        expect(+groupHeaderBlocks[0].nativeElement.getBoundingClientRect().width.toFixed(3))
+            .toBe(+(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.getBoundingClientRect().width * 3).toFixed(3));
         expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(51 * 3);
 
         let gridFirstRow = grid.rowList.first;
@@ -797,7 +799,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         // check cell height in row. By default should span 1 row
         const firstCell = grid.gridAPI.get_cell_by_index(0, 'Fax').nativeElement;
-        expect(firstCell.offsetHeight, 'ContactName').toEqual(grid.gridAPI.get_cell_by_index(0).nativeElement.offsetHeight);
+        expect(firstCell.offsetHeight).toEqual(grid.gridAPI.get_cell_by_index(0, 'ContactName').nativeElement.offsetHeight);
     }));
 
     // Virtualization

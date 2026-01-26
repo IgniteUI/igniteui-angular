@@ -273,7 +273,7 @@ export class TreeGridFunctions {
 
         const iconDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
         const iconDivRect = iconDiv.nativeElement.getBoundingClientRect();
-        expect((iconDivRect.left - (treeCellRect.left + treeCellPaddingLeft + indentation, 'TreeRow icon has incorrect position').toBe(true)
+        expect((iconDivRect.left - (treeCellRect.left + treeCellPaddingLeft + indentation)) < 2, 'TreeRow icon has incorrect position').toBe(true);
     }
 
     /**

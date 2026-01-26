@@ -179,7 +179,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         it('Should update the Advanced Filtering button in toolbar when (filtering)/(clear filtering).', fakeAsync(() => {
             // Verify that the advanced filtering button indicates there are no filters.
             let advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(Array.from(advFilterBtn.children, 'Button indicates there is active filtering.').toBe(false)
+            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')),
+                'Button indicates there is active filtering.').toBe(false);
 
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
@@ -206,7 +207,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify that the advanced filtering button indicates there are filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(Array.from(advFilterBtn.children, 'Button indicates there is no active filtering.').toBe(true)
+            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')),
+                'Button indicates there is no active filtering.').toBe(true);
 
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
@@ -222,7 +224,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify that the advanced filtering button indicates there are no filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(Array.from(advFilterBtn.children, 'Button indicates there is active filtering.').toBe(false)
+            expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')),
+                'Button indicates there is active filtering.').toBe(false);
         }));
 
         it('The Clear/Cancel/Apply buttons type should be set to "button"',  fakeAsync(() => {
@@ -238,9 +241,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const expectedButtonType = 'button';
 
             // Verify buttons type is set to "button".
-            expect(clearButtonType).toBe(expectedButtonType, 'Clear button type is not "button"');
-            expect(cancelButtonType).toBe(expectedButtonType, 'Cancel button type is not "button"');
-            expect(applyButtonType).toBe(expectedButtonType, 'Apply button type is not "button"');
+            expect(clearButtonType, 'Clear button type is not "button"').toBe(expectedButtonType);
+            expect(cancelButtonType, 'Cancel button type is not "button"').toBe(expectedButtonType);
+            expect(applyButtonType, 'Apply button type is not "button"').toBe(expectedButtonType);
         }));
 
         it('Should emit the filtering event when applying filters.', fakeAsync(() => {
@@ -928,14 +931,14 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Verify that the Advanced Filtering dialog is opened.
-            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull('Advanced Filtering dialog is not opened.');
+            expect(GridFunctions.getAdvancedFilteringComponent(fix), 'Advanced Filtering dialog is not opened.').not.toBeNull();
 
             grid.nativeElement.click();
             tick(200);
             fix.detectChanges();
 
             // Verify that the Advanced Filtering dialog remains opened.
-            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull('Advanced Filtering dialog is not opened.');
+            expect(GridFunctions.getAdvancedFilteringComponent(fix), 'Advanced Filtering dialog is not opened.').not.toBeNull();
         }));
 
         it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy', fakeAsync(() => {

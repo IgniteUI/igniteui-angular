@@ -907,7 +907,8 @@ describe('Rendering Tests', () => {
                     .toEqual((i + 1).toString());
                 expect(stepper.steps[i].nativeElement.attributes['aria-setsize'].value)
                     .toEqual(stepper.steps.length.toString());
-                expect(stepper.steps[i].nativeElement.attributes['aria-controls'].value, 'content').toEqual(`${stepper.steps[i].id.replace('step')
+                expect(stepper.steps[i].nativeElement.attributes['aria-controls'].value)
+                    .toEqual(`${stepper.steps[i].id.replace('step', 'content')}`);
 
                 if (i !== 0) {
                     expect(stepper.steps[i].nativeElement.attributes['aria-selected'].value).toEqual('false');

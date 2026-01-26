@@ -308,28 +308,28 @@ export class GridFunctions {
     }
 
     public static verifyColumnIsHidden(column, isHidden: boolean, visibleColumnsCount: number) {
-        expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
+        expect(column.hidden, 'Hidden is not ' + isHidden).toBe(isHidden);
 
         const visibleColumns = column.grid.visibleColumns;
         expect(visibleColumns.length, 'Unexpected visible columns count!').toBe(visibleColumnsCount);
-        expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+        expect(visibleColumns.findIndex((col) => col === column) > -1, 'Unexpected result for visibleColumns collection!').toBe(!isHidden);
     }
 
     public static verifyColumnsAreHidden(columns, isHidden: boolean, visibleColumnsCount: number) {
         const visibleColumns = columns[0].grid.visibleColumns;
         columns.forEach(column => {
-            expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
-            expect(visibleColumns.findIndex((col, 'Unexpected result for visibleColumns collection!').toBe(!isHidden)
+            expect(column.hidden, 'Hidden is not ' + isHidden).toBe(isHidden);
+            expect(visibleColumns.findIndex((col) => col === column) > -1, 'Unexpected result for visibleColumns collection!').toBe(!isHidden);
         });
         expect(visibleColumns.length, 'Unexpected visible columns count!').toBe(visibleColumnsCount);
     }
 
     public static verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
-        expect(column.pinned).toBe(isPinned, 'Pinned is not ' + isPinned);
+        expect(column.pinned, 'Pinned is not ' + isPinned).toBe(isPinned);
 
         const pinnedColumns = column.grid.pinnedColumns;
         expect(pinnedColumns.length, 'Unexpected pinned columns count!').toBe(pinnedColumnsCount);
-        expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
+        expect(pinnedColumns.findIndex((col) => col === column) > -1, 'Unexpected result for pinnedColumns collection!').toBe(isPinned);
     }
 
     public static verifyUnpinnedAreaWidth(grid: GridType, expectedWidth: number, includeScrollWidth = true) {

@@ -81,8 +81,8 @@ const testSort = () => {
                 strategy: DefaultSortingStrategy.instance()
             };
             let res = DataUtil.sort(data, [se0]);
-            expect(dataGenerator.getValuesForColumn(res, 'number'))
-                .toEqual([3, 2, 1, 0, 4], 'expressionDefaults.ignoreCase = false');
+            expect(dataGenerator.getValuesForColumn(res, 'number'), 'expressionDefaults.ignoreCase = false')
+                .toEqual([3, 2, 1, 0, 4]);
             se0.ignoreCase = true;
             res = DataUtil.sort(data, [se0]);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
@@ -389,7 +389,8 @@ const testFilter = () => {
             ];
 
             let res = FilterUtil.filter(data, state);
-            expect(dataGenerator.getValuesForColumn(res, 'number', 'number').toEqual(dataGenerator.getValuesForColumn(data)
+            expect(dataGenerator.getValuesForColumn(res, 'number'))
+                .toEqual(dataGenerator.getValuesForColumn(data, 'number'));
             (res[0] as { string: string }).string = 'ROW';
             // case-sensitive
             res = FilterUtil.filter(res, stateIgnoreCase);

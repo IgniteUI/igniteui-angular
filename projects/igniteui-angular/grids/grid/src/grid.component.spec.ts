@@ -56,7 +56,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.instance;
             const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
 
-            expect(grid).toBeDefined('Grid initializing through markup failed');
+            expect(grid, 'Grid initializing through markup failed').toBeDefined();
             expect(grid.columnList.length, 'Invalid number of columns initialized').toEqual(2);
             expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(3);
 
@@ -84,12 +84,14 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            expect(grid).toBeDefined('Grid initializing through autoGenerate failed');
+            expect(grid, 'Grid initializing through autoGenerate failed').toBeDefined();
             expect(grid.columns.length, 'Invalid number of columns initialized').toEqual(4);
             expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(1);
             expect(grid.columns[0].dataType, 'Invalid dataType set on column').toEqual(GridColumnDataType.Number);
-            expect(grid.columns.find((col, 'Invalid dataType set on column').toEqual(GridColumnDataType.String)
-            expect(grid.columns.find((col, 'Invalid dataType set on column').toEqual(GridColumnDataType.Boolean)
+            expect(grid.columns.find((col) => col.index === 1).dataType, 'Invalid dataType set on column')
+                .toEqual(GridColumnDataType.String);
+            expect(grid.columns.find((col) => col.index === 2).dataType, 'Invalid dataType set on column')
+                .toEqual(GridColumnDataType.Boolean);
             expect(grid.columns[grid.columns.length - 1].dataType, 'Invalid dataType set on column').toEqual(GridColumnDataType.Date);
             expect(fix.componentInstance.columnEventCount).toEqual(4);
         });
@@ -708,7 +710,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
-            });
+        });
     });
 
     describe('IgxGrid - virtualization tests', () => {
@@ -3063,7 +3065,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 .toBeLessThan(MAX_GROUPED_RENDER);
         });
 
-        xit('should scroll (optimized delta) the grid vertically in a certain amount of time', async (done) => {
+        it.skip('should scroll (optimized delta) the grid vertically in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
