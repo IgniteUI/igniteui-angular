@@ -1976,7 +1976,7 @@ describe('IgxDateRangePicker', () => {
 
                 expect(dateRange['_calendar'].hasHeader).toBeTruthy();
                 const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER_TEMPLATE));
-                expect(calendarHeader).toBeTruthy('Calendar header should be present');
+                expect(calendarHeader, 'Calendar header should be present').toBeTruthy();
             }));
 
             it('should set calendar headerOrientation prop in dialog mode', fakeAsync(() => {
@@ -2016,7 +2016,7 @@ describe('IgxDateRangePicker', () => {
 
                 expect(dateRange['_calendar'].hasHeader).toBeFalsy();
                 const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
-                expect(calendarHeader).toBeFalsy('Calendar header should not be present');
+                expect(calendarHeader, 'Calendar header should not be present').toBeFalsy();
             }));
 
             it('should set calendar orientation property', fakeAsync(() => {
@@ -2185,7 +2185,7 @@ describe('IgxDateRangePicker', () => {
 
                 it('Should use the custom template for header title', fakeAsync(() => {
                     const headerTitleElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TITLE));
-                    expect(headerTitleElement).toBeTruthy('Header title element should be present');
+                    expect(headerTitleElement, 'Header title element should be present').toBeTruthy();
                     if (headerTitleElement) {
                         expect(headerTitleElement.nativeElement.textContent.trim()).toBe('Test header title');
                     }
@@ -2193,7 +2193,7 @@ describe('IgxDateRangePicker', () => {
 
                 it('Should use the custom template for header', fakeAsync(() => {
                     const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TEMPLATE));
-                    expect(headerElement).toBeTruthy('Header element should be present');
+                    expect(headerElement, 'Header element should be present').toBeTruthy();
                     if (headerElement) {
                         expect(headerElement.nativeElement.textContent.trim()).toBe('Test header');
                     }
@@ -2201,7 +2201,7 @@ describe('IgxDateRangePicker', () => {
 
                 it('Should use the custom template for subheader', fakeAsync(() => {
                     const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_SUBHEADER));
-                    expect(headerElement).toBeTruthy('Subheader element should be present');
+                    expect(headerElement, 'Subheader element should be present').toBeTruthy();
                     if (headerElement) {
                         expect(headerElement.nativeElement.textContent.trim()).toBe('Test subheader');
                     }

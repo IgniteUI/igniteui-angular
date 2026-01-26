@@ -1931,10 +1931,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chips.length).toBe(4);
 
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
-            expect(leftArrowButton).toBeTruthy('Left scroll arrow should be visible');
+            expect(leftArrowButton, 'Left scroll arrow should be visible').toBeTruthy();
 
             const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
-            expect(rightArrowButton).toBeTruthy('Right scroll arrow should be visible');
+            expect(rightArrowButton, 'Right scroll arrow should be visible').toBeTruthy();
             expect(grid.rowList.length).toBe(2);
 
             let chipToRemove = filterUIRow.componentInstance.expressionsList[3];

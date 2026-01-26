@@ -217,7 +217,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait(100);
             fixture.detectChanges();
 
-            expect(grid.columns[2].cells[3].value).toBeTruthy('BRown');
+            expect(grid.columns[2].cells[3].value, 'BRown').toBeTruthy();
         }));
 
         it('Should be able to reorder columns programmatically when a column is grouped.', (async () => {
@@ -397,14 +397,14 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait(100);
             fixture.detectChanges();
 
-            expect(grid.columns[0].cells[3].value).toBeTruthy('Rick');
+            expect(grid.columns[0].cells[3].value, 'Rick').toBeTruthy();
 
             // step 3 - verify horizontal scrolling is not broken
             grid.headerContainer.getScroll().scrollLeft = 200;
             await wait(100);
             fixture.detectChanges();
 
-            expect(grid.columns[2].cells[3].value).toBeTruthy('BRown');
+            expect(grid.columns[2].cells[3].value, 'BRown').toBeTruthy();
         }));
 
         it('Should fire columnMovingStart, columnMoving and columnMovingEnd with correct values of event arguments.', (async () => {

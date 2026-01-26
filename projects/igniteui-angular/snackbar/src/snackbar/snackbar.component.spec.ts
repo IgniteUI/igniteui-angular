@@ -213,7 +213,7 @@ describe('IgxSnackbar with custom content', () => {
         expect(messageEl.nativeElement.innerText).toContain('Item shown');
 
         const customContent = fixture.debugElement.query(By.css('.igx-snackbar__content'));
-        expect(customContent).toBeTruthy('Custom content is not found');
+        expect(customContent, 'Custom content is not found').toBeTruthy();
 
         // Verify the custom button is displayed instead of the snackbar actionText
         const button = fixture.debugElement.query(By.css('.igx-button'));

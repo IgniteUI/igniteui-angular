@@ -22,7 +22,7 @@ describe('IgxDirectionality', () => {
 
             expect(injectionToken).toEqual(document);
             expect(injectionToken).toEqual(expect.any(Document));
-            expect(document).toBeTruthy(expect.any(Document));
+            expect(document).toBeTruthy();
         });
 
         it('should read dir from html if not specified on the body', inject([DOCUMENT], () => {

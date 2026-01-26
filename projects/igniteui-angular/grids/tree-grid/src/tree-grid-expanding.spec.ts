@@ -1150,11 +1150,11 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             const cell = treeGrid.getCellByColumn(1, 'Name');
             const overlayContent = GridFunctions.getRowEditingBanner(fix);
             expect(overlayContent.getBoundingClientRect().height).toBe(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should not be visible').toBeTruthy();
 
             cell.editMode = true;
             fix.detectChanges();
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
@@ -1164,7 +1164,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             indicatorDiv.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should not hide');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should not hide').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
@@ -1172,7 +1172,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             indicatorDiv.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should still be shown');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should still be shown').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
@@ -1182,26 +1182,26 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             const cell = treeGrid.getCellByColumn(1, 'Name');
             const overlayContent = GridFunctions.getRowEditingBanner(fix);
             expect(overlayContent.getBoundingClientRect().height).toBe(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should not be visible').toBeTruthy();
 
             cell.editMode = true;
 
             fix.detectChanges();
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should not hide');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should not hide').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should still be shown');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should still be shown').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
@@ -1221,7 +1221,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             const cell = treeGrid.getCellByColumn(0, 'Name');
             const overlayContent = GridFunctions.getRowEditingBanner(fix);
             expect(overlayContent.getBoundingClientRect().height).toBe(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should not be visible').toBeTruthy();
 
             cell.editMode = true;
             fix.detectChanges();
@@ -1232,7 +1232,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
 
@@ -1240,7 +1240,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
         });
@@ -1251,7 +1251,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             const cell = treeGrid.getCellByColumn(1, 'Name');
             const overlayContent = GridFunctions.getRowEditingBanner(fix);
             expect(overlayContent.getBoundingClientRect().height).toBe(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should not be visible').toBeTruthy();
 
             cell.editMode = true;
             fix.detectChanges();
@@ -1260,7 +1260,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
 
@@ -1268,7 +1268,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
         });
@@ -1280,7 +1280,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             const cell = treeGrid.getCellByColumn(9, 'Name');
             const overlayContent = GridFunctions.getRowEditingBanner(fix);
             expect(overlayContent.getBoundingClientRect().height).toBe(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should not be visible').toBeTruthy();
 
             cell.editMode = true;
             fix.detectChanges();
@@ -1291,7 +1291,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
 
@@ -1299,7 +1299,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
         });
@@ -1310,7 +1310,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             const cell = treeGrid.getCellByColumn(9, 'Name');
             const overlayContent = GridFunctions.getRowEditingBanner(fix);
             expect(overlayContent.getBoundingClientRect().height).toBe(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should not be visible').toBeTruthy();
 
             cell.editMode = true;
             fix.detectChanges();
@@ -1319,7 +1319,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
 
@@ -1327,7 +1327,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             expect(overlayContent.getBoundingClientRect().height).toBeGreaterThan(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
         });
@@ -1352,7 +1352,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             let overlayContent = GridFunctions.getRowEditingBanner(fix);
 
             expect(overlayContent.getBoundingClientRect().height).toBe(0);
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should not be visible').toBeTruthy();
             const cell = treeGrid.getCellByColumn(2, 'Name');
             cell.editMode = true;
             fix.detectChanges();
@@ -1362,14 +1362,14 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             indicatorDiv.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeGreaterThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
 
             indicatorDiv.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
-            expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible but outside of bounds');
+            expect(treeGrid.rowEditingOverlay.collapsed, 'Edit overlay should be visible but outside of bounds').toBeFalsy();
             expect(overlayContent.getBoundingClientRect().top).toBeLessThan(treeGrid.nativeElement.getBoundingClientRect().top +
                                                                             treeGrid.nativeElement.getBoundingClientRect().height);
         });
