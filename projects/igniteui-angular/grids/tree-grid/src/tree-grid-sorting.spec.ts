@@ -112,8 +112,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
         });
 
-        it('should sort treeGrid by multiple expressions through API', () => {
-            pending('figure out how was this passing before');
+        it.skip('should sort treeGrid by multiple expressions through API', () => {
             // Test prerequisites (need to have multiple records with the same name on every level)
             treeGrid.data[0].Name = 'Ana Sanders';
             treeGrid.data[0].Employees[1].Name = 'Michael Langdon';

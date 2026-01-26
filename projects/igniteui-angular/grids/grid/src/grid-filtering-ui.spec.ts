@@ -344,8 +344,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toEqual(2);
         }));
 
-        it('UI - should correctly filter date column by \'equals\' filtering conditions', fakeAsync(() => {
-            pending('This should be tested in the e2e test');
+        it.skip('UI - should correctly filter date column by \'equals\' filtering conditions', fakeAsync(() => {
             GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -373,8 +372,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toEqual(1);
         }));
 
-        it('Should correctly select month from month view datepicker/calendar component', fakeAsync(() => {
-            pending('This should be tested in the e2e test');
+        it.skip('Should correctly select month from month view datepicker/calendar component', fakeAsync(() => {
             const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
             filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
             tick();
@@ -413,8 +411,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(month.innerHTML.trim()).toEqual(firstMonthText);
         }));
 
-        it('Should correctly select year from year view datepicker/calendar component', fakeAsync(() => {
-            pending('This should be tested in the e2e test');
+        it.skip('Should correctly select year from year view datepicker/calendar component', fakeAsync(() => {
             const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
             filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
             tick();
@@ -723,9 +720,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 expect(idCellChips.length).toBe(1);
             }));
 
-        it('should render correct input and dropdown in filter row for different column types',
+        it.skip('should render correct input and dropdown in filter row for different column types',
             fakeAsync(/** showHideArrowButtons rAF */() => {
-                pending('This should be tested in the e2e test');
                 const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
                 const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
                 const numberCellChip = filteringCells[2].query(By.css('igx-chip'));
@@ -777,8 +773,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix.detectChanges();
             }));
 
-        it('should apply  multiple conditions to grid immediately while the filter row is still open', fakeAsync(() => {
-            pending('This should be tested in the e2e test');
+        it.skip('should apply  multiple conditions to grid immediately while the filter row is still open', fakeAsync(() => {
             const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
             const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
             const numberCellChip = filteringCells[2].query(By.css('igx-chip'));
@@ -937,8 +932,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(GridFunctions.getFilterRowRightArrowButton(fix)).toBeNull();
         }));
 
-        it('Should correctly update filtering row rendered when changing current column by clicking on a header.', fakeAsync(() => {
-            pending('This should be tested in the e2e test');
+        it.skip('Should correctly update filtering row rendered when changing current column by clicking on a header.', fakeAsync(() => {
             const headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
             const numberHeader = headers[2];
             const boolHeader = headers[3];
@@ -1446,9 +1440,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             verifyFilterRowUI(input, close, reset);
         }));
 
-        it('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
-            pending(`The test needs refactoring. The dispatchEvent doesn't focus elements with tabindex over them.
-                Also, the focus is now persistent over the tbody element`);
+        it.skip('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
@@ -1755,8 +1747,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 expect(filterUIRow).toBeUndefined();
             }));
 
-        it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
-            pending('Should be fixed with headers navigation');
+        it.skip('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
             const filterCellChip = GridFunctions.getFilterChipsForColumn('AnotherField', fix)[0];
             UIInteractions.triggerKeyDownEvtUponElem('Tab', filterCellChip.nativeElement, true);
             tick(200);
@@ -1837,8 +1828,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(document.activeElement).toEqual(header.nativeElement);
         }));
 
-        it('Should update active element when click \'clear\' button of last chip and there is no \'more\' icon.', fakeAsync(() => {
-            pending('This this is not valid anymore, so we should probably dellete it.');
+        it.skip('Should update active element when click \'clear\' button of last chip and there is no \'more\' icon.', fakeAsync(() => {
             grid.getColumnByName('ProductName').width = '350px';
             tick(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -1907,8 +1897,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipDiv.classList.contains('igx-chip__item--selected'), 'chip is not selected').toBe(true);
         }));
 
-        it('Should not throw error when deleting the last chip', (async () => {
-            pending('This should be tested in the e2e test');
+        it.skip('Should not throw error when deleting the last chip', (async () => {
             grid.width = '700px';
             fix.detectChanges();
             await wait(100);

@@ -1070,9 +1070,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
         });
 
-        it(`Should not clear range when try to navigate out the grid with shift
+        it.skip(`Should not clear range when try to navigate out the grid with shift
             + arrrow keys and then click on other cell with pressed Ctrl'`, () => {
-            pending('# Issue should be fixedy');
             let cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();

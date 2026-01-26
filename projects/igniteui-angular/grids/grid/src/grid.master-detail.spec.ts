@@ -580,8 +580,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(targetCellElement2.active).toBeTruthy();
         });
 
-        it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async () => {
-            pending('This test should pass when the issue #7300 is fixed.');
+        it.skip('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async () => {
             grid.navigateTo(20, 0);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();

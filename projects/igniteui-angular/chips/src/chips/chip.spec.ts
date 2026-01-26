@@ -313,8 +313,7 @@ describe('IgxChip', () => {
             });
         });
 
-        it('should fire selectedChanged event when selectable is true', (async () => {
-            pending('This should be tested in the e2e test');
+        it.skip('should fire selectedChanged event when selectable is true', (async () => {
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
 
             vi.spyOn(secondChipComp.selectedChanging, 'emit');

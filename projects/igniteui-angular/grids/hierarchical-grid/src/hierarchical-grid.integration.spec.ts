@@ -744,8 +744,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     });
 
     describe('Toolbar', () => {
-        it('should be displayed correctly for child layout and hiding should apply to the correct child.', fakeAsync(() => {
-            pending('Change test for new scrollbar structure');
+        it.skip('should be displayed correctly for child layout and hiding should apply to the correct child.', fakeAsync(() => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
             tick();
             fixture.detectChanges();
@@ -776,8 +775,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // expect(childGrid.visibleColumns.length).toEqual(3);
         }));
 
-        it('should be displayed correctly for child layout and pinning should apply to the correct child.', fakeAsync(() => {
-            pending('Change test for new scrollbar structure');
+        it.skip('should be displayed correctly for child layout and pinning should apply to the correct child.', fakeAsync(() => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
 
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
@@ -803,8 +801,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.getColumnByName('ID').pinned).toBeFalsy();
         }));
 
-        it('should read from custom templates per level', fakeAsync(() => {
-            pending('Change test for new scrollbar structure');
+        it.skip('should read from custom templates per level', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestCustomToolbarComponent);
             tick();
             fixture.detectChanges();

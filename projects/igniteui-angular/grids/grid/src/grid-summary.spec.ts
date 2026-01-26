@@ -1174,8 +1174,7 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(cell.selected).toBe(false);
         });
 
-        it('should navigate with tab to filter row if the grid is empty', () => {
-            pending('this test need to be written again when the header are ready');
+        it.skip('should navigate with tab to filter row if the grid is empty', () => {
             grid.allowFiltering = true;
             grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();

@@ -2713,8 +2713,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         expect(mockSelection.delete).toHaveBeenCalled();
     });
 
-    it('Should correctly handle ngControl validity', () => {
-        pending('Convert existing form test here');
+    it.skip('Should correctly handle ngControl validity', () => {
     });
 });
 

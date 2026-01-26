@@ -27,13 +27,12 @@ describe('Scroll Inertia Directive - Rendering', () => {
     });
 
     it('should initialize directive on non-scrollable container.', async () => {
-        expect(fix.componentInstance.scrInertiaDir).toBeDefined('scroll inertia initializing through markup failed');
+        expect(fix.componentInstance.scrInertiaDir, 'scroll inertia initializing through markup failed').toBeDefined();
         await fix.whenStable();
     });
 
     // Unit tests for inertia function.
-    it('inertia should accelerate and then deccelerate vertically.', async () => {
-        pending('This should be tested in the e2e test');
+    it.skip('inertia should accelerate and then deccelerate vertically.', async () => {
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
         // vertical inertia
@@ -51,8 +50,7 @@ describe('Scroll Inertia Directive - Rendering', () => {
         expect(end).toBeLessThan(mid);
     });
 
-    it('inertia should accelerate and then deccelerate horizontally.', async () => {
-        pending('This should be tested in the e2e test');
+    it.skip('inertia should accelerate and then deccelerate horizontally.', async () => {
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
         // horizontal inertia
