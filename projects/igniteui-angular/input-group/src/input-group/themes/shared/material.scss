@@ -349,8 +349,7 @@ $input-bottom-spacing: rem(6px);
         }
 
         @include e(textarea) {
-            // This gives the drag handle some room from the field bottom border
-            border-bottom: rem(2px) solid transparent;
+            padding-block-end: #{pad-block(rem(8px), rem(12px), rem(16px))};
         }
     }
 

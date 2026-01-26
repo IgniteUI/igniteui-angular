@@ -103,7 +103,7 @@ $_theme: $indigo;
 
     @include m(textarea-group) {
         @include e(textarea) {
-            padding-block: pad-block(rem(4px), rem(6px), rem(8px)) 0;
+            padding-block: pad-block(rem(4px), rem(6px), rem(8px));
         }
 
         @include e(bundle) {
