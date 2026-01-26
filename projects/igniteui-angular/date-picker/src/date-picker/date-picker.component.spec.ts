@@ -1262,7 +1262,7 @@ describe('IgxDatePicker', () => {
                     }
                 );
 
-                const collapsedSpy = spyOnProperty(datePicker, 'collapsed', 'get');
+                const collapsedSpy = vi.spyOn(datePicker, 'collapsed', 'get');
                 collapsedSpy.mockReturnValue(false);
                 datePicker.disabled = false;
                 datePicker.open();
@@ -1276,7 +1276,7 @@ describe('IgxDatePicker', () => {
                 expect(overlay.attach).not.toHaveBeenCalled();
                 collapsedSpy.mockReturnValue(true);
                 datePicker.disabled = false;
-                const isDropdownSpy = spyOnProperty(datePicker, 'isDropdown', 'get');
+                const isDropdownSpy = vi.spyOn(datePicker, 'isDropdown', 'get');
                 isDropdownSpy.mockReturnValue(false);
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDialogSettings);
@@ -1345,7 +1345,7 @@ describe('IgxDatePicker', () => {
                 datePicker.ngAfterViewInit();
 
                 // assign overlayId
-                const collapsedSpy = spyOnProperty(datePicker, 'collapsed', 'get');
+                const collapsedSpy = vi.spyOn(datePicker, 'collapsed', 'get');
                 collapsedSpy.mockReturnValue(true);
                 datePicker.open();
                 datePicker.close();
@@ -1378,7 +1378,7 @@ describe('IgxDatePicker', () => {
                 datePicker.getEditElement().dispatchEvent('click' as any);
                 // does not call open when in DD mode
                 expect(datePicker.open).toHaveBeenCalledTimes(0);
-                spyOnProperty(datePicker, 'isDropdown', 'get').mockReturnValue(false);
+                vi.spyOn(datePicker, 'isDropdown', 'get').mockReturnValue(false);
                 datePicker.getEditElement().dispatchEvent('click' as any);
                 expect(datePicker.open).toHaveBeenCalledTimes(1);
             });
@@ -1468,7 +1468,7 @@ describe('IgxDatePicker', () => {
                 vi.spyOn(datePicker.validationFailed, 'emit');
                 const validDate = new Date(2012, 5, 7);
                 const invalidDate = new Date(2012, 6, 1);
-                spyOnProperty(mockDateEditor, 'value', 'set').mockImplementation((val: Date) => {
+                vi.spyOn(mockDateEditor, 'value', 'set').mockImplementation((val: Date) => {
                     if (val === invalidDate) {
                         mockDateEditor.validationFailed.emit({ oldValue: validDate });
                         return;

@@ -209,7 +209,7 @@ describe('IgxDateRangePicker', () => {
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
             dateRange.ngOnInit();
 
-            spyOnProperty((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
+            vi.spyOn((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
             dateRange.minValue = new Date(2000, 10, 1);
             dateRange.maxValue = new Date(2000, 10, 20);
 
@@ -224,7 +224,7 @@ describe('IgxDateRangePicker', () => {
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
             dateRange.ngOnInit();
 
-            spyOnProperty((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
+            vi.spyOn((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
             dateRange.minValue = '2000/10/1';
             dateRange.maxValue = '2000/10/30';
 
@@ -243,7 +243,7 @@ describe('IgxDateRangePicker', () => {
             dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
             mockNgControl.registerOnValidatorChangeCb.mockClear();
-            spyOnProperty((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
+            vi.spyOn((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
 
             const start = new Date(new Date().getFullYear(), new Date().getMonth(), 10);
             const end = new Date(new Date().getFullYear(), new Date().getMonth(), 18);
