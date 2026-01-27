@@ -1161,11 +1161,8 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const parentRowDE = parentRows[0];
                 const parentCells = parentRowDE.queryAll(By.css('.igx-grid__td'));
                 const parentCellDE = parentCells[1];
-                childCellDE.nativeElement.dispatchEvent(new FocusEvent('focusout', {
-                    bubbles: true,
-                    relatedTarget: parentCellDE.nativeElement
-                }));
                 UIInteractions.simulateClickAndSelectEvent(parentCellDE.nativeElement);
+                parentCellDE.nativeElement.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
                 await wait(1);
                 fix.detectChanges();
 
