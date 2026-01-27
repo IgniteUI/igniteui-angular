@@ -649,16 +649,22 @@ export class IgxOverlayService implements OnDestroy {
         const parent = element.parentElement;
         
         if (parent) {
-            // Insert wrapper before the element
+            // Insert wrapper before the element in its current position
             parent.insertBefore(info.wrapperElement, element);
             // Move element into the content div inside wrapper
             contentElement.appendChild(element);
             // Set popover attribute on wrapper
             info.wrapperElement.setAttribute('popover', 'manual');
         } else {
-            // Fallback to old behavior if no parent (shouldn't happen in normal cases)
-            this.getOverlayElement(info).appendChild(info.wrapperElement);
+            // For elements without a parent (e.g., dynamically created components),
+            // append wrapper to the outlet or body, then use popover
+            const outlet = info.settings.outlet ? 
+                (info.settings.outlet.nativeElement || info.settings.outlet) : 
+                this._document.body;
+            outlet.appendChild(info.wrapperElement);
             contentElement.appendChild(element);
+            // Set popover attribute on wrapper
+            info.wrapperElement.setAttribute('popover', 'manual');
         }
     }
 
@@ -745,30 +751,30 @@ export class IgxOverlayService implements OnDestroy {
         }
         
         // Restore element to its original position
-        if (info.hook && info.wrapperElement) {
-            // Extract the element from the wrapper
+        if (info.hook) {
+            // Element had a parent, so we used a hook
             const parent = info.hook.parentElement;
-            if (parent && info.wrapperElement.parentElement) {
-                // Insert element back at hook position
+            if (parent) {
+                // Extract the element from the wrapper structure
+                if (child.parentElement) {
+                    child.parentElement.removeChild(child);
+                }
                 parent.insertBefore(child, info.hook);
-                // Remove the wrapper
-                info.wrapperElement.parentElement.removeChild(info.wrapperElement);
+                
+                // Remove the wrapper if it exists in the parent
+                if (info.wrapperElement && parent.contains(info.wrapperElement)) {
+                    parent.removeChild(info.wrapperElement);
+                }
+                
                 // Remove the hook
                 parent.removeChild(info.hook);
                 delete info.hook;
             }
-        } else {
-            // Fallback: check if wrapper is in overlay element and remove it
-            const outlet = this.getOverlayElement(info);
-            if (outlet.contains(child)) {
-                outlet.removeChild(child.parentNode.parentNode);
-            }
-            
-            // Restore via hook if available
-            if (info.hook) {
-                info.hook.parentElement.insertBefore(child, info.hook);
-                info.hook.parentElement.removeChild(info.hook);
-                delete info.hook;
+        } else if (info.wrapperElement) {
+            // Element didn't have a parent (dynamically created)
+            // Just remove the wrapper from wherever it was added
+            if (info.wrapperElement.parentElement) {
+                info.wrapperElement.parentElement.removeChild(info.wrapperElement);
             }
         }
         
@@ -781,7 +787,7 @@ export class IgxOverlayService implements OnDestroy {
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
 
-        // this._overlayElement.parentElement check just for tests that manually delete the element
+        // Clean up overlay element if no more overlays
         if (this._overlayInfos.length === 0) {
             if (this._overlayElement && this._overlayElement.parentElement) {
                 this._overlayElement.parentElement.removeChild(this._overlayElement);

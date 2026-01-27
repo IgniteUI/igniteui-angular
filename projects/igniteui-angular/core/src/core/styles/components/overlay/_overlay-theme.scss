@@ -28,6 +28,9 @@
             padding: 0;
             border: none;
             overflow: visible;
+            // Ensure wrapper covers viewport when shown
+            position: fixed;
+            inset: 0;
         }
     }
 
