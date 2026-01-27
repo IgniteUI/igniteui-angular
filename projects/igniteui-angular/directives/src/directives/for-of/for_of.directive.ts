@@ -501,6 +501,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected subscribeToObserver(target: Element) {
         if (this.igxForScrollOrientation === 'vertical') {
             this._zone.runOutsideAngular(() => {
+                // console.log(target);
                 if (this.platformUtil.isBrowser) {
                     this.contentObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => this.contentResizeNotify.next(entries));
                     this.contentObserver.observe(target);
@@ -842,11 +843,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 continue;
             }
             const currDiff = newVal - oldVal;
+            // if (currDiff > 0) {
+            //     console.log('RECALC Size increased for index ', targetIndex, ' from ', oldVal, ' to ', newVal);
+            // }
             diffs.push(currDiff);
             totalDiff += currDiff;
             this.individualSizeCache[targetIndex] = cachedNodeSize;
             this.sizesCache[targetIndex + 1] = (this.sizesCache[targetIndex] || 0) + newVal;
         }
+
+        // console.log(this.individualSizeCache);
         // update cache
         if (Math.abs(totalDiff) > 0) {
             for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
@@ -958,22 +964,15 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     protected updateSizes(entries:ResizeObserverEntry[] ) {
-        if (!this.scrollComponent.nativeElement.isConnected) return;
-        const scrollable = this.isScrollable();
         entries.forEach((entry) => {
             const index = parseInt(entry.target.getAttribute('data-index'), 0);
             const height = entry.contentRect.height;
             const embView = this._embeddedViews[index - this.state.startIndex];
             this._embeddedViewSizesCache.set(embView, height);
+            // console.log('Observed size change for index ', index, ' new size ', height);
+            // console.log(this._embeddedViewSizesCache);
         });
-        this._applyChanges();
-        this._updateScrollOffset();
         this.recalcUpdateSizes();
-        if (scrollable !== this.isScrollable()) {
-            this.scrollbarVisibilityChanged.emit();
-        } else {
-            this.contentSizeChange.emit();
-        }
     }
 
     /**
@@ -1423,6 +1422,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         // also detach from ViewContainerRef to make absolutely sure this is removed from the view container.
         this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
         oldElem.destroy();
+        this._embeddedViewSizesCache.delete(oldElem);
 
         this.state.chunkSize--;
     }
