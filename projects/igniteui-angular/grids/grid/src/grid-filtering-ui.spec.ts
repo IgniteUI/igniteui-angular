@@ -2047,7 +2047,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Verify the condition was submitted.
             const header = GridFunctions.getColumnHeader('ProductName', fix);
             const activeFilterIcon = header.nativeElement.querySelector('.igx-excel-filter__icon--filtered');
-            expect(activeFilterIcon).toBeDefined('no active filter icon was found');
+            expect(activeFilterIcon, 'no active filter icon was found').toBeDefined();
         }));
 
         it('Should clear non-unary conditions with null searchVal when close', fakeAsync(() => {
@@ -2842,24 +2842,23 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should render custom filter template instead of default one.', fakeAsync(() => {
             // Verify default filter template is not present.
-            expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.igx-filtering-chips'))).toBeNull(
-                '\'ProductName\' default filter chips area template was found.');
-            expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.igx-filtering-chips'))).toBeNull(
-                '\'Downloads\' default filter chips area template was found.');
-            expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.igx-filtering-chips'))).toBeNull(
-                '\'Released\' default filter chips area template was found.');
-            expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.igx-filtering-chips'))).toBeNull(
-                '\'ReleaseDate\' default filter chips area template was found.');
-
+            expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.igx-filtering-chips')),
+                '\'ProductName\' default filter chips area template was found.').toBeNull();
+            expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.igx-filtering-chips')),
+                '\'Downloads\' default filter chips area template was found.').toBeNull();
+            expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.igx-filtering-chips')),
+                '\'Released\' default filter chips area template was found.').toBeNull();
+            expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.igx-filtering-chips')),
+                '\'ReleaseDate\' default filter chips area template was found.').toBeNull();
             // Verify the custom filter template is present.
-            expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.custom-filter'))).not.toBeNull(
-                '\'ProductName\' customer filter template was not found.');
-            expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.custom-filter'))).not.toBeNull(
-                '\'Downloads\' customer filter template was not found.');
-            expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.custom-filter'))).not.toBeNull(
-                '\'Released\' customer filter template was not found.');
-            expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.custom-filter'))).not.toBeNull(
-                '\'ReleaseDate\' customer filter template was not found.');
+            expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.custom-filter')),
+                '\'ProductName\' customer filter template was not found.').not.toBeNull();
+            expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.custom-filter')),
+                '\'Downloads\' customer filter template was not found.').not.toBeNull();
+            expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.custom-filter')),
+                '\'Released\' customer filter template was not found.').not.toBeNull();
+            expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.custom-filter')),
+                '\'ReleaseDate\' customer filter template was not found.').not.toBeNull();
         }));
 
         it('Should close default filter template when clicking on a column with custom one.', fakeAsync(() => {
@@ -6176,7 +6175,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             expect(excelMenu).not.toBeNull();
-            expect(inputNativeElement.value).toBe('', 'input isn\'t cleared correctly');
+            expect(inputNativeElement.value, 'input isn\'t cleared correctly').toBe('');
         }));
 
         it('Should clear search criteria when selecting clear column filters option.', fakeAsync(() => {
@@ -6615,7 +6614,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             flush();
 
             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
-            expect(inputNativeElement.value).toBe('', 'input value didn\'t reset');
+            expect(inputNativeElement.value, 'input value didn\'t reset').toBe('');
         }));
 
         it('Should reset blank items on column change.', fakeAsync(() => {
@@ -7429,8 +7428,7 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: ɵSiz
         expect(actionsAreaColumnHidingIcon, 'actionsArea column hiding icon is  NOT present').not.toBeNull();
     } else {
         // Verify icons in header are present.
-        expect((headerAreaPinIcon !== null) || (headerAreaUnpinIcon !== null)).toBe(true,
-            'headerArea pin/unpin icon is  NOT present');
+        expect((headerAreaPinIcon !== null) || (headerAreaUnpinIcon !== null), 'headerArea pin/unpin icon is  NOT present').toBe(true);
         expect(headerAreaColumnHidingIcon, 'headerArea column hiding icon is  NOT present').not.toBeNull();
         // Verify icons in actions area are not present.
         expect(actionsPinArea, 'actionsArea pin icon is present').toBeNull();

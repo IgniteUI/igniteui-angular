@@ -87,7 +87,7 @@ export class TreeTestFunctions {
         allChildren?: any[]
     ): IgxTreeNodeComponent<any>[] {
         const nodesArr = [];
-        const mockEmitter: EventEmitter<boolean> = { emit: vi.fn() };
+        const mockEmitter: EventEmitter<boolean> = { emit: vi.fn() } as unknown as EventEmitter<boolean>;
         for (let i = 0; i < count; i++) {
             nodesArr.push(this.createNodeSpy({
                 level,

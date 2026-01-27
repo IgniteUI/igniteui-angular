@@ -166,7 +166,8 @@ describe('IgxTree #treeView', () => {
                 tree.nodes = mockNodes;
                 const customArrayParam = [];
                 for (let i = 0; i < 5; i++) {
-                    const node = {
+                    const node: any = {
+                        _expanded: false,
                         get expanded(): boolean {
                             return this._expanded;
                         },
@@ -197,7 +198,8 @@ describe('IgxTree #treeView', () => {
                 tree.nodes = mockNodes;
                 const customArrayParam = [];
                 for (let i = 0; i < 5; i++) {
-                    const node = {
+                    const node: any = {
+                        _expanded: false,
                         get expanded(): boolean {
                             return this._expanded;
                         },
@@ -229,7 +231,7 @@ describe('IgxTree #treeView', () => {
                 tree.deselectAll();
                 expect(mockSelectionService.deselectNodesWithNoEvent).toHaveBeenCalledWith(undefined);
                 const customParam = { toArray: vi.fn() };
-                tree.deselectAll(customParam);
+                tree.deselectAll(customParam as any);
                 expect(mockSelectionService.deselectNodesWithNoEvent).toHaveBeenCalledWith(customParam);
             });
         });

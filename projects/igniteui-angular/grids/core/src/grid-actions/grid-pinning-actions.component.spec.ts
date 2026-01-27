@@ -122,8 +122,8 @@ class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
-    private data: any[];
-    private columns: any[];
+    public data: any[];
+    public columns: any[];
 
     public ngOnInit() {
 

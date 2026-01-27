@@ -490,14 +490,14 @@ describe('PDF Grid Exporter', () => {
         it('should export hierarchical pivot grid', async () => {
             fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fix.detectChanges();
-            fix.whenStable().then(() => {
-                pivotGrid = fix.componentInstance.pivotGrid;
+            await fix.whenStable();
+            
+            pivotGrid = fix.componentInstance.pivotGrid;
 
-                const exportPromise = firstValueFrom(exporter.exportEnded);
-        exporter.export(pivotGrid, options);
-        await exportPromise;
-        expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+            const exportPromise = firstValueFrom(exporter.exportEnded);
+            exporter.export(pivotGrid, options);
+            await exportPromise;
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
         });
     });
 });

@@ -1647,11 +1647,11 @@ describe('IgxGrid - Column properties #grid', () => {
                 .filter(attr => Boolean(attr));
 
             for (const attr of gridAttributes) {
-                expect(grid[attr]).toBe(true, `Grid attribute: '${attr}' failed`);
+                expect(grid[attr], `Grid attribute: '${attr}' failed`).toBe(true);
             }
 
             for (const attr of columnAttributes) {
-                expect(column[attr]).toBe(true, `Column attribute: '${attr}' failed`);
+                expect(column[attr], `Column attribute: '${attr}' failed`).toBe(true);
             }
         }))
     });

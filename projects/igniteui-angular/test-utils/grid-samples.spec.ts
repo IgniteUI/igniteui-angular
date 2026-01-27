@@ -269,7 +269,7 @@ export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`,
+    template: GridTemplateStrings.declareGrid(` height="height" width="width"`,
         `${EventSubscriptions.selected}${EventSubscriptions.columnPin}`,
         ColumnDefinitions.generatedWithWidth),
     imports: [IgxGridComponent, IgxColumnComponent]

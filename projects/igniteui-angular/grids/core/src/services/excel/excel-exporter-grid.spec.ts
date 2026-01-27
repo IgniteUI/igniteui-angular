@@ -944,7 +944,7 @@ describe('Excel Exporter', () => {
             hGrid = fix.componentInstance.hGrid;
             options = createExportOptions('HierarchicalGridEmptyDataExcelExport');
 
-            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+            await expect(getExportedData(hGrid, options)).resolves.toBeDefined();
         });
 
         it('should export hierarchical grid with empty data and summaries without throwing error', async () => {
@@ -959,7 +959,7 @@ describe('Excel Exporter', () => {
             options = createExportOptions('HierarchicalGridEmptyDataWithSummariesExcelExport');
             options.exportSummaries = true;
 
-            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+            await expect(getExportedData(hGrid, options)).resolves.toBeDefined();
         });
 
         it('should export hierarchical grid with missing child data key without throwing error', async () => {
@@ -969,7 +969,7 @@ describe('Excel Exporter', () => {
             hGrid = fix.componentInstance.hGrid;
             options = createExportOptions('HierarchicalGridMissingChildDataExcelExport');
 
-            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+            await expect(getExportedData(hGrid, options)).resolves.toBeDefined();
         });
     });
 

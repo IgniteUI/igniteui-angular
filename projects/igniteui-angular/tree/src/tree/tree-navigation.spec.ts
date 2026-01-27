@@ -636,8 +636,8 @@ describe('IgxTree - Navigation #treeView', () => {
 
         describe('IgxNavigationService', () => {
             beforeEach(() => {
-                mockEmitter = { emit: vi.fn() };
-                mockTree = { selection: IgxTreeSelectionType.BiState, activeNodeChanged: mockEmitter, nodes: mockQuery1 };
+                mockEmitter = { emit: vi.fn() } as unknown as EventEmitter<IgxTreeNode<any>>;
+                mockTree = { selection: IgxTreeSelectionType.BiState, activeNodeChanged: mockEmitter, nodes: mockQuery1 } as unknown as IgxTreeComponent;
 
                 TestBed.configureTestingModule({
                     providers: [

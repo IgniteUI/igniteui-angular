@@ -55,8 +55,8 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
     describe('IgxTreeSelectionService - BiState & None', () => {
         beforeEach(() => {
-            mockEmitter = { emit: vi.fn() };
-            mockTree = { selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: mockQuery1 };
+            mockEmitter = { emit: vi.fn() } as unknown as EventEmitter<ITreeNodeSelectionEvent>;
+            mockTree = { selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: mockQuery1 } as unknown as IgxTree;
             selectionService.register(mockTree);
         });
 
@@ -96,7 +96,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         });
 
         it('Should handle selection based on tree.selection', () => {
-            const mockSelectedChangeEmitter: EventEmitter<boolean> = { emit: vi.fn() };
+            const mockSelectedChangeEmitter: EventEmitter<boolean> = { emit: vi.fn() } as unknown as EventEmitter<boolean>;
             const mockNode = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
             // None
@@ -147,7 +147,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         });
 
         it('Should deselect nodes', () => {
-            const mockSelectedChangeEmitter: EventEmitter<boolean> = { emit: vi.fn() };
+            const mockSelectedChangeEmitter: EventEmitter<boolean> = { emit: vi.fn() } as unknown as EventEmitter<boolean>;
             const mockNode1 = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
             const mockNode2 = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
