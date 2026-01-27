@@ -22,15 +22,20 @@
         pointer-events: none;
         box-sizing: content-box;
         
-        // Popover specific styles
+        // Popover specific styles - override browser defaults
         &[popover] {
-            margin: 0;
-            padding: 0;
-            border: none;
-            overflow: visible;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            overflow: visible !important;
             // Ensure wrapper covers viewport when shown
-            position: fixed;
-            inset: 0;
+            position: fixed !important;
+            inset: 0 !important;
+            // Preserve background and pointer-events from modal classes
+            &:popover-open {
+                background: inherit;
+                pointer-events: inherit;
+            }
         }
     }
 
