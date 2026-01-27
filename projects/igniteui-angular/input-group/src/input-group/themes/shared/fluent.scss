@@ -35,7 +35,7 @@ $_theme: $fluent;
         @include type-style(body-2);
 
         padding-inline: pad-inline(rem(8px));
-        padding-block: pad-block(rem(6px), rem(10px), rem(14px)) 0;
+        padding-block: pad-block(rem(6px), rem(10px), rem(14px));
     }
 
     @include e(file-input) {
