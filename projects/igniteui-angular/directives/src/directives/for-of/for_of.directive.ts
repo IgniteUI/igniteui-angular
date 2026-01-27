@@ -972,6 +972,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             // console.log('Observed size change for index ', index, ' new size ', height);
             // console.log(this._embeddedViewSizesCache);
         });
+        this.recalcUpdateSizes();
     }
 
     /**
