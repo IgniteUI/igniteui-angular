@@ -819,47 +819,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             || containerSize && endTopOffset - containerSize > 5;
     }
 
-    public updateSizeAtIndex(index: number, newSize: number) {
-        const oldSize = this.individualSizeCache[index];
-        const sizeDiff = newSize - oldSize;
-        this.individualSizeCache[index] = newSize;
-        if (sizeDiff === 0) {
-            return;
-        }
-        for (let j = index + 1; j < this.sizesCache.length; j++) {
-            this.sizesCache[j] = (this.sizesCache[j] || 0) + sizeDiff;
-        }
-
-        // update scrBar heights/widths
-        const reducer = (acc, val) => acc + val;
-
-        const hSum = this.individualSizeCache.reduce(reducer);
-        if (hSum > this._maxSize) {
-            this._virtRatio = hSum / this._maxSize;
-        }
-        this.scrollComponent.size = Math.min(this.scrollComponent.size + sizeDiff, this._maxSize);
-        this._virtSize = hSum;
-        if (!this.scrollComponent.destroyed) {
-            this.scrollComponent.cdr.detectChanges();
-        }
-        const scrToBottom = this._isScrolledToBottom && !this.dc.instance.notVirtual;
-        if (scrToBottom && !this._isAtBottomIndex) {
-            const containerSize = parseInt(this.igxForContainerSize, 10);
-            const maxVirtScrollTop = this._virtSize - containerSize;
-            this._bScrollInternal = true;
-            this._virtScrollPosition = maxVirtScrollTop;
-            this.scrollPosition = maxVirtScrollTop;
-            return;
-        }
-        if (this._adjustToIndex) {
-            // in case scrolled to specific index where after scroll heights are changed
-            // need to adjust the offsets so that item is last in view.
-            if (sizeDiff !== 0) {
-                this.addScroll(sizeDiff);
-            }
-            this._adjustToIndex = null;
-        }
-    }
 
     /**
      * @hidden
@@ -879,13 +838,15 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             const cachedNodeSize = this._embeddedViewSizesCache.get(view);
             const oldVal = this.individualSizeCache[targetIndex];
             const newVal = cachedNodeSize;
-            this.individualSizeCache[targetIndex] = cachedNodeSize;
+            if (!newVal) {
+                continue;
+            }
             const currDiff = newVal - oldVal;
             diffs.push(currDiff);
             totalDiff += currDiff;
+            this.individualSizeCache[targetIndex] = cachedNodeSize;
             this.sizesCache[targetIndex + 1] = (this.sizesCache[targetIndex] || 0) + newVal;
         }
-
         // update cache
         if (Math.abs(totalDiff) > 0) {
             for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
@@ -1000,15 +961,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (!this.scrollComponent.nativeElement.isConnected) return;
         const scrollable = this.isScrollable();
         entries.forEach((entry) => {
-            if (entry.target.isConnected) {
-                const index = parseInt(entry.target.getAttribute('data-index'), 0);
-                this.updateSizeAtIndex(index, entry.contentRect.height);
-                const embView = this._embeddedViews[index - this.state.startIndex];
-                this._embeddedViewSizesCache.set(embView, entry.contentRect.height);
-            }
+            const index = parseInt(entry.target.getAttribute('data-index'), 0);
+            const height = entry.contentRect.height;
+            const embView = this._embeddedViews[index - this.state.startIndex];
+            this._embeddedViewSizesCache.set(embView, height);
         });
         this._applyChanges();
         this._updateScrollOffset();
+        this.recalcUpdateSizes();
         if (scrollable !== this.isScrollable()) {
             this.scrollbarVisibilityChanged.emit();
         } else {
