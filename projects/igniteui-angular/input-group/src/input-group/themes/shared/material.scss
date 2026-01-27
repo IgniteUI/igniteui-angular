@@ -23,6 +23,8 @@ $input-bottom-spacing: rem(6px);
         %box-floating-text-area-label {
             @include type-style(caption);
 
+            --_input-top-spacing: #{sizable(rem(8px), rem(12px), rem(16px))};
+
             translate: 0;
             inset-block-start: calc(var(--_input-top-spacing) / 4);
         }
@@ -350,6 +352,7 @@ $input-bottom-spacing: rem(6px);
 
         @include e(textarea) {
             padding-block-end: #{pad-block(rem(8px), rem(12px), rem(16px))};
+            border-bottom: rem(2px) solid transparent;
         }
     }
 
