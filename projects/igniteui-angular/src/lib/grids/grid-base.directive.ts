@@ -3779,29 +3779,21 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-        fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event: FocusEvent) => {
-            const activeNode = this.navigation.activeNode;
-            if (this.crudService.cell || !activeNode) {
-                return;
-            }
-            const nextFocused = event.relatedTarget as Node;
-            const activeElement = (nextFocused || this.document.activeElement) as Node;
-            const focusWithin = !!activeElement && this.nativeElement.contains(activeElement);
-            const allowClear = !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode);
-
-            if (!focusWithin && allowClear) {
-                this.clearActiveNode();
-                return;
-            }
-
-            if (((event.target === this.tbody.nativeElement && activeNode.row >= 0 &&
-                activeNode.row < this.dataView.length)
-                || (event.target === this.theadRow.nativeElement && activeNode.row === -1)
-                || (event.target === this.tfoot.nativeElement && activeNode.row === this.dataView.length)) &&
-                allowClear) {
-                this.clearActiveNode();
-            }
-        });
+        fromEvent(this.document, 'focusin')
+            .pipe(filter(() => !!this.navigation.activeNode), destructor)
+            .subscribe((event: FocusEvent) => {
+                if (this.crudService.cell || !this.navigation.activeNode) {
+                    return;
+                }
+                if (this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode) {
+                    return;
+                }
+                const target = event.target as Node;
+                if (target && this.nativeElement.contains(target)) {
+                    return;
+                }
+                Promise.resolve().then(() => this.clearActiveNode());
+            });
         this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.rowDeletedNotifier.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
