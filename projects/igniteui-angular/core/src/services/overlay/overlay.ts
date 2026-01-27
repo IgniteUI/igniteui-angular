@@ -723,9 +723,15 @@ export class IgxOverlayService implements OnDestroy {
     private closeDone(info: OverlayInfo) {
         info.visible = false;
         
-        // Hide popover if not already hidden by animation
-        if (info.wrapperElement?.hasAttribute('popover') && !info.closeAnimationPlayer) {
-            (info.wrapperElement as any).hidePopover?.();
+        // Hide popover when closing without animation
+        // When there's a close animation, hidePopover is called in closeAnimationDone
+        if (info.wrapperElement?.hasAttribute('popover') && !info.settings.positionStrategy.settings.closeAnimation) {
+            try {
+                (info.wrapperElement as any).hidePopover?.();
+            } catch (e) {
+                // Popover might already be hidden or not support the API
+                console.warn('Failed to hide popover:', e);
+            }
         }
         
         if (info.wrapperElement) {
@@ -744,9 +750,13 @@ export class IgxOverlayService implements OnDestroy {
         // Hide popover before cleanup
         if (info.wrapperElement?.hasAttribute('popover')) {
             try {
-                (info.wrapperElement as any).hidePopover?.();
+                // Check if popover is still open before hiding
+                if ((info.wrapperElement as any).matches?.(':popover-open')) {
+                    (info.wrapperElement as any).hidePopover?.();
+                }
             } catch (e) {
-                // Popover might already be hidden
+                // Popover might already be hidden, not support the API, or element might be detached
+                console.warn('Failed to hide popover during cleanup:', e);
             }
         }
         
@@ -1045,7 +1055,12 @@ export class IgxOverlayService implements OnDestroy {
         
         // Hide popover after close animation completes
         if (info.wrapperElement?.hasAttribute('popover')) {
-            (info.wrapperElement as any).hidePopover?.();
+            try {
+                (info.wrapperElement as any).hidePopover?.();
+            } catch (e) {
+                // Popover might already be hidden or not support the API
+                console.warn('Failed to hide popover after close animation:', e);
+            }
         }
         
         this.closeDone(info);
