@@ -20,8 +20,15 @@
         background: transparent;
         transition: background .25s $in-out-quad;
         pointer-events: none;
-        z-index: 10005;
         box-sizing: content-box;
+        
+        // Popover specific styles
+        &[popover] {
+            margin: 0;
+            padding: 0;
+            border: none;
+            overflow: visible;
+        }
     }
 
     %overlay-wrapper--modal {
