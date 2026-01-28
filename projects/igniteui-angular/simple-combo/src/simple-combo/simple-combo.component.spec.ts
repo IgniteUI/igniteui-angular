@@ -2081,7 +2081,7 @@ describe('IgxSimpleCombo', () => {
             expect(document.activeElement).toEqual(thirdComboInput.nativeElement);
         }));
 
-        it('should lose focus when clicking outside the combo', fakeAsync(() => {
+        it('should lose focus when user closes combo by clicking outside', fakeAsync(() => {
             // Initially combo is not focused
             expect(document.activeElement).not.toBe(input.nativeElement);
 
