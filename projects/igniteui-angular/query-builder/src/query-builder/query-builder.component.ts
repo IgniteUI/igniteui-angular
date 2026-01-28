@@ -195,7 +195,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     public get searchValueTemplate(): TemplateRef<IgxQueryBuilderSearchValueContext> {
-        return this.searchValueTemplateDirective?.template || this._searchValueTemplate;
+        return this._searchValueTemplate || this.searchValueTemplateDirective?.template;
     }
 
     /**
