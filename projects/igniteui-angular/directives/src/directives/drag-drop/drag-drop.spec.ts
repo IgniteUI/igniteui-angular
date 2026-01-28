@@ -2068,7 +2068,7 @@ class TestDragDropLinkedSingleComponent extends TestDragDropComponent { }
         <h3>Draggable elements:</h3>
         <div #container class="container">
             <div id="firstDrag" class="dragElem" [igxDrag]="{ key: 1 }" [dragChannel]="1">Drag 1</div>
-            <div id="secondDrag" class="dragElem" [igxDrag]="{ key: 2 }" [dragChannel]="[2, 6, '3']">Drag 2</div>
+            <div id="secondDrag" class="dragElem" [igxDrag]="{ key: 2 }" [dragChannel]="[2, 6, 3]">Drag 2</div>
             <div id="thirdDrag" class="dragElem" [igxDrag]="{ key: 3 }" [dragChannel]="3">Drag 3</div>
             <ng-template #ghostTemplate>
                 <div class="ghostElement">Drag Template</div>

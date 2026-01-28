@@ -1217,13 +1217,11 @@ export const verifyTooltipPosition = (
     const result = directionCheckPassed && alignmentCheckPassed;
 
     if (shouldAlign) {
-        expect(result).toBeTruthy(
+        expect(result,
             `Tooltip misaligned for "${placement}": actual offset=${actualOffset}, wanted offset=${offset}, accurate placement=${directionCheckPassed}, accurate alignment=${alignmentCheckPassed}`
-        );
+        ).toBeTruthy();
     } else {
-        expect(result).toBeFalsy(
-            `Tooltip was unexpectedly aligned`
-        );
+        expect(result, `Tooltip was unexpectedly aligned`).toBeFalsy();
     }
 };
 

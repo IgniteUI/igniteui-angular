@@ -1410,7 +1410,6 @@ class IgxDropDownTestComponent {
 }
 @Component({
     template: `
-    <button (click)="selectItem5()">Select 5</button>
     <igx-drop-down #dropdown1>
         @for (item of items; track item.field) {
             <igx-drop-down-item>
@@ -1448,7 +1447,7 @@ class DoubleIgxDropDownComponent implements OnInit {
     template: `
     <input (click)="toggleDropDown()">
     <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
-    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="justify">
+    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="'justify'">
         <igx-tab-item>
             <igx-tab-header>
                 Tab111111111111111111111111
@@ -1474,7 +1473,7 @@ class DoubleIgxDropDownComponent implements OnInit {
             </igx-tab-content>
         </igx-tab-item>
     </igx-tabs>
-    <igx-drop-down igxDropDownItemNavigation (selectionChanging)="selectionChanging($event)"
+    <igx-drop-down [igxDropDownItemNavigation]="dropdown" (selectionChanging)="selectionChanging($event)"
         (opening)="onToggleOpening()" (opened)="onToggleOpened()"
         (closing)="onToggleClosing()" (closed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
         @for (item of items; track item.field) {

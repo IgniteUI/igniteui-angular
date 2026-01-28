@@ -49,7 +49,7 @@ describe('IgxRipple', () => {
         expect(initialWidth).toBeGreaterThan(0);
         expect(initialHeight).toBeGreaterThan(0);
 
-        const setStylesSpy = vi.spyOn(rippleDirective, 'setStyles').and.callThrough();
+        const setStylesSpy = vi.spyOn(rippleDirective as any, 'setStyles').and.callThrough();
         const rect = button.getBoundingClientRect();
         const mouseEvent = new MouseEvent('mousedown', {
             clientX: rect.left + 50,
@@ -61,7 +61,7 @@ describe('IgxRipple', () => {
 
         expect(setStylesSpy).toHaveBeenCalled();
 
-        const rippleElement = setStylesSpy.calls.mostRecent().args[0] as HTMLElement;
+        const rippleElement = setStylesSpy.mock.calls[setStylesSpy.mock.calls.length - 1][0] as HTMLElement;
 
         expect(rippleElement.style.position).toBe('absolute');
 
@@ -89,8 +89,8 @@ describe('IgxRipple', () => {
 
         rippleDirective.onMouseDown(mouseEvent);
 
-        const positionStyleCall = setStyleSpy.calls.all().find(call =>
-            call.args[1] === 'position' && call.args[2] === 'absolute'
+        const positionStyleCall = setStyleSpy.mock.calls.find(call =>
+            call[1] === 'position' && call[2] === 'absolute'
         );
         expect(positionStyleCall).toBeTruthy();
     });
@@ -101,7 +101,7 @@ describe('IgxRipple', () => {
 
         const buttonDebug = fixture.debugElement.query(By.css('button'));
         const rippleDirective = buttonDebug.injector.get(IgxRippleDirective);
-        const setStylesSpy = vi.spyOn(rippleDirective, 'setStyles');
+        const setStylesSpy = vi.spyOn(rippleDirective as any, 'setStyles');
         const button = buttonDebug.nativeElement;
         const rect = button.getBoundingClientRect();
         const mouseEvent = new MouseEvent('mousedown', {
@@ -131,8 +131,8 @@ describe('IgxRipple', () => {
 
         rippleDirective.onMouseDown(mouseEvent);
 
-        const backgroundStyleCall = setStyleSpy.calls.all().find(call =>
-            call.args[1] === 'background' && call.args[2] === 'red'
+        const backgroundStyleCall = setStyleSpy.mock.calls.find(call =>
+            call[1] === 'background' && call[2] === 'red'
         );
         expect(backgroundStyleCall).toBeTruthy();
     });
@@ -154,11 +154,11 @@ describe('IgxRipple', () => {
 
         rippleDirective.onMouseDown(mouseEvent);
 
-        const topStyleCall = setStyleSpy.calls.all().find(call =>
-            call.args[1] === 'top' && call.args[2] === '0px'
+        const topStyleCall = setStyleSpy.mock.calls.find(call =>
+            call[1] === 'top' && call[2] === '0px'
         );
-        const leftStyleCall = setStyleSpy.calls.all().find(call =>
-            call.args[1] === 'left' && call.args[2] === '0px'
+        const leftStyleCall = setStyleSpy.mock.calls.find(call =>
+            call[1] === 'left' && call[2] === '0px'
         );
 
         expect(topStyleCall).toBeTruthy();
@@ -182,8 +182,8 @@ describe('IgxRipple', () => {
         });
         rippleDirective.onMouseDown(mouseEvent);
 
-        const appendCall = appendChildSpy.calls.mostRecent();
-        expect(appendCall.args[0]).toBe(targetButton);
+        const appendCall = appendChildSpy.mock.calls[appendChildSpy.mock.calls.length - 1];
+        expect(appendCall[0]).toBe(targetButton);
     });
 
     it('Should set all required ripple element styles including position absolute', () => {
@@ -206,8 +206,8 @@ describe('IgxRipple', () => {
         });
         rippleDirective.onMouseDown(mouseEvent);
 
-        const styleCalls = setStyleSpy.calls.all();
-        const styles = styleCalls.map(call => call.args[1]);
+        const styleCalls = setStyleSpy.mock.calls;
+        const styles = styleCalls.map(call => call[1]);
 
         expect(styles).toContain('position');
         expect(styles).toContain('width');
@@ -215,8 +215,8 @@ describe('IgxRipple', () => {
         expect(styles).toContain('top');
         expect(styles).toContain('left');
 
-        const positionCall = styleCalls.find(call => call.args[1] === 'position');
-        expect(positionCall.args[2]).toBe('absolute');
+        const positionCall = styleCalls.find(call => call[1] === 'position');
+        expect(positionCall[2]).toBe('absolute');
     });
 });
 

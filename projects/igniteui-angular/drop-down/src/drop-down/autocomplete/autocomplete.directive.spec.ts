@@ -941,7 +941,7 @@ export class IgxAutocompletePipeStartsWith implements PipeTransform {
         <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'
-            [igxAutocompleteSettings]='settings' (selectionChanging)="selectionChanging($event)"/>
+            [igxAutocompleteSettings]='settings' (selectionChanging)="selectionChanging()"/>
         <label igxLabel for="towns">Towns</label>
         <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
     </igx-input-group>
@@ -1021,13 +1021,12 @@ class AutocompleteInputComponent extends AutocompleteComponent {
         <igx-input-group>
             <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
             <input igxInput name="towns" formControlName="towns" type="text" required
-                [igxAutocomplete]='townsPanel'
-                [igxAutocompleteSettings]='settings' />
+                [igxAutocomplete]='townsPanel' />
             <label igxLabel for="towns">Towns</label>
             <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
         </igx-input-group>
         <igx-drop-down #townsPanel>
-            @for (town of towns | startsWith:townSelected; track town+$index) {
+            @for (town of town; track town+$index) {
                 <igx-drop-down-item [value]="town">
                     {{town}}
                 </igx-drop-down-item>
