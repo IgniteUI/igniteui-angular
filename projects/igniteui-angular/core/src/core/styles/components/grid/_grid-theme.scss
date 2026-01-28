@@ -2036,18 +2036,18 @@
     }
 
 
-        %igx-group-label__count-badge {
-            --background-color: #{var-get($theme, 'group-count-background')};
-            --text-color: #{var-get($theme, 'group-count-text-color')};
+    %igx-group-label__count-badge {
+        --background-color: #{var-get($theme, 'group-count-background')};
+        --text-color: #{var-get($theme, 'group-count-text-color')};
 
-            @if $variant == 'indigo' {
-                --shadow: none;
-            }
-
-            > span {
-                font-size: $grid-head-fs;
-            }
+        @if $variant == 'indigo' {
+            --shadow: none;
         }
+
+        > span {
+            font-size: $grid-head-fs;
+        }
+    }
 
 
     %igx-group-label__text {
