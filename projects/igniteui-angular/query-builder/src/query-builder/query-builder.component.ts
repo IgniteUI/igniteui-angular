@@ -1,4 +1,4 @@
-import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject, AfterContentInit } from '@angular/core';
+import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -20,7 +20,7 @@ import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderSearchValueContext } from './query-builder.common';
 
-/* wcElementTag: igc-query-builder-header */
+/* wcElementTag: igc-query-builder */
 /**
  * A component used for operating with complex filters by creating or editing conditions
  * and grouping them using AND/OR logic.
@@ -37,7 +37,7 @@ import { IgxQueryBuilderSearchValueContext } from './query-builder.common';
     templateUrl: './query-builder.component.html',
     imports: [IgxQueryBuilderTreeComponent]
 })
-export class IgxQueryBuilderComponent implements AfterContentInit,OnDestroy {
+export class IgxQueryBuilderComponent implements OnDestroy {
     protected iconService = inject(IgxIconService);
 
     /**
@@ -195,14 +195,14 @@ export class IgxQueryBuilderComponent implements AfterContentInit,OnDestroy {
     }
 
     public get searchValueTemplate(): TemplateRef<IgxQueryBuilderSearchValueContext> {
-        return this._searchValueTemplate;
+        return this.searchValueTemplateDirective?.template || this._searchValueTemplate;
     }
 
     /**
      * Disables return fields changes at the root level.
      */
-     @Input()
-     public disableReturnFieldsChange = false;
+    @Input()
+    public disableReturnFieldsChange = false;
 
     /**
      * Event fired as the expression tree is changed.
@@ -240,15 +240,6 @@ export class IgxQueryBuilderComponent implements AfterContentInit,OnDestroy {
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
         }, this);
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterContentInit(): void {
-        if (this.searchValueTemplateDirective) {
-            this._searchValueTemplate = this.searchValueTemplateDirective.template;
-        }
     }
 
     /**
@@ -322,7 +313,7 @@ export class IgxQueryBuilderComponent implements AfterContentInit,OnDestroy {
         this.queryTree.setAddButtonFocus();
     }
 
-    public onExpressionTreeChange(tree: IExpressionTree) {
+    protected onExpressionTreeChange(tree: IExpressionTree) {
         if (tree && this.entities && tree !== this._expressionTree) {
             this._expressionTree = recreateTree(tree, this.entities);
         } else {
