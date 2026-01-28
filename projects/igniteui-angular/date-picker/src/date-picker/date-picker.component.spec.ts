@@ -964,7 +964,8 @@ describe('IgxDatePicker', () => {
                     this._isRequired = val;
                 },
                 element: {
-                    nativeElement: { focus: vi.fn(), blur: vi.fn(), click: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn() }
+                    nativeElement: { focus: vi.fn(), blur: vi.fn(), click: vi.fn(),
+                        addEventListener: vi.fn(), removeEventListener: vi.fn(), querySelector: vi.fn() }
                 }
             } as any;
             mockInputDirective = {
@@ -1025,6 +1026,7 @@ describe('IgxDatePicker', () => {
 
             datePicker = TestBed.inject(IgxDatePickerComponent);
             (datePicker as any).inputGroup = mockInputGroup;
+            (mockInputGroup.element.nativeElement.querySelector as jasmine.Spy).and.returnValue(mockInputGroup.element.nativeElement);
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
             (datePicker as any).viewContainerRef = viewsContainerRef;
