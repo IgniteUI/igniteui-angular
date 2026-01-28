@@ -250,12 +250,12 @@ class GridComponentAutogenerate extends BasicGridComponent {
         <igx-grid-lite [data]="data" #grid [autoGenerate]="shouldAutoGenerate">
             <igx-grid-lite-column [field]="'name'" [header]="'Name'" [headerTemplate]="headerTemplate"></igx-grid-lite-column>
             <igx-grid-lite-column [field]="'active'" [header]="'Active'" [cellTemplate]="bodyTemplate"></igx-grid-lite-column>
-            <igx-grid-lite-column [field]="'importance'" [header]="'Importance'" [headerTemplate]="headerTemplate">
+            <igx-grid-lite-column [field]="'importance'" [header]="'Importance'">
                 <ng-template igxGridLiteHeaderTemplate let-column>
                     <div>{{column.header}} (Custom Inline)</div>
                 </ng-template>
             </igx-grid-lite-column>
-            <igx-grid-lite-column [field]="'address'" [header]="'Full address'" [cellTemplate]="bodyTemplate">
+            <igx-grid-lite-column [field]="'address'" [header]="'Full address'">
                 <ng-template igxGridLiteCellTemplate let-value>
                     <span>{{value.city}}, {{value.code}}</span>
                 </ng-template>

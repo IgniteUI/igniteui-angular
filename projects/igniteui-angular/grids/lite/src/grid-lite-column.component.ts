@@ -119,7 +119,7 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
     constructor() {
         effect((onCleanup) => {
             const directive = this.headerTemplateDirective();
-            const template = directive?.template ?? this.headerTemplate();
+            const template = this.headerTemplate() ?? directive?.template;
             if (template) {
                 this.headerTemplateFunc = (ctx: IgcHeaderContext<T>) => {
                     if (!this.headerViewRef) {
@@ -143,7 +143,7 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
 
         effect((onCleanup) => {
             const directive = this.cellTemplateDirective();
-            const template = directive?.template ?? this.cellTemplate();
+            const template = this.cellTemplate() ?? directive?.template;
             if (template) {
                 this.cellTemplateFunc = (ctx: IgcCellContext<T>) => {
                     const oldViewRef = this.cellViewRefs.get(ctx.row.data);
