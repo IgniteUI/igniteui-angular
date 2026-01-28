@@ -16,6 +16,12 @@ export class DataService {
         return data;
     }
 
+    public generateHierarchicalData(rows: number): any[] {
+        const rnd = new Mulberry32(1234);
+        const data = this.generateAthletesData(rnd, rows, true);
+        return data;
+    }
+
     public generateTreeData(rows: number): any[] {
         const rnd = new Mulberry32(1234);
         const data = this.generateEmployeesData(rnd, rows);
@@ -114,7 +120,7 @@ export class DataService {
         return currData;
     }
 
-    private generateAthletesData(rnd: Mulberry32, rows: number): any[] {
+    private generateAthletesData(rnd: Mulberry32, rows: number, children = false): any[] {
         const currData = [];
         for (let i = 0; i < rows; i++) {
             const rand = Math.floor(rnd.random() * Math.floor(athletesData.length));
@@ -125,6 +131,10 @@ export class DataService {
             dataObj["Active"] = this.randomizeBoolean(rnd);
             dataObj["SuccessRate"] = this.randomizePercentage(rnd);
             dataObj["AthleteNumber"] = this.randomizeAthleteNumber(dataObj["AthleteNumber"], rnd);
+            if (children) {
+                const rnd = new Mulberry32(i);
+                dataObj["childData"] = this.generateAthletesData(rnd, 5);
+            }
             currData.push(dataObj);
         }
         return currData;
