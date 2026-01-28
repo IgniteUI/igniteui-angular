@@ -83,7 +83,7 @@ $pinned-shadow-size: #{rem(1px)};
         --grouparea-size: #{sizable(rem(41px), rem(49px), rem(57px))};
         --igx-tree-indent-size: #{sizable(rem(24px), rem(16px), rem(12px))};
 
-        --_grid-head-font-size: rem(12px);
+        --_grid-head-font-size: #{rem(12px)};
 
         // Core grid structure
         position: relative;
@@ -628,7 +628,7 @@ $pinned-shadow-size: #{rem(1px)};
             }
 
             igx-input-group {
-                --size: var(--cell-height) !important;
+                --size: 100% !important;
 
                 width: 100%;
                 overflow: hidden;
@@ -677,18 +677,25 @@ $pinned-shadow-size: #{rem(1px)};
 
         // Row editing state - active edit mode on a row
         @include e(tr, $m: edit) {
-            border-bottom: rem(1px) solid var-get($theme, 'edit-mode-color');
+            &::after {
+                content: "";
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                inset: 0;
+                pointer-events: none;
+                user-select: none;
+           }
+        }
+        @include e(tr, $m: edit) {
             position: relative;
 
             // Top border indicator
             &::after {
-                content: '';
-                position: absolute;
-                height: rem(1px);
-                width: 100%;
-                top: rem(-1px);
-                inset-inline-start: 0;
-                background: var-get($theme, 'edit-mode-color');
+                z-index: 1;
+                box-shadow:
+                    inset 0 rem(1px) 0 0 var-get($theme, 'edit-mode-color'),
+                    inset 0 rem(-1px) 0 0 var-get($theme, 'edit-mode-color');
             }
         }
 
@@ -1821,6 +1828,57 @@ $pinned-shadow-size: #{rem(1px)};
         @include e(text) {
             @include ellipsis();
         }
+
+        .igx-banner {
+            @include sizable();
+            --component-size: var(--ig-size, var(--ig-size-large));
+
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: rem(8px);
+            padding: rem(16px) rem(8px);
+            min-width: rem(320px);
+            color: contrast-color($color: 'surface', $variant: 500);
+            background: color($color: 'surface', $variant: 500);
+            border-radius: 0;
+
+            igc-icon,
+            igx-icon,
+            igc-button,
+            [igxButton] {
+                --component-size: var(--ig-size, var(--ig-size-large));
+            }
+        }
+
+        .igx-banner__message {
+            display: flex;
+            align-items: center;
+            min-width: rem(150px);
+            flex: 1 0 0%;
+            gap: rem(16px);
+            padding: 0 rem(8px);
+        }
+
+        .igx-banner__text {
+            @include type-style('body-2');
+
+            flex: 1 0 0%;
+        }
+
+        .igx-banner__border-top {
+            box-shadow: inset 0 rem(1px) 0 0 var-get($theme, 'header-border-color');
+        }
+
+        .igx-banner__border-bottom {
+            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'header-border-color');
+        }
+
+        .igx-banner__actions {
+            flex-wrap: wrap;
+            align-self: flex-end;
+            gap: 0.5rem;
+        }
     }
 
     @include b(igx-grid-grouparea) {
@@ -2422,10 +2480,9 @@ $pinned-shadow-size: #{rem(1px)};
         }
 
         @include e(icon) {
+            --igx-icon-size: rem(16px);
+
             color: var-get($theme, 'drop-area-icon-color');
-            width: rem(16px);
-            height: rem(16px);
-            font-size: rem(16px);
             margin-inline-end: rem(8px);
         }
 
@@ -2444,7 +2501,8 @@ $pinned-shadow-size: #{rem(1px)};
         gap: rem(4px);
 
         @include e(text) {
-            color: var-get($theme, 'group-label-text')
+            color: var-get($theme, 'group-label-text');
+            font-size: calc(var(--_grid-head-font-size) + #{rem(1px)})
         }
 
         @include e(icon) {
@@ -2462,8 +2520,8 @@ $pinned-shadow-size: #{rem(1px)};
         }
 
         @include e(count-badge) {
-            --background-color: #{var-get($theme, 'group-count-background')};
-            --text-color: #{var-get($theme, 'group-count-text-color')};
+            --igx-badge-background-color: #{var-get($theme, 'group-count-background')};
+            --igx-badge-text-color: #{var-get($theme, 'group-count-text-color')};
 
             > span {
                 font-size: var(--_grid-head-font-size);
