@@ -1431,6 +1431,11 @@
         position: relative;
         background: inherit;
         z-index: 9999;
+
+        %grid-cell-header,
+        %igx-grid__filtering-cell {
+            background: transparent;
+        }
     }
 
     %grid-cell--pinned--column-selected {
@@ -1675,6 +1680,16 @@
 
     %igx-grid-th--active {
         @extend %grid-cell--active;
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
+            pointer-events: none;
+            z-index: 9999;
+        }
 
         %igx-grid-th--selected,
         %igx-grid-th--selectable {
@@ -2373,7 +2388,6 @@
     %igx-grid__filtering-cell {
         display: flex;
         align-items: center;
-        background-clip: border-box;
         border-inline-end: $grid-header-border;
         border-top: $grid-header-border;
         height: var(--header-size);
