@@ -59,8 +59,8 @@
     $material-box-top-padding: sizable(rem(16px), rem(20px), rem(24px));
     $material-border-top-padding: sizable(rem(8px), rem(12px), rem(16px));
 
-    $textarea-top-padding: map.get((
-        'material': rem(0px),
+    $textarea-padding: map.get((
+        'material': sizable(rem(8px), rem(12px), rem(16px)),
         'fluent': sizable(rem(6px), rem(10px), rem(14px)),
         'bootstrap': sizable(rem(4px), rem(8px), rem(12px)),
         'indigo': sizable(rem(4px), rem(6px), rem(8px)),
@@ -1289,7 +1289,7 @@
 
         %textarea-group-label--focused {
             transform: translateY(0);
-            top: calc(#{$material-box-top-padding} / 4);
+            top: calc(#{$textarea-padding} / 4);
         }
 
         %textarea-group-label--filled--border,
@@ -1465,9 +1465,10 @@
         resize: vertical;
         overflow: hidden;
         z-index: 1;
+        padding-block-end: $textarea-padding;
 
         @if $material-theme {
-            padding: 0;
+            padding-block-start: 0;
         }
     }
 
@@ -2023,14 +2024,14 @@
     }
 
     %indigo-textarea {
-        padding-block: $textarea-top-padding 0;
+        padding-block: $textarea-padding;
         padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
         inset-block-end: rem(2px);
     }
 
     %fluent-textarea {
         padding-inline: pad-inline(rem(8px));
-        padding-block: $textarea-top-padding 0;
+        padding-block: $textarea-padding;
     }
 
     %fluent-input-disabled {
@@ -2292,7 +2293,7 @@
         );
 
         &:is(textarea) {
-            padding-block: $textarea-top-padding 0;
+            padding-block: $textarea-padding;
         }
     }
 
