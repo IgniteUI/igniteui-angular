@@ -20,8 +20,23 @@
         background: transparent;
         transition: background .25s $in-out-quad;
         pointer-events: none;
-        z-index: 10005;
         box-sizing: content-box;
+        
+        // Popover specific styles - override browser defaults
+        &[popover] {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            overflow: visible !important;
+            // Ensure wrapper covers viewport when shown
+            position: fixed !important;
+            inset: 0 !important;
+            // Preserve background and pointer-events from modal classes
+            &:popover-open {
+                background: inherit;
+                pointer-events: inherit;
+            }
+        }
     }
 
     %overlay-wrapper--modal {
