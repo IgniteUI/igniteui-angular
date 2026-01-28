@@ -1,5 +1,5 @@
 ﻿import { NgForOfContext } from '@angular/common';
-import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, booleanAttribute, DOCUMENT, inject, afterNextRender, runInInjectionContext, EnvironmentInjector } from '@angular/core';
+import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, booleanAttribute, DOCUMENT, inject, afterNextRender, runInInjectionContext, EnvironmentInjector, AfterViewInit } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
@@ -84,7 +84,7 @@ export abstract class IgxForOfToken<T, U extends T[] = T[]> {
     ],
     standalone: true
 })
-export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U> implements OnInit, OnChanges, OnDestroy {
+export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
     private _viewContainer = inject(ViewContainerRef);
     protected _template = inject<TemplateRef<NgForOfContext<T>>>(TemplateRef);
     protected _differs = inject(IterableDiffers);
@@ -273,8 +273,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected _bScrollInternal = false;
     // End properties related to virtual height handling
     protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
-    protected contentResizeNotify = new Subject<ResizeObserverEntry[]>();
+    protected contentResizeNotify = new Subject<void>();
     protected contentObserver: ResizeObserver;
+    protected viewObserver: ResizeObserver;
+    protected viewResizeNotify = new Subject<ResizeObserverEntry[]>();
     /** Size that is being virtualized. */
     protected _virtSize = 0;
     /**
@@ -471,8 +473,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(
                 filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
+                throttleTime(40, undefined, { leading: false, trailing: true }),
                 destructor
-            ).subscribe((entries: ResizeObserverEntry[]) => this._zone.runTask(() => this.updateSizes(entries)));
+            ).subscribe(() => this._zone.runTask(() => this.updateSizes()));
         }
 
         if (this.igxForScrollOrientation === 'horizontal') {
@@ -498,13 +501,23 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         this.resolveDataDiff();
     }
 
-    protected subscribeToObserver(target: Element) {
+    public ngAfterViewInit(): void {
         if (this.igxForScrollOrientation === 'vertical') {
             this._zone.runOutsideAngular(() => {
-                // console.log(target);
                 if (this.platformUtil.isBrowser) {
-                    this.contentObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => this.contentResizeNotify.next(entries));
-                    this.contentObserver.observe(target);
+                    this.contentObserver = new (getResizeObserver())(() => this.contentResizeNotify.next());
+                    this.contentObserver.observe(this.dc.instance._viewContainer.element.nativeElement);
+                }
+            });
+        }
+    }
+
+    protected subscribeToViewObserver(target: Element) {
+        if (this.igxForScrollOrientation === 'vertical' && this.viewObserver) {
+            this._zone.runOutsideAngular(() => {
+                if (this.platformUtil.isBrowser) {
+                    this.viewObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => this.viewResizeNotify.next(entries));
+                    this.viewObserver.observe(target);
                 }
             });
         }
@@ -830,29 +843,27 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             // nothing changed
             return;
         }
+        const dimension = this.igxForScrollOrientation === 'horizontal' ?
+        this.igxForSizePropName : 'height';
         const diffs = [];
         let totalDiff = 0;
-
+        const rNodes = this.embeddedViewNodes;
         for (let index = 0; index < this._embeddedViews.length; index++) {
+            const rNode = rNodes[index];
             const targetIndex = this.state.startIndex + index;
             const view = this._embeddedViews[index];
-            const cachedNodeSize = this._embeddedViewSizesCache.get(view);
+            const nodeSize = this._embeddedViewSizesCache.get(view) ??
+            dimension === 'height' ?
+            rNode.clientHeight + this.getMargin(rNode, dimension):
+            rNode.clientWidth + this.getMargin(rNode, dimension);
             const oldVal = this.individualSizeCache[targetIndex];
-            const newVal = cachedNodeSize;
-            if (!newVal) {
-                continue;
-            }
+            const newVal = nodeSize;
             const currDiff = newVal - oldVal;
-            // if (currDiff > 0) {
-            //     console.log('RECALC Size increased for index ', targetIndex, ' from ', oldVal, ' to ', newVal);
-            // }
             diffs.push(currDiff);
             totalDiff += currDiff;
-            this.individualSizeCache[targetIndex] = cachedNodeSize;
+            this.individualSizeCache[targetIndex] = nodeSize;
             this.sizesCache[targetIndex + 1] = (this.sizesCache[targetIndex] || 0) + newVal;
         }
-
-        // console.log(this.individualSizeCache);
         // update cache
         if (Math.abs(totalDiff) > 0) {
             for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
@@ -963,14 +974,25 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
     }
 
-    protected updateSizes(entries:ResizeObserverEntry[] ) {
+    protected updateSizes() {
+        if (!this.scrollComponent.nativeElement.isConnected) return;
+        const scrollable = this.isScrollable();
+        this.recalcUpdateSizes();
+        this._applyChanges();
+        this._updateScrollOffset();
+        if (scrollable !== this.isScrollable()) {
+            this.scrollbarVisibilityChanged.emit();
+        } else {
+            this.contentSizeChange.emit();
+        }
+    }
+
+    protected updateViewSizes(entries:ResizeObserverEntry[] ) {
         entries.forEach((entry) => {
             const index = parseInt(entry.target.getAttribute('data-index'), 0);
             const height = entry.contentRect.height;
             const embView = this._embeddedViews[index - this.state.startIndex];
             this._embeddedViewSizesCache.set(embView, height);
-            // console.log('Observed size change for index ', index, ' new size ', height);
-            // console.log(this._embeddedViewSizesCache);
         });
         this.recalcUpdateSizes();
     }
@@ -1418,7 +1440,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
         this.beforeViewDestroyed.emit(oldElem);
-        this.contentObserver.unobserve(oldElem.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || oldElem.rootNodes[0].nextElementSibling);
+        this.viewObserver?.unobserve(oldElem.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || oldElem.rootNodes[0].nextElementSibling);
         // also detach from ViewContainerRef to make absolutely sure this is removed from the view container.
         this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
         oldElem.destroy();
@@ -1632,6 +1654,12 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         this.syncService.setMaster(this);
         super.ngOnInit();
         this.removeScrollEventListeners();
+        const destructor = takeUntil<any>(this.destroy$);
+        this.viewObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => this.viewResizeNotify.next(entries));
+        this.viewResizeNotify.pipe(
+            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
+            destructor
+        ).subscribe((entries: ResizeObserverEntry[]) => this._zone.runTask(() => this.updateViewSizes(entries)));
     }
 
     public override ngOnChanges(changes: SimpleChanges) {
@@ -1857,7 +1885,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         );
 
         this._embeddedViews.push(embeddedView);
-        this.subscribeToObserver(embeddedView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || embeddedView.rootNodes[0].nextElementSibling);
+        this.subscribeToViewObserver(embeddedView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || embeddedView.rootNodes[0].nextElementSibling);
         this.state.chunkSize++;
     }
 
