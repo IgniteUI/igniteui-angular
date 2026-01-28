@@ -24,7 +24,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
                     <igx-icon igxPrefix>drag_indicator</igx-icon>
                 </igx-chip>
             }
-            <igx-chip #chipElem [tabIndex]="1" [id]="tabChipAttr">
+            <igx-chip #chipElem [tabIndex]="1" id="tabChipAttr">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
             <igx-chip #chipElem [tabIndex]="2" [disabled]="true" id="tabChipDisabled">

@@ -2,7 +2,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
 import { IgxChatMarkdownService } from './markdown-service';
 import { MarkdownPipe } from './markdown-pipe';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 
 // Mock the Service: We trust the service to provide safe HTML from Shiki.
 const mockSafeHtml = `
@@ -19,7 +19,7 @@ class MockChatMarkdownService {
 describe('MarkdownPipe', () => {
     let pipe: MarkdownPipe;
     let sanitizer: DomSanitizer;
-    let bypassSpy: Spy;
+    let bypassSpy: Mock<any>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({

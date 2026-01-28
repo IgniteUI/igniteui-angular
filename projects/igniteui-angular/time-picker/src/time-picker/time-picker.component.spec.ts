@@ -398,7 +398,7 @@ describe('IgxTimePicker', () => {
             const mockToggleDirective = { close: vi.fn(), collapsed: true };
             timePicker['dateTimeEditor'] = mockDateTimeEditorDirective;
             timePicker['inputDirective'] = mockInputDirective;
-            timePicker['toggleRef'] = mockToggleDirective;
+            (timePicker as any)['toggleRef'] = mockToggleDirective;
             timePicker.minDropdownValue = timePicker.minDateValue;
             timePicker.maxDropdownValue = timePicker.maxDateValue;
             timePicker.ngOnInit();
@@ -467,7 +467,7 @@ describe('IgxTimePicker', () => {
                 (itemListDirective as any).onPanMove,
                 hammerOptions);
 
-            vi.spyOn(itemListDirective, 'onPanMove');
+            vi.spyOn(itemListDirective as any, 'onPanMove');
             const event = { type: 'pan' };
             (itemListDirective as any).onPanMove(event);
             expect(itemListDirective['onPanMove']).toHaveBeenCalled();

@@ -3474,7 +3474,7 @@ describe('igxCombo', () => {
     template: `
     <igx-combo #combo [placeholder]="'Location'" [data]='items'
         [disableFiltering]='false' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
-        (selectionChanging)="selectionChanging($event)" [style.--ig-size]="'var(--ig-size-' + size + ')'">
+        (selectionChanging)="selectionChanging()" [style.--ig-size]="'var(--ig-size-' + size + ')'">
         <ng-template igxComboItem let-display let-key="valueKey">
             <div class="state-card--simple">
                 <span class="small-red-circle"></span>
@@ -3631,9 +3631,8 @@ class IgxComboFormComponent {
     <form #form="ngForm">
         <igx-combo #testCombo #testComboNgModel="ngModel" class="input-container" [placeholder]="'Locations'"
             name="anyName" required [(ngModel)]="values"
-            [data]="items" [disableFiltering]="disableFilteringFlag"
-            [displayKey]="'field'" [valueKey]="'field'"
-            [groupKey]="'field' ? 'region' : ''" [width]="'100%'">
+            [data]="items" [displayKey]="'field'" [valueKey]="'field'"
+            [groupKey]="field ? 'region' : ''" [width]="'100%'">
             <label igxLabel>Combo Label</label>
         </igx-combo>
     </form>

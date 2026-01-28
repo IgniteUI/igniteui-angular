@@ -1199,14 +1199,14 @@ describe('Stepper service unit tests', () => {
 
     it('should determine the steps that should be disabled in linear mode based on the validity of the active step', () => {
         vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Horizontal);
-        vi.spyOn(stepper, 'steps').mockReturnValue(steps);
+        vi.spyOn(stepper as any, 'steps').mockReturnValue(steps);
 
         for (const step of steps) {
-            vi.spyOn(step, 'isValid').mockReturnValue(false);
+            vi.spyOn(step as any, 'isValid').mockReturnValue(false);
         }
-        vi.spyOn(stepper, 'linear').mockReturnValue(true);
+        vi.spyOn(stepper as any, 'linear').mockReturnValue(true);
         stepperService.activeStep = steps[0];
-        vi.spyOn(steps[0], 'active').mockReturnValue(true);
+        vi.spyOn(steps[0] as any, 'active').mockReturnValue(true);
 
         expect(stepperService.linearDisabledSteps.size).toBe(0);
         stepperService.calculateLinearDisabledSteps();
@@ -1214,19 +1214,19 @@ describe('Stepper service unit tests', () => {
         let sampleSet = new Set<IgxStepComponent>([steps[1], steps[2], steps[3]]);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        vi.spyOn(steps[0], 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[0] as any, 'isValid').mockReturnValue(true);
         stepperService.calculateLinearDisabledSteps();
         sampleSet = new Set<IgxStepComponent>([steps[2], steps[3]]);
         expect(stepperService.linearDisabledSteps.size).toBe(2);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        vi.spyOn(steps[1], 'active').mockReturnValue(true);
-        vi.spyOn(steps[1], 'isValid').mockReturnValue(false);
+        vi.spyOn(steps[1] as any, 'active').mockReturnValue(true);
+        vi.spyOn(steps[1] as any, 'isValid').mockReturnValue(false);
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(2);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        vi.spyOn(steps[1], 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[1] as any, 'isValid').mockReturnValue(true);
         stepperService.activeStep = steps[1];
         sampleSet = new Set<IgxStepComponent>([steps[3]]);
         stepperService.calculateLinearDisabledSteps();
@@ -1234,8 +1234,8 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
         expect(stepperService.linearDisabledSteps).toContain(steps[3]);
 
-        vi.spyOn(steps[2], 'isValid').mockReturnValue(true);
-        vi.spyOn(steps[3], 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[2] as any, 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[3] as any, 'isValid').mockReturnValue(true);
         stepperService.activeStep = steps[3];
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(0);
@@ -1244,7 +1244,7 @@ describe('Stepper service unit tests', () => {
 
     it('should emit activating event', () => {
         vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Horizontal);
-        vi.spyOn(stepper, 'steps').mockReturnValue(steps);
+        vi.spyOn(stepper as any, 'steps').mockReturnValue(steps);
         const activeChangingSpy = vi.spyOn(stepper.activeStepChanging, 'emit');
         stepperService.activeStep = steps[0];
 

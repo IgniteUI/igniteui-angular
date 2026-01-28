@@ -1318,7 +1318,7 @@ class InputReactiveFormComponent {
 
 @Component({
     template: `
-        <form [formGroup]="formWithFileInput" (ngSubmit)="onSubmit()">
+        <form [formGroup]="formWithFileInput">
             <igx-input-group #igxInputGroup>
                 <input igxInput #fileInput name="fileInput" type="file" formControlName="fileInput" />
                 <label igxLabel for="fileInput">File Name</label>

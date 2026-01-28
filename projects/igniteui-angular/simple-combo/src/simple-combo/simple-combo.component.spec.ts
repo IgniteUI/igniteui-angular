@@ -7,7 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectionAPIService, PlatformUtil } from 'igniteui-angular/core';
 import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxInputState, IgxLabelDirective } from '../../../input-group/src/public_api';
+import { IgxInputDirective, IgxInputState, IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
@@ -251,12 +251,12 @@ describe('IgxSimpleCombo', () => {
             });
         });
         it('should properly emit added and removed values in change event on single value selection', () => {
-            const dropdown = { selectItem: vi.fn() };
+            const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
             combo.ngOnInit();
             combo.data = complexData;
             combo.valueKey = 'country';
             combo.dropdown = dropdown;
-            vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+            vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
             const selectionSpy = vi.spyOn(combo.selectionChanging, 'emit');
             const expectedResults: ISimpleComboSelectionChangingEventArgs = {
                 newValue: combo.data[0][combo.valueKey],
@@ -267,8 +267,7 @@ describe('IgxSimpleCombo', () => {
                 displayText: `${combo.data[0][combo.displayKey]}`,
                 cancel: false
             };
-            const comboInput = { value: vi.fn() };
-            comboInput.value = 'test';
+            const comboInput = { value: vi.fn().mockReturnValue('test') } as unknown as IgxInputDirective;
             combo.comboInput = comboInput;
             combo.select(combo.data[0][combo.valueKey]);
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
@@ -283,13 +282,13 @@ describe('IgxSimpleCombo', () => {
             expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
         });
         it('should properly handle selection manipulation through selectionChanging emit', () => {
-            const dropdown = { selectItem: vi.fn() };
+            const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
             combo.ngOnInit();
             combo.data = data;
             combo.dropdown = dropdown;
-            vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+            vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
             vi.spyOn(combo.selectionChanging, 'emit').mockImplementation((event: IComboSelectionChangingEventArgs) => event.newValue = undefined);
-            const comboInput = { value: vi.fn() };
+            const comboInput = { value: vi.fn() } as unknown as IgxInputDirective;
             combo.comboInput = comboInput;
             // No items are initially selected
             expect(combo.selection).toEqual(undefined);
@@ -325,14 +324,13 @@ describe('IgxSimpleCombo', () => {
             expect(combo.data.length).toBe(0);
         });
         it('should properly handleInputChange', () => {
-            const dropdown = { selectItem: vi.fn(), navigateFirst: vi.fn() };
+            const dropdown = { selectItem: vi.fn(), navigateFirst: vi.fn() } as unknown as IgxComboDropDownComponent;
             combo.ngOnInit();
             combo.data = data;
             combo.dropdown = dropdown;
-            const matchSpy = vi.spyOn(combo, 'checkMatch');
+            const matchSpy = vi.spyOn(combo as any, 'checkMatch');
             vi.spyOn(combo.searchInputUpdate, 'emit');
-            const comboInput = { value: vi.fn() };
-            comboInput.value = 'test';
+            const comboInput = { value: vi.fn() } as unknown as IgxInputDirective;
             combo.comboInput = comboInput;
 
             combo.handleInputChange();
@@ -365,11 +363,11 @@ describe('IgxSimpleCombo', () => {
             combo.searchInputUpdate.subscribe((e) => {
                 e.cancel = true;
             });
-            const matchSpy = vi.spyOn(combo, 'checkMatch');
-            const dropdown = { selectItem: vi.fn(), collapsed: vi.fn(), open: vi.fn(), navigateFirst: vi.fn() };
+            const matchSpy = vi.spyOn(combo as any, 'checkMatch');
+            const dropdown = { selectItem: vi.fn(), collapsed: vi.fn(), open: vi.fn(), navigateFirst: vi.fn() } as unknown as IgxComboDropDownComponent;
             combo.dropdown = dropdown;
             vi.spyOn(combo.searchInputUpdate, 'emit');
-            const comboInput = { value: vi.fn(), focused: vi.fn() };
+            const comboInput = { value: vi.fn(), focused: vi.fn() } as unknown as IgxInputDirective;
             comboInput.value = 'test';
             combo.comboInput = comboInput;
 
@@ -378,30 +376,29 @@ describe('IgxSimpleCombo', () => {
             expect(matchSpy).toHaveBeenCalledTimes(1);
         });
         it('should not open on click if combo is disabled', () => {
-            const dropdown = { open: vi.fn(), close: vi.fn(), toggle: vi.fn() };
-            const spyObj = { stopPropagation: vi.fn(), preventDefault: vi.fn() };
-            const comboInput = { value: vi.fn() };
+            const dropdown = { open: vi.fn(), close: vi.fn(), toggle: vi.fn(), collapsed: true } as unknown as IgxComboDropDownComponent;
+            const spyObj = { stopPropagation: vi.fn(), preventDefault: vi.fn() } as unknown as MouseEvent;
+            const comboInput = { value: vi.fn() } as unknown as IgxInputDirective;
             comboInput.value = 'test';
             combo.comboInput = comboInput;
             combo.ngOnInit();
             combo.dropdown = dropdown;
-            dropdown.collapsed = true;
 
             combo.disabled = true;
             combo.onClick(spyObj);
             expect(combo.dropdown.collapsed).toBeTruthy();
         });
         it('should not clear value when combo is disabled', () => {
-            const dropdown = { selectItem: vi.fn(), focusedItem: vi.fn() };
-            const spyObj = { stopPropagation: vi.fn() };
+            const dropdown = { selectItem: vi.fn(), focusedItem: vi.fn() } as unknown as IgxComboDropDownComponent;
+            const spyObj = { stopPropagation: vi.fn() } as unknown as MouseEvent;
             combo.ngOnInit();
             combo.data = data;
             combo.dropdown = dropdown;
             combo.disabled = true;
-            const comboInput = { value: vi.fn(), focus: vi.fn() };
+            const comboInput = { value: vi.fn(), focus: vi.fn() } as unknown as IgxInputDirective;
             comboInput.value = 'test';
             combo.comboInput = comboInput;
-            vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+            vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
 
             const item = combo.data.slice(0, 1);
             combo.select(item);
@@ -948,7 +945,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo).toBeDefined();
             expect(combo.valueKey).toBeDefined();
             let selectedItem = combo.data[1];
-            const spyObj = { stopPropagation: vi.fn() };
+            const spyObj = { stopPropagation: vi.fn() } as unknown as MouseEvent;
             combo.toggle();
 
             combo.select(combo.data[1][combo.valueKey]);
@@ -2800,7 +2797,7 @@ describe('IgxSimpleCombo', () => {
                 await wait(60);
                 fixture.detectChanges();
             } catch (error) {
-                fail(`Test failed with error: ${error}`)
+                expect.fail(`Test failed with error: ${error}`)
             }
 
             const virtState = grid.verticalScrollContainer.state;
@@ -2812,7 +2809,7 @@ describe('IgxSimpleCombo', () => {
                 const targetCell = grid.gridAPI.get_cell_by_index(i, 'Region') as any;
                 comboNativeEl = targetCell.nativeElement.querySelector(SIMPLE_COMBO_ELEMENT);
                 const comboInput = comboNativeEl.querySelector('input');
-                expect(comboInput.value).toBe('', `Failed on index: ${i.toString()}`);
+                expect(comboInput.value, `Failed on index: ${i.toString()}`).toBe('');
             }
 
             for (let i = virtState.startIndex; i < virtState.startIndex + virtState.chunkSize && i < grid.dataView.length; i++) {
@@ -2865,7 +2862,7 @@ class IgxSimpleComboInGridComponent {
 @Component({
     template: `
     <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [style.--ig-size]="'var(--ig-size-' + size + ')'"
-    [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)"
+    [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging()"
     [allowCustomValues]="allowCustomValues">
         <ng-template igxComboItem let-display let-key="valueKey">
         <div class="state-card--simple">
@@ -3057,7 +3054,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
         <igx-simple-combo #testCombo class="input-container" [placeholder]="'Locations'"
             name="anyName" required [(ngModel)]="values" [data]="items"
             [displayKey]="'field'" [valueKey]="'field'"
-            [groupKey]="'field' ? 'region' : ''" [width]="'100%'">
+            [groupKey]="'region'" [width]="'100%'">
             <label igxLabel>Combo Label</label>
         </igx-simple-combo>
     </form>

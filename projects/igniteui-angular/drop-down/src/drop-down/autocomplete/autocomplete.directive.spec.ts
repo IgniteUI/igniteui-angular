@@ -1045,9 +1045,7 @@ class AutocompleteInputComponent extends AutocompleteComponent {
         IgxRippleDirective,
         IgxDropDownComponent,
         IgxDropDownItemComponent,
-        IgxIconComponent,
-        IgxAutocompleteDirective,
-        IgxAutocompletePipeStartsWith,
+        IgxIconComponent
     ]
 })
 

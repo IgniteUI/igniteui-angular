@@ -2793,6 +2793,7 @@ class IgxSelectGroupsComponent {
         { continent: 'South America', capitals: ['Buenos Aires', 'Caracas', 'Lima'] },
         { continent: 'North America', capitals: ['Washington', 'Ottawa', 'Mexico City'] }
     ];
+    public value = null;
 }
 
 @Component({
@@ -2818,6 +2819,7 @@ class IgxSelectMiddleComponent {
         'Option 2',
         'Option 3'
     ];
+    public value = null;
 }
 @Component({
     template: `
@@ -2846,6 +2848,7 @@ class IgxSelectTopComponent {
         'Option 8',
         'Option 9',
         'Option 10'];
+    public value = null;
 }
 @Component({
     template: `
@@ -2874,6 +2877,7 @@ class IgxSelectBottomComponent {
         'Option 8',
         'Option 9',
         'Option 10'];
+    public value = null;
 }
 @Component({
     template: `
@@ -2908,6 +2912,7 @@ class IgxSelectAffixComponent {
         'Option 6',
         'Option 7'
     ];
+    public value = null;
 }
 
 @Component({
@@ -3068,7 +3073,6 @@ class IgxSelectTemplateFormComponent {
             <ng-template igxSelectFooter>
                 <div class="custom-select-footer">
                     <div>iFOOTER</div>
-                    <button type="button" igxButton="contained" (click)="btnClick()">Click Me!</button>
                 </div>
             </ng-template>
         </igx-select>
@@ -3087,6 +3091,8 @@ class IgxSelectTemplateFormComponent {
 class IgxSelectHeaderFooterComponent implements OnInit {
     @ViewChild('headerFooterSelect', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
+
+    public value = null;
 
     public items: any[] = [];
     public ngOnInit() {

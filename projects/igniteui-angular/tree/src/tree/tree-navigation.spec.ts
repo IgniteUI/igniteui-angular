@@ -12,6 +12,7 @@ import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { PlatformUtil } from 'igniteui-angular/core/src/core/utils';
 describe('IgxTree - Navigation #treeView', () => {
 
     describe('Navigation - UI Tests', () => {
@@ -811,7 +812,8 @@ describe('IgxTree - Navigation #treeView', () => {
                 vi.spyOn(nav, 'update_visible_cache');
                 vi.spyOn(nav, 'register');
                 const mockPlatform = { isBrowser: vi.fn(), isServer: vi.fn() };
-                const tree = TestBed.inject(IgxTreeComponent, mockPlatform);
+                TestBed.overrideProvider(PlatformUtil, { useValue: mockPlatform });
+                const tree = TestBed.inject(IgxTreeComponent);
                 tree.nodes = mockQuery;
                 expect(nav.register).toHaveBeenCalledWith(tree);
                 expect(nav.init_invisible_cache).not.toHaveBeenCalled();

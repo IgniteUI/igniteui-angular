@@ -585,9 +585,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             const cancelBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[0] as DebugElement;
             const doneBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[1];
-            vi.spyOn(cancelBtn.nativeElement, 'focus');
-            vi.spyOn(grid.rowEditTabs.first, 'move');
-            vi.spyOn(grid.rowEditTabs.last, 'move');
+            vi.spyOn(cancelBtn.nativeElement as any, 'focus');
+            vi.spyOn(grid.rowEditTabs.first as any, 'move');
+            vi.spyOn(grid.rowEditTabs.last as any, 'move');
 
             await TreeGridFunctions.moveGridCellWithTab(fix, grid.gridAPI.get_cell_by_index(2, 'Age'));
             expect(cancelBtn.nativeElement.focus).toHaveBeenCalled();

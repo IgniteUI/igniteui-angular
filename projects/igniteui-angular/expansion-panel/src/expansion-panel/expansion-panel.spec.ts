@@ -219,7 +219,8 @@ describe('igxExpansionPanel', () => {
             expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(0);
             expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
             expect(panel.contentExpanding.emit).toHaveBeenCalledTimes(1);
-            expect(panel.contentExpanding.emit).toHaveBeenCalledBefore(panel.contentExpanded.emit);
+            expect((panel.contentExpanding.emit as any).mock.invocationCallOrder[0])
+                .toBeLessThan((panel.contentExpanded.emit as any).mock.invocationCallOrder[0]);
             expect(panel.collapsed).toBeFalsy();
 
             panel.toggle();
@@ -229,7 +230,8 @@ describe('igxExpansionPanel', () => {
             expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(1);
             expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
             expect(panel.contentExpanding.emit).toHaveBeenCalledTimes(1);
-            expect(panel.contentCollapsing.emit).toHaveBeenCalledBefore(panel.contentCollapsed.emit);
+            expect((panel.contentCollapsing.emit as any).mock.invocationCallOrder[0])
+                .toBeLessThan((panel.contentCollapsed.emit as any).mock.invocationCallOrder[0]);
             expect(panel.collapsed).toBeTruthy();
         }));
 

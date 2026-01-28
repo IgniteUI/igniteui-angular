@@ -17,7 +17,7 @@ import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/inpu
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DEBOUNCE_TIME = 60;
 const ROW_TAG = 'igx-grid-row';

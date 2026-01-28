@@ -527,7 +527,7 @@ export class QueryBuilderFunctions {
      * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
      */
     public static verifyOperatorLine(operatorLine: HTMLElement, operator: string) {
-        expect(operator === 'and' || operator === 'or').toBe(true, 'operator must be \'and\' or \'or\'');
+        expect(operator === 'and' || operator === 'or', 'operator must be \'and\' or \'or\'').toBe(true);
 
         if (operator === 'and') {
             expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND), 'incorrect operator line').toBe(true);
@@ -717,8 +717,8 @@ export class QueryBuilderFunctions {
         const columnSpan = chipSpans[0];
         const operatorSpan = chipSpans[1];
         const valueSpan = chipSpans[2];
-        expect(columnSpan.textContent.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
-        expect(operatorSpan.textContent.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
+        expect(columnSpan.textContent.toLowerCase().trim(), 'incorrect chip column').toBe(columnText.toLowerCase());
+        expect(operatorSpan.textContent.toLowerCase().trim(), 'incorrect chip operator').toBe(operatorText.toLowerCase());
         if (valueSpan != undefined && valueText != undefined) {
             expect(valueSpan.textContent.toLowerCase().trim().replaceAll(/\s/g, ''), 'incorrect chip filter value')
                 .toBe(valueText.toLowerCase().replaceAll(/\s/g, ''));

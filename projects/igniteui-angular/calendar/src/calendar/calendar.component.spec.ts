@@ -3097,15 +3097,8 @@ class DateTester {
         disabled: boolean,
     ) {
         for (const day of dates) {
-            expect(day.isDisabled).toBe(
-                disabled,
-                day.date.native.toLocaleDateString() + " is not disabled",
-            );
-            expect(day.isDisabledCSS).toBe(
-                disabled,
-                day.date.native.toLocaleDateString() +
-                    " is not with disabled style",
-            );
+            expect(day.isDisabled, day.date.native.toLocaleDateString() + " is not disabled").toBe(disabled);
+            expect(day.isDisabledCSS, day.date.native.toLocaleDateString() + " is not with disabled style").toBe(disabled);
         }
     }
 

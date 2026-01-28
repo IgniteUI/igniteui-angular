@@ -391,8 +391,8 @@ describe('Navigation Drawer', () => {
 
             // mid gesture
             expect(navDrawer.drawer.classList).toContain('panning');
-            expect(navDrawer.drawer.style.transform)
-                .toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/, 'Drawer should be moving with the pan');
+            expect(navDrawer.drawer.style.transform, 'Drawer should be moving with the pan')
+                .toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/);
             listener();
         });
 
@@ -535,7 +535,7 @@ describe('Navigation Drawer', () => {
 
         // wait for debounce
         await wait(200);
-        expect(fixture.componentInstance.navDrawer.pin).toBe(false, `Shouldn't change state on resize if window width is the same`);
+        expect(fixture.componentInstance.navDrawer.pin, `Shouldn't change state on resize if window width is the same`).toBe(false);
         expect(fixture.componentInstance.pin, 'Parent component pin remain on resize if window width is the same').toBe(true);
         fixture.componentInstance.pin = true;
         fixture.detectChanges();
