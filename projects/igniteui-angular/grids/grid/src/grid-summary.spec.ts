@@ -19,6 +19,7 @@ import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridSummaryCalculationMode, IColumnPipeArgs, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('IgxGrid - Summaries #grid', () => {
 
     const SUMMARY_CLASS = '.igx-grid-summary';
@@ -297,10 +298,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 const lastColumnSummaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 4);
                 const lastColumnSummaryCellRect = lastColumnSummaryCell.nativeElement.getBoundingClientRect();
 
-                expect(lastColumnSummaryCellRect.left).toBe(lastColumnNormalCellRect.left,
-                    'summary cell and data cell are not left aligned');
-                expect(lastColumnSummaryCellRect.right).toBe(lastColumnNormalCellRect.right,
-                    'summary cell and data cell are not right aligned');
+                expect(lastColumnSummaryCellRect.left, 'summary cell and data cell are not left aligned').toBe(lastColumnNormalCellRect.left);
+                expect(lastColumnSummaryCellRect.right, 'summary cell and data cell are not right aligned').toBe(lastColumnNormalCellRect.right);
             });
 
             it('should apply disabledSummaries with custom summary', fakeAsync(() => {
@@ -1175,8 +1174,7 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(cell.selected).toBe(false);
         });
 
-        it('should navigate with tab to filter row if the grid is empty', () => {
-            pending('this test need to be written again when the header are ready');
+        it.skip('should navigate with tab to filter row if the grid is empty', () => {
             grid.allowFiltering = true;
             grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
@@ -2384,7 +2382,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             let addRow = grid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBeTruthy();
 
             let cell = grid.getCellByColumn(2, 'ParentID');
             cell.update(newRow.ParentID);
@@ -2403,7 +2401,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             addRow = grid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeFalse();
+            expect(addRow.addRowUI).toBeFalsy();
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DotmaticsComponent } from './hound.component';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('DotmaticsComponent', () => {
   let component: DotmaticsComponent;
   let fixture: ComponentFixture<DotmaticsComponent>;

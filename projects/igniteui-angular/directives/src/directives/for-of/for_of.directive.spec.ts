@@ -1,4 +1,4 @@
-﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
+import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -8,6 +8,7 @@ import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spe
 
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
 
+import { describe, it, expect, beforeEach, afterEach, beforeAll, vi } from 'vitest';
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
     const DISPLAY_CONTAINER = 'igx-display-container';
@@ -253,7 +254,7 @@ describe('IgxForOf directive -', () => {
 
             expect(parseInt(transform.slice(transform.indexOf('(') + 1, transform.indexOf(')')), 10)).toEqual(-5);
 
-            spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
+            vi.spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             fix.componentInstance.data = [{ 1: 1, 2: 2, 3: 3, 4: 4 }];
             fix.detectChanges();
@@ -775,9 +776,9 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        xit('should apply inertia when swiping via touch interaction.', async () => {
+        it.skip('should apply inertia when swiping via touch interaction.', async () => {
             const dcElem = fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
-            // spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
+            // vi.spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
             await UIInteractions.simulateTouchStartEvent(
                 dcElem,
                 0,
@@ -925,7 +926,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should correctly scroll to the last element when using the scrollTo method', () => {
-            spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
+            vi.spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             /**  Scroll to the last 49999 row. */
             fix.componentInstance.parentVirtDir.scrollTo(49999);
@@ -957,8 +958,8 @@ describe('IgxForOf directive -', () => {
 
         it('should emit the chunkPreload/chunkLoad only when startIndex or chunkSize have changed.', async () => {
             const verticalDir = fix.componentInstance.parentVirtDir;
-            const chunkLoadSpy = spyOn<any>(verticalDir.chunkLoad, 'emit').and.callThrough();
-            const chunkPreLoadSpy = spyOn<any>(verticalDir.chunkPreload, 'emit').and.callThrough();
+            const chunkLoadSpy = vi.spyOn(verticalDir.chunkLoad, 'emit');
+            const chunkPreLoadSpy = vi.spyOn(verticalDir.chunkPreload, 'emit');
             // scroll so that start index does not change.
             fix.componentInstance.scrollTop(1);
             fix.detectChanges();
@@ -1910,3 +1911,5 @@ export class LocalVariablesAsComponent {
         }
     }
 }
+
+

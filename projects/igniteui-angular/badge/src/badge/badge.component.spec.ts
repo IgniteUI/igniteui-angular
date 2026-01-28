@@ -3,6 +3,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBadgeComponent, IgxBadgeType } from './badge.component';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('Badge', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

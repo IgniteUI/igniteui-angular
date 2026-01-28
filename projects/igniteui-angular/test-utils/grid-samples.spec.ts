@@ -8,7 +8,7 @@ import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions, ExternalTemplateDefinitions } from './template-strings.spec';
 
-import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesSortingStrategy, IDataCloneStrategy, IFilteringExpressionsTree, IgxFilteringOperand, IgxFilterItem, IgxNumberFilteringOperand, IgxSummaryResult, ISortingOptions, ISortingStrategy, OverlaySettings, SortingDirection } from 'igniteui-angular/core';
+import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesSortingStrategy, GridColumnDataType, IDataCloneStrategy, IFilteringExpressionsTree, IgxFilteringOperand, IgxFilterItem, IgxNumberFilteringOperand, IgxSummaryResult, ISortingOptions, ISortingStrategy, OverlaySettings, SortingDirection } from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -16,8 +16,9 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffi
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxButtonDirective, IgxFocusDirective } from 'igniteui-angular/directives';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { CellType, IGridCellEventArgs, IgxAdvancedFilteringDialogComponent, IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxDateSummaryOperand, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleSearchComponent, IgxExcelStyleSelectingComponent, IgxFilterCellTemplateDirective, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowSelectorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from 'igniteui-angular/grids/core';
+import { CellType, GridSelectionMode, IGridCellEventArgs, IgxAdvancedFilteringDialogComponent, IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxDateSummaryOperand, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleSearchComponent, IgxExcelStyleSelectingComponent, IgxFilterCellTemplateDirective, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowSelectorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from 'igniteui-angular/grids/core';
 
+import { it } from 'vitest';
 @Component({
     template: GridTemplateStrings.declareGrid('', '', `<igx-column field="ID" [hidden]="true"></igx-column>`),
     imports: [IgxGridComponent, IgxColumnComponent]
@@ -268,7 +269,7 @@ export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`,
+    template: GridTemplateStrings.declareGrid(` height="height" width="width"`,
         `${EventSubscriptions.selected}${EventSubscriptions.columnPin}`,
         ColumnDefinitions.generatedWithWidth),
     imports: [IgxGridComponent, IgxColumnComponent]
@@ -278,16 +279,16 @@ export class PinningComponent extends GridWithSizeComponent
 
     public column: IgxColumnComponent;
     public columns = [
-        { field: 'ID', width: 100 },
-        { field: 'CompanyName', width: 300 },
-        { field: 'ContactName', width: 200 },
-        { field: 'ContactTitle', width: 200 },
-        { field: 'Address', width: 300 },
-        { field: 'City', width: 100 },
-        { field: 'Region', width: 100 },
-        { field: 'PostalCode', width: 100 },
-        { field: 'Phone', width: 150 },
-        { field: 'Fax', width: 150 }
+        { field: 'ID', width: "100px" },
+        { field: 'CompanyName', width: "300px" },
+        { field: 'ContactName', width: "200px" },
+        { field: 'ContactTitle', width: "200px" },
+        { field: 'Address', width: "300px" },
+        { field: 'City', width: "100px" },
+        { field: 'Region', width: "100px" },
+        { field: 'PostalCode', width: "100px" },
+        { field: 'Phone', width: "150px" },
+        { field: 'Fax', width: "150px" }
     ];
 
     public override data = SampleTestData.contactMariaAndersData();
@@ -338,12 +339,12 @@ export class GroupableGridSearchComponent extends ScrollableGridSearchComponent 
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width" [columnWidth]="columnWidth" `, '', ColumnDefinitions.productAllColumnFeatures),
+    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width" [moving]="true" [columnWidth]="columnWidth" `, '', ColumnDefinitions.productAllColumnFeatures),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridAllFeaturesComponent extends GridWithSizeComponent {
     @Input()
-    public columnWidth = 200;
+    public columnWidth = "200px";
 
 }
 
@@ -400,7 +401,7 @@ export class GridHireDateComponent extends BasicGridComponent {
 export class MovableColumnsComponent extends BasicGridComponent {
     public override data = SampleTestData.personIDNameRegionData();
     public autoGenerate = false;
-    public rowSelection = 'none';
+    public rowSelection = GridSelectionMode.none;
     public isFilterable = false;
     public isSortable = false;
     public isResizable = false;
@@ -450,6 +451,9 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
     public isFilterable = false;
     public isSortable = false;
     public isResizable = false;
+    public isEditable = false;
+    public isGroupable = false;
+    public isHidden = false;
 }
 
 @Component({
@@ -464,6 +468,8 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
     public width = '500px';
     public height = '400px';
+    public paging = false;
+    public rowSelection = GridSelectionMode.none;
 
     public columnInit(column: IgxColumnComponent) {
         column.sortable = true;
@@ -577,10 +583,10 @@ export class VirtualGridComponent extends BasicGridComponent {
     public gridHeight = '300px';
     public defaultWidth = '200px';
     public columns = [
-        { field: 'index' },
-        { field: 'value' },
-        { field: 'other' },
-        { field: 'another' }
+        { field: 'index', width: this.defaultWidth },
+        { field: 'value', width: this.defaultWidth },
+        { field: 'other', width: this.defaultWidth },
+        { field: 'another', width: this.defaultWidth }
     ];
     public selectedCell: CellType;
     constructor() {
@@ -1278,13 +1284,13 @@ export class IgxGridClipboardComponent extends BasicGridComponent {
 })
 export class DynamicColumnsComponent extends GridWithSizeComponent {
     public columns = [
-        { field: 'ID', width: 100, dataType: 'string' },
-        { field: 'CompanyName', width: 300, dataType: 'string' },
-        { field: 'ContactName', width: 200, dataType: 'string' },
-        { field: 'ContactTitle', width: 200, dataType: 'string' },
-        { field: 'Address', width: 300, dataType: 'string' },
-        { field: 'City', width: 100, dataType: 'string' },
-        { field: 'Region', width: 100, dataType: 'string' }
+        { field: 'ID', width: 100, dataType: GridColumnDataType.Number },
+        { field: 'CompanyName', width: 300, dataType: GridColumnDataType.String },
+        { field: 'ContactName', width: 200, dataType: GridColumnDataType.String },
+        { field: 'ContactTitle', width: 200, dataType: GridColumnDataType.String },
+        { field: 'Address', width: 300, dataType: GridColumnDataType.String },
+        { field: 'City', width: 100, dataType: GridColumnDataType.String },
+        { field: 'Region', width: 100, dataType: GridColumnDataType.String }
     ];
 
     public override data = SampleTestData.contactInfoDataFull();

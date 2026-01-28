@@ -17,6 +17,7 @@ import {
 } from './components';
 import { defineComponents } from '../utils/register';
 
+import { describe, it, expect, beforeEach, afterEach, beforeAll } from 'vitest';
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
 

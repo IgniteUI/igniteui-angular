@@ -21,6 +21,7 @@ import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-an
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';
 const CSS_CLASS_DRAG_INDICATOR_OFF = 'igx-grid__drag-indicator--off';
@@ -89,8 +90,8 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit');
-                    spyOn(grid.rowDragEnd, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
@@ -123,7 +124,7 @@ describe('Row Drag Tests', () => {
                     pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
-                    spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
 
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
@@ -153,8 +154,8 @@ describe('Row Drag Tests', () => {
 
                     startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
                     movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
-                    spyOn(grid.rowDragStart, 'emit');
-                    spyOn(grid.rowDragEnd, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
                     rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', movePoint));
@@ -288,8 +289,8 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit').and.callThrough();
-                    spyOn(grid.rowDragEnd, 'emit').and.callThrough();
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     rowDragDirective.onPointerDown(pointerDownEvent);
                     rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -311,8 +312,8 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit');
-                    spyOn(grid.rowDragEnd, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
@@ -348,8 +349,8 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit');
-                    spyOn(grid.rowDragEnd, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
@@ -388,8 +389,8 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit').and.callThrough();
-                    spyOn(grid.rowDragEnd, 'emit').and.callThrough();
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     rowDragDirective.onPointerDown(pointerDownEvent);
                     rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -555,8 +556,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -595,8 +596,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -634,8 +635,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -667,8 +668,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -699,8 +700,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -736,8 +737,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -813,8 +814,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -852,8 +853,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -893,7 +894,7 @@ describe('Row Drag Tests', () => {
                 const cellElement = dragCell.nativeElement;
                 let cellInput = null;
 
-                spyOn(dragGrid.gridAPI.crudService, 'endEdit').and.callThrough();
+                vi.spyOn(dragGrid.gridAPI.crudService, 'endEdit');
 
                 cellElement.dispatchEvent(new Event('focus'));
                 fixture.detectChanges();
@@ -978,8 +979,8 @@ describe('Row Drag Tests', () => {
             pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
             pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-            spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-            spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+            vi.spyOn(dragGrid.rowDragStart, 'emit');
+            vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
             rowDragDirective.onPointerDown(pointerDownEvent);
             rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -1000,8 +1001,8 @@ describe('Row Drag Tests', () => {
             startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
             pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
 
-            spyOn(childGrid.rowDragStart, 'emit').and.callThrough();
-            spyOn(childGrid.rowDragEnd, 'emit').and.callThrough();
+            vi.spyOn(childGrid.rowDragStart, 'emit');
+            vi.spyOn(childGrid.rowDragEnd, 'emit');
 
             rowDragDirective.onPointerDown(pointerDownEvent);
             rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -1021,8 +1022,8 @@ describe('Row Drag Tests', () => {
             startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
             pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
 
-            spyOn(nestedChildGrid.rowDragStart, 'emit').and.callThrough();
-            spyOn(nestedChildGrid.rowDragEnd, 'emit').and.callThrough();
+            vi.spyOn(nestedChildGrid.rowDragStart, 'emit');
+            vi.spyOn(nestedChildGrid.rowDragEnd, 'emit');
 
             rowDragDirective.onPointerDown(pointerDownEvent);
             rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -1130,8 +1131,8 @@ describe('Row Drag Tests', () => {
             pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
             pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-            spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-            spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+            vi.spyOn(dragGrid.rowDragStart, 'emit');
+            vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
             rowDragDirective.onPointerDown(pointerDownEvent);
             rowDragDirective.onPointerMove(pointerMoveEvent);

@@ -17,6 +17,7 @@ import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     const DEBOUNCETIME = 30;
 

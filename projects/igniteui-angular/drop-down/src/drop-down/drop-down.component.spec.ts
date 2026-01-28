@@ -17,6 +17,7 @@ import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_SCROLL = 'igx-drop-down__list-scroll';
@@ -41,12 +42,12 @@ describe('IgxDropDown ', () => {
             { value: 'Item4', index: 4 } as IgxDropDownItemComponent,
             { value: 'Item5', index: 5 } as IgxDropDownItemComponent];
         const mockSelection: {
-            [key: string]: jasmine.Spy;
-        } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items', 'delete']);
-        const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
-        mockSelection.get.and.returnValue(new Set([]));
-        const mockForOf = jasmine.createSpyObj('IgxForOfDirective', ['totalItemCount']);
-        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+            [key: string]: any;
+        } = { get: vi.fn(), set: vi.fn(), add_items: vi.fn(), select_items: vi.fn(), delete: vi.fn() };
+        const mockCdr = { markForCheck: vi.fn(), detectChanges: vi.fn() };
+        mockSelection.get.mockReturnValue(new Set([]));
+        const mockForOf = { totalItemCount: vi.fn() };
+        const mockDocument = { 'defaultView': { getComputedStyle: () => null }};
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -63,8 +64,8 @@ describe('IgxDropDown ', () => {
         });
         it('should notify when selection has changed', () => {
             (dropdown as any).virtDir = mockForOf;
-            spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
-            spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown.selectionChanging, 'emit');
 
             dropdown.selectItem(data[0]);
             expect(dropdown.selectedItem).toEqual(data[0]);
@@ -76,8 +77,8 @@ describe('IgxDropDown ', () => {
         });
         it('should fire selectionChanging with correct args', () => {
             (dropdown as any).virtDir = mockForOf;
-            spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
-            spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown.selectionChanging, 'emit');
 
             const selectionArgs: ISelectionEventArgs = {
                 newSelection: dropdown.items[1],
@@ -99,9 +100,9 @@ describe('IgxDropDown ', () => {
         });
         it('should notify when selection is cleared', () => {
             (dropdown as any).virtDir = mockForOf;
-            spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
-            spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
-            spyOn(dropdown.closed, 'emit').and.callThrough();
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown.selectionChanging, 'emit');
+            vi.spyOn(dropdown.closed, 'emit');
 
             dropdown.selectItem(data[1]);
             const selected = dropdown.selectedItem;
@@ -129,7 +130,7 @@ describe('IgxDropDown ', () => {
         it('setSelectedItem should return selected item', () => {
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
-            spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
 
             expect(dropdown.selectedItem).toBeNull();
 
@@ -141,7 +142,7 @@ describe('IgxDropDown ', () => {
         it('setSelectedItem should return null when selection is cleared', () => {
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
-            spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
 
             dropdown.setSelectedItem(3);
             expect(dropdown.selectedItem).toBeTruthy();
@@ -152,28 +153,27 @@ describe('IgxDropDown ', () => {
         });
         it('toggle should call open method when dropdown is collapsed', () => {
             (dropdown as any).virtDir = mockForOf;
-            spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
-            spyOnProperty(dropdown, 'collapsed', 'get').and.returnValue(true);
-            spyOn(dropdown, 'open');
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown, 'collapsed', 'get').mockReturnValue(true);
+            vi.spyOn(dropdown, 'open');
 
             dropdown.toggle();
             expect(dropdown.open).toHaveBeenCalledTimes(1);
         });
         it('toggle should call close method when dropdown is opened', () => {
             (dropdown as any).virtDir = mockForOf;
-            const mockToggle = jasmine.createSpyObj('IgxToggleDirective', ['open']);
-            mockToggle.isClosing = false;
+            const mockToggle = { open: vi.fn(), isClosing: vi.fn().mockResolvedValue(false) };
             (dropdown as any).toggleDirective = mockToggle;
-            spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
-            spyOnProperty(dropdown, 'collapsed', 'get').and.returnValue(false);
-            spyOn(dropdown, 'close');
+            vi.spyOn(dropdown, 'items', 'get').mockReturnValue(data);
+            vi.spyOn(dropdown, 'collapsed', 'get').mockReturnValue(false);
+            vi.spyOn(dropdown, 'close');
 
             dropdown.toggle();
             expect(dropdown.close).toHaveBeenCalledTimes(1);
         });
         it('should remove selection on destroy', () => {
             const selectionService = TestBed.inject(IgxSelectionAPIService);
-            const selectionDeleteSpy = spyOn(selectionService, 'delete');
+            const selectionDeleteSpy = vi.spyOn(selectionService, 'delete');
             dropdown.ngOnDestroy();
             expect(selectionDeleteSpy).toHaveBeenCalled();
         });
@@ -194,10 +194,10 @@ describe('IgxDropDown ', () => {
                 dropdown = fixture.componentInstance.dropdown;
             });
             it('should toggle drop down on open/close methods call', fakeAsync(() => {
-                spyOn(dropdown, 'onToggleOpening');
-                spyOn(dropdown, 'onToggleOpened');
-                spyOn(dropdown, 'onToggleClosing');
-                spyOn(dropdown, 'onToggleClosed');
+                vi.spyOn(dropdown, 'onToggleOpening');
+                vi.spyOn(dropdown, 'onToggleOpened');
+                vi.spyOn(dropdown, 'onToggleClosing');
+                vi.spyOn(dropdown, 'onToggleClosed');
 
                 expect(dropdown.collapsed).toBeTruthy();
                 dropdown.open();
@@ -215,8 +215,8 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
             }));
             it('#3810 - should not emit events when calling open on opened dropdown', fakeAsync(() => {
-                spyOn(dropdown.opening, 'emit').and.callThrough();
-                spyOn(dropdown.opened, 'emit').and.callThrough();
+                vi.spyOn(dropdown.opening, 'emit');
+                vi.spyOn(dropdown.opened, 'emit');
 
                 dropdown.open();
                 tick();
@@ -235,13 +235,13 @@ describe('IgxDropDown ', () => {
             it('should use default overlay settings if none are provided', () => {
                 const toggle: IgxToggleDirective = (dropdown as any).toggleDirective;
 
-                spyOn(toggle, 'open').and.callThrough();
+                vi.spyOn(toggle, 'open');
 
                 dropdown.open();
                 fixture.detectChanges();
                 expect(toggle.open).toHaveBeenCalledTimes(1);
 
-                const appliedSettings = (toggle.open as jasmine.Spy).calls.mostRecent().args[0];
+                const appliedSettings = (toggle.open as any).mock.lastCall[0];
                 expect(appliedSettings.closeOnOutsideClick).toBe(true);
                 expect(appliedSettings.modal).toBe(false);
                 expect(appliedSettings.positionStrategy instanceof ConnectedPositioningStrategy).toBe(true);
@@ -265,13 +265,13 @@ describe('IgxDropDown ', () => {
                     })
                 };
 
-                spyOn(toggle, 'open').and.callThrough();
+                vi.spyOn(toggle, 'open');
 
                 dropdown.open(customOverlaySettings);
                 fixture.detectChanges();
                 expect(toggle.open).toHaveBeenCalledTimes(1);
 
-                const appliedSettings = (toggle.open as jasmine.Spy).calls.mostRecent().args[0];
+                const appliedSettings = (toggle.open as any).mock.lastCall[0];
                 expect(appliedSettings.closeOnOutsideClick).toBe(customOverlaySettings.closeOnOutsideClick);
                 expect(appliedSettings.modal).toBe(customOverlaySettings.modal);
                 expect(appliedSettings.positionStrategy instanceof ConnectedPositioningStrategy).toBe(true);
@@ -284,10 +284,10 @@ describe('IgxDropDown ', () => {
             });
             it('#2798 - should allow canceling of open/close through opening/closing events', fakeAsync(() => {
                 const toggle: IgxToggleDirective = (dropdown as any).toggleDirective;
-                const onOpeningSpy = spyOn(dropdown.opening, 'emit').and.callThrough();
-                const onOpenedSpy = spyOn(dropdown.opened, 'emit').and.callThrough();
-                spyOn(dropdown.closing, 'emit').and.callThrough();
-                spyOn(dropdown.closed, 'emit').and.callThrough();
+                const onOpeningSpy = vi.spyOn(dropdown.opening, 'emit');
+                const onOpenedSpy = vi.spyOn(dropdown.opened, 'emit');
+                vi.spyOn(dropdown.closing, 'emit');
+                vi.spyOn(dropdown.closed, 'emit');
 
                 dropdown.closing.pipe(take(1)).subscribe((e: CancelableEventArgs) => e.cancel = true);
 
@@ -307,8 +307,8 @@ describe('IgxDropDown ', () => {
 
                 toggle.close();
                 fixture.detectChanges();
-                onOpeningSpy.calls.reset();
-                onOpenedSpy.calls.reset();
+                onOpeningSpy.mockClear();
+                onOpenedSpy.mockClear();
 
                 dropdown.opening.pipe(take(1)).subscribe((e: CancelableEventArgs) => e.cancel = true);
                 dropdown.toggle();
@@ -361,11 +361,11 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.collapsed).toEqual(false);
             }));
             it('should close the dropdown and not change selection by pressing ESC key', fakeAsync(() => {
-                spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
-                spyOn(dropdown.opening, 'emit').and.callThrough();
-                spyOn(dropdown.opened, 'emit').and.callThrough();
-                spyOn(dropdown.closing, 'emit').and.callThrough();
-                spyOn(dropdown.closed, 'emit').and.callThrough();
+                vi.spyOn(dropdown.selectionChanging, 'emit');
+                vi.spyOn(dropdown.opening, 'emit');
+                vi.spyOn(dropdown.opened, 'emit');
+                vi.spyOn(dropdown.closing, 'emit');
+                vi.spyOn(dropdown.closed, 'emit');
 
                 dropdown.toggle();
                 tick();
@@ -541,7 +541,7 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.selectedItem.itemIndex).toEqual(2);
             }));
             it('should return the proper eventArgs if selection has been cancelled', fakeAsync(() => {
-                spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
+                vi.spyOn(dropdown.selectionChanging, 'emit');
 
                 dropdown.toggle();
                 tick();
@@ -571,7 +571,7 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(canceledSelectionArgs);
             }));
             it('should provide correct event argument when closing through keyboard', fakeAsync(() => {
-                spyOn(dropdown.closing, 'emit').and.callThrough();
+                vi.spyOn(dropdown.closing, 'emit');
                 const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
 
                 dropdown.toggle();
@@ -642,7 +642,7 @@ describe('IgxDropDown ', () => {
                 expectedSelected = dropdown.items[4];
                 dropdown.items[4].isHeader = true;
 
-                spyOn(dropdown, 'selectItem').and.callThrough();
+                vi.spyOn(dropdown, 'selectItem');
                 expect(() => {
                     dropdown.selectItem(calledSelected);
                 }).toThrow();
@@ -856,7 +856,7 @@ describe('IgxDropDown ', () => {
                 const itemToClick = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`))[0];
 
                 const event = new Event('mousedown', { });
-                spyOn(event, 'preventDefault');
+                vi.spyOn(event, 'preventDefault');
                 itemToClick.triggerEventHandler('mousedown', event);
 
                 fixture.detectChanges();
@@ -867,7 +867,7 @@ describe('IgxDropDown ', () => {
                 fixture.detectChanges();
                 dropdown = fixture.componentInstance.dropdown;
                 const input = fixture.debugElement.query(By.css('input'));
-                spyOn(dropdown, 'selectItem').and.callThrough();
+                vi.spyOn(dropdown, 'selectItem');
 
                 expect(dropdown).toBeDefined();
                 expect(dropdown.focusedItem).toEqual(null);
@@ -956,8 +956,8 @@ describe('IgxDropDown ', () => {
             expect(firstItemElement.textContent.trim()).toEqual('Item 1990');
             expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
         });
-        xit('Should properly handle keyboard navigation when virtualized', async () => {
-            pending('does not have time to focus last item on navigateLast()');
+        it.skip('Should properly handle keyboard navigation when virtualized', async () => {
+            // pending('does not have time to focus last item on navigateLast()');
             // dropdown.toggle();
             // fixture.detectChanges();
             // dropdown.navigateFirst();
@@ -1298,10 +1298,10 @@ describe('IgxDropDown ', () => {
                 const tabs = fixture.debugElement.query(By.css(CSS_CLASS_TABS));
                 const input = fixture.debugElement.query(By.css('input'));
                 const img = fixture.debugElement.query(By.css('img'));
-                spyOn(dropdown.opening, 'emit').and.callThrough();
-                spyOn(dropdown.opened, 'emit').and.callThrough();
-                spyOn(dropdown.closing, 'emit').and.callThrough();
-                spyOn(dropdown.closed, 'emit').and.callThrough();
+                vi.spyOn(dropdown.opening, 'emit');
+                vi.spyOn(dropdown.opened, 'emit');
+                vi.spyOn(dropdown.closing, 'emit');
+                vi.spyOn(dropdown.closed, 'emit');
                 tabs.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
@@ -1410,7 +1410,6 @@ class IgxDropDownTestComponent {
 }
 @Component({
     template: `
-    <button (click)="selectItem5()">Select 5</button>
     <igx-drop-down #dropdown1>
         @for (item of items; track item.field) {
             <igx-drop-down-item>
@@ -1448,7 +1447,7 @@ class DoubleIgxDropDownComponent implements OnInit {
     template: `
     <input (click)="toggleDropDown()">
     <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
-    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="justify">
+    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="'justify'">
         <igx-tab-item>
             <igx-tab-header>
                 Tab111111111111111111111111
@@ -1474,7 +1473,7 @@ class DoubleIgxDropDownComponent implements OnInit {
             </igx-tab-content>
         </igx-tab-item>
     </igx-tabs>
-    <igx-drop-down igxDropDownItemNavigation (selectionChanging)="selectionChanging($event)"
+    <igx-drop-down [igxDropDownItemNavigation]="dropdown" (selectionChanging)="selectionChanging($event)"
         (opening)="onToggleOpening()" (opened)="onToggleOpened()"
         (closing)="onToggleClosing()" (closed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
         @for (item of items; track item.field) {

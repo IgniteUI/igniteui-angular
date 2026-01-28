@@ -5,6 +5,7 @@ import { wait } from '../../../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
 
+import { it, expect } from 'vitest';
 export class TestMethods {
 
     public static async testRawData(myGrid: IgxGridComponent, action: (grid) => Promise<void>) {
@@ -13,7 +14,7 @@ export class TestMethods {
         await wait(16);
         myGrid = fix.componentInstance.grid;
 
-        expect(myGrid.rowList.length).toEqual(10, 'Invalid number of rows initialized!');
+        expect(myGrid.rowList.length, 'Invalid number of rows initialized!').toEqual(10);
         await action(myGrid);
     }
 

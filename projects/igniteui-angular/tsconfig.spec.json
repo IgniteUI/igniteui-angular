@@ -1,10 +1,18 @@
 {
   "extends": "../../tsconfig.json",
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "controlFlowPreventingContentProjection": "suppress"
+      }
+    }
+  },
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "types": [
-      "jasmine",
+      "vitest/globals",
       "node",
+      "@vitest/browser/providers/playwright",
       "hammerjs"
     ]
   },

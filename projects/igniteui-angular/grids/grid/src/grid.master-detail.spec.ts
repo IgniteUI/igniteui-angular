@@ -17,6 +17,8 @@ import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/inpu
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 const DEBOUNCE_TIME = 60;
 const ROW_TAG = 'igx-grid-row';
 const GROUP_ROW_TAG = 'igx-grid-groupby-row';
@@ -578,8 +580,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(targetCellElement2.active).toBeTruthy();
         });
 
-        it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async () => {
-            pending('This test should pass when the issue #7300 is fixed.');
+        it.skip('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async () => {
             grid.navigateTo(20, 0);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
@@ -847,7 +848,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             it('Should exclude expanded detail views when doing range cell selection', fakeAsync(() => {
                 grid.expandRow(fix.componentInstance.data[2].ID);
-                const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+                const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
                 const startCell = grid.gridAPI.get_cell_by_index(1, 'ContactName');
                 const endCell = grid.gridAPI.get_cell_by_index(6, 'CompanyName');
                 const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };
@@ -1412,3 +1413,5 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
 
 const getDetailAddressText = (detailElem) => detailElem.querySelector('.addressArea').innerText;
+
+

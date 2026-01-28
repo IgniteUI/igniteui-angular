@@ -18,6 +18,7 @@ import { IgxQueryBuilderComponent } from './query-builder.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxQueryBuilder', () => {
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
@@ -48,13 +49,13 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilderElement.children.length).toEqual(1);
 
       const queryTreeElement = queryBuilderElement.children[0];
-      expect(queryTreeElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
+      expect(queryTreeElement.classList.contains(QueryBuilderSelectors.QUERY_BUILDER_TREE)).toBe(true);
 
       expect(queryBuilder.expressionTree).toBeUndefined();
 
       expect(queryTreeElement.children.length).toEqual(3);
       const bodyElement = queryTreeElement.children[0];
-      expect(bodyElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_BODY);
+      expect(bodyElement.classList.contains(QueryBuilderSelectors.QUERY_BUILDER_BODY)).toBe(true);
       expect(bodyElement.children.length).toEqual(1);
 
       QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false);
@@ -75,25 +76,25 @@ describe('IgxQueryBuilder', () => {
 
       const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE))[0].nativeElement;
       const bodyElement = queryTreeElement.children[0];
-      expect(bodyElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_BODY);
+      expect(bodyElement.classList.contains(QueryBuilderSelectors.QUERY_BUILDER_BODY)).toBe(true);
       expect(bodyElement.children.length).toEqual(2);
 
       // Verify the operator line of the root group is an 'And' line.
       QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
       // all inputs should be displayed correctly
       const selectFromContainer = bodyElement.children[0];
-      expect(selectFromContainer).toHaveClass('igx-filter-tree__inputs');
+      expect(selectFromContainer.classList.contains('igx-filter-tree__inputs')).toBe(true);
       expect(selectFromContainer.children[0].children[1].tagName).toEqual('IGX-SELECT');
       expect(selectFromContainer.children[1].children[1].tagName).toEqual('IGX-COMBO');
       const queryTreeExpressionContainer = bodyElement.children[1].children[1];
-      expect(queryTreeExpressionContainer).toHaveClass('igx-filter-tree');
-      expect(queryTreeExpressionContainer.children[1]).toHaveClass('igx-filter-tree__expressions');
+      expect(queryTreeExpressionContainer.classList.contains('igx-filter-tree')).toBe(true);
+      expect(queryTreeExpressionContainer.children[1].classList.contains('igx-filter-tree__expressions')).toBe(true);
 
       const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
-      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse();
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalsy();
 
       const fieldsCombo = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 0);
-      expect(fieldsCombo.children[0].classList.contains('igx-input-group--disabled')).toBeFalse();
+      expect(fieldsCombo.children[0].classList.contains('igx-input-group--disabled')).toBeFalsy();
 
       const expressionItems = queryTreeExpressionContainer.children[1].children[1].querySelectorAll(':scope > .igx-filter-tree__expression-item');
       expect(expressionItems.length).toEqual(queryBuilder.expressionTree.filteringOperands.length);
@@ -104,7 +105,7 @@ describe('IgxQueryBuilder', () => {
       // nested queries should be collapsed
       const nestedQueryTrees = queryTreeExpressionContainer.querySelectorAll(QueryBuilderSelectors.QUERY_BUILDER_TREE);
       for (let i = 0; i < nestedQueryTrees.length; i++) {
-        expect(nestedQueryTrees[i].checkVisibility()).toBeFalse();
+        expect(nestedQueryTrees[i].checkVisibility()).toBeFalsy();
       }
       // adding buttons should be enabled
       const buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
@@ -172,7 +173,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it(`Should discard newly added group when clicking on the 'cancel' button of its initial condition.`, fakeAsync(() => {
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
       expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
 
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
@@ -181,7 +182,7 @@ describe('IgxQueryBuilder', () => {
 
       // Verify there is a new root group, which is empty.
       const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
-      expect(group).not.toBeNull('There is no root group.');
+      expect(group, 'There is no root group.').not.toBeNull();
 
       // Click on the 'cancel' button
       const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
@@ -197,7 +198,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
 
       // Verify group's children count before adding a new child.
       let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -235,7 +236,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
 
       // Verify group's children count before adding a new child.
       let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -285,7 +286,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
 
       // Verify group's children count before adding a new child.
       let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -334,7 +335,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
 
       // Verify tree layout before deleting chips.
       QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
@@ -1049,7 +1050,7 @@ describe('IgxQueryBuilder', () => {
 
       //Check for the active element
       const searchValueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
-      expect(document.activeElement).toBe(searchValueInput, 'The input should be the active element.');
+      expect(document.activeElement, 'The input should be the active element.').toBe(searchValueInput);
     }));
 
     it('Should display add button when hovering a chip.', fakeAsync(() => {
@@ -1057,22 +1058,19 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Verify actions container is not visible. (This container contains the 'add' button.)
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-        .toBeNull('actions container is visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is visible').toBeNull();
 
       // Hover the first chip and verify actions container is visible.
       UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
       tick(50);
       fix.detectChanges();
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-        .not.toBeNull('actions container is not visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is not visible').not.toBeNull();
 
       // Unhover the first chip and verify actions container is not visible.
       UIInteractions.unhoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
       tick(50);
       fix.detectChanges();
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-        .toBeNull('actions container is visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is visible').toBeNull();
     }));
 
     it('Should have disabled adding buttons when an expression is in edit mode.', fakeAsync(() => {
@@ -1125,14 +1123,14 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Equals', '3');
 
       // Verify that the nested query is not expanded
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalsy();
 
       // Click the nested query chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
       tick(50);
       fix.detectChanges();
       // Verify the query is expanded
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTruthy();
       // Click a chip in the nested query three to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], 1);
       tick(50);
@@ -1189,7 +1187,7 @@ describe('IgxQueryBuilder', () => {
       tick(50);
       fix.detectChanges();
 
-      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
+      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalsy();
 
       // Click chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
@@ -1201,7 +1199,7 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
+      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalsy();
 
       // Click chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
@@ -1212,7 +1210,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
       fix.detectChanges();
 
-      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
+      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalsy();
 
       // Click chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
@@ -1223,7 +1221,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix);
       fix.detectChanges();
 
-      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
+      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalsy();
     }));
 
     it('Should show add expression button when there is an expression in add mode.', fakeAsync(() => {
@@ -1245,15 +1243,13 @@ describe('IgxQueryBuilder', () => {
       UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
       tick(50);
       fix.detectChanges();
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
-        .not.toBeNull('actions container is not visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]), 'actions container is not visible').not.toBeNull();
 
       // Hover the second chip and verify actions container is visible.
       UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [1]) as HTMLElement);
       tick(50);
       fix.detectChanges();
-      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [1]))
-        .not.toBeNull('actions container is not visible');
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [1]), 'actions container is not visible').not.toBeNull();
     }));
 
     it('Should display an alert dialog when the entity is changed and showEntityChangeDialog is true.', fakeAsync(() => {
@@ -1266,7 +1262,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
       // Alert dialog should not be opened if there is no previous selection
-      expect(dialog.checkVisibility()).toBeFalse();
+      expect(dialog.checkVisibility()).toBeFalsy();
 
       // Select entity
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
@@ -1274,13 +1270,13 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Alert dialog should be opened
-      expect(dialog.checkVisibility()).toBeTrue();
+      expect(dialog.checkVisibility()).toBeTruthy();
 
       // Show again checkbox should be unchecked
       const checkbox = dialogOutlet.querySelector('igx-checkbox');
       expect(checkbox).toBeDefined();
-      expect(checkbox).not.toHaveClass('igx-checkbox--checked');
-      expect(queryBuilder.showEntityChangeDialog).toBeTrue();
+      expect(checkbox.classList.contains('igx-checkbox--checked')).toBe(false);
+      expect(queryBuilder.showEntityChangeDialog).toBeTruthy();
 
       // Close dialog
       const cancelButton = Array.from(dialogOutlet.querySelectorAll('button'))[0];
@@ -1294,7 +1290,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Alert dialog should NOT be opened
-      expect(dialog.checkVisibility()).toBeTrue();
+      expect(dialog.checkVisibility()).toBeTruthy();
     }));
 
     it('Should not display an alert dialog when the entity changed once showEntityChangeDialog is disabled.', fakeAsync(() => {
@@ -1307,7 +1303,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
       // Alert dialog should not be opened if there is no previous selection
-      expect(dialog.checkVisibility()).toBeFalse();
+      expect(dialog.checkVisibility()).toBeFalsy();
 
       // Select entity
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
@@ -1315,7 +1311,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Alert dialog should be opened
-      expect(dialog.checkVisibility()).toBeTrue();
+      expect(dialog.checkVisibility()).toBeTruthy();
 
       // Check show again checkbox
       const checkbox = dialogOutlet.querySelector('igx-checkbox') as HTMLElement;
@@ -1324,8 +1320,8 @@ describe('IgxQueryBuilder', () => {
       checkbox.click();
       tick(100);
       fix.detectChanges();
-      expect(checkbox).toHaveClass('igx-checkbox--checked');
-      expect(queryBuilder.showEntityChangeDialog).toBeFalse();
+      expect(checkbox.classList.contains('igx-checkbox--checked')).toBe(true);
+      expect(queryBuilder.showEntityChangeDialog).toBeFalsy();
 
       // Close dialog
       const cancelButton = Array.from(dialogOutlet.querySelectorAll('button'))[0];
@@ -1339,7 +1335,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Alert dialog should NOT be opened
-      expect(dialog.checkVisibility()).toBeFalse();
+      expect(dialog.checkVisibility()).toBeFalsy();
     }));
 
     it('Initially should not display an alert dialog when the entity is changed if hideEntityChangeDialog is disabled through API.', fakeAsync(() => {
@@ -1352,7 +1348,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
       // Alert dialog should not be opened if there is no previous selection
-      expect(dialog.checkVisibility()).toBeFalse();
+      expect(dialog.checkVisibility()).toBeFalsy();
 
       // Select entity
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
@@ -1360,7 +1356,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Alert dialog should NOT be opened
-      expect(dialog.checkVisibility()).toBeFalse();
+      expect(dialog.checkVisibility()).toBeFalsy();
     }));
 
     it('Should reset all inputs when the entity is changed.', fakeAsync(() => {
@@ -1608,14 +1604,14 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
 
       // Verify that the nested query is expanded
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTruthy();
 
       QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
       tick(100);
       fix.detectChanges();
 
       // Verify that the nested query is collapsed
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalsy();
     }));
 
     it(`Should discard the changes in the fields if 'close' button of nested query condition is clicked.`, fakeAsync(() => {
@@ -1821,7 +1817,7 @@ describe('IgxQueryBuilder', () => {
       const bodyElement = queryBuilderElement.children[0].children[0];
       const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
       expect(actionArea).toBeNull();
-      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1]).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
+      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].classList.contains(QueryBuilderSelectors.QUERY_BUILDER_TREE)).toBe(true);
       expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].children.length).toEqual(3);
       const tree = bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].querySelector('.igx-filter-tree__expression');
       expect(tree).toBeNull();
@@ -1835,18 +1831,18 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
       tick(50);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).toBeTrue();
+      expect(queryBuilder.canCommit()).toBeTruthy();
 
       // Verify the Query Builder validity state while editing a condition.
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       UIInteractions.clickAndSendInputElementValue(input, 'a');
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).toBeTrue();
+      expect(queryBuilder.canCommit()).toBeTruthy();
     }));
 
     it('canCommit should return the correct validity state of currently added condition.', fakeAsync(() => {
@@ -1854,40 +1850,40 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Entity selected').toBeTrue();
+      expect(queryBuilder.canCommit(), 'Entity selected').toBeTruthy();
 
       // Click the 'Add condition' button.
       QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Add condition clicked').toBeTrue();
+      expect(queryBuilder.canCommit(), 'Add condition clicked').toBeTruthy();
 
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
-      expect(queryBuilder.canCommit()).withContext('Column selected').toBeFalse();
+      expect(queryBuilder.canCommit(), 'Column selected').toBeFalsy();
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
-      expect(queryBuilder.canCommit()).withContext('Operator contains selected').toBeFalse();
+      expect(queryBuilder.canCommit(), 'Operator contains selected').toBeFalsy();
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       UIInteractions.clickAndSendInputElementValue(input, 'a');
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Search value filled').toBeTrue();
+      expect(queryBuilder.canCommit(), 'Search value filled').toBeTruthy();
 
       // Click on the 'cancel' button
       const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
       UIInteractions.simulateClickEvent(closeButton);
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Entity remains selected').toBeTrue();
+      expect(queryBuilder.canCommit(), 'Entity remains selected').toBeTruthy();
 
       // Verify the Query Builder validity state for UNARY condition.
       QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).withContext('Add condition clicked again').toBeTrue();
+      expect(queryBuilder.canCommit(), 'Add condition clicked again').toBeTruthy();
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
-      expect(queryBuilder.canCommit()).withContext('Column selected again').toBeTrue();
+      expect(queryBuilder.canCommit(), 'Column selected again').toBeTruthy();
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
-      expect(queryBuilder.canCommit()).withContext('Unary operator selected').toBeTrue();
+      expect(queryBuilder.canCommit(), 'Unary operator selected').toBeTruthy();
     }));
 
     it('Should be able to commit nested query without where condition.', fakeAsync(() => {
@@ -2021,7 +2017,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
-      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue();
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTruthy();
     });
 
     it('Should disable changing a selected entity when "disableEntityChange"=true only after initial selection', fakeAsync(() => {
@@ -2029,10 +2025,10 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
-      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse();
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalsy();
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 0);
 
-      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue();
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTruthy();
     }));
 
     it('Should disable changing the selected fields when "disableReturnFieldsChange"=true', () => {
@@ -2041,7 +2037,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       const fieldsCombo = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 0);
-      expect(fieldsCombo.children[0].classList.contains('igx-input-group--disabled')).toBeTrue();
+      expect(fieldsCombo.children[0].classList.contains('igx-input-group--disabled')).toBeTruthy();
     });
 
     it(`Should show 'Ungroup' as disabled in root group context menu.`, fakeAsync(() => {
@@ -2071,7 +2067,7 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
 
-      spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+      vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
     }));
 
     it(`Should commit the changes in a valid edited condition when the 'commit' method is called.`, fakeAsync(() => {
@@ -2082,9 +2078,9 @@ describe('IgxQueryBuilder', () => {
 
       // Change the current condition
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       UIInteractions.clickAndSendInputElementValue(input, 'a');
       tick(100);
@@ -2110,9 +2106,9 @@ describe('IgxQueryBuilder', () => {
 
       // Change the current condition
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
       UIInteractions.clickAndSendInputElementValue(input, 'a');
       tick(100);
@@ -2135,15 +2131,15 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
       tick(50);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).toBeTrue();
+      expect(queryBuilder.canCommit()).toBeTruthy();
 
       // Start editing expression in the nested query
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], 1);
       tick(50);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).toBeTrue();
+      expect(queryBuilder.canCommit()).toBeTruthy();
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
 
       // Discard the changes
       queryBuilder.discard();
@@ -2151,7 +2147,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Verify the nested query is collapsed
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalsy();
 
       // Click the existing chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
@@ -2162,16 +2158,16 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], 1);
       tick(50);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).toBeTrue();
+      expect(queryBuilder.canCommit()).toBeTruthy();
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
       UIInteractions.clickAndSendInputElementValue(input, '1');
       tick(100);
       fix.detectChanges();
-      expect(queryBuilder.canCommit()).toBeTrue();
+      expect(queryBuilder.canCommit()).toBeTruthy();
 
       // Apply the changes
       queryBuilder.commit();
@@ -2179,7 +2175,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Verify the nested query is collapsed
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalsy();
 
       // Expand the nested query by putting it in edit mode
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
@@ -2228,7 +2224,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Should NOT throw errors when an invalid condition is committed through API.', fakeAsync(() => {
-      spyOn(console, 'error');
+      vi.spyOn(console, 'error');
       // Click the existing chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [2]);
       tick(50);
@@ -2236,7 +2232,7 @@ describe('IgxQueryBuilder', () => {
 
       // Change the current condition
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
-      expect(queryBuilder.canCommit()).toBeFalse();
+      expect(queryBuilder.canCommit()).toBeFalsy();
 
       let errMessage = '';
       // Apply the changes
@@ -2633,7 +2629,7 @@ describe('IgxQueryBuilder', () => {
     });
 
     // TODO: Currently doesn't work as expected. The drop ghost is not shown on the first action.
-    xit('Should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', () => {
+    it.skip('Should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate Today" chip
       const dragDir = draggedChip.dragDirective;
       UIInteractions.moveDragDirective(fix, dragDir, -50, 10, false);
@@ -2750,7 +2746,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
       fix.detectChanges();
 
-      spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
+      vi.spyOn(dragDir.ghostElement, 'dispatchEvent');
 
       const addConditionButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
       const addConditionButtonCenter = QueryBuilderFunctions.getElementCenter(addConditionButton);
@@ -2903,7 +2899,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChip = chipComponents[0].componentInstance;
       const draggedChipElem = draggedChip.nativeElement;
 
-      expect(draggedChip.draggable).toBeTrue();
+      expect(draggedChip.draggable).toBeTruthy();
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChipElem.offsetHeight, false);
       expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBe(null);
     });
@@ -2975,7 +2971,7 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.triggerEventHandler('focus', {});
       draggedIndicator.nativeElement.focus();
 
-      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      vi.spyOn(tree.nativeElement, 'dispatchEvent');
       const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
 
       //pass 1 down to bottom
@@ -3109,7 +3105,7 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.triggerEventHandler('focus', {});
       draggedIndicator.nativeElement.focus();
 
-      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      vi.spyOn(tree.nativeElement, 'dispatchEvent');
 
       tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       tick(20);
@@ -3216,7 +3212,7 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.triggerEventHandler('focus', {});
       draggedIndicator.nativeElement.focus();
 
-      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      vi.spyOn(tree.nativeElement, 'dispatchEvent');
 
       tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       tick(20);

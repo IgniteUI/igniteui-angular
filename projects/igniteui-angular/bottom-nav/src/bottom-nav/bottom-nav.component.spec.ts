@@ -17,6 +17,7 @@ import { RoutingView1Component, RoutingView2Component, RoutingView3Component, Ro
 import { IgxBottomNavItemComponent } from './bottom-nav-item.component';
 import { IgxBottomNavComponent } from './bottom-nav.component';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxBottomNav', () => {
 
     const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';
@@ -324,9 +325,9 @@ describe('IgxBottomNav', () => {
                 bottomNav = fixture.componentInstance.bottomNav;
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
-                itemChangeSpy = spyOn(bottomNav.selectedItemChange, 'emit').and.callThrough();
-                indexChangeSpy = spyOn(bottomNav.selectedIndexChange, 'emit').and.callThrough();
-                indexChangingSpy = spyOn(bottomNav.selectedIndexChanging, 'emit').and.callThrough();
+                itemChangeSpy = vi.spyOn(bottomNav.selectedItemChange, 'emit');
+                indexChangeSpy = vi.spyOn(bottomNav.selectedIndexChange, 'emit');
+                indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
             }));
 
             it('Validate the fired events on clicking tab headers.', fakeAsync(() => {
@@ -384,9 +385,9 @@ describe('IgxBottomNav', () => {
                 bottomNav = fixture.componentInstance.bottomNav;
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
-                itemChangeSpy = spyOn(bottomNav.selectedItemChange, 'emit');
-                indexChangeSpy = spyOn(bottomNav.selectedIndexChange, 'emit');
-                indexChangingSpy = spyOn(bottomNav.selectedIndexChanging, 'emit');
+                itemChangeSpy = vi.spyOn(bottomNav.selectedItemChange, 'emit');
+                indexChangeSpy = vi.spyOn(bottomNav.selectedIndexChange, 'emit');
+                indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
             }));
 
             it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', fakeAsync(() => {

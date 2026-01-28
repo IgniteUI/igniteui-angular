@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BaseProgressDirective } from './progressbar.component';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 @Component({
     template: ``,
 })
@@ -173,7 +174,7 @@ describe('BaseProgressDirective', () => {
     }));
 
     it('should trigger progressChanged event when value changes', () => {
-        spyOn(component.progressChanged, 'emit');
+        vi.spyOn(component.progressChanged, 'emit');
 
         component.value = 30;
         expect(component.progressChanged.emit).toHaveBeenCalledWith({
@@ -189,14 +190,14 @@ describe('BaseProgressDirective', () => {
     });
 
     it('should not trigger progressChanged event when value remains the same', () => {
-        spyOn(component.progressChanged, 'emit');
+        vi.spyOn(component.progressChanged, 'emit');
 
         component.value = 0; // Default value is already 0
         expect(component.progressChanged.emit).not.toHaveBeenCalled();
     });
 
     it('should trigger progressChanged event when indeterminate is true', () => {
-        spyOn(component.progressChanged, 'emit');
+        vi.spyOn(component.progressChanged, 'emit');
 
         component.indeterminate = true;
         component.value = 30;

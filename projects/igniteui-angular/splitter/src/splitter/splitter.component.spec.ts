@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
 const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
 const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
@@ -268,8 +269,8 @@ describe('IgxSplitter', () => {
         splitterBarComponent.movingEnd.emit(-100);
         fixture.detectChanges();
 
-        expect(pane1.size.indexOf('%') !== -1).toBeTrue();
-        expect(pane2.size.indexOf('%') !== -1).toBeTrue();
+        expect(pane1.size.indexOf('%') !== -1).toBeTruthy();
+        expect(pane2.size.indexOf('%') !== -1).toBeTruthy();
 
         expect(pane1.element.offsetWidth).toBeCloseTo(pane1_originalSize + 100);
         expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
@@ -297,7 +298,7 @@ describe('IgxSplitter', () => {
 
         // fist pane should remain in px
         expect(pane1.size).toBe('300px');
-        expect(pane2.size.indexOf('%') !== -1).toBeTrue();
+        expect(pane2.size.indexOf('%') !== -1).toBeTruthy();
 
         expect(pane1.element.offsetWidth).toBeCloseTo(pane1_originalSize + 100);
         expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
@@ -408,9 +409,9 @@ describe('IgxSplitter pane toggle', () => {
     it('should emit resizing events on splitter bar move: resizeStart, resizing, resizeEnd.', () => {
         fixture.componentInstance.type = SplitterType.Vertical;
         fixture.detectChanges();
-        spyOn(splitter.resizeStart, 'emit').and.callThrough();
-        spyOn(splitter.resizing, 'emit').and.callThrough();
-        spyOn(splitter.resizeEnd, 'emit').and.callThrough();
+        vi.spyOn(splitter.resizeStart, 'emit');
+        vi.spyOn(splitter.resizing, 'emit');
+        vi.spyOn(splitter.resizeEnd, 'emit');
 
         const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
@@ -488,7 +489,7 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
         const pane2 = splitter.panes.toArray()[1];
         const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
         const minSize = parseInt(pane1.minSize);
-        spyOn(splitter, 'onMoveEnd').and.callThrough();
+        vi.spyOn(splitter, 'onMoveEnd');
 
         splitterBarComponent.moveStart.emit(pane1);
         fixture.detectChanges();

@@ -3,6 +3,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFlexDirective, IgxLayoutDirective } from './layout.directive';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxLayoutDirective', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

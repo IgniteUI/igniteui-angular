@@ -5,6 +5,7 @@ import { DATA } from 'src/app/shared/pivot-data';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from 'igniteui-angular/core';
 import { TestBed } from '@angular/core/testing';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;
     let rowStatePipe: IgxPivotRowExpansionPipe;

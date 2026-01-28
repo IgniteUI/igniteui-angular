@@ -6,6 +6,7 @@ import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } fro
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
 
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('TreeGrid Grouping Pipe', () => {
     let groupPipe: IgxTreeGridGroupingPipe;
     let data: any[];

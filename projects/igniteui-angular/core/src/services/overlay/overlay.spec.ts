@@ -34,6 +34,7 @@ import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { PlatformUtil } from 'igniteui-angular';
 
+import { describe, it, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
 const CLASS_OVERLAY_CONTENT_RELATIVE = 'igx-overlay__content--relative';
@@ -273,9 +274,9 @@ describe('igxOverlay', () => {
         });
 
         it('Should clear listener for escape key when overlay settings have outlet specified', () => {
-            const addEventSpy = spyOn(document, 'addEventListener').and.callThrough();
-            const removeEventSpy = spyOn(document, 'removeEventListener').and.callThrough();
-            const hideSpy = spyOn(overlay, 'hide').and.callThrough();
+            const addEventSpy = vi.spyOn(document, 'addEventListener');
+            const removeEventSpy = vi.spyOn(document, 'removeEventListener');
+            const hideSpy = vi.spyOn(overlay, 'hide');
 
             const mockOverlaySettings: OverlaySettings = {
                 modal: false,
@@ -289,10 +290,10 @@ describe('igxOverlay', () => {
             overlay.show(id);
 
             // expect escape listener to be added to document
-            expect(addEventSpy).toHaveBeenCalledWith('keydown', jasmine.any(Function), undefined);
+            expect(addEventSpy).toHaveBeenCalledWith('keydown', expect.any(Function), undefined);
 
-            const listener = addEventSpy.calls.all()
-                .find(call => call.args[0] === 'keydown')?.args[1] as EventListener;
+            const listener = addEventSpy.mock.calls
+                .find(call => call[0] === 'keydown')?.[1] as EventListener;
 
             expect(listener).toBeDefined();
 
@@ -338,7 +339,7 @@ describe('igxOverlay', () => {
             const overlayDiv = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
             expect(overlayDiv).toBeDefined();
-            expect(overlayDiv).toHaveClass(CLASS_OVERLAY_MAIN);
+            expect(overlayDiv.classList.contains(CLASS_OVERLAY_MAIN)).toBe(true);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -397,12 +398,12 @@ describe('igxOverlay', () => {
 
             const wrapperElement = overlayElement.children[0];
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER_MODAL);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER_MODAL)).toBe(true);
             expect(wrapperElement.children[0].localName).toEqual('div');
 
             const contentElement = wrapperElement.children[0];
             expect(contentElement).toBeDefined();
-            expect(contentElement).toHaveClass(CLASS_OVERLAY_CONTENT_MODAL);
+            expect(contentElement.classList.contains(CLASS_OVERLAY_CONTENT_MODAL)).toBe(true);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -495,13 +496,13 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const overlayInstance = fixture.componentInstance.overlay;
-            spyOn(overlayInstance.closed, 'emit');
-            spyOn(overlayInstance.closing, 'emit');
-            spyOn(overlayInstance.opened, 'emit');
-            spyOn(overlayInstance.contentAppending, 'emit');
-            spyOn(overlayInstance.contentAppended, 'emit');
-            spyOn(overlayInstance.opening, 'emit');
-            spyOn(overlayInstance.animationStarting, 'emit');
+            vi.spyOn(overlayInstance.closed, 'emit');
+            vi.spyOn(overlayInstance.closing, 'emit');
+            vi.spyOn(overlayInstance.opened, 'emit');
+            vi.spyOn(overlayInstance.contentAppending, 'emit');
+            vi.spyOn(overlayInstance.contentAppended, 'emit');
+            vi.spyOn(overlayInstance.opening, 'emit');
+            vi.spyOn(overlayInstance.animationStarting, 'emit');
 
             const firstCallId = overlayInstance.attach(SimpleDynamicComponent);
             overlayInstance.show(firstCallId);
@@ -509,28 +510,28 @@ describe('igxOverlay', () => {
 
             expect(overlayInstance.opening.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.opening.emit)
-                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false });
-            const args: OverlayEventArgs = (overlayInstance.opening.emit as jasmine.Spy).calls.mostRecent().args[0];
-            expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: expect.any(ComponentRef) as any, cancel: false });
+            const args: OverlayEventArgs = (overlayInstance.opening.emit as any).mock.lastCall[0];
+            expect(args.componentRef.instance).toEqual(expect.any(SimpleDynamicComponent));
             expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.animationStarting.emit).toHaveBeenCalledTimes(1);
 
             tick();
             expect(overlayInstance.opened.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.opened.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any });
+            expect(overlayInstance.opened.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: expect.any(ComponentRef) as any });
             overlayInstance.hide(firstCallId);
 
             tick();
             expect(overlayInstance.closing.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.closing.emit)
-                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false, event: undefined });
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: expect.any(ComponentRef) as any, cancel: false, event: undefined });
             expect(overlayInstance.animationStarting.emit).toHaveBeenCalledTimes(2);
 
             tick();
             expect(overlayInstance.closed.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.closed.emit).
-                toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, event: undefined });
+                toHaveBeenCalledWith({ id: firstCallId, componentRef: expect.any(ComponentRef) as any, event: undefined });
 
             const secondCallId = overlayInstance.attach(fixture.componentInstance.item);
             overlayInstance.show(secondCallId);
@@ -572,8 +573,8 @@ describe('igxOverlay', () => {
                 closeOnEscape: false
             };
 
-            spyOn(overlayInstance.contentAppending, 'emit');
-            spyOn(overlayInstance.contentAppended, 'emit');
+            vi.spyOn(overlayInstance.contentAppending, 'emit');
+            vi.spyOn(overlayInstance.contentAppended, 'emit');
 
             const firstCallId = overlayInstance.attach(SimpleDynamicComponent);
             overlayInstance.show(firstCallId);
@@ -583,8 +584,8 @@ describe('igxOverlay', () => {
             expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
 
             expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({
-                id: firstCallId, elementRef: jasmine.any(Object),
-                componentRef: jasmine.any(ComponentRef) as any, settings: os
+                id: firstCallId, elementRef: expect.any(Object),
+                componentRef: expect.any(ComponentRef) as any, settings: os
             })
         }));
 
@@ -607,13 +608,13 @@ describe('igxOverlay', () => {
             });
             overlayInstance.contentAppended.pipe(first()).subscribe((e: OverlayEventArgs) => {
                 const overlay = overlayInstance.getOverlayById(e.id);
-                expect(overlay.settings.closeOnEscape).toBeTrue();
+                expect(overlay.settings.closeOnEscape).toBeTruthy();
                 expect(overlay.settings.modal).toBeFalsy();
                 expect(overlay.settings.closeOnOutsideClick).toBeFalsy();
             });
 
-            spyOn(overlayInstance.contentAppended, 'emit').and.callThrough();
-            spyOn(overlayInstance.contentAppending, 'emit').and.callThrough();
+            vi.spyOn(overlayInstance.contentAppended, 'emit');
+            vi.spyOn(overlayInstance.contentAppending, 'emit');
 
             const firstCallId = overlayInstance.attach(SimpleDynamicComponent);
             overlayInstance.show(firstCallId);
@@ -658,13 +659,13 @@ describe('igxOverlay', () => {
             const height = 200;
             const bottom = 200;
             const mockElement = document.createElement('div');
-            spyOn(mockElement, 'getBoundingClientRect').and.callFake(() => ({
+            vi.spyOn(mockElement, 'getBoundingClientRect').mockImplementation(() => ({
                 left, top, width, height, right, bottom
             } as DOMRect));
 
             const mockItem = document.createElement('div');
             mockElement.append(mockItem);
-            spyOn(mockItem, 'getBoundingClientRect').and.callFake(() => new DOMRect(top, left, width, height));
+            vi.spyOn(mockItem, 'getBoundingClientRect').mockImplementation(() => new DOMRect(top, left, width, height));
 
             const mockPositioningSettings1: PositionSettings = {
                 horizontalDirection: HorizontalAlignment.Right,
@@ -709,8 +710,8 @@ describe('igxOverlay', () => {
         });
 
         it('Should properly call position method - AutoPosition.', () => {
-            spyOn(BaseFitPositionStrategy.prototype, 'position');
-            spyOn<any>(ConnectedPositioningStrategy.prototype, 'setStyle');
+            vi.spyOn(BaseFitPositionStrategy.prototype, 'position');
+            vi.spyOn(ConnectedPositioningStrategy.prototype as any, 'setStyle');
             const mockDiv = document.createElement('div');
             const autoStrat1 = new AutoPositionStrategy();
             autoStrat1.position(mockDiv, null, document, false);
@@ -727,8 +728,8 @@ describe('igxOverlay', () => {
         });
 
         it('Should properly call position method - ElasticPosition.', () => {
-            spyOn(BaseFitPositionStrategy.prototype, 'position');
-            spyOn<any>(ConnectedPositioningStrategy.prototype, 'setStyle');
+            vi.spyOn(BaseFitPositionStrategy.prototype, 'position');
+            vi.spyOn(ConnectedPositioningStrategy.prototype as any, 'setStyle');
             const mockDiv = document.createElement('div');
             const autoStrat1 = new ElasticPositionStrategy();
 
@@ -886,7 +887,7 @@ describe('igxOverlay', () => {
         //         top: 50,
         //         width: 0
         //     };
-        //     const getPointSpy = spyOn(Util, 'getTargetRect').and.returnValue(rect);
+        //     const getPointSpy = vi.spyOn(Util, 'getTargetRect').mockReturnValue(rect);
         //     const fixture = TestBed.createComponent(FlexContainerComponent);
         //     fixture.detectChanges();
         //     const overlayInstance = fixture.componentInstance.overlay;
@@ -909,7 +910,7 @@ describe('igxOverlay', () => {
         //     rect.right = 200;
         //     rect.top = 200;
         //     rect.bottom = 200;
-        //     getPointSpy.and.callThrough().and.returnValue(rect);
+        //     getPointSpy.mockReturnValue(rect);
         //     window.resizeBy(200, 200);
         //     window.dispatchEvent(new Event('resize'));
         //     tick(DEBOUNCE_TIME);
@@ -939,17 +940,17 @@ describe('igxOverlay', () => {
 
                 const contentElement = componentElement.parentElement;
                 expect(contentElement).toBeDefined();
-                expect(contentElement).toHaveClass(CLASS_OVERLAY_CONTENT_MODAL);
-                expect(contentElement).toHaveClass(CLASS_OVERLAY_CONTENT_RELATIVE);
+                expect(contentElement.classList.contains(CLASS_OVERLAY_CONTENT_MODAL)).toBe(true);
+                expect(contentElement.classList.contains(CLASS_OVERLAY_CONTENT_RELATIVE)).toBe(true);
 
                 const wrapperElement = contentElement.parentElement;
                 expect(wrapperElement).toBeDefined();
-                expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER_MODAL);
-                expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER_FLEX);
+                expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER_MODAL)).toBe(true);
+                expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER_FLEX)).toBe(true);
 
                 const overlayElement = wrapperElement.parentElement;
                 expect(overlayElement).toBeDefined();
-                expect(overlayElement).toHaveClass(CLASS_OVERLAY_MAIN);
+                expect(overlayElement.classList.contains(CLASS_OVERLAY_MAIN)).toBe(true);
 
                 overlay.detachAll();
             }));
@@ -986,10 +987,10 @@ describe('igxOverlay', () => {
                 e.cancel = true;
             });
 
-            spyOn(overlayInstance.closed, 'emit').and.callThrough();
-            spyOn(overlayInstance.closing, 'emit').and.callThrough();
-            spyOn(overlayInstance.opened, 'emit').and.callThrough();
-            spyOn(overlayInstance.opening, 'emit').and.callThrough();
+            vi.spyOn(overlayInstance.closed, 'emit');
+            vi.spyOn(overlayInstance.closing, 'emit');
+            vi.spyOn(overlayInstance.opened, 'emit');
+            vi.spyOn(overlayInstance.opening, 'emit');
 
             const firstCallId = overlayInstance.attach(SimpleDynamicComponent);
             overlayInstance.show(firstCallId);
@@ -1120,7 +1121,7 @@ describe('igxOverlay', () => {
                 location: { nativeElement: mockNativeElement },
                 destroy: () => { }
             };
-            spyOn(viewContainerRef, 'createComponent').and.returnValue(mockComponent as any);
+            vi.spyOn(viewContainerRef, 'createComponent').mockReturnValue(mockComponent as any);
             const id = overlay.attach(SimpleDynamicComponent, viewContainerRef);
             expect(viewContainerRef.createComponent).toHaveBeenCalledWith(SimpleDynamicComponent as any);
             expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
@@ -1224,12 +1225,12 @@ describe('igxOverlay', () => {
         //         right: 1300,
         //         width: 300
         //     };
-        //     spyOn<any>(elastic, 'setStyle').and.returnValue({});
-        //     spyOn(Util, 'getViewportRect').and.returnValue(viewPortRect);
-        //     spyOn(Util, 'getTargetRect').and.returnValue(targetRect);
+        //     vi.spyOn(elastic, 'setStyle').mockReturnValue({});
+        //     vi.spyOn(Util, 'getViewportRect').mockReturnValue(viewPortRect);
+        //     vi.spyOn(Util, 'getTargetRect').mockReturnValue(targetRect);
 
-        //     const mockElement = jasmine.createSpyObj('HTMLElement', ['getBoundingClientRect']);
-        //     spyOn(mockElement, 'getBoundingClientRect').and.returnValue(elementRect);
+        //     const mockElement = { getBoundingClientRect: vi.fn() };
+        //     vi.spyOn(mockElement, 'getBoundingClientRect').mockReturnValue(elementRect);
         //     mockElement.classList = { add: () => { } };
         //     mockElement.style = { width: '', height: '' };
         //     elastic.position(mockElement, null, null, true);
@@ -1341,7 +1342,7 @@ describe('igxOverlay', () => {
             const overlayInstance = fixture.componentInstance.overlay;
             const id = overlayInstance.attach(SimpleDynamicComponent);
             const info = overlayInstance.getOverlayById(id);
-            const initialPositionSpy = spyOn(info.settings.positionStrategy, 'position').and.callThrough();
+            const initialPositionSpy = vi.spyOn(info.settings.positionStrategy, 'position');
 
             overlayInstance.show(id);
             tick();
@@ -1358,7 +1359,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false,
                 closeOnEscape: true
             };
-            const lastPositionSpy = spyOn(os.positionStrategy, 'position').and.callThrough();
+            const lastPositionSpy = vi.spyOn(os.positionStrategy, 'position');
             overlayInstance.show(id, os);
             tick();
 
@@ -1395,10 +1396,10 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false
             };
             const overlay = fixture.componentInstance.overlay;
-            spyOn(scrollStrat, 'initialize').and.callThrough();
-            spyOn(scrollStrat, 'attach').and.callThrough();
-            spyOn(scrollStrat, 'detach').and.callThrough();
-            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            vi.spyOn(scrollStrat, 'initialize');
+            vi.spyOn(scrollStrat, 'attach');
+            vi.spyOn(scrollStrat, 'detach');
+            const scrollSpy = vi.spyOn(scrollStrat as any, 'onScroll');
             const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
             tick();
@@ -1436,10 +1437,10 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false
             };
             const overlay = fixture.componentInstance.overlay;
-            spyOn(scrollStrat, 'initialize').and.callThrough();
-            spyOn(scrollStrat, 'attach').and.callThrough();
-            spyOn(scrollStrat, 'detach').and.callThrough();
-            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            vi.spyOn(scrollStrat, 'initialize');
+            vi.spyOn(scrollStrat, 'attach');
+            vi.spyOn(scrollStrat, 'detach');
+            const scrollSpy = vi.spyOn(scrollStrat as any, 'onScroll');
             const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(id);
             tick();
@@ -1476,8 +1477,8 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false
             };
             const overlay = fixture.componentInstance.overlay;
-            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
-            spyOn(overlay, 'reposition');
+            const scrollSpy = vi.spyOn(scrollStrat as any, 'onScroll');
+            vi.spyOn(overlay, 'reposition');
 
             const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(id);
@@ -1518,10 +1519,10 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false
             };
             const overlay = fixture.componentInstance.overlay;
-            spyOn(scrollStrat, 'initialize').and.callThrough();
-            spyOn(scrollStrat, 'attach').and.callThrough();
-            spyOn(scrollStrat, 'detach').and.callThrough();
-            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            vi.spyOn(scrollStrat, 'initialize');
+            vi.spyOn(scrollStrat, 'attach');
+            vi.spyOn(scrollStrat, 'detach');
+            const scrollSpy = vi.spyOn(scrollStrat as any, 'onScroll');
 
             const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(id);
@@ -1576,7 +1577,7 @@ describe('igxOverlay', () => {
             const overlayElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
             const wrapperElement = overlayElement.children[0];
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER)).toBe(true);
 
             overlay.detachAll();
         }));
@@ -1800,7 +1801,7 @@ describe('igxOverlay', () => {
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER)).toBe(true);
 
             overlay.detachAll();
         }));
@@ -2202,7 +2203,7 @@ describe('igxOverlay', () => {
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER)).toBe(true);
 
             overlay.detachAll();
         }));
@@ -2603,12 +2604,12 @@ describe('igxOverlay', () => {
                 positionStrategy: new GlobalPositionStrategy()
             };
 
-            spyOn(scrollStrategy, 'initialize').and.callThrough();
-            spyOn(scrollStrategy, 'attach').and.callThrough();
-            spyOn(scrollStrategy, 'detach').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
+            vi.spyOn(scrollStrategy, 'initialize');
+            vi.spyOn(scrollStrategy, 'attach');
+            vi.spyOn(scrollStrategy, 'detach');
+            vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
+            const scrollSpy = vi.spyOn(scrollStrategy as any, 'onScroll');
 
             const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
@@ -2640,12 +2641,12 @@ describe('igxOverlay', () => {
                 scrollStrategy
             };
 
-            spyOn(scrollStrategy, 'initialize').and.callThrough();
-            spyOn(scrollStrategy, 'attach').and.callThrough();
-            spyOn(scrollStrategy, 'detach').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
+            vi.spyOn(scrollStrategy, 'initialize');
+            vi.spyOn(scrollStrategy, 'attach');
+            vi.spyOn(scrollStrategy, 'detach');
+            vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
+            const scrollSpy = vi.spyOn(scrollStrategy as any, 'onScroll');
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
@@ -2688,7 +2689,7 @@ describe('igxOverlay', () => {
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER);
+            expect(wrapperElement.classList.contains(CLASS_OVERLAY_WRAPPER)).toBe(true);
 
             overlay.detachAll();
         }));
@@ -3104,12 +3105,12 @@ describe('igxOverlay', () => {
                 positionStrategy: new ElasticPositionStrategy()
             };
 
-            spyOn(scrollStrategy, 'initialize').and.callThrough();
-            spyOn(scrollStrategy, 'attach').and.callThrough();
-            spyOn(scrollStrategy, 'detach').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
+            vi.spyOn(scrollStrategy, 'initialize');
+            vi.spyOn(scrollStrategy, 'attach');
+            vi.spyOn(scrollStrategy, 'detach');
+            vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
+            const scrollSpy = vi.spyOn(scrollStrategy as any, 'onScroll');
 
             const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
@@ -3141,12 +3142,12 @@ describe('igxOverlay', () => {
                 scrollStrategy
             };
 
-            spyOn(scrollStrategy, 'initialize').and.callThrough();
-            spyOn(scrollStrategy, 'attach').and.callThrough();
-            spyOn(scrollStrategy, 'detach').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
+            vi.spyOn(scrollStrategy, 'initialize');
+            vi.spyOn(scrollStrategy, 'attach');
+            vi.spyOn(scrollStrategy, 'detach');
+            vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = spyOn<any>(scrollStrategy, 'onScroll').and.callThrough();
+            const scrollSpy = vi.spyOn(scrollStrategy as any, 'onScroll');
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
@@ -3284,10 +3285,10 @@ describe('igxOverlay', () => {
 
             button.addEventListener('click', _handler);
 
-            spyOn(button, 'click').and.callThrough();
-            spyOn(button, 'onclick').and.callThrough();
-            spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
+            vi.spyOn(button, 'click');
+            vi.spyOn(button, 'onclick');
+            vi.spyOn(overlay, 'show');
+            vi.spyOn(overlay, 'hide');
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
@@ -4306,8 +4307,8 @@ describe('igxOverlay', () => {
                 positionStrategy: new GlobalPositionStrategy()
             };
 
-            spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay.closing, 'emit');
+            vi.spyOn(overlay, 'show');
+            vi.spyOn(overlay.closing, 'emit');
 
             const firstCallId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(firstCallId);
@@ -4320,9 +4321,9 @@ describe('igxOverlay', () => {
             expect(overlay.closing.emit).toHaveBeenCalledTimes(1);
             expect(overlay.closing.emit).toHaveBeenCalledWith({
                 id: firstCallId,
-                componentRef: jasmine.any(ComponentRef) as any,
+                componentRef: expect.any(ComponentRef) as any,
                 cancel: false,
-                event: jasmine.any(Event) as any
+                event: expect.any(Event) as any
             });
 
             overlay.detachAll();
@@ -4341,9 +4342,9 @@ describe('igxOverlay', () => {
                 excludeFromOutsideClick: [divElement]
             };
 
-            spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay.closing, 'emit');
-            spyOn(overlay.closed, 'emit');
+            vi.spyOn(overlay, 'show');
+            vi.spyOn(overlay.closing, 'emit');
+            vi.spyOn(overlay.closed, 'emit');
 
             let callId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(callId);
@@ -4363,7 +4364,7 @@ describe('igxOverlay', () => {
             expect(overlay.closing.emit)
                 .toHaveBeenCalledWith({
                     id: callId,
-                    componentRef: jasmine.any(ComponentRef) as any,
+                    componentRef: expect.any(ComponentRef) as any,
                     cancel: false,
                     event: undefined
                 });
@@ -4384,9 +4385,9 @@ describe('igxOverlay', () => {
             expect(overlay.closing.emit)
                 .toHaveBeenCalledWith({
                     id: callId,
-                    componentRef: jasmine.any(ComponentRef) as any,
+                    componentRef: expect.any(ComponentRef) as any,
                     cancel: false,
-                    event: jasmine.any(Event) as any
+                    event: expect.any(Event) as any
                 });
 
             overlay.detachAll();
@@ -4773,3 +4774,5 @@ export class FlexContainerComponent {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.overlaySettings);
     }
 }
+
+

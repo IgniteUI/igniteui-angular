@@ -3,6 +3,7 @@ import { SampleTestData } from './sample-test-data.spec';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxCellHeaderTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 
+import { it } from 'vitest';
 @Component({
     template: `
     <div id="grid-wrapper" [style.width.px]="gridWrapperWidthPx">

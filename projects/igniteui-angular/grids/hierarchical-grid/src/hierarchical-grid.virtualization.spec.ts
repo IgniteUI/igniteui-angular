@@ -16,6 +16,7 @@ import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } f
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -354,20 +355,9 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         expect(childRowComponent.index).toBe(4);
     });
 
-    it('should update scrollbar when expanding a row with data loaded after initial view initialization', (done) => {
+    it('should update scrollbar when expanding a row with data loaded after initial view initialization', async () => {
         fixture.componentInstance.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
-
-        fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)).subscribe(
-            async (args) => {
-                args.grid.data = fixture.componentInstance.generateData(10, 0);
-                await wait(200);
-                fixture.detectChanges();
-
-                expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
-                done();
-            }
-        );
 
         expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(510);
 
@@ -377,6 +367,13 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
 
         expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(561);
+
+        const args = await firstValueFrom(fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)));
+        args.grid.data = fixture.componentInstance.generateData(10, 0);
+        await wait(200);
+        fixture.detectChanges();
+
+        expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
     });
 
     it('should emit onScroll and dataPreLoad on row island when child grid is scrolled.', async () => {
@@ -390,8 +387,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
 
 
-        spyOn(ri.gridScroll, 'emit').and.callThrough();
-        spyOn(ri.dataPreLoad, 'emit').and.callThrough();
+        vi.spyOn(ri.gridScroll, 'emit');
+        vi.spyOn(ri.dataPreLoad, 'emit');
 
 
         // scroll down

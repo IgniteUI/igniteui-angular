@@ -1,5 +1,6 @@
 import {IgxSelectionAPIService} from './selection';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxSelectionAPIService', () => {
     let service;
     beforeEach(() => {

@@ -7,6 +7,7 @@ import { IgxRadioComponent } from '../../../radio/src/radio/radio.component';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 import { IgxRadioGroupDirective } from 'igniteui-angular/radio';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 interface IButton {
     type?: string;
     ripple?: string;
@@ -99,7 +100,7 @@ describe('IgxButtonGroup', () => {
         fixture.detectChanges();
 
         const btnGroupInstance = fixture.componentInstance.buttonGroup;
-        spyOn(btnGroupInstance.selected, 'emit');
+        vi.spyOn(btnGroupInstance.selected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
         fixture.detectChanges();
@@ -128,7 +129,7 @@ describe('IgxButtonGroup', () => {
         const btnGroupInstance = fixture.componentInstance.buttonGroup;
         btnGroupInstance.buttons[0].select();
         btnGroupInstance.buttons[1].select();
-        spyOn(btnGroupInstance.deselected, 'emit');
+        vi.spyOn(btnGroupInstance.deselected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
         fixture.detectChanges();
@@ -204,7 +205,7 @@ describe('IgxButtonGroup', () => {
         const buttongroup = fixture.componentInstance.buttonGroup;
         buttongroup.selectionMode = 'singleRequired';
         await wait();
-        spyOn(buttongroup.deselected, 'emit');
+        vi.spyOn(buttongroup.deselected, 'emit');
 
         buttongroup.selectButton(0);
         await wait();
@@ -438,7 +439,7 @@ describe('IgxButtonGroup', () => {
 
         const buttonGroup = fixture.componentInstance.buttonGroup;
 
-        spyOn(buttonGroup.selected, 'emit').and.callThrough();
+        vi.spyOn(buttonGroup.selected, 'emit');
 
         buttonGroup.selectButton(0);
         await wait();

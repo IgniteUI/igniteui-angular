@@ -8,6 +8,7 @@ import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular
 import { IgxCsvExporterService, IgxExcelExporterService, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { ExportUtilities } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';
 const TOOLBAR_ACTIONS_TAG = 'igx-grid-toolbar-actions';
@@ -177,8 +178,8 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             $('#excelEntry').click();
             fixture.detectChanges();
 
-            expect(instance.exporterAction.isExporting).toBeFalse();
-            expect(instance.exporterAction.toolbar.showProgress).toBeFalse();
+            expect(instance.exporterAction.isExporting).toBeFalsy();
+            expect(instance.exporterAction.toolbar.showProgress).toBeFalsy();
         });
 
         it('toolbar exporter should include PDF option by default', () => {
@@ -224,7 +225,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             exporterButton.click();
             fixture.detectChanges();
 
-            spyOn(instance.exporterAction, 'export');
+            vi.spyOn(instance.exporterAction, 'export');
             $('#pdfEntry').click();
             fixture.detectChanges();
 
@@ -241,7 +242,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             exporterButton.click();
             fixture.detectChanges();
 
-            spyOn(ExportUtilities, 'saveBlobToFile');
+            vi.spyOn(ExportUtilities, 'saveBlobToFile');
             $('#pdfEntry').click();
             fixture.detectChanges();
 
@@ -258,8 +259,8 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             $('#pdfEntry').click();
             fixture.detectChanges();
 
-            expect(instance.exporterAction.isExporting).toBeFalse();
-            expect(instance.exporterAction.toolbar.showProgress).toBeFalse();
+            expect(instance.exporterAction.isExporting).toBeFalsy();
+            expect(instance.exporterAction.toolbar.showProgress).toBeFalsy();
         });
 
         it('Setting overlaySettings for each toolbar columns action', () => {
@@ -303,7 +304,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
         }));
 
         it('should emit columnToggle event when a column is shown/hidden via the column hiding action', fakeAsync(() => {
-            const spy = spyOn(instance.hidingAction.columnToggle, 'emit');
+            const spy = vi.spyOn(instance.hidingAction.columnToggle, 'emit');
             const hidingUI = $(TOOLBAR_HIDING_TAG);
             const grid = fixture.componentInstance.grid;
             fixture.detectChanges();
@@ -322,7 +323,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 { column: grid.getColumnByName('ProductID'), checked: false });
 
             // test after closing and reopening the hiding UI
-            spy.calls.reset();
+            spy.mockClear();
             hidingActionButton.click();
             tick();
             fixture.detectChanges();

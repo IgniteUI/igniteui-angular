@@ -9,6 +9,7 @@ import { FilteringExpressionsTree, FilteringLogic, IFilteringExpression, IgxBool
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { ExpressionUI } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Filtering actions #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -754,8 +755,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('should correctly apply multiple filtering through API', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         gridExpressionsTree.filteringOperands = [
@@ -786,8 +787,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('should correctly apply global filtering', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         grid.filteringLogic = FilteringLogic.Or;
         grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
@@ -1029,8 +1030,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should always emit filteringDone with proper eventArgs, even when column does not exist', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         grid.filteringLogic = FilteringLogic.Or;
         grid.filter('Nonexisting', 'ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
@@ -1043,8 +1044,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should emit filteringDone when filtering globally', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         grid.filteringLogic = FilteringLogic.Or;
         grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
@@ -1057,8 +1058,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should keep existing expressionTree when filtering with a null expressionTree.', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         const expression1 = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
         const expression11 = {
@@ -1099,8 +1100,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should not clear previous filtering when filterGlobal() is called with invalid condition', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('greaterThan'), true);
         tick(30);
@@ -1124,8 +1125,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should disable filtering feature when using NoopFilteringStrategy.', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         // Use the NoopFilteringStrategy.
         grid.filterStrategy = NoopFilteringStrategy.instance();
@@ -1165,8 +1166,8 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     }));
 
     it('should correctly filter with \'filteringExpressionsTree\' binding', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
+        vi.spyOn(grid.filtering, 'emit');
+        vi.spyOn(grid.filteringDone, 'emit');
 
         // Verify initially filtered 'Downloads > 200'
         expect(grid.rowList.length).toEqual(3);

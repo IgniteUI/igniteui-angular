@@ -8,6 +8,7 @@ import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'ignite
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxSnackbar', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -45,7 +46,7 @@ describe('IgxSnackbar', () => {
     });
 
     it('should auto hide 1 second after is open', fakeAsync(() => {
-        spyOn(snackbar.closing, 'emit');
+        vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         fixture.detectChanges();
@@ -62,7 +63,7 @@ describe('IgxSnackbar', () => {
     }));
 
     it('should not auto hide 1 second after is open', fakeAsync(() => {
-        spyOn(snackbar.closing, 'emit');
+        vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         snackbar.autoHide = false;
@@ -82,7 +83,7 @@ describe('IgxSnackbar', () => {
     it('should trigger on action', fakeAsync(() => {
         snackbar.actionText = 'undo';
         snackbar.displayTime = 100;
-        spyOn(snackbar.clicked, 'emit');
+        vi.spyOn(snackbar.clicked, 'emit');
 
         snackbar.open();
         tick(100);
@@ -95,7 +96,7 @@ describe('IgxSnackbar', () => {
     }));
 
     it('should emit opening when snackbar is shown', fakeAsync(() => {
-        spyOn(snackbar.opening, 'emit');
+        vi.spyOn(snackbar.opening, 'emit');
         snackbar.open();
         tick(100);
         expect(snackbar.opening.emit).toHaveBeenCalled();
@@ -105,7 +106,7 @@ describe('IgxSnackbar', () => {
     it('should emit onOpened when snackbar is opened', fakeAsync(() => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
-        spyOn(snackbar.opened, 'emit');
+        vi.spyOn(snackbar.opened, 'emit');
         snackbar.open();
         tick(100);
         fixture.detectChanges();
@@ -114,7 +115,7 @@ describe('IgxSnackbar', () => {
     }));
 
     it('should emit closing when snackbar is hidden', () => {
-        spyOn(snackbar.closing, 'emit');
+        vi.spyOn(snackbar.closing, 'emit');
         snackbar.open();
         snackbar.close();
         expect(snackbar.closing.emit).toHaveBeenCalled();
@@ -123,7 +124,7 @@ describe('IgxSnackbar', () => {
     it('should emit onClosed when snackbar is closed', fakeAsync(() => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
-        spyOn(snackbar.closed, 'emit');
+        vi.spyOn(snackbar.closed, 'emit');
         snackbar.open();
         snackbar.close();
         tick(100);
@@ -137,13 +138,13 @@ describe('IgxSnackbar', () => {
 
         snackbar.toggle();
         tick(100);
-        expect(snackbar.isVisible).toBeTrue();
-        expect(snackbar.collapsed).toBeFalse();
+        expect(snackbar.isVisible).toBeTruthy();
+        expect(snackbar.collapsed).toBeFalsy();
 
         snackbar.toggle();
         tick(100);
-        expect(snackbar.isVisible).toBeFalse();
-        expect(snackbar.collapsed).toBeTrue();
+        expect(snackbar.isVisible).toBeFalsy();
+        expect(snackbar.collapsed).toBeTruthy();
     }));
 
     it('can set snackbar message through open method', fakeAsync(() => {
@@ -212,7 +213,7 @@ describe('IgxSnackbar with custom content', () => {
         expect(messageEl.nativeElement.innerText).toContain('Item shown');
 
         const customContent = fixture.debugElement.query(By.css('.igx-snackbar__content'));
-        expect(customContent).toBeTruthy('Custom content is not found');
+        expect(customContent, 'Custom content is not found').toBeTruthy();
 
         // Verify the custom button is displayed instead of the snackbar actionText
         const button = fixture.debugElement.query(By.css('.igx-button'));
@@ -222,12 +223,12 @@ describe('IgxSnackbar with custom content', () => {
         // Verify the message is displayed on the left side of the custom content
         const messageElRect = messageEl.nativeElement.getBoundingClientRect();
         const customContentRect = customContent.nativeElement.getBoundingClientRect();
-        expect(messageElRect.left <= customContentRect.left).toBe(true, 'The message is not on the left of the custom content');
+        expect(messageElRect.left <= customContentRect.left, 'The message is not on the left of the custom content').toBe(true);
 
         // Verify the custom content element is on the left side of the button
         const buttonRect = button.nativeElement.getBoundingClientRect();
-        expect(customContentRect.right <= buttonRect.left).toBe(true, 'The custom element is not on the left of the button');
-        expect(messageElRect.right <= buttonRect.left).toBe(true, 'The button is not on the right side of the snackbar content');
+        expect(customContentRect.right <= buttonRect.left, 'The custom element is not on the left of the button').toBe(true);
+        expect(messageElRect.right <= buttonRect.left, 'The button is not on the right side of the snackbar content').toBe(true);
         snackbar.close();
     });
 

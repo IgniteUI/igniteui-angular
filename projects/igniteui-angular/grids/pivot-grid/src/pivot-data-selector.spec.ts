@@ -19,6 +19,7 @@ import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe("Pivot data selector", () => {
 
     beforeEach(waitForAsync(() => {
@@ -74,49 +75,49 @@ describe("Pivot data selector integration", () => {
     });
 
     it("should set through API expand states for panels with two way data binding", () => {
-        spyOn(selector.filtersExpandedChange, "emit");
-        spyOn(selector.columnsExpandedChange, "emit");
-        spyOn(selector.rowsExpandedChange, "emit");
-        spyOn(selector.valuesExpandedChange, "emit");
+        vi.spyOn(selector.filtersExpandedChange, "emit");
+        vi.spyOn(selector.columnsExpandedChange, "emit");
+        vi.spyOn(selector.rowsExpandedChange, "emit");
+        vi.spyOn(selector.valuesExpandedChange, "emit");
 
         const expansionPanels = fixture.debugElement.queryAll(By.directive(IgxExpansionPanelComponent));
         expect(expansionPanels.length).toEqual(4);
-        expect(expansionPanels[0].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[0].componentInstance.collapsed).toBeFalsy();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeFalsy();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeFalsy();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalsy();
 
         fixture.componentInstance.filterExpandState = false;
         fixture.detectChanges();
 
         expect(expansionPanels[0].componentInstance.collapsed).toBeTruthy();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeFalsy();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeFalsy();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalsy();
 
         fixture.componentInstance.columnExpandState = false;
         fixture.detectChanges();
 
-        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[0].componentInstance.collapsed).toBeTruthy();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeTruthy();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeFalsy();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalsy();
 
         fixture.componentInstance.rowExpandState = false;
         fixture.detectChanges();
 
-        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[0].componentInstance.collapsed).toBeTruthy();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeTruthy();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeTruthy();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalsy();
 
         fixture.componentInstance.valueExpandState = false;
         fixture.detectChanges();
 
-        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[0].componentInstance.collapsed).toBeTruthy();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeTruthy();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeTruthy();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeTruthy();
 
         expect(selector.filtersExpandedChange.emit).not.toHaveBeenCalled();
         expect(selector.columnsExpandedChange.emit).not.toHaveBeenCalled();
@@ -129,42 +130,42 @@ describe("Pivot data selector integration", () => {
         const panelHeaders = fixture.debugElement.queryAll(By.directive(IgxExpansionPanelHeaderComponent));
         expect(expansionPanels.length).toEqual(4);
 
-        expect(fixture.componentInstance.filterExpandState).toBeTrue();
-        expect(fixture.componentInstance.columnExpandState).toBeTrue();
-        expect(fixture.componentInstance.rowExpandState).toBeTrue();
-        expect(fixture.componentInstance.valueExpandState).toBeTrue();
-        expect(expansionPanels[0].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(fixture.componentInstance.filterExpandState).toBeTruthy();
+        expect(fixture.componentInstance.columnExpandState).toBeTruthy();
+        expect(fixture.componentInstance.rowExpandState).toBeTruthy();
+        expect(fixture.componentInstance.valueExpandState).toBeTruthy();
+        expect(expansionPanels[0].componentInstance.collapsed).toBeFalsy();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeFalsy();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeFalsy();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeFalsy();
 
         UIInteractions.simulateClickEvent(panelHeaders[0].nativeElement);
         fixture.detectChanges();
         await wait(100);
 
-        expect(fixture.componentInstance.filterExpandState).toBeFalse();
-        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
+        expect(fixture.componentInstance.filterExpandState).toBeFalsy();
+        expect(expansionPanels[0].componentInstance.collapsed).toBeTruthy();
 
         UIInteractions.simulateClickEvent(panelHeaders[1].nativeElement);
         fixture.detectChanges();
         await wait(100);
 
-        expect(fixture.componentInstance.columnExpandState).toBeFalse();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
+        expect(fixture.componentInstance.columnExpandState).toBeFalsy();
+        expect(expansionPanels[1].componentInstance.collapsed).toBeTruthy();
 
         UIInteractions.simulateClickEvent(panelHeaders[2].nativeElement);
         fixture.detectChanges();
         await wait(100);
 
-        expect(fixture.componentInstance.rowExpandState).toBeFalse();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeTrue();
+        expect(fixture.componentInstance.rowExpandState).toBeFalsy();
+        expect(expansionPanels[2].componentInstance.collapsed).toBeTruthy();
 
         UIInteractions.simulateClickEvent(panelHeaders[3].nativeElement);
         fixture.detectChanges();
         await wait(100);
 
-        expect(fixture.componentInstance.valueExpandState).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeTrue();
+        expect(fixture.componentInstance.valueExpandState).toBeFalsy();
+        expect(expansionPanels[3].componentInstance.collapsed).toBeTruthy();
     });
 
     it("should render a list of all row, column, filter, and value dimensions", () => {
@@ -324,10 +325,10 @@ describe("Pivot data selector integration", () => {
         // Get all value items
         const items = getPanelItemsByDimensionType(null);
 
-        spyOn(selector, "ghostCreated");
-        spyOn(selector, "onItemDragMove");
-        spyOn(selector, "onItemDragEnd");
-        spyOn(selector, "onItemDropped");
+        vi.spyOn(selector, "ghostCreated");
+        vi.spyOn(selector, "onItemDragMove");
+        vi.spyOn(selector, "onItemDragEnd");
+        vi.spyOn(selector, "onItemDropped");
 
         // Get the drag handle of the last item in the panel
         const dragHandle = items[0].parentNode
@@ -398,7 +399,7 @@ describe("Pivot data selector integration", () => {
     });
 
     it("should call filtering menu on column and row filter click", () => {
-        spyOn(grid.filteringService, "toggleFilterDropdown");
+        vi.spyOn(grid.filteringService, "toggleFilterDropdown");
 
         const columnItems = getPanelItemsByDimensionType(
             PivotDimensionType.Column
