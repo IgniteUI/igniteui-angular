@@ -133,7 +133,7 @@ describe('igxCombo', () => {
             // writeValue
             expect(combo.displayValue).toEqual('');
             mockSelection.get.mockReturnValue(new Set(['test']));
-            vi.spyOn(combo, 'isRemote').mockReturnValue(false);
+            vi.spyOn(combo as any, 'isRemote').mockReturnValue(false);
             combo.writeValue(['test']);
             expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
             expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['test'], true);
@@ -154,30 +154,30 @@ describe('igxCombo', () => {
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(['simpleValue']);
 
             // OnTouched callback
-            vi.spyOn(combo, 'collapsed').mockReturnValue(true);
+            vi.spyOn(combo as any, 'collapsed').mockReturnValue(true);
             vi.spyOn(combo, 'valid', 'set');
 
             combo.onBlur();
             expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
         });
         it('should properly call dropdown methods on toggle', () => {
-            const dropdown = { open: vi.fn(), close: vi.fn(), toggle: vi.fn() };
+            const dropdown = { open: vi.fn(), close: vi.fn(), toggle: vi.fn() } as unknown as IgxComboDropDownComponent;
             combo.ngOnInit();
             combo.dropdown = dropdown;
-            dropdown.collapsed = true;
+            (dropdown as any).collapsed = true;
 
             combo.open();
-            dropdown.collapsed = false;
+            (dropdown as any).collapsed = false;
             expect(combo.dropdown.open).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBe(false);
 
             combo.close();
-            dropdown.collapsed = true;
+            (dropdown as any).collapsed = true;
             expect(combo.dropdown.close).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBe(true);
 
             combo.toggle();
-            dropdown.collapsed = false;
+            (dropdown as any).collapsed = false;
             expect(combo.dropdown.toggle).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBe(false);
         });
@@ -201,7 +201,7 @@ describe('igxCombo', () => {
         });
         it('should call dropdown toggle with correct overlaySettings', () => {
 
-            const dropdown = { toggle: vi.fn() };
+            const dropdown = { toggle: vi.fn() } as unknown as IgxComboDropDownComponent;
             combo.ngOnInit();
             combo.dropdown = dropdown;
             const defaultSettings = (combo as any)._overlaySettings;
@@ -230,7 +230,7 @@ describe('igxCombo', () => {
             combo.ngOnInit();
             combo.data = data;
             mockSelection.select_items.mockClear();
-            vi.spyOn(combo, 'isRemote').mockReturnValue(false);
+            vi.spyOn(combo as any, 'isRemote').mockReturnValue(false);
             combo.writeValue(['EXAMPLE']);
             expect(mockSelection.select_items).toHaveBeenCalledTimes(1);
 
@@ -309,7 +309,7 @@ describe('igxCombo', () => {
         });
         it('should properly handleInputChange', () => {
 
-            const dropdown = { selectItem: vi.fn() };
+            const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
             combo.ngOnInit();
             combo.data = data;
             combo.dropdown = dropdown;
@@ -317,7 +317,7 @@ describe('igxCombo', () => {
                 value: '',
             } as any;
             combo.disableFiltering = false;
-            const matchSpy = vi.spyOn(combo, 'checkMatch');
+            const matchSpy = vi.spyOn(combo as any, 'checkMatch');
             vi.spyOn(combo.searchInputUpdate, 'emit');
 
             combo.handleInputChange();
@@ -353,7 +353,7 @@ describe('igxCombo', () => {
             combo.searchInputUpdate.subscribe((e) => {
                 e.cancel = true;
             });
-            const matchSpy = vi.spyOn(combo, 'checkMatch');
+            const matchSpy = vi.spyOn(combo as any, 'checkMatch');
             vi.spyOn(combo.searchInputUpdate, 'emit');
 
             combo.handleInputChange('Item1');
@@ -362,11 +362,11 @@ describe('igxCombo', () => {
         });
         it('should not open on click if combo is disabled', () => {
 
-            const dropdown = { open: vi.fn(), close: vi.fn(), toggle: vi.fn() };
-            const spyObj = { stopPropagation: vi.fn(), preventDefault: vi.fn() };
+            const dropdown = { open: vi.fn(), close: vi.fn(), toggle: vi.fn() } as unknown as IgxComboDropDownComponent;
+            const spyObj = { stopPropagation: vi.fn(), preventDefault: vi.fn() } as unknown as Event;
             combo.ngOnInit();
             combo.dropdown = dropdown;
-            dropdown.collapsed = true;
+            (dropdown as any).collapsed = true;
 
             combo.disabled = true;
             combo.onClick(spyObj);
@@ -408,12 +408,12 @@ describe('igxCombo', () => {
             });
 
             it('should select items through setSelctedItem method', () => {
-                const dropdown = { selectItem: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 combo.ngOnInit();
                 combo.data = complexData;
                 combo.valueKey = 'country';
                 combo.dropdown = dropdown;
-                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
 
                 const selectedItems = [combo.data[0]];
                 const selectedValues = [combo.data[0].country];
@@ -451,11 +451,11 @@ describe('igxCombo', () => {
                 expect(combo.value).toEqual(selectedItems);
             });
             it('should set selectedItems correctly on selectItems method call', () => {
-                const dropdown = { selectItem: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
 
                 combo.select([], false);
                 expect(combo.selection).toEqual([]);
@@ -479,11 +479,11 @@ describe('igxCombo', () => {
                 expect(combo.value).toEqual([]);
             });
             it('should fire selectionChanging event on item selection', () => {
-                const dropdown = { selectItem: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo.selectionChanging, 'emit');
 
                 let oldValue = [];
@@ -568,12 +568,12 @@ describe('igxCombo', () => {
                 });
             });
             it('should properly emit added and removed values in change event on single value selection', () => {
-                const dropdown = { selectItem: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 combo.ngOnInit();
                 combo.data = complexData;
                 combo.valueKey = 'country';
                 combo.dropdown = dropdown;
-                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
                 const selectionSpy = vi.spyOn(combo.selectionChanging, 'emit');
                 const expectedResults: IComboSelectionChangingEventArgs = {
                     newValue: [combo.data[0][combo.valueKey]],
@@ -602,13 +602,13 @@ describe('igxCombo', () => {
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             });
             it('should properly emit added and removed values in change event on multiple values selection', () => {
-                const dropdown = { selectItem: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 combo.ngOnInit();
                 combo.data = complexData;
                 combo.valueKey = 'country';
                 combo.displayKey = 'city';
                 combo.dropdown = dropdown;
-                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
                 const selectionSpy = vi.spyOn(combo.selectionChanging, 'emit');
 
                 let oldSelection = [];
@@ -657,11 +657,11 @@ describe('igxCombo', () => {
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             });
             it('should handle select/deselect ALL items', () => {
-                const dropdown = { selectItem: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo, 'selectAllItems');
                 vi.spyOn(combo, 'deselectAllItems');
 
@@ -674,11 +674,11 @@ describe('igxCombo', () => {
                 expect(combo.deselectAllItems).toHaveBeenCalledTimes(1);
             });
             it('should emit onSelectonChange event on select/deselect ALL items method call', () => {
-                const dropdown = { selectItem: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo.selectionChanging, 'emit');
 
                 combo.selectAllItems(true);
@@ -716,11 +716,11 @@ describe('igxCombo', () => {
                 });
             });
             it('should properly handle selection manipulation through selectionChanging emit', () => {
-                const dropdown = { selectItem: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
-                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo.selectionChanging, 'emit').mockImplementation((event: IComboSelectionChangingEventArgs) => event.newValue = []);
                 // No items are initially selected
                 expect(combo.selection).toEqual([]);
@@ -730,13 +730,13 @@ describe('igxCombo', () => {
                 expect(combo.selection).toEqual([]);
             });
             it('should not clear value when combo is disabled', () => {
-                const dropdown = { selectItem: vi.fn() };
-                const spyObj = { stopPropagation: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
+                const spyObj = { stopPropagation: vi.fn() } as unknown as Event;
                 combo.ngOnInit();
                 combo.data = data;
                 combo.dropdown = dropdown;
                 combo.disabled = true;
-                vi.spyOn(combo, 'totalItemCount').mockReturnValue(combo.data.length);
+                vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
 
                 const item = combo.data.slice(0, 1);
                 combo.select(item, true);
@@ -744,11 +744,11 @@ describe('igxCombo', () => {
                 expect(combo.displayValue).toEqual(item[0]);
             });
             it('should allow canceling and overwriting of item addition', fakeAsync(() => {
-                const dropdown = { selectItem: vi.fn() };
+                const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 const mockVirtDir = { scrollTo: vi.fn() };
                 const mockInput = {
                     nativeElement: { focus: vi.fn() }
-                };
+                } as ElementRef;
                 vi.spyOn(combo.addition, 'emit');
                 const subParams: { cancel: boolean; newValue: string; modify: boolean } = {
                     cancel: false,
@@ -1369,7 +1369,7 @@ describe('igxCombo', () => {
             });
             it('should bind combo data to remote data and clear selection properly', async () => {
                 let selectedItems = [combo.data[0], combo.data[1]];
-                const spyObj = { stopPropagation: vi.fn() };
+                const spyObj = { stopPropagation: vi.fn() } as unknown as Event;
                 combo.toggle();
                 combo.select([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
                 expect(combo.displayValue).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
@@ -1857,7 +1857,7 @@ describe('igxCombo', () => {
             });
             it('should properly return a reference to the VirtScrollContainer', () => {
                 expect(combo.dropdown.element).toBeDefined();
-                const mockScroll = spyOnProperty<any>(combo.dropdown, 'scrollContainer', 'get');
+                const mockScroll = vi.spyOn(combo.dropdown, 'scrollContainer', 'get');
                 const mockFunc = () => mockScroll();
                 expect(mockFunc).toThrow();
                 combo.toggle();

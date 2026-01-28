@@ -24,19 +24,19 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
                     <igx-icon igxPrefix>drag_indicator</igx-icon>
                 </igx-chip>
             }
-            <igx-chip #chipElem tabIndex="1" [id]="tabChipAttr">
+            <igx-chip #chipElem [tabIndex]="1" [id]="tabChipAttr">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
-            <igx-chip #chipElem tabIndex="2" [disabled]="true" [id]="tabChipDisabled">
+            <igx-chip #chipElem [tabIndex]="2" [disabled]="true" id="tabChipDisabled">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
-            <igx-chip #chipElem [tabIndex]="3" [removable]="true" [id]="tabChipInput" >
+            <igx-chip #chipElem [tabIndex]="3" [removable]="true" id="tabChipInput" >
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
-            <igx-chip #chipElem tabIndex="4" [tabIndex]="1" [id]="tabChipBoth">
+            <igx-chip #chipElem [tabIndex]="4" id="tabChipBoth">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
-            <igx-chip #chipElem tabIndex="5" [tabIndex]="1" [disabled]="true" [id]="tabChipAll">
+            <igx-chip #chipElem [tabIndex]="5" [disabled]="true" id="tabChipAll">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
         </igx-chips-area>
