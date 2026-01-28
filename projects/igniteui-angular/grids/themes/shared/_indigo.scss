@@ -3,23 +3,13 @@
 @use 'igniteui-theming/sass/color/functions' as *;
 @use 'styles/themes/standalone' as *;
 
-@include themed-block(igx-grid-th, indigo) {
-    @include e(title) {
-      font-weight: 600;
-    }
-
-    @include e(icons) {
-        .sort-icon igx-icon {
-            --component-size: 2;
-        }
-    }
-}
+// TODO type style is throwing an error
 
 @include themed-block(igx-grid, indigo) {
     --cell-height: #{sizable(rem(32px), rem(40px), rem(48px))};
     --header-size: #{sizable(rem(32px), rem(40px), rem(48px))};
     --grouparea-size: #{sizable(rem(40px), rem(48px), rem(55px))};
-    --indicator-icon-width: #{rem(16px)};
+    --_expander-icon-width: #{rem(16px)};
     --_hierarchical-action-icon: #{rem(16px)};
 
 
@@ -86,8 +76,48 @@
     }
 }
 
+@include themed-block(igx-grid-th, indigo) {
+    @include e(title) {
+        //@include type-style('detail-2', false)
+    }
+
+    @include e(icons) {
+        .sort-icon igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(group-title) {
+        //@include type-style('detail-2', false);
+    }
+}
+
 @include themed-block(igx-grid-thead, indigo) {
     @include e(title) {
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+}
+
+@include themed-block(igx-drop-area, indigo) {
+    padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+}
+
+@include themed-block(igx-group-label, indigo) {
+    @include e(text) {
+        //@include type-style('detail-1', false);
+    }
+
+    @include e(icon) {
+        @at-root igx-icon#{&} {
+            --component-size: 2;
+        }
+    }
+
+    @include e(column-name) {
+        //@include type-style('detail-2', false);
+    }
+
+    @include e(count-badge) {
+        --shadow: none;
     }
 }
