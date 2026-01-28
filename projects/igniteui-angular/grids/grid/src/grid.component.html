@@ -104,6 +104,7 @@
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             [igxForTrackBy]="trackChanges"
             #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
+            <div [attr.data-index]="rowIndex">
             <ng-template
                 [igxTemplateOutlet]="getRowTemplate(rowData)"
                 [igxTemplateOutletContext]="getContext(rowData, rowIndex)"
@@ -112,6 +113,7 @@
                 (beforeViewDetach)="viewDetachHandler($event)"
                 (viewMoved)="viewMovedHandler($event)">
             </ng-template>
+            </div>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
