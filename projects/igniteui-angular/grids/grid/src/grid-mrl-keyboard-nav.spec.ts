@@ -11,8 +11,9 @@ import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-function
 import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 
-const DEBOUNCE_TIME = 30;
+const DEBOUNCE_TIME = 60;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const CELL_BLOCK = `.${GRID_MRL_BLOCK}`;
@@ -28,6 +29,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     }));
 
     beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+        });
         fix = TestBed.createComponent(ColumnLayoutTestComponent);
     });
 
