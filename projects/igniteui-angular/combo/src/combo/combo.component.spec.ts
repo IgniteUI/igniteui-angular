@@ -1798,12 +1798,90 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                     expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                 }));
-                it('should close the dropdown list on pressing Tab key', fakeAsync(() => {
+                it('should close the dropdown list on pressing Tab key and focus the next focusable element', fakeAsync(() => {
                     combo.toggle();
                     fixture.detectChanges();
 
                     const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                    const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
                     UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
+                    tick();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeTruthy();
+
+                    combo.toggle();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeFalsy();
+
+                    let focusedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_FOCUSED}`);
+                    let selectedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_SELECTED}`);
+                    expect(focusedItems.length).toEqual(0);
+                    expect(selectedItems.length).toEqual(0);
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownContent);
+                    fixture.detectChanges();
+                    focusedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_FOCUSED}`);
+                    expect(focusedItems.length).toEqual(1);
+
+                    UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
+                    tick();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeTruthy();
+                    expect(document.activeElement).not.toEqual(combo.comboInput.nativeElement);
+
+                    combo.toggle();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeFalsy();
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownContent);
+                    fixture.detectChanges();
+                    focusedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_FOCUSED}`);
+                    expect(focusedItems.length).toEqual(1);
+
+                    UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
+                    fixture.detectChanges();
+                    selectedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_SELECTED}`);
+                    expect(selectedItems.length).toEqual(1);
+
+                    UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
+                    tick();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeTruthy();
+                    expect(document.activeElement).not.toEqual(combo.comboInput.nativeElement);
+                }));
+                it('should clear the selection and preserve the focus when the combo is collapsed and Escape key is pressed', fakeAsync(() => {
+                    combo.comboInput.nativeElement.focus();
+                    fixture.detectChanges();
+                    expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
+
+                    combo.select([combo.data[0][combo.valueKey]]);
+                    expect(combo.selection.length).toEqual(1);
+                    fixture.detectChanges();
+
+                    combo.onEscape(UIInteractions.getKeyboardEvent('keydown', 'Escape'));
+                    tick();
+                    fixture.detectChanges();
+                    expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
+                    expect(combo.selection.length).toEqual(0);
+                }));
+                it('should close the combo and preserve the focus when Escape key is pressed', fakeAsync(() => {
+                    combo.comboInput.nativeElement.focus();
+                    fixture.detectChanges();
+                    expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
+
+                    combo.toggle();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeFalsy();
+
+                    const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownContent);
+                    fixture.detectChanges();
+
+                    UIInteractions.triggerEventHandlerKeyDown('Escape', dropdownContent);
+                    fixture.detectChanges();
+                    expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
+
                     tick();
                     fixture.detectChanges();
                     expect(combo.collapsed).toBeTruthy();
@@ -2136,37 +2214,6 @@ describe('igxCombo', () => {
                         displayText: selectedItem_2.value[combo.valueKey],
                         cancel: false
                     });
-            });
-            it('should toggle combo dropdown on Enter of the focused toggle icon', fakeAsync(() => {
-                spyOn(combo, 'toggle').and.callThrough();
-                const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`));
-
-                UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
-                tick();
-                fixture.detectChanges();
-                expect(combo.toggle).toHaveBeenCalledTimes(1);
-                expect(combo.collapsed).toEqual(false);
-
-                UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
-                tick();
-                fixture.detectChanges();
-                expect(combo.toggle).toHaveBeenCalledTimes(2);
-                expect(combo.collapsed).toEqual(true);
-            }));
-            it('should clear the selection on Enter of the focused clear icon', () => {
-                const selectedItem_1 = combo.dropdown.items[1];
-                combo.toggle();
-                fixture.detectChanges();
-                simulateComboItemClick(1);
-                expect(combo.selection[0]).toEqual(selectedItem_1.value);
-                expect(combo.value[0]).toEqual(selectedItem_1.value[combo.valueKey]);
-
-                const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-                UIInteractions.triggerEventHandlerKeyDown('Enter', clearBtn);
-                fixture.detectChanges();
-                expect(input.nativeElement.value).toEqual('');
-                expect(combo.selection.length).toEqual(0);
-                expect(combo.value.length).toEqual(0);
             });
             it('should not be able to select group header', () => {
                 spyOn(combo.selectionChanging, 'emit').and.callThrough();
