@@ -902,7 +902,7 @@ class RadioGroupDeepProjectionComponent {
         <ng-container #radioContainer></ng-container>
     </igx-radio-group>
   `,
-  imports: [IgxRadioComponent, IgxRadioGroupDirective]
+  imports: [IgxRadioGroupDirective]
 })
 
 class RadioGroupTestComponent implements OnInit {
@@ -938,7 +938,7 @@ class RadioGroupTestComponent implements OnInit {
             <ng-container #radioContainer></ng-container>
         </igx-radio-group>
     `,
-    imports: [IgxRadioGroupDirective, IgxRadioComponent]
+    imports: [IgxRadioGroupDirective]
 })
 class DynamicRadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })

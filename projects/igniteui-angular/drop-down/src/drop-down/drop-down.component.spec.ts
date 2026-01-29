@@ -1370,7 +1370,7 @@ describe('IgxDropDown ', () => {
 @Component({
     template: `
     <button (click)="toggleDropDown()">Toggle</button>
-    <igx-drop-down id="test-id" igxDropDownItemNavigation [maxHeight]="maxHeight"
+    <igx-drop-down id="test-id" [igxDropDownItemNavigation]="dropdown" [maxHeight]="maxHeight"
         [allowItemsFocus]="true" style="--ig-size: var(--ig-size-medium);">
         @for (item of items; track item.field) {
             <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">

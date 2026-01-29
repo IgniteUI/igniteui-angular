@@ -3086,7 +3086,7 @@ class IgxSelectTemplateFormComponent {
             box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
             }
         `],
-    imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxButtonDirective, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective]
+    imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective]
 })
 class IgxSelectHeaderFooterComponent implements OnInit {
     @ViewChild('headerFooterSelect', { read: IgxSelectComponent, static: true })

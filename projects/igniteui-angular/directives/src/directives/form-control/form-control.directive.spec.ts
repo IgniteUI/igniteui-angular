@@ -30,7 +30,7 @@ describe('IgcFormControlDirective - ', () => {
 
         const elementRef = { nativeElement: document.createElement('igc-rating') };
 
-        const mockNgControl = { writeValue: vi.fn(), onChange: vi.fn(), setDisabledState: vi.fn(), onChange: vi.fn(), registerOnChangeCb: vi.fn(), registerOnTouchedCb: vi.fn() };
+        const mockNgControl = { writeValue: vi.fn(), onChange: vi.fn(), setDisabledState: vi.fn(), registerOnChangeCb: vi.fn(), registerOnTouchedCb: vi.fn() };
 
         const renderer2Mock = { setProperty: vi.fn() };
 

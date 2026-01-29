@@ -779,7 +779,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(companyNameCell.visibleColumnIndex, 'ContactName').toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length);
             expect(GridFunctions.isCellPinned(companyNameCell)).toBe(true);
 
-            const contactNameCell = grid.gridAPI.get_cell_by_index(0);
+            const contactNameCell = grid.gridAPI.get_cell_by_index(0 , 'ContactName');
             expect(contactNameCell.visibleColumnIndex).toEqual(0);
             expect(GridFunctions.isCellPinned(contactNameCell)).toBe(true);
 

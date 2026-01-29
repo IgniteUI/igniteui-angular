@@ -3632,7 +3632,7 @@ class IgxComboFormComponent {
         <igx-combo #testCombo #testComboNgModel="ngModel" class="input-container" [placeholder]="'Locations'"
             name="anyName" required [(ngModel)]="values"
             [data]="items" [displayKey]="'field'" [valueKey]="'field'"
-            [groupKey]="field ? 'region' : ''" [width]="'100%'">
+            [groupKey]="'region'" [width]="'100%'">
             <label igxLabel>Combo Label</label>
         </igx-combo>
     </form>

@@ -123,7 +123,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
 
-            expect(grid.columns.map(col => col.field)).toEqual(['Number', 'Boolean'], 'Invalid columns after exclusion initialized');
+            expect(grid.columns.map(col => col.field), 'Invalid columns after exclusion initialized').toEqual(['Number', 'Boolean']);
         });
 
         it('should initialize a grid and allow changing columns runtime with @for', () => {

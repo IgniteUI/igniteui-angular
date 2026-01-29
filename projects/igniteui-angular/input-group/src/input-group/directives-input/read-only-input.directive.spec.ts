@@ -55,7 +55,7 @@ describe('IgxReadOnlyInputDirective', () => {
 
 @Component({
     template: `<igx-date-picker></igx-date-picker>`,
-    imports: [IgxDatePickerComponent, IgxReadOnlyInputDirective]
+    imports: [IgxDatePickerComponent]
 })
 class TestComponent {
     @ViewChild(IgxDatePickerComponent, { static: true })

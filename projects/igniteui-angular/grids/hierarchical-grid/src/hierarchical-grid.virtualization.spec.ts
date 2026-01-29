@@ -368,7 +368,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(561);
 
-        const args = await firstValueFrom(fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)));
+        const args: any = await firstValueFrom(fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)));
         args.grid.data = fixture.componentInstance.generateData(10, 0);
         await wait(200);
         fixture.detectChanges();

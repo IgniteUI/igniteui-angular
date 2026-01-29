@@ -427,7 +427,7 @@ describe('CSV Grid Exporter', () => {
             line.includes(':') && !line.includes('[object Object]')
         );
 
-        expect(hasProperlySummary).toBe(true, 'Summary data should be formatted as "label: value"');
+        expect(hasProperlySummary, 'Summary data should be formatted as "label: value"').toBe(true);
     });
 
     describe('Tree Grid CSV export', () => {

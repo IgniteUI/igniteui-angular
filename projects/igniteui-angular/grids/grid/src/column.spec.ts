@@ -1676,6 +1676,7 @@ interface IColumnConfig {
     maxWidth?: string;
     hidden?: boolean;
     pinned?: boolean;
+    resizable?: boolean;
 }
 
 @Component({

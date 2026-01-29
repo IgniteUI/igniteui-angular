@@ -853,7 +853,7 @@ describe('IgxDatePicker', () => {
         let renderer2: Renderer2;
 
         beforeEach(() => {
-            renderer2 = { setAttribute: vi.fn() };
+            renderer2 = { setAttribute: vi.fn() } as unknown as Renderer2;
             mockControlInstance = {
                 _touched: false,
                 get touched() {
@@ -1026,7 +1026,7 @@ describe('IgxDatePicker', () => {
 
             datePicker = TestBed.inject(IgxDatePickerComponent);
             (datePicker as any).inputGroup = mockInputGroup;
-            (mockInputGroup.element.nativeElement.querySelector as jasmine.Spy).and.returnValue(mockInputGroup.element.nativeElement);
+            (mockInputGroup.element.nativeElement.querySelector as any).mockReturnValue(mockInputGroup.element.nativeElement);
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
             (datePicker as any).viewContainerRef = viewsContainerRef;
@@ -1154,7 +1154,7 @@ describe('IgxDatePicker', () => {
                 datePicker.outlet = mockEl;
                 expect(datePicker.outlet).toEqual(mockEl);
                 const mockOverlayDirective: IgxOverlayOutletDirective =
-                    { nativeElement: vi.fn() };
+                    { nativeElement: vi.fn() } as unknown as IgxOverlayOutletDirective;
                 datePicker.outlet = mockOverlayDirective;
                 expect(datePicker.outlet).toEqual(mockOverlayDirective);
                 const specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Weekdays },
@@ -1535,7 +1535,7 @@ describe('IgxDatePicker', () => {
                 const parseIsoDate = vi.spyOn(DateTimeUtil, 'parseIsoDate');
                 parseIsoDate.mockImplementation((val: string) => {
                     if (val === undefined || mockDate1) {
-                        return mockDate2;
+                        return mockDate2 as unknown as Date;
                     } else {
                         return init(val);
                     }
@@ -1551,7 +1551,7 @@ describe('IgxDatePicker', () => {
                 expect(mockDate1.setMinutes).not.toHaveBeenCalled();
                 expect(mockDate1.setSeconds).not.toHaveBeenCalled();
                 expect(mockDate1.setMilliseconds).not.toHaveBeenCalled();
-                mockCalendar.selected.emit(mockDate1);
+                mockCalendar.selected.emit(mockDate1 as unknown as Date);
                 // if the value is falsy or InvalidDate, hours, minutes and seconds will not be mapped
                 expect(mockDate2.getHours).not.toHaveBeenCalled();
                 expect(mockDate2.getMinutes).not.toHaveBeenCalled();

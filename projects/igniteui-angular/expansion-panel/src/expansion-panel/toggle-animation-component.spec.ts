@@ -6,6 +6,7 @@ import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-compon
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ElementRef } from '@angular/core';
 class MockTogglePlayer extends ToggleAnimationPlayer {
 }
 
@@ -25,8 +26,8 @@ describe('Toggle animation component', () => {
     describe('Unit tests', () => {
         it('Should initialize player with give settings', () => {
             const player = TestBed.inject(MockTogglePlayer);
-            const startPlayerSpy = vi.spyOn(player, 'startPlayer');
-            const mockEl = { focus: vi.fn() };
+            const startPlayerSpy = vi.spyOn(player as any, 'startPlayer');
+            const mockEl = { focus: vi.fn() } as unknown as ElementRef;
             player.playOpenAnimation(mockEl);
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.OPEN, mockEl, noop);
             player.playCloseAnimation(mockEl);
@@ -67,7 +68,8 @@ describe('Toggle animation component', () => {
             expect(player.openAnimationDone.emit).toHaveBeenCalledTimes(1);
             expect(player.closeAnimationStart.emit).toHaveBeenCalledTimes(0);
             expect(player.closeAnimationDone.emit).toHaveBeenCalledTimes(0);
-            expect(player.openAnimationStart.emit).toHaveBeenCalledBefore(player.openAnimationDone.emit);
+            expect((player.openAnimationStart.emit as any).mock.invocationCallOrder[0])
+                .toBeLessThan((player.openAnimationDone.emit as any).mock.invocationCallOrder[0]);
             expect(mockCb).toHaveBeenCalledTimes(1);
 
             player.playCloseAnimation({ nativeElement: mockElement }, mockCb);
@@ -75,7 +77,8 @@ describe('Toggle animation component', () => {
             expect(player.openAnimationDone.emit).toHaveBeenCalledTimes(1);
             expect(player.closeAnimationStart.emit).toHaveBeenCalledTimes(1);
             expect(player.closeAnimationDone.emit).toHaveBeenCalledTimes(1);
-            expect(player.closeAnimationStart.emit).toHaveBeenCalledBefore(player.closeAnimationDone.emit);
+            expect((player.closeAnimationStart.emit as any).mock.invocationCallOrder[0])
+                .toBeLessThan((player.closeAnimationDone.emit as any).mock.invocationCallOrder[0]);
 
             expect(mockCb).toHaveBeenCalledTimes(2);
         });

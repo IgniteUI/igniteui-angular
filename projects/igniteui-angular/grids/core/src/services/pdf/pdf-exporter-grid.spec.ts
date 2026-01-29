@@ -50,7 +50,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export grid with custom page orientation', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -63,7 +63,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should honor ignoreColumnsVisibility option', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -79,7 +79,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should handle empty grid', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -93,7 +93,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export grid with landscape orientation', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -106,7 +106,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export with table borders disabled', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -119,7 +119,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export with custom font size', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -132,7 +132,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export with different page sizes', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -145,7 +145,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should honor ignoreColumnsOrder option', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -158,7 +158,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should honor ignoreFiltering option', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -171,7 +171,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should honor ignoreSorting option', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -184,7 +184,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
 
 
@@ -198,7 +198,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export with custom filename from options', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
@@ -211,9 +211,9 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, customOptions);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            const callArgs = (ExportUtilities.saveBlobToFile as any).mock.lastCall;
-            expect(callArgs[1]).toBe('MyCustomGrid.pdf');
-        });
+        const callArgs = (ExportUtilities.saveBlobToFile as any).mock.lastCall;
+        expect(callArgs[1]).toBe('MyCustomGrid.pdf');
+    });
 
     it('should export grid with multi-column headers', async () => {
         TestBed.configureTestingModule({
@@ -232,7 +232,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export grid with nested multi-column headers', async () => {
         TestBed.configureTestingModule({
@@ -251,7 +251,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export grid with summaries', async () => {
         TestBed.configureTestingModule({
@@ -270,7 +270,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export hierarchical grid', async () => {
         TestBed.configureTestingModule({
@@ -294,7 +294,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export the correct number of child data rows from a hierarchical grid', async () => {
         const fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
@@ -336,7 +336,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(hGrid, options);
         await exportPromise;
         expect(drawDataRowSpy.mock.calls.length).toBe(expectedRows);
-        });
+    });
 
     it('should export tree grid with hierarchical data', async () => {
         TestBed.configureTestingModule({
@@ -355,7 +355,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should export tree grid with flat self-referencing data', async () => {
         TestBed.configureTestingModule({
@@ -374,7 +374,7 @@ describe('PDF Grid Exporter', () => {
         exporter.export(grid, options);
         await exportPromise;
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-        });
+    });
 
     it('should truncate long header text with ellipsis in multi-column headers', async () => {
         TestBed.configureTestingModule({
@@ -389,16 +389,17 @@ describe('PDF Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
 
-        const exportPromise = firstValueFrom(exporter.exportEnded);
-
         // Use smaller page size to force truncation
         options.pageSize = 'a5';
+
+        const exportPromise = firstValueFrom(exporter.exportEnded);
         exporter.export(grid, options);
-        await exportPromise;
+        const args = await exportPromise;
+
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            // The PDF should be created successfully even with long header text
-            expect(args.pdf).toBeDefined();
-        });
+        // The PDF should be created successfully even with long header text
+        expect(args.pdf).toBeDefined();
+    });
 
     describe('Pivot Grid PDF Export', () => {
         let pivotGrid: IgxPivotGridComponent;
@@ -413,18 +414,18 @@ describe('PDF Grid Exporter', () => {
 
         it('should export basic pivot grid', async () => {
             const exportPromise = firstValueFrom(exporter.exportEnded);
-        exporter.export(pivotGrid, options);
-        await exportPromise;
-        expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            exporter.export(pivotGrid, options);
+            await exportPromise;
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
         });
 
         it('should export pivot grid with row headers', async () => {
             pivotGrid.pivotUI.showRowHeaders = true;
 
             const exportPromise = firstValueFrom(exporter.exportEnded);
-        exporter.export(pivotGrid, options);
-        await exportPromise;
-        expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            exporter.export(pivotGrid, options);
+            await exportPromise;
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
         });
 
         it('should export pivot grid with horizontal row layout', async () => {
@@ -446,52 +447,52 @@ describe('PDF Grid Exporter', () => {
             fix.detectChanges();
 
             const exportPromise = firstValueFrom(exporter.exportEnded);
-        exporter.export(pivotGrid, options);
-        await exportPromise;
-        expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            exporter.export(pivotGrid, options);
+            await exportPromise;
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
         });
 
         it('should export pivot grid with custom page size', async () => {
             options.pageSize = 'letter';
 
             const exportPromise = firstValueFrom(exporter.exportEnded);
-        exporter.export(pivotGrid, options);
-        await exportPromise;
-        expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            exporter.export(pivotGrid, options);
+            await exportPromise;
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
         });
 
         it('should export pivot grid with landscape orientation', async () => {
             options.pageOrientation = 'landscape';
 
             const exportPromise = firstValueFrom(exporter.exportEnded);
-        exporter.export(pivotGrid, options);
-        await exportPromise;
-        expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            exporter.export(pivotGrid, options);
+            await exportPromise;
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
         });
 
         it('should export pivot grid without table borders', async () => {
             options.showTableBorders = false;
 
             const exportPromise = firstValueFrom(exporter.exportEnded);
-        exporter.export(pivotGrid, options);
-        await exportPromise;
-        expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            exporter.export(pivotGrid, options);
+            await exportPromise;
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
         });
 
         it('should export pivot grid with custom font size', async () => {
             options.fontSize = 14;
 
             const exportPromise = firstValueFrom(exporter.exportEnded);
-        exporter.export(pivotGrid, options);
-        await exportPromise;
-        expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            exporter.export(pivotGrid, options);
+            await exportPromise;
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
         });
 
         it('should export hierarchical pivot grid', async () => {
             fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fix.detectChanges();
             await fix.whenStable();
-            
+
             pivotGrid = fix.componentInstance.pivotGrid;
 
             const exportPromise = firstValueFrom(exporter.exportEnded);

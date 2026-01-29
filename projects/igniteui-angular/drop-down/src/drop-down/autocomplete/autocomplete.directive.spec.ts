@@ -1026,7 +1026,7 @@ class AutocompleteInputComponent extends AutocompleteComponent {
             <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
         </igx-input-group>
         <igx-drop-down #townsPanel>
-            @for (town of town; track town+$index) {
+            @for (town of towns; track town+$index) {
                 <igx-drop-down-item [value]="town">
                     {{town}}
                 </igx-drop-down-item>
@@ -1038,6 +1038,7 @@ class AutocompleteInputComponent extends AutocompleteComponent {
     `,
     imports: [
         ReactiveFormsModule,
+        IgxAutocompleteDirective,
         IgxInputGroupComponent,
         IgxInputDirective,
         IgxLabelDirective,
