@@ -408,6 +408,10 @@
             align-items: center;
             //gap: $title-gap--horizontal;
         }
+
+        %igx-stepper__step-indicator {
+            flex-shrink: 0;
+        }
     }
 
     %igx-stepper__step--start,
