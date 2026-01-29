@@ -181,7 +181,6 @@ export interface OverlayInfo {
     componentRef?: ComponentRef<any>;
     settings?: OverlaySettings;
     initialSize?: Size;
-    hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
     // calling animation.destroy in detach fires animation.done. This should not happen
     // this is why we should trace if animation ever started

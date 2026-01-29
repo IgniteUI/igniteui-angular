@@ -117,7 +117,6 @@ export class IgxOverlayService implements OnDestroy {
 
     private _componentId = 0;
     private _overlayInfos: OverlayInfo[] = [];
-    private _overlayElement: HTMLElement;
     private _document: Document;
     private _keyPressEventListener: Subscription;
     private destroy$ = new Subject<boolean>();
@@ -330,12 +329,11 @@ export class IgxOverlayService implements OnDestroy {
         // Append the content to the overlay
         info.settings = eventArgs.settings;
         this._overlayInfos.push(info);
-        info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
         info.initialSize = { width: elementRect.width, height: elementRect.height };
-        // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
+        // Get the size before wrapping the element so that it does not forget about inherited styles.
         this.getComponentSize(info);
-        this.moveElementToOverlay(info);
+        this.wrapElementInPlace(info);
         // Update the container size after moving if there is size.
         if (info.size) {
             info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
@@ -431,6 +429,16 @@ export class IgxOverlayService implements OnDestroy {
                 this.buildAnimationPlayers(info);
             }
         this.addModalClasses(info);
+
+        // Show the popover using the native API
+        if (info.wrapperElement && typeof (info.wrapperElement as any).showPopover === 'function') {
+            try {
+                (info.wrapperElement as any).showPopover();
+            } catch (_e) {
+                // If popover is already showing or error occurs, continue normally
+            }
+        }
+
         if (info.settings.positionStrategy.settings.openAnimation) {
             // TODO: should we build players again. This was already done in attach!!!
             // this.buildAnimationPlayers(info);
@@ -567,10 +575,13 @@ export class IgxOverlayService implements OnDestroy {
         if (eventArgs.cancel) {
             return;
         }
+
         this.removeModalClasses(info);
         if (info.settings.positionStrategy.settings.closeAnimation) {
             this.playCloseAnimation(info, event);
         } else {
+            // If no animation, hide immediately
+            this.hidePopoverElement(info);
             this.closeDone(info);
         }
     }
@@ -626,26 +637,41 @@ export class IgxOverlayService implements OnDestroy {
         return info;
     }
 
-    private placeElementHook(element: HTMLElement): HTMLElement {
-        if (!element.parentElement) {
-            return null;
-        }
-        const hook = this._document.createElement('div');
-        hook.style.display = 'none';
-        element.parentElement.insertBefore(hook, element);
-        return hook;
-    }
+    private wrapElementInPlace(info: OverlayInfo) {
+        const element = info.elementRef.nativeElement;
+        const parent = element.parentElement;
 
-    private moveElementToOverlay(info: OverlayInfo) {
+        if (!parent) {
+            console.warn('Cannot wrap element without parent');
+            return;
+        }
+
+        // Create wrapper with popover attribute and content element
         info.wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
-        this.getOverlayElement(info).appendChild(info.wrapperElement);
-        contentElement.appendChild(info.elementRef.nativeElement);
+
+        // Insert wrapper before the element in its current DOM position
+        parent.insertBefore(info.wrapperElement, element);
+
+        // Move element into the content element (wrapping it in place)
+        contentElement.appendChild(element);
+    }
+
+    private hidePopoverElement(info: OverlayInfo) {
+        // Hide the popover using the native API
+        if (info.wrapperElement && typeof (info.wrapperElement as any).hidePopover === 'function') {
+            try {
+                (info.wrapperElement as any).hidePopover();
+            } catch (_e) {
+                // If popover is already hidden or error occurs, continue normally
+            }
+        }
     }
 
     private getWrapperElement(): HTMLElement {
         const wrapper: HTMLElement = this._document.createElement('div');
         wrapper.classList.add('igx-overlay__wrapper');
+        wrapper.setAttribute('popover', 'manual');
         return wrapper;
     }
 
@@ -667,18 +693,6 @@ export class IgxOverlayService implements OnDestroy {
         wrapperElement.style.visibility = 'hidden';
         wrapperElement.appendChild(content);
         return content;
-    }
-
-    private getOverlayElement(info: OverlayInfo): HTMLElement {
-        if (info.settings.outlet) {
-            return info.settings.outlet.nativeElement || info.settings.outlet;
-        }
-        if (!this._overlayElement) {
-            this._overlayElement = this._document.createElement('div');
-            this._overlayElement.classList.add('igx-overlay');
-            this._document.body.appendChild(this._overlayElement);
-        }
-        return this._overlayElement;
     }
 
     private updateSize(info: OverlayInfo) {
@@ -708,33 +722,27 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private cleanUp(info: OverlayInfo) {
-        const child: HTMLElement = info.elementRef.nativeElement;
-        const outlet = this.getOverlayElement(info);
-        // if same element is shown in other overlay outlet will not contain
-        // the element and we should not remove it form outlet
-        if (outlet.contains(child)) {
-            outlet.removeChild(child.parentNode.parentNode);
+        const element = info.elementRef.nativeElement;
+
+        // Unwrap the element - move it back to where the wrapper is, then remove the wrapper
+        if (info.wrapperElement && info.wrapperElement.parentElement) {
+            const parent = info.wrapperElement.parentElement;
+            // Insert element before the wrapper (back to original position)
+            parent.insertBefore(element, info.wrapperElement);
+            // Remove the wrapper
+            parent.removeChild(info.wrapperElement);
         }
+
         if (info.componentRef) {
             this._appRef.detachView(info.componentRef.hostView);
             info.componentRef.destroy();
             delete info.componentRef;
         }
-        if (info.hook) {
-            info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
-            info.hook.parentElement.removeChild(info.hook);
-            delete info.hook;
-        }
 
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
 
-        // this._overlayElement.parentElement check just for tests that manually delete the element
         if (this._overlayInfos.length === 0) {
-            if (this._overlayElement && this._overlayElement.parentElement) {
-                this._overlayElement.parentElement.removeChild(this._overlayElement);
-                this._overlayElement = null;
-            }
             this.removeCloseOnEscapeListener();
         }
 
@@ -838,9 +846,18 @@ export class IgxOverlayService implements OnDestroy {
     private addOutsideClickListener(info: OverlayInfo) {
         if (info.settings.closeOnOutsideClick) {
             if (info.settings.modal) {
-                fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
+                // For modal overlays, listen to clicks on the wrapper element (backdrop)
+                // The wrapper fills the viewport, so clicks outside content will hit the wrapper
+                fromEvent(info.wrapperElement, 'click')
                     .pipe(takeUntil(this.destroy$))
-                    .subscribe((e: Event) => this._hide(info.id, e));
+                    .subscribe((e: Event) => {
+                        const target = e.target as HTMLElement;
+                        const contentElement = info.elementRef.nativeElement.parentElement;
+                        // Close if click is on wrapper but not on content or its children
+                        if (!contentElement.contains(target)) {
+                            this._hide(info.id, e);
+                        }
+                    });
             } else if (
                 //  if all overlays minus closing overlays equals one add the handler
                 this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -
@@ -924,7 +941,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private addModalClasses(info: OverlayInfo) {
         if (info.settings.modal) {
-            const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
+            const wrapperElement = info.wrapperElement;
             wrapperElement.classList.remove('igx-overlay__wrapper');
             this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
             requestAnimationFrame(() => {
@@ -935,7 +952,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private removeModalClasses(info: OverlayInfo) {
         if (info.settings.modal) {
-            const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
+            const wrapperElement = info.wrapperElement;
             this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.closeAnimation);
             wrapperElement.classList.remove('igx-overlay__wrapper--modal');
             wrapperElement.classList.add('igx-overlay__wrapper');
@@ -978,6 +995,8 @@ export class IgxOverlayService implements OnDestroy {
         if (info.openAnimationPlayer?.hasStarted()) {
             info.openAnimationPlayer.reset();
         }
+        // Hide the popover after close animation completes
+        this.hidePopoverElement(info);
         this.closeDone(info);
     }
 

@@ -6,7 +6,7 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin overlay($theme) {
-    @include css-vars($theme, '.igx-overlay__wrapper--modal, .igx-overlay__content--modal');
+    @include css-vars($theme, '.igx-overlay__wrapper--modal::backdrop, .igx-overlay__content--modal');
 
     %overlay-display {
         width: 0;
@@ -15,18 +15,51 @@
     }
 
     %overlay-wrapper {
-        position: fixed;
-        inset: 0;
+        // Wrapper is in normal DOM flow but becomes top-layer when popover is shown
+        display: contents;
+        border: none;
+        margin: 0;
+        padding: 0;
         background: transparent;
-        transition: background .25s $in-out-quad;
-        pointer-events: none;
-        z-index: 10005;
-        box-sizing: content-box;
+
+        // When shown as popover, fill the viewport
+        &:popover-open {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            overflow: hidden;
+            pointer-events: none;
+        }
     }
 
     %overlay-wrapper--modal {
-        background: var-get($theme, 'background-color');
-        pointer-events: initial;
+        &:popover-open {
+            // Modal wrapper should catch all clicks on backdrop
+            pointer-events: auto;
+        }
+
+        // Use ::backdrop pseudo-element for the modal backdrop
+        &::backdrop {
+            background: var-get($theme, 'background-color');
+            transition: background .25s $in-out-quad;
+            // Backdrop blocks all interactions
+            pointer-events: auto;
+        }
+    }
+
+    %overlay-wrapper--flex {
+        &:popover-open {
+            display: flex;
+        }
+    }
+
+    %overlay-wrapper--flex-container {
+        &:popover-open {
+            display: flex;
+            position: absolute;
+        }
     }
 
     %overlay-wrapper--flex {
@@ -40,12 +73,13 @@
 
     %overlay-content {
         position: absolute;
-        pointer-events: all;
+        pointer-events: auto;
         box-sizing: content-box;
     }
 
     %overlay-content--modal {
-        pointer-events: initial;
+        // Content should catch clicks to prevent closing when clicking inside
+        pointer-events: auto;
     }
 
     %overlay-content--elastic {
