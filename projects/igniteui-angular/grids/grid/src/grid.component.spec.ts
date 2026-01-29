@@ -18,6 +18,7 @@ import { AsyncPipe } from '@angular/common';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
+import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
@@ -40,6 +41,12 @@ describe('IgxGrid Component Tests #grid', () => {
             })
             .compileComponents();
         }));
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
+        });
 
         it('should initialize a grid with columns from markup', () => {
             const fix = TestBed.createComponent(IgxGridMarkupDeclarationComponent);
@@ -2022,7 +2029,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.navigateTo(50, 16);
             fix.detectChanges();
-            await wait();
+            await wait(60);
             fix.detectChanges();
 
             expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');
@@ -2169,6 +2176,38 @@ describe('IgxGrid Component Tests #grid', () => {
 
                 // first column takes new min
                 expect(col1.calcPixelWidth).toBe(500);
+            });
+
+            it('in columns with no width and min-widths should recalculate and re-apply constraints to all cols.', () => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 3 cols
+                fix.componentInstance.initColumnsRows(5, 3);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                grid.columns[0].minWidth = "80px";
+                grid.columns[1].minWidth = "90px";
+                grid.columns[2].minWidth = "130px";
+
+                grid.width = "300px";
+                fix.detectChanges();
+
+                expect(grid.columns[0].calcWidth).toBe(80);
+                expect(grid.columns[1].calcWidth).toBe(90);
+                expect(grid.columns[2].calcWidth).toBe(130);
+
+                expect(grid.hasHorizontalScroll()).toBe(false);
+                expect(grid.isHorizontalScrollHidden).toBe(true);
+
+                grid.width = "290px";
+                fix.detectChanges();
+
+                expect(grid.columns[0].calcWidth).toBe(80);
+                expect(grid.columns[1].calcWidth).toBe(90);
+                expect(grid.columns[2].calcWidth).toBe(130);
+
+                expect(grid.hasHorizontalScroll()).toBe(true);
+                expect(grid.isHorizontalScrollHidden).toBe(false);
             });
         });
 

@@ -35,10 +35,11 @@ import {
 import { GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, igxI18N, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxChipComponent, IgxBadgeComponent, IgxDatePickerComponent, IgxCalendarComponent, IgxIconComponent } from 'igniteui-angular';
+import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
 
 const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -1217,10 +1218,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringComponent);
-            const strings = GridResourceStringsEN;
+            const strings = Object.assign({}, GridResourceStringsEN);
             strings.igx_grid_filter = 'My filter';
             strings.igx_grid_filter_row_close = 'My close';
-            igxI18N.instance().changei18n(strings);
+            changei18n(strings);
             fix.detectChanges();
 
             const initialChips = GridFunctions.getFilteringChips(fix);
@@ -1238,7 +1239,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(close.nativeElement.childNodes[1].textContent.trim()).toBe('My close');
             expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
 
-            igxI18N.instance().changei18n({
+            changei18n({
                 igx_grid_filter: 'Filter',
                 igx_grid_filter_row_close: 'Close'
             });
@@ -5074,6 +5075,62 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
+        it('Should properly scroll to prev/next period in custom date filter dialog.', fakeAsync(() => {
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            const datePicker = expr.querySelector('igx-date-picker');
+            const input = datePicker.querySelector('input');
+            UIInteractions.simulateClickEvent(input);
+            fix.detectChanges();
+
+            // Click today item.
+            const calendar = document.querySelector('igx-calendar');
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
+            tick(100);
+            fix.detectChanges();
+            flush();
+
+            // Reopen calender and click previous month button.
+            UIInteractions.simulateClickEvent(input);
+            fix.detectChanges();
+
+            const prevMonthButton = fix.debugElement.queryAll(
+                                By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS),
+                            )[0].nativeElement;
+            prevMonthButton.focus();
+            UIInteractions.simulateMouseEvent(
+                "mousedown",
+                prevMonthButton,
+                0,
+                0,
+            );
+            tick();
+            UIInteractions.simulateMouseEvent(
+                "mouseup",
+                prevMonthButton,
+                0,
+                0,
+            );
+            fix.detectChanges();
+
+            // Verify the calendar is scrolled to previous month.
+            const headerLabel = document.querySelector('igx-calendar').querySelector('.igx-calendar-picker__date') as HTMLElement;
+            const today = new Date();
+            const prevMonth = new Date(today.setMonth(today.getMonth() - 1));
+            const monthName = prevMonth.toLocaleString('default', { month: 'short' });
+            expect(headerLabel.innerText.trim()).toMatch(`${monthName}`);
+        }));
+
         it('Should take pipeArgs weekStart property as calendar\'s default.', fakeAsync(() => {
             const column = grid.getColumnByName('ReleaseDate');
 
@@ -6031,6 +6088,39 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
             expect(checkboxes[0].indeterminate).toBeTrue();
+        }));
+
+        it('Should enable the `Apply` button & filter properly when "Add to current filter selection" is the only selected option.', fakeAsync(() => {
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '5', fix);
+            fix.detectChanges();
+            tick();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+            expect(checkboxes.length).toBe(3);
+            checkboxes[0].click(); // Uncheck 'Select All'
+            checkboxes[1].click(); // Check 'Add to current filter selection'
+            fix.detectChanges();
+            tick();
+
+            // Click 'apply' button to apply filter.
+            const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix, excelMenu);
+            expect(applyButton.disabled).toBeFalse();
+            applyButton.click();
+            fix.detectChanges();
+            tick();
+
+            // Get the results and verify that they match the list items.
+            const gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads');
+
+            // Record with '254' downloads is filtered out.
+            expect(gridCellValues.length).toEqual(7);
         }));
 
         it('Should commit and close ESF on pressing \'Enter\'', fakeAsync(() => {

@@ -22,7 +22,7 @@
 @if (column.dataType === 'date') {
     <igx-date-picker #picker
         [weekStart]="column.pipeArgs.weekStart ?? weekStart"
-        [(value)]="searchVal"
+        [(ngModel)]="searchVal"
         [locale]="grid.locale"
         [outlet]="grid.outlet"
         (click)="picker.open()"

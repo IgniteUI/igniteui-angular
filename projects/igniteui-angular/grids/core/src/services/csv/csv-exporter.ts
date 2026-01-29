@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { DEFAULT_OWNER, ExportHeaderType, IColumnInfo, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
+import { DEFAULT_OWNER, ExportHeaderType, ExportRecordType, IColumnInfo, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
@@ -50,10 +50,36 @@ export class IgxCsvExporterService extends IgxBaseExporter {
     private _stringData: string;
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions, done: () => void) {
-        const dimensionKeys = data[0]?.dimensionKeys;
-        data = dimensionKeys?.length ?
-            data.map((item) => item.rawData):
-            data.map((item) => item.data);
+        const firstDataElement = data[0];
+        const dimensionKeys = firstDataElement?.dimensionKeys;
+
+        const dataRecords = dimensionKeys?.length ?
+            data.filter(item => item.type !== ExportRecordType.SummaryRecord).map((item) => item.rawData):
+            data.filter(item => item.type !== ExportRecordType.SummaryRecord).map((item) => item.data);
+
+        // Get summary records if exportSummaries is enabled
+        const summaryRecords: any[] = [];
+        if (options.exportSummaries) {
+            const summaries = data.filter(item => item.type === ExportRecordType.SummaryRecord);
+            for (const summary of summaries) {
+                // Convert summary record data to a flat object format for CSV
+                const summaryData: any = {};
+                if (summary.data) {
+                    for (const [key, value] of Object.entries(summary.data)) {
+                        if (value && typeof value === 'object' && 'label' in value && 'value' in value) {
+                            summaryData[key] = `${value.label}: ${value.value}`;
+                        } else {
+                            summaryData[key] = value;
+                        }
+                    }
+                }
+                summaryRecords.push(summaryData);
+            }
+        }
+
+        // Combine data records and summary records
+        const allRecords = [...dataRecords, ...summaryRecords];
+
         const columnList = this._ownersMap.get(DEFAULT_OWNER);
         const columns = columnList?.columns.filter(c => c.headerType === ExportHeaderType.ColumnHeader);
         if (dimensionKeys) {
@@ -72,13 +98,13 @@ export class IgxCsvExporterService extends IgxBaseExporter {
             columns.unshift(...dimensionCols);
         }
 
-        const csvData = new CharSeparatedValueData(data, options.valueDelimiter, columns);
+        const csvData = new CharSeparatedValueData(allRecords, options.valueDelimiter, columns);
         csvData.prepareDataAsync((r) => {
             this._stringData = r;
             this.saveFile(options);
             this.exportEnded.emit({ csvData: this._stringData });
             done();
-        });
+        }, options.alwaysExportHeaders);
     }
 
     private saveFile(options: IgxCsvExporterOptions) {

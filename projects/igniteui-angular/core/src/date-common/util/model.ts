@@ -170,10 +170,10 @@ export class CalendarDay {
                 return prevYearDec31.calculateSimpleWeekNumber(weekStart);
             }
 
-            const daysSinceFirstWeek = Math.floor((this.timestamp - firstWeekStart.timestamp) / millisecondsInDay);
+            const daysSinceFirstWeek = Math.round((this.timestamp - firstWeekStart.timestamp) / millisecondsInDay);
             return Math.floor(daysSinceFirstWeek / 7) + 1;
         } else {
-            const daysSinceYearStart = Math.floor((this.timestamp - yearStart.timestamp) / millisecondsInDay);
+            const daysSinceYearStart = Math.round((this.timestamp - yearStart.timestamp) / millisecondsInDay);
             return Math.floor(daysSinceYearStart / 7) + 1;
         }
     }
@@ -201,7 +201,7 @@ export class CalendarDay {
      * Calculates the number of weeks between two Thursday dates (ISO 8601 helper).
      */
     private getWeeksDifference(currentThursday: CalendarDay, firstWeekThursday: CalendarDay): number {
-        const daysDifference = Math.floor((currentThursday.timestamp - firstWeekThursday.timestamp) / millisecondsInDay);
+        const daysDifference = Math.round((currentThursday.timestamp - firstWeekThursday.timestamp) / millisecondsInDay);
         return Math.floor(daysDifference / 7);
     }
 

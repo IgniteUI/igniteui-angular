@@ -63,7 +63,8 @@ import {
     DatePartDeltas,
     DatePart,
     isDateInRanges,
-    IgxOverlayOutletDirective
+    IgxOverlayOutletDirective,
+    I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -111,6 +112,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _renderer = inject(Renderer2);
     private platform = inject(PlatformUtil);
     private cdr = inject(ChangeDetectorRef);
+    private _i18nFormatter = inject(I18N_FORMATTER);
 
 
     /**
@@ -460,7 +462,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private get inputGroupElement(): HTMLElement {
-        return this.inputGroup?.element.nativeElement;
+        return this.inputGroup?.element.nativeElement.querySelector('.igx-input-group__bundle');
     }
 
     private get dateValue(): Date {
@@ -528,7 +530,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     constructor() {
         super();
-        this.locale = this.locale || this._localeId;
+        this.initLocale();
     }
 
     /** @hidden @internal */
@@ -771,8 +773,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
-
-        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
@@ -1006,5 +1006,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
         componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.selectToday());
+    }
+
+    protected override updateResources(): void {
+        this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false, this._locale);
     }
 }

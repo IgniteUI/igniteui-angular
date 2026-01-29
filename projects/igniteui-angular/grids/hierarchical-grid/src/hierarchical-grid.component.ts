@@ -33,7 +33,7 @@ import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, Igx
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { EntityType, FieldType, IFilteringExpressionsTree, IgxActionStripToken, IgxOverlayOutletDirective, flatten } from 'igniteui-angular/core';
+import { EntityType, FieldType, IFilteringExpressionsTree, IgxActionStripToken, IgxOverlayOutletDirective, flatten, IGridResourceStrings } from 'igniteui-angular/core';
 import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 import { IgxGridCellMergePipe, IgxGridComponent, IgxGridFilteringPipe, IgxGridSortingPipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
 
@@ -49,8 +49,11 @@ let NEXT_ID = 0;
     imports: [NgClass]
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
+    /* blazorSuppress */
     public readonly gridAPI = inject<IgxHierarchicalGridAPIService>(IGX_GRID_SERVICE_BASE);
+    /* blazorSuppress */
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    /* blazorSuppress */
     public cdr = inject(ChangeDetectorRef);
 
     @Input()
@@ -574,6 +577,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses EN resources.
+     */
+    @Input()
+    public override set resourceStrings(value: IGridResourceStrings) {
+        super.resourceStrings = value;
+        if (!this.parent) {
+            this.gridAPI.getChildGrids(true).forEach((grid) => {
+                grid.resourceStrings = value;
+            });
+        }
+    }
+
+    public override get resourceStrings() {
+        return super.resourceStrings;
+    }
+
+    /**
      * Gets the unique identifier of the parent row. It may be a `string` or `number` if `primaryKey` of the
      * parent grid is set or an object reference of the parent record otherwise.
      * ```typescript
@@ -675,6 +698,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
         if (this.parent) {
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
+            this._resourceStrings = this.rootGrid._resourceStrings;
         }
 
         this.headSelectorsTemplates = this.parentIsland ?

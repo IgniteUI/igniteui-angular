@@ -10,14 +10,17 @@ import {
     IQueryBuilderResourceStrings,
     QueryBuilderResourceStringsEN,
     recreateTree,
+    IgxOverlayOutletDirective,
     getCurrentResourceStrings,
-    IgxOverlayOutletDirective
+    onResourceChangeHandle
 } from 'igniteui-angular/core';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
+import { IgxQueryBuilderSearchValueContext } from './query-builder.common';
 
+/* wcElementTag: igc-query-builder */
 /**
  * A component used for operating with complex filters by creating or editing conditions
  * and grouping them using AND/OR logic.
@@ -174,7 +177,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -184,10 +187,22 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public disableEntityChange = false;
 
     /**
+     * Sets/gets the search value template.
+     */
+    @Input()
+    public set searchValueTemplate(template: TemplateRef<IgxQueryBuilderSearchValueContext>) {
+        this._searchValueTemplate = template;
+    }
+
+    public get searchValueTemplate(): TemplateRef<IgxQueryBuilderSearchValueContext> {
+        return this._searchValueTemplate || this.searchValueTemplateDirective?.template;
+    }
+
+    /**
      * Disables return fields changes at the root level.
      */
-     @Input()
-     public disableReturnFieldsChange = false;
+    @Input()
+    public disableReturnFieldsChange = false;
 
     /**
      * Event fired as the expression tree is changed.
@@ -202,8 +217,8 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxQueryBuilderSearchValueTemplateDirective, { read: TemplateRef })
-    public searchValueTemplate: TemplateRef<any>;
+    @ContentChild(IgxQueryBuilderSearchValueTemplateDirective)
+    protected searchValueTemplateDirective: IgxQueryBuilderSearchValueTemplateDirective;
 
     /**
      * @hidden @internal
@@ -212,14 +227,19 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public queryTree: IgxQueryBuilderTreeComponent;
 
     private destroy$ = new Subject<any>();
-    private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
     private _expressionTree: IExpressionTree;
     private _fields: FieldType[];
     private _entities: EntityType[];
     private _shouldEmitTreeChange = true;
+    private _searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueContext>;
 
     constructor() {
         this.registerSVGIcons();
+        onResourceChangeHandle(this.destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+        }, this);
     }
 
     /**
@@ -293,7 +313,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
         this.queryTree.setAddButtonFocus();
     }
 
-    public onExpressionTreeChange(tree: IExpressionTree) {
+    protected onExpressionTreeChange(tree: IExpressionTree) {
         if (tree && this.entities && tree !== this._expressionTree) {
             this._expressionTree = recreateTree(tree, this.entities);
         } else {

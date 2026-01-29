@@ -332,7 +332,7 @@ export interface GridServiceType {
     grid: GridType;
     /** Represents the type of the CRUD service (Create, Read, Update, Delete) operations on the grid data. */
     crudService: any;
-    /** A service responsible for handling column moving within the grid. It contains a reference to the column, its icon, and indicator for cancelation. */
+    /** A service responsible for handling column moving within the grid. It contains a reference to the column, its icon, and indicator for cancellation. */
     cms: IgxColumnMovingService;
 
     /** Represents a method declaration for retrieving the data used in the grid. The returned values could be of any type */
@@ -504,6 +504,8 @@ export interface GridType extends IGridDataBindable {
     crudService: any;
     /** @hidden @internal */
     summaryService: any;
+    /** @hidden @internal */
+    i18nFormatter: any;
 
 
 
@@ -905,7 +907,7 @@ export interface GridType extends IGridDataBindable {
     refreshSearch(): void;
     getDefaultExpandState(record: any): boolean;
     trackColumnChanges(index: number, column: any): any;
-    getPossibleColumnWidth(baseWidth?: number, minColumnWidth?: number): string;
+    getPossibleColumnWidth(baseWidth?: number): string;
     resetHorizontalVirtualization(): void;
     hasVerticalScroll(): boolean;
     getVisibleContentHeight(): number;

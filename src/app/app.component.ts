@@ -4,17 +4,31 @@ import {
     ViewChild,
     HostBinding,
     inject,
-    signal,
+    signal
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
 import { IGX_NAVIGATION_DRAWER_DIRECTIVES, IgxNavigationDrawerComponent } from 'igniteui-angular/navigation-drawer';
 import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
+
+// I18n
+import { registerI18n } from 'igniteui-angular';
+import { IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT, IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT } from 'igniteui-angular-i18n';
+import localeBG from '@angular/common/locales/bg';
+import localeEN from '@angular/common/locales/en';
+import localeDE from '@angular/common/locales/de';
+import localeES from '@angular/common/locales/es';
+import localeFR from '@angular/common/locales/fr';
+import localeIT from '@angular/common/locales/it';
+import localeJA from '@angular/common/locales/ja';
+import localeKO from '@angular/common/locales/ko';
+import localeHans from '@angular/common/locales/zh-Hans';
+import localeHant from '@angular/common/locales/zh-Hant';
 
 @Component({
     selector: 'app-root',
@@ -30,7 +44,7 @@ import { IgxRippleDirective } from 'igniteui-angular/directives';
         PageHeaderComponent,
         RouterOutlet,
         IgxRippleDirective,
-        PropertiesPanelComponent
+        PropertiesPanelComponent,
     ]
 })
 export class AppComponent implements OnInit {
@@ -786,5 +800,28 @@ export class AppComponent implements OnInit {
         this.iconService.addSvgIcon('fa-breeze', '../assets/images/card/icons/breeze.svg', 'fa-solid');
         this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
         this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
+
+        // Angular locale data
+        registerLocaleData(localeBG);
+        registerLocaleData(localeEN);
+        registerLocaleData(localeDE);
+        registerLocaleData(localeES);
+        registerLocaleData(localeFR);
+        registerLocaleData(localeIT);
+        registerLocaleData(localeJA);
+        registerLocaleData(localeKO);
+        registerLocaleData(localeHans);
+        registerLocaleData(localeHant);
+
+        registerI18n(IgxResourceStringsBG, 'bg');
+        registerI18n(IgxResourceStringsDE, 'de');
+        registerI18n(IgxResourceStringsES, 'es');
+        registerI18n(IgxResourceStringsFR, 'fr');
+        registerI18n(IgxResourceStringsIT, 'it');
+        registerI18n(IgxResourceStringsJA, 'ja');
+        registerI18n(IgxResourceStringsKO, 'ko');
+        registerI18n(IgxResourceStringsZHHANS, 'zh-Hans');
+        registerI18n(IgxResourceStringsZHHANT, 'zh-Hant');
     }
+
 }

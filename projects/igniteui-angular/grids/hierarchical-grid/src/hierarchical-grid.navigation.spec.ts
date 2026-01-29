@@ -10,8 +10,9 @@ import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../te
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
+import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 
-const DEBOUNCE_TIME = 50;
+const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 
@@ -37,11 +38,20 @@ describe('IgxHierarchicalGrid Navigation', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout * 2;
     }));
 
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+        });
+    }));
+
     afterAll(() => jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout);
 
     describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            });
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -108,7 +118,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', childGridContent, false, false, false);
             fixture.detectChanges();
-            await wait();
+            await wait(60);
             // parent should scroll down so that cell in child is in view.
             const selectedCell = fixture.componentInstance.selectedCell;
             const selectedCellElem = childGrid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field) as IgxGridCellComponent;
@@ -615,7 +625,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             await wait(DEBOUNCE_TIME);
 
             hierarchicalGrid.navigateTo(2);
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             const cell = hierarchicalGrid.gridAPI.get_cell_by_index(2, 'ChildLevels');
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -623,7 +633,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             await wait();
 
             UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
-            fixture.detectChanges();
+            fixture.detectChanges(DEBOUNCE_TIME);
             await wait(DEBOUNCE_TIME);
 
             const activeEl = document.activeElement;
@@ -725,17 +735,17 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
         it('should allow navigating up from parent into nested child grid', async () => {
             hierarchicalGrid.verticalScrollContainer.scrollTo(2);
-            await wait();
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const child = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const lastIndex =  child.dataView.length - 1;
             child.verticalScrollContainer.scrollTo(lastIndex);
-            await wait();
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             child.verticalScrollContainer.scrollTo(lastIndex);
-            await wait();
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const parentCell = hierarchicalGrid.gridAPI.get_cell_by_index(2, 'ID');
@@ -935,7 +945,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
             firstChildGrid.verticalScrollContainer.scrollTo(9);
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             const firstChildCell =  firstChildGrid.gridAPI.get_cell_by_index(9, 'Col1');
             GridFunctions.focusCell(fixture, firstChildCell);
@@ -954,6 +964,9 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
     describe('IgxHierarchicalGrid Navigation API #hGrid', () => {
         beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
+            });
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -1004,16 +1017,16 @@ describe('IgxHierarchicalGrid Navigation', () => {
             };
 
             hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested], () => {
-                fixture.detectChanges();
+            fixture.detectChanges();
                 const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot]).nativeElement;
-                expect(childGrid).not.toBe(undefined);
+            expect(childGrid).not.toBe(undefined);
                 const childGridNested =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot, targetNested]).nativeElement;
-                expect(childGridNested).not.toBe(undefined);
+            expect(childGridNested).not.toBe(undefined);
 
-                const parentBottom = childGrid.getBoundingClientRect().bottom;
-                const parentTop = childGrid.getBoundingClientRect().top;
-                // check it's in view within its parent
-                expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
+            const parentBottom = childGrid.getBoundingClientRect().bottom;
+            const parentTop = childGrid.getBoundingClientRect().top;
+            // check it's in view within its parent
+            expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
                 done();
             });
         });

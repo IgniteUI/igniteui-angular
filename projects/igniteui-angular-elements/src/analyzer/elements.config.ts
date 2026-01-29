@@ -1,3 +1,4 @@
+import { IgxQueryBuilderComponent } from "../../../igniteui-angular/query-builder";
 import { IgxGridComponent } from "../../../igniteui-angular/grids/grid";
 import { IgxHierarchicalGridComponent } from "../../../igniteui-angular/grids/hierarchical-grid";
 import {
@@ -5,11 +6,14 @@ import {
   IgxPivotGridComponent,
 } from "../../../igniteui-angular/grids/pivot-grid";
 import { IgxTreeGridComponent } from "../../../igniteui-angular/grids/tree-grid";
+import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
+import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/paginator/src/paginator/paginator.component";
 import { IgxPaginatorToken } from "../../../igniteui-angular/paginator/src/paginator/token";
 import { IgxColumnGroupComponent } from "../../../igniteui-angular/grids/core/src/columns/column-group.component";
 import { IgxColumnComponent } from "../../../igniteui-angular/grids/core/src/columns/column.component";
 import { IgxColumnLayoutComponent } from "../../../igniteui-angular/grids/core/src/columns/column-layout.component";
+import { IgxQueryBuilderHeaderComponent } from "../../../igniteui-angular/query-builder/src/query-builder/query-builder-header.component";
 import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-editing-actions.component";
 import { IgxActionStripActionsToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-pinning-actions.component";
@@ -22,8 +26,6 @@ import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/grids
 import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-hiding.component";
 import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-pinning.component";
 import { IgxRowIslandComponent } from "../../../igniteui-angular/grids/hierarchical-grid/src/row-island.component";
-import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
-import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [
@@ -32,6 +34,7 @@ export const registerComponents = [
   IgxTreeGridComponent,
   IgxPivotGridComponent,
   IgxPivotDataSelectorComponent,
+  IgxQueryBuilderComponent,
 ];
 
 //// WARNING: Code below this line is auto-generated and any modifications will be overwritten
@@ -830,6 +833,29 @@ export var registerConfig = [
     ],
   },
   {
+    component: IgxQueryBuilderComponent,
+    selector: "igc-query-builder",
+    parents: [],
+    contentQueries: [],
+    additionalProperties: [],
+    methods: ["canCommit", "commit", "discard"],
+    templateProps: ["searchValueTemplate"],
+    boolProps: [
+      "showEntityChangeDialog",
+      "disableEntityChange",
+      "disableReturnFieldsChange",
+    ],
+  },
+  {
+    component: IgxQueryBuilderHeaderComponent,
+    selector: "igc-query-builder-header",
+    parents: [IgxQueryBuilderComponent],
+    contentQueries: [],
+    additionalProperties: [],
+    methods: [],
+    boolProps: ["showLegend"],
+  },
+  {
     component: IgxRowIslandComponent,
     selector: "igc-row-island",
     parents: [IgxHierarchicalGridComponent, IgxRowIslandComponent],
@@ -874,8 +900,6 @@ export var registerConfig = [
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
       { name: "columns" },
-      { name: "pinnedStartColumns" },
-      { name: "pinnedEndColumns" },
       { name: "pinnedRows" },
     ],
     methods: [
