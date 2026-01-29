@@ -726,21 +726,17 @@ describe('Rendering Tests', () => {
             const fixture = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
 
-            const cmp = fixture.componentInstance;
-            const stepperInstance = cmp.stepper;
-
-            expect(stepperInstance.orientation).toBe(IgxStepperOrientation.Vertical);
-            expect(stepperInstance.titlePosition).toBe(IgxStepperTitlePosition.End);
-
+            const stepperInstance = fixture.componentInstance.stepper;
             const indicator = stepperInstance.steps[0].nativeElement.querySelector(`.${STEP_INDICATOR_CLASS}`) as HTMLElement;
 
-            expect(indicator).not.toBeNull();
-            expect(getComputedStyle(indicator).flexShrink).toBe('0');
-
+            const { minWidth } = getComputedStyle(indicator);
             const { width, height } = indicator.getBoundingClientRect();
+
+            expect(minWidth).not.toBe('0px');
+            expect(minWidth).not.toBe('auto');
             expect(Math.abs(width - height)).toBeLessThan(1.5);
+            expect(Math.abs(width - parseFloat(minWidth))).toBeLessThan(1.5);
         }));
     });
 
