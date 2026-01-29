@@ -185,14 +185,14 @@ describe('IgxGrid - Cell component #grid', () => {
         it('should fit last cell in the available display container when there is vertical and horizontal scroll.', (async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
-            await wait();
+            await wait(16);
             fix.detectChanges();
 
             const firsCell = GridFunctions.getRowCells(fix, 1)[0];
             expect(GridFunctions.getValueFromCellElement(firsCell)).toEqual('0');
 
             fix.componentInstance.scrollLeft(999999);
-            await wait();
+            await wait(16);
             // This won't work always in debugging mode due to the angular native events behavior, so errors are expected
             fix.detectChanges();
             const cells = GridFunctions.getRowCells(fix, 1);
@@ -238,7 +238,7 @@ describe('IgxGrid - Cell component #grid', () => {
             const scrollbar = grid.headerContainer.getScroll();
             scrollbar.scrollLeft = 10000;
             fix.detectChanges();
-            await wait();
+            await wait(16);
             const lastColumnCells = grid.columnList.get(grid.columnList.length - 1).cells;
             fix.detectChanges();
             lastColumnCells.forEach((item) => {
