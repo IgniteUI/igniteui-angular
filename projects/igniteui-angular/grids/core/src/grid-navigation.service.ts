@@ -520,7 +520,8 @@ export class IgxGridNavigationService {
         return Math.ceil(this.grid.headerContainer.scrollPosition);
     }
     public get containerTopOffset() {
-        return parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+        const transform = this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.transform
+        return  Number(transform.match(/translateY\((-?\d+\.?\d*)px\)/)?.[1])
     }
 
     protected getColumnUnpinnedIndex(visibleColumnIndex: number) {
