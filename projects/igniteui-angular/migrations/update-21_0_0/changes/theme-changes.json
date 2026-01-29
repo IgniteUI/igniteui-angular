@@ -1,0 +1,53 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+      {
+        "name": "$resting-shadow",
+        "remove": true,
+        "owner": "outlined-button-theme",
+        "type": "property"
+      },
+      {
+        "name": "$hover-shadow",
+        "remove": true,
+        "owner": "outlined-button-theme",
+        "type": "property"
+      },
+      {
+        "name": "$focus-shadow",
+        "remove": true,
+        "owner": "outlined-button-theme",
+        "type": "property"
+      },
+      {
+        "name": "$active-shadow",
+        "remove": true,
+        "owner": "outlined-button-theme",
+        "type": "property"
+      },
+      {
+        "name": "$resting-shadow",
+        "remove": true,
+        "owner": "flat-button-theme",
+        "type": "property"
+      },
+      {
+        "name": "$hover-shadow",
+        "remove": true,
+        "owner": "flat-button-theme",
+        "type": "property"
+      },
+      {
+        "name": "$focus-shadow",
+        "remove": true,
+        "owner": "flat-button-theme",
+        "type": "property"
+      },
+      {
+        "name": "$active-shadow",
+        "remove": true,
+        "owner": "flat-button-theme",
+        "type": "property"
+      }
+  ]
+}

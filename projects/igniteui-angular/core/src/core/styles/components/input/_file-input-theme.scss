@@ -1,0 +1,117 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin file-input($theme) {
+    @include css-vars($theme, '.igx-file-input');
+    $variant: map.get($theme, '_meta', 'theme');
+
+    %file-names {
+        color: var-get($theme, 'file-names-foreground');
+        background-color: var-get($theme, 'file-names-background');
+    }
+
+    %file-names--filled {
+        color: var-get($theme, 'file-names-foreground--filled');
+        background-color: var-get($theme, 'file-names-background--filled');
+    }
+
+    %file-names--focused {
+        color: var-get($theme, 'file-names-foreground--focused');
+        background-color: var-get($theme, 'file-names-background--focused');
+    }
+
+    %file-names--disabled {
+        color: var-get($theme, 'file-names-foreground--disabled');
+        background-color: var-get($theme, 'file-names-background--disabled');
+    }
+
+    %upload-button-wrapper {
+        background: #{var-get($theme, 'file-selector-button-background')}
+    }
+
+    %upload-button {
+        border-inline: 0;
+
+        // That button can't have :focus, :active, :hover states, that's why we dont need to override them here.
+        --foreground: #{var-get($theme, 'file-selector-button-foreground')};
+        --background: transparent;
+        --resting-elevation: none;
+        --shadow-color: none;
+        --border-radius: 0;
+    }
+
+
+    %upload-button-wrapper--filled {
+        color: #{var-get($theme, 'file-selector-button-foreground--filled')};
+        background: #{var-get($theme, 'file-selector-button-background--filled')};
+    }
+
+    %upload-button--filled {
+        --foreground: #{var-get($theme, 'file-selector-button-foreground--filled')};
+        --background: transparent;
+    }
+
+    %upload-button-wrapper--focused {
+        color: #{var-get($theme, 'file-selector-button-foreground--focused')};
+        background: #{var-get($theme, 'file-selector-button-background--focused')};
+    }
+
+    %upload-button--focused {
+        --foreground: #{var-get($theme, 'file-selector-button-foreground--focused')};
+        --background: transparent;
+    }
+
+    %upload-button-wrapper--disabled {
+        color: #{var-get($theme, 'file-selector-button-foreground--disabled')};
+        background: #{var-get($theme, 'file-selector-button-background--disabled')};
+    }
+
+    %upload-button--disabled {
+        --disabled-foreground: #{var-get($theme, 'file-selector-button-foreground--disabled')};
+        --disabled-background: transparent;
+    }
+
+    %clear-icon {
+        &:focus {
+            @if $variant == 'indigo' or $variant == 'fluent' {
+                background-color: color($color: 'primary', $variant: 500);
+                color: contrast-color($color: 'primary', $variant: 600);
+            }
+
+            @if $variant == 'material' {
+                background-color: transparent;
+                color: color($color: 'secondary', $variant: 500);
+            }
+
+            @if $variant == 'bootstrap' {
+                color: contrast-color($color: 'primary', $variant: 600);
+                background-color: color($color: 'primary', $variant: 500);
+            }
+        }
+    }
+}
+
+/// Adds typography styles for the .igx-file-input.
+/// Uses the 'subtitle-1', 'caption'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(file-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+@mixin file-input-typography(
+    $categories: (
+        file-text: 'subtitle-1'
+    )
+) {
+    $file-text: map.get($categories, 'file-text');
+
+    %file-names {
+        @include type-style($file-text) {
+            margin: 0;
+        }
+    }
+}

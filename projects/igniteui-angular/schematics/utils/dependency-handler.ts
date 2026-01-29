@@ -20,12 +20,15 @@ const schematicsPackage = '@igniteui/angular-schematics';
  */
 export const DEPENDENCIES_MAP: PackageEntry[] = [
     // dependencies
-    { name: 'fflate', target: PackageTarget.REGULAR },
+    { name: 'fflate', target: PackageTarget.NONE },
+    { name: 'jspdf', target: PackageTarget.NONE },
     { name: 'tslib', target: PackageTarget.NONE },
     { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
     { name: 'lodash-es', target: PackageTarget.NONE },
     { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
+    { name: 'igniteui-i18n-core', target: PackageTarget.REGULAR },
     { name: 'igniteui-theming', target: PackageTarget.NONE },
+    { name: 'igniteui-webcomponents', target: PackageTarget.NONE },
     // peerDependencies
     { name: '@angular/forms', target: PackageTarget.NONE },
     { name: '@angular/common', target: PackageTarget.NONE },
