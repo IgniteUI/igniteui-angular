@@ -724,7 +724,7 @@ describe('Rendering Tests', () => {
             testAnimationBehavior('fade', fix, false);
         }));
 
-        fit('should not shrink the step indicator in vertical orientation when titlePosition="end" and the title is very long', fakeAsync(() => {
+        it('should not shrink the step indicator in vertical orientation when titlePosition="end" and the title is very long', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
             fixture.detectChanges();
             tick();
