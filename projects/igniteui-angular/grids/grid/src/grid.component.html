@@ -199,7 +199,7 @@
     </div>
 </div>
 
-<div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
+<div class="igx-grid__scroll" role="presentation" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
     <div class="igx-grid__scroll-start" [style.width.px]="pinnedStartWidth" [style.min-width.px]="pinnedStartWidth"></div>
     <div class="igx-grid__scroll-main" [style.width.px]="unpinnedWidth">
         <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>
@@ -208,7 +208,7 @@
     <div class="igx-grid__scroll-end" [style.float]="'right'" [style.width.px]="pinnedEndWidth" [style.min-width.px]="pinnedEndWidth" [hidden]="pinnedEndWidth === 0"></div>
 </div>
 
-<div class="igx-grid__footer" #footer>
+<div class="igx-grid__footer" role="presentation" #footer>
     <ng-content select="igx-grid-footer,igc-grid-footer"></ng-content>
     <ng-content select="igx-paginator,igc-paginator"></ng-content>
 </div>
