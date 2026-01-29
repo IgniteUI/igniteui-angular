@@ -1,7 +1,8 @@
 import { EventEmitter } from '@angular/core';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
-import { type ITreeGridRecord, type ColumnType, type GridTypeBase, type IPathSegment, type IgxSummaryResult, type GridColumnDataType, DataUtil, FilterUtil, GridSummaryCalculationMode, IBaseEventArgs, IFilteringState, IGroupByExpandState, IGroupByRecord, IGroupingState, TreeGridFilteringStrategy, cloneArray, cloneValue, columnFieldPath, resolveNestedPath, yieldingLoop, getHierarchy, isHierarchyMatch, BaseFormatter } from 'igniteui-angular/core';
+import { yieldingLoop } from './yielding-loop';
+import { type ITreeGridRecord, type ColumnType, type GridTypeBase, type IPathSegment, type IgxSummaryResult, type GridColumnDataType, DataUtil, FilterUtil, GridSummaryCalculationMode, IBaseEventArgs, IFilteringState, IGroupByExpandState, IGroupByRecord, IGroupingState, TreeGridFilteringStrategy, cloneArray, cloneValue, columnFieldPath, resolveNestedPath, getHierarchy, isHierarchyMatch, BaseFormatter } from 'igniteui-angular/core';
 import { FormatWidth, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 
 export enum ExportRecordType {

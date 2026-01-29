@@ -86,7 +86,7 @@
     "rxjs": "^7.8.2",
     "shiki": "^3.13.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.16.0"
   },
   "devDependencies": {
     "@angular-devkit/schematics": "^21.0.1",

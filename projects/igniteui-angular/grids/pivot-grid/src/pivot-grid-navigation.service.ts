@@ -1,9 +1,9 @@
-import { IActiveNode, IgxGridNavigationService, IMultiRowLayoutNode, IPivotDimension, IPivotGridRecord, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
+import { IActiveNode, IgxGridNavigationService, IMultiRowLayoutNode, IPivotDimension, IPivotGridRecord, PivotSummaryPosition, PivotUtil, HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from 'igniteui-angular/grids/core';
 import { Injectable } from '@angular/core';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { take, timeout } from 'rxjs/operators';
-import { HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SortingDirection } from 'igniteui-angular/core';
+import { SortingDirection } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {

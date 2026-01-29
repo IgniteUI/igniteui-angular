@@ -3,9 +3,7 @@ import {
     Input,
 } from '@angular/core';
 import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
-import { FlatGridType } from '../common/grid.interface';
-import { IgxGroupByAreaDirective, IgxGroupByMetaPipe } from './group-by-area.directive';
-import { IgxGroupAreaDropDirective } from '../grid.directives';
+import { FlatGridType, IgxGroupByAreaDirective, IgxGroupByMetaPipe, IgxGroupAreaDropDirective } from 'igniteui-angular/grids/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSuffixDirective } from 'igniteui-angular/input-group';

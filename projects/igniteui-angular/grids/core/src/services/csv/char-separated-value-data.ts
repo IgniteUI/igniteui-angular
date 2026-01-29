@@ -1,6 +1,6 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IColumnInfo } from '../exporter-common/base-export-service';
-import { yieldingLoop } from 'igniteui-angular/core';
+import { yieldingLoop } from '../exporter-common/yielding-loop';
 
 /**
  * @hidden
