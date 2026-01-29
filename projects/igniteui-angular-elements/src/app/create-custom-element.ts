@@ -4,6 +4,7 @@ import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, I
 import { ComponentConfig } from './component-config';
 import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
 import type { IgniteComponent } from '../utils/register';
+import { TransactionsWrapper } from './transactionsWrapper/transactions-wrapper';
 
 export type IgxNgElementConfig = Omit<NgElementConfig, 'strategyFactory'> & { registerConfig: ComponentConfig[] };
 type IgxElementConstructor<T> = NgElementConstructor<T> & { tagName: string};
@@ -71,6 +72,24 @@ export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgEleme
             };
         }
         elementCtor.prototype.getFilterFactory = getFilterFactory;
+
+        /**
+         * transactions methods for flat grid due to missing Transactions service in custom elements
+         */
+
+        Object.defineProperty(elementCtor.prototype, 'transactions', {
+            get() {
+                if(!this._transactionsWrapper){
+                    this._transactionsWrapper = new TransactionsWrapper(
+                        () => this.ngElementStrategy.componentRef?.instance,
+                        (func: () => any) => this.ngElementStrategy.runInZone(func)
+                    );
+                }
+                return this._transactionsWrapper;
+            },
+            configurable: true,
+            enumerable: true,
+        });
     }
 
     // assign static `tagName` for register/define:
