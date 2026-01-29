@@ -192,7 +192,7 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(GridFunctions.getValueFromCellElement(firsCell)).toEqual('0');
 
             fix.componentInstance.scrollLeft(999999);
-            await wait(16);
+
             // This won't work always in debugging mode due to the angular native events behavior, so errors are expected
             fix.detectChanges();
             const cells = GridFunctions.getRowCells(fix, 1);
