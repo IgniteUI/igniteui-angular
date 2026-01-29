@@ -1659,7 +1659,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         this.viewResizeNotify.pipe(
             filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
             destructor
-        ).subscribe((entries: ResizeObserverEntry[]) => this._zone.runTask(() => this.updateViewSizes(entries)));
+        ).subscribe((entries: ResizeObserverEntry[]) => () => this.updateViewSizes(entries));
     }
 
     public override ngOnChanges(changes: SimpleChanges) {
