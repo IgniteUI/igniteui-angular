@@ -1,13 +1,15 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList, booleanAttribute, inject } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ACCORDION_NAVIGATION_KEYS } from 'igniteui-angular/core';
 import {
     IExpansionPanelCancelableEventArgs,
     IExpansionPanelEventArgs, IgxExpansionPanelBase
 } from 'igniteui-angular/expansion-panel';
 import { IgxExpansionPanelComponent } from 'igniteui-angular/expansion-panel';
 import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
+
+/** @hidden @internal */
+const ACCORDION_NAVIGATION_KEYS = new Set('up down arrowup arrowdown home end'.split(' '));
 
 export interface IAccordionEventArgs extends IExpansionPanelEventArgs {
     owner: IgxAccordionComponent;
