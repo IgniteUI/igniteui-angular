@@ -741,7 +741,7 @@ describe('Rendering Tests', () => {
             expect(Math.abs(width - parseFloat(minWidth))).toBeLessThan(1.5);
         }));
 
-        it('should maintain consistent padding-inline-start on step content wrapper in vertical mode with titlePosition="end"', fakeAsync(() => {
+        it('should not shift step content horizontally when navigating between steps in vertical mode', fakeAsync(() => {
             const indicatorFix = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
             indicatorFix.detectChanges();
             const indicatorStepper = indicatorFix.componentInstance.stepper;
