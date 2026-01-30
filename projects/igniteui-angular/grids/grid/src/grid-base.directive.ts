@@ -133,21 +133,25 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 export abstract class IgxGridBaseDirective implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
 
+    /* blazorSuppress */
     public readonly validation = inject(IgxGridValidationService);
     /** @hidden @internal */
     public readonly selectionService = inject(IgxGridSelectionService);
     protected colResizingService = inject(IgxColumnResizingService);
+    /* blazorSuppress */
     public readonly gridAPI = inject<GridServiceType>(IGX_GRID_SERVICE_BASE);
     protected transactionFactory = inject(IgxFlatTransactionFactory);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected zone = inject(NgZone);
     /** @hidden @internal */
     public document = inject(DOCUMENT);
+    /* blazorSuppress */
     public readonly cdr = inject(ChangeDetectorRef);
     protected differs = inject(IterableDiffers);
     protected viewRef = inject(ViewContainerRef);
     protected injector = inject(Injector);
     protected envInjector = inject(EnvironmentInjector);
+    /* blazorSuppress */
     public navigation = inject(IgxGridNavigationService);
     /** @hidden @internal */
     public filteringService = inject(IgxFilteringService);
@@ -2268,7 +2272,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (value !== this._pinning) {
             this.resetCaches();
         }
-        this._pinning = value;
+        this._pinning = Object.assign({}, this._pinning, value);
     }
 
     /**
@@ -2451,7 +2455,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._sortingStrategy = value;
     }
 
-
+    /* csSuppress */
     /**
      * Gets/Sets the merge strategy of the grid.
      *
@@ -7867,8 +7871,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If record is pinned but is not in pinned area then it is a ghost record.
      *
      * @param dataViewIndex The index of that record in the data view.
+     * @hidden
+     * @internal
      */
-    private isGhostRecordAtIndex(dataViewIndex) {
+    public isGhostRecordAtIndex(dataViewIndex) {
         const isPinned = this.isRecordPinned(this.dataView[dataViewIndex]);
         const isInPinnedArea = this.isRecordPinnedByViewIndex(dataViewIndex);
         return isPinned && !isInPinnedArea;

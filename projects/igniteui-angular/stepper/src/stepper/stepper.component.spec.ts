@@ -85,7 +85,8 @@ describe('Rendering Tests', () => {
                 imports: [
                     NoopAnimationsModule,
                     IgxStepperSampleTestComponent,
-                    IgxStepperLinearComponent
+                    IgxStepperLinearComponent,
+                    IgxStepperIndicatorNoShrinkComponent
                 ]
             }).compileComponents();
         })
@@ -721,6 +722,23 @@ describe('Rendering Tests', () => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.horizontalAnimationType = 'fade';
             testAnimationBehavior('fade', fix, false);
+        }));
+
+        it('should not shrink the step indicator in vertical orientation when titlePosition="end" and the title is very long', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
+            fixture.detectChanges();
+            tick();
+
+            const stepperInstance = fixture.componentInstance.stepper;
+            const indicator = stepperInstance.steps[0].nativeElement.querySelector(`.${STEP_INDICATOR_CLASS}`) as HTMLElement;
+
+            const { minWidth } = getComputedStyle(indicator);
+            const { width, height } = indicator.getBoundingClientRect();
+
+            expect(minWidth).not.toBe('0px');
+            expect(minWidth).not.toBe('auto');
+            expect(Math.abs(width - height)).toBeLessThan(1.5);
+            expect(Math.abs(width - parseFloat(minWidth))).toBeLessThan(1.5);
         }));
     });
 
@@ -1377,4 +1395,33 @@ export class IgxStepperSampleTestComponent {
 })
 export class IgxStepperLinearComponent {
     @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+}
+
+@Component({
+    template: `
+        <div>
+            <igx-stepper #stepper [orientation]="'vertical'" [titlePosition]="'end'">
+                <igx-step [active]="true">
+                    <span igxStepTitle>{{ longTitle }}</span>
+                    <div igxStepContent>Content</div>
+                </igx-step>
+                <igx-step>
+                    <span igxStepTitle>Short</span>
+                    <div igxStepContent>Content</div>
+                </igx-step>
+            </igx-stepper>
+        </div>
+    `,
+    imports: [
+        IgxStepperComponent,
+        IgxStepComponent,
+        IgxStepTitleDirective,
+        IgxStepContentDirective
+    ]
+})
+export class IgxStepperIndicatorNoShrinkComponent {
+    @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+
+    public longTitle =
+        'This is a very very very very very very very very very very very very very very very very very very very very very long step title that should not shrink the indicator';
 }
