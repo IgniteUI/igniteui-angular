@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, Input, IterableDiffer, IterableDiffers, OnDestroy, booleanAttribute, inject } from '@angular/core';
+import { AfterContentInit, Component, HostBinding, Input, IterableDiffer, IterableDiffers, OnDestroy, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
@@ -22,6 +22,13 @@ import { IgxGroupAreaDropDirective, IgxGroupByAreaDirective, IgxGroupByMetaPipe 
 })
 export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective implements AfterContentInit, OnDestroy {
     private differs = inject(IterableDiffers);
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'presentation';
 
     @Input({ transform: booleanAttribute })
     public get hideGroupedColumns() {

@@ -1,5 +1,6 @@
 import {
     Component,
+    HostBinding,
     Input,
 } from '@angular/core';
 import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
@@ -24,6 +25,13 @@ import { IGroupingExpression, ISortingExpression } from 'igniteui-angular/core';
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'presentation';
+
     @Input()
     public sortingExpressions: ISortingExpression[] = [];
 
