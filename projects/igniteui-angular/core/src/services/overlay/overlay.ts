@@ -130,7 +130,8 @@ export class IgxOverlayService implements OnDestroy {
         scrollStrategy: new NoOpScrollStrategy(),
         modal: true,
         closeOnOutsideClick: true,
-        closeOnEscape: false
+        closeOnEscape: false,
+        cacheSize: true
     };
 
     constructor() {
@@ -331,11 +332,18 @@ export class IgxOverlayService implements OnDestroy {
         info.settings = eventArgs.settings;
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
-        const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
-        info.initialSize = { width: elementRect.width, height: elementRect.height };
+        let elementRect;
+        // Get the element rect size before moving it into the overlay to cache its size.
+        if (info.settings.cacheSize) {
+            elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+        }
         // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
         this.getComponentSize(info);
         this.moveElementToOverlay(info);
+        if (!info.settings.cacheSize) {
+            elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+        }
+        info.initialSize = { width: elementRect.width, height: elementRect.height };
         // Update the container size after moving if there is size.
         if (info.size) {
             info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
