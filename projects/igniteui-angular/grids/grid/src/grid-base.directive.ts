@@ -2836,7 +2836,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /* blazorSuppress */
+    /* csSuppress */
     /**
      * Get transactions service for the grid.
      */
