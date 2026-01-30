@@ -349,24 +349,18 @@
     }
 
     %igx-stepper__step-content-wrapper {
-        margin-inline-start: $v-line-indent;
+        padding-inline-start: calc(#{$v-line-indent} * 2);
         position: relative;
         min-height: if($variant == 'indigo', rem(24px), rem(32px));
 
         &::before {
             content: '';
             position: absolute;
-            inset-inline-start: calc(-#{$separator-size} / 2);
+            inset-inline-start: calc(#{$v-line-indent} - (#{$separator-size} / 2));
             top: calc(-#{$step-header-padding} + #{$title-gap});
             bottom: calc(-#{$step-header-padding} + #{$title-gap});
             width: $separator-size;
             border-inline-start: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
-        }
-    }
-
-    [aria-selected='true'] {
-        %igx-stepper__step-content-wrapper {
-            padding-inline-start: $v-line-indent;
         }
     }
 

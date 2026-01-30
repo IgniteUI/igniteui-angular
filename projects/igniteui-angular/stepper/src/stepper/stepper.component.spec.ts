@@ -740,6 +740,32 @@ describe('Rendering Tests', () => {
             expect(Math.abs(width - height)).toBeLessThan(1.5);
             expect(Math.abs(width - parseFloat(minWidth))).toBeLessThan(1.5);
         }));
+
+        it('should not shift step content horizontally when navigating between steps in vertical mode', fakeAsync(() => {
+            const indicatorFix = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
+            indicatorFix.detectChanges();
+            const indicatorStepper = indicatorFix.componentInstance.stepper;
+
+            const getContentWrapperStyles = (stepIndex: number) => {
+                const contentWrapper = indicatorStepper.steps[stepIndex].nativeElement.querySelector('.igx-stepper__step-content-wrapper') as HTMLElement;
+                const styles = window.getComputedStyle(contentWrapper);
+                return {
+                    paddingInlineStart: styles.paddingInlineStart || styles.paddingLeft,
+                    marginInlineStart: styles.marginInlineStart || styles.marginLeft
+                };
+            };
+
+            const step0ActiveStyles = getContentWrapperStyles(0);
+
+            indicatorStepper.navigateTo(1);
+            indicatorFix.detectChanges();
+            tick(500);
+
+            const step0InactiveStyles = getContentWrapperStyles(0);
+
+            expect(step0InactiveStyles.paddingInlineStart).toBe(step0ActiveStyles.paddingInlineStart);
+            expect(step0InactiveStyles.marginInlineStart).toBe(step0ActiveStyles.marginInlineStart);
+        }));
     });
 
     describe('Keyboard navigation', () => {
