@@ -1526,7 +1526,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
         if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
-            this.recalcUpdateSizes();
             const offset = this.igxForScrollOrientation === 'horizontal' ?
                 parseInt(this.dc.instance._viewContainer.element.nativeElement.style.left, 10) :
                 Number(this.dc.instance._viewContainer.element.nativeElement.style.transform?.match(/translateY\((-?\d+\.?\d*)px\)/)?.[1]);
