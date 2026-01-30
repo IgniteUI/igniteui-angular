@@ -332,7 +332,7 @@ export class IgxOverlayService implements OnDestroy {
         info.settings = eventArgs.settings;
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
-        let elementRect;
+        let elementRect: DOMRect;
         // Get the element rect size before moving it into the overlay to cache its size.
         if (info.settings.cacheSize) {
             elementRect = info.elementRef.nativeElement.getBoundingClientRect();
