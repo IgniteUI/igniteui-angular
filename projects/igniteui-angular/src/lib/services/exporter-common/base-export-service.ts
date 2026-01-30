@@ -666,8 +666,8 @@ export abstract class IgxBaseExporter {
 
             for (const island of childLayoutList) {
                 const path: IPathSegment = {
-                    rowID: island.primaryKey ? entry[island.primaryKey] : entry,
-                    rowKey: island.primaryKey ? entry[island.primaryKey] : entry,
+                    rowID: grid.primaryKey ? entry[grid.primaryKey] : entry,
+                    rowKey: grid.primaryKey ? entry[grid.primaryKey] : entry,
                     rowIslandKey: island.key
                 };
 
@@ -806,16 +806,17 @@ export abstract class IgxBaseExporter {
                 this.flatRecords.push(exportRecord);
 
                 if (island.children.length > 0) {
+                    const islandRowKey = grid?.primaryKey ? rec[grid.primaryKey] : rec;
                     const islandExpansionStateVal = grid === undefined ?
                         false :
-                        grid.expansionStates.has(rec) ?
-                            grid.expansionStates.get(rec) :
+                        grid.expansionStates.has(islandRowKey) ?
+                            grid.expansionStates.get(islandRowKey) :
                             false;
 
                     for (const childIsland of island.children) {
                         const path: IPathSegment = {
-                            rowID: childIsland.primaryKey ? rec[childIsland.primaryKey] : rec,
-                            rowKey: childIsland.primaryKey ? rec[childIsland.primaryKey] : rec,
+                            rowID: grid?.primaryKey ? rec[grid.primaryKey] : rec,
+                            rowKey: grid?.primaryKey ? rec[grid.primaryKey] : rec,
                             rowIslandKey: childIsland.key
                         };
 
@@ -823,7 +824,9 @@ export abstract class IgxBaseExporter {
                         const childIslandGrid = grid?.gridAPI.getChildGrid([path]);
                         const keyRecordData = this.prepareIslandData(island, childIslandGrid, rec[childIsland.key]) || [];
 
-                        this.getAllChildColumnsAndData(childIsland, keyRecordData, islandExpansionStateVal, childIslandGrid);
+                        // Children should only be visible if both parent and current row are expanded
+                        const combinedExpansionState = expansionStateVal && islandExpansionStateVal;
+                        this.getAllChildColumnsAndData(childIsland, keyRecordData, combinedExpansionState, childIslandGrid);
                     }
                 }
             }
