@@ -136,7 +136,8 @@ export interface OverlaySettings {
     excludeFromOutsideClick?: HTMLElement[];
     /**
      * @hidden @internal
-     * Set if the element should retain its size when moved to the overlay.
+     * Controls whether element size is measured before (true) or after (false) moving to the overlay container.
+     * Default is true to retain element size.
      */
     cacheSize?: boolean;
 }
