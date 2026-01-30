@@ -1,8 +1,7 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { GridColumnDataType, IGX_GRID_DIRECTIVES, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent } from "igniteui-angular"
+import { GridColumnDataType, IgxColumnComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent } from "igniteui-angular"
 import { DataService } from '../services/data.service';
 import { ActivatedRoute } from '@angular/router';
-import { IgxRowIslandAPIService } from 'igniteui-angular/grids/hierarchical-grid/src/row-island-api.service';
 
 @Component({
     selector: 'app-hierarchical-grid',
