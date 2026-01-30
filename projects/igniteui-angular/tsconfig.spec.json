@@ -14,10 +14,12 @@
       "hammerjs"
     ]
   },
+  "files": [],
   "exclude": [
-    "migrations/**/*.spec.ts",
-    "schematics/**/*.spec.ts",
-    "cypress/**/*.spec.ts"
+    "migrations",
+    "schematics",
+    "cypress",
+    "node_modules"
   ],
   "include": [
     "**/*.spec.ts",

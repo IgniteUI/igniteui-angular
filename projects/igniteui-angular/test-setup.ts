@@ -1,3 +1,6 @@
+import 'zone.js';
+import 'zone.js/testing';
+
 import { getTestBed } from '@angular/core/testing';
 import {
   BrowserDynamicTestingModule,
@@ -28,8 +31,17 @@ expect.extend({
   }
 });
 
-// Initialize the Angular testing environment
-getTestBed().initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting(),
-);
+// Wait for Zone.js to be available
+if (typeof Zone === 'undefined') {
+  throw new Error('Zone.js is required but not loaded');
+}
+
+// Initialize the Angular testing environment only if not already initialized
+const testBed = getTestBed();
+if (!(testBed as any).platform) {
+  testBed.initTestEnvironment(
+    BrowserDynamicTestingModule,
+    platformBrowserDynamicTesting(),
+    { teardown: { destroyAfterEach: true } }
+  );
+}

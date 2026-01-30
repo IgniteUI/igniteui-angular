@@ -172,8 +172,14 @@
           "builder": "@angular/build:unit-test",
             "options": {
               "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
+              "browsers": ["chromium"],
               "buildTarget": "::test",
-              "runnerConfig": "./vitest.config.ts"
+              "runnerConfig": "./vitest.config.ts",
+              "exclude": [
+                "**/migrations/**",
+                "**/schematics/**",
+                "**/cypress/**"
+              ]
             }
         },
         "lint": {

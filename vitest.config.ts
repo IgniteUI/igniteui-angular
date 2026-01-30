@@ -23,6 +23,13 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./projects/igniteui-angular/test-setup.ts'],
     include: ['**/*.spec.ts'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/migrations/**',
+      '**/schematics/**',
+      '**/cypress/**',
+    ],
     browser: {
       headless: true,
       provider: playwright(),
@@ -46,9 +53,10 @@ export default defineConfig({
         root: './projects/igniteui-angular',
         include: ['**/*.spec.ts'],
         exclude: [
-          'migrations/**/*.spec.ts',
-          'schematics/**/*.spec.ts',
-          'cypress/**/*.spec.ts',
+          '**/migrations/**',
+          '**/schematics/**',
+          '**/cypress/**',
+          '**/node_modules/**',
         ],
       },
     },
