@@ -8,6 +8,7 @@ import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionCompone
 import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
 import { UIInteractions } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const ACCORDION_CLASS = 'igx-accordion';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';
 const ACCORDION_TAG = 'IGX-ACCORDION';
@@ -69,8 +70,8 @@ describe('Rendering Tests', () => {
 
         it(`Should be able to expand only one panel when singleBranchExpanded is set to true
         and expandAll/collapseAll should not update the current expansion state `, fakeAsync(() => {
-            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
-            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
+            vi.spyOn(accordion.panelExpanded, 'emit');
+            vi.spyOn(accordion.panelCollapsed, 'emit');
             accordion.singleBranchExpand = true;
             fix.detectChanges();
 
@@ -79,7 +80,7 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(1);
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[3].collapsed).toBeFalsy();
             expect(accordion.panelExpanded.emit).toHaveBeenCalledTimes(0);
 
             accordion.panels[0].expand();
@@ -87,10 +88,10 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(2);
-            expect(accordion.panels[0].collapsed).toBeFalse();
-            expect(accordion.panels[1].collapsed).toBeTrue();
-            expect(accordion.panels[2].collapsed).toBeTrue();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBeFalsy();
+            expect(accordion.panels[1].collapsed).toBeTruthy();
+            expect(accordion.panels[2].collapsed).toBeTruthy();
+            expect(accordion.panels[3].collapsed).toBeFalsy();
 
             accordion.collapseAll();
             tick();
@@ -104,10 +105,10 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(1);
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeFalse();
-            expect(accordion.panels[2].collapsed).toBeTrue();
-            expect(accordion.panels[3].collapsed).toBeTrue();
+            expect(accordion.panels[0].collapsed).toBeTruthy();
+            expect(accordion.panels[1].collapsed).toBeFalsy();
+            expect(accordion.panels[2].collapsed).toBeTruthy();
+            expect(accordion.panels[3].collapsed).toBeTruthy();
 
         }));
 
@@ -120,26 +121,26 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(3);
-            expect(accordion.panels[0].collapsed).toBeFalse();
-            expect(accordion.panels[1].collapsed).toBeTrue();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBeFalsy();
+            expect(accordion.panels[1].collapsed).toBeTruthy();
+            expect(accordion.panels[2].collapsed).toBeFalsy();
+            expect(accordion.panels[3].collapsed).toBeFalsy();
 
             accordion.panels[1].expand();
             tick();
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(4);
-            expect(accordion.panels[0].collapsed).toBeFalse();
-            expect(accordion.panels[1].collapsed).toBeFalse();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBeFalsy();
+            expect(accordion.panels[1].collapsed).toBeFalsy();
+            expect(accordion.panels[2].collapsed).toBeFalsy();
+            expect(accordion.panels[3].collapsed).toBeFalsy();
         }));
 
         it(`Should update the current expansion state when expandAll/collapseAll is invoked and
         singleBranchExpaned is set to false`, fakeAsync(() => {
-            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
-            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
+            vi.spyOn(accordion.panelExpanded, 'emit');
+            vi.spyOn(accordion.panelCollapsed, 'emit');
             accordion.singleBranchExpand = false;
             accordion.panels[3].collapse();
             tick();
@@ -161,38 +162,38 @@ describe('Rendering Tests', () => {
         }));
 
         it(`Should collapse all expanded and not disabled panels except for the last one when setting singleBranchExpand to true`, () => {
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeTrue();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBeTruthy();
+            expect(accordion.panels[1].collapsed).toBeTruthy();
+            expect(accordion.panels[2].collapsed).toBeFalsy();
+            expect(accordion.panels[3].collapsed).toBeFalsy();
 
             accordion.panels[1].collapsed = false;
             fix.detectChanges();
 
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeFalse();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBeTruthy();
+            expect(accordion.panels[1].collapsed).toBeFalsy();
+            expect(accordion.panels[2].collapsed).toBeFalsy();
+            expect(accordion.panels[3].collapsed).toBeFalsy();
 
             accordion.singleBranchExpand = true;
             fix.detectChanges();
 
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeTrue();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBeTruthy();
+            expect(accordion.panels[1].collapsed).toBeTruthy();
+            expect(accordion.panels[2].collapsed).toBeFalsy();
+            expect(accordion.panels[3].collapsed).toBeFalsy();
         });
 
         it('Should emit ing and ed events when expand panel state is toggled', fakeAsync(() => {
-            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
-            spyOn(accordion.panelExpanding, 'emit').and.callThrough();
-            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
-            spyOn(accordion.panelCollapsing, 'emit').and.callThrough();
+            vi.spyOn(accordion.panelExpanded, 'emit');
+            vi.spyOn(accordion.panelExpanding, 'emit');
+            vi.spyOn(accordion.panelCollapsed, 'emit');
+            vi.spyOn(accordion.panelCollapsing, 'emit');
 
-            spyOn(accordion.panels[0].contentCollapsing, 'emit').and.callThrough();
-            spyOn(accordion.panels[0].contentCollapsed, 'emit').and.callThrough();
-            spyOn(accordion.panels[0].contentExpanding, 'emit').and.callThrough();
-            spyOn(accordion.panels[0].contentExpanded, 'emit').and.callThrough();
+            vi.spyOn(accordion.panels[0].contentCollapsing, 'emit');
+            vi.spyOn(accordion.panels[0].contentCollapsed, 'emit');
+            vi.spyOn(accordion.panels[0].contentExpanding, 'emit');
+            vi.spyOn(accordion.panels[0].contentExpanded, 'emit');
 
             accordion.singleBranchExpand = false;
             fix.detectChanges();

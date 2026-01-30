@@ -58,6 +58,7 @@ export class ExpansionTestComponent {
         const expectedContent =  `import { Component, ViewChild } from '@angular/core';
 import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from 'igniteui-angular';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 @Component({
     selector: 'app-expansion-test',
     templateUrl: './expansion-test.component.html',

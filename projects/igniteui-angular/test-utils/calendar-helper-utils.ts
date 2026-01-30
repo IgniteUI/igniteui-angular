@@ -1,5 +1,6 @@
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { expect } from 'vitest';
 
 export class HelperTestFunctions {
     public static DAYS_VIEW = 'igx-days-view';

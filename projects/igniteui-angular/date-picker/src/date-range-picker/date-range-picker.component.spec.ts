@@ -26,6 +26,7 @@ import { CalendarDay, BaseFormatter } from 'igniteui-angular/core';
 import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
 import { KeyboardNavigationService } from 'igniteui-angular/calendar/src/calendar/calendar.services';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
 const DEFAULT_ICON_TEXT = 'date_range';
@@ -59,10 +60,7 @@ describe('IgxDateRangePicker', () => {
         let fixture: any;
         let dateRange: IgxDateRangePickerComponent;
         const elementRef = { nativeElement: null };
-        const mockNgControl = jasmine.createSpyObj('NgControl',
-            ['registerOnChangeCb',
-                'registerOnTouchedCb',
-                'registerOnValidatorChangeCb']);
+        const mockNgControl = { registerOnChangeCb: vi.fn(), registerOnTouchedCb: vi.fn(), registerOnValidatorChangeCb: vi.fn() };
         /* eslint-disable @typescript-eslint/no-unused-vars */
         beforeEach(() => {
             mockElement = {
@@ -79,9 +77,9 @@ describe('IgxDateRangePicker', () => {
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
 
-            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', {
+            mockCdr = {
                 detectChanges: () => { }
-            });
+            };
 
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule],
@@ -102,7 +100,7 @@ describe('IgxDateRangePicker', () => {
             mockCalendar = TestBed.inject(IgxCalendarComponent);
 
             mockDaysView = {
-                focusActiveDate: jasmine.createSpy()
+                focusActiveDate: vi.fn()
             } as any;
             mockCalendar.daysView = mockDaysView;
         });
@@ -128,7 +126,7 @@ describe('IgxDateRangePicker', () => {
         it('should emit valueChange on selection', () => {
             //const dateRange = TestBed.inject(IgxDateRangePickerComponent);
             // dateRange.calendar = calendar;
-            spyOn(dateRange.valueChange, 'emit');
+            vi.spyOn(dateRange.valueChange, 'emit');
             let startDate = new Date(2017, 4, 5);
             const endDate = new Date(2017, 11, 22);
 
@@ -155,7 +153,7 @@ describe('IgxDateRangePicker', () => {
             // init
             dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRange.registerOnTouched(mockNgControl.registerOnTouchedCb);
-            spyOn(dateRange as any, 'handleSelection').and.callThrough();
+            vi.spyOn(dateRange as any, 'handleSelection');
 
             // writeValue
             expect(dateRange.value).toBeUndefined();
@@ -211,7 +209,7 @@ describe('IgxDateRangePicker', () => {
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
             dateRange.ngOnInit();
 
-            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
+            vi.spyOn((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
             dateRange.minValue = new Date(2000, 10, 1);
             dateRange.maxValue = new Date(2000, 10, 20);
 
@@ -226,11 +224,11 @@ describe('IgxDateRangePicker', () => {
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
             dateRange.ngOnInit();
 
-            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
+            vi.spyOn((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
             dateRange.minValue = '2000/10/1';
             dateRange.maxValue = '2000/10/30';
 
-            spyOn((dateRange as any).calendar, 'deselectDate').and.returnValue(null);
+            vi.spyOn((dateRange as any).calendar, 'deselectDate').mockReturnValue(null);
             (dateRange as any).updateCalendar();
             expect((dateRange as any).calendar.disabledDates.length).toEqual(2);
             expect((dateRange as any).calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
@@ -244,8 +242,8 @@ describe('IgxDateRangePicker', () => {
 
             dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
-            mockNgControl.registerOnValidatorChangeCb.calls.reset();
-            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
+            mockNgControl.registerOnValidatorChangeCb.mockClear();
+            vi.spyOn((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
 
             const start = new Date(new Date().getFullYear(), new Date().getMonth(), 10);
             const end = new Date(new Date().getFullYear(), new Date().getMonth(), 18);
@@ -430,7 +428,7 @@ describe('IgxDateRangePicker', () => {
 
                         const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
                         let suffix = inputGroup.query(By.directive(IgxSuffixDirective));
-                        spyOn(dateRange.valueChange, 'emit');
+                        vi.spyOn(dateRange.valueChange, 'emit');
 
                         UIInteractions.simulateClickAndSelectEvent(suffix.nativeElement);
                         tick();
@@ -439,7 +437,8 @@ describe('IgxDateRangePicker', () => {
                         expect(dateRange.value).toBeNull();
                         suffix = inputGroup.query(By.directive(IgxSuffixDirective));
                         expect(suffix).toBeNull();
-                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnceWith(null);
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnce();
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledWith(null);
                     }));
 
                     it('should not clear the value when clicking element in the suffix that is not the clear icon', fakeAsync(() => {
@@ -489,13 +488,14 @@ describe('IgxDateRangePicker', () => {
                         dateRange.value = range;
                         fixture.detectChanges();
 
-                        spyOn(dateRange.valueChange, 'emit');
+                        vi.spyOn(dateRange.valueChange, 'emit');
                         UIInteractions.simulateClickAndSelectEvent(pickerClear.nativeElement);
                         tick();
                         fixture.detectChanges();
 
                         expect(dateRange.value).toBeNull();
-                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnceWith(null);
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledOnce();
+                        expect(dateRange.valueChange.emit).toHaveBeenCalledWith(null);
                     }));
                 });
             });
@@ -577,8 +577,8 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
 
                     dateRange.open();
                     tick();
@@ -590,7 +590,7 @@ describe('IgxDateRangePicker', () => {
                     tick();
                     fixture.detectChanges();
 
-                    expect(dateRange.collapsed).toBeTrue();
+                    expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
@@ -603,8 +603,8 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.dateRange.value = orig;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
 
                     dateRange.open();
                     tick();
@@ -618,7 +618,7 @@ describe('IgxDateRangePicker', () => {
                     tick();
                     fixture.detectChanges();
 
-                    expect(dateRange.collapsed).toBeTrue();
+                    expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
@@ -681,10 +681,10 @@ describe('IgxDateRangePicker', () => {
                 it('should emit open/close events - open/close methods', fakeAsync(() => {
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
-                    spyOn(dateRange.opening, 'emit').and.callThrough();
-                    spyOn(dateRange.opened, 'emit').and.callThrough();
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.opening, 'emit');
+                    vi.spyOn(dateRange.opened, 'emit');
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
 
                     dateRange.open();
                     tick(DEBOUNCE_TIME);
@@ -707,10 +707,10 @@ describe('IgxDateRangePicker', () => {
                 }));
 
                 it('should emit open/close events - toggle method', fakeAsync(() => {
-                    spyOn(dateRange.opening, 'emit').and.callThrough();
-                    spyOn(dateRange.opened, 'emit').and.callThrough();
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.opening, 'emit');
+                    vi.spyOn(dateRange.opened, 'emit');
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
 
                     dateRange.toggle();
                     tick(DEBOUNCE_TIME);
@@ -736,8 +736,8 @@ describe('IgxDateRangePicker', () => {
                 }));
 
                 it('should not close calendar if closing event is canceled', fakeAsync(() => {
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
                     dateRange.closing.subscribe((e: CancelableEventArgs) => e.cancel = true);
 
                     dateRange.toggle();
@@ -763,12 +763,12 @@ describe('IgxDateRangePicker', () => {
 
             describe('Keyboard navigation', () => {
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
-                    spyOn(dateRange.opening, 'emit').and.callThrough();
-                    spyOn(dateRange.opened, 'emit').and.callThrough();
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.opening, 'emit');
+                    vi.spyOn(dateRange.opened, 'emit');
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.isFocused).toBeFalse();
+                    expect(dateRange.isFocused).toBeFalsy();
 
                     const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
                     UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
@@ -781,10 +781,10 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
                     const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
 
                     UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                     tick();
@@ -792,15 +792,15 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.inputDirective.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(dateRange.inputDirective.nativeElement.contains(document.activeElement),
+                        'focus should return to the picker input')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
                 }));
 
                 it('should close the calendar with ESC', fakeAsync(() => {
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
                     dateRange.mode = 'dropdown';
 
                     expect(dateRange.collapsed).toBeTruthy();
@@ -810,10 +810,9 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeFalsy();
 
                     const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
 
                     UIInteractions.triggerKeyDownEvtUponElem('Escape', calendarWrapper, true);
                     tick();
@@ -822,10 +821,9 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.inputDirective.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(dateRange.inputDirective.nativeElement.contains(document.activeElement), 'focus should return to the picker input')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
                 }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
@@ -833,8 +831,8 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.disabled = true;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.opening, 'emit').and.callThrough();
-                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.opening, 'emit');
+                    vi.spyOn(dateRange.opened, 'emit');
 
                     const input = document.getElementsByClassName('igx-input-group__input')[0];
                     UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true, true);
@@ -889,15 +887,15 @@ describe('IgxDateRangePicker', () => {
 
                 disabled$.next(true);
                 testFixture.detectChanges();
-                expect(dateRange.inputDirective.disabled).toBeTrue();
+                expect(dateRange.inputDirective.disabled).toBeTruthy();
 
                 disabled$.next(false);
                 testFixture.detectChanges();
-                expect(dateRange.inputDirective.disabled).toBeFalse();
+                expect(dateRange.inputDirective.disabled).toBeFalsy();
 
                 disabled$.next(true);
                 testFixture.detectChanges();
-                expect(dateRange.inputDirective.disabled).toBeTrue();
+                expect(dateRange.inputDirective.disabled).toBeTruthy();
 
                 disabled$.complete();
             }));
@@ -1287,12 +1285,12 @@ describe('IgxDateRangePicker', () => {
             describe('Keyboard navigation', () => {
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key - dropdown mode', fakeAsync(() => {
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.isFocused).toBeFalse();
+                    expect(dateRange.isFocused).toBeFalsy();
 
-                    spyOn(dateRange.opening, 'emit').and.callThrough();
-                    spyOn(dateRange.opened, 'emit').and.callThrough();
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.opening, 'emit');
+                    vi.spyOn(dateRange.opened, 'emit');
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
 
                     expect(dateRange.collapsed).toBeTruthy();
                     startInput.nativeElement.focus();
@@ -1306,10 +1304,10 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
                     let calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
 
                     UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                     tick();
@@ -1317,10 +1315,9 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
-                    expect(startInput.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(startInput.nativeElement.contains(document.activeElement), 'focus should return to the picker input')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
 
                     // reopen and close again
                     UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
@@ -1328,17 +1325,17 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
 
                     calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
-                        .toBeTrue();
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
+                        .toBeTruthy();
                     UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                     tick();
                     fixture.detectChanges();
 
-                    expect(startInput.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(startInput.nativeElement.contains(document.activeElement),
+                        'focus should return to the picker input')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
                 }));
 
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key - dialog mode', fakeAsync(() => {
@@ -1346,10 +1343,10 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
 
-                    spyOn(dateRange.opening, 'emit').and.callThrough();
-                    spyOn(dateRange.opened, 'emit').and.callThrough();
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.opening, 'emit');
+                    vi.spyOn(dateRange.opened, 'emit');
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
 
                     expect(dateRange.collapsed).toBeTruthy();
                     const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
@@ -1370,8 +1367,8 @@ describe('IgxDateRangePicker', () => {
                 }));
 
                 it('should close the calendar with ESC', fakeAsync(() => {
-                    spyOn(dateRange.closing, 'emit').and.callThrough();
-                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.closing, 'emit');
+                    vi.spyOn(dateRange.closed, 'emit');
                     dateRange.mode = 'dropdown';
                     startInput.nativeElement.focus();
 
@@ -1382,10 +1379,10 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeFalsy();
 
                     let calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
 
                     UIInteractions.triggerKeyDownEvtUponElem('Escape', calendarWrapper, true);
                     tick();
@@ -1394,10 +1391,10 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
-                    expect(startInput.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(startInput.nativeElement.contains(document.activeElement),
+                        'focus should return to the picker input')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
 
                     // reopen and close again
                     dateRange.open();
@@ -1405,25 +1402,25 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
 
                     calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
-                    expect(calendarWrapper.contains(document.activeElement))
-                        .withContext('focus should move to calendar for KB nav')
-                        .toBeTrue();
+                    expect(calendarWrapper.contains(document.activeElement),
+                        'focus should move to calendar for KB nav')
+                        .toBeTruthy();
 
                     UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                     tick();
                     fixture.detectChanges();
-                    expect(startInput.nativeElement.contains(document.activeElement))
-                        .withContext('focus should return to the picker input')
-                        .toBeTrue();
-                    expect(dateRange.isFocused).toBeTrue();
+                    expect(startInput.nativeElement.contains(document.activeElement),
+                        'focus should return to the picker input')
+                        .toBeTruthy();
+                    expect(dateRange.isFocused).toBeTruthy();
                 }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
                     fixture.componentInstance.disabled = true;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.opening, 'emit').and.callThrough();
-                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    vi.spyOn(dateRange.opening, 'emit');
+                    vi.spyOn(dateRange.opened, 'emit');
 
                     // UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
                     tick(DEBOUNCE_TIME * 2);
@@ -1582,18 +1579,18 @@ describe('IgxDateRangePicker', () => {
 
                 disabled$.next(true);
                 testFixture.detectChanges();
-                expect(dateRange.projectedInputs.first.inputDirective.disabled).toBeTrue();
-                expect(dateRange.projectedInputs.last.inputDirective.disabled).toBeTrue();
+                expect(dateRange.projectedInputs.first.inputDirective.disabled).toBeTruthy();
+                expect(dateRange.projectedInputs.last.inputDirective.disabled).toBeTruthy();
 
                 disabled$.next(false);
                 testFixture.detectChanges();
-                expect(dateRange.projectedInputs.first.inputDirective.disabled).toBeFalse();
-                expect(dateRange.projectedInputs.last.disabled).toBeFalse();
+                expect(dateRange.projectedInputs.first.inputDirective.disabled).toBeFalsy();
+                expect(dateRange.projectedInputs.last.disabled).toBeFalsy();
 
                 disabled$.next(true);
                 testFixture.detectChanges();
-                expect(dateRange.projectedInputs.first.inputDirective.disabled).toBeTrue();
-                expect(dateRange.projectedInputs.last.inputDirective.disabled).toBeTrue();
+                expect(dateRange.projectedInputs.first.inputDirective.disabled).toBeTruthy();
+                expect(dateRange.projectedInputs.last.inputDirective.disabled).toBeTruthy();
 
                 disabled$.complete();
             }));
@@ -1724,7 +1721,7 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 it('should render predefined area and emit selection event when the user performs selection via chips', () => {
-                    const selectionSpy = spyOn(dateRange as any, 'handleSelection').and.callThrough();
+                    const selectionSpy = vi.spyOn(dateRange as any, 'handleSelection');
 
                     dateRange.usePredefinedRanges = true;
                     dateRange.customRanges = customRanges;
@@ -1914,7 +1911,7 @@ describe('IgxDateRangePicker', () => {
             it('should invoke AutoPositionStrategy by default with proper arguments', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
-                spyOn<any>(AutoPositionStrategy.prototype, 'position');
+                vi.spyOn(AutoPositionStrategy.prototype, 'position');
 
                 dateRange = fixture.componentInstance.dateRange;
                 dateRange.open();
@@ -1925,8 +1922,8 @@ describe('IgxDateRangePicker', () => {
                 const expectedTarget = dateRange.element.nativeElement.querySelector('.igx-input-group__bundle');
                 expect(AutoPositionStrategy.prototype.position).toHaveBeenCalledTimes(1);
                 expect(AutoPositionStrategy.prototype.position)
-                    .toHaveBeenCalledWith(overlayContent, jasmine.anything(), document,
-                        jasmine.anything(), expectedTarget);
+                    .toHaveBeenCalledWith(overlayContent, expect.anything(), document,
+                        expect.anything(), expectedTarget);
             }));
             it('Should the weekStart property takes precedence over locale.', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);
@@ -1978,9 +1975,9 @@ describe('IgxDateRangePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(dateRange['_calendar'].hasHeader).toBeTrue();
+                expect(dateRange['_calendar'].hasHeader).toBeTruthy();
                 const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER_TEMPLATE));
-                expect(calendarHeader).toBeTruthy('Calendar header should be present');
+                expect(calendarHeader, 'Calendar header should be present').toBeTruthy();
             }));
 
             it('should set calendar headerOrientation prop in dialog mode', fakeAsync(() => {
@@ -2018,9 +2015,9 @@ describe('IgxDateRangePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(dateRange['_calendar'].hasHeader).toBeFalse();
+                expect(dateRange['_calendar'].hasHeader).toBeFalsy();
                 const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
-                expect(calendarHeader).toBeFalsy('Calendar header should not be present');
+                expect(calendarHeader, 'Calendar header should not be present').toBeFalsy();
             }));
 
             it('should set calendar orientation property', fakeAsync(() => {
@@ -2032,7 +2029,7 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect(dateRange['_calendar'].orientation).toEqual(PickerCalendarOrientation.Horizontal.toString());
-                expect(dateRange['_calendar'].wrapper.nativeElement).not.toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                expect(dateRange['_calendar'].wrapper.nativeElement.classList.contains(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL)).toBe(false);
                 dateRange.close();
                 tick();
                 fixture.detectChanges();
@@ -2043,7 +2040,7 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect(dateRange['_calendar'].orientation).toEqual(PickerCalendarOrientation.Vertical.toString());
-                expect(dateRange['_calendar'].wrapper.nativeElement).toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                expect(dateRange['_calendar'].wrapper.nativeElement.classList.contains(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL)).toBe(true);
             }));
 
             it('should limit the displayMonthsCount property between 1 and 2', fakeAsync(() => {
@@ -2189,7 +2186,7 @@ describe('IgxDateRangePicker', () => {
 
                 it('Should use the custom template for header title', fakeAsync(() => {
                     const headerTitleElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TITLE));
-                    expect(headerTitleElement).toBeTruthy('Header title element should be present');
+                    expect(headerTitleElement, 'Header title element should be present').toBeTruthy();
                     if (headerTitleElement) {
                         expect(headerTitleElement.nativeElement.textContent.trim()).toBe('Test header title');
                     }
@@ -2197,7 +2194,7 @@ describe('IgxDateRangePicker', () => {
 
                 it('Should use the custom template for header', fakeAsync(() => {
                     const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TEMPLATE));
-                    expect(headerElement).toBeTruthy('Header element should be present');
+                    expect(headerElement, 'Header element should be present').toBeTruthy();
                     if (headerElement) {
                         expect(headerElement.nativeElement.textContent.trim()).toBe('Test header');
                     }
@@ -2205,7 +2202,7 @@ describe('IgxDateRangePicker', () => {
 
                 it('Should use the custom template for subheader', fakeAsync(() => {
                     const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_SUBHEADER));
-                    expect(headerElement).toBeTruthy('Subheader element should be present');
+                    expect(headerElement, 'Subheader element should be present').toBeTruthy();
                     if (headerElement) {
                         expect(headerElement.nativeElement.textContent.trim()).toBe('Test subheader');
                     }
@@ -2536,3 +2533,5 @@ export class DateRangeReactiveFormComponent {
         this.form.disable();
     }
 }
+
+

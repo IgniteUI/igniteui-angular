@@ -15,6 +15,7 @@ import { ɵSize } from 'igniteui-angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { Calendar } from 'igniteui-angular/calendar';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
@@ -143,13 +144,13 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             const resizer = GridFunctions.getResizer(fixture);
             const resizerDirective = resizer.componentInstance.resizer as IgxColumnResizerDirective;
-            const leftSetterSpy = spyOnProperty(resizerDirective, 'left', 'set').and.callThrough();
+            const leftSetterSpy = vi.spyOn(resizerDirective, 'left', 'set');
             UIInteractions.simulateMouseEvent('mousemove', resizer.nativeElement, 200, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer.nativeElement, 200, 5);
             fixture.detectChanges();
 
             expect(leftSetterSpy).toHaveBeenCalled();
-            expect(parseInt(leftSetterSpy.calls.mostRecent().args[0].toFixed(0))).toEqual(200);
+            expect(parseInt(leftSetterSpy.mock.lastCall[0].toFixed(0))).toEqual(200);
             expect(parseInt(grid.columnList.get(1).headerCell.nativeElement.getBoundingClientRect().width.toFixed(0))).toEqual(173);
         }));
 
@@ -673,7 +674,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         }));
 
         it('should fire columnResized with correct event args.', fakeAsync(() => {
-            const resizingSpy = spyOn<any>(grid.columnResized, 'emit').and.callThrough();
+            const resizingSpy = vi.spyOn(grid.columnResized, 'emit');
             const headers: DebugElement[] = GridFunctions.getColumnHeaders(fixture);
 
             expect(grid.columnList.get(0).width).toEqual('150px');
@@ -1149,3 +1150,5 @@ export class ColAutosizeGridComponent implements OnInit {
         this.data = SampleTestData.generateProductData(10);
     }
 }
+
+

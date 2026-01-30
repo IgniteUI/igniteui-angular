@@ -518,6 +518,7 @@ public onBannerOpened(event: BannerEventArgs) {
         const expectedContent =  `import { Component, ViewChild } from '@angular/core';
 import { BannerEventArgs, BannerCancelEventArgs } from 'igniteui-angular';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 @Component({
 selector: 'app-banner-test',
 templateUrl: './banner-test.component.html',

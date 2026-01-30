@@ -21,6 +21,7 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - GroupBy #grid', () => {
 
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
@@ -716,7 +717,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         let groupsRecordsLength;
 
-        spyOn(grid.groupingDone, 'emit').and.callThrough();
+        vi.spyOn(grid.groupingDone, 'emit');
         grid.groupingDone.subscribe(() => {
             groupsRecordsLength = grid.groupsRecords.length;
         });
@@ -806,7 +807,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        spyOn(grid.groupingExpressionsChange, 'emit');
+        vi.spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
         const firstCellElem = grid.gridAPI.get_cell_by_index(2, 'Downloads');
         UIInteractions.simulateClickAndSelectEvent(firstCellElem);
@@ -825,7 +826,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        spyOn(grid.groupingExpressionsChange, 'emit');
+        vi.spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
         const chips = grid.groupArea.chips;
         grid.groupArea.handleClick(chips.first.id);
@@ -862,7 +863,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // no such column initially, so chip is disabled.
         const chips = grid.groupArea.chips;
-        expect(chips.first.disabled).toBeTrue();
+        expect(chips.first.disabled).toBeTruthy();
         const newCols = [...fix.componentInstance.columns];
         newCols.push({
             field: "NewColumn",
@@ -872,7 +873,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // column now exists and has groupable=true, so chip should be enabled.
-        expect(chips.first.disabled).toBeFalse();
+        expect(chips.first.disabled).toBeFalsy();
     });
 
     it('should update chip state on column groupable prop change', () => {
@@ -888,12 +889,12 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // initially should not be disabled.
         const chips = grid.groupArea.chips;
-        expect(chips.first.disabled).toBeFalse();
+        expect(chips.first.disabled).toBeFalsy();
 
         // should get disabled on groupable=false
         column.groupable = false;
         fix.detectChanges();
-        expect(chips.first.disabled).toBeTrue();
+        expect(chips.first.disabled).toBeTruthy();
     });
 
     // GroupBy + Sorting integration
@@ -1437,12 +1438,12 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
-            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
+            const selectionSpy = vi.spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
 
             expect(selectionSpy).toHaveBeenCalledTimes(1);
-            const args = selectionSpy.calls.mostRecent().args[0];
+            const args = selectionSpy.mock.lastCall[0];
             expect(args.added.length).toBe(2);
             expect(grid.selectedRows.length).toEqual(2);
 
@@ -1527,12 +1528,12 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
-            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
+            const selectionSpy = vi.spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
 
             expect(selectionSpy).toHaveBeenCalledTimes(1);
-            const args = selectionSpy.calls.mostRecent().args[0];
+            const args = selectionSpy.mock.lastCall[0];
             expect(args.removed.length).toBe(2);
             expect(grid.selectedRows.length).toEqual(0);
 
@@ -2160,7 +2161,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
         const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
 
-        spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
+        vi.spyOn(fix.componentInstance, 'onGroupByRowClick');
 
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
         fix.detectChanges();

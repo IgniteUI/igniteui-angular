@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
 import { hasClass } from "../../../test-utils/helper-utils.spec";
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxLinearProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxLinearProgressBarComponent>;
     let progress: IgxLinearProgressBarComponent;

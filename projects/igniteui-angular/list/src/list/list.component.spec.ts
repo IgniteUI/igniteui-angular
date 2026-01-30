@@ -30,6 +30,7 @@ import {
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('List', () => {
 
     beforeEach(waitForAsync(() => {
@@ -129,9 +130,9 @@ describe('List', () => {
 
         fixture.detectChanges();
 
-        spyOn(list.leftPan, 'emit').and.callThrough();
-        spyOn(list.panStateChange, 'emit').and.callThrough();
-        spyOn(list.rightPan, 'emit').and.callThrough();
+        vi.spyOn(list.leftPan, 'emit');
+        vi.spyOn(list.panStateChange, 'emit');
+        vi.spyOn(list.rightPan, 'emit');
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const listItems = list.items;
@@ -155,8 +156,8 @@ describe('List', () => {
 
         fixture.detectChanges();
 
-        spyOn(list.startPan, 'emit').and.callThrough();
-        spyOn(list.endPan, 'emit').and.callThrough();
+        vi.spyOn(list.startPan, 'emit');
+        vi.spyOn(list.endPan, 'emit');
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
 
@@ -178,9 +179,9 @@ describe('List', () => {
 
         const list: IgxListComponent = fixture.componentInstance.list;
 
-        spyOn(list.leftPan, 'emit').and.callThrough();
-        spyOn(list.panStateChange, 'emit').and.callThrough();
-        spyOn(list.rightPan, 'emit').and.callThrough();
+        vi.spyOn(list.leftPan, 'emit');
+        vi.spyOn(list.panStateChange, 'emit');
+        vi.spyOn(list.rightPan, 'emit');
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const listItems = list.items;
@@ -205,9 +206,9 @@ describe('List', () => {
 
         const list: IgxListComponent = fixture.componentInstance.list;
 
-        spyOn(list.leftPan, 'emit').and.callThrough();
-        spyOn(list.panStateChange, 'emit').and.callThrough();
-        spyOn(list.rightPan, 'emit').and.callThrough();
+        vi.spyOn(list.leftPan, 'emit');
+        vi.spyOn(list.panStateChange, 'emit');
+        vi.spyOn(list.rightPan, 'emit');
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const listItems = list.items;
@@ -309,7 +310,7 @@ describe('List', () => {
         const list: IgxListComponent = fixture.componentInstance.list;
         fixture.detectChanges();
 
-        spyOn(list.itemClicked, 'emit').and.callThrough();
+        vi.spyOn(list.itemClicked, 'emit');
 
         const event = new Event('click');
         list.items[0].element.dispatchEvent(event);
@@ -318,7 +319,8 @@ describe('List', () => {
             event: event,
             direction: IgxListPanState.NONE
         };
-        expect(list.itemClicked.emit).toHaveBeenCalledOnceWith(args);
+        expect(list.itemClicked.emit).toHaveBeenCalledOnce();
+        expect(list.itemClicked.emit).toHaveBeenCalledWith(args);
 
         // Click the same item again and verify click is fired again
         list.items[0].element.dispatchEvent(event);
@@ -336,7 +338,7 @@ describe('List', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
 
-        spyOn(list.itemClicked, 'emit').and.callThrough();
+        vi.spyOn(list.itemClicked, 'emit');
 
         fixture.detectChanges();
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
@@ -347,14 +349,15 @@ describe('List', () => {
             event: null,
             direction: IgxListPanState.LEFT
         };
-        expect(list.itemClicked.emit).toHaveBeenCalledOnceWith(args);
+        expect(list.itemClicked.emit).toHaveBeenCalledOnce();
+        expect(list.itemClicked.emit).toHaveBeenCalledWith(args);
     });
 
     it('should emit ItemClicked with correct direction argument when swiping right', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
 
-        spyOn(list.itemClicked, 'emit').and.callThrough();
+        vi.spyOn(list.itemClicked, 'emit');
 
         fixture.detectChanges();
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
@@ -365,7 +368,8 @@ describe('List', () => {
             event: null,
             direction: IgxListPanState.RIGHT
         };
-        expect(list.itemClicked.emit).toHaveBeenCalledOnceWith(args);
+        expect(list.itemClicked.emit).toHaveBeenCalledOnce();
+        expect(list.itemClicked.emit).toHaveBeenCalledWith(args);
     });
 
     it('should display multiple headers properly.', () => {
@@ -431,9 +435,9 @@ describe('List', () => {
 
         const item = list.items[0] as IgxListItemComponent;
 
-        spyOn(list.leftPan, 'emit').and.callThrough();
-        spyOn(list.rightPan, 'emit').and.callThrough();
-        spyOn(list.panStateChange, 'emit').and.callThrough();
+        vi.spyOn(list.leftPan, 'emit');
+        vi.spyOn(list.rightPan, 'emit');
+        vi.spyOn(list.panStateChange, 'emit');
 
         elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
         panItem(elementRefCollection[1], 0.8);
@@ -488,9 +492,9 @@ describe('List', () => {
 
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
 
-        spyOn(list.startPan, 'emit').and.callThrough();
-        spyOn(list.endPan, 'emit').and.callThrough();
-        spyOn(list.resetPan, 'emit').and.callThrough();
+        vi.spyOn(list.startPan, 'emit');
+        vi.spyOn(list.endPan, 'emit');
+        vi.spyOn(list.resetPan, 'emit');
 
         /* Pan item left */
         panItem(itemNativeElements[1], -0.3);
@@ -539,8 +543,8 @@ describe('List', () => {
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
 
-        spyOn(list.startPan, 'emit').and.callThrough();
-        spyOn(list.endPan, 'emit').and.callThrough();
+        vi.spyOn(list.startPan, 'emit');
+        vi.spyOn(list.endPan, 'emit');
 
         const firstItem = list.items[0] as IgxListItemComponent;
         const leftPanTmpl = firstItem.leftPanningTemplateElement;
@@ -563,8 +567,8 @@ describe('List', () => {
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
 
-        spyOn(list.startPan, 'emit').and.callThrough();
-        spyOn(list.endPan, 'emit').and.callThrough();
+        vi.spyOn(list.startPan, 'emit');
+        vi.spyOn(list.endPan, 'emit');
 
         const firstItem = list.items[0] as IgxListItemComponent;
         const leftPanTmpl = firstItem.leftPanningTemplateElement;
@@ -704,9 +708,9 @@ describe('List', () => {
 
         expect(thumbnail).toBeDefined();
         // Check if the directive removes the classes from the target element
-        expect(thumbnail.nativeElement).toHaveClass('igx-icon');
+        expect(thumbnail.nativeElement.classList.contains('igx-icon')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(thumbnail.parent.nativeElement).toHaveClass('igx-list__item-thumbnail');
+        expect(thumbnail.parent.nativeElement.classList.contains('igx-list__item-thumbnail')).toBe(true);
     });
 
     it('Initializes igxListLine directive', () => {
@@ -716,9 +720,9 @@ describe('List', () => {
 
         expect(listLine).toBeDefined();
         // Check if the directive removes the classes from the target element
-        expect(listLine.nativeElement).toHaveClass('text-line');
+        expect(listLine.nativeElement.classList.contains('text-line')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+        expect(listLine.parent.nativeElement.classList.contains('igx-list__item-lines')).toBe(true);
     });
 
     it('Initializes igxListAction directive', () => {
@@ -728,9 +732,9 @@ describe('List', () => {
 
         expect(listLine).toBeDefined();
         // Check if the directive removes the classes from the target element
-        expect(listLine.nativeElement).toHaveClass('action-icon');
+        expect(listLine.nativeElement.classList.contains('action-icon')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-actions');
+        expect(listLine.parent.nativeElement.classList.contains('igx-list__item-actions')).toBe(true);
     });
 
     it('Initializes igxListLineTitle directive', () => {
@@ -740,11 +744,11 @@ describe('List', () => {
 
         expect(listLine).toBeDefined();
         // Check if the directive removes the custom classes from the target element
-        expect(listLine.nativeElement).toHaveClass('custom');
+        expect(listLine.nativeElement.classList.contains('custom')).toBe(true);
         // Check if the directive add the correct class on the target element
-        expect(listLine.nativeElement).toHaveClass('igx-list__item-line-title');
+        expect(listLine.nativeElement.classList.contains('igx-list__item-line-title')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+        expect(listLine.parent.nativeElement.classList.contains('igx-list__item-lines')).toBe(true);
     });
 
     it('Initializes igxListLineSubTitle directive', () => {
@@ -754,11 +758,11 @@ describe('List', () => {
 
         expect(listLine).toBeDefined();
         // Check if the directive removes the custom classes from the target element
-        expect(listLine.nativeElement).toHaveClass('custom');
+        expect(listLine.nativeElement.classList.contains('custom')).toBe(true);
         // Check if the directive add the correct class on the target element
-        expect(listLine.nativeElement).toHaveClass('igx-list__item-line-subtitle');
+        expect(listLine.nativeElement.classList.contains('igx-list__item-line-subtitle')).toBe(true);
         // Check if the directive wraps the target element and sets the correct class on the parent element
-        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+        expect(listLine.parent.nativeElement.classList.contains('igx-list__item-lines')).toBe(true);
     });
 
     /* factorX - the coefficient used to calculate deltaX.

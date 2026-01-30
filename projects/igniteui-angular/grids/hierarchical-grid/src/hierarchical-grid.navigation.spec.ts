@@ -11,6 +11,9 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
+import { firstValueFrom } from 'rxjs';
+
+import { describe, it, expect, beforeEach, afterEach, afterAll } from 'vitest';
 
 const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -20,7 +23,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
-    const defaultTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -35,7 +37,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout * 2;
     }));
 
     beforeEach(waitForAsync(() => {
@@ -43,8 +44,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
             providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
         });
     }));
-
-    afterAll(() => jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout);
 
     describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
@@ -979,7 +978,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             clearGridSubs();
         });
 
-        it('should navigate to exact child grid with navigateToChildGrid.', (done) => {
+        it('should navigate to exact child grid with navigateToChildGrid.', async () => {
             hierarchicalGrid.primaryKey = 'ID';
             hierarchicalGrid.expandChildren = false;
             fixture.detectChanges();
@@ -988,19 +987,21 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 rowIslandKey: 'childData2',
                 rowID: 10
             };
-            hierarchicalGrid.navigation.navigateToChildGrid([path], () => {
-                fixture.detectChanges();
-                const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([path]).nativeElement;
-                expect(childGrid).not.toBe(undefined);
+            await new Promise<void>(resolve => {
+                hierarchicalGrid.navigation.navigateToChildGrid([path], () => {
+                    fixture.detectChanges();
+                    const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([path]).nativeElement;
+                    expect(childGrid).not.toBe(undefined);
 
-                const parentBottom = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().bottom;
-                const parentTop = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().top;
-                // check it's in view within its parent
-                expect(childGrid.getBoundingClientRect().bottom <= parentBottom && childGrid.getBoundingClientRect().top >= parentTop);
-                done();
+                    const parentBottom = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+                    const parentTop = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().top;
+                    // check it's in view within its parent
+                    expect(childGrid.getBoundingClientRect().bottom <= parentBottom && childGrid.getBoundingClientRect().top >= parentTop);
+                    resolve();
+                });
             });
         });
-        it('should navigate to exact nested child grid with navigateToChildGrid.', (done) => {
+        it('should navigate to exact nested child grid with navigateToChildGrid.', async () => {
             hierarchicalGrid.expandChildren = false;
             hierarchicalGrid.primaryKey = 'ID';
             hierarchicalGrid.childLayoutList.toArray()[0].primaryKey = 'ID';
@@ -1016,18 +1017,20 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 rowID: 5
             };
 
-            hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested], () => {
-            fixture.detectChanges();
-                const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot]).nativeElement;
-            expect(childGrid).not.toBe(undefined);
-                const childGridNested =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot, targetNested]).nativeElement;
-            expect(childGridNested).not.toBe(undefined);
+            await new Promise<void>(resolve => {
+                hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested], () => {
+                fixture.detectChanges();
+                    const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot]).nativeElement;
+                expect(childGrid).not.toBe(undefined);
+                    const childGridNested =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot, targetNested]).nativeElement;
+                expect(childGridNested).not.toBe(undefined);
 
-            const parentBottom = childGrid.getBoundingClientRect().bottom;
-            const parentTop = childGrid.getBoundingClientRect().top;
-            // check it's in view within its parent
-            expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
-                done();
+                const parentBottom = childGrid.getBoundingClientRect().bottom;
+                const parentTop = childGrid.getBoundingClientRect().top;
+                // check it's in view within its parent
+                expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
+                    resolve();
+                });
             });
         });
     });

@@ -23,6 +23,7 @@ import { IgxGridCell } from 'igniteui-angular/grids/core';
 import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
 import { getI18nManager } from 'igniteui-i18n-core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
@@ -165,7 +166,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const removeIcon = rowChip.querySelectorAll('igx-icon')[2];
             removeIcon.click();
             fixture.detectChanges();
-            expect(pivotGrid.pivotConfiguration.rows[1].enabled).toBeFalse();
+            expect(pivotGrid.pivotConfiguration.rows[1].enabled).toBeFalsy();
             expect(pivotGrid.rowDimensions.length).toBe(1);
             pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
             expect(pivotRecord.dimensionValues.get('SellerName')).toBeUndefined();
@@ -189,7 +190,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const removeIcon = rowChip.querySelectorAll('igx-icon')[2];
             removeIcon.click();
             fixture.detectChanges();
-            expect(pivotGrid.pivotConfiguration.columns[1].enabled).toBeFalse();
+            expect(pivotGrid.pivotConfiguration.columns[1].enabled).toBeFalsy();
             expect(pivotGrid.columnDimensions.length).toBe(1);
             expect(pivotGrid.columns.length).toBe(9);
         });
@@ -208,7 +209,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             let removeIcon = rowChip.querySelectorAll('igx-icon')[2];
             removeIcon.click();
             fixture.detectChanges();
-            expect(pivotGrid.pivotConfiguration.values[0].enabled).toBeFalse();
+            expect(pivotGrid.pivotConfiguration.values[0].enabled).toBeFalsy();
             expect(pivotGrid.values.length).toBe(1);
             expect(pivotGrid.columns.length).not.toBe(9);
 
@@ -217,7 +218,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             removeIcon = rowChip.querySelectorAll('igx-icon')[2];
             removeIcon.click();
             fixture.detectChanges();
-            expect(pivotGrid.pivotConfiguration.values[1].enabled).toBeFalse();
+            expect(pivotGrid.pivotConfiguration.values[1].enabled).toBeFalsy();
             expect(pivotGrid.values.length).toBe(0);
             expect(pivotGrid.columns.length).toBe(3);
         });
@@ -242,7 +243,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             pivotGrid.pivotConfiguration.filters = [filterDimension];
             pivotGrid.pipeTrigger++;
             fixture.detectChanges();
-            expect(pivotGrid.pivotConfiguration.filters[0].enabled).toBeTrue();
+            expect(pivotGrid.pivotConfiguration.filters[0].enabled).toBeTruthy();
             expect(pivotGrid.rowList.length).toBe(2);
 
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
@@ -250,7 +251,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const removeIcon = rowChip.querySelectorAll('igx-icon')[1];
             removeIcon.click();
             fixture.detectChanges();
-            expect(pivotGrid.pivotConfiguration.filters[0].enabled).toBeFalse();
+            expect(pivotGrid.pivotConfiguration.filters[0].enabled).toBeFalsy();
             expect(pivotGrid.rowList.length).toBe(5);
         });
 
@@ -334,7 +335,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.columnGroupStates.size).toBe(1);
             const value = pivotGrid.columnGroupStates.entries().next().value;
             expect(value[0]).toEqual('All Countries');
-            expect(value[1]).toBeTrue();
+            expect(value[1]).toBeTruthy();
         });
 
         it('should collapse column with 2 value dimension', () => {
@@ -363,7 +364,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.columnGroupStates.size).toBe(1);
             let value = pivotGrid.columnGroupStates.entries().next().value;
             expect(value[0]).toEqual('All Countries');
-            expect(value[1]).toBeTrue();
+            expect(value[1]).toBeTruthy();
 
             headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             header = headerRow.querySelector('igx-grid-header-group');
@@ -372,7 +373,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             value = pivotGrid.columnGroupStates.entries().next().value;
             expect(value[0]).toEqual('All Countries');
-            expect(value[1]).toBeFalse();
+            expect(value[1]).toBeFalsy();
         });
 
         it('should collapse row', () => {
@@ -387,7 +388,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             expect(pivotGrid.rowList.length).toEqual(1);
             expect(pivotGrid.expansionStates.size).toEqual(1);
-            expect(pivotGrid.expansionStates.get('All')).toBeFalse();
+            expect(pivotGrid.expansionStates.get('All')).toBeFalsy();
         });
 
         it('should display aggregations when no row dimensions are enabled', () => {
@@ -601,8 +602,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
             // all should take grid size default min-width (200 for default grid size) as they exceed the size of the grid
             const colGroups = pivotGrid.columns.filter(x => x.columnGroup);
             const childCols = pivotGrid.columns.filter(x => !x.columnGroup);
-            expect(colGroups.every(x => x.width === '400px')).toBeTrue();
-            expect(childCols.every(x => x.width === '200px')).toBeTrue();
+            expect(colGroups.every(x => x.width === '400px')).toBeTruthy();
+            expect(childCols.every(x => x.width === '200px')).toBeTruthy();
         });
 
         it('should render correct grid with noop strategies', () => {
@@ -808,7 +809,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const colSum = pivotGrid.featureColumnsWidth() + pivotGrid.columns.filter(x => !x.columnGroup).map(x => x.calcPixelWidth).reduce((x, y) => x + y);
             const expectedSize = Math.min(window.innerWidth, colSum);
-            expect(pivotGrid.nativeElement.clientWidth - expectedSize).toBeLessThan(50, "should take sum of columns as width.");
+            expect(pivotGrid.nativeElement.clientWidth - expectedSize, "should take sum of columns as width.").toBeLessThan(50);
         });
 
         it('should render cell values for dimension columns containing dots - issue #16445', () => {
@@ -1265,7 +1266,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(filtersChip).not.toBeUndefined();
                 const filterIcon = filtersChip.querySelectorAll('igx-icon')[0];
 
-                spyOn(headerRow, 'onFilteringIconPointerDown').and.callThrough();
+                vi.spyOn(headerRow, 'onFilteringIconPointerDown');
                 filterIcon.dispatchEvent(new Event('pointerdown'));
                 expect(headerRow.onFilteringIconPointerDown).toHaveBeenCalledTimes(1);
             });
@@ -1273,7 +1274,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             it('should apply sorting for dimension via row chip', () => {
                 fixture.detectChanges();
                 const pivotGrid = fixture.componentInstance.pivotGrid;
-                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
+                vi.spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
                 rowChip.click();
@@ -1306,7 +1307,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const colChip = headerRow.querySelector('igx-chip[id="Country"]');
-                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
+                vi.spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 // sort
                 colChip.click();
                 fixture.detectChanges();
@@ -1345,7 +1346,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const colChip = headerRow.querySelector('igx-chip[id="Country"]');
-                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
+                vi.spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 // sort
                 colChip.click();
                 fixture.detectChanges();
@@ -1449,7 +1450,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             // xit-ing because of https://github.com/IgniteUI/igniteui-angular/issues/10546
-            xit('should sort on column for all sibling dimensions.', () => {
+            it.skip('should sort on column for all sibling dimensions.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.height = '1500px';
                 pivotGrid.pivotConfiguration.rows = [
@@ -1911,8 +1912,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
 
                 // check drop here chips are displayed in other areas
-                expect(headerRow.notificationChips.toArray()[1].nativeElement.hidden).toBeFalse();
-                expect(headerRow.notificationChips.toArray()[2].nativeElement.hidden).toBeFalse();
+                expect(headerRow.notificationChips.toArray()[1].nativeElement.hidden).toBeFalsy();
+                expect(headerRow.notificationChips.toArray()[2].nativeElement.hidden).toBeFalsy();
 
                 const dropHereRowChip = headerRow.notificationChips.toArray()[2];
                 // move Seller onto the drop here chip
@@ -2138,7 +2139,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             it('should have the correct IGridCellEventArgs when clicking on a cell', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
-                spyOn(pivotGrid.cellClick, 'emit').and.callThrough();
+                vi.spyOn(pivotGrid.cellClick, 'emit');
                 fixture.detectChanges();
 
                 const cell = pivotGrid.gridAPI.get_cell_by_index(0, 'Bulgaria-UnitsSold');
@@ -2150,7 +2151,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const expectedCell = new IgxGridCell(pivotGrid, 0, cell.column);
 
                 const cellClickArgs: IGridCellEventArgs = { cell: expectedCell, event };
-                expect(pivotGrid.cellClick.emit).toHaveBeenCalledOnceWith(cellClickArgs);
+                expect(pivotGrid.cellClick.emit).toHaveBeenCalledOnce();
+                expect(pivotGrid.cellClick.emit).toHaveBeenCalledWith(cellClickArgs);
             });
         });
     });
@@ -2174,7 +2176,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const secondDimCell = rowHeaders.find(x => x.componentInstance.column.header === 'Clothing');
             secondDimCell.nativeElement.click();
             fixture.detectChanges();
-            expect(row.selected).toBeTrue();
+            expect(row.selected).toBeTruthy();
             expect(pivotGrid.selectedRows).not.toBeNull();
             expect(pivotGrid.selectedRows.length).toBe(1);
             expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('All cities')).toBe('All Cities');
@@ -2183,7 +2185,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             //deselect
             secondDimCell.nativeElement.click();
             fixture.detectChanges();
-            expect(row.selected).toBeFalse();
+            expect(row.selected).toBeFalsy();
             expect(pivotGrid.selectedRows.length).toBe(0);
         });
 
@@ -2197,7 +2199,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             firstDimCell.nativeElement.click();
             fixture.detectChanges();
             for (let i = 0; i < 5; ++i) {
-                expect(pivotRows[i].componentInstance.selected).toBeTrue();
+                expect(pivotRows[i].componentInstance.selected).toBeTruthy();
             }
             expect(pivotGrid.selectedRows).not.toBeNull();
             expect(pivotGrid.selectedRows.length).toBe(5);
@@ -2319,14 +2321,14 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
 
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(rowHeaders[0].componentInstance.column.resizable).toBeTrue();
-            expect(rowHeaders[3].componentInstance.column.resizable).toBeTrue();
+            expect(rowHeaders[0].componentInstance.column.resizable).toBeTruthy();
+            expect(rowHeaders[3].componentInstance.column.resizable).toBeTruthy();
 
             rowHeaders = dimensionContents[1].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
-            expect(rowHeaders[0].componentInstance.column.resizable).toBeTrue();
-            expect(rowHeaders[1].componentInstance.column.resizable).toBeTrue();
-            expect(rowHeaders[5].componentInstance.column.resizable).toBeTrue();
-            expect(rowHeaders[7].componentInstance.column.resizable).toBeTrue();
+            expect(rowHeaders[0].componentInstance.column.resizable).toBeTruthy();
+            expect(rowHeaders[1].componentInstance.column.resizable).toBeTruthy();
+            expect(rowHeaders[5].componentInstance.column.resizable).toBeTruthy();
+            expect(rowHeaders[7].componentInstance.column.resizable).toBeTruthy();
         }));
 
         it('should update grid after resizing a top dimension header to be bigger.', fakeAsync(() => {
@@ -3448,7 +3450,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const secondDimCell = rowHeaders.find(x => x.componentInstance.column.header === 'Accessories');
             secondDimCell.nativeElement.click();
             fixture.detectChanges();
-            expect(row.selected).toBeTrue();
+            expect(row.selected).toBeTruthy();
             expect(pivotGrid.selectedRows).not.toBeNull();
             expect(pivotGrid.selectedRows.length).toBe(1);
             expect((pivotGrid.selectedRows[0] as IPivotGridRecord).dimensionValues.get('ProductCategory')).toBe('Accessories');

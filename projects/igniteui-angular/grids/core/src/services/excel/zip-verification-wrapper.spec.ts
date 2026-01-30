@@ -1,3 +1,4 @@
+import { expect } from 'vitest';
 import { strFromU8 } from 'fflate';
 import { ExcelFileTypes } from './excel-enums';
 import { ZipFiles } from './zip-helper.spec';
@@ -27,7 +28,7 @@ export class ZipWrapper {
             result && ObjectComparer.AreEqual(this.dataFilesAndFolders, template) :
             result && this._filesAndFolders.length === ZipFiles.templatesNames.length;
 
-        expect(result).toBe(true, message + ' Unexpected zip structure!');
+        expect(result, message + ' Unexpected zip structure!').toBe(true);
     }
 
     /* Verifies the contents of all template files and asserts the result.
@@ -40,7 +41,7 @@ export class ZipWrapper {
 
         await this.readTemplateFiles().then(() => {
             result = this.compareFiles(this.templateFilesContent, undefined);
-            expect(result.areEqual).toBe(true, msg + result.differences);
+            expect(result.areEqual, msg + result.differences).toBe(true);
         });
     }
 
@@ -52,7 +53,7 @@ export class ZipWrapper {
 
         await this.readDataFiles().then(() => {
             result = this.compareFiles(this.dataFilesContent, expectedData, isHGrid);
-            expect(result.areEqual).toBe(true, msg + result.differences);
+            expect(result.areEqual, msg + result.differences).toBe(true);
         });
     }
 

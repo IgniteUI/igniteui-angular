@@ -5,6 +5,7 @@ import { scssImport, cssImport } from './add-normalize';
 import { DEPENDENCIES_MAP, PackageTarget, PackageEntry } from '../utils/dependency-handler';
 import { ProjectType } from '../utils/util';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('ng-add schematics', () => {
   const collectionPath = path.join(__dirname, '../collection.json');
   const runner: SchematicTestRunner = new SchematicTestRunner('cli-schematics', collectionPath);
@@ -62,9 +63,9 @@ describe('ng-add schematics', () => {
     for (const key of Object.keys(allDependencies)) {
       const expectedPackages: PackageEntry = {
         name: key,
-        target: jasmine.anything() as any
+        target: expect.anything() as any
       };
-      expect(DEPENDENCIES_MAP).toContain(expectedPackages, `Dependency ${key} missing in dependencies map!`);
+      expect(DEPENDENCIES_MAP,  `Dependency ${key} missing in dependencies map!`).toContain(expectedPackages);
     }
   });
 
@@ -76,13 +77,13 @@ describe('ng-add schematics', () => {
     expect(pkgJsonData.dependencies).toBeTruthy();
     expect(pkgJsonData.devDependencies).toBeTruthy();
     // Check for explicit dependencies
-    expect(Object.keys(pkgJsonData.dependencies).length).toEqual(expectedDeps.length, `Different number of added dependencies!`);
-    expect(Object.keys(pkgJsonData.devDependencies).length).toEqual(expectedDevDeps.length, `Different number of added devDependencies!`);
+    expect(Object.keys(pkgJsonData.dependencies).length,  `Different number of added dependencies!`).toEqual(expectedDeps.length,);
+    expect(Object.keys(pkgJsonData.devDependencies).length, `Different number of added devDependencies!`).toEqual(expectedDevDeps.length);
     for (const dependency of expectedDeps) {
-      expect(pkgJsonData.dependencies.hasOwnProperty(dependency)).toEqual(true, `Dependency ${dependency} is missing from output!`);
+      expect(pkgJsonData.dependencies.hasOwnProperty(dependency),  `Dependency ${dependency} is missing from output!`).toEqual(true);
     }
     for (const dependency of expectedDevDeps) {
-      expect(pkgJsonData.devDependencies.hasOwnProperty(dependency)).toEqual(true, `DevDependency ${dependency} is missing from output!`);
+      expect(pkgJsonData.devDependencies.hasOwnProperty(dependency), `DevDependency ${dependency} is missing from output!`).toEqual(true);
     }
   });
 

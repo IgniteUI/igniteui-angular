@@ -6,6 +6,7 @@ import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
 const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
@@ -182,7 +183,7 @@ describe('IgxInputGroup', () => {
 
         const pointOnPrefix = UIInteractions.getPointFromElement(prefix.nativeElement);
         const pointerEvent = UIInteractions.createPointerEvent('pointerdown', pointOnPrefix);
-        const preventDefaultSpy = spyOn(pointerEvent, 'preventDefault');
+        const preventDefaultSpy = vi.spyOn(pointerEvent, 'preventDefault');
 
         Object.defineProperty(pointerEvent, 'target', { value: input.nativeElement, configurable: true });
         const inputGroupDebugElement = fixture.debugElement.query(By.directive(IgxInputGroupComponent));

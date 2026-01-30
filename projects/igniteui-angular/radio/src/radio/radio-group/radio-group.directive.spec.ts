@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { IgxRadioGroupDirective } from './radio-group.directive';
+import { IgxRadioGroupDirective, RadioGroupAlignment } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from '../../radio/radio.component';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxRadioGroupDirective', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -57,7 +58,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        expect(radioInstance.checked).toBeTrue();
+        expect(radioInstance.checked).toBeTruthy();
     }));
 
     it('Setting radioGroup\'s properties should affect all radio buttons.', fakeAsync(() => {
@@ -106,7 +107,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toBeDefined();
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
 
-        spyOn(radioInstance.change, 'emit');
+        vi.spyOn(radioInstance.change, 'emit');
 
         radioInstance.value = 'Foo';
         fixture.detectChanges();
@@ -129,7 +130,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toBeDefined();
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
 
-        spyOn(radioInstance.change, 'emit');
+        vi.spyOn(radioInstance.change, 'emit');
 
         radioInstance.selected = radioInstance.radioButtons.first;
         fixture.detectChanges();
@@ -548,7 +549,7 @@ describe('IgxRadioGroupDirective', () => {
             fixture.detectChanges();
             tick();
 
-            spyOn(radioGroup.radioButtons.toArray()[1].nativeElement, 'focus');
+            vi.spyOn(radioGroup.radioButtons.toArray()[1].nativeElement, 'focus');
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
@@ -571,7 +572,7 @@ describe('IgxRadioGroupDirective', () => {
             fixture.detectChanges();
             tick();
 
-            spyOn(firstButton.nativeElement, 'blur');
+            vi.spyOn(firstButton.nativeElement, 'blur');
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
@@ -595,7 +596,7 @@ describe('IgxRadioGroupDirective', () => {
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown', cancelable: true });
-            spyOn(event, 'preventDefault');
+            vi.spyOn(event, 'preventDefault');
 
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
@@ -690,16 +691,13 @@ describe('IgxRadioGroupDirective', () => {
             fixture.detectChanges();
             tick();
 
-            // Import RadioGroupAlignment from the directive
-            const RadioGroupAlignment = { horizontal: 'horizontal', vertical: 'vertical' } as const;
-
-            radioGroup.alignment = RadioGroupAlignment.vertical as any;
+            radioGroup.alignment = RadioGroupAlignment.vertical;
             fixture.detectChanges();
             tick();
 
             expect(radioGroup.alignment).toBe('vertical');
 
-            radioGroup.alignment = RadioGroupAlignment.horizontal as any;
+            radioGroup.alignment = RadioGroupAlignment.horizontal;
             fixture.detectChanges();
             tick();
 
@@ -904,14 +902,14 @@ class RadioGroupDeepProjectionComponent {
         <ng-container #radioContainer></ng-container>
     </igx-radio-group>
   `,
-  imports: [IgxRadioComponent, IgxRadioGroupDirective]
+  imports: [IgxRadioGroupDirective]
 })
 
 class RadioGroupTestComponent implements OnInit {
     @ViewChild('radioContainer', { read: ViewContainerRef, static: true })
     public container!: ViewContainerRef;
 
-    public alignment = 'horizontal';
+    public alignment = RadioGroupAlignment.horizontal;
     public required = false;
     public value: any;
 
@@ -940,7 +938,7 @@ class RadioGroupTestComponent implements OnInit {
             <ng-container #radioContainer></ng-container>
         </igx-radio-group>
     `,
-    imports: [IgxRadioGroupDirective, IgxRadioComponent]
+    imports: [IgxRadioGroupDirective]
 })
 class DynamicRadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })

@@ -28,6 +28,7 @@ import { DropPosition } from 'igniteui-angular/grids/core';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Column Pinning #grid', () => {
 
     const DEBOUNCETIME = 30;
@@ -342,7 +343,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should emit columnPin event and allow changing the insertAtIndex param.', () => {
 
-                spyOn(grid.columnPin, 'emit').and.callThrough();
+                vi.spyOn(grid.columnPin, 'emit');
 
                 const idCol = grid.getColumnByName('ID');
                 const idColIndex = idCol.index;
@@ -732,8 +733,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 // check correct headers have left border
                 const firstPinnedHeader = grid.headerGroupsList.find(group => group.isPinned);
                 // The first child of the header is the <div> wrapping the MRL block
-                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK)).toBeTrue();
-                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBeTrue();
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK)).toBeTruthy();
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBeTruthy();
             }));
 
             it('should correctly add pinned columns to the right of the already fixed one', () => {
@@ -775,11 +776,10 @@ describe('IgxGrid - Column Pinning #grid', () => {
             // verify DOM
             // ContactName first, CompanyName last
             const companyNameCell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
-            expect(companyNameCell.visibleColumnIndex)
-                .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length);
+            expect(companyNameCell.visibleColumnIndex, 'ContactName').toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length);
             expect(GridFunctions.isCellPinned(companyNameCell)).toBe(true);
 
-            const contactNameCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+            const contactNameCell = grid.gridAPI.get_cell_by_index(0 , 'ContactName');
             expect(contactNameCell.visibleColumnIndex).toEqual(0);
             expect(GridFunctions.isCellPinned(contactNameCell)).toBe(true);
 
@@ -816,11 +816,10 @@ describe('IgxGrid - Column Pinning #grid', () => {
             GridFunctions.verifyUnpinnedAreaWidth(grid, 200);
 
             expect(col.pinned).toBe(true);
-            expect(col.visibleIndex)
-                .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
+            expect(col.visibleIndex, 'ID').toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
             expect(col.pinningPosition).toBe(ColumnPinningPosition.End);
 
-            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 0);
             expect(cell.visibleColumnIndex)
                 .toEqual(grid.pinnedStartColumns.length + grid.unpinnedColumns.length + 1);
             expect(GridFunctions.isCellPinned(cell)).toBe(true);

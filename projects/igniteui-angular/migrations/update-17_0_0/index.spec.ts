@@ -267,6 +267,7 @@ import { Component, ViewChild } from '@angular/core';
 
 import { IgxCardModule } from '${igPackage}';
 import { EaseOut, flipRight, growVerIn, growVerOut, scaleOutHorLeft, shakeHor, slideInBr, swingOutLeftBck } from '${igPackage}/animations';
+import { describe, it, expect, beforeEach } from 'vitest';
 `
             );
         });

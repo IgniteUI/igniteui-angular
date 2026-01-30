@@ -6,6 +6,7 @@ import { IgxCheckboxComponent } from './checkbox.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxCheckbox', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

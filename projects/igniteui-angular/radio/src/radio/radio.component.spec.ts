@@ -6,6 +6,7 @@ import { IgxRadioComponent } from './radio.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxRadio', () => {
 
     beforeEach(waitForAsync(() => {
@@ -310,7 +311,7 @@ class DisabledRadioComponent {
     @for (item of ['Foo', 'Bar']; track item) {
         <igx-radio #radios
             [value]="item"
-            [(ngModel)]="Foo"
+            [ngModel]="item"
             required>
             {{item}}
         </igx-radio>

@@ -3,6 +3,7 @@ import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates
 import { Component, signal, TemplateRef, viewChild } from '@angular/core';
 import type { IgcChatComponent, IgcChatMessage, IgcTextareaComponent } from 'igniteui-webcomponents';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('Chat wrapper', () => {
 
     let chatComponent: IgxChatComponent;

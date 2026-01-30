@@ -6,6 +6,7 @@ import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { By } from '@angular/platform-browser';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxIconButton', () => {
 
     const baseClass = 'igx-icon-button';

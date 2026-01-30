@@ -21,6 +21,7 @@ import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ColumnPinningPosition, DefaultSortingStrategy, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -220,10 +221,10 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             const rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
             const lastRow = rows[rows.length - 1];
-            expect(lastRow.query(By.css('igx-icon')).nativeElement).toHaveClass('igx-icon--inactive');
+            expect(lastRow.query(By.css('igx-icon')).nativeElement.classList.contains('igx-icon--inactive')).toBe(true);
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
             fixture.detectChanges();
-            expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
+            expect(lastRow.query(By.css('igx-icon')).nativeElement.classList.contains('igx-icon--inactive')).toBe(false);
         }));
 
         it('should now allow expanding uncommitted added rows', fakeAsync(() => {
@@ -743,8 +744,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     });
 
     describe('Toolbar', () => {
-        it('should be displayed correctly for child layout and hiding should apply to the correct child.', fakeAsync(() => {
-            pending('Change test for new scrollbar structure');
+        it.skip('should be displayed correctly for child layout and hiding should apply to the correct child.', fakeAsync(() => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
             tick();
             fixture.detectChanges();
@@ -775,8 +775,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // expect(childGrid.visibleColumns.length).toEqual(3);
         }));
 
-        it('should be displayed correctly for child layout and pinning should apply to the correct child.', fakeAsync(() => {
-            pending('Change test for new scrollbar structure');
+        it.skip('should be displayed correctly for child layout and pinning should apply to the correct child.', fakeAsync(() => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
 
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
@@ -802,8 +801,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.getColumnByName('ID').pinned).toBeFalsy();
         }));
 
-        it('should read from custom templates per level', fakeAsync(() => {
-            pending('Change test for new scrollbar structure');
+        it.skip('should read from custom templates per level', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestCustomToolbarComponent);
             tick();
             fixture.detectChanges();
@@ -848,7 +846,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     describe('Moving', () => {
 
         // TODO: Revise this test! That DOM digging is sloppy
-        xit('should not be possible to drag move a column from another grid.', (async () => {
+        it.skip('should not be possible to drag move a column from another grid.', (async () => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
 
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));

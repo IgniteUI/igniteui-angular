@@ -16,6 +16,7 @@ import { IgxHierarchicalRowComponent } from '../../hierarchical-grid/src/hierarc
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { GridCellMergeMode, IgxColumnComponent, IgxGridMRLNavigationService, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;
     let grid: IgxGridComponent;
@@ -931,18 +932,16 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         describe('Multi-row layout', () => {
             it('should throw warning and disallow merging with mrl.', () => {
-                jasmine.getEnv().allowRespy(true);
                 fix = TestBed.createComponent(ColumnLayoutTestComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-                spyOn(console, 'warn');
+                vi.spyOn(console, 'warn');
                 grid.columns[1].merge = true;
                 fix.detectChanges();
 
                 expect(console.warn).toHaveBeenCalledWith('Merging is not supported with multi-row layouts.');
                 expect(console.warn).toHaveBeenCalledTimes(1);
-                jasmine.getEnv().allowRespy(false);
-            });
+                });
 
         });
 
