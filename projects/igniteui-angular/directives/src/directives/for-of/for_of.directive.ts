@@ -532,6 +532,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (this.contentObserver) {
             this.contentObserver.disconnect();
         }
+
+        if (this.viewObserver) {
+            this._embeddedViewSizesCache.clear();
+            this.viewObserver.disconnect();
+        }
     }
 
     /**
