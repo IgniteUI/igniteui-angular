@@ -30,7 +30,9 @@ import {
     ViewContainerRef,
     DOCUMENT,
     inject,
-    InjectionToken
+    InjectionToken,
+    SimpleChanges,
+    OnChanges
 } from '@angular/core';
 import {
     areEqualArrays,
@@ -143,7 +145,7 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
-    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit, OnChanges {
 
     /* blazorSuppress */
     public readonly validation = inject(IgxGridValidationService);
@@ -197,6 +199,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @WatchChanges()
     @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
@@ -4267,6 +4270,15 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._cdrRequests) {
             this.resetNotifyChanges();
             this.cdr.detectChanges();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.autoGenerate?.currentValue && this.data.length > 0 && this.columnList.length === 0) {
+            this.setupColumns()
         }
     }
 
