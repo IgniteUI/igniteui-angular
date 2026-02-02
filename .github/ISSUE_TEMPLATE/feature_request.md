@@ -2,6 +2,7 @@
 name: Feature request
 about: Suggest an idea for this project
 title: ''
+type: Feature
 labels: ':toolbox: feature-request,:new: status: new'
 assignees: ''
 projects: IgniteUI/16
