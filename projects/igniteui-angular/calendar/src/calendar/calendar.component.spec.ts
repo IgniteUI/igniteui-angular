@@ -2,7 +2,6 @@ import { Component, DebugElement, LOCALE_ID, ViewChild } from "@angular/core";
 import {
     TestBed,
     tick,
-    fakeAsync,
     flush,
     ComponentFixture,
 } from "@angular/core/testing";
@@ -33,6 +32,7 @@ import { HelperTestFunctions } from "../../../test-utils/calendar-helper-utils";
 import { WEEKDAYS } from "../../../core/src/core/enums";
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe("IgxCalendar - ", () => {
     registerLocaleData(localeFr);
 
@@ -2338,7 +2338,7 @@ describe("IgxCalendar - ", () => {
                     dom = fixture.debugElement;
                 });
 
-                it("Should navigate to the previous/next month via KB.", fakeAsync(() => {
+                it("Should navigate to the previous/next month via KB.", customFakeAsync(() => {
                     const prev = dom.queryAll(
                         By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS),
                     )[0];
@@ -2376,7 +2376,7 @@ describe("IgxCalendar - ", () => {
                     expect(calendar.viewDate.getMonth()).toEqual(6);
                 }));
 
-                it("Should open years view, navigate through and select an year via KB.", fakeAsync(() => {
+                it("Should open years view, navigate through and select an year via KB.", customFakeAsync(() => {
                     const year = dom.queryAll(
                         By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS),
                     )[1];
@@ -2466,7 +2466,7 @@ describe("IgxCalendar - ", () => {
                     expect(calendar.viewDate.getFullYear()).toEqual(2016);
                 }));
 
-                it("Should open months view, navigate through and select a month via KB.", fakeAsync(() => {
+                it("Should open months view, navigate through and select a month via KB.", customFakeAsync(() => {
                     const month = dom.queryAll(
                         By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS),
                     )[0];
@@ -2874,7 +2874,7 @@ describe("IgxCalendar - ", () => {
                 )[0].nativeElement;
             });
 
-            it("Should increment/decrement months continuously on mousedown.", fakeAsync(() => {
+            it("Should increment/decrement months continuously on mousedown.", customFakeAsync(() => {
                 expect(calendar.viewDate.getMonth()).toEqual(5);
                 // Have no idea how this test worked before,
                 // changing expectation based on my udnerstanding of that the test does
@@ -2912,7 +2912,7 @@ describe("IgxCalendar - ", () => {
                 expect(calendar.viewDate.getMonth()).toEqual(5);
             }));
 
-            it("Should increment/decrement months continuously on enter keydown.", fakeAsync(() => {
+            it("Should increment/decrement months continuously on enter keydown.", customFakeAsync(() => {
                 expect(calendar.viewDate.getMonth()).toEqual(5);
 
                 prevMonthBtn.focus();
@@ -2928,7 +2928,7 @@ describe("IgxCalendar - ", () => {
                 expect(calendar.viewDate.getMonth()).toEqual(5);
             }));
 
-            it("Should prioritize weekStart property over locale.", fakeAsync(() => {
+            it("Should prioritize weekStart property over locale.", customFakeAsync(() => {
                 calendar.locale = "en";
                 fixture.detectChanges();
                 expect(calendar.weekStart).toEqual(0);
@@ -2943,7 +2943,7 @@ describe("IgxCalendar - ", () => {
                 flush();
             }));
 
-            it("Should throw error when setting incorrect locale", fakeAsync(() => {
+            it("Should throw error when setting incorrect locale", customFakeAsync(() => {
                 let errorThrown;
                 try {
                     calendar.locale = "frrr";
@@ -2956,7 +2956,7 @@ describe("IgxCalendar - ", () => {
                 flush();
             }));
 
-            it("Should setting the global LOCALE_ID, Calendar must be displayed per current locale.", fakeAsync(() => {
+            it("Should setting the global LOCALE_ID, Calendar must be displayed per current locale.", customFakeAsync(() => {
                 // Verify locale is set respecting the globally LOCALE_ID provider
                 expect(calendar.locale).toEqual("fr");
 

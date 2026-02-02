@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -13,6 +13,7 @@ import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - multi-column headers #grid', () => {
     let contactInf;
     let countryInf;
@@ -284,7 +285,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, generalInf, true, false, ['remove', 'add']);
         });
 
-        it('verify setting templates by property', fakeAsync(() => {
+        it('verify setting templates by property', customFakeAsync(() => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf);
 
             // Set template
@@ -394,7 +395,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         let fixture;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -548,7 +549,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf, true, true);
         });
 
-        it('Moving: Verify that expanded state is preserved when move column group', fakeAsync(() => {
+        it('Moving: Verify that expanded state is preserved when move column group', customFakeAsync(() => {
             const generalInf = GridFunctions.getColGroup(grid, 'General Information');
 
             expect(addressInf.expanded).toBeTruthy();

@@ -1,6 +1,6 @@
 import { IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
 import {
@@ -20,6 +20,7 @@ import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const DEBOUNCETIME = 60;
 
 describe('IgxGrid - Row Adding #grid', () => {
@@ -959,7 +960,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             gridContent = GridFunctions.getGridContent(fixture);
         });
 
-        it('Should exit add row mode when moving a column', fakeAsync(() => {
+        it('Should exit add row mode when moving a column', customFakeAsync(() => {
             vi.spyOn(grid.gridAPI.crudService, 'endEdit');
             const dataLength = grid.data.length;
             const row = grid.rowList.first;

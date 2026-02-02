@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxTreeGridExpandingComponent,
@@ -20,6 +20,7 @@ import { QueryList } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 
 import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -359,7 +360,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(treeGrid.paginator.totalPages).toBe(1);
         });
 
-        it('Should update the paginator when a row of any level is expanded', fakeAsync(() => {
+        it('Should update the paginator when a row of any level is expanded', customFakeAsync(() => {
             // Test prerequisites
             treeGrid.paginator.perPage = 5;
             fix.detectChanges();
@@ -916,7 +917,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 treeGrid = fix.componentInstance.treeGrid;
             });
 
-            it('check expanding and collapsing a row with children', fakeAsync(() => {
+            it('check expanding and collapsing a row with children', customFakeAsync(() => {
                 let rows = TreeGridFunctions.getAllRows(fix);
                 const row = rows[0];
                 TreeGridFunctions.verifyTreeRowIndicator(row, false);
@@ -946,7 +947,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(rows.length).toBe(3);
             }));
 
-            it('check expanding and collapsing a row without children', fakeAsync(() => {
+            it('check expanding and collapsing a row without children', customFakeAsync(() => {
                 let rows = TreeGridFunctions.getAllRows(fix);
                 const row = rows[1];
                 const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
@@ -968,7 +969,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(rows.length).toBe(3);
             }));
 
-            it('check row selection when expand a row', fakeAsync(() => {
+            it('check row selection when expand a row', customFakeAsync(() => {
                 treeGrid.rowSelection = GridSelectionMode.multiple;
                 fix.detectChanges();
 
@@ -1000,7 +1001,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(treeGrid.selectedRows).toEqual([1, 6, 10]);
             }));
 
-            it('check row selection within multipleCascade selection mode when expand a row', fakeAsync(() => {
+            it('check row selection within multipleCascade selection mode when expand a row', customFakeAsync(() => {
                 treeGrid.rowSelection = GridSelectionMode.multipleCascade;
                 fix.detectChanges();
 
@@ -1043,7 +1044,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 treeGrid = fix.componentInstance.treeGrid;
             });
 
-            it('check expanding and collapsing a row with children', fakeAsync(() => {
+            it('check expanding and collapsing a row with children', customFakeAsync(() => {
                 let rows = TreeGridFunctions.getAllRows(fix);
                 const row = rows[0];
                 TreeGridFunctions.verifyTreeRowIndicator(row, false);
@@ -1073,7 +1074,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(rows.length).toBe(3);
             }));
 
-            it('check expanding and collapsing a row without children', fakeAsync(() => {
+            it('check expanding and collapsing a row without children', customFakeAsync(() => {
                 let rows = TreeGridFunctions.getAllRows(fix);
                 const row = rows[1];
                 const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
@@ -1103,7 +1104,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 treeGrid = fix.componentInstance.treeGrid;
             });
 
-            it('check expanding and collapsing a row with children', fakeAsync(() => {
+            it('check expanding and collapsing a row with children', customFakeAsync(() => {
                 let rows = TreeGridFunctions.getAllRows(fix);
                 const firstRow = rows[0];
                 const secondRow = rows[1];

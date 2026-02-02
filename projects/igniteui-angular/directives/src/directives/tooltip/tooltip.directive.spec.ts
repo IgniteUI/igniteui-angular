@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent, IgxTooltipNestedTooltipsComponent } from '../../../../test-utils/tooltip-components.spec';
@@ -10,6 +10,7 @@ import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 import { Placement, PositionsMap } from './tooltip.common';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 const SHOW_DELAY = 200;
@@ -77,7 +78,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         });
 
-        it('IgxTooltip is shown/hidden when hovering/unhovering its target', fakeAsync(() => {
+        it('IgxTooltip is shown/hidden when hovering/unhovering its target', customFakeAsync(() => {
             hoverElement(button);
             flush();
 
@@ -89,7 +90,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('should not render a default arrow', fakeAsync(() => {
+        it('should not render a default arrow', customFakeAsync(() => {
             expect(tooltipTarget.hasArrow).toBeFalsy();
 
             hoverElement(button);
@@ -102,7 +103,7 @@ describe('IgxTooltip', () => {
             expect(arrow.style.display).toEqual("none");
         }));
 
-        it('should show/hide the arrow via the `hasArrow` property', fakeAsync(() => {
+        it('should show/hide the arrow via the `hasArrow` property', customFakeAsync(() => {
             expect(tooltipTarget.hasArrow).toBeFalsy();
 
             tooltipTarget.hasArrow = true;
@@ -122,7 +123,7 @@ describe('IgxTooltip', () => {
             expect(arrow.style.display).toEqual("none");
         }));
 
-        it('show target tooltip when hovering its target and ignore [tooltip] input', fakeAsync(() => {
+        it('show target tooltip when hovering its target and ignore [tooltip] input', customFakeAsync(() => {
             hoverElement(button);
             flush();
 
@@ -130,13 +131,13 @@ describe('IgxTooltip', () => {
             expect(tooltipNativeElement.textContent.trim()).toEqual('Hello, I am a tooltip!');
         }));
 
-        it('verify tooltip default position', fakeAsync(() => {
+        it('verify tooltip default position', customFakeAsync(() => {
             hoverElement(button);
             flush();
             verifyTooltipPosition(tooltipNativeElement, button);
         }));
 
-        it('IgxTooltip is not shown when is disabled and hovering its target', fakeAsync(() => {
+        it('IgxTooltip is not shown when is disabled and hovering its target', customFakeAsync(() => {
             tooltipTarget.tooltipDisabled = true;
             fix.detectChanges();
 
@@ -152,7 +153,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
         }));
 
-        it('IgxTooltip mouse interaction respects showDelay', fakeAsync(() => {
+        it('IgxTooltip mouse interaction respects showDelay', customFakeAsync(() => {
             tooltipTarget.showDelay = 900;
             fix.detectChanges();
 
@@ -168,7 +169,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
         }));
 
-        it('IgxTooltip mouse interaction respects hideDelay', fakeAsync(() => {
+        it('IgxTooltip mouse interaction respects hideDelay', customFakeAsync(() => {
             tooltipTarget.hideDelay = 700;
             fix.detectChanges();
 
@@ -187,7 +188,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('IgxTooltip is shown/hidden when invoking respective API methods', fakeAsync(() => {
+        it('IgxTooltip is shown/hidden when invoking respective API methods', customFakeAsync(() => {
             tooltipTarget.showTooltip();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -197,7 +198,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('showing tooltip through API does NOT respect showDelay', fakeAsync(() => {
+        it('showing tooltip through API does NOT respect showDelay', customFakeAsync(() => {
             tooltipTarget.showDelay = 400;
             fix.detectChanges();
 
@@ -207,7 +208,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
         }));
 
-        it('hiding tooltip through API does NOT respect hideDelay', fakeAsync(() => {
+        it('hiding tooltip through API does NOT respect hideDelay', customFakeAsync(() => {
             tooltipTarget.hideDelay = 450;
             fix.detectChanges();
 
@@ -220,7 +221,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('IgxTooltip respects the passed overlaySettings', fakeAsync(() => {
+        it('IgxTooltip respects the passed overlaySettings', customFakeAsync(() => {
             // Hover the button.
             hoverElement(button);
             flush();
@@ -254,7 +255,7 @@ describe('IgxTooltip', () => {
             flush();
         }));
 
-        it('IgxTooltip closes when the target is clicked', fakeAsync(() => {
+        it('IgxTooltip closes when the target is clicked', customFakeAsync(() => {
             hoverElement(button);
             flush();
 
@@ -266,7 +267,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('IgxTooltip should not be shown if the target is clicked - #16145', fakeAsync(() => {
+        it('IgxTooltip should not be shown if the target is clicked - #16145', customFakeAsync(() => {
             tooltipTarget.showDelay = 500;
             fix.detectChanges();
 
@@ -281,7 +282,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('IgxTooltip hides on pressing \'escape\' key', fakeAsync(() => {
+        it('IgxTooltip hides on pressing \'escape\' key', customFakeAsync(() => {
             tooltipTarget.showTooltip();
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -292,7 +293,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('IgxTooltip is hidden when its target is destroyed', fakeAsync(() => {
+        it('IgxTooltip is hidden when its target is destroyed', customFakeAsync(() => {
             hoverElement(button);
             flush();
 
@@ -306,7 +307,7 @@ describe('IgxTooltip', () => {
         }));
 
         describe('Tooltip events', () => {
-            it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
+            it('should emit the proper events when hovering/unhovering target', customFakeAsync(() => {
                 vi.spyOn(tooltipTarget.tooltipShow, 'emit');
                 vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
@@ -320,7 +321,7 @@ describe('IgxTooltip', () => {
                 flush();
             }));
 
-            it('should emit the proper events when showing/hiding tooltip through API', fakeAsync(() => {
+            it('should emit the proper events when showing/hiding tooltip through API', customFakeAsync(() => {
                 vi.spyOn(tooltipTarget.tooltipShow, 'emit');
                 vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
@@ -334,7 +335,7 @@ describe('IgxTooltip', () => {
                 flush();
             }));
 
-            it('should emit the proper events with correct eventArgs when hover/unhover', fakeAsync(() => {
+            it('should emit the proper events with correct eventArgs when hover/unhover', customFakeAsync(() => {
                 vi.spyOn(tooltipTarget.tooltipShow, 'emit');
                 vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
@@ -351,7 +352,7 @@ describe('IgxTooltip', () => {
                 flush();
             }));
 
-            it('should emit the proper events with correct eventArgs when show/hide through API', fakeAsync(() => {
+            it('should emit the proper events with correct eventArgs when show/hide through API', customFakeAsync(() => {
                 vi.spyOn(tooltipTarget.tooltipShow, 'emit');
                 vi.spyOn(tooltipTarget.tooltipHide, 'emit');
 
@@ -368,7 +369,7 @@ describe('IgxTooltip', () => {
                 flush();
             }));
 
-            it('should cancel the showing event when hover', fakeAsync(() => {
+            it('should cancel the showing event when hover', customFakeAsync(() => {
                 fix.componentInstance.cancelShowing = true;
 
                 hoverElement(button);
@@ -377,7 +378,7 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
 
-            it('should cancel the hiding event when unhover', fakeAsync(() => {
+            it('should cancel the hiding event when unhover', customFakeAsync(() => {
                 fix.componentInstance.cancelHiding = true;
 
                 hoverElement(button);
@@ -389,7 +390,7 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
             }));
 
-            it('should cancel the showing event when show through API', fakeAsync(() => {
+            it('should cancel the showing event when show through API', customFakeAsync(() => {
                 fix.componentInstance.cancelShowing = true;
 
                 tooltipTarget.showTooltip();
@@ -398,7 +399,7 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
 
-            it('should cancel the hiding event when hide through API', fakeAsync(() => {
+            it('should cancel the hiding event when hide through API', customFakeAsync(() => {
                 fix.componentInstance.cancelHiding = true;
 
                 tooltipTarget.showTooltip();
@@ -412,7 +413,7 @@ describe('IgxTooltip', () => {
         });
 
         describe('Tooltip show/hide triggers', () => {
-            it('should override default triggers', fakeAsync(() => {
+            it('should override default triggers', customFakeAsync(() => {
                 tooltipTarget.showTriggers = 'focus';
                 tooltipTarget.hideTriggers = 'keypress';
                 fix.detectChanges();
@@ -434,7 +435,7 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
 
-            it('should add multiple show triggers', fakeAsync(() => {
+            it('should add multiple show triggers', customFakeAsync(() => {
                 tooltipTarget.showTriggers = 'focus, keypress';
                 fix.detectChanges();
 
@@ -451,7 +452,7 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
             }));
 
-            it('should add multiple hide triggers', fakeAsync(() => {
+            it('should add multiple hide triggers', customFakeAsync(() => {
                 tooltipTarget.showTriggers = 'focus';
                 tooltipTarget.hideTriggers = 'blur, keypress';
                 fix.detectChanges();
@@ -471,7 +472,7 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
 
-            it('should respect showDelay and hideDelay', fakeAsync(() => {
+            it('should respect showDelay and hideDelay', customFakeAsync(() => {
                 tooltipTarget.showTriggers = tooltipTarget.hideTriggers = 'click';
                 fix.detectChanges();
 
@@ -489,7 +490,7 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
 
-            it('should not be shown if the tooltip is disabled', fakeAsync(() => {
+            it('should not be shown if the tooltip is disabled', customFakeAsync(() => {
                 tooltipTarget.showTriggers = 'focus';
                 tooltipTarget.hideTriggers = 'blur';
                 tooltipTarget.tooltipDisabled = true;
@@ -532,13 +533,13 @@ describe('IgxTooltip', () => {
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
         });
 
-        it('IgxTooltip is initially hidden', fakeAsync(() => {
+        it('IgxTooltip is initially hidden', customFakeAsync(() => {
             unhoverElement(button);
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('IgxTooltip is shown/hidden when hovering/unhovering its target', fakeAsync(() => {
+        it('IgxTooltip is shown/hidden when hovering/unhovering its target', customFakeAsync(() => {
             hoverElement(button);
             flush();
 
@@ -550,7 +551,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('Should respect default max-width constraint for plain string tooltip', fakeAsync(() => {
+        it('Should respect default max-width constraint for plain string tooltip', customFakeAsync(() => {
             hoverElement(button);
             flush();
 
@@ -570,7 +571,7 @@ describe('IgxTooltip', () => {
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
         });
 
-        it('Should not have max-width constraint for custom content tooltip', fakeAsync(() => {
+        it('Should not have max-width constraint for custom content tooltip', customFakeAsync(() => {
             hoverElement(button);
             flush();
 
@@ -622,7 +623,7 @@ describe('IgxTooltip', () => {
             tooltip3 = fix.componentInstance.tooltipLevel3;
         });
 
-        it('should show arrow for each tooltip', fakeAsync(() => {
+        it('should show arrow for each tooltip', customFakeAsync(() => {
             hoverElement(tooltipTarget1);
             flush();
             verifyTooltipVisibility(tooltip1.element, tooltipTarget1, true);
@@ -660,7 +661,7 @@ describe('IgxTooltip', () => {
             buttonTwo = fix.debugElement.query(By.css('.buttonTwo'));
         });
 
-        it('Same tooltip shows on different targets depending on which target is hovered', fakeAsync(() => {
+        it('Same tooltip shows on different targets depending on which target is hovered', customFakeAsync(() => {
             hoverElement(buttonOne);
             flush();
 
@@ -680,7 +681,7 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
         }));
 
-        it('Same tooltip shows on a second target when hovering it without closing from first target\'s logic', fakeAsync(() => {
+        it('Same tooltip shows on a second target when hovering it without closing from first target\'s logic', customFakeAsync(() => {
             targetOne.hideDelay = 700;
             fix.detectChanges();
 
@@ -700,7 +701,7 @@ describe('IgxTooltip', () => {
             flush();
         }));
 
-        it('Should position relative to its target when having no close animation - #16288', fakeAsync(() => {
+        it('Should position relative to its target when having no close animation - #16288', customFakeAsync(() => {
             targetOne.positionSettings = targetTwo.positionSettings = {
                 openAnimation: undefined,
                 closeAnimation: undefined
@@ -725,7 +726,7 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
         }));
 
-        it('Hovering first target briefly and then hovering second target leads to tooltip showing for second target', fakeAsync(() => {
+        it('Hovering first target briefly and then hovering second target leads to tooltip showing for second target', customFakeAsync(() => {
             targetOne.showDelay = 600;
             fix.detectChanges();
 
@@ -748,7 +749,7 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
         }));
 
-        it('should not emit tooltipHide event multiple times', fakeAsync(() => {
+        it('should not emit tooltipHide event multiple times', customFakeAsync(() => {
             vi.spyOn(targetOne.tooltipHide, 'emit');
             vi.spyOn(targetTwo.tooltipHide, 'emit');
 
@@ -777,7 +778,7 @@ describe('IgxTooltip', () => {
             flush();
         }));
 
-        it('should show and remove close button depending on active sticky target', fakeAsync(() => {
+        it('should show and remove close button depending on active sticky target', customFakeAsync(() => {
             targetOne.sticky = true;
             fix.detectChanges();
             hoverElement(buttonOne);
@@ -808,7 +809,7 @@ describe('IgxTooltip', () => {
             expect(fix.componentInstance.tooltip.role).toBe('tooltip');
         }));
 
-        it('should assign close template programmatically and render it only for the sticky target', fakeAsync(() => {
+        it('should assign close template programmatically and render it only for the sticky target', customFakeAsync(() => {
             const instance = fix.componentInstance;
 
             targetOne.sticky = true;
@@ -834,7 +835,7 @@ describe('IgxTooltip', () => {
             expect(tooltipNativeElement.querySelector('.my-close-btn')).toBeNull();
         }));
 
-        it('should not update tooltip state when non-active target changes sticky or closeTemplate', fakeAsync(() => {
+        it('should not update tooltip state when non-active target changes sticky or closeTemplate', customFakeAsync(() => {
             const instance = fix.componentInstance as IgxTooltipMultipleTargetsComponent;
 
             targetOne.sticky = true;
@@ -869,7 +870,7 @@ describe('IgxTooltip', () => {
             expect(instance.tooltip.tooltipTarget).toBe(targetOne);
         }));
 
-        it('should update tooltip state when active target changes closeTemplate or sticky', fakeAsync(() => {
+        it('should update tooltip state when active target changes closeTemplate or sticky', customFakeAsync(() => {
             const instance = fix.componentInstance as IgxTooltipMultipleTargetsComponent;
 
             targetOne.sticky = true;
@@ -905,7 +906,7 @@ describe('IgxTooltip', () => {
             expect(tooltip.querySelector('igx-tooltip-close-button')).toBeNull();
         }));
 
-        it('should correctly update tooltip when showing programmatically for sticky and non-sticky targets', fakeAsync(() => {
+        it('should correctly update tooltip when showing programmatically for sticky and non-sticky targets', customFakeAsync(() => {
             const tooltip = tooltipNativeElement;
 
             targetOne.sticky = true;
@@ -932,7 +933,7 @@ describe('IgxTooltip', () => {
             expect(tooltip.role).toBe('tooltip');
         }));
 
-        it('should correctly manage arrow state between different targets', fakeAsync(() => {
+        it('should correctly manage arrow state between different targets', customFakeAsync(() => {
             targetOne.hasArrow = true;
             fix.detectChanges();
 
@@ -964,7 +965,7 @@ describe('IgxTooltip', () => {
             button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
         });
 
-        it('Correctly sets tooltip target when defined before igxToggleAction directive on same host - issue #14196', fakeAsync(() => {
+        it('Correctly sets tooltip target when defined before igxToggleAction directive on same host - issue #14196', customFakeAsync(() => {
             expect(tooltipTarget.target.element).toBe(tooltipNativeElement);
             expect(fix.componentInstance.toggleDir.collapsed).toBe(true);
 
@@ -995,7 +996,7 @@ describe('IgxTooltip', () => {
             button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
         });
 
-        it('should render custom close button when sticky is true', fakeAsync(() => {
+        it('should render custom close button when sticky is true', customFakeAsync(() => {
             hoverElement(button);
             flush();
 
@@ -1004,7 +1005,7 @@ describe('IgxTooltip', () => {
             expect(closeBtn).toBeTruthy();
         }));
 
-        it('should remove close button when sticky is set to false', fakeAsync(() => {
+        it('should remove close button when sticky is set to false', customFakeAsync(() => {
             tooltipTarget.sticky = false;
             fix.detectChanges();
             tick();
@@ -1018,7 +1019,7 @@ describe('IgxTooltip', () => {
 
         }));
 
-        it('should hide the tooltip custom close button is clicked', fakeAsync(() => {
+        it('should hide the tooltip custom close button is clicked', customFakeAsync(() => {
             hoverElement(button);
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -1031,7 +1032,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        it('should use default close icon when no custom template is passed', fakeAsync(() => {
+        it('should use default close icon when no custom template is passed', customFakeAsync(() => {
             // Clear custom template
             tooltipTarget.closeTemplate = null;
             fix.detectChanges();
@@ -1046,7 +1047,7 @@ describe('IgxTooltip', () => {
             expect(icon?.textContent?.trim().toLowerCase()).toBe('close');
         }));
 
-        it('should update the DOM role attribute correctly when sticky changes', fakeAsync(() => {
+        it('should update the DOM role attribute correctly when sticky changes', customFakeAsync(() => {
             hoverElement(button);
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -1059,7 +1060,7 @@ describe('IgxTooltip', () => {
             expect(tooltipNativeElement.getAttribute('role')).toBe('tooltip');
         }));
 
-        it('should hide sticky tooltip when Escape is pressed', fakeAsync(() => {
+        it('should hide sticky tooltip when Escape is pressed', customFakeAsync(() => {
             tooltipTarget.sticky = true;
             fix.detectChanges();
 
@@ -1079,7 +1080,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false)
         }));
 
-        it('should correctly display a sticky tooltip on custom show trigger', fakeAsync(() => {
+        it('should correctly display a sticky tooltip on custom show trigger', customFakeAsync(() => {
             tooltipTarget.sticky = true;
             tooltipTarget.showTriggers = 'focus';
             fix.detectChanges();
@@ -1107,7 +1108,7 @@ describe('IgxTooltip', () => {
             UIInteractions.clearOverlay();
         });
 
-        it('should respect custom positive offset', fakeAsync(() => {
+        it('should respect custom positive offset', customFakeAsync(() => {
             const customOffset = 20;
             tooltipTarget.positionSettings = {
                 ...PositionsMap.get(Placement.Bottom),
@@ -1122,7 +1123,7 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom, customOffset);
         }));
 
-        it('should respect custom negative offset', fakeAsync(() => {
+        it('should respect custom negative offset', customFakeAsync(() => {
             const customOffset = -10;
             tooltipTarget.positionSettings = {
                 ...PositionsMap.get(Placement.Right),
@@ -1137,7 +1138,7 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Right, customOffset);
         }));
 
-        it('should correctly position arrow based on tooltip placement', fakeAsync(() => {
+        it('should correctly position arrow based on tooltip placement', customFakeAsync(() => {
             tooltipTarget.positionSettings = {
                 ...PositionsMap.get(Placement.BottomStart),
             };

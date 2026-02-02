@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, inject } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -20,6 +20,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGridCreatedEventArgs } from './events';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     beforeEach(async () => {
@@ -545,7 +546,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGridSecondRow.inEditMode).toBe(false);
         });
 
-        it('child grid width should be recalculated if parent no longer shows scrollbar.', fakeAsync(() => {
+        it('child grid width should be recalculated if parent no longer shows scrollbar.', customFakeAsync(() => {
             hierarchicalGrid.height = '1000px';
             fixture.detectChanges();
             hierarchicalGrid.filter('ProductName', 'A0', IgxStringFilteringOperand.instance().condition('contains'), true);
@@ -1066,7 +1067,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(fixture.componentInstance.childGridRef.elementRef.nativeElement).toEqual(child1Grid.nativeElement);
         });
 
-        it('should update columns property of row islands on columns change.', fakeAsync(() => {
+        it('should update columns property of row islands on columns change.', customFakeAsync(() => {
 
             expect(hierarchicalGrid.childLayoutList.first.columns.length, 'Initial columns length should be 2').toEqual(2);
             expect(hierarchicalGrid.childLayoutList.first.columnList.length, 'Initial columnList length should be 2').toEqual(2);
@@ -1096,7 +1097,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrid1.columns[1].editable).toBeTruthy();
         });
 
-        it('should update the row island summary UI when disabledSummaries is changed at runtime', fakeAsync(() => {
+        it('should update the row island summary UI when disabledSummaries is changed at runtime', customFakeAsync(() => {
             const masterRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(masterRow.expander);
             fixture.detectChanges();
@@ -1290,7 +1291,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
 
         // To investigate why it times out
-        it('should render loading indicator when loading and autoGenerate are enabled', fakeAsync(() => {
+        it('should render loading indicator when loading and autoGenerate are enabled', customFakeAsync(() => {
             fixture.detectChanges();
 
             const grid = fixture.componentInstance.instance;
@@ -1341,7 +1342,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(icon.getActive).toBe(false);
         });
 
-        it('should keep already expanded child grids\' data when expanding subsequent ones', fakeAsync(() => {
+        it('should keep already expanded child grids\' data when expanding subsequent ones', customFakeAsync(() => {
             const hierarchicalGrid = fixture.componentInstance.instance;
 
             fixture.componentInstance.databind();
@@ -1415,7 +1416,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(child2Headers[2].nativeElement.innerText).toEqual('Col1');
         });
 
-        it('should render correct columns when setting columns for parent and child post init using @for', fakeAsync(() => {
+        it('should render correct columns when setting columns for parent and child post init using @for', customFakeAsync(() => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
@@ -1441,7 +1442,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(child1Grid.columns[2].field).toBe('Col1');
         }));
 
-        it('should update columns for expanded child when adding column to row island', fakeAsync(() => {
+        it('should update columns for expanded child when adding column to row island', customFakeAsync(() => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
@@ -1489,7 +1490,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(colHeaders[1].nativeElement.innerText).toEqual('ProductName');
         }));
 
-        it('should update columns for rendered child that is collapsed when adding column to row island', fakeAsync(() => {
+        it('should update columns for rendered child that is collapsed when adding column to row island', customFakeAsync(() => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
@@ -1828,7 +1829,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         let fixture: ComponentFixture<IgxHierarchicalGridToggleRIAndColsComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
 
-        it('should allow changing columns runtime in root grid when there are no row islands.', fakeAsync(() => {
+        it('should allow changing columns runtime in root grid when there are no row islands.', customFakeAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridToggleRIAndColsComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -1899,7 +1900,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrid.excelStyleFilteringComponent).toBe(ri.excelStyleFilteringComponent);
         });
 
-        it('should correctly filter templated row island in hierarchical grid', fakeAsync(() => {
+        it('should correctly filter templated row island in hierarchical grid', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxHierarchicalGridCustomFilteringTemplateComponent);
             fixture.detectChanges();
 

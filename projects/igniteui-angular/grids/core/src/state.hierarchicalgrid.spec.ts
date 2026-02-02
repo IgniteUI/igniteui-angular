@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +12,7 @@ import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-an
 import { IgxGridNavigationService } from './grid-navigation.service';
 
 import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
@@ -165,7 +166,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         HelperFunctions.verifyMoving(grid.moving, gridState);
     });
 
-    it('setState should correctly restore grid moving state from string', fakeAsync(() => {
+    it('setState should correctly restore grid moving state from string', customFakeAsync(() => {
         const state = fix.componentInstance.state;
 
         const initialState = HelperFunctions.buildStateString(grid, 'moving', 'true', 'true');
@@ -203,7 +204,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
     });
 
-    it('setState should correctly restore grid filtering state from string', fakeAsync(() => {
+    it('setState should correctly restore grid filtering state from string', customFakeAsync(() => {
         const state = fix.componentInstance.state;
 
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
@@ -231,7 +232,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(filteringState);
     }));
 
-    it('setState should correctly restore grid filtering state from object', fakeAsync(() => {
+    it('setState should correctly restore grid filtering state from object', customFakeAsync(() => {
         const state = fix.componentInstance.state;
 
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
@@ -458,7 +459,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(expansionState);
     });
 
-    it('setState should correctly restore grid columns state from string', fakeAsync(() => {
+    it('setState should correctly restore grid columns state from string', customFakeAsync(() => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 

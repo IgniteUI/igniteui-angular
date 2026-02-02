@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject } from '@angular/core';
-import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, tick, flush } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,6 +21,7 @@ import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-an
 import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
@@ -313,7 +314,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
         });
 
-        it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
+        it ('checks if attributes are correctly assigned when grid has or does not have data', customFakeAsync( () => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
 
@@ -340,7 +341,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
         }));
 
-        it('should render empty message', fakeAsync(() => {
+        it('should render empty message', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
             fixture.detectChanges();
@@ -382,7 +383,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
         }));
 
-        it('should render loading indicator when loading is enabled', fakeAsync(() => {
+        it('should render loading indicator when loading is enabled', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
             fixture.componentInstance.grid.isLoading = true;
@@ -433,7 +434,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(loadingIndicator).not.toBeNull();
         }));
 
-        it('should render loading indicator when loading is enabled when there is height', fakeAsync(() => {
+        it('should render loading indicator when loading is enabled when there is height', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
             fixture.componentInstance.grid.isLoading = true;
@@ -488,7 +489,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(loadingIndicator.nativeElement.children.length).toBe(0);
         }));
 
-        it('should render loading indicator when loading is enabled and autoGenerate is enabled', fakeAsync(() => {
+        it('should render loading indicator when loading is enabled and autoGenerate is enabled', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
             fixture.componentInstance.grid.isLoading = true;
@@ -528,7 +529,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(loadingIndicator).not.toBeNull();
         }));
 
-        it('should render loading indicator when loading is enabled and autoGenerate is enabled and async data', fakeAsync(() => {
+        it('should render loading indicator when loading is enabled and autoGenerate is enabled and async data', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
             fixture.detectChanges();
             tick(16);
@@ -550,7 +551,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
         }));
 
-        it('should render loading indicator when loading is enabled and the grid has empty filtering pre-applied', fakeAsync(() => {
+        it('should render loading indicator when loading is enabled and the grid has empty filtering pre-applied', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
             grid.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -578,7 +579,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
         }));
 
-        it('should allow applying custom empty and loading indicator', fakeAsync(() => {
+        it('should allow applying custom empty and loading indicator', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
             fixture.componentInstance.customLoading = true;
             fixture.detectChanges();
@@ -610,7 +611,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
         }));
 
-        it('should remove loading overlay when isLoading is set to false', fakeAsync(() => {
+        it('should remove loading overlay when isLoading is set to false', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
             fixture.componentInstance.grid.isLoading = true;
@@ -654,7 +655,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.textContent).toEqual(grid.emptyGridMessage);
         }));
 
-        it('should render empty message when grid height is 100%', fakeAsync(() => {
+        it('should render empty message when grid height is 100%', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridEmptyMessage100PercentComponent);
             fixture.detectChanges();
             tick(16);
@@ -1273,7 +1274,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it(`should render grid with correct height when parent container's height is set
-            and the total row height is smaller than parent height #1861`, fakeAsync(() => {
+            and the total row height is smaller than parent height #1861`, customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
             fix.componentInstance.grid.height = '100%';
             fix.componentInstance.paging = true;
@@ -1286,7 +1287,7 @@ describe('IgxGrid Component Tests #grid', () => {
         }));
 
         it(`should render grid with correct height when height is in percent and the
-            sum height of all rows is lower than parent height #1858`, fakeAsync(() => {
+            sum height of all rows is lower than parent height #1858`, customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
             fix.componentInstance.grid.height = '100%';
             fix.componentInstance.data = fix.componentInstance.data.slice(0, 3);
@@ -1297,7 +1298,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
         }));
 
-        it('should keep auto-sizing if initial data is empty then set to a new array', fakeAsync(() => {
+        it('should keep auto-sizing if initial data is empty then set to a new array', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             tick();
             fix.detectChanges();
@@ -1314,7 +1315,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBe(510);
         }));
 
-        it('should keep auto-sizing if initial data is set to empty array that is then filled', fakeAsync(() => {
+        it('should keep auto-sizing if initial data is set to empty array that is then filled', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.detectChanges();
 
@@ -1388,7 +1389,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBe(510);
         });
 
-        it('should keep default height when filtering', fakeAsync(() => {
+        it('should keep default height when filtering', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             tick();
             fix.detectChanges();
@@ -1440,7 +1441,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBeNull();
         });
 
-        it('should not keep auto-sizing when changing height', fakeAsync(() => {
+        it('should not keep auto-sizing when changing height', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.detectChanges();
 
@@ -1469,7 +1470,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBeGreaterThan(300);
         }));
 
-        it('should not auto-size when changing height is determinable', fakeAsync(() => {
+        it('should not auto-size when changing height is determinable', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.outerHeight = 800;
             tick();
@@ -1494,7 +1495,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.componentInstance.data = fix.componentInstance.fullData;
         }));
 
-        it('should not auto-size when container has display:contents and size is determinable ', fakeAsync(() => {
+        it('should not auto-size when container has display:contents and size is determinable ', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.display = "contents";
             fix.componentInstance.data = fix.componentInstance.fullData;
@@ -1532,7 +1533,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-        it('Should render date and number values based on default formatting', fakeAsync(() => {
+        it('Should render date and number values based on default formatting', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             fixture.detectChanges();
             tick(16);
@@ -1663,7 +1664,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        it('Should change dates/number display based on locale #ivy', fakeAsync(() => {
+        it('Should change dates/number display based on locale #ivy', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {
@@ -1980,7 +1981,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(calcWidth).toBe(126);
         });
 
-        it('should recreate columns when data changes and autoGenerate is true', fakeAsync(() => {
+        it('should recreate columns when data changes and autoGenerate is true', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
@@ -2348,7 +2349,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it(`When edit a cell onto filtered data through grid method, the row should
-            disappear and the new value should not persist onto the next row`, fakeAsync(() => {
+            disappear and the new value should not persist onto the next row`, customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(5, 5);
             fix.detectChanges();
@@ -2760,7 +2761,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(thirdRow.viewIndex).toBe(7);
         });
 
-        it('Verify that getRowByIndex returns correct data when paging is enabled', fakeAsync(() => {
+        it('Verify that getRowByIndex returns correct data when paging is enabled', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             const grid = fix.componentInstance.grid;
             fix.componentInstance.data = fix.componentInstance.fullData;
@@ -3003,7 +3004,7 @@ describe('IgxGrid Component Tests #grid', () => {
             }).compileComponents();
         });
 
-        it('should have access to grid context', fakeAsync(() => {
+        it('should have access to grid context', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWithCustomPaginationTemplateComponent);
             tick();
             fix.detectChanges();

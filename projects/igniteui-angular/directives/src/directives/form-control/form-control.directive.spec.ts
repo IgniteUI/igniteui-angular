@@ -1,5 +1,5 @@
 import { Component, DebugElement, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
@@ -7,6 +7,7 @@ import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 import { IgcFormControlDirective } from './form-control.directive';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgcFormControlDirective - ', () => {
 
     let fixture: ComponentFixture<any>;
@@ -69,7 +70,7 @@ describe('IgcFormControlDirective - ', () => {
             defineComponents(IgcRatingComponent);
         });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(IgxFormsControlComponent);
             fixture.detectChanges();
             input = fixture.debugElement.query(By.css(`#basicModelRating`));

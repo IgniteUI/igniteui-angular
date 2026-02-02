@@ -1,7 +1,7 @@
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { formatDate, registerLocaleData } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject, Renderer2, ElementRef } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +16,7 @@ import { MaskParsingService } from '../mask/mask-parsing.service';
 import { removeUnicodeSpaces } from 'igniteui-angular/test-utils/helper-utils.spec';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
@@ -812,7 +813,7 @@ describe('IgxDateTimeEditor', () => {
                 result = formatDate(date, 'longTime', 'en-US').normalize("NFKD");
                 expect(removeUnicodeSpaces(inputElement.nativeElement.value)).toContain(result);
             });
-            it('should be able to apply custom display format.', fakeAsync(() => {
+            it('should be able to apply custom display format.', customFakeAsync(() => {
                 // default format
                 const date = new Date(2003, 3, 5, 0, 0, 0, 0);
                 fixture.componentInstance.date = new Date(2003, 3, 5, 0, 0, 0, 0);
@@ -897,7 +898,7 @@ describe('IgxDateTimeEditor', () => {
                 inputDate = ControlsFunction.formatDate(date, longDateOptions, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
             });
-            it('should clear input date on clear()', fakeAsync(() => {
+            it('should clear input date on clear()', customFakeAsync(() => {
                 const date = new Date(2003, 3, 5);
                 fixture.componentInstance.date = date;
                 fixture.detectChanges();
@@ -908,7 +909,7 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditorDirective.clear();
                 expect(inputElement.nativeElement.value).toEqual('');
             }));
-            it('should move the caret to the start/end of the portion with CTRL + arrow left/right keys.', fakeAsync(() => {
+            it('should move the caret to the start/end of the portion with CTRL + arrow left/right keys.', customFakeAsync(() => {
                 const date = new Date(2003, 4, 5);
                 fixture.componentInstance.date = date;
                 fixture.detectChanges();
@@ -1009,7 +1010,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual('../../.... ..:..:..:...');
             });
-            it('should be en/disabled when the input is en/disabled.', fakeAsync(() => {
+            it('should be en/disabled when the input is en/disabled.', customFakeAsync(() => {
                 vi.spyOn(dateTimeEditorDirective, 'setDisabledState');
                 fixture.componentInstance.disabled = true;
                 fixture.detectChanges();
@@ -1128,7 +1129,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
-            it('should properly increment/decrement date-time portions on wheel', fakeAsync(() => {
+            it('should properly increment/decrement date-time portions on wheel', customFakeAsync(() => {
                 fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
                 fixture.detectChanges();
                 const today = new Date(2021, 12, 12);

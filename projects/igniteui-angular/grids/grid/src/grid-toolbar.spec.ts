@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { GridFunctions } from "../../../test-utils/grid-functions.spec";
@@ -9,6 +9,7 @@ import { IgxCsvExporterService, IgxExcelExporterService, IgxGridToolbarActionsCo
 import { ExportUtilities } from 'igniteui-angular/grids/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';
 const TOOLBAR_ACTIONS_TAG = 'igx-grid-toolbar-actions';
@@ -51,7 +52,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
         const $ = (selector: string) => fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(DefaultToolbarComponent);
             fixture.detectChanges();
         }));
@@ -111,13 +112,13 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
         const $ = (selector: string) => fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(ToolbarActionsComponent);
             fixture.detectChanges();
             instance = fixture.componentInstance;
         }));
 
-        it('the buttons type should be set to "button"', fakeAsync(() => {
+        it('the buttons type should be set to "button"', customFakeAsync(() => {
             tick();
             fixture.detectChanges();
 
@@ -285,7 +286,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
         });
 
-        it('should initialize input property columnsAreaMaxHeight properly', fakeAsync(() => {
+        it('should initialize input property columnsAreaMaxHeight properly', customFakeAsync(() => {
             expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('100%');
 
             instance.pinningAction.columnsAreaMaxHeight = '10px';
@@ -303,7 +304,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('10px');
         }));
 
-        it('should emit columnToggle event when a column is shown/hidden via the column hiding action', fakeAsync(() => {
+        it('should emit columnToggle event when a column is shown/hidden via the column hiding action', customFakeAsync(() => {
             const spy = vi.spyOn(instance.hidingAction.columnToggle, 'emit');
             const hidingUI = $(TOOLBAR_HIDING_TAG);
             const grid = fixture.componentInstance.grid;

@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import {
     IgxTreeGridSimpleComponent,
@@ -27,6 +27,7 @@ import { IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxTreeGrid - Selection #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -173,7 +174,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 4], true);
         });
 
-        it('should persist the selection after filtering', fakeAsync(() => {
+        it('should persist the selection after filtering', customFakeAsync(() => {
             treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).key, treeGrid.gridAPI.get_row_by_index(5).key,
             treeGrid.gridAPI.get_row_by_index(8).key], true);
             fix.detectChanges();
@@ -244,7 +245,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
 
-        it('should persist selection after paging', fakeAsync(() => {
+        it('should persist selection after paging', customFakeAsync(() => {
             treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(0).key, treeGrid.gridAPI.get_row_by_index(3).key,
             treeGrid.gridAPI.get_row_by_index(5).key], true);
             fix.detectChanges();
@@ -439,7 +440,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 4], true);
         });
 
-        it('should persist the selection after filtering', fakeAsync(() => {
+        it('should persist the selection after filtering', customFakeAsync(() => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 8);
@@ -459,7 +460,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
         }));
 
-        it('should update header checkbox when reselecting all filtered-in rows', fakeAsync(() => {
+        it('should update header checkbox when reselecting all filtered-in rows', customFakeAsync(() => {
             treeGrid.filter('Age', 30, IgxNumberFilteringOperand.instance().condition('lessThan'));
             tick(100);
 
@@ -497,7 +498,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
 
-        it('should persist selection after paging', fakeAsync(() => {
+        it('should persist selection after paging', customFakeAsync(() => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
@@ -670,7 +671,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
         });
 
-        it('should have correct header checkbox when add a row and undo transaction', fakeAsync(() => {
+        it('should have correct header checkbox when add a row and undo transaction', customFakeAsync(() => {
             treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
             tick();
             fix.detectChanges();
@@ -871,7 +872,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(treeGrid.selectedCells.length).toBe(0);
         });
 
-        it('should persist selection after filtering', fakeAsync(() => {
+        it('should persist selection after filtering', customFakeAsync(() => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             UIInteractions.simulateClickAndSelectEvent(treeGridCell);
@@ -993,7 +994,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
         });
 
-        it('should display the banner correctly on row selection', fakeAsync(() => {
+        it('should display the banner correctly on row selection', customFakeAsync(() => {
             const targetCell = treeGrid.getCellByColumn(1, 'Name');
             treeGrid.rowSelection = GridSelectionMode.multiple;
             treeGrid.rowEditable = true;
@@ -1017,7 +1018,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(banner[0]).toBeTruthy();
         }));
 
-        it('should display the banner correctly on cell selection', fakeAsync(() => {
+        it('should display the banner correctly on cell selection', customFakeAsync(() => {
             treeGrid.rowEditable = true;
 
             const allRows = TreeGridFunctions.getAllRows(fix);
@@ -1512,7 +1513,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
         it(`Parent with two or more children. Select parent. Filter out one of the children. Deselect all the others -> children
             and parent checkbox state becomes deselected. Filter the other child back in. This child should remain selected.
-            Parent checkbox state should be indeterminate.`, fakeAsync(() => {
+            Parent checkbox state should be indeterminate.`, customFakeAsync(() => {
             treeGrid.selectRows([147], true);
             fix.detectChanges();
 
@@ -1554,7 +1555,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
         it(`Parent in indeterminate state. Filter out its children -> parent not selected. Select parent and add new child.
         Parent -> not selected. Revert filtering so that previous records are back in the view and parent should become in
-        indeterminate state because one of it children is selected`, fakeAsync(() => {
+        indeterminate state because one of it children is selected`, customFakeAsync(() => {
 
             treeGrid.selectRows([998], true);
             fix.detectChanges();
@@ -1628,7 +1629,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it(`Selected parent. Filter out some of the children and delete otheres.
-        Parent should be not selected`, fakeAsync(() => {
+        Parent should be not selected`, customFakeAsync(() => {
 
             treeGrid.selectRows([317], true);
             fix.detectChanges();
@@ -1670,7 +1671,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it(`Set nested child row, that has its own children, as initially selected and verify
-        that both direct and indirect parent's checkboxes are set in the correct state.`, fakeAsync(() => {
+        that both direct and indirect parent's checkboxes are set in the correct state.`, customFakeAsync(() => {
 
             treeGrid.selectedRows = [317];
             fix.detectChanges();
@@ -2005,7 +2006,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it(`Set nested child row, that has its own children, as initially selected and verify
-        that both direct and indirect parent's checkboxes are set in the correct state.`, fakeAsync(() => {
+        that both direct and indirect parent's checkboxes are set in the correct state.`, customFakeAsync(() => {
             treeGrid.selectedRows = [317];
             fix.detectChanges();
             tick(100);

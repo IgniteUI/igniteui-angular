@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
@@ -17,6 +17,7 @@ import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '
 import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const DEBOUNCE_TIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const CELL_CSS_CLASS_NUMBER_FORMAT = '.igx-grid__td--number';
@@ -152,7 +153,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(parseFloat(cell.value)).toBe(expectedValue);
         });
 
-        it('edit template should be according column data type -- boolean', fakeAsync(() => {
+        it('edit template should be according column data type -- boolean', customFakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'isActive');
             const cellDomBoolean = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
 
@@ -251,7 +252,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBeNull();
         });
 
-        it('Should not revert cell\' value when doubleClick while in editMode', fakeAsync(() => {
+        it('Should not revert cell\' value when doubleClick while in editMode', customFakeAsync(() => {
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
             const firstCell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
@@ -274,7 +275,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(firstCell.editMode).toBeTruthy();
         }));
 
-        it('should end cell editing when clearing or applying advanced filter', fakeAsync(() => {
+        it('should end cell editing when clearing or applying advanced filter', customFakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
             // Enter cell edit mode
@@ -312,7 +313,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(false);
         }));
 
-        it('should focus the first cell when editing mode is cell', fakeAsync(() => {
+        it('should focus the first cell when editing mode is cell', customFakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             expect(cell.editMode).toBe(false);
             expect(document.activeElement.nodeName).toEqual('BODY')
@@ -330,7 +331,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(10)
         }));
 
-        it('should work correct when not using ngModel but value and change event', fakeAsync(() => {
+        it('should work correct when not using ngModel but value and change event', customFakeAsync(() => {
             fixture = TestBed.createComponent(CellEditingCustomEditorTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -362,7 +363,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe(newValue);
         }));
 
-        it('should preserve the navigation when cancel cellEdit and async set cell.editMode=false', fakeAsync(() => {
+        it('should preserve the navigation when cancel cellEdit and async set cell.editMode=false', customFakeAsync(() => {
             grid.cellEdit.subscribe((evt: IGridEditEventArgs) => {
                 evt.cancel = true;
                 const rowIndex = evt.cellID.rowIndex;
@@ -653,7 +654,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             grid.ngAfterViewInit();
         });
 
-        afterEach(fakeAsync(() => {
+        afterEach(customFakeAsync(() => {
             $destroyer.next(true);
         }));
 
@@ -882,7 +883,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        it(`Should be able to cancel 'cellEdit' event`, fakeAsync(() => {
+        it(`Should be able to cancel 'cellEdit' event`, customFakeAsync(() => {
             const emitSpy = vi.spyOn(grid.cellEdit, 'emit');
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
@@ -957,7 +958,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
         }));
 
-        it(`Should be able to update other cell in 'cellEdit' event`, fakeAsync(() => {
+        it(`Should be able to update other cell in 'cellEdit' event`, customFakeAsync(() => {
             grid.primaryKey = 'personNumber';
             fixture.detectChanges();
 
@@ -1373,7 +1374,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
     });
 
-    it('Cell editing (when rowEditable=false) - default column editable value is false', fakeAsync(() => {
+    it('Cell editing (when rowEditable=false) - default column editable value is false', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnEditablePropertyTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1387,7 +1388,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
     }));
 
     // Bug #5855
-    it('should apply proper style on cell editing when new value equals zero or false', fakeAsync(() => {
+    it('should apply proper style on cell editing when new value equals zero or false', customFakeAsync(() => {
         const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
         fixture.detectChanges();
 

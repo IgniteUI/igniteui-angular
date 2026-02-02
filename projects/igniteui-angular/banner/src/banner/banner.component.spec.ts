@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
-import { TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,6 +9,7 @@ import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } fro
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_EXPANSION_PANEL_BODY = 'igx-expansion-panel__body';
 const CSS_CLASS_BANNER = 'igx-banner';
@@ -93,7 +94,7 @@ describe('igxBanner', () => {
             expect(buttons[1].innerHTML).toEqual('DISMISS');
         });
 
-        it('Should properly set base classes', fakeAsync(() => {
+        it('Should properly set base classes', customFakeAsync(() => {
             const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
 
@@ -119,7 +120,7 @@ describe('igxBanner', () => {
             expect(bannerActionsElement).toBeDefined();
         }));
 
-        it('Should initialize banner with at least one and up to two buttons', fakeAsync(() => {
+        it('Should initialize banner with at least one and up to two buttons', customFakeAsync(() => {
             const fixture: ComponentFixture<IgxBannerEmptyComponent> = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
 
@@ -157,7 +158,7 @@ describe('igxBanner', () => {
             expect(bannerActionsElement).toBeNull();
         }));
 
-        it('Should position buttons next to the banner content', fakeAsync(() => {
+        it('Should position buttons next to the banner content', customFakeAsync(() => {
             const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
 
@@ -174,7 +175,7 @@ describe('igxBanner', () => {
             expect(bannerMessageElementTop).toBe(bannerActionsElementTop);
         }));
 
-        it('Should span the entire width of the parent element', fakeAsync(() => {
+        it('Should span the entire width of the parent element', customFakeAsync(() => {
             const fixture: ComponentFixture<IgxBannerOneButtonComponent> = TestBed.createComponent(IgxBannerOneButtonComponent);
             fixture.detectChanges();
 
@@ -196,7 +197,7 @@ describe('igxBanner', () => {
             expect(parentElementRect.bottom).toBe(bannerElementRect.bottom);
         }));
 
-        it('Should push parent element content downwards on loading', fakeAsync(() => {
+        it('Should push parent element content downwards on loading', customFakeAsync(() => {
             const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
 
@@ -226,7 +227,7 @@ describe('igxBanner', () => {
     });
 
     describe('Action tests: ', () => {
-        it('Should dismiss/confirm banner on button clicking', fakeAsync(() => {
+        it('Should dismiss/confirm banner on button clicking', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -334,7 +335,7 @@ describe('igxBanner', () => {
             targetDiv.parentNode.removeChild(targetDiv);
         });
 
-        it('Should properly emit events', fakeAsync(() => {
+        it('Should properly emit events', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -361,7 +362,7 @@ describe('igxBanner', () => {
             expect(banner.closed.emit).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should properly cancel opening and closing', fakeAsync(() => {
+        it('Should properly cancel opening and closing', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleBannerEventsComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -396,7 +397,7 @@ describe('igxBanner', () => {
             expect(banner.closed.emit).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should toggle banner state when expanded property changes', fakeAsync(() => {
+        it('Should toggle banner state when expanded property changes', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -428,7 +429,7 @@ describe('igxBanner', () => {
     });
 
     describe('Rendering tests: ', () => {
-        it('Should apply all appropriate classes on initialization_default template', fakeAsync(() => {
+        it('Should apply all appropriate classes on initialization_default template', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -462,7 +463,7 @@ describe('igxBanner', () => {
             expect(bannerActionsElement).toBeNull();
         }));
 
-        it('Should apply all appropriate classes on initialization_custom template', fakeAsync(() => {
+        it('Should apply all appropriate classes on initialization_custom template', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerCustomTemplateComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -482,7 +483,7 @@ describe('igxBanner', () => {
             expect(panelBody.childElementCount).toEqual(1);
         }));
 
-        it('Should apply the appropriate display style to the banner host', fakeAsync(() => {
+        it('Should apply the appropriate display style to the banner host', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -505,7 +506,7 @@ describe('igxBanner', () => {
             expect(banner.collapsed).toBeTruthy();
         }));
 
-        it('Should apply the appropriate attributes on initialization', fakeAsync(() => {
+        it('Should apply the appropriate attributes on initialization', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
             fixture.detectChanges();
 
@@ -515,7 +516,7 @@ describe('igxBanner', () => {
             expect(panel.attributes.getNamedItem('aria-live').nodeValue).toEqual('polite');
         }));
 
-        it('Should initialize banner as open when expanded is set to true', fakeAsync(() => {
+        it('Should initialize banner as open when expanded is set to true', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;

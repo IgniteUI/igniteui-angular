@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, flush } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { CustomDateRange, DateRange, PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
@@ -27,6 +27,7 @@ import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHe
 import { KeyboardNavigationService } from 'igniteui-angular/calendar/src/calendar/calendar.services';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
 const DEFAULT_ICON_TEXT = 'date_range';
@@ -221,7 +222,7 @@ describe('IgxDateRangePicker', () => {
             expect(mockCalendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
         });
 
-        it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
+        it('should disable calendar dates when min and/or max values as strings are provided', customFakeAsync(() => {
             dateRange.ngOnInit();
 
             vi.spyOn((dateRange as any), 'calendar').mockReturnValue(mockCalendar);
@@ -323,7 +324,7 @@ describe('IgxDateRangePicker', () => {
                     ]
                 }).compileComponents();
             });
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -422,7 +423,7 @@ describe('IgxDateRangePicker', () => {
                         expect(icon.nativeElement.textContent.trim()).toEqual(CLEAR_ICON_TEXT);
                     });
 
-                    it('should clear the value when clicking the default clear icon (suffix)', fakeAsync(() => {
+                    it('should clear the value when clicking the default clear icon (suffix)', customFakeAsync(() => {
                         dateRange.value = range;
                         fixture.detectChanges();
 
@@ -441,7 +442,7 @@ describe('IgxDateRangePicker', () => {
                         expect(dateRange.valueChange.emit).toHaveBeenCalledWith(null);
                     }));
 
-                    it('should not clear the value when clicking element in the suffix that is not the clear icon', fakeAsync(() => {
+                    it('should not clear the value when clicking element in the suffix that is not the clear icon', customFakeAsync(() => {
                         fixture = TestBed.createComponent(DateRangeTemplatesComponent);
                         fixture.detectChanges();
 
@@ -470,7 +471,7 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 describe('Projected clear icon', () => {
-                    it('should clear the value when clicking the projected clear icon', fakeAsync(() => {
+                    it('should clear the value when clicking the projected clear icon', customFakeAsync(() => {
                         fixture = TestBed.createComponent(DateRangeTemplatesComponent);
                         fixture.detectChanges();
 
@@ -573,7 +574,7 @@ describe('IgxDateRangePicker', () => {
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
                 });
 
-                it('should close the calendar with the "Done" button', fakeAsync(() => {
+                it('should close the calendar with the "Done" button', customFakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
@@ -597,7 +598,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
-                it('should close the calendar with the "Cancel" button and retain original value', fakeAsync(() => {
+                it('should close the calendar with the "Cancel" button and retain original value', customFakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     const orig = { start: new Date(2020, 0, 1), end: new Date(2020, 0, 5) };
                     fixture.componentInstance.dateRange.value = orig;
@@ -627,7 +628,7 @@ describe('IgxDateRangePicker', () => {
                     expect(fixture.componentInstance.dateRange.value).toEqual(orig);
                 }));
 
-                it('should show the "Done" and "Cancel" buttons only in dialog mode', fakeAsync(() => {
+                it('should show the "Done" and "Cancel" buttons only in dialog mode', customFakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
 
@@ -653,7 +654,7 @@ describe('IgxDateRangePicker', () => {
                     expect(cancelBtn).not.toBeDefined();
                 }));
 
-                it('should be able to change the "Done" button text', fakeAsync(() => {
+                it('should be able to change the "Done" button text', customFakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
 
@@ -678,7 +679,7 @@ describe('IgxDateRangePicker', () => {
                     expect(doneBtn.textContent.trim()).toEqual('Close');
                 }));
 
-                it('should emit open/close events - open/close methods', fakeAsync(() => {
+                it('should emit open/close events - open/close methods', customFakeAsync(() => {
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
                     vi.spyOn(dateRange.opening, 'emit');
@@ -706,7 +707,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
-                it('should emit open/close events - toggle method', fakeAsync(() => {
+                it('should emit open/close events - toggle method', customFakeAsync(() => {
                     vi.spyOn(dateRange.opening, 'emit');
                     vi.spyOn(dateRange.opened, 'emit');
                     vi.spyOn(dateRange.closing, 'emit');
@@ -735,7 +736,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
-                it('should not close calendar if closing event is canceled', fakeAsync(() => {
+                it('should not close calendar if closing event is canceled', customFakeAsync(() => {
                     vi.spyOn(dateRange.closing, 'emit');
                     vi.spyOn(dateRange.closed, 'emit');
                     dateRange.closing.subscribe((e: CancelableEventArgs) => e.cancel = true);
@@ -762,7 +763,7 @@ describe('IgxDateRangePicker', () => {
             });
 
             describe('Keyboard navigation', () => {
-                it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
+                it('should toggle the calendar with ALT + DOWN/UP ARROW key', customFakeAsync(() => {
                     vi.spyOn(dateRange.opening, 'emit');
                     vi.spyOn(dateRange.opened, 'emit');
                     vi.spyOn(dateRange.closing, 'emit');
@@ -798,7 +799,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.isFocused).toBeTruthy();
                 }));
 
-                it('should close the calendar with ESC', fakeAsync(() => {
+                it('should close the calendar with ESC', customFakeAsync(() => {
                     vi.spyOn(dateRange.closing, 'emit');
                     vi.spyOn(dateRange.closed, 'emit');
                     dateRange.mode = 'dropdown';
@@ -826,7 +827,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.isFocused).toBeTruthy();
                 }));
 
-                it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
+                it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', customFakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.disabled = true;
                     fixture.detectChanges();
@@ -844,7 +845,7 @@ describe('IgxDateRangePicker', () => {
                 }));
             });
 
-            it('should expand the calendar if the default icon (prefix) is clicked', fakeAsync(() => {
+            it('should expand the calendar if the default icon (prefix) is clicked', customFakeAsync(() => {
                 const prefix = fixture.debugElement.query(By.directive(IgxPrefixDirective));
                 prefix.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
@@ -852,14 +853,14 @@ describe('IgxDateRangePicker', () => {
                 expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
             }));
 
-            it('should not expand the calendar if the input is clicked in dropdown mode', fakeAsync(() => {
+            it('should not expand the calendar if the input is clicked in dropdown mode', customFakeAsync(() => {
                 UIInteractions.simulateClickAndSelectEvent(dateRange.getEditElement());
                 tick();
                 fixture.detectChanges();
                 expect(fixture.componentInstance.dateRange.collapsed).toBeTruthy();
             }));
 
-            it('should expand the calendar if the input is clicked in dialog mode', fakeAsync(() => {
+            it('should expand the calendar if the input is clicked in dialog mode', customFakeAsync(() => {
                 dateRange.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
                 UIInteractions.simulateClickAndSelectEvent(dateRange.getEditElement());
@@ -868,7 +869,7 @@ describe('IgxDateRangePicker', () => {
                 expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
             }));
 
-            it('should not expand the calendar if the default icon (in prefix) is clicked when disabled is set to true', fakeAsync(() => {
+            it('should not expand the calendar if the default icon (in prefix) is clicked when disabled is set to true', customFakeAsync(() => {
                 fixture.componentInstance.disabled = true;
                 fixture.detectChanges();
                 const prefix = fixture.debugElement.query(By.directive(IgxPrefixDirective));
@@ -878,7 +879,7 @@ describe('IgxDateRangePicker', () => {
                 expect(fixture.componentInstance.dateRange.collapsed).toBeTruthy();
             }));
 
-            it('should properly set/update disabled when ChangeDetectionStrategy.OnPush is used', fakeAsync(() => {
+            it('should properly set/update disabled when ChangeDetectionStrategy.OnPush is used', customFakeAsync(() => {
                 const testFixture = TestBed
                     .createComponent(DateRangeDisabledComponent) as ComponentFixture<DateRangeDisabledComponent>;
                 testFixture.detectChanges();
@@ -900,7 +901,7 @@ describe('IgxDateRangePicker', () => {
                 disabled$.complete();
             }));
 
-            it('should update the calendar while it\'s open and the value has been updated', fakeAsync(() => {
+            it('should update the calendar while it\'s open and the value has been updated', customFakeAsync(() => {
                 dateRange.open();
                 tick();
                 fixture.detectChanges();
@@ -929,7 +930,7 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRangePicker.inputDirective.valid).toBe(IgxInputState.INITIAL);
             });
 
-            it('should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+            it('should update validity state when programmatically setting errors on reactive form controls', customFakeAsync(() => {
                 const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
                 tick(500);
                 fix.detectChanges();
@@ -1113,7 +1114,7 @@ describe('IgxDateRangePicker', () => {
                     expect(endInputEditor.displayFormat).toEqual(displayFormat);
                 });
 
-                it('should set default inputFormat to the start/end editors with parts for day, month and year based on locale ', fakeAsync(() => {
+                it('should set default inputFormat to the start/end editors with parts for day, month and year based on locale ', customFakeAsync(() => {
                     registerLocaleData(localeBg);
                     registerLocaleData(localeJa);
 
@@ -1141,7 +1142,7 @@ describe('IgxDateRangePicker', () => {
                     expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
                     expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
                 }));
-                it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
+                it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', customFakeAsync(() => {
                     const startInputEditor = startInput.injector.get(IgxDateTimeEditorDirective);
                     const endInputEditor = endInput.injector.get(IgxDateTimeEditorDirective);
 
@@ -1161,7 +1162,7 @@ describe('IgxDateRangePicker', () => {
                     expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('MM/dd/yyyy');
                     expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy');
                 }));
-                it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
+                it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', customFakeAsync(() => {
                     registerLocaleData(localeBg);
                     const startInputEditor = startInput.injector.get(IgxDateTimeEditorDirective);
                     const endInputEditor = endInput.injector.get(IgxDateTimeEditorDirective);
@@ -1237,7 +1238,7 @@ describe('IgxDateRangePicker', () => {
                     expect(endInput.nativeElement.value).toEqual(inputEndDate);
                 });
 
-                it('should select a range from the calendar only when any of the two inputs are filled in', fakeAsync(() => {
+                it('should select a range from the calendar only when any of the two inputs are filled in', customFakeAsync(() => {
                     // refactored to any of the two inputs, instead of both, to match the behavior in WC - #16131
                     startInput.triggerEventHandler('focus', {});
                     fixture.detectChanges();
@@ -1283,7 +1284,7 @@ describe('IgxDateRangePicker', () => {
             });
 
             describe('Keyboard navigation', () => {
-                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dropdown mode', fakeAsync(() => {
+                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dropdown mode', customFakeAsync(() => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.isFocused).toBeFalsy();
 
@@ -1338,7 +1339,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.isFocused).toBeTruthy();
                 }));
 
-                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dialog mode', fakeAsync(() => {
+                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dialog mode', customFakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
@@ -1366,7 +1367,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
-                it('should close the calendar with ESC', fakeAsync(() => {
+                it('should close the calendar with ESC', customFakeAsync(() => {
                     vi.spyOn(dateRange.closing, 'emit');
                     vi.spyOn(dateRange.closed, 'emit');
                     dateRange.mode = 'dropdown';
@@ -1415,7 +1416,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.isFocused).toBeTruthy();
                 }));
 
-                it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
+                it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', customFakeAsync(() => {
                     fixture.componentInstance.disabled = true;
                     fixture.detectChanges();
 
@@ -1430,7 +1431,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
                 }));
 
-                it('should keep the calendar open when input is focused by click and while typing', fakeAsync(() => {
+                it('should keep the calendar open when input is focused by click and while typing', customFakeAsync(() => {
                     fixture.componentInstance.dateRange.open();
                     fixture.detectChanges();
                     tick(DEBOUNCE_TIME);
@@ -1450,7 +1451,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeFalsy();
                 }));
 
-                it('should update the calendar selection on typing', fakeAsync(() => {
+                it('should update the calendar selection on typing', customFakeAsync(() => {
                     const range = { start: new Date(2025, 0, 16), end: new Date(2025, 0, 20) };
                     dateRange.value = range;
                     fixture.detectChanges();
@@ -1480,7 +1481,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange['_calendar'].wrapper.nativeElement.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
                 }));
 
-                it('should update the calendar view and active date on typing a date that is not in the current view', fakeAsync(() => {
+                it('should update the calendar view and active date on typing a date that is not in the current view', customFakeAsync(() => {
                     const range = { start: new Date(2025, 0, 16), end: new Date(2025, 0, 20) };
                     dateRange.value = range;
                     fixture.detectChanges();
@@ -1505,7 +1506,7 @@ describe('IgxDateRangePicker', () => {
                 }));
             });
 
-            it('should focus the last focused input after the calendar closes - dropdown', fakeAsync(() => {
+            it('should focus the last focused input after the calendar closes - dropdown', customFakeAsync(() => {
                 endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
                 endInput.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
@@ -1522,7 +1523,7 @@ describe('IgxDateRangePicker', () => {
                 expect(input.isFocused).toBeTruthy();
             }));
 
-            it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {
+            it('should focus the last focused input after the calendar closes - dialog', customFakeAsync(() => {
                 fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
                 endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
@@ -1542,7 +1543,7 @@ describe('IgxDateRangePicker', () => {
                     .toBeTruthy();
             }));
 
-            it('should expand the calendar if the default icon is clicked', fakeAsync(() => {
+            it('should expand the calendar if the default icon is clicked', customFakeAsync(() => {
                 const icon = fixture.debugElement.query(By.css('igx-picker-toggle'));
                 icon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
@@ -1550,7 +1551,7 @@ describe('IgxDateRangePicker', () => {
                 expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
             }));
 
-            it('should expand the calendar if any of the inputs is clicked in dialog mode', fakeAsync(() => {
+            it('should expand the calendar if any of the inputs is clicked in dialog mode', customFakeAsync(() => {
                 fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
                 endInput = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT))[1];
@@ -1560,7 +1561,7 @@ describe('IgxDateRangePicker', () => {
                 expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
             }));
 
-            it('should not expand the calendar if the default icon is clicked when disabled is set to true', fakeAsync(() => {
+            it('should not expand the calendar if the default icon is clicked when disabled is set to true', customFakeAsync(() => {
                 fixture.componentInstance.disabled = true;
                 fixture.detectChanges();
                 const icon = fixture.debugElement.query(By.css('igx-picker-toggle'));
@@ -1570,7 +1571,7 @@ describe('IgxDateRangePicker', () => {
                 expect(fixture.componentInstance.dateRange.collapsed).toBeTruthy();
             }));
 
-            it('should properly set/update disabled when ChangeDetectionStrategy.OnPush is used', fakeAsync(() => {
+            it('should properly set/update disabled when ChangeDetectionStrategy.OnPush is used', customFakeAsync(() => {
                 const testFixture = TestBed
                     .createComponent(DateRangeTwoInputsDisabledComponent) as ComponentFixture<DateRangeTwoInputsDisabledComponent>;
                 testFixture.detectChanges();
@@ -1595,7 +1596,7 @@ describe('IgxDateRangePicker', () => {
                 disabled$.complete();
             }));
 
-            it('should update the calendar while it\'s open and the value has been updated', fakeAsync(() => {
+            it('should update the calendar while it\'s open and the value has been updated', customFakeAsync(() => {
                 dateRange.open();
                 tick();
                 fixture.detectChanges();
@@ -1608,7 +1609,7 @@ describe('IgxDateRangePicker', () => {
             }));
 
             describe('Data binding', () => {
-                it('should properly update component value with ngModel bound to projected inputs - #7353', fakeAsync(() => {
+                it('should properly update component value with ngModel bound to projected inputs - #7353', customFakeAsync(() => {
                     fixture = TestBed.createComponent(DateRangeTwoInputsNgModelTestComponent);
                     fixture.detectChanges();
                     const range = (fixture.componentInstance as DateRangeTwoInputsNgModelTestComponent).range;
@@ -1851,7 +1852,7 @@ describe('IgxDateRangePicker', () => {
                 expect(suffixRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
             });
 
-            it('should render aria attributes properly', fakeAsync(() => {
+            it('should render aria attributes properly', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -1908,7 +1909,7 @@ describe('IgxDateRangePicker', () => {
                 expect(singleInputElement.nativeElement.value).toEqual(result);
             });
 
-            it('should invoke AutoPositionStrategy by default with proper arguments', fakeAsync(() => {
+            it('should invoke AutoPositionStrategy by default with proper arguments', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 vi.spyOn(AutoPositionStrategy.prototype, 'position');
@@ -1925,7 +1926,7 @@ describe('IgxDateRangePicker', () => {
                     .toHaveBeenCalledWith(overlayContent, expect.anything(), document,
                         expect.anything(), expectedTarget);
             }));
-            it('Should the weekStart property takes precedence over locale.', fakeAsync(() => {
+            it('Should the weekStart property takes precedence over locale.', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -1946,7 +1947,7 @@ describe('IgxDateRangePicker', () => {
                 flush();
             }));
 
-            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+            it('Should passing invalid value for locale, then setting weekStart must be respected.', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -1966,7 +1967,7 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange.weekStart).toEqual(WEEKDAYS.FRIDAY);
             }));
 
-            it('Should render calendar with header in dialog mode by default', fakeAsync(() => {
+            it('Should render calendar with header in dialog mode by default', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -1980,7 +1981,7 @@ describe('IgxDateRangePicker', () => {
                 expect(calendarHeader, 'Calendar header should be present').toBeTruthy();
             }));
 
-            it('should set calendar headerOrientation prop in dialog mode', fakeAsync(() => {
+            it('should set calendar headerOrientation prop in dialog mode', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -2004,7 +2005,7 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange['_calendar'].headerOrientation).toBe(PickerHeaderOrientation.Vertical);
             }));
 
-            it('should hide the calendar header if hideHeader is true in dialog mode', fakeAsync(() => {
+            it('should hide the calendar header if hideHeader is true in dialog mode', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -2020,7 +2021,7 @@ describe('IgxDateRangePicker', () => {
                 expect(calendarHeader, 'Calendar header should not be present').toBeFalsy();
             }));
 
-            it('should set calendar orientation property', fakeAsync(() => {
+            it('should set calendar orientation property', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -2043,7 +2044,7 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange['_calendar'].wrapper.nativeElement.classList.contains(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL)).toBe(true);
             }));
 
-            it('should limit the displayMonthsCount property between 1 and 2', fakeAsync(() => {
+            it('should limit the displayMonthsCount property between 1 and 2', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -2061,7 +2062,7 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange.displayMonthsCount).toBe(1);
             }));
 
-            it('should set the specialDates of the calendar', fakeAsync(() => {
+            it('should set the specialDates of the calendar', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -2082,7 +2083,7 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange['_calendar'].specialDates).toEqual(specialDates);
             }));
 
-            it('should set the disabledDates of the calendar', fakeAsync(() => {
+            it('should set the disabledDates of the calendar', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -2103,7 +2104,7 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange['_calendar'].disabledDates).toEqual(disabledDates);
             }));
 
-             it('should initialize activeDate with current date, when not set', fakeAsync(() => {
+             it('should initialize activeDate with current date, when not set', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -2121,7 +2122,7 @@ describe('IgxDateRangePicker', () => {
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
             }));
 
-            it('should initialize activeDate = first defined in value (start/end) when it is not set, but value is', fakeAsync(() => {
+            it('should initialize activeDate = first defined in value (start/end) when it is not set, but value is', customFakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
@@ -2146,7 +2147,7 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange.activeDate).toEqual(range.end);
             }));
 
-            it('should set activeDate correctly', fakeAsync(() => {
+            it('should set activeDate correctly', customFakeAsync(() => {
                 const targetDate = new Date(2025, 11, 1);
                  fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
@@ -2185,7 +2186,7 @@ describe('IgxDateRangePicker', () => {
                     await fixture.whenStable();
                 });
 
-                it('Should use the custom template for header title', fakeAsync(() => {
+                it('Should use the custom template for header title', customFakeAsync(() => {
                     const headerTitleElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TITLE));
                     expect(headerTitleElement, 'Header title element should be present').toBeTruthy();
                     if (headerTitleElement) {
@@ -2193,7 +2194,7 @@ describe('IgxDateRangePicker', () => {
                     }
                 }));
 
-                it('Should use the custom template for header', fakeAsync(() => {
+                it('Should use the custom template for header', customFakeAsync(() => {
                     const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TEMPLATE));
                     expect(headerElement, 'Header element should be present').toBeTruthy();
                     if (headerElement) {
@@ -2201,7 +2202,7 @@ describe('IgxDateRangePicker', () => {
                     }
                 }));
 
-                it('Should use the custom template for subheader', fakeAsync(() => {
+                it('Should use the custom template for subheader', customFakeAsync(() => {
                     const headerElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_SUBHEADER));
                     expect(headerElement, 'Subheader element should be present').toBeTruthy();
                     if (headerElement) {

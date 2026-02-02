@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import {
@@ -19,6 +19,7 @@ import { IgxGridTransaction } from 'igniteui-angular/grids/core';
 import { HierarchicalTransaction, IgxHierarchicalTransactionService, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
@@ -661,7 +662,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(editedParentCell.value).toEqual(80);
         });
 
-        it('should select the text when the first cell (tree grid cell) enters edit mode', fakeAsync(() => {
+        it('should select the text when the first cell (tree grid cell) enters edit mode', customFakeAsync(() => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
             grid.expandAll();
             fix.detectChanges();

@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -10,6 +10,7 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
 import { ExpressionUI } from 'igniteui-angular/grids/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Filtering actions #grid', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -20,13 +21,13 @@ describe('IgxGrid - Filtering actions #grid', () => {
     });
 
     let fix; let grid;
-    beforeEach(fakeAsync(() => {
+    beforeEach(customFakeAsync(() => {
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         grid = fix.componentInstance.grid;
     }));
 
-    it('should correctly filter by \'string\' filtering conditions', fakeAsync(() => {
+    it('should correctly filter by \'string\' filtering conditions', customFakeAsync(() => {
         // Contains filter
         grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
@@ -116,7 +117,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(1);
     }));
 
-    it('should correctly filter by \'number\' filtering conditions', fakeAsync(() => {
+    it('should correctly filter by \'number\' filtering conditions', customFakeAsync(() => {
         // DoesNotEqual filter
         grid.filter('Downloads', 254, IgxNumberFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
@@ -187,7 +188,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(7);
     }));
 
-    it('should correctly filter by \'boolean\' filtering conditions', fakeAsync(() => {
+    it('should correctly filter by \'boolean\' filtering conditions', customFakeAsync(() => {
         // Empty filter
         grid.filter('Released', null, IgxBooleanFilteringOperand.instance().condition('empty'));
         fix.detectChanges();
@@ -230,7 +231,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(2);
     }));
 
-    it('should correctly filter by \'date\' filtering conditions', fakeAsync(() => {
+    it('should correctly filter by \'date\' filtering conditions', customFakeAsync(() => {
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
 
@@ -346,7 +347,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(1);
     }));
 
-    it('should correctly filter by \'time\' filtering conditions', fakeAsync(() => {
+    it('should correctly filter by \'time\' filtering conditions', customFakeAsync(() => {
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.todayFullDate;
 
@@ -437,7 +438,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(7);
     }));
 
-    it('should correctly filter by \'dateTime\' filtering conditions', fakeAsync(() => {
+    it('should correctly filter by \'dateTime\' filtering conditions', customFakeAsync(() => {
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.todayFullDate;
 
@@ -454,7 +455,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(7);
     }));
 
-    it('should correctly filter with earliest/latest \'date\' values', fakeAsync(() => {
+    it('should correctly filter with earliest/latest \'date\' values', customFakeAsync(() => {
         const earliest = new Date(SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1).getTime() + 7200 * 1000);
         const latest =  new Date(SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1).getTime() - 7200 * 1000);
 
@@ -500,7 +501,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(1);
     }));
 
-    it('should correctly filter by \'date\' filtering conditions when dates are ISO 8601 strings', fakeAsync(() => {
+    it('should correctly filter by \'date\' filtering conditions when dates are ISO 8601 strings', customFakeAsync(() => {
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
 
@@ -622,7 +623,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(1);
     }));
 
-    it('should correctly filter by \'date\' filtering conditions when dates are miliseconds numbers', fakeAsync(() => {
+    it('should correctly filter by \'date\' filtering conditions when dates are miliseconds numbers', customFakeAsync(() => {
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
 
@@ -744,7 +745,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(1);
     }));
 
-    it('should exclude null and undefined values when filter by \'false\'', fakeAsync(() => {
+    it('should exclude null and undefined values when filter by \'false\'', customFakeAsync(() => {
         expect(grid.rowList.length).toEqual(8);
 
         grid.filter('Released', false, IgxStringFilteringOperand.instance().condition('equals'), true);
@@ -754,7 +755,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.getCellByColumn(1, 'Released').value).toBe(false);
     }));
 
-    it('should correctly apply multiple filtering through API', fakeAsync(() => {
+    it('should correctly apply multiple filtering through API', customFakeAsync(() => {
         vi.spyOn(grid.filtering, 'emit');
         vi.spyOn(grid.filteringDone, 'emit');
 
@@ -786,7 +787,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
     }));
 
-    it('should correctly apply global filtering', fakeAsync(() => {
+    it('should correctly apply global filtering', customFakeAsync(() => {
         vi.spyOn(grid.filtering, 'emit');
         vi.spyOn(grid.filteringDone, 'emit');
 
@@ -804,7 +805,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
     }));
 
-    it('Should render chip when filtering using the API.', fakeAsync(() => {
+    it('Should render chip when filtering using the API.', customFakeAsync(() => {
         const firstHeaderCell = fix.debugElement.query(By.css('.header-release-date'));
         let filteringChips = firstHeaderCell.parent.queryAll(By.directive(IgxChipComponent));
         expect(filteringChips.length).toEqual(1);
@@ -826,7 +827,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(chipContent).toEqual('Filter');
     }));
 
-    it('Should correctly apply two conditions to two columns at once.', fakeAsync(() => {
+    it('Should correctly apply two conditions to two columns at once.', customFakeAsync(() => {
         const colDownloadsExprTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
         colDownloadsExprTree.filteringOperands = [
             { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'), conditionName: 'greaterThanOrEqualTo' },
@@ -855,7 +856,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
     }));
 
-    it('Should correctly apply two conditions to number column.', fakeAsync(() => {
+    it('Should correctly apply two conditions to number column.', customFakeAsync(() => {
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
         const expression = {
             fieldName: 'Downloads',
@@ -879,7 +880,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
     }));
 
-    it('Should correctly apply two conditions to string column.', fakeAsync(() => {
+    it('Should correctly apply two conditions to string column.', customFakeAsync(() => {
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression = {
             fieldName: 'ProductName',
@@ -903,7 +904,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
     }));
 
-    it('Should correctly apply two conditions to date column.', fakeAsync(() => {
+    it('Should correctly apply two conditions to date column.', customFakeAsync(() => {
         const today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ReleaseDate');
@@ -929,7 +930,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
     }));
 
-    it('Should correctly update summary.', fakeAsync(() => {
+    it('Should correctly update summary.', customFakeAsync(() => {
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or);
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ReleaseDate');
         const expression = {
@@ -951,7 +952,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
     }));
 
-    it('should correctly show and hide the "No records found." message.', fakeAsync(() => {
+    it('should correctly show and hide the "No records found." message.', customFakeAsync(() => {
         grid.filter('ProductName', 'asdf', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         let noRecordsSpan = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
@@ -966,7 +967,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(noRecordsSpan).toBeFalsy();
     }));
 
-    it('Should generate the expressions UI list correctly.', fakeAsync(() => {
+    it('Should generate the expressions UI list correctly.', customFakeAsync(() => {
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
         const expression = {
             fieldName: 'ProductName',
@@ -1019,7 +1020,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         verifyExpressionUI(expressionUIs[4], expression22, null, FilteringLogic.And);
     }));
 
-    it('Should do nothing when clearing filter of non-existing column.', fakeAsync(() => {
+    it('Should do nothing when clearing filter of non-existing column.', customFakeAsync(() => {
         grid.filter('ProductName', 'ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
@@ -1029,7 +1030,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(2);
     }));
 
-    it('Should always emit filteringDone with proper eventArgs, even when column does not exist', fakeAsync(() => {
+    it('Should always emit filteringDone with proper eventArgs, even when column does not exist', customFakeAsync(() => {
         vi.spyOn(grid.filtering, 'emit');
         vi.spyOn(grid.filteringDone, 'emit');
 
@@ -1043,7 +1044,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.filteringDone.emit).toHaveBeenCalledWith(args);
     }));
 
-    it('Should emit filteringDone when filtering globally', fakeAsync(() => {
+    it('Should emit filteringDone when filtering globally', customFakeAsync(() => {
         vi.spyOn(grid.filtering, 'emit');
         vi.spyOn(grid.filteringDone, 'emit');
 
@@ -1057,7 +1058,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree);
     }));
 
-    it('Should keep existing expressionTree when filtering with a null expressionTree.', fakeAsync(() => {
+    it('Should keep existing expressionTree when filtering with a null expressionTree.', customFakeAsync(() => {
         vi.spyOn(grid.filtering, 'emit');
         vi.spyOn(grid.filteringDone, 'emit');
 
@@ -1092,14 +1093,14 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.filteringDone.emit).toHaveBeenCalledWith(expression1);
     }));
 
-    it('Should throw descriptive error when filter() is called without condition', fakeAsync(() => {
+    it('Should throw descriptive error when filter() is called without condition', customFakeAsync(() => {
         expect(() => {
             grid.filter('Downloads', 100);
             fix.detectChanges();
         }).toThrowError('Invalid condition or Expression Tree!');
     }));
 
-    it('Should not clear previous filtering when filterGlobal() is called with invalid condition', fakeAsync(() => {
+    it('Should not clear previous filtering when filterGlobal() is called with invalid condition', customFakeAsync(() => {
         vi.spyOn(grid.filtering, 'emit');
         vi.spyOn(grid.filteringDone, 'emit');
 
@@ -1124,7 +1125,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.filteringDone.emit).toHaveBeenCalledTimes(1);
     }));
 
-    it('Should disable filtering feature when using NoopFilteringStrategy.', fakeAsync(() => {
+    it('Should disable filtering feature when using NoopFilteringStrategy.', customFakeAsync(() => {
         vi.spyOn(grid.filtering, 'emit');
         vi.spyOn(grid.filteringDone, 'emit');
 
@@ -1159,13 +1160,13 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     });
 
     let fix; let grid: IgxGridComponent;
-    beforeEach(fakeAsync(() => {
+    beforeEach(customFakeAsync(() => {
         fix = TestBed.createComponent(IgxGridFilteringBindingComponent);
         fix.detectChanges();
         grid = fix.componentInstance.grid;
     }));
 
-    it('should correctly filter with \'filteringExpressionsTree\' binding', fakeAsync(() => {
+    it('should correctly filter with \'filteringExpressionsTree\' binding', customFakeAsync(() => {
         vi.spyOn(grid.filtering, 'emit');
         vi.spyOn(grid.filteringDone, 'emit');
 

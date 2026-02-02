@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -16,6 +16,7 @@ import { GridSelectionMode, IRowSelectionEventArgs } from 'igniteui-angular/grid
 import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;
 
@@ -978,7 +979,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid = fix.componentInstance.grid;
         });
 
-        it('Change  RowSelection to multiple ', fakeAsync(() => {
+        it('Change  RowSelection to multiple ', customFakeAsync(() => {
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false, false);
             GridSelectionFunctions.verifyRowHasCheckbox(grid.gridAPI.get_row_by_index(0).nativeElement, false, false);
 

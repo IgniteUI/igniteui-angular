@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
@@ -10,6 +10,7 @@ import { CancelableEventArgs } from 'igniteui-angular/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Clipboard #grid', () => {
 
     let fix: ComponentFixture<IgxGridClipboardComponent>;
@@ -150,7 +151,7 @@ describe('IgxGrid - Clipboard #grid', () => {
         expect(eventData).toEqual('undefined');
     });
 
-    it('Copy when there is a cell in edit mode', fakeAsync(() => {
+    it('Copy when there is a cell in edit mode', customFakeAsync(() => {
         const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         const cell = grid.getCellByColumn(0, 'ProductName');
         grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.dispatchEvent( new Event('dblclick'));
@@ -169,7 +170,7 @@ describe('IgxGrid - Clipboard #grid', () => {
         expect(eventData).toEqual('');
     }));
 
-    it('Should be able to copy from quick filtering input', fakeAsync(() => {
+    it('Should be able to copy from quick filtering input', customFakeAsync(() => {
         fix.componentInstance.allowFiltering = true;
         fix.detectChanges();
         const productNameFilterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[0];

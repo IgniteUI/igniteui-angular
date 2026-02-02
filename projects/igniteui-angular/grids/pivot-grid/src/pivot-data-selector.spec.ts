@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { fakeAsync, TestBed } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxExpansionPanelHeaderComponent } from 'igniteui-angular/expansion-panel';
@@ -20,6 +20,7 @@ import { ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe("Pivot data selector", () => {
 
     beforeEach(async () => {
@@ -55,7 +56,7 @@ describe("Pivot data selector integration", () => {
         }).compileComponents();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(customFakeAsync(() => {
         fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
         fixture.detectChanges();
         grid = fixture.componentInstance.pivotGrid;

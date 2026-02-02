@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -12,6 +12,7 @@ import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angul
 import { HammerGesturesManager, PlatformUtil } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Cell component #grid', () => {
 
     describe('Test events', () => {
@@ -161,7 +162,7 @@ describe('IgxGrid - Cell component #grid', () => {
             }).compileComponents();
         });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(VirtualGridComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -353,7 +354,7 @@ describe('IgxGrid - Cell component #grid', () => {
             }).compileComponents();
         });
 
-        it('should be able to conditionally style cells', fakeAsync(() => {
+        it('should be able to conditionally style cells', customFakeAsync(() => {
             const fixture = TestBed.createComponent(ConditionalCellStyleTestComponent);
             fixture.detectChanges();
 
@@ -385,7 +386,7 @@ describe('IgxGrid - Cell component #grid', () => {
             }).compileComponents();
         });
 
-        it('verify that value of the cell title is correctly', fakeAsync(() => {
+        it('verify that value of the cell title is correctly', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridDateTimeColumnComponent);
             fixture.detectChanges();
 

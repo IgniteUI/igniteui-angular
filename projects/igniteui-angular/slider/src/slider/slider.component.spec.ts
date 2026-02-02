@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,6 +9,7 @@ import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirecti
 import { IgxSliderComponent } from './slider.component';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const SLIDER_CLASS = '.igx-slider';
 const THUMB_TAG = 'igx-thumb';
 const THUMB_TO_CLASS = '.igx-slider-thumb-to';
@@ -1761,7 +1762,7 @@ describe('IgxSlider', () => {
     });
 
     describe('Form Component', () => {
-        it('Should correctly bind, update and get updated by ngModel', fakeAsync(() => {
+        it('Should correctly bind, update and get updated by ngModel', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SliderTemplateFormComponent);
             fixture.detectChanges();
             tick();
@@ -1799,7 +1800,7 @@ describe('IgxSlider', () => {
             expect(slider.value).toBe(formControl.value);
         });
 
-        it('Should respect the ngModelOptions updateOn: blur', fakeAsync(() => {
+        it('Should respect the ngModelOptions updateOn: blur', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SliderTemplateFormComponent);
             fixture.componentInstance.updateOn = 'blur';
             fixture.componentInstance.value = 0;
@@ -1844,7 +1845,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
         });
 
-        it('should apply all ARIA properties correctly to both thumbs', fakeAsync(() => {
+        it('should apply all ARIA properties correctly to both thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1886,7 +1887,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-disabled')).toBe('true');
         }));
 
-        it('should apply correct tabindex to thumbs', fakeAsync(() => {
+        it('should apply correct tabindex to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1899,7 +1900,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('tabindex')).toBe('0');
         }));
 
-        it('should apply correct role to thumbs', fakeAsync(() => {
+        it('should apply correct role to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1912,7 +1913,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('role')).toBe('slider');
         }));
 
-        it('should apply aria-valuenow, aria-valuemin, and aria-valuemax to thumbs', fakeAsync(() => {
+        it('should apply aria-valuenow, aria-valuemin, and aria-valuemax to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1930,7 +1931,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-valuemax')).toBe(String(slider.maxValue));
         }));
 
-        it('should apply aria-valuenow to the thumbs', fakeAsync(() => {
+        it('should apply aria-valuenow to the thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1943,7 +1944,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-valuenow')).toBe(String(slider.upperLabel));
         }));
 
-        it('should update aria-valuenow when the slider value changes', fakeAsync(() => {
+        it('should update aria-valuenow when the slider value changes', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1966,7 +1967,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-valuenow')).toBe('70');
         }));
 
-        it('should apply aria-valuetext when labels are provided', fakeAsync(() => {
+        it('should apply aria-valuetext when labels are provided', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1993,7 +1994,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-valuetext')).toBe('Medium');
         }));
 
-        it('should apply correct aria-label to thumbs', fakeAsync(() => {
+        it('should apply correct aria-label to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -2006,7 +2007,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-label')).toBe('Slider thumb to');
         }));
 
-        it('should apply correct aria-orientation to thumbs', fakeAsync(() => {
+        it('should apply correct aria-orientation to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -2019,7 +2020,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-orientation')).toBe('horizontal');
         }));
 
-        it('should update aria-disabled when the slider is disabled', fakeAsync(() => {
+        it('should update aria-disabled when the slider is disabled', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();

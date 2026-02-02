@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../../test-utils/grid-samples.spec';
@@ -9,6 +9,7 @@ import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const SELECTED_COLUMN_CLASS = 'igx-grid-th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const SELECTED_FILTER_CELL_CLASS = 'igx-grid__filtering-cell--selected';
@@ -956,7 +957,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             colProductName = grid.getColumnByName('ProductName');
         });
 
-        it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
+        it('Filtering: Verify column selection when filter row is opened ', customFakeAsync(() => {
             grid.allowFiltering = true;
             fix.detectChanges();
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductID');
@@ -1087,7 +1088,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
         });
 
-        it('Moving: Verify that when move a column, it stays selected', fakeAsync(() => {
+        it('Moving: Verify that when move a column, it stays selected', customFakeAsync(() => {
             colProductID.selected = true;
             fix.detectChanges();
 
@@ -1100,7 +1101,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             expect(colProductID.visibleIndex).toEqual(1);
         }));
 
-        it('Paging: Verify column stays selected when change page', fakeAsync(() => {
+        it('Paging: Verify column stays selected when change page', customFakeAsync(() => {
             colProductName.selected = true;
             colProductID.selected = true;
             fix.componentInstance.paging = true;

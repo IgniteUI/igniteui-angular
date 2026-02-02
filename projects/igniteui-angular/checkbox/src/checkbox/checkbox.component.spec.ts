@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from './checkbox.component';
@@ -7,6 +7,7 @@ import { IgxCheckboxComponent } from './checkbox.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxCheckbox', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -56,7 +57,7 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.getAttribute('aria-label')).toMatch('New Label');
     });
 
-    it('Initializes with ngModel', fakeAsync(() => {
+    it('Initializes with ngModel', customFakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         fixture.detectChanges();
 
@@ -134,7 +135,7 @@ describe('IgxCheckbox', () => {
         expect(labelStyles.order).toEqual('-1');
     });
 
-    it('Indeterminate state', fakeAsync(() => {
+    it('Indeterminate state', customFakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxIndeterminateComponent);
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
@@ -356,7 +357,7 @@ describe('IgxCheckbox', () => {
         expect(domCheckbox.classList.contains('igx-checkbox--invalid')).toBe(true);
     });
 
-    it('Should work properly with ngModel', fakeAsync(() => {
+    it('Should work properly with ngModel', customFakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxFormComponent);
         fixture.detectChanges();
         tick();

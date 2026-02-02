@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ViewChildren } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
@@ -19,6 +19,7 @@ import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const DEBOUNCE_TIME = 60;
 const ROW_TAG = 'igx-grid-row';
 const GROUP_ROW_TAG = 'igx-grid-groupby-row';
@@ -53,7 +54,7 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Basic', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -726,7 +727,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
     describe('Integration', () => {
         describe('Paging', () => {
-            it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
+            it('Should not take into account expanded detail views as additional records.', customFakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
@@ -741,7 +742,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(grid.pagingState.metadata.countRecords).toEqual(initialTotalRecords);
             }));
 
-            it('Should persist template state after paging to a page with fewer records and paging back.', fakeAsync(() => {
+            it('Should persist template state after paging to a page with fewer records and paging back.', customFakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 fix.componentInstance.perPage = 5;
                 grid = fix.componentInstance.grid;
@@ -773,7 +774,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Hiding', () => {
-            it('Should set the expand/collapse icon to the new first visible column when hiding the first column.', fakeAsync(() => {
+            it('Should set the expand/collapse icon to the new first visible column when hiding the first column.', customFakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
@@ -786,7 +787,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Pinning', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
@@ -816,13 +817,13 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Column Moving', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
             }));
 
-            it('Should keep the expand/collapse icon in the first column, even when moving a column in first place.', fakeAsync(() => {
+            it('Should keep the expand/collapse icon in the first column, even when moving a column in first place.', customFakeAsync(() => {
                 grid.moveColumn(grid.columnList.last, grid.columnList.first);
                 tick();
                 fix.detectChanges();
@@ -830,7 +831,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
             }));
 
-            it('Should keep the expand/collapse icon in the first column, even when moving a column out of first place.', fakeAsync(() => {
+            it('Should keep the expand/collapse icon in the first column, even when moving a column out of first place.', customFakeAsync(() => {
                 grid.moveColumn(grid.columnList.first, grid.columnList.last);
                 tick();
                 fix.detectChanges();
@@ -840,13 +841,13 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Cell Selection', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
             }));
 
-            it('Should exclude expanded detail views when doing range cell selection', fakeAsync(() => {
+            it('Should exclude expanded detail views when doing range cell selection', customFakeAsync(() => {
                 grid.expandRow(fix.componentInstance.data[2].ID);
                 const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
                 const startCell = grid.gridAPI.get_cell_by_index(1, 'ContactName');
@@ -883,7 +884,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(rowDetail.querySelector('[class*="selected"]')).toBeNull();
             }));
 
-            it('getSelectedData should return correct values when there are master details', fakeAsync(() => {
+            it('getSelectedData should return correct values when there are master details', customFakeAsync(() => {
                 const range = { rowStart: 0, rowEnd: 5, columnStart: 'ContactName', columnEnd: 'ContactName' };
                 const expectedData = [
                     { ContactName: 'Maria Anders' },
@@ -899,7 +900,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(grid.getSelectedData()).toEqual(expectedData);
             }));
 
-            it('getSelectedData should return correct values when there are master details and paging is enabled', fakeAsync(() => {
+            it('getSelectedData should return correct values when there are master details and paging is enabled', customFakeAsync(() => {
                 const range = { rowStart: 0, rowEnd: 5, columnStart: 'ContactName', columnEnd: 'ContactName' };
                 const expectedDataFromSecondPage = [
                     { ContactName: 'Hanna Moos' },
@@ -943,7 +944,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Row Selection', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.componentInstance.rowSelectable = true;
@@ -1065,7 +1066,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Filtering', () => {
-            it('Should persist template state after filtering out the whole data and removing the filter.', fakeAsync(() => {
+            it('Should persist template state after filtering out the whole data and removing the filter.', customFakeAsync(() => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
                 tick(100);
@@ -1096,7 +1097,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Multi-row layout', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fix = TestBed.createComponent(MRLMasterDetailComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
@@ -1185,7 +1186,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('GroupBy', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 fix.detectChanges();
 

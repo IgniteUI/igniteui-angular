@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -10,6 +10,7 @@ import { DefaultSortingStrategy, FormattedValuesSortingStrategy, NoopSortingStra
 import { By } from '@angular/platform-browser';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Grid Sorting #grid', () => {
 
     let fixture;
@@ -36,7 +37,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
     describe('API tests', () => {
 
-        it('Should sort grid ascending by column name', fakeAsync(() => {
+        it('Should sort grid ascending by column name', customFakeAsync(() => {
             vi.spyOn(grid.sorting, 'emit');
             vi.spyOn(grid.sortingDone, 'emit');
             const currentColumn = 'Name';
@@ -411,7 +412,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByKey(4, 'LastName').row.index, 'LastName').toBeGreaterThan(grid.getCellByKey(5, 'LastName').row.index);
         });
 
-        it('Should sort grid by formatted values using FormattedValuesSortingStrategy', fakeAsync(() => {
+        it('Should sort grid by formatted values using FormattedValuesSortingStrategy', customFakeAsync(() => {
             fixture = TestBed.createComponent(IgxGridFormattedValuesSortingComponent);
             tick();
             fixture.detectChanges();
@@ -466,7 +467,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
     describe('UI tests', () => {
 
-        it('Should sort grid ascending by clicking once on first header cell UI', fakeAsync(() => {
+        it('Should sort grid ascending by clicking once on first header cell UI', customFakeAsync(() => {
             vi.spyOn(grid.sorting, 'emit');
             vi.spyOn(grid.sortingDone, 'emit');
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
@@ -496,7 +497,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should sort grid descending by clicking twice on sort icon UI', fakeAsync(() => {
+        it('Should sort grid descending by clicking twice on sort icon UI', customFakeAsync(() => {
             vi.spyOn(grid.sorting, 'emit');
             vi.spyOn(grid.sortingDone, 'emit');
 
@@ -538,7 +539,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
         }));
 
-        it('Should sort grid none when we click three time on header sort icon UI', fakeAsync(() => {
+        it('Should sort grid none when we click three time on header sort icon UI', customFakeAsync(() => {
             vi.spyOn(grid.sorting, 'emit');
             vi.spyOn(grid.sortingDone, 'emit');
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
@@ -589,7 +590,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, false);
         });
 
-        it('Should sort grid on sorting icon click when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
+        it('Should sort grid on sorting icon click when FilterRow is visible.', customFakeAsync(/** Filtering showHideArrowButtons RAF */() => {
             grid.allowFiltering = true;
             fixture.detectChanges();
 
@@ -617,7 +618,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.headerGroupsList[1].isFiltered).toBeTruthy();
         }));
 
-        it('Should disable sorting feature when using NoopSortingStrategy.', fakeAsync(() => {
+        it('Should disable sorting feature when using NoopSortingStrategy.', customFakeAsync(() => {
             vi.spyOn(grid.sorting, 'emit');
             vi.spyOn(grid.sortingDone, 'emit');
             grid.sortStrategy = NoopSortingStrategy.instance();
@@ -706,7 +707,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_drop_down');
         });
 
-        it('Should be able to set single sorting mode and sort one column at a time', fakeAsync(() => {
+        it('Should be able to set single sorting mode and sort one column at a time', customFakeAsync(() => {
             fixture = TestBed.createComponent(SortByParityComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -739,7 +740,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         }));
 
 
-        it('should not display sorting index when sorting mode is set to "single"', fakeAsync(() => {
+        it('should not display sorting index when sorting mode is set to "single"', customFakeAsync(() => {
             fixture = TestBed.createComponent(SortByParityComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -765,7 +766,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.sortingExpressions.length).toBe(1);
         }));
 
-        it('should not clear sortingExpressions when setting sortingOptions on init. ', fakeAsync(() => {
+        it('should not clear sortingExpressions when setting sortingOptions on init. ', customFakeAsync(() => {
             fixture = TestBed.createComponent(SortOnInitComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;

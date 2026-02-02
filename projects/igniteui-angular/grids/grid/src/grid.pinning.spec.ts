@@ -1,4 +1,4 @@
-﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+﻿import { TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridSelectionMode, IgxGridHeaderRowComponent, IgxGridMRLNavigationService, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
@@ -29,6 +29,7 @@ import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/hel
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Column Pinning #grid', () => {
 
     const DEBOUNCETIME = 30;
@@ -234,7 +235,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(result).toBe(false);
             });
 
-            it('should fix column when grid width is 100% and column width is set', fakeAsync(() => {
+            it('should fix column when grid width is 100% and column width is set', customFakeAsync(() => {
                 fix.componentInstance.grid.width = '100%';
                 tick(DEBOUNCETIME);
                 fix.detectChanges();
@@ -278,7 +279,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             let fix;
             let grid: IgxGridComponent;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fix = TestBed.createComponent(GridFeaturesComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
@@ -335,7 +336,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             let fix;
             let grid: IgxGridComponent;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fix = TestBed.createComponent(PinningComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
@@ -489,7 +490,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
         describe('', () => {
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(customFakeAsync(() => {
                 fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
                 fix.componentInstance.grid.pinning = pinningConfig;
                 fix.detectChanges();
@@ -596,7 +597,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 GridFunctions.verifyUnpinnedAreaWidth(grid, scrBarMainSection.nativeElement.offsetWidth, false);
             });
 
-            it('should pin an unpinned column when drag/drop it among pinned columns.', fakeAsync(() => {
+            it('should pin an unpinned column when drag/drop it among pinned columns.', customFakeAsync(() => {
 
                 // move 'ID' column to the pinned area
                 grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('ContactName'), DropPosition.BeforeDropTarget);
@@ -682,7 +683,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
         });
 
         describe('MRL/MCH', () => {
-            it('should correctly pin column groups to end.', fakeAsync(() => {
+            it('should correctly pin column groups to end.', customFakeAsync(() => {
 
                 fix = TestBed.createComponent(MultiColumnHeadersWithGroupingComponent);
                 fix.componentInstance.isPinned = true;
@@ -712,7 +713,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(pinnedHeaders[1].column.field).toBe('CompanyName');
             }));
 
-            it('should correctly pin multi-row-layouts to end.', fakeAsync(() => {
+            it('should correctly pin multi-row-layouts to end.', customFakeAsync(() => {
 
                 fix = TestBed.createComponent(GridPinningMRLComponent);
                 fix.componentInstance.grid.pinning = pinningConfig;
@@ -758,7 +759,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
     describe('Both', () => {
         let fix;
         let grid: IgxGridComponent;
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             // ContactName pinned to start, CompanyName pinned to end
             fix = TestBed.createComponent(PinOnBothSidesInitComponent);
             fix.detectChanges();
@@ -843,7 +844,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
         });
 
-        it('should pin an unpinned column when drag/drop it among pinned columns.', fakeAsync(() => {
+        it('should pin an unpinned column when drag/drop it among pinned columns.', customFakeAsync(() => {
             // move 'ID' column to the right pinned area, before CompanyName
             grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('CompanyName'), DropPosition.BeforeDropTarget);
             tick();
@@ -977,7 +978,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
         });
 
-        it('should correctly pin multi-row-layouts to both sides.', fakeAsync(() => {
+        it('should correctly pin multi-row-layouts to both sides.', customFakeAsync(() => {
             fix = TestBed.createComponent(MRLTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;

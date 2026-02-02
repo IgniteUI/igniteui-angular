@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, DebugElement, ViewChild, ElementRef, OnInit, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective } from './toggle.directive';
@@ -8,6 +8,7 @@ import { first } from 'rxjs/operators';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CancelableEventArgs, ConnectedPositioningStrategy, HorizontalAlignment, IgxOverlayOutletDirective, IgxOverlayService, OffsetMode, OverlaySettings } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxToggle', () => {
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
@@ -57,7 +58,7 @@ describe('IgxToggle', () => {
         expect(divEl.classList.contains(TOGGLER_CLASS)).toBeTruthy();
     });
 
-    it('should emit \'opening\' and \'opened\' events', fakeAsync(() => {
+    it('should emit \'opening\' and \'opened\' events', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
@@ -72,7 +73,7 @@ describe('IgxToggle', () => {
         expect(toggle.opened.emit).toHaveBeenCalled();
     }));
 
-    it('should emit \'appended\' event', fakeAsync(() => {
+    it('should emit \'appended\' event', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
@@ -94,7 +95,7 @@ describe('IgxToggle', () => {
         expect(toggle.appended.emit).toHaveBeenCalledTimes(2);
     }));
 
-    it('should emit \'onClosing\' and \'closed\' events', fakeAsync(() => {
+    it('should emit \'onClosing\' and \'closed\' events', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
@@ -113,7 +114,7 @@ describe('IgxToggle', () => {
         expect(toggle.closed.emit).toHaveBeenCalledTimes(1);
     }));
 
-    it('should propagate IgxOverlay opened/closed events', fakeAsync(() => {
+    it('should propagate IgxOverlay opened/closed events', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxOverlayServiceComponent);
         fixture.detectChanges();
 
@@ -146,7 +147,7 @@ describe('IgxToggle', () => {
         expect(toggle.collapsed).toBe(true);
     }));
 
-    it('should open toggle when IgxToggleActionDirective is clicked and toggle is closed', fakeAsync(() => {
+    it('should open toggle when IgxToggleActionDirective is clicked and toggle is closed', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
 
@@ -162,7 +163,7 @@ describe('IgxToggle', () => {
         expect(divEl.classes[TOGGLER_CLASS]).toBe(true);
     }));
 
-    it('should close toggle when IgxToggleActionDirective is clicked and toggle is opened', fakeAsync(() => {
+    it('should close toggle when IgxToggleActionDirective is clicked and toggle is opened', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
         fixture.componentInstance.toggle.open();
@@ -180,7 +181,7 @@ describe('IgxToggle', () => {
         expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBeTruthy();
     }));
 
-    it('should hide content and emit \'closed\' event when you click outside the toggle\'s content', fakeAsync(() => {
+    it('should hide content and emit \'closed\' event when you click outside the toggle\'s content', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
 
@@ -236,7 +237,7 @@ describe('IgxToggle', () => {
         expect(overlayService.setOffset).toHaveBeenCalledWith(overlayId, 10, 10, OffsetMode.Set);
     });
 
-    it('Toggle should be registered into navigationService if it is passed through identifier', fakeAsync(() => {
+    it('Toggle should be registered into navigationService if it is passed through identifier', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleServiceInjectComponent);
         fixture.detectChanges();
 
@@ -247,7 +248,7 @@ describe('IgxToggle', () => {
         expect(toggleFromService.id).toEqual(toggleFromComponent.id);
     }));
 
-    it('Toggle should working with parent component and OnPush strategy applied.', fakeAsync(() => {
+    it('Toggle should working with parent component and OnPush strategy applied.', customFakeAsync(() => {
         const fix = TestBed.createComponent(TestWithOnPushComponent);
         fix.detectChanges();
 
@@ -273,7 +274,7 @@ describe('IgxToggle', () => {
         expect(toggleElm.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
     }));
 
-    it('fix for #2798 - Allow canceling of open and close of IgxDropDown through opening and closing events', fakeAsync(() => {
+    it('fix for #2798 - Allow canceling of open and close of IgxDropDown through opening and closing events', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
@@ -318,7 +319,7 @@ describe('IgxToggle', () => {
         expect(toggle.opened.emit).toHaveBeenCalledTimes(1);
     }));
 
-    it('fix for #3636 - ToggleAction should provide its element as target', fakeAsync(() => {
+    it('fix for #3636 - ToggleAction should provide its element as target', customFakeAsync(() => {
         const fixture = TestBed.createComponent(TestWithThreeToggleActionsComponent);
         fixture.detectChanges();
         fixture.debugElement.componentInstance.overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
@@ -356,7 +357,7 @@ describe('IgxToggle', () => {
         expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
     }));
 
-    it('fix for #3636 - All toggles should scroll correctly', fakeAsync(() => {
+    it('fix for #3636 - All toggles should scroll correctly', customFakeAsync(() => {
         const fixture = TestBed.createComponent(TestWithThreeToggleActionsComponent);
         fixture.detectChanges();
         fixture.debugElement.componentInstance.overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
@@ -417,7 +418,7 @@ describe('IgxToggle', () => {
         expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
     }));
 
-    it('fix for #3810 - Should not open toggle when already opened', fakeAsync(() => {
+    it('fix for #3810 - Should not open toggle when already opened', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
@@ -439,7 +440,7 @@ describe('IgxToggle', () => {
         expect(toggle.opened.emit).toHaveBeenCalledTimes(1);
     }));
 
-    it('fix for #3810 - Should not close toggle when not open', fakeAsync(() => {
+    it('fix for #3810 - Should not close toggle when not open', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
@@ -470,7 +471,7 @@ describe('IgxToggle', () => {
         expect(toggle.closed.emit).toHaveBeenCalledTimes(1);
     }));
 
-    it('fix for #4222 - Should emit closed when closed second time', fakeAsync(() => {
+    it('fix for #4222 - Should emit closed when closed second time', customFakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
@@ -501,7 +502,7 @@ describe('IgxToggle', () => {
     }));
 
     describe('overlay settings', () => {
-        it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', fakeAsync(() => {
+        it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
             vi.spyOn(IgxToggleDirective.prototype, 'toggle');
@@ -583,7 +584,7 @@ describe('IgxToggle', () => {
             expect(toggleSpy).toHaveBeenCalledWith(settings);
         });
 
-        it('Should fire toggle "closing" event when closing through closeOnOutsideClick', fakeAsync(() => {
+        it('Should fire toggle "closing" event when closing through closeOnOutsideClick', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
 

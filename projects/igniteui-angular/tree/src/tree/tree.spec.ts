@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
@@ -14,6 +14,7 @@ import { IgxTreeService } from './tree.service';
 import { IGX_TREE_COMPONENT } from './common';
 
 import { describe, it, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const TREE_ROOT_CLASS = 'igx-tree__root';
 const NODE_TAG = 'igx-tree-node';
 
@@ -72,7 +73,7 @@ describe('IgxTree #treeView', () => {
         });
 
         describe('IgxTreeComponent', () => {
-            it('Should update nav children cache when events are fired', fakeAsync(() => {
+            it('Should update nav children cache when events are fired', customFakeAsync(() => {
                 expect(mockNavService.init_invisible_cache).toHaveBeenCalledTimes(0);
                 expect(mockNavService.update_visible_cache).toHaveBeenCalledTimes(0);
                 expect(mockNavService.update_disabled_cache).toHaveBeenCalledTimes(0);
@@ -552,7 +553,7 @@ describe('IgxTree #treeView', () => {
             it.skip('Should apply proper node classes depending on tree displayDensity', () => {
             });
 
-            it('Should do nothing when calling expand()/collapse() on expanded/collapsed node', fakeAsync(() => {
+            it('Should do nothing when calling expand()/collapse() on expanded/collapsed node', customFakeAsync(() => {
                 const expandingSpy = vi.spyOn(tree.nodeExpanding, 'emit');
                 const collapsingSpy = vi.spyOn(tree.nodeCollapsing, 'emit');
                 tree.nodes.first.collapse();
@@ -564,7 +565,7 @@ describe('IgxTree #treeView', () => {
                 expect(collapsingSpy).not.toHaveBeenCalled();
             }));
 
-            it('Should properly emit state toggle events', fakeAsync(() => {
+            it('Should properly emit state toggle events', customFakeAsync(() => {
                 // node event spies
                 const collapsingSpy = vi.spyOn(tree.nodeCollapsing, 'emit');
                 const expandingSpy = vi.spyOn(tree.nodeExpanding, 'emit');
@@ -628,7 +629,7 @@ describe('IgxTree #treeView', () => {
                 unsub$.complete();
             }));
 
-            it.skip('Should collapse all sibling nodes when `singleBranchExpand` is set and node is toggled', fakeAsync(() => {
+            it.skip('Should collapse all sibling nodes when `singleBranchExpand` is set and node is toggled', customFakeAsync(() => {
                 tree.rootNodes.forEach((n, index) => index > 0 ? n.expanded = true : n.expanded = false);
                 fix.detectChanges();
                 expect(tree.nodes.filter(n => n.expanded).length).toBe(4);

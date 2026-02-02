@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -19,6 +19,7 @@ import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -266,7 +267,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(startCell.active).toBe(true);
         });
 
-        it('should be able to select range with shift + arrow keys in the parent grid', fakeAsync(() => {
+        it('should be able to select range with shift + arrow keys in the parent grid', customFakeAsync(() => {
             setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
@@ -295,7 +296,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 3, 1, 2);
         }));
 
-        it('should be able to select range with shift + arrow keys in the child grid', fakeAsync(() => {
+        it('should be able to select range with shift + arrow keys in the child grid', customFakeAsync(() => {
             setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
@@ -426,7 +427,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 0, 0, 2, 2);
         });
 
-        it('should clear the selection in parent grid when continue navigation in the child grid', fakeAsync(() => {
+        it('should clear the selection in parent grid when continue navigation in the child grid', customFakeAsync(() => {
             setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small)
             fix.detectChanges();
 
@@ -457,7 +458,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(hierarchicalGrid.getSelectedRanges().length).toBe(0);
         }));
 
-        it('should NOT be able to create range selection between parent and child grid on mouse click + shift key', fakeAsync(() => {
+        it('should NOT be able to create range selection between parent and child grid on mouse click + shift key', customFakeAsync(() => {
             setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small)
             fix.detectChanges();
 
@@ -521,7 +522,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         });
 
-        it('should have checkboxes on each row', fakeAsync(() => {
+        it('should have checkboxes on each row', customFakeAsync(() => {
             hierarchicalGrid.expandChildren = true;
             tick(100);
             fix.detectChanges();
@@ -1177,7 +1178,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(childGrid.dataRowList.toArray());
         });
 
-        it('should not be able to select deleted row', fakeAsync(() => {
+        it('should not be able to select deleted row', customFakeAsync(() => {
             // Expand first row
             const firstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             fix.detectChanges();
@@ -1548,7 +1549,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             });
         });
 
-        it('Should have correct indices on all pages', fakeAsync(() => {
+        it('Should have correct indices on all pages', customFakeAsync(() => {
             // root grid
             hGrid.paginator.nextPage();
             tick(100);

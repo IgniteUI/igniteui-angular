@@ -21,7 +21,7 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    include: ['**/*.spec.ts'],
+    include: ['projects/igniteui-angular/**/*.spec.ts'],
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
@@ -33,6 +33,7 @@ export default defineConfig({
       headless: true,
       provider: playwright(),
       instances: [{ browser: 'chromium' }],
+      screenshotFailures: false,
     },
     coverage: {
       provider: 'v8',

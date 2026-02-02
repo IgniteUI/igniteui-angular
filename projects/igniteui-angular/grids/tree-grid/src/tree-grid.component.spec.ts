@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { By } from '@angular/platform-browser';
@@ -19,6 +19,7 @@ import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
 
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
     let fix;
@@ -124,7 +125,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(horizontalScroll.children[0].offsetWidth).toBeLessThanOrEqual(801);
         });
 
-        it('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync(() => {
+        it('checks if attributes are correctly assigned when grid has or does not have data', customFakeAsync(() => {
             // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
             const container = fix.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
             expect(container.getAttribute('role')).toBe(null);
@@ -200,7 +201,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         //     element.remove();
         // });
 
-        it('should auto-generate all columns', fakeAsync(() => {
+        it('should auto-generate all columns', customFakeAsync(() => {
             grid.data = [];
             tick();
             fix.detectChanges();
@@ -221,7 +222,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
         }));
 
-        it('should auto-generate columns without childDataKey', fakeAsync(() => {
+        it('should auto-generate columns without childDataKey', customFakeAsync(() => {
             grid.data = [];
             tick();
             fix.detectChanges();
@@ -242,7 +243,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
         }));
 
-        it('should recreate columns when data changes and autoGenerate is true', fakeAsync(() => {
+        it('should recreate columns when data changes and autoGenerate is true', customFakeAsync(() => {
             grid.width = '500px';
             grid.height = '500px';
             grid.autoGenerate = true;
@@ -303,7 +304,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.detectChanges();
         });
 
-        it('should not render rows and headers group when all cols are hidden', fakeAsync(() => {
+        it('should not render rows and headers group when all cols are hidden', customFakeAsync(() => {
             grid.rowSelection = GridSelectionMode.multiple;
             grid.rowDraggable = true;
             tick();

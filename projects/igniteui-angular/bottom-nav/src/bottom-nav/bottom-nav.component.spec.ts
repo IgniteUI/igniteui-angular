@@ -1,5 +1,5 @@
 import { QueryList } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -18,6 +18,7 @@ import { IgxBottomNavItemComponent } from './bottom-nav-item.component';
 import { IgxBottomNavComponent } from './bottom-nav.component';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxBottomNav', () => {
 
     const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';
@@ -139,7 +140,7 @@ describe('IgxBottomNav', () => {
             }
         });
 
-        it('should select/deselect tabs', fakeAsync(() => {
+        it('should select/deselect tabs', customFakeAsync(() => {
             expect(bottomNav.selectedIndex).toBe(0);
             const tab1: IgxBottomNavItemComponent = tabItems[0];
             const tab2: IgxBottomNavItemComponent = tabItems[1];
@@ -198,7 +199,7 @@ describe('IgxBottomNav', () => {
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
             });
 
-            it('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
+            it('should navigate to the correct URL when clicking on tab buttons', customFakeAsync(() => {
                 fixture.ngZone.run(() => router.initialNavigation());
                 tick();
                 expect(location.path()).toBe('/');
@@ -216,7 +217,7 @@ describe('IgxBottomNav', () => {
                 expect(location.path()).toBe('/view1');
             }));
 
-            it('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
+            it('should select the correct tab button/panel when navigating an URL', customFakeAsync(() => {
                 fixture.ngZone.run(() => router.initialNavigation());
                 tick();
                 expect(location.path()).toBe('/');
@@ -251,7 +252,7 @@ describe('IgxBottomNav', () => {
         });
 
         describe('', () => {
-            it('should not navigate to an URL blocked by activate guard', fakeAsync(() => {
+            it('should not navigate to an URL blocked by activate guard', customFakeAsync(() => {
                 fixture = TestBed.createComponent(BottomNavRoutingGuardTestComponent);
                 fixture.detectChanges();
 
@@ -330,7 +331,7 @@ describe('IgxBottomNav', () => {
                 indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
             });
 
-            it('Validate the fired events on clicking tab headers.', fakeAsync(() => {
+            it('Validate the fired events on clicking tab headers.', customFakeAsync(() => {
                 tick(100);
 
                 headers[1].dispatchEvent(new Event('click', { bubbles: true }));
@@ -352,7 +353,7 @@ describe('IgxBottomNav', () => {
                 });
             }));
 
-            it('Cancel selectedIndexChanging event.', fakeAsync(() => {
+            it('Cancel selectedIndexChanging event.', customFakeAsync(() => {
                 tick(100);
                 bottomNav.selectedIndexChanging.pipe().subscribe((e) => e.cancel = true);
                 fixture.detectChanges();
@@ -390,7 +391,7 @@ describe('IgxBottomNav', () => {
                 indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
             });
 
-            it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', fakeAsync(() => {
+            it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', customFakeAsync(() => {
                 fixture.ngZone.run(() => router.initialNavigation());
                 tick();
                 expect(location.path()).toBe('/');

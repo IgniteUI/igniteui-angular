@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } from '../../../test-utils/tree-grid-components.spec';
@@ -8,6 +8,7 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { DefaultSortingStrategy } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxTreeGrid', () => {
 
     beforeEach(async () => {
@@ -35,7 +36,7 @@ describe('IgxTreeGrid', () => {
             treeGrid = fix.componentInstance.treeGrid;
         });
 
-        it('loads successfully', fakeAsync(() => {
+        it('loads successfully', customFakeAsync(() => {
             const groupByAreaElement = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
             const chipsAreaElement = groupByAreaElement.querySelector('igx-chips-area');
 
@@ -54,7 +55,7 @@ describe('IgxTreeGrid', () => {
             expect(spanElement.innerText).toEqual(DROP_AREA_MSG);
         }));
 
-        it ('has the expected default properties\' values', fakeAsync(() => {
+        it ('has the expected default properties\' values', customFakeAsync(() => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.grid).toEqual(treeGrid);
             expect(groupByArea.expressions).toEqual([]);
@@ -64,7 +65,7 @@ describe('IgxTreeGrid', () => {
             expect(groupByArea.dropAreaVisible).toBeTruthy();
         }));
 
-        it('allows changing the drop area message', fakeAsync(() => {
+        it('allows changing the drop area message', customFakeAsync(() => {
             const dropMsg = 'New drop message';
             groupByArea.dropAreaMessage = dropMsg;
             fix.detectChanges();
@@ -74,7 +75,7 @@ describe('IgxTreeGrid', () => {
             expect(fix.debugElement.nativeElement.querySelector('.igx-drop-area__text').innerText).toEqual(dropMsg);
         }));
 
-        it('allows setting the `hideGroupedColumns` property', fakeAsync(() => {
+        it('allows setting the `hideGroupedColumns` property', customFakeAsync(() => {
             groupByArea.hideGroupedColumns = true;
             fix.detectChanges();
             tick();
@@ -98,7 +99,7 @@ describe('IgxTreeGrid', () => {
             clearGridSubs();
         });
 
-        it ('GroupByArea has the expected properties\' values set', fakeAsync(() => {
+        it ('GroupByArea has the expected properties\' values set', customFakeAsync(() => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.expressions.length).toEqual(2);
             expect(groupByArea.grid).toEqual(treeGrid);
@@ -108,7 +109,7 @@ describe('IgxTreeGrid', () => {
             expect(groupByArea.dropAreaVisible).toBeFalsy();
         }));
 
-        it('is loaded grouped by two fields.', fakeAsync(() => {
+        it('is loaded grouped by two fields.', customFakeAsync(() => {
             const groupArea = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
             expect(groupArea).toBeDefined();
             const chips = fix.debugElement.nativeElement.querySelectorAll('igx-chip');
@@ -125,7 +126,7 @@ describe('IgxTreeGrid', () => {
             expect(rows.length).toBe(treeGrid.rowList.length);
         }));
 
-        it('shows a new group chip when adding a grouping expression', fakeAsync(() => {
+        it('shows a new group chip when adding a grouping expression', customFakeAsync(() => {
             expect(groupByArea.expressions).toEqual(groupingExpressions);
             let chips = getChips(fix);
 
@@ -142,7 +143,7 @@ describe('IgxTreeGrid', () => {
             expect(chips[2].id).toEqual('JobTitle');
         }));
 
-        it('removes a group chip when removing a grouping expression', fakeAsync(() => {
+        it('removes a group chip when removing a grouping expression', customFakeAsync(() => {
             groupingExpressions.pop();
             fix.detectChanges();
 
@@ -151,13 +152,13 @@ describe('IgxTreeGrid', () => {
             expect(getChips(fix)[0].id).toEqual('OnPTO');
         }));
 
-        it('group columns stay visible by default', fakeAsync(() => {
+        it('group columns stay visible by default', customFakeAsync(() => {
             expect(treeGrid.getColumnByName('OnPTO').hidden).toBeFalsy();
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalsy();
 
         }));
 
-        it('keeps the group columns visible by default', fakeAsync(() => {
+        it('keeps the group columns visible by default', customFakeAsync(() => {
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalsy();
 
             groupingExpressions.pop();
@@ -168,7 +169,7 @@ describe('IgxTreeGrid', () => {
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalsy();
         }));
 
-        it('hides/shows the grouped by column when hideGroupedColumns=true', fakeAsync(() => {
+        it('hides/shows the grouped by column when hideGroupedColumns=true', customFakeAsync(() => {
             groupByArea.hideGroupedColumns = true;
             fix.detectChanges();
 
@@ -189,7 +190,7 @@ describe('IgxTreeGrid', () => {
             expect(treeGrid.getColumnByName('JobTitle').hidden).toBeTruthy();
         }));
 
-        it('shows aggregated values in parent records properly', fakeAsync(() => {
+        it('shows aggregated values in parent records properly', customFakeAsync(() => {
             expect(treeGrid.getCellByColumn(0, 'HireDate').value).toBeUndefined();
             expect(treeGrid.getCellByColumn(1, 'HireDate').value).toBeUndefined();
 

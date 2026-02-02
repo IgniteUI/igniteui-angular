@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
+import { TestBed, flushMicrotasks } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './button-group.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
@@ -8,6 +8,7 @@ import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interaction
 import { IgxRadioGroupDirective } from 'igniteui-angular/radio';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 interface IButton {
     type?: string;
     ripple?: string;
@@ -383,7 +384,7 @@ describe('IgxButtonGroup', () => {
         }
     });
 
-    it('should style the corresponding button as deselected when the value bound to the selected input changes', fakeAsync(() => {
+    it('should style the corresponding button as deselected when the value bound to the selected input changes', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ButtonGroupButtonWithBoundSelectedOutputComponent);
         fixture.detectChanges();
 

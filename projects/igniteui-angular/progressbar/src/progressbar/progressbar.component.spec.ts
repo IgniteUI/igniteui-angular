@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { BaseProgressDirective } from './progressbar.component';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 @Component({
     template: ``,
 })
@@ -149,7 +150,7 @@ describe('BaseProgressDirective', () => {
         expect(component.animate).toBe(true);
     });
 
-    it('should correctly update host styles', fakeAsync(() => {
+    it('should correctly update host styles', customFakeAsync(() => {
         component.value = 50;
 
         tick(50);
@@ -162,7 +163,7 @@ describe('BaseProgressDirective', () => {
         expect(nativeElement.style.getPropertyValue('--_transition-duration')).toBe('2000ms');
     }));
 
-    it('should correctly calculate fraction and integer values for progress', fakeAsync(() => {
+    it('should correctly calculate fraction and integer values for progress', customFakeAsync(() => {
         component.value = 75.25;
 
         tick(50);

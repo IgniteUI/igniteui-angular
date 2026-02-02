@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangeDetectorRef, ElementRef, EventEmitter, QueryList } from '@angular/core';
 import { IgxTreeComponent } from './tree.component';
@@ -12,6 +12,7 @@ import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeSelectionSampleComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxTree - Selection #treeView', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -27,7 +28,7 @@ describe('IgxTree - Selection #treeView', () => {
         let fix;
         let tree: IgxTreeComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeSimpleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
@@ -175,7 +176,7 @@ describe('IgxTree - Selection #treeView', () => {
         let fix;
         let tree: IgxTreeComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeSimpleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
@@ -308,7 +309,7 @@ describe('IgxTree - Selection #treeView', () => {
         let fix;
         let tree: IgxTreeComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeSelectionSampleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;

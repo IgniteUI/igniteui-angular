@@ -1,6 +1,6 @@
 import { useAnimation } from '@angular/animations';
 import { Component, ViewChild } from '@angular/core';
-import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
+import { waitForAsync, TestBed, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../../../expansion-panel/src/public_api';
@@ -9,6 +9,7 @@ import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
 import { UIInteractions } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const ACCORDION_CLASS = 'igx-accordion';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';
 const ACCORDION_TAG = 'IGX-ACCORDION';
@@ -67,7 +68,7 @@ describe('Rendering Tests', () => {
         });
 
         it(`Should be able to expand only one panel when singleBranchExpanded is set to true
-        and expandAll/collapseAll should not update the current expansion state `, fakeAsync(() => {
+        and expandAll/collapseAll should not update the current expansion state `, customFakeAsync(() => {
             vi.spyOn(accordion.panelExpanded, 'emit');
             vi.spyOn(accordion.panelCollapsed, 'emit');
             accordion.singleBranchExpand = true;
@@ -110,7 +111,7 @@ describe('Rendering Tests', () => {
 
         }));
 
-        it('Should be able to expand multiple panels when singleBranchExpanded is set to false', fakeAsync(() => {
+        it('Should be able to expand multiple panels when singleBranchExpanded is set to false', customFakeAsync(() => {
             accordion.singleBranchExpand = false;
             fix.detectChanges();
 
@@ -136,7 +137,7 @@ describe('Rendering Tests', () => {
         }));
 
         it(`Should update the current expansion state when expandAll/collapseAll is invoked and
-        singleBranchExpaned is set to false`, fakeAsync(() => {
+        singleBranchExpaned is set to false`, customFakeAsync(() => {
             vi.spyOn(accordion.panelExpanded, 'emit');
             vi.spyOn(accordion.panelCollapsed, 'emit');
             accordion.singleBranchExpand = false;
@@ -182,7 +183,7 @@ describe('Rendering Tests', () => {
             expect(accordion.panels[3].collapsed).toBeFalsy();
         });
 
-        it('Should emit ing and ed events when expand panel state is toggled', fakeAsync(() => {
+        it('Should emit ing and ed events when expand panel state is toggled', customFakeAsync(() => {
             vi.spyOn(accordion.panelExpanded, 'emit');
             vi.spyOn(accordion.panelExpanding, 'emit');
             vi.spyOn(accordion.panelCollapsed, 'emit');
@@ -275,7 +276,7 @@ describe('Rendering Tests', () => {
         });
 
         it(`Should expand/collapse all panels on SHIFT + ALT + ArrowDown/ArrowUp key pressed
-                when singleBranchExpanded is false`, fakeAsync(() => {
+                when singleBranchExpanded is false`, customFakeAsync(() => {
             accordion.singleBranchExpand = false;
             fix.detectChanges();
             accordion.panels[1].header.disabled = true;
@@ -304,7 +305,7 @@ describe('Rendering Tests', () => {
         }));
 
         it(`Should do nothing/collapse the only panel on SHIFT + ALT + ArrowDown/ArrowUp key pressed
-                when singleBranchExpanded is true`, fakeAsync(() => {
+                when singleBranchExpanded is true`, customFakeAsync(() => {
             accordion.singleBranchExpand = true;
             fix.detectChanges();
 

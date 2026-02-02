@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
@@ -20,6 +20,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Cell selection #grid', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -955,7 +956,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
         });
 
-        it('Should not throw an error when trying to do a drag selection that is started outside the grid', fakeAsync(() => {
+        it('Should not throw an error when trying to do a drag selection that is started outside the grid', customFakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
 
             UIInteractions.simulatePointerOverElementEvent('pointerdown', document.body);
@@ -1937,7 +1938,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Filtering, Paging: selected range should not change when perform filtering', fakeAsync(() => {
+        it('Filtering, Paging: selected range should not change when perform filtering', customFakeAsync(() => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
             grid.perPage = 5;
@@ -1966,7 +1967,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(fData);
         }));
 
-        it('Paging: selected range should be cleared on paging', fakeAsync(() => {
+        it('Paging: selected range should be cleared on paging', customFakeAsync(() => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
             grid.paginator.perPage = 5;
@@ -1995,7 +1996,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual([]);
         }));
 
-        it('Paging: selected range should be cleared when perPage items are changed', fakeAsync(() => {
+        it('Paging: selected range should be cleared when perPage items are changed', customFakeAsync(() => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
             grid.perPage = 5;
@@ -2024,7 +2025,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual([]);
         }));
 
-        it.skip('Resizing: selected range should not change on resizing', fakeAsync(() => {
+        it.skip('Resizing: selected range should not change on resizing', customFakeAsync(() => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2389,7 +2390,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Moving: selection should not change when move columns inside selected range', fakeAsync(() => {
+        it('Moving: selection should not change when move columns inside selected range', customFakeAsync(() => {
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
             const secondCell = grid.gridAPI.get_cell_by_index(4, 'HireDate');
             GridSelectionFunctions.selectCellsRangeNoWait(fix, firstCell, secondCell);

@@ -1,5 +1,5 @@
 import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     IgxCarouselComponent,
@@ -12,6 +12,7 @@ import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('Carousel', () => {
     let fixture;
     let carousel: IgxCarouselComponent;
@@ -788,7 +789,7 @@ describe('Carousel', () => {
             slides = fixture.componentInstance.slides;
         });
 
-        it('should activate slide when change its property active', fakeAsync(() => {
+        it('should activate slide when change its property active', customFakeAsync(() => {
             tick();
             // Verify 3th slide is active
             HelperTestFunctions.verifyActiveSlide(carousel, 2);
@@ -800,7 +801,7 @@ describe('Carousel', () => {
             HelperTestFunctions.verifyActiveSlide(carousel, 0);
         }));
 
-        it('should add slides to the carousel when collection is changed', fakeAsync(() => {
+        it('should add slides to the carousel when collection is changed', customFakeAsync(() => {
             tick();
             vi.spyOn(carousel.slideAdded, 'emit');
 
@@ -822,7 +823,7 @@ describe('Carousel', () => {
             expect(carousel.slideAdded.emit).toHaveBeenCalledTimes(2);
         }));
 
-        it('should remove slides in the carousel', fakeAsync(() => {
+        it('should remove slides in the carousel', customFakeAsync(() => {
             tick();
             vi.spyOn(carousel.slideRemoved, 'emit');
 
@@ -845,7 +846,7 @@ describe('Carousel', () => {
             expect(carousel.slideRemoved.emit).toHaveBeenCalledTimes(2);
         }));
 
-        it('should not render navigation buttons and indicators when carousel does not have slides', fakeAsync(() => {
+        it('should not render navigation buttons and indicators when carousel does not have slides', customFakeAsync(() => {
             fixture.componentInstance.removeAllSlides();
             fixture.detectChanges();
             tick(200);

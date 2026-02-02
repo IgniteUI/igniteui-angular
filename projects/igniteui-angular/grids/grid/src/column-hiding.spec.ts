@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../../test-utils/grid-base-components.spec';
@@ -11,6 +11,7 @@ import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('Column Hiding UI #grid', () => {
 
     let fix: ComponentFixture<ColumnHidingTestComponent>;
@@ -113,7 +114,7 @@ describe('Column Hiding UI #grid', () => {
             expect(colProductName).toBeUndefined();
         });
 
-        it('"hiddenColumnsCount" reflects properly the number of hidden columns.', fakeAsync(() => {
+        it('"hiddenColumnsCount" reflects properly the number of hidden columns.', customFakeAsync(() => {
             vi.spyOn(grid.columnVisibilityChanged, 'emit');
             vi.spyOn(grid.columnVisibilityChanging, 'emit');
 
@@ -416,7 +417,7 @@ describe('Column Hiding UI #grid', () => {
             expect(columnChooser.columnItems.length).toBe(4);
         });
 
-        it('filters columns according to the specified filter criteria.', fakeAsync(() => {
+        it('filters columns according to the specified filter criteria.', customFakeAsync(() => {
             columnChooser.filterCriteria = 'd';
             fix.detectChanges();
             tick();
@@ -448,7 +449,7 @@ describe('Column Hiding UI #grid', () => {
             expect(columnChooser.columnItems.length).toBe(4);
         }));
 
-        it('- Hide All button operates over the filtered in columns only', fakeAsync(() => {
+        it('- Hide All button operates over the filtered in columns only', customFakeAsync(() => {
             vi.spyOn(grid.columnVisibilityChanged, 'emit');
             vi.spyOn(grid.columnVisibilityChanging, 'emit');
 
@@ -505,7 +506,7 @@ describe('Column Hiding UI #grid', () => {
             expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledTimes(columnChooser.columnItems.length);
         }));
 
-        it('- When Hide All columns no rows should be rendered', fakeAsync(() => {
+        it('- When Hide All columns no rows should be rendered', customFakeAsync(() => {
             fix.componentInstance.paging = true;
             tick(50);
             fix.detectChanges();
@@ -556,7 +557,7 @@ describe('Column Hiding UI #grid', () => {
             expect(verticalScrollBar).not.toBeNull();
         }));
 
-        it('- Show All button operates over the filtered in columns only', fakeAsync(() => {
+        it('- Show All button operates over the filtered in columns only', customFakeAsync(() => {
             vi.spyOn(grid.columnVisibilityChanged, 'emit');
             vi.spyOn(grid.columnVisibilityChanging, 'emit');
 
@@ -829,7 +830,7 @@ describe('Column Hiding UI #grid', () => {
     });
 
     describe('toolbar button', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;

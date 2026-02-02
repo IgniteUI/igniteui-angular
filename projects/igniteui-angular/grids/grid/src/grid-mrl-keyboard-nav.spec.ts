@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -15,6 +15,7 @@ import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 
 import { describe, it, expect, beforeEach } from 'vitest';
 
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const DEBOUNCE_TIME = 60;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
@@ -976,7 +977,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         });
 
         describe('Column Moving Integration', () => {
-            it('tab navigation should follow correct sequence if a column is moved.', fakeAsync(() => {
+            it('tab navigation should follow correct sequence if a column is moved.', customFakeAsync(() => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
                     // row span 3

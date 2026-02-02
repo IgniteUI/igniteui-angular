@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,6 +17,7 @@ import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-
 import { ColumnType, SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
@@ -45,7 +46,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
         });
 
-        it('Should be able to reorder columns.', fakeAsync(() => {
+        it('Should be able to reorder columns.', customFakeAsync(() => {
             let columnsList = grid.columns;
             grid.moveColumn(columnsList[0], columnsList[2]);
             tick();
@@ -56,7 +57,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('ID');
         }));
 
-        it('Should be able to reorder columns programmatically.', fakeAsync(() => {
+        it('Should be able to reorder columns programmatically.', customFakeAsync(() => {
             let columnsList = grid.columns;
             const column = columnsList[0] as IgxColumnComponent;
             column.move(2);
@@ -69,7 +70,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('ID');
         }));
 
-        it('Should not reorder columns, if passed incorrect index.', fakeAsync(() => {
+        it('Should not reorder columns, if passed incorrect index.', customFakeAsync(() => {
             let columnsList = grid.columns;
 
             expect(columnsList[0].field).toEqual('ID');
@@ -96,7 +97,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        it('Should show hidden column on correct index', fakeAsync(() => {
+        it('Should show hidden column on correct index', customFakeAsync(() => {
             let columnsList = grid.columns;
             const column = columnsList[0] as IgxColumnComponent;
 
@@ -114,7 +115,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('ID');
         }));
 
-        it('Should fire columnMovingEnd with correct values of event arguments.', fakeAsync(() => {
+        it('Should fire columnMovingEnd with correct values of event arguments.', customFakeAsync(() => {
             let columnsList = grid.columns;
             const column = columnsList[0] as IgxColumnComponent;
 
@@ -130,7 +131,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledWith(args);
         }));
 
-        it('Should exit edit mode and commit the new value when column moving programmatically', fakeAsync(() => {
+        it('Should exit edit mode and commit the new value when column moving programmatically', customFakeAsync(() => {
             fixture.componentInstance.isEditable = true;
             fixture.detectChanges();
             const cacheValue = grid.getCellByColumn(0, 'ID').value;
@@ -163,7 +164,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toBe(cacheValue);
         }));
 
-        it('Should preserve hidden columns order after columns are reordered programmatically', fakeAsync(() => {
+        it('Should preserve hidden columns order after columns are reordered programmatically', customFakeAsync(() => {
 
             // step 1 - hide a column
             fixture.componentInstance.isHidden = true;

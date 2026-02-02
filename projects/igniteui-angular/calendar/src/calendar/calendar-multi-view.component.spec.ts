@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -11,6 +11,7 @@ import { IgxCalendarComponent } from './calendar.component';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('Multi-View Calendar - ', () => {
     let fixture: ComponentFixture<any>
     let calendar: any;
@@ -201,7 +202,7 @@ describe('Multi-View Calendar - ', () => {
             { type: DateRangeType.Between, dateRange: [new Date(2020, 1, 1), new Date(2020, 1, 15)] },
             { type: DateRangeType.Between, dateRange: [new Date(2020, 1, 25), new Date(2020, 2, 11)] }];
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
             fixture.detectChanges();
             calendar = fixture.componentInstance.calendar;
@@ -516,7 +517,7 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [ymd('2017-10-19'), ymd('2017-11-19'), ymd('2017-12-19')]);
         });
 
-        it('Verify navigation with Shift plus pageDown', fakeAsync(() => {
+        it('Verify navigation with Shift plus pageDown', customFakeAsync(() => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild); // TODO: Use pointerdown for focus & remove
             UIInteractions.simulateClickAndSelectEvent(monthDates[16].firstChild);
@@ -715,7 +716,7 @@ describe('Multi-View Calendar - ', () => {
         const octoberDate = ymd('2019-10-16');
         const novemberDate = ymd('2019-11-16');
         const decemberDate = ymd('2019-12-16');
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
             fixture.detectChanges();
             calendar = fixture.componentInstance.calendar;
@@ -998,7 +999,7 @@ describe('Multi-View Calendar - ', () => {
     });
 
     describe('Selection tests with ngModel - ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(MultiViewNgModelSampleComponent);
             fixture.detectChanges();
             calendar = fixture.componentInstance.calendar;
@@ -1031,7 +1032,7 @@ describe('Multi-View Calendar - ', () => {
     describe('DatePicker/Calendar Integration Tests - ', () => {
         let datePicker;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(MultiViewDatePickerSampleComponent);
             fixture.detectChanges();
             datePicker = fixture.componentInstance.datePicker;
@@ -1040,7 +1041,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.clearOverlay();
         });
 
-        it('Verify opening Multi View Calendar from datepicker', fakeAsync(() => {
+        it('Verify opening Multi View Calendar from datepicker', customFakeAsync(() => {
             let target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
             UIInteractions.simulateClickAndSelectEvent(target);
             tick(400);
@@ -1073,7 +1074,7 @@ describe('Multi-View Calendar - ', () => {
             tick(350);
         }));
 
-        it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', fakeAsync(() => {
+        it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', customFakeAsync(() => {
             const target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
             UIInteractions.simulateClickAndSelectEvent(target);
             tick(400);

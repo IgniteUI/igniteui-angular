@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxSwitchComponent } from './switch.component';
@@ -7,6 +7,7 @@ import { IgxSwitchComponent } from './switch.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxSwitch', () => {
 
     beforeEach(async () => {
@@ -247,7 +248,7 @@ describe('IgxSwitch', () => {
         expect(domSwitch.classList.contains('igx-switch--invalid')).toBe(true);
     });
 
-    it('Should work properly with ngModel', fakeAsync(() => {
+    it('Should work properly with ngModel', customFakeAsync(() => {
         const fixture = TestBed.createComponent(SwitchFormComponent);
         fixture.detectChanges();
         tick();

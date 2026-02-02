@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
@@ -24,6 +24,7 @@ import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
 import { getI18nManager } from 'igniteui-i18n-core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
@@ -521,7 +522,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.columnDimensions.length).toEqual(0);
         });
 
-        it('should change grid size', fakeAsync(() => {
+        it('should change grid size', customFakeAsync(() => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const minWidthComf = '80';
             const minWidthSupercompact = '56';
@@ -2038,7 +2039,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(162);
             });
 
-            it('should auto-size row dimension when width is set to auto.', fakeAsync(() => {
+            it('should auto-size row dimension when width is set to auto.', customFakeAsync(() => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 let rowDimension = pivotGrid.pivotConfiguration.rows[0];
                 expect(rowDimension.width).toBeUndefined();
@@ -2317,7 +2318,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
         });
 
-        it('should define grid with resizable columns.', fakeAsync(() => {
+        it('should define grid with resizable columns.', customFakeAsync(() => {
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
 
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -2331,7 +2332,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeaders[7].componentInstance.column.resizable).toBeTruthy();
         }));
 
-        it('should update grid after resizing a top dimension header to be bigger.', fakeAsync(() => {
+        it('should update grid after resizing a top dimension header to be bigger.', customFakeAsync(() => {
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
 
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -2369,7 +2370,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeaders[7].componentInstance.column.width).toEqual('200px');
         }));
 
-        it('should update grid after resizing a child dimension header to be bigger.', fakeAsync(() => {
+        it('should update grid after resizing a child dimension header to be bigger.', customFakeAsync(() => {
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
 
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -2400,7 +2401,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeaders[7].componentInstance.column.width).toEqual('200px');
         }));
 
-        it('should update grid after resizing with double click', fakeAsync(() => {
+        it('should update grid after resizing with double click', customFakeAsync(() => {
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
 
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -2425,7 +2426,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeaders[7].componentInstance.column.width).toEqual('200px');
         }));
 
-        it('should update grid after resizing to equal min width', fakeAsync(() => {
+        it('should update grid after resizing to equal min width', customFakeAsync(() => {
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
 
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -2457,7 +2458,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeaders[7].componentInstance.column.width).toEqual('200px');
         }));
 
-        it('should update grid after resizing with percentages', fakeAsync(() => {
+        it('should update grid after resizing with percentages', customFakeAsync(() => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.width = '1000px';
             pivotGrid.pivotConfiguration.rows[0].width = '20%';
@@ -3290,7 +3291,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.navigation.activeNode.row).toEqual(1);
         });
 
-        it("should allow navigation in the row layouts.", fakeAsync(() => {
+        it("should allow navigation in the row layouts.", customFakeAsync(() => {
             fixture.detectChanges();
             const layoutContainer = fixture.debugElement.query(
                 By.directive(IgxPivotRowDimensionMrlRowComponent));
@@ -3377,7 +3378,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(activeCells.length).toBe(1);
         }));
 
-        it("should allow resizing the row dimension.", fakeAsync(() => {
+        it("should allow resizing the row dimension.", customFakeAsync(() => {
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
             let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
             expect(rowHeaders[0].componentInstance.column.width).toEqual('200px');

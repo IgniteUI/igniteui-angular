@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -24,6 +24,7 @@ import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -50,13 +51,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         let fix: ComponentFixture<IgxGridAdvancedFilteringComponent>;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
 
-        it('Should show/hide Advanced Filtering button in toolbar based on respective input.', fakeAsync(() => {
+        it('Should show/hide Advanced Filtering button in toolbar based on respective input.', customFakeAsync(() => {
             // Verify Advanced Filtering button in toolbar is visible.
             let advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
             expect(advFilterButton !== null && advFilterButton !== undefined, 'Adv.Filter button is not visible.').toBe(true);
@@ -76,7 +77,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(advFilterButton !== null && advFilterButton !== undefined, 'Adv.Filter button is not visible.').toBe(true);
         }));
 
-        it('Should correctly initialize the Advanced Filtering dialog.', fakeAsync(() => {
+        it('Should correctly initialize the Advanced Filtering dialog.', customFakeAsync(() => {
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
@@ -100,7 +101,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
         }));
 
-        it('Should open/close Advanced Filtering dialog through API.', fakeAsync(() => {
+        it('Should open/close Advanced Filtering dialog through API.', customFakeAsync(() => {
             // Open dialog through API.
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
@@ -117,7 +118,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
         }));
 
-        it('Should close Advanced Filtering dialog through API by respecting \'applyChanges\' argument.', fakeAsync(() => {
+        it('Should close Advanced Filtering dialog through API by respecting \'applyChanges\' argument.', customFakeAsync(() => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
@@ -176,7 +177,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
         }));
 
-        it('Should update the Advanced Filtering button in toolbar when (filtering)/(clear filtering).', fakeAsync(() => {
+        it('Should update the Advanced Filtering button in toolbar when (filtering)/(clear filtering).', customFakeAsync(() => {
             // Verify that the advanced filtering button indicates there are no filters.
             let advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
             expect(Array.from(advFilterBtn.children).some(c => (c as any).classList.contains('igx-adv-filter--column-number')),
@@ -228,7 +229,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 'Button indicates there is active filtering.').toBe(false);
         }));
 
-        it('The Clear/Cancel/Apply buttons type should be set to "button"',  fakeAsync(() => {
+        it('The Clear/Cancel/Apply buttons type should be set to "button"',  customFakeAsync(() => {
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
@@ -246,7 +247,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(applyButtonType, 'Apply button type is not "button"').toBe(expectedButtonType);
         }));
 
-        it('Should emit the filtering event when applying filters.', fakeAsync(() => {
+        it('Should emit the filtering event when applying filters.', customFakeAsync(() => {
             vi.spyOn(grid.filtering, 'emit');
 
             // Open Advanced Filtering dialog.
@@ -281,7 +282,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             }));
         }));
 
-        it('Should cancel filtering if cancel is set to true.', fakeAsync(() => {
+        it('Should cancel filtering if cancel is set to true.', customFakeAsync(() => {
             vi.spyOn(grid.filtering, 'emit').mockImplementation((args: IFilteringEventArgs) => {
                 args.cancel = true;
             });
@@ -319,7 +320,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.filteredData).toEqual(null);
         }));
 
-        it('Should emit the filteringDone event when applying filters.', fakeAsync(() => {
+        it('Should emit the filteringDone event when applying filters.', customFakeAsync(() => {
             vi.spyOn(grid.filteringDone, 'emit');
 
             // Open Advanced Filtering dialog.
@@ -350,7 +351,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number').textContent).toContain('1');
         }));
 
-        it('Applying/Clearing filter through the API should correctly update the UI and correctly show number of filtered columns', fakeAsync(() => {
+        it('Applying/Clearing filter through the API should correctly update the UI and correctly show number of filtered columns', customFakeAsync(() => {
             grid.height = '800px';
             fix.detectChanges();
             tick(50);
@@ -395,7 +396,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number')).toBeNull();
         }));
 
-        it('Applying/Clearing filter through the API should correctly update the UI.', fakeAsync(() => {
+        it('Applying/Clearing filter through the API should correctly update the UI.', customFakeAsync(() => {
             // Test prerequisites
             grid.height = '800px';
             fix.detectChanges();
@@ -473,7 +474,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 0, 0);
         }));
 
-        it('Applying/Clearing filter through the UI should correctly update the API.', fakeAsync(() => {
+        it('Applying/Clearing filter through the UI should correctly update the API.', customFakeAsync(() => {
             // Test prerequisites
             grid.height = '800px';
             fix.detectChanges();
@@ -535,7 +536,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
         }));
 
-        it('Should apply filters on Apply button click without prior Commit button click', fakeAsync(() => {
+        it('Should apply filters on Apply button click without prior Commit button click', customFakeAsync(() => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
@@ -561,7 +562,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
         }));
 
-        it('Should close the dialog on Apply button click if not all expression inputs are set', fakeAsync(() => {
+        it('Should close the dialog on Apply button click if not all expression inputs are set', customFakeAsync(() => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
@@ -614,7 +615,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.filteredData).toBe(null);
         }));
 
-        it('Column dropdown should contain only filterable columns.', fakeAsync(() => {
+        it('Column dropdown should contain only filterable columns.', customFakeAsync(() => {
             // Make the 'Downloads', 'Released' and 'ReleaseDate' columns non-filterable.
             grid.getColumnByName('Downloads').filterable = false;
             grid.getColumnByName('Released').filterable = false;
@@ -644,7 +645,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect((dropdownItems[3] as HTMLElement).innerText).toBe('ReleaseTime');
         }));
 
-        it('Should scroll the adding buttons into view when the add icon of a chip is clicked.', fakeAsync(() => {
+        it('Should scroll the adding buttons into view when the add icon of a chip is clicked.', customFakeAsync(() => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.Or);
             for (let index = 0; index < 30; index++) {
@@ -682,7 +683,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             }
         }));
 
-        it('Should scroll the newly added expression into view when the respective add button is clicked.', fakeAsync(() => {
+        it('Should scroll the newly added expression into view when the respective add button is clicked.', customFakeAsync(() => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.Or);
             for (let index = 0; index < 30; index++) {
@@ -722,7 +723,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             verifyElementIsInExpressionsContainerView(fix, QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false) as HTMLElement);
         }));
 
-        it('Should scroll to the expression when entering its edit mode.', fakeAsync(() => {
+        it('Should scroll to the expression when entering its edit mode.', customFakeAsync(() => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.Or);
             for (let index = 0; index < 30; index++) {
@@ -757,7 +758,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             verifyElementIsInExpressionsContainerView(fix, QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false) as HTMLElement);
         }));
 
-        it('Should clear all conditions and groups when the \'clear filter\' button is clicked.', fakeAsync(() => {
+        it('Should clear all conditions and groups when the \'clear filter\' button is clicked.', customFakeAsync(() => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
@@ -795,7 +796,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 0, 0);
         }));
 
-        it('Should keep edited conditions and groups inside AF dialog when applying and opening it again.', fakeAsync(() => {
+        it('Should keep edited conditions and groups inside AF dialog when applying and opening it again.', customFakeAsync(() => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
@@ -860,7 +861,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'a');
         }));
 
-        it('Should not keep changes over edited conditions and groups inside AF dialog when canceling and opening it again.', fakeAsync(() => {
+        it('Should not keep changes over edited conditions and groups inside AF dialog when canceling and opening it again.', customFakeAsync(() => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
@@ -925,7 +926,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'angular');
         }));
 
-        it('Should not close the AF dialog when clicking outside of it.', fakeAsync(() => {
+        it('Should not close the AF dialog when clicking outside of it.', customFakeAsync(() => {
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
@@ -941,7 +942,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix), 'Advanced Filtering dialog is not opened.').not.toBeNull();
         }));
 
-        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy', fakeAsync(() => {
+        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy', customFakeAsync(() => {
             const formattedStrategy = new FormattedValuesFilteringStrategy(['Downloads']);
             grid.filterStrategy = formattedStrategy;
             const downloadsFormatter = (val: number): number => {
@@ -983,7 +984,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(rows.length, 'Wrong filtered rows count').toEqual(3);
         }));
 
-        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy with rowData', fakeAsync(() => {
+        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy with rowData', customFakeAsync(() => {
             const formattedStrategy = new FormattedValuesFilteringStrategy(['ProductName']);
             grid.filterStrategy = formattedStrategy;
             const anotherFieldFormatter = (value: any, rowData: any) => rowData.ID + ':' + value;
@@ -1017,7 +1018,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(rows.length, 'Wrong filtered rows count').toEqual(1);
         }));
 
-        it('DateTime: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+        it('DateTime: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', customFakeAsync(() => {
             const releaseDateColumn = grid.getColumnByName('ReleaseDate');
             releaseDateColumn.dataType = 'dateTime';
             releaseDateColumn.editorOptions = {
@@ -1048,7 +1049,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(dateTimeEditor.locale).toMatch(grid.locale);
         }));
 
-        it('DateTime: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+        it('DateTime: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', customFakeAsync(() => {
             const releaseDateColumn = grid.getColumnByName('ReleaseDate');
             releaseDateColumn.dataType = 'dateTime';
             releaseDateColumn.pipeArgs = {
@@ -1075,7 +1076,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
         }));
 
-        it('Time: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+        it('Time: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', customFakeAsync(() => {
             const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
             releaseTimeColumn.editorOptions = {
                 dateTimeFormat: 'hh:mm'
@@ -1100,7 +1101,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.editorOptions.dateTimeFormat);
         }));
 
-        it('Time: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+        it('Time: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', customFakeAsync(() => {
             const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
             releaseTimeColumn.pipeArgs = {
                 format: 'hh:mm'
@@ -1125,7 +1126,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.pipeArgs.format);
         }));
 
-        it('should handle advanced filtering correctly when grid columns and data are dynamically changed', fakeAsync(() => {
+        it('should handle advanced filtering correctly when grid columns and data are dynamically changed', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridAdvancedFilteringDynamicColumnsComponent);
             grid = fixture.componentInstance.grid;
             fixture.detectChanges();
@@ -1202,13 +1203,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         let fix: ComponentFixture<IgxGridAdvancedFilteringWithToolbarComponent>;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringWithToolbarComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
 
-        it('Should update toolbar when advancedFilteringExpressionsTreeChange emits a new value', fakeAsync(() => {
+        it('Should update toolbar when advancedFilteringExpressionsTreeChange emits a new value', customFakeAsync(() => {
             // Set initial filtering expressions tree
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
@@ -1258,7 +1259,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     })
 
     describe('Localization - ', () => {
-        it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
+        it('Should correctly change resource strings for Advanced Filtering dialog.', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             const grid: IgxGridComponent = fix.componentInstance.grid;
             const myResourceStrings: IGridResourceStrings = {
@@ -1335,13 +1336,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
     describe('Column groups - ', () => {
         let fix; let grid: IgxGridComponent;
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringColumnGroupComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
 
-        it('Should not display column groups in advanced filtering dialog.', fakeAsync(() => {
+        it('Should not display column groups in advanced filtering dialog.', customFakeAsync(() => {
             // Open dialog through API.
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
@@ -1364,13 +1365,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
     describe('External - ', () => {
         let fix; let grid: IgxGridComponent;
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxGridExternalAdvancedFilteringComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
 
-        it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
+        it('Should allow hosting Advanced Filtering dialog outside of the grid.', customFakeAsync(() => {
             // Add a root 'and' group.
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
@@ -1412,7 +1413,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
         }));
 
-        it('Should allow hosting Advanced Filtering dialog outside of the hierarchical grid without any console errors.', fakeAsync(() => {
+        it('Should allow hosting Advanced Filtering dialog outside of the hierarchical grid without any console errors.', customFakeAsync(() => {
             fix = TestBed.createComponent(IgxHierGridExternalAdvancedFilteringComponent);
             const hgrid: IgxHierarchicalGridComponent = fix.componentInstance.hgrid;
             fix.detectChanges();
@@ -1437,13 +1438,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
     describe('Expression tree bindings - ', () => {
         let fix; let grid: IgxGridComponent;
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringBindingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
         }));
 
-        it('should correctly filter with \'advancedFilteringExpressionsTree\' binding', fakeAsync(() => {
+        it('should correctly filter with \'advancedFilteringExpressionsTree\' binding', customFakeAsync(() => {
             // Verify initially filtered in Advanced Filtering - 'Downloads > 200'
             expect(grid.filteredData.length).toEqual(3);
             expect(grid.rowList.length).toBe(3);
@@ -1463,7 +1464,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.rowList.length).toBe(8);
         }));
 
-        it('should correctly set filteredData if advancedFilteringExpressionsTree is empty', fakeAsync(() => {
+        it('should correctly set filteredData if advancedFilteringExpressionsTree is empty', customFakeAsync(() => {
             // Verify filtering expressions tree binding state
             expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
 
@@ -1487,13 +1488,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         let fix: ComponentFixture<IgxGridAdvancedFilteringSerializedTreeComponent>;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
 
-        it('should correctly filter with a deserialized expression tree.', fakeAsync(() => {
+        it('should correctly filter with a deserialized expression tree.', customFakeAsync(() => {
             const errorSpy = vi.spyOn(console, 'error');
 
             expect(errorSpy).not.toHaveBeenCalled();
@@ -1503,7 +1504,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.rowList.length).toBe(3);
         }));
 
-        it('should correctly filter with a declared IFilteringExpressionsTree object.', fakeAsync(() => {
+        it('should correctly filter with a declared IFilteringExpressionsTree object.', customFakeAsync(() => {
             const errorSpy = vi.spyOn(console, 'error');
             fix.componentInstance.grid.advancedFilteringExpressionsTree = fix.componentInstance.filterTreeObject;
             fix.detectChanges();
@@ -1514,7 +1515,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.rowList.length).toBe(2);
         }));
 
-        it('should correctly filter when binding to a declared IFilteringExpressionsTree object.', fakeAsync(() => {
+        it('should correctly filter when binding to a declared IFilteringExpressionsTree object.', customFakeAsync(() => {
             const errorSpy = vi.spyOn(console, 'error');
             fix.componentInstance.filterTree = fix.componentInstance.filterTreeObject;
             fix.detectChanges();
@@ -1531,7 +1532,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         let fix: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
         let hgrid: IgxHierarchicalGridComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             hgrid = fix.componentInstance.hgrid;
             hgrid.allowAdvancedFiltering = true;
@@ -1547,7 +1548,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
         }));
 
-        it(`Should have 'In'/'Not-In' operators for fields with chilld entities.`, fakeAsync(() => {
+        it(`Should have 'In'/'Not-In' operators for fields with chilld entities.`, customFakeAsync(() => {
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
 
@@ -1566,7 +1567,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
         }));
 
-        it(`Should NOT have 'In'/'Not-In' operators for fields without chilld entities.`, fakeAsync(() => {
+        it(`Should NOT have 'In'/'Not-In' operators for fields without chilld entities.`, customFakeAsync(() => {
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
@@ -1595,7 +1596,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
         }));
 
-        it('Should have correct entities depending on the hierarchy level.', fakeAsync(() => {
+        it('Should have correct entities depending on the hierarchy level.', customFakeAsync(() => {
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
@@ -1613,7 +1614,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
         }));
 
-        it(`Should apply 'In'/'Not-In' operators for each level properly.`, fakeAsync(() => {
+        it(`Should apply 'In'/'Not-In' operators for each level properly.`, customFakeAsync(() => {
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
@@ -1655,7 +1656,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(hgrid.rowList.length).toBe(5);
         }));
 
-        it(`Should have correct return fields in the child query when there are multiple child entities.`, fakeAsync(() => {
+        it(`Should have correct return fields in the child query when there are multiple child entities.`, customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxHierarchicalGridExportComponent);
             const hierarchicalGrid = fixture.componentInstance.hGrid;
             fixture.componentInstance.shouldDisplayArtist = true;
@@ -1683,7 +1684,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(fieldInputGroup.value).toBe('Artist');
         }));
 
-        it('Should correctly apply filtering expressions tree to the hgrid component through API.', fakeAsync(() => {
+        it('Should correctly apply filtering expressions tree to the hgrid component through API.', customFakeAsync(() => {
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
@@ -1715,7 +1716,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(hgrid.filteredData.length).toBe(5);
         }));
 
-        it('Should correctly apply JSON filtering expressions tree to the hgrid correctly.', fakeAsync(() => {
+        it('Should correctly apply JSON filtering expressions tree to the hgrid correctly.', customFakeAsync(() => {
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
@@ -1747,7 +1748,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(hgrid.filteredData.length).toBe(5);
         }));
 
-        it('Should have proper fields in UI when schema is defined with load on demand.', fakeAsync(() => {
+        it('Should have proper fields in UI when schema is defined with load on demand.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
             const hierarchicalGrid = fixture.componentInstance.instance;
             hierarchicalGrid.allowAdvancedFiltering = true;
@@ -1819,7 +1820,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(dropdownValues).toEqual(expectedValues);
         }));
 
-        it('Should correctly change resource strings for hierarchical Advanced Filtering dialog.', fakeAsync(() => {
+        it('Should correctly change resource strings for hierarchical Advanced Filtering dialog.', customFakeAsync(() => {
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
             fix.detectChanges();
@@ -1896,7 +1897,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(Array.from(operatorSelect.querySelectorAll('igx-select-item')).pop().textContent).toBe('My Not In');
         }));
 
-        it('Should not throw an error when some child data is missing.', fakeAsync(() => {
+        it('Should not throw an error when some child data is missing.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxHierarchicalGridMissingChildDataComponent);
             const hierarchicalGrid = fixture.componentInstance.hGrid;
             hierarchicalGrid.allowAdvancedFiltering = true;

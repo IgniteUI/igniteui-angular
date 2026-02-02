@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -11,6 +11,7 @@ import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxGridNavigationService, PivotRowLayoutType } from 'igniteui-angular/grids/core';
 
 import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const DEBOUNCE_TIME = 250;
 const PIVOT_TBODY_CSS_CLASS = '.igx-grid__tbody';
 const PIVOT_ROW_DIMENSION_CONTENT = 'igx-pivot-row-dimension-content';
@@ -39,7 +40,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             }).compileComponents();
         });
 
-        beforeEach(fakeAsync(async () => {
+        beforeEach(customFakeAsync(async () => {
             fixture = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
             fixture.detectChanges();
             pivotGrid = fixture.componentInstance.pivotGrid;
@@ -355,7 +356,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             }).compileComponents();
         });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
         }));

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCalendarComponent } from '../../../../calendar/src/public_api';
@@ -9,6 +9,7 @@ import { IgxCalendarContainerComponent } from './calendar-container.component';
 
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('Calendar Container', () => {
     let fixture: ComponentFixture<IgxDatePickerTestComponent>;
     let container: IgxCalendarContainerComponent;
@@ -18,7 +19,7 @@ describe('Calendar Container', () => {
         }).compileComponents();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(customFakeAsync(() => {
         fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         fixture.detectChanges();
         container = fixture.componentInstance.container;

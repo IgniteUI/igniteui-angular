@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -24,6 +24,7 @@ import { takeUntil } from 'rxjs/operators';
 import { DefaultDataCloneStrategy, DefaultSortingStrategy, IgxNumberFilteringOperand, IgxStringFilteringOperand, ɵSize, SortingDirection, Transaction, TransactionType } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
 const ROW_DELETED_CLASS = 'igx-grid__tr--deleted';
@@ -1518,7 +1519,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.value).toBe('AAAAAAAAAAA Don Juan De Marco');
         });
 
-        it(`Summaries: Should update summaries after row editing completes`, fakeAsync(() => {
+        it(`Summaries: Should update summaries after row editing completes`, customFakeAsync(() => {
             grid.enableSummaries('OrderDate');
             tick(16);
             fix.detectChanges();
@@ -1555,7 +1556,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 ['Count', 'Earliest', 'Latest'], ['10', 'Jan 1, 1901', 'Dec 25, 2025']);
         }));
 
-        it(`Moving: Should exit edit mode when moving a column`, fakeAsync(() => {
+        it(`Moving: Should exit edit mode when moving a column`, customFakeAsync(() => {
             grid.moving = true;
             const column = grid.columnList.filter(c => c.field === 'ProductName')[0];
             const targetColumn = grid.columnList.filter(c => c.field === 'ProductID')[0];
@@ -1611,7 +1612,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toBeFalsy();
         });
 
-        it(`Resizing: Should keep edit mode when resizing a column`, fakeAsync(() => {
+        it(`Resizing: Should keep edit mode when resizing a column`, customFakeAsync(() => {
             vi.spyOn(grid.gridAPI.crudService, 'endEdit');
 
             // put cell in edit mode
@@ -1701,7 +1702,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
         });
 
-        afterEach(fakeAsync(() => {
+        afterEach(customFakeAsync(() => {
             $destroyer.next(true);
         }));
 
@@ -2330,7 +2331,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let grid;
         let cell: CellType;
         let cellElem: any;
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2859,7 +2860,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let grid: IgxGridComponent;
         let cell: CellType;
         let groupRows;
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2949,7 +2950,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let trans;
         let fix;
         let grid;
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;

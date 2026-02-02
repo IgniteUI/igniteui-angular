@@ -2,10 +2,10 @@ import {
     TestBed,
     ComponentFixture,
     flushMicrotasks,
-    fakeAsync,
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 import {
     IgxToastComponent
 } from './toast.component';
@@ -52,7 +52,7 @@ describe('IgxToast', () => {
         fixture.detectChanges();
     });
 
-    it('should properly toggle and emit isVisibleChange', fakeAsync(() => {
+    it('should properly toggle and emit isVisibleChange', customFakeAsync(() => {
         vi.spyOn(toast.isVisibleChange, 'emit');
         expect(toast.isVisible).toBe(false);
         expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(0);

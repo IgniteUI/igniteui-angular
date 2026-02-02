@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -11,6 +11,7 @@ import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.dir
 import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--flex`;
 const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--modal`;
@@ -144,7 +145,7 @@ describe('Dialog', () => {
         expect(document.activeElement).toEqual(toggle.nativeElement);
     });
 
-    it('Should open and close dialog when set values to IsOpen', fakeAsync(() => {
+    it('Should open and close dialog when set values to IsOpen', customFakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
 
@@ -159,7 +160,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(false);
     }));
 
-    it('Should open and close dialog with isOpen two way data binding', fakeAsync(() => {
+    it('Should open and close dialog with isOpen two way data binding', customFakeAsync(() => {
         const fixture = TestBed.createComponent(DialogTwoWayDataBindingComponent);
         const dialog = fixture.componentInstance.dialog;
         fixture.detectChanges();
@@ -208,7 +209,7 @@ describe('Dialog', () => {
         expect(dialog.rightButtonRipple).toEqual('white');
     });
 
-    it('Should execute open/close methods.', fakeAsync(() => {
+    it('Should execute open/close methods.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
         fixture.detectChanges();
@@ -225,7 +226,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(false);
     }));
 
-    it('Should set closeOnOutsideSelect.', fakeAsync(() => {
+    it('Should set closeOnOutsideSelect.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         fixture.detectChanges();
         const dialog = fixture.componentInstance.dialog;
@@ -251,7 +252,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(true);
     }));
 
-    it('Should test events.', fakeAsync(() => {
+    it('Should test events.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(DialogSampleComponent);
         const dialog = fixture.componentInstance.dialog;
         const args: IDialogEventArgs = {
@@ -323,7 +324,7 @@ describe('Dialog', () => {
         expect(titleWrapper.attributes.id).toEqual(dialogWindow.attributes['aria-labelledby']);
     });
 
-    it('Should close only inner dialog on closeOnOutsideSelect.', fakeAsync(() => {
+    it('Should close only inner dialog on closeOnOutsideSelect.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(NestedDialogsComponent);
         fixture.detectChanges();
 
@@ -381,7 +382,7 @@ describe('Dialog', () => {
 
     });
 
-    it('When modal mode is changed, overlay should be informed', fakeAsync(() => {
+    it('When modal mode is changed, overlay should be informed', customFakeAsync(() => {
         const fix = TestBed.createComponent(AlertComponent);
         fix.detectChanges();
 
@@ -413,7 +414,7 @@ describe('Dialog', () => {
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
     }));
 
-    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync(() => {
+    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DialogComponent);
         fix.detectChanges();
 
@@ -443,13 +444,13 @@ describe('Dialog', () => {
         let fix;
         let dialog;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(PositionSettingsDialogComponent);
             fix.detectChanges();
             dialog = fix.componentInstance.dialog;
         }));
 
-        it('Define different position settings ', fakeAsync(() => {
+        it('Define different position settings ', customFakeAsync(() => {
             const currentElement = fix.componentInstance;
             dialog.open();
             tick(16);

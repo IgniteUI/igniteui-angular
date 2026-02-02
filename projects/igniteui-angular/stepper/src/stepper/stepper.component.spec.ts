@@ -1,6 +1,6 @@
 import { AnimationBuilder } from '@angular/animations';
 import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
@@ -25,6 +25,7 @@ import { IgxStepperService } from './stepper.service';
 import { IgxDirectionality } from 'igniteui-angular/core/src/services/direction/directionality';
 
 import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
 const STEPPER_BODY = 'igx-stepper__body';
@@ -110,7 +111,7 @@ describe('Rendering Tests', () => {
             }
         });
 
-        it('should not allow activating a step with next/prev methods when disabled is set to true', fakeAsync(() => {
+        it('should not allow activating a step with next/prev methods when disabled is set to true', customFakeAsync(() => {
             const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
             const serviceCollapseSpy = vi.spyOn((stepper as any).stepperService, 'collapse');
             stepper.orientation = IgxStepperOrientation.Horizontal;
@@ -155,7 +156,7 @@ describe('Rendering Tests', () => {
             expect(serviceCollapseSpy).toHaveBeenCalledWith(stepper.steps[0]);
         }));
 
-        it('should calculate disabled steps properly when the stepper is initially in linear mode', fakeAsync(() => {
+        it('should calculate disabled steps properly when the stepper is initially in linear mode', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxStepperLinearComponent);
             fixture.detectChanges();
             const linearStepper = fixture.componentInstance.stepper;
@@ -171,7 +172,7 @@ describe('Rendering Tests', () => {
             expect(serviceExpandSpy).not.toHaveBeenCalled();
         }));
 
-        it('should not allow moving forward to next step in linear mode if the previous step is invalid', fakeAsync(() => {
+        it('should not allow moving forward to next step in linear mode if the previous step is invalid', customFakeAsync(() => {
             const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.linear = true;
@@ -228,7 +229,7 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[2].linearDisabled).toBeFalsy();
         }));
 
-        it('should emit ing and ed events when a step is activated', fakeAsync(() => {
+        it('should emit ing and ed events when a step is activated', customFakeAsync(() => {
             const changingSpy = vi.spyOn(stepper.activeStepChanging, 'emit');
             const changedSpy = vi.spyOn(stepper.activeStepChanged, 'emit');
             const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
@@ -274,7 +275,7 @@ describe('Rendering Tests', () => {
             expect(serviceCollapseSpy).toHaveBeenCalledWith(stepper.steps[0]);
         }));
 
-        it('should be able to cancel the activeStepChanging event', fakeAsync(() => {
+        it('should be able to cancel the activeStepChanging event', customFakeAsync(() => {
             const changingSpy = vi.spyOn(stepper.activeStepChanging, 'emit');
             const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
             const serviceCollapseSpy = vi.spyOn((stepper as any).stepperService, 'collapse');
@@ -305,7 +306,7 @@ describe('Rendering Tests', () => {
             expect(serviceCollapseSpy).not.toHaveBeenCalled();
         }));
 
-        it('a step should emit activeChange event when its active property changes', fakeAsync(() => {
+        it('a step should emit activeChange event when its active property changes', customFakeAsync(() => {
             const fourthActiveChangeSpy = vi.spyOn(stepper.steps[3].activeChange, 'emit');
             const fifthActiveChangeSpy = vi.spyOn(stepper.steps[4].activeChange, 'emit');
             const serviceExpandAPISpy = vi.spyOn((stepper as any).stepperService, 'expandThroughApi');
@@ -592,7 +593,7 @@ describe('Rendering Tests', () => {
             expect(stepper.nativeElement.children[1].classList.contains(STEPPER_HEADER)).toBe(true);
         });
 
-        it('should allow modifying animationSettings that are used for transitioning between steps ', fakeAsync(() => {
+        it('should allow modifying animationSettings that are used for transitioning between steps ', customFakeAsync(() => {
             const numericTestValues = [100, 1000];
 
             for (const val of numericTestValues) {
@@ -635,7 +636,7 @@ describe('Rendering Tests', () => {
             }
         }));
 
-        it('should render dynamically added step and properly set the linear disabled steps with its addition', fakeAsync(() => {
+        it('should render dynamically added step and properly set the linear disabled steps with its addition', customFakeAsync(() => {
             const stepsLength = stepper.steps.length;
             expect(stepsLength).toBe(5);
 
@@ -713,7 +714,7 @@ describe('Rendering Tests', () => {
             }
         }));
 
-        it('should activate the first accessible step and clear the visited steps collection when the stepper is reset', fakeAsync(() => {
+        it('should activate the first accessible step and clear the visited steps collection when the stepper is reset', customFakeAsync(() => {
             // "visit" some steps
             stepper.steps[0].active = true;
             fix.detectChanges();
@@ -734,13 +735,13 @@ describe('Rendering Tests', () => {
             expect((stepper as any).stepperService.visitedSteps).toContain(stepper.steps[firstAccessibleStepIdx]);
         }));
 
-        it('should properly collapse the previously active step in horizontal orientation and animation type \'fade\'', fakeAsync(() => {
+        it('should properly collapse the previously active step in horizontal orientation and animation type \'fade\'', customFakeAsync(() => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.horizontalAnimationType = 'fade';
             testAnimationBehavior('fade', fix, false);
         }));
 
-        it('should not shrink the step indicator in vertical orientation when titlePosition="end" and the title is very long', fakeAsync(() => {
+        it('should not shrink the step indicator in vertical orientation when titlePosition="end" and the title is very long', customFakeAsync(() => {
             const fixture = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
             fixture.detectChanges();
             tick();
@@ -759,7 +760,7 @@ describe('Rendering Tests', () => {
     });
 
     describe('Keyboard navigation', () => {
-        it('should navigate to first/last step on Home/End key press', fakeAsync(() => {
+        it('should navigate to first/last step on Home/End key press', customFakeAsync(() => {
             const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
             const serviceCollapseSpy = vi.spyOn((stepper as any).stepperService, 'collapse');
 
@@ -784,7 +785,7 @@ describe('Rendering Tests', () => {
             expect(serviceCollapseSpy).not.toHaveBeenCalled();
         }));
 
-        it('should activate the currently focused step on Enter/Space key press', fakeAsync(() => {
+        it('should activate the currently focused step on Enter/Space key press', customFakeAsync(() => {
             const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
             stepper.steps[0].active = true;
             fix.detectChanges();
@@ -817,7 +818,7 @@ describe('Rendering Tests', () => {
             expect(serviceExpandSpy.mock.lastCall[0]).toBe(stepper.steps[4]);
         }));
 
-        it('should navigate to the next/previous step in horizontal orientation on Arrow Right/Left key press', fakeAsync(() => {
+        it('should navigate to the next/previous step in horizontal orientation on Arrow Right/Left key press', customFakeAsync(() => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.steps[0].active = true;
             fix.detectChanges();
@@ -841,7 +842,7 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[0].nativeElement as Element).toBe(document.activeElement);
         }));
 
-        it('should navigate to the next/previous step in vertical orientation on Arrow Down/Up key press', fakeAsync(() => {
+        it('should navigate to the next/previous step in vertical orientation on Arrow Down/Up key press', customFakeAsync(() => {
             stepper.orientation = IgxStepperOrientation.Vertical;
             stepper.steps[0].active = true;
             fix.detectChanges();
@@ -865,7 +866,7 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[0].nativeElement as Element).toBe(document.activeElement);
         }));
 
-        it('should specify tabIndex="0" for the active step and tabIndex="-1" for the other steps', fakeAsync(() => {
+        it('should specify tabIndex="0" for the active step and tabIndex="-1" for the other steps', customFakeAsync(() => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.steps[0].active = true;
             fix.detectChanges();

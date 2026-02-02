@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, DebugElement, ViewChild } from '@angular/core';
@@ -10,6 +10,7 @@ import { IgxComboComponent } from 'igniteui-angular/combo';
 import { cloneArray, columnFieldPath, IgxStringFilteringOperand, resolveNestedPath, SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const first = <T>(array: T[]): T => array[0];
 
 const DATA = [
@@ -212,7 +213,7 @@ describe('Grid - nested data source properties #grid', () => {
             }).compileComponents();
         });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(NestedPropertiesGridComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -506,7 +507,7 @@ describe('Edit cell with data of type Array #grid', () => {
         }).compileComponents();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(customFakeAsync(() => {
         fixture = TestBed.createComponent(NestedPropertyGridComponent);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid;

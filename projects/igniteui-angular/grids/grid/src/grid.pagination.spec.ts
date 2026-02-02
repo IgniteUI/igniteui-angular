@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { GridWithUndefinedDataComponent } from '../../../test-utils/grid-samples.spec';
 import { PagingComponent, RemotePagingComponent } from '../../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,6 +9,7 @@ import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../../test-utils/con
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const grid = fix.componentInstance.grid;
 
@@ -49,7 +50,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
     describe('General', () => {
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(PagingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -436,7 +437,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
     });
 
-    it('should not throw error when data is undefined', fakeAsync(() => {
+    it('should not throw error when data is undefined', customFakeAsync(() => {
         let errorMessage = '';
         fix = TestBed.createComponent(GridWithUndefinedDataComponent);
         try {
@@ -453,7 +454,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         expect(grid.rowList.length).toBe(5);
     }));
 
-    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', fakeAsync(() => {
+    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', customFakeAsync(() => {
         fix = TestBed.createComponent(RemotePagingComponent);
         fix.detectChanges();
         tick();
@@ -462,7 +463,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         expect(grid.paginator.totalPages).toBe(4);
     }));
 
-    it('should get correct rowIndex in remote paging', fakeAsync(() => {
+    it('should get correct rowIndex in remote paging', customFakeAsync(() => {
         fix = TestBed.createComponent(RemotePagingComponent);
         fix.detectChanges();
         tick();

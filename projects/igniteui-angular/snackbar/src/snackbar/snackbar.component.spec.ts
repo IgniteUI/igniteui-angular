@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent } from './snackbar.component';
@@ -9,6 +9,7 @@ import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxSnackbar', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -45,7 +46,7 @@ describe('IgxSnackbar', () => {
         expect(domSnackbar.id).toBe('customId');
     });
 
-    it('should auto hide 1 second after is open', fakeAsync(() => {
+    it('should auto hide 1 second after is open', customFakeAsync(() => {
         vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
@@ -62,7 +63,7 @@ describe('IgxSnackbar', () => {
         expect(snackbar.closing.emit).toHaveBeenCalled();
     }));
 
-    it('should not auto hide 1 second after is open', fakeAsync(() => {
+    it('should not auto hide 1 second after is open', customFakeAsync(() => {
         vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
@@ -80,7 +81,7 @@ describe('IgxSnackbar', () => {
         snackbar.close();
     }));
 
-    it('should trigger on action', fakeAsync(() => {
+    it('should trigger on action', customFakeAsync(() => {
         snackbar.actionText = 'undo';
         snackbar.displayTime = 100;
         vi.spyOn(snackbar.clicked, 'emit');
@@ -95,7 +96,7 @@ describe('IgxSnackbar', () => {
         expect(snackbar.clicked.emit).toHaveBeenCalledWith(snackbar);
     }));
 
-    it('should emit opening when snackbar is shown', fakeAsync(() => {
+    it('should emit opening when snackbar is shown', customFakeAsync(() => {
         vi.spyOn(snackbar.opening, 'emit');
         snackbar.open();
         tick(100);
@@ -103,7 +104,7 @@ describe('IgxSnackbar', () => {
         snackbar.close();
     }));
 
-    it('should emit onOpened when snackbar is opened', fakeAsync(() => {
+    it('should emit onOpened when snackbar is opened', customFakeAsync(() => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
         vi.spyOn(snackbar.opened, 'emit');
@@ -121,7 +122,7 @@ describe('IgxSnackbar', () => {
         expect(snackbar.closing.emit).toHaveBeenCalled();
     });
 
-    it('should emit onClosed when snackbar is closed', fakeAsync(() => {
+    it('should emit onClosed when snackbar is closed', customFakeAsync(() => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
         vi.spyOn(snackbar.closed, 'emit');
@@ -132,7 +133,7 @@ describe('IgxSnackbar', () => {
         expect(snackbar.closed.emit).toHaveBeenCalled();
     }));
 
-    it('should be opened and closed by the toggle method', fakeAsync(() => {
+    it('should be opened and closed by the toggle method', customFakeAsync(() => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
 
@@ -147,7 +148,7 @@ describe('IgxSnackbar', () => {
         expect(snackbar.collapsed).toBeTruthy();
     }));
 
-    it('can set snackbar message through open method', fakeAsync(() => {
+    it('can set snackbar message through open method', customFakeAsync(() => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
 

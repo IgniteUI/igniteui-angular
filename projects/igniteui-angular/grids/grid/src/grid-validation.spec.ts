@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { flush, TestBed, tick } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +20,7 @@ import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalA
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Validation #grid', () => {
 
     beforeEach(async () => {
@@ -191,7 +192,7 @@ describe('IgxGrid - Validation #grid', () => {
             expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
-        it('should show the error message on error icon hover and when the invalid cell becomes active.', fakeAsync(() => {
+        it('should show the error message on error icon hover and when the invalid cell becomes active.', customFakeAsync(() => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
 
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
@@ -375,7 +376,7 @@ describe('IgxGrid - Validation #grid', () => {
     describe('Custom Validation - ', () => {
         let fixture;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(IgxGridValidationTestCustomErrorComponent);
             fixture.detectChanges();
         }));
@@ -405,7 +406,7 @@ describe('IgxGrid - Validation #grid', () => {
     describe('Custom Editor Templates - ', () => {
         let fixture;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(IgxGridCustomEditorsComponent);
             fixture.componentInstance.grid.batchEditing = true;
             fixture.detectChanges();
@@ -481,7 +482,7 @@ describe('IgxGrid - Validation #grid', () => {
     describe('Transactions integration - ', () => {
         let fixture;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(IgxGridValidationTestBaseComponent);
             fixture.componentInstance.batchEditing = true;
             fixture.detectChanges();
@@ -647,7 +648,7 @@ describe('IgxGrid - Validation #grid', () => {
     describe('TreeGrid integration - ', () => {
         let fixture;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(IgxTreeGridValidationTestComponent);
             fixture.componentInstance.batchEditing = true;
             fixture.detectChanges();

@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
 } from '@angular/forms';
@@ -29,6 +29,7 @@ import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interaction
 import { IgxComboAPIService } from './combo.api';
 
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
 const CSS_CLASS_DROPDOWN = 'igx-drop-down';
@@ -743,7 +744,7 @@ describe('igxCombo', () => {
                 combo.handleClearItems(spyObj);
                 expect(combo.displayValue).toEqual(item[0]);
             });
-            it('should allow canceling and overwriting of item addition', fakeAsync(() => {
+            it('should allow canceling and overwriting of item addition', customFakeAsync(() => {
                 const dropdown = { selectItem: vi.fn() } as unknown as IgxComboDropDownComponent;
                 const mockVirtDir = { scrollTo: vi.fn() };
                 const mockInput = {
@@ -904,7 +905,7 @@ describe('igxCombo', () => {
                 expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
                 expect(dropDownScrollList.childElementCount).toEqual(0);
             });
-            it('should render aria attributes properly', fakeAsync(() => {
+            it('should render aria attributes properly', customFakeAsync(() => {
                 expect(input.nativeElement.getAttribute('role')).toEqual('combobox');
                 expect(input.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
                 expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
@@ -937,7 +938,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(input.nativeElement.getAttribute('aria-label')).toEqual('Selected options');
             }));
-            it('should render aria-expanded attribute properly', fakeAsync(() => {
+            it('should render aria-expanded attribute properly', customFakeAsync(() => {
                 expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
                 combo.open();
                 tick();
@@ -971,7 +972,7 @@ describe('igxCombo', () => {
                 expect(combo.placeholder).toEqual('States');
                 expect(combo.comboInput.nativeElement.placeholder).toEqual('States');
             });
-            it('should render dropdown list and item height properly', fakeAsync(() => {
+            it('should render dropdown list and item height properly', customFakeAsync(() => {
                 // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
                 let itemHeight = defaultDropdownItemHeight;
                 let itemMaxHeight = defaultDropdownItemMaxHeight;
@@ -1089,13 +1090,13 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.searchInput).toBeFalsy();
             });
-            it('should focus search input', fakeAsync(() => {
+            it('should focus search input', customFakeAsync(() => {
                 combo.toggle();
                 tick();
                 fixture.detectChanges();
                 expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
             }));
-            it('should not focus search input, when autoFocusSearch=false', fakeAsync(() => {
+            it('should not focus search input, when autoFocusSearch=false', customFakeAsync(() => {
                 combo.autoFocusSearch = false;
                 combo.toggle();
                 tick();
@@ -1185,7 +1186,7 @@ describe('igxCombo', () => {
                 combo = fixture.componentInstance.combo;
                 containerElement = fixture.debugElement.query(By.css('.comboContainer')).nativeElement;
             });
-            it('should adjust combo width to the container element width when set to 100%', fakeAsync(() => {
+            it('should adjust combo width to the container element width when set to 100%', customFakeAsync(() => {
                 const containerWidth = 500;
                 const comboWrapper = fixture.debugElement.query(By.css(CSS_CLASS_COMBO)).nativeElement;
                 let containerElementWidth = containerElement.getBoundingClientRect().width;
@@ -1206,7 +1207,7 @@ describe('igxCombo', () => {
                 expect(dropDownWidth).toEqual(containerElementWidth);
                 expect(inputWidth).toEqual(containerElementWidth);
             }));
-            it('should render combo width properly when placed in container', fakeAsync(() => {
+            it('should render combo width properly when placed in container', customFakeAsync(() => {
                 let comboWidth = '300px';
                 const containerWidth = '500px';
                 combo.width = comboWidth;
@@ -1468,7 +1469,7 @@ describe('igxCombo', () => {
                 combo = fixture.componentInstance.combo;
                 component = fixture.componentInstance;
             });
-            it('should properly bind to object value w/ valueKey', fakeAsync(() => {
+            it('should properly bind to object value w/ valueKey', customFakeAsync(() => {
                 combo.valueKey = 'id';
                 component.selectedItems = [0, 2];
                 fixture.detectChanges();
@@ -1479,7 +1480,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(component.selectedItems).toEqual([0, 2, 4]);
             }));
-            it('should properly bind to object value w/o valueKey', fakeAsync(() => {
+            it('should properly bind to object value w/o valueKey', customFakeAsync(() => {
                 component.selectedItems = [component.items[0], component.items[2]];
                 fixture.detectChanges();
                 tick();
@@ -1489,7 +1490,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(component.selectedItems).toEqual([combo.data[0], combo.data[2], combo.data[4]]);
             }));
-            it('should properly bind to values w/o valueKey', fakeAsync(() => {
+            it('should properly bind to values w/o valueKey', customFakeAsync(() => {
                 component.items = ['One', 'Two', 'Three', 'Four', 'Five'];
                 component.selectedItems = ['One', 'Two'];
                 fixture.detectChanges();
@@ -1512,7 +1513,7 @@ describe('igxCombo', () => {
                     dropdown = combo.dropdown;
                     input = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 });
-                it('should properly call dropdown navigatePrev method', fakeAsync(() => {
+                it('should properly call dropdown navigatePrev method', customFakeAsync(() => {
                     expect(dropdown.focusedItem).toBeFalsy();
                     expect(dropdown.focusedItem).toEqual(null);
                     expect(combo.collapsed).toBeTruthy();
@@ -1631,7 +1632,7 @@ describe('igxCombo', () => {
                     expect(dropdown.focusedItem).toEqual(null);
                     dropdown.onBlur();
                 });
-                it('should properly handle dropdown.focusItem', fakeAsync(() => {
+                it('should properly handle dropdown.focusItem', customFakeAsync(() => {
                     combo.toggle();
                     tick();
                     fixture.detectChanges();
@@ -1649,7 +1650,7 @@ describe('igxCombo', () => {
                     expect(virtualSpyDOWN).toHaveBeenCalled();
                     expect(virtualSpyUP).toHaveBeenCalled();
                 }));
-                it('should handle keyboard events', fakeAsync(() => {
+                it('should handle keyboard events', customFakeAsync(() => {
                     combo.toggle();
                     tick();
                     fixture.detectChanges();
@@ -1671,7 +1672,7 @@ describe('igxCombo', () => {
                     combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'Escape'));
                     expect(combo.toggle).toHaveBeenCalledTimes(1);
                 }));
-                it('should toggle combo dropdown on toggle button click', fakeAsync(() => {
+                it('should toggle combo dropdown on toggle button click', customFakeAsync(() => {
                     vi.spyOn(combo, 'toggle');
                     input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     tick();
@@ -1686,7 +1687,7 @@ describe('igxCombo', () => {
                     expect(combo.collapsed).toEqual(true);
                     expect(combo.toggle).toHaveBeenCalledTimes(2);
                 }));
-                it('should toggle dropdown list with arrow down/up keys', fakeAsync(() => {
+                it('should toggle dropdown list with arrow down/up keys', customFakeAsync(() => {
                     vi.spyOn(combo, 'open');
                     vi.spyOn(combo, 'close');
 
@@ -1793,7 +1794,7 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                     expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                 }));
-                it('should close the dropdown list on pressing Tab key', fakeAsync(() => {
+                it('should close the dropdown list on pressing Tab key', customFakeAsync(() => {
                     combo.toggle();
                     fixture.detectChanges();
 
@@ -2132,7 +2133,7 @@ describe('igxCombo', () => {
                         cancel: false
                     });
             });
-            it('should toggle combo dropdown on Enter of the focused toggle icon', fakeAsync(() => {
+            it('should toggle combo dropdown on Enter of the focused toggle icon', customFakeAsync(() => {
                 vi.spyOn(combo, 'toggle');
                 const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`));
 
@@ -2295,7 +2296,7 @@ describe('igxCombo', () => {
                 expect(combo.value).toEqual([]);
                 expect(combo.displayValue).toEqual('');
             });
-            it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
+            it('should select values that have spaces as prefixes/suffixes', customFakeAsync(() => {
                 combo.displayKey = combo.valueKey = 'value';
                 combo.data = [
                     { value: "Mississippi " }
@@ -2356,7 +2357,7 @@ describe('igxCombo', () => {
                 expect(combo.selection.length).toEqual(0);
                 expect((combo as any)._remoteSelection[0]).toBeUndefined();
             });
-            it('should add predefined selection to the input when data is bound after initialization', fakeAsync(() => {
+            it('should add predefined selection to the input when data is bound after initialization', customFakeAsync(() => {
                 fixture = TestBed.createComponent(IgxComboBindingDataAfterInitComponent);
                 fixture.detectChanges();
                 input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
@@ -2450,7 +2451,7 @@ describe('igxCombo', () => {
                 combo = fixture.componentInstance.combo;
                 input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
             });
-            it('should group items correctly', fakeAsync(() => {
+            it('should group items correctly', customFakeAsync(() => {
                 combo.toggle();
                 tick();
                 fixture.detectChanges();
@@ -2467,7 +2468,7 @@ describe('igxCombo', () => {
                 // First item is regular item
                 expect(combo.dropdown.items[0].value).toEqual(combo.data[0]);
             }));
-            it('should properly handle click events on disabled/header items', fakeAsync(() => {
+            it('should properly handle click events on disabled/header items', customFakeAsync(() => {
                 vi.spyOn(combo.dropdown, 'selectItem');
                 combo.toggle();
                 tick();
@@ -2689,7 +2690,7 @@ describe('igxCombo', () => {
                 expect(combo.data[combo.data.length - 1]).toEqual('myItem');
             });
 
-            it('should support filtering strings containing diacritic characters', fakeAsync(() => {
+            it('should support filtering strings containing diacritic characters', customFakeAsync(() => {
                 combo.filterFunction = comboIgnoreDiacriticsFilter;
                 combo.displayKey = null;
                 combo.valueKey = null;
@@ -2714,7 +2715,7 @@ describe('igxCombo', () => {
                 verifyFilteredItems('é', 6);
             }));
 
-            it('should filter the dropdown items when typing in the search input', fakeAsync(() => {
+            it('should filter the dropdown items when typing in the search input', customFakeAsync(() => {
                 let dropdownList;
                 let dropdownItems;
                 let expectedValues = combo.data.filter(data => data.field.toLowerCase().includes('m'));
@@ -2813,7 +2814,7 @@ describe('igxCombo', () => {
                 verifyFilteredItems('M', 4, 15);
                 combo.filteredData.forEach((item) => expect(combo.data).toContain(item));
             });
-            it('should clear the search input and close the dropdown list on pressing ESC key', fakeAsync(() => {
+            it('should clear the search input and close the dropdown list on pressing ESC key', customFakeAsync(() => {
                 combo.toggle();
                 fixture.detectChanges();
 
@@ -2952,7 +2953,7 @@ describe('igxCombo', () => {
                 expect(combo.collapsed).toBeFalsy();
                 expect(combo.displayValue).toEqual('My New Custom Item');
             });
-            it('should enable/disable filtering at runtime', fakeAsync(() => {
+            it('should enable/disable filtering at runtime', customFakeAsync(() => {
                 combo.open(); // Open combo - all data items are in filteredData
                 tick();
                 fixture.detectChanges();
@@ -3035,7 +3036,7 @@ describe('igxCombo', () => {
                 expect(combo.searchValue).toEqual('Test');
                 cancelSub.unsubscribe();
             });
-            it('Should filter the data when custom filterFunction is provided', fakeAsync(() => {
+            it('Should filter the data when custom filterFunction is provided', customFakeAsync(() => {
                 combo.open();
                 tick();
                 fixture.detectChanges();
@@ -3073,7 +3074,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.items.length).toEqual(0);
             }));
-            it('Should update filtering when custom filterFunction is provided and filteringOptions.caseSensitive is changed', fakeAsync(() => {
+            it('Should update filtering when custom filterFunction is provided and filteringOptions.caseSensitive is changed', customFakeAsync(() => {
                 combo.open();
                 tick();
                 fixture.detectChanges();
@@ -3110,7 +3111,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.items.length).toEqual(0);
             }));
-            it('Should update filtering when custom filteringOptions are provided', fakeAsync(() => {
+            it('Should update filtering when custom filteringOptions are provided', customFakeAsync(() => {
                 combo.open();
                 tick();
                 fixture.detectChanges();
@@ -3304,7 +3305,7 @@ describe('igxCombo', () => {
                     expect(inputGroupIsRequiredClass).toBeDefined();
                 });
 
-                it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+                it('Should update validity state when programmatically setting errors on reactive form controls', customFakeAsync(() => {
                     const form = fixture.componentInstance.reactiveForm;
 
                     form.markAllAsTouched();
@@ -3332,7 +3333,7 @@ describe('igxCombo', () => {
             });
             describe('Template form tests: ', () => {
                 let inputGroupRequired: DebugElement;
-                beforeEach(fakeAsync(() => {
+                beforeEach(customFakeAsync(() => {
                     fixture = TestBed.createComponent(IgxComboInTemplatedFormComponent);
                     fixture.detectChanges();
                     combo = fixture.componentInstance.testCombo;
@@ -3360,7 +3361,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
                 });
-                it('should properly init with empty array and handle consecutive model changes', fakeAsync(() => {
+                it('should properly init with empty array and handle consecutive model changes', customFakeAsync(() => {
                     const model = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
                     fixture.componentInstance.values = [];
                     fixture.detectChanges();
@@ -3431,7 +3432,7 @@ describe('igxCombo', () => {
                     expect(combo.onBlur).toHaveBeenCalled();
                     expect(combo.onBlur).toHaveBeenCalledWith();
                 });
-                it('should set validity to initial when the form is reset', fakeAsync(() => {
+                it('should set validity to initial when the form is reset', customFakeAsync(() => {
                     combo.onBlur();
                     fixture.detectChanges();
                     expect(combo.valid).toEqual(IgxInputState.INVALID);
@@ -3442,7 +3443,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 }));
-                it('should mark as touched and invalid when combo is focused, dropdown appears, and user clicks away without selection', fakeAsync(() => {
+                it('should mark as touched and invalid when combo is focused, dropdown appears, and user clicks away without selection', customFakeAsync(() => {
                     const ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);

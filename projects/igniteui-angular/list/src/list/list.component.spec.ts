@@ -1,5 +1,5 @@
 import { QueryList } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
@@ -31,6 +31,7 @@ import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('List', () => {
 
     beforeEach(async () => {
@@ -504,7 +505,7 @@ describe('List', () => {
         expect(list.resetPan.emit).toHaveBeenCalledTimes(1);
     });
 
-    it('checking the panLeftTemplate is not visible when releasing a list item.', fakeAsync(() => {
+    it('checking the panLeftTemplate is not visible when releasing a list item.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -521,7 +522,7 @@ describe('List', () => {
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
     }));
 
-    it('checking the panRightTemplate is not visible when releasing a list item.', fakeAsync(() => {
+    it('checking the panRightTemplate is not visible when releasing a list item.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -538,7 +539,7 @@ describe('List', () => {
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
     }));
 
-    it('cancel left panning', fakeAsync(() => {
+    it('cancel left panning', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -562,7 +563,7 @@ describe('List', () => {
         expect(list.endPan.emit).toHaveBeenCalledTimes(1);
     }));
 
-    it('cancel right panning', fakeAsync(() => {
+    it('cancel right panning', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();

@@ -1,5 +1,5 @@
 import { Component, ComponentRef, ElementRef, HostBinding, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
@@ -35,6 +35,7 @@ import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { PlatformUtil } from 'igniteui-angular';
 
 import { describe, it, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
 const CLASS_OVERLAY_CONTENT_RELATIVE = 'igx-overlay__content--relative';
@@ -330,7 +331,7 @@ describe('igxOverlay', () => {
             }).compileComponents();
         });
 
-        it('OverlayElement should return a div attached to Document\'s body.', fakeAsync(() => {
+        it('OverlayElement should return a div attached to Document\'s body.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -344,7 +345,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
-        it('Should attach to setting target or default to body', fakeAsync(() => {
+        it('Should attach to setting target or default to body', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const button = fixture.componentInstance.buttonElement;
             const overlay = fixture.componentInstance.overlay;
@@ -384,7 +385,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should show component passed to overlay.', fakeAsync(() => {
+        it('Should show component passed to overlay.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -408,7 +409,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
-        it('Should hide component and the overlay when Hide() is called.', fakeAsync(() => {
+        it('Should hide component and the overlay when Hide() is called.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -446,7 +447,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should hide all components and the overlay when HideAll() is called.', fakeAsync(() => {
+        it('Should hide all components and the overlay when HideAll() is called.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             const overlay = fixture.componentInstance.overlay;
@@ -473,7 +474,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should show and hide component via directive.', fakeAsync(() => {
+        it('Should show and hide component via directive.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
             fixture.detectChanges();
             fixture.componentInstance.show();
@@ -492,7 +493,7 @@ describe('igxOverlay', () => {
             expect(overlayDiv).toBeUndefined();
         }));
 
-        it('Should properly emit events.', fakeAsync(() => {
+        it('Should properly emit events.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const overlayInstance = fixture.componentInstance.overlay;
@@ -560,7 +561,7 @@ describe('igxOverlay', () => {
             overlayInstance.detachAll();
         }));
 
-        it('Should properly emit contentAppending event', fakeAsync(() => {
+        it('Should properly emit contentAppending event', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const overlayInstance = fixture.componentInstance.overlay;
@@ -589,7 +590,7 @@ describe('igxOverlay', () => {
             })
         }));
 
-        it('Should properly be able to override OverlaySettings using contentAppending event args', fakeAsync(() => {
+        it('Should properly be able to override OverlaySettings using contentAppending event args', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const overlayInstance = fixture.componentInstance.overlay;
@@ -746,7 +747,7 @@ describe('igxOverlay', () => {
             expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
-        it('Should properly call setOffset method', fakeAsync(() => {
+        it('Should properly call setOffset method', customFakeAsync(() => {
             const fixture = TestBed.createComponent(WidthTestOverlayComponent);
             const overlayInstance = fixture.componentInstance.overlay;
 
@@ -791,7 +792,7 @@ describe('igxOverlay', () => {
             overlayInstance.detachAll();
         }));
 
-        it('Should offset the overlay content correctly using setOffset method and optional offsetMode', fakeAsync(() => {
+        it('Should offset the overlay content correctly using setOffset method and optional offsetMode', customFakeAsync(() => {
             const fixture = TestBed.createComponent(WidthTestOverlayComponent);
             const overlayInstance = fixture.componentInstance.overlay;
 
@@ -824,7 +825,7 @@ describe('igxOverlay', () => {
             overlayInstance.detachAll();
         }));
 
-        it('#1690 - click on second filter does not close first one.', fakeAsync(() => {
+        it('#1690 - click on second filter does not close first one.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(TwoButtonsComponent);
             const button1 = fixture.nativeElement.getElementsByClassName('buttonOne')[0];
             const button2 = fixture.nativeElement.getElementsByClassName('buttonTwo')[0];
@@ -846,7 +847,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
-        it('#1692 - scroll strategy closes overlay when shown component is scrolled.', fakeAsync(() => {
+        it('#1692 - scroll strategy closes overlay when shown component is scrolled.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
             const overlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
             fixture.componentInstance.show(overlaySettings);
@@ -878,7 +879,7 @@ describe('igxOverlay', () => {
         }));
 
         // TODO: refactor utilities to include all exported methods in a class
-        // it('#1799 - content div should reposition on window resize.', fakeAsync(() => {
+        // it('#1799 - content div should reposition on window resize.', customFakeAsync(() => {
         //     const rect: ClientRect = {
         //         bottom: 50,
         //         height: 0,
@@ -925,7 +926,7 @@ describe('igxOverlay', () => {
         // }));
 
         it('#2475 - An error is thrown for IgxOverlay when showing a component' +
-            'instance that is not attached to the DOM', fakeAsync(() => {
+            'instance that is not attached to the DOM', customFakeAsync(() => {
                 const fixture = TestBed.createComponent(SimpleRefComponent);
                 fixture.detectChanges();
                 const overlay = fixture.componentInstance.overlay;
@@ -955,7 +956,7 @@ describe('igxOverlay', () => {
                 overlay.detachAll();
             }));
 
-        it('#2486 - filtering dropdown is not correctly positioned', fakeAsync(() => {
+        it('#2486 - filtering dropdown is not correctly positioned', customFakeAsync(() => {
             const fixture = TestBed.createComponent(WidthTestOverlayComponent);
             fixture.debugElement.nativeElement.style.transform = 'translatex(100px)';
 
@@ -978,7 +979,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
-        it('#2798 - Allow canceling of open and close of IgxDropDown through opening and closing events', fakeAsync(() => {
+        it('#2798 - Allow canceling of open and close of IgxDropDown through opening and closing events', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const overlayInstance = fixture.componentInstance.overlay;
@@ -1018,7 +1019,7 @@ describe('igxOverlay', () => {
             overlayInstance.detachAll();
         }));
 
-        it('#3673 - Should not close dropdown in dropdown', fakeAsync(() => {
+        it('#3673 - Should not close dropdown in dropdown', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const button = fixture.componentInstance.buttonElement;
             const overlay = fixture.componentInstance.overlay;
@@ -1239,7 +1240,7 @@ describe('igxOverlay', () => {
         //     expect(mockElement.style.height).toBe('100px');
         // });
 
-        it('should close overlay on outside click when target is point, #8297', fakeAsync(() => {
+        it('should close overlay on outside click when target is point, #8297', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             fixture.detectChanges();
@@ -1271,7 +1272,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('should correctly handle close on outside click in shadow DOM', fakeAsync(() => {
+        it('should correctly handle close on outside click in shadow DOM', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageInShadowDomComponent);
             const button = fixture.componentInstance.buttonElement;
             const overlay = fixture.componentInstance.overlay;
@@ -1315,7 +1316,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should properly move computed size style to the overlay content container.', fakeAsync(() => {
+        it('Should properly move computed size style to the overlay content container.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
 
@@ -1336,7 +1337,7 @@ describe('igxOverlay', () => {
             overlayInstance.detach(firstCallId);
         }));
 
-        it('#15228 - Should use provided in show overlay settings ', fakeAsync(() => {
+        it('#15228 - Should use provided in show overlay settings ', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const overlayInstance = fixture.componentInstance.overlay;
@@ -1375,7 +1376,7 @@ describe('igxOverlay', () => {
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
             });
         });
-        it('Should properly initialize Scroll Strategy - Block.', fakeAsync(async () => {
+        it('Should properly initialize Scroll Strategy - Block.', customFakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -1416,7 +1417,7 @@ describe('igxOverlay', () => {
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should properly initialize Scroll Strategy - Absolute.', fakeAsync(async () => {
+        it('Should properly initialize Scroll Strategy - Absolute.', customFakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -1456,7 +1457,7 @@ describe('igxOverlay', () => {
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should only call reposition once on scroll - Absolute.', fakeAsync(async () => {
+        it('Should only call reposition once on scroll - Absolute.', customFakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -1499,7 +1500,7 @@ describe('igxOverlay', () => {
             overlay.detach(id);
         }));
 
-        it('Should properly initialize Scroll Strategy - Close.', fakeAsync(async () => {
+        it('Should properly initialize Scroll Strategy - Close.', customFakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -1552,7 +1553,7 @@ describe('igxOverlay', () => {
 
         // 1. Positioning Strategies
         // 1.1 Global (show components in the window center - default).
-        it('Should correctly render igx-overlay', fakeAsync(() => {
+        it('Should correctly render igx-overlay', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             const overlay = fixture.componentInstance.overlay;
@@ -1582,7 +1583,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should cover the whole window 100% width and height.', fakeAsync(() => {
+        it('Should cover the whole window 100% width and height.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -1602,7 +1603,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
-        it('Should show the component inside the igx-overlay wrapper as a content last child.', fakeAsync(() => {
+        it('Should show the component inside the igx-overlay wrapper as a content last child.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             const overlay = fixture.componentInstance.overlay;
@@ -1628,7 +1629,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should apply the corresponding inline css to the overlay wrapper div element for each alignment.', fakeAsync(() => {
+        it('Should apply the corresponding inline css to the overlay wrapper div element for each alignment.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             const overlay = fixture.componentInstance.overlay;
@@ -1668,7 +1669,7 @@ describe('igxOverlay', () => {
             }
         }));
 
-        it('Should center the shown component in the igx-overlay (visible window) - default.', fakeAsync(() => {
+        it('Should center the shown component in the igx-overlay (visible window) - default.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             const overlay = fixture.componentInstance.overlay;
@@ -1684,7 +1685,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should display a new instance of the same component/options exactly on top of the previous one.', fakeAsync(() => {
+        it('Should display a new instance of the same component/options exactly on top of the previous one.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             const overlay = fixture.componentInstance.overlay;
@@ -1708,7 +1709,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should show a component bigger than the visible window as centered.', fakeAsync(() => {
+        it('Should show a component bigger than the visible window as centered.', customFakeAsync(() => {
 
             // overlay div is forced to has width and height equal to 0. This will prevent body
             // to show any scrollbars whatever the size of the component is.
@@ -1733,7 +1734,7 @@ describe('igxOverlay', () => {
         // 1.1.1 Global Css
         it('Should apply the css class on igx-overlay component div wrapper.' +
             'Test defaults: When no positionStrategy is passed use GlobalPositionStrategy with default PositionSettings and css class.',
-            fakeAsync(() => {
+            customFakeAsync(() => {
                 const fixture = TestBed.createComponent(EmptyPageComponent);
                 fixture.detectChanges();
                 const overlay = fixture.componentInstance.overlay;
@@ -1753,7 +1754,7 @@ describe('igxOverlay', () => {
             })
         );
 
-        it('Should apply css class on igx-overlay component inner div wrapper.', fakeAsync(() => {
+        it('Should apply css class on igx-overlay component inner div wrapper.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -1776,7 +1777,7 @@ describe('igxOverlay', () => {
         }));
 
         // 1.2 ConnectedPositioningStrategy(show components based on a specified position base point, horizontal and vertical alignment)
-        it('Should correctly render igx-overlay', fakeAsync(() => {
+        it('Should correctly render igx-overlay', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -1806,7 +1807,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should cover the whole window 100% width and height.', fakeAsync(() => {
+        it('Should cover the whole window 100% width and height.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -1834,7 +1835,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('It should position the shown component inside the igx-overlay wrapper as a content last child.', fakeAsync(() => {
+        it('It should position the shown component inside the igx-overlay wrapper as a content last child.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -1878,7 +1879,7 @@ describe('igxOverlay', () => {
 
         // adding more than one component to show in igx-overlay:
         it('Should render the component exactly on top of the previous one when adding a new instance with default settings.',
-            fakeAsync(() => {
+            customFakeAsync(() => {
                 const fixture = TestBed.createComponent(TopLeftOffsetComponent);
                 const overlay = fixture.componentInstance.overlay;
                 const overlaySettings: OverlaySettings = {
@@ -1908,7 +1909,7 @@ describe('igxOverlay', () => {
             }));
 
         it('Should render the component exactly on top of the previous one when adding a new instance with the same options.',
-            fakeAsync(() => {
+            customFakeAsync(() => {
                 const fixture = TestBed.createComponent(TopLeftOffsetComponent);
                 const x = 200;
                 const y = 300;
@@ -1948,7 +1949,7 @@ describe('igxOverlay', () => {
             }));
 
         it(`Should change the state of the component to closed when reaching threshold and closing scroll strategy is used.`,
-            fakeAsync(() => {
+            customFakeAsync(() => {
                 const fixture = TestBed.createComponent(EmptyPageComponent);
 
                 //  add one div far away to the right and to the bottom in order scrollbars to appear on page
@@ -1991,7 +1992,7 @@ describe('igxOverlay', () => {
                 overlay.detachAll()
             }));
 
-        it('Should scroll component with the scrolling container when absolute scroll strategy is used.', fakeAsync(() => {
+        it('Should scroll component with the scrolling container when absolute scroll strategy is used.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
 
             //  add one div far away to the right and to the bottom in order scrollbars to appear on page
@@ -2047,7 +2048,7 @@ describe('igxOverlay', () => {
         }));
 
         // 1.2.1 Connected Css
-        it('Should apply css class on igx-overlay component div wrapper.', fakeAsync(() => {
+        it('Should apply css class on igx-overlay component div wrapper.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -2178,7 +2179,7 @@ describe('igxOverlay', () => {
         });
 
         // 1.3 AutoPosition (fit the shown component into the visible window.)
-        it('Should correctly render igx-overlay', fakeAsync(() => {
+        it('Should correctly render igx-overlay', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -2208,7 +2209,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should cover the whole window 100% width and height.', fakeAsync(() => {
+        it('Should cover the whole window 100% width and height.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -2238,7 +2239,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should append the shown component inside the igx-overlay as a last child.', fakeAsync(() => {
+        it('Should append the shown component inside the igx-overlay as a last child.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -2272,7 +2273,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT.', fakeAsync(() => {
+        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(DownRightButtonComponent);
             fixture.detectChanges();
 
@@ -2314,7 +2315,7 @@ describe('igxOverlay', () => {
         }));
 
         // it('Should display each shown component based on the options specified if the component fits into the visible window.',
-        //     fakeAsync(() => {
+        //     customFakeAsync(() => {
         //         const fixture = TestBed.createComponent(EmptyPageComponent);
         //         fixture.detectChanges();
 
@@ -2383,7 +2384,7 @@ describe('igxOverlay', () => {
 
         // it(`Should reposition the component and render it correctly in the window, even when the rendering options passed
         //     should result in otherwise a partially hidden component. No scrollbars should appear.`,
-        //     fakeAsync(() => {
+        //     customFakeAsync(() => {
         //         const fixture = TestBed.createComponent(EmptyPageComponent);
         //         fixture.detectChanges();
 
@@ -2463,7 +2464,7 @@ describe('igxOverlay', () => {
         //         }
         //     }));
 
-        it('Should render margins correctly.', fakeAsync(() => {
+        it('Should render margins correctly.', customFakeAsync(() => {
             const expectedMargin = '0px';
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
@@ -2499,7 +2500,7 @@ describe('igxOverlay', () => {
 
         // When adding more than one component to show in igx-overlay:
         it('When the options used to fit the component in the window - adding a new instance of the component with the ' +
-            ' same options will render it on top of the previous one.', fakeAsync(() => {
+            ' same options will render it on top of the previous one.', customFakeAsync(() => {
                 const fixture = TestBed.createComponent(EmptyPageComponent);
                 fixture.detectChanges();
 
@@ -2545,7 +2546,7 @@ describe('igxOverlay', () => {
         // When adding more than one component to show in igx-overlay and the options used will not fit the component in the
         // window, so AutoPosition is used.
         it('When adding a new instance of the component with the same options, will render it on top of the previous one.',
-            fakeAsync(() => {
+            customFakeAsync(() => {
                 const fixture = TestBed.createComponent(EmptyPageComponent);
                 fixture.detectChanges();
 
@@ -2592,7 +2593,7 @@ describe('igxOverlay', () => {
             }));
 
         it(`Should persist the component's open state when scrolling, when scrolling and noOP scroll strategy is used
-        (expanded DropDown remains expanded).`, fakeAsync(() => {
+        (expanded DropDown remains expanded).`, customFakeAsync(() => {
             // TO DO replace Spies with css class and/or getBoundingClientRect.
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const scrollTolerance = 10;
@@ -2628,7 +2629,7 @@ describe('igxOverlay', () => {
             overlay.detach(overlayId);
         }));
 
-        it('Should persist the component open state when scrolling and absolute scroll strategy is used.', fakeAsync(() => {
+        it('Should persist the component open state when scrolling and absolute scroll strategy is used.', customFakeAsync(() => {
             // TO DO replace Spies with css class and/or getBoundingClientRect.
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const scrollTolerance = 10;
@@ -2664,7 +2665,7 @@ describe('igxOverlay', () => {
         }));
 
         // 1.4 ElasticPosition (resize shown component to fit into visible window)
-        it('Should correctly render igx-overlay', fakeAsync(() => {
+        it('Should correctly render igx-overlay', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -2694,7 +2695,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should cover the whole window 100% width and height.', fakeAsync(() => {
+        it('Should cover the whole window 100% width and height.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -2725,7 +2726,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should append the shown component inside the igx-overlay as a last child.', fakeAsync(() => {
+        it('Should append the shown component inside the igx-overlay as a last child.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -2761,7 +2762,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT.', fakeAsync(() => {
+        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(DownRightButtonComponent);
             fixture.detectChanges();
 
@@ -2792,7 +2793,7 @@ describe('igxOverlay', () => {
         }));
 
         // it('Should display each shown component based on the options specified if the component fits into the visible window.',
-        //     fakeAsync(() => {
+        //     customFakeAsync(() => {
         //         const fixture = TestBed.createComponent(EmptyPageComponent);
         //         fixture.detectChanges();
 
@@ -2873,7 +2874,7 @@ describe('igxOverlay', () => {
 
         // it(`Should reposition the component and render it correctly in the window, even when the rendering options passed
         // should result in otherwise a partially hidden component.No scrollbars should appear.`,
-        //     fakeAsync(() => {
+        //     customFakeAsync(() => {
         //         const fixture = TestBed.createComponent(EmptyPageComponent);
         //         fixture.detectChanges();
 
@@ -2963,7 +2964,7 @@ describe('igxOverlay', () => {
         //         }
         //     }));
 
-        it('Should render margins correctly.', fakeAsync(() => {
+        it('Should render margins correctly.', customFakeAsync(() => {
             const expectedMargin = '0px';
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
@@ -2999,7 +3000,7 @@ describe('igxOverlay', () => {
 
         // When adding more than one component to show in igx-overlay:
         it('When the options used to fit the component in the window - adding a new instance of the component with the ' +
-            ' same options will render it on top of the previous one.', fakeAsync(() => {
+            ' same options will render it on top of the previous one.', customFakeAsync(() => {
                 const fixture = TestBed.createComponent(EmptyPageComponent);
                 fixture.detectChanges();
 
@@ -3045,7 +3046,7 @@ describe('igxOverlay', () => {
         // When adding more than one component to show in igx-overlay and the options used will not fit the component in the
         // window, so element is resized.
         it('When adding a new instance of the component with the same options, will render it on top of the previous one.',
-            fakeAsync(() => {
+            customFakeAsync(() => {
                 const fixture = TestBed.createComponent(EmptyPageComponent);
                 fixture.detectChanges();
 
@@ -3093,7 +3094,7 @@ describe('igxOverlay', () => {
             }));
 
         it(`Should persist the component's open state when scrolling, when scrolling and noOP scroll strategy is used
-            (expanded DropDown remains expanded).`, fakeAsync(() => {
+            (expanded DropDown remains expanded).`, customFakeAsync(() => {
             // TO DO replace Spies with css class and/or getBoundingClientRect.
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const scrollTolerance = 10;
@@ -3129,7 +3130,7 @@ describe('igxOverlay', () => {
             overlay.detach(overlayId);
         }));
 
-        it('Should persist the component open state when scrolling and absolute scroll strategy is used.', fakeAsync(() => {
+        it('Should persist the component open state when scrolling and absolute scroll strategy is used.', customFakeAsync(() => {
             // TO DO replace Spies with css class and/or getBoundingClientRect.
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const scrollTolerance = 10;
@@ -3165,7 +3166,7 @@ describe('igxOverlay', () => {
         }));
 
         // 1.5 GlobalContainer.
-        it('Should center the shown component in the outlet.', fakeAsync(() => {
+        it('Should center the shown component in the outlet.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
 
             const outlet = fixture.componentInstance.divElement;
@@ -3208,7 +3209,7 @@ describe('igxOverlay', () => {
 
         // 3. Interaction
         // 3.1 Modal
-        it('Should apply a greyed-out mask layers when is modal.', fakeAsync(() => {
+        it('Should apply a greyed-out mask layers when is modal.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
@@ -3233,7 +3234,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
-        it('Should apply a greyed-out mask layers when is modal and has no animation.', fakeAsync(() => {
+        it('Should apply a greyed-out mask layers when is modal and has no animation.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
@@ -3256,7 +3257,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
-        it('Should allow interaction only for the shown component when is modal.', fakeAsync(() => {
+        it('Should allow interaction only for the shown component when is modal.', customFakeAsync(() => {
             // Utility handler meant for later detachment
             // TO DO replace Spies with css class and/or getBoundingClientRect.
             const _handler = event => {
@@ -3300,7 +3301,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should close the component when esc key is pressed.', fakeAsync(() => {
+        it('Should close the component when esc key is pressed.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
@@ -3324,7 +3325,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should not close the component when esc key is pressed and closeOnEsc is false', fakeAsync(() => {
+        it('Should not close the component when esc key is pressed and closeOnEsc is false', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
@@ -3348,7 +3349,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should close the opened overlays consecutively on esc keypress', fakeAsync(() => {
+        it('Should close the opened overlays consecutively on esc keypress', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
@@ -3375,7 +3376,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should not close the opened overlays consecutively on esc keypress', fakeAsync(() => {
+        it('Should not close the opened overlays consecutively on esc keypress', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
@@ -3408,7 +3409,7 @@ describe('igxOverlay', () => {
         }));
 
         // Test #1883 #1820
-        it('It should close the component when esc key is pressed and there were other keys pressed prior to esc.', fakeAsync(() => {
+        it('It should close the component when esc key is pressed and there were other keys pressed prior to esc.', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
@@ -3450,7 +3451,7 @@ describe('igxOverlay', () => {
         }));
 
         // 3.2 Non - Modal
-        it('Should not apply a greyed-out mask layer when is not modal', fakeAsync(() => {
+        it('Should not apply a greyed-out mask layer when is not modal', customFakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
@@ -3469,7 +3470,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should not close when esc key is pressed and is not modal (DropDown, Dialog, etc.).', fakeAsync(() => {
+        it('Should not close when esc key is pressed and is not modal (DropDown, Dialog, etc.).', customFakeAsync(() => {
 
             // Utility handler meant for later detachment
             const _handler = event => {
@@ -3508,7 +3509,7 @@ describe('igxOverlay', () => {
 
         // 4. Css
         it('Should use component initial container\'s properties when is with 100% width and show in overlay element',
-            fakeAsync(() => {
+            customFakeAsync(() => {
                 const fixture = TestBed.createComponent(WidthTestOverlayComponent);
                 fixture.detectChanges();
                 expect(fixture.componentInstance.customComponent).toBeDefined();
@@ -3538,7 +3539,7 @@ describe('igxOverlay', () => {
         });
         // If adding a component near the visible window borders(left,right,up,down)
         // it should be partially hidden and based on scroll strategy:
-        it('Should not allow scrolling with scroll strategy is not passed.', fakeAsync(async () => {
+        it('Should not allow scrolling with scroll strategy is not passed.', customFakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -3589,7 +3590,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should retain the component state when scrolling and block scroll strategy is used.', fakeAsync(async () => {
+        it('Should retain the component state when scrolling and block scroll strategy is used.', customFakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button { position: absolute; bottom: -2000px; } `]
@@ -3635,7 +3636,7 @@ describe('igxOverlay', () => {
         }));
 
         it(`Should show the component, AutoPositionStrategy, inside of the viewport if it would normally be outside of bounds,
-            TOP + LEFT.`, fakeAsync(async () => {
+            TOP + LEFT.`, customFakeAsync(async () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -3689,7 +3690,7 @@ describe('igxOverlay', () => {
         }));
 
         it(`Should show the component, AutoPositionStrategy, inside of the viewport if it would normally be outside of bounds,
-            TOP + RIGHT.`, fakeAsync(async () => {
+            TOP + RIGHT.`, customFakeAsync(async () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -3743,7 +3744,7 @@ describe('igxOverlay', () => {
         }));
 
         it(`Should show the component, AutoPositionStrategy, inside of the viewport if it would normally be outside of bounds,
-            TOP + RIGHT.`, fakeAsync(async () => {
+            TOP + RIGHT.`, customFakeAsync(async () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -3795,7 +3796,7 @@ describe('igxOverlay', () => {
         }));
 
         it(`Should show the component, AutoPositionStrategy, inside of the viewport if it would normally be outside of bounds,
-            BOTTOM + LEFT.`, fakeAsync(async () => {
+            BOTTOM + LEFT.`, customFakeAsync(async () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -3849,7 +3850,7 @@ describe('igxOverlay', () => {
         }));
 
         it(`Should show the component, ElasticPositionStrategy, inside of the viewport if it would normally be outside of bounds,
-            TOP + LEFT.`, fakeAsync(async () => {
+            TOP + LEFT.`, customFakeAsync(async () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -3895,7 +3896,7 @@ describe('igxOverlay', () => {
         }));
 
         it(`Should show the component, ElasticPositionStrategy, inside of the viewport if it would normally be outside of bounds,
-            TOP + RIGHT.`, fakeAsync(async () => {
+            TOP + RIGHT.`, customFakeAsync(async () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -3943,7 +3944,7 @@ describe('igxOverlay', () => {
         }));
 
         it(`Should show the component, ElasticPositionStrategy, inside of the viewport if it would normally be outside of bounds,
-            BOTTOM + LEFT.`, fakeAsync(async () => {
+            BOTTOM + LEFT.`, customFakeAsync(async () => {
             TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -3990,7 +3991,7 @@ describe('igxOverlay', () => {
 
         // 2. Scroll Strategy (test with GlobalPositionStrategy(default))
         // 2.1. Scroll Strategy - None
-        it('Should not scroll component, nor the window when none scroll strategy is passed. No scrolling happens.', fakeAsync(async () => {
+        it('Should not scroll component, nor the window when none scroll strategy is passed. No scrolling happens.', customFakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -4029,7 +4030,7 @@ describe('igxOverlay', () => {
 
         it(`Should not close the shown component when none scroll strategy is passed.
         (example: expanded DropDown stays expanded during a scrolling attempt.)`,
-            fakeAsync(async () => {
+            customFakeAsync(async () => {
                 TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
                         styles: [`button {
@@ -4070,7 +4071,7 @@ describe('igxOverlay', () => {
         // 2.2 Scroll Strategy - Closing. (Uses a tolerance and closes an expanded component upon scrolling if the tolerance is exceeded.)
         // (example: DropDown or Dialog component collapse/closes after scrolling 10px.)
         it('Should scroll until the set threshold is exceeded, and closing scroll strategy is used.',
-            fakeAsync(async () => {
+            customFakeAsync(async () => {
                 TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
                         styles: [
@@ -4118,7 +4119,7 @@ describe('igxOverlay', () => {
 
         it(`Should not change the shown component shown state until it exceeds the scrolling tolerance set,
             and closing scroll strategy is used.`,
-            fakeAsync(async () => {
+            customFakeAsync(async () => {
                 TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
                         styles: [
@@ -4158,7 +4159,7 @@ describe('igxOverlay', () => {
             }));
 
         it(`Should close the shown component shown when it exceeds the scrolling threshold set, and closing scroll strategy is used.
-            (an expanded DropDown, Menu, DatePicker, etc.collapses).`, fakeAsync(async () => {
+            (an expanded DropDown, Menu, DatePicker, etc.collapses).`, customFakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
@@ -4206,7 +4207,7 @@ describe('igxOverlay', () => {
 
         // 2.3 Scroll Strategy - NoOp.
         it('Should retain the component static and only the background scrolls, when scrolling and noOP scroll strategy is used.',
-            fakeAsync(async () => {
+            customFakeAsync(async () => {
                 TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
                         styles: [
@@ -4246,7 +4247,7 @@ describe('igxOverlay', () => {
             }));
 
         // 2.4. Scroll Strategy - Absolute.
-        it('Should scroll everything except component when scrolling and absolute scroll strategy is used.', fakeAsync(async () => {
+        it('Should scroll everything except component when scrolling and absolute scroll strategy is used.', customFakeAsync(async () => {
 
             // Should behave as NoOpScrollStrategy
             TestBed.overrideComponent(EmptyPageComponent, {
@@ -4288,7 +4289,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should collapse/close the component when click outside it (DropDown, DatePicker, NavBar etc.)', fakeAsync(async () => {
+        it('Should collapse/close the component when click outside it (DropDown, DatePicker, NavBar etc.)', customFakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
@@ -4329,7 +4330,7 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         }));
 
-        it('Should remain opened when click is on an element contained in the excludeFromOutsideClick collection', fakeAsync(async () => {
+        it('Should remain opened when click is on an element contained in the excludeFromOutsideClick collection', customFakeAsync(async () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
@@ -4400,7 +4401,7 @@ describe('igxOverlay', () => {
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
             }).compileComponents();
         });
-        it(`Should properly be able to render components that have no initial content(IgxCalendar, IgxAvatar)`, fakeAsync(() => {
+        it(`Should properly be able to render components that have no initial content(IgxCalendar, IgxAvatar)`, customFakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const IGX_CALENDAR_TAG = 'igx-calendar';

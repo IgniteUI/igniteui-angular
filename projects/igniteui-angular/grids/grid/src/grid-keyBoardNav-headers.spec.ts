@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
@@ -16,6 +16,7 @@ import { IgxGridHeaderRowComponent } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand, ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Headers Keyboard navigation #grid', () => {
@@ -289,7 +290,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.headerContainer.getScroll().scrollLeft).toEqual(hScroll);
         });
 
-        it('Sorting: Should be able to sort a column with the keyboard', fakeAsync (() => {
+        it('Sorting: Should be able to sort a column with the keyboard', customFakeAsync(() => {
             vi.spyOn(grid.sorting, 'emit');
             vi.spyOn(grid.sortingDone, 'emit');
             grid.getColumnByName('ID').sortable = true;
@@ -478,7 +479,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
         });
 
-        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"',  fakeAsync(() => {
+        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"',  customFakeAsync(() => {
             // Enable Advanced Filtering
             grid.allowAdvancedFiltering = true;
             fix.detectChanges();
@@ -674,7 +675,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.groupingDone.emit).toHaveBeenCalled();
         });
 
-        it('Group by: Should be able group columns with keyboard when hideGroupedColumns is true', fakeAsync(() => {
+        it('Group by: Should be able group columns with keyboard when hideGroupedColumns is true', customFakeAsync(() => {
             grid.width = '1000px';
             grid.hideGroupedColumns = true;
             grid.columns.forEach(c => c.groupable = true);
