@@ -4247,7 +4247,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.autoGenerate?.currentValue && this.data.length > 0 && this.columnList.length === 0) {
+        if (changes.autoGenerate?.currentValue && this.data?.length > 0 && this.columnList?.length === 0) {
             this.setupColumns()
         }
     }
