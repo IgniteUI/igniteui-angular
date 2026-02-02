@@ -172,9 +172,8 @@
           "builder": "@angular/build:unit-test",
             "options": {
               "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
-              "browsers": ["chromium"],
               "buildTarget": "::test",
-              "runnerConfig": "./vitest.config.ts",
+              "browsers": ["chromiumHeadless"],
               "exclude": [
                 "**/migrations/**",
                 "**/schematics/**",
