@@ -214,7 +214,7 @@ describe('IgxSimpleCombo', () => {
             combo.handleClosing(inputEvent);
             expect(inputEvent.cancel).toEqual(true);
             sub.unsubscribe();
-            platformUtil.KEYMAP = null;
+            platformUtil.KEYMAP = {};
         });
         it('should fire selectionChanging event on item selection', () => {
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
