@@ -95,7 +95,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected platformUtil = inject(PlatformUtil);
     protected document = inject(DOCUMENT);
     private _igxForOf: U & T[] | null = null;
-    private _embeddedViewSizesCache = new Map<EmbeddedViewRef<any>, number>();
+    protected _embeddedViewSizesCache = new Map<EmbeddedViewRef<any>, number>();
 
     /**
      * Sets the data to be rendered.
@@ -410,7 +410,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         return this.scrollComponent.size > parseInt(this.igxForContainerSize, 10);
     }
 
-    private get embeddedViewNodes() {
+    protected get embeddedViewNodes() {
         const result = new Array(this._embeddedViews.length);
         for (let i = 0; i < this._embeddedViews.length; i++) {
             const view = this._embeddedViews[i];
@@ -837,6 +837,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             || containerSize && endTopOffset - containerSize > 5;
     }
 
+    protected getEmbeddedViewSize(index:number ) {
+        const dimension = this.igxForScrollOrientation === 'horizontal' ?
+        this.igxForSizePropName : 'height';
+        const rNode = this.embeddedViewNodes[index];
+        const nodeSize = dimension === 'height' ?
+            rNode.clientHeight + this.getMargin(rNode, dimension):
+            rNode.clientWidth + this.getMargin(rNode, dimension);
+        return nodeSize;
+    }
+
 
     /**
      * @hidden
@@ -847,26 +857,19 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             // nothing changed
             return;
         }
-        const dimension = this.igxForScrollOrientation === 'horizontal' ?
-        this.igxForSizePropName : 'height';
+
         const diffs = [];
         let totalDiff = 0;
-        const rNodes = this.embeddedViewNodes;
+
         for (let index = 0; index < this._embeddedViews.length; index++) {
-            const rNode = rNodes[index];
             const targetIndex = this.state.startIndex + index;
-            const view = this._embeddedViews[index];
-            const nodeSize = this._embeddedViewSizesCache.get(view) ??
-            dimension === 'height' ?
-            rNode.clientHeight + this.getMargin(rNode, dimension):
-            rNode.clientWidth + this.getMargin(rNode, dimension);
+            const nodeSize = this.getEmbeddedViewSize(index);
             const oldVal = this.individualSizeCache[targetIndex];
-            const newVal = nodeSize;
-            const currDiff = newVal - oldVal;
+            const currDiff = nodeSize - oldVal;
             diffs.push(currDiff);
             totalDiff += currDiff;
             this.individualSizeCache[targetIndex] = nodeSize;
-            this.sizesCache[targetIndex + 1] = (this.sizesCache[targetIndex] || 0) + newVal;
+            this.sizesCache[targetIndex + 1] = (this.sizesCache[targetIndex] || 0) + nodeSize;
         }
         // update cache
         if (Math.abs(totalDiff) > 0) {
@@ -1541,7 +1544,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
     }
 
-    private getMargin(node, dimension: string): number {
+    protected getMargin(node, dimension: string): number {
         const styles = window.getComputedStyle(node);
         if (dimension === 'height') {
             return parseFloat(styles['marginTop']) +
@@ -1817,6 +1820,15 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             this.sizesCache[ i + 1] = totalSize;
         }
         return totalSize;
+    }
+
+    protected override getEmbeddedViewSize(index:number ) {
+        if (this.igxForScrollOrientation === 'vertical') {
+            const view = this._embeddedViews[index];
+            return this._embeddedViewSizesCache.get(view) || parseInt(this.igxForItemSize, 10);
+        } else {
+            return super.getEmbeddedViewSize(index);
+        }
     }
 
     protected override _updateSizeCache(changes: IterableChanges<T> = null) {
