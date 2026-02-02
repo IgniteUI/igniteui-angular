@@ -1,3 +1,4 @@
+import { IgxQueryBuilderComponent } from '../../../igniteui-angular/query-builder';
 import { IgxGridComponent } from '../../../igniteui-angular/grids/grid';
 import { IgxHierarchicalGridComponent } from '../../../igniteui-angular/grids/hierarchical-grid';
 import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from '../../../igniteui-angular/grids/pivot-grid';
@@ -8,5 +9,6 @@ export const registerComponents = [
     IgxHierarchicalGridComponent,
     IgxTreeGridComponent,
     IgxPivotGridComponent,
-    IgxPivotDataSelectorComponent
+    IgxPivotDataSelectorComponent,
+    IgxQueryBuilderComponent
 ];
