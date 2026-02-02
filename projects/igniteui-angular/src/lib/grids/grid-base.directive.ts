@@ -4337,8 +4337,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.autoGenerate?.currentValue && this.data?.length > 0 && this.columnList?.length === 0) {
-            this.setupColumns()
+        if (!changes.autoGenerate?.firstChange && changes.autoGenerate?.currentValue && this.data?.length > 0 && this.columnList?.length === 0) {
+            // Make sure to setup columns only after the grid is initialized and autoGenerate is changed
+            this.setupColumns();
         }
     }
 
@@ -6848,7 +6849,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
-                this._columnWidth =  this.minColumnWidth + 'px';
+                this._columnWidth = this.minColumnWidth + 'px';
             }
         }
         this._columns.forEach((column: IgxColumnComponent) => {
