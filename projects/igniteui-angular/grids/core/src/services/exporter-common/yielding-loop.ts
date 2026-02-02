@@ -2,7 +2,7 @@ import { setImmediate } from '../../setImmediate';
 
 /**
  * Executes a loop in chunks to avoid blocking the UI thread.
- * Uses setImmediate for efficient microtask scheduling between chunks.
+ * Uses setImmediate for efficient scheduling between chunks.
  * @hidden
  * @internal
  */
