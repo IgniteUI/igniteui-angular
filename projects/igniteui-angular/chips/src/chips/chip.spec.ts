@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
@@ -103,15 +103,16 @@ describe('IgxChip', () => {
     let fix: ComponentFixture<TestChipComponent | TestChipsLabelAndSuffixComponent>;
     let chipArea;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [TestChipComponent, TestChipsLabelAndSuffixComponent]
         }).compileComponents();
-    }));
+    });
 
     describe('Rendering Tests: ', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(TestChipComponent);
+            await fix.whenStable();
             fix.detectChanges();
             chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
         });
@@ -212,8 +213,9 @@ describe('IgxChip', () => {
     });
 
     describe('Interactions Tests: ', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(TestChipComponent);
+            await fix.whenStable();
             fix.detectChanges();
         });
 
@@ -268,7 +270,7 @@ describe('IgxChip', () => {
             expect(chipComponentsIds).not.toContain('City');
         });
 
-        it('should affect the ghostElement size when chip has it set to compact', () => {
+        it('should affect the ghostElement size when chip has it set to compact', async () => {
             const thirdChip = fix.componentInstance.chips.toArray()[2];
             const thirdChipElem = thirdChip.chipArea.nativeElement;
 
@@ -282,9 +284,11 @@ describe('IgxChip', () => {
 
             UIInteractions.simulatePointerEvent('pointerdown', thirdChipElem, startingX, startingY);
             fix.detectChanges();
+            await fix.whenStable();
 
             UIInteractions.simulatePointerEvent('pointermove', thirdChipElem, startingX + 10, startingY + 10);
             fix.detectChanges();
+            await fix.whenStable();
 
             expect(getComponentSize(thirdChip.dragDirective.ghostElement)).toEqual('1');
         });
@@ -375,8 +379,9 @@ describe('IgxChip', () => {
     });
 
     describe('Chips Label Tests: ', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(TestChipsLabelAndSuffixComponent);
+            await fix.whenStable();
             fix.detectChanges();
             chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
         });

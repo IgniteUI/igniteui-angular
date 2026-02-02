@@ -21,7 +21,6 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    setupFiles: ['./projects/igniteui-angular/test-setup.ts'],
     include: ['**/*.spec.ts'],
     exclude: [
       '**/node_modules/**',
@@ -45,21 +44,6 @@ export default defineConfig({
         '**/*.spec.ts',
         'dist/',
       ],
-    },
-    projects: [{
-      extends: './vitest.config.ts',
-      test: {
-        name: 'igniteui-angular',
-        root: './projects/igniteui-angular',
-        include: ['**/*.spec.ts'],
-        exclude: [
-          '**/migrations/**',
-          '**/schematics/**',
-          '**/cypress/**',
-          '**/node_modules/**',
-        ],
-      },
-    },
-    ]
+    }
   },
 });
