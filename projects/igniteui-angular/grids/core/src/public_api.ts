@@ -125,6 +125,7 @@ export * from './services/excel/excel-exporter';
 export * from './services/excel/excel-exporter-options';
 export * from './services/pdf/pdf-exporter';
 export * from './services/pdf/pdf-exporter-options';
+export * from './services/pdf/fonts/noto-fonts';
 
 /*
 
