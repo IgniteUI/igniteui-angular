@@ -1,4 +1,4 @@
-import { TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { TestBed, flush, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';

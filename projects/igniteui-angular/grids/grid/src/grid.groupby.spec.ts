@@ -1,6 +1,6 @@
-﻿import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
+import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
 import { formatNumber } from '@angular/common'
-import { ComponentFixture, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxGridStateDirective } from 'igniteui-angular/grids/core';

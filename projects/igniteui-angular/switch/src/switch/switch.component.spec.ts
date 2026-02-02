@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxSwitchComponent } from './switch.component';

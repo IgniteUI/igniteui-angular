@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, tick, flush } from '@angular/core/testing';
+import { TestBed, ComponentFixture, flush } from '@angular/core/testing';
 import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';

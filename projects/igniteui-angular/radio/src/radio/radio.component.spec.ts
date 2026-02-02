@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, inject } from '@angular/core';
-import { TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from './radio.component';

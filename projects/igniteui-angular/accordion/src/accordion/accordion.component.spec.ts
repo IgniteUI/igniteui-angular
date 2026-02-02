@@ -1,6 +1,6 @@
 import { useAnimation } from '@angular/animations';
 import { Component, ViewChild } from '@angular/core';
-import { waitForAsync, TestBed, ComponentFixture, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../../../expansion-panel/src/public_api';

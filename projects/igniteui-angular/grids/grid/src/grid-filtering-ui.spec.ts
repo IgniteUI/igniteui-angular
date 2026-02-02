@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { TestBed, flush, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';

@@ -1,6 +1,6 @@
 import { DebugElement, QueryList } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { ComponentFixture, tick } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group/src/public_api';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { UIInteractions, wait } from './ui-interactions.spec';

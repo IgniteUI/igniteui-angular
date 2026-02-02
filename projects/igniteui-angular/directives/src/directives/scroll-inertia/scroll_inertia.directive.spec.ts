@@ -1,5 +1,5 @@
 import { Component, Directive, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { TestBed, ComponentFixture, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { wait } from '../../../../test-utils/ui-interactions.spec';

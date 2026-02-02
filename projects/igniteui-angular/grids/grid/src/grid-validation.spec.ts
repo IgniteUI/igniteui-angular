@@ -1,4 +1,4 @@
-import { flush, TestBed, tick } from '@angular/core/testing';
+import { flush, TestBed } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';

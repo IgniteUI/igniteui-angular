@@ -1,7 +1,6 @@
 import {
     TestBed,
-    ComponentFixture,
-    flushMicrotasks,
+    ComponentFixture
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';

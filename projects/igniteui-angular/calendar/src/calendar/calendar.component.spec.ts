@@ -1,7 +1,6 @@
 import { Component, DebugElement, LOCALE_ID, ViewChild } from "@angular/core";
 import {
     TestBed,
-    tick,
     flush,
     ComponentFixture,
 } from "@angular/core/testing";

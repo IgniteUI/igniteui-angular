@@ -1,5 +1,5 @@
-ï»¿import { Component, DebugElement, ViewChild } from '@angular/core';
-import { TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
+import { Component, DebugElement, ViewChild } from '@angular/core';
+import { TestBed, ComponentFixture, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -509,7 +509,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 fix.detectChanges();
 
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['10', '17 mai 1990', '25 dÃ©c. 2025']);
+                    ['Count', 'Earliest', 'Latest'], ['10', '17 mai 1990', '25 déc. 2025']);
             });
 
             it('should calc tfoot height according number of summary functions', () => {
@@ -664,7 +664,7 @@ describe('IgxGrid - Summaries #grid', () => {
                     });
                 fix.detectChanges();
 
-                summaryResultsValues = ['10', '17 mai 1990', '25 dÃ©c. 2025'];
+                summaryResultsValues = ['10', '17 mai 1990', '25 déc. 2025'];
 
                 for (let i = 0; i < summaryItems.length; i++) {
                     const summaryItem = summaryItems[i];
