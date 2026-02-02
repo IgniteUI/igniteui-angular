@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './public_api';
 import { BasicGridSearchComponent } from '../../../test-utils/grid-base-components.spec';
@@ -13,6 +13,8 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { firstValueFrom } from 'rxjs';
 import { DefaultSortingStrategy, GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - search API #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const HIGHLIGHT_CSS_CLASS = '.igx-highlight';
@@ -20,8 +22,8 @@ describe('IgxGrid - search API #grid', () => {
     let fix: ComponentFixture<any>;
     let component; let grid: IgxGridComponent; let fixNativeElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 BasicGridSearchComponent,
@@ -30,7 +32,7 @@ describe('IgxGrid - search API #grid', () => {
                 ScrollableGridSearchComponent
             ]
         }).compileComponents();
-    }))
+    });
 
     describe('BasicGrid - ', () => {
         beforeEach(() => {
@@ -232,7 +234,7 @@ describe('IgxGrid - search API #grid', () => {
             fix.detectChanges();
         });
 
-        it('Should update exact match highlights when clearing filter.', fakeAsync(() => {
+        it('Should update exact match highlights when clearing filter.', customFakeAsync(() => {
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
             tick(16);
             fix.detectChanges();
@@ -280,7 +282,7 @@ describe('IgxGrid - search API #grid', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        xit('Should scroll properly when using paging', () => {
+        it.skip('Should scroll properly when using paging', () => {
             fix.componentInstance.paging = true;
             grid.height = '240px';
             grid.paginator.perPage = 7;

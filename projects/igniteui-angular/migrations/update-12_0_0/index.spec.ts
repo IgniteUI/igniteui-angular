@@ -1536,6 +1536,7 @@ export class SimpleComponent {
             .toEqual(`
 import { IgxToastComponent } from 'igniteui-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 export class SimpleComponent {
     @ViewChild('toast', { static: true })
     public toast: IgxToastComponent;

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -10,14 +10,16 @@ import { IgxToggleDirective } from '../../../directives/src/directives/toggle/to
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--flex`;
 const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--modal`;
 const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
 describe('Dialog', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 AlertComponent,
@@ -31,7 +33,7 @@ describe('Dialog', () => {
                 DialogTwoWayDataBindingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -143,7 +145,7 @@ describe('Dialog', () => {
         expect(document.activeElement).toEqual(toggle.nativeElement);
     });
 
-    it('Should open and close dialog when set values to IsOpen', fakeAsync(() => {
+    it('Should open and close dialog when set values to IsOpen', customFakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
 
@@ -158,7 +160,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(false);
     }));
 
-    it('Should open and close dialog with isOpen two way data binding', fakeAsync(() => {
+    it('Should open and close dialog with isOpen two way data binding', customFakeAsync(() => {
         const fixture = TestBed.createComponent(DialogTwoWayDataBindingComponent);
         const dialog = fixture.componentInstance.dialog;
         fixture.detectChanges();
@@ -207,7 +209,7 @@ describe('Dialog', () => {
         expect(dialog.rightButtonRipple).toEqual('white');
     });
 
-    it('Should execute open/close methods.', fakeAsync(() => {
+    it('Should execute open/close methods.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
         fixture.detectChanges();
@@ -224,7 +226,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(false);
     }));
 
-    it('Should set closeOnOutsideSelect.', fakeAsync(() => {
+    it('Should set closeOnOutsideSelect.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         fixture.detectChanges();
         const dialog = fixture.componentInstance.dialog;
@@ -250,7 +252,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(true);
     }));
 
-    it('Should test events.', fakeAsync(() => {
+    it('Should test events.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(DialogSampleComponent);
         const dialog = fixture.componentInstance.dialog;
         const args: IDialogEventArgs = {
@@ -263,11 +265,11 @@ describe('Dialog', () => {
             cancel: false
         };
 
-        spyOn(dialog.opening, 'emit');
-        spyOn(dialog.opened, 'emit');
-        spyOn(dialog.isOpenChange, 'emit');
-        spyOn(dialog.closing, 'emit');
-        spyOn(dialog.closed, 'emit');
+        vi.spyOn(dialog.opening, 'emit');
+        vi.spyOn(dialog.opened, 'emit');
+        vi.spyOn(dialog.isOpenChange, 'emit');
+        vi.spyOn(dialog.closing, 'emit');
+        vi.spyOn(dialog.closed, 'emit');
 
         dialog.open();
         tick();
@@ -293,11 +295,11 @@ describe('Dialog', () => {
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
-        spyOn(dialog.leftButtonSelect, 'emit');
+        vi.spyOn(dialog.leftButtonSelect, 'emit');
         dispatchEvent(leftButton, 'click');
         expect(dialog.leftButtonSelect.emit).toHaveBeenCalled();
 
-        spyOn(dialog.rightButtonSelect, 'emit');
+        vi.spyOn(dialog.rightButtonSelect, 'emit');
         dispatchEvent(rightButton, 'click');
         tick();
         expect(dialog.rightButtonSelect.emit).toHaveBeenCalled();
@@ -322,7 +324,7 @@ describe('Dialog', () => {
         expect(titleWrapper.attributes.id).toEqual(dialogWindow.attributes['aria-labelledby']);
     });
 
-    it('Should close only inner dialog on closeOnOutsideSelect.', fakeAsync(() => {
+    it('Should close only inner dialog on closeOnOutsideSelect.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(NestedDialogsComponent);
         fixture.detectChanges();
 
@@ -380,7 +382,7 @@ describe('Dialog', () => {
 
     });
 
-    it('When modal mode is changed, overlay should be informed', fakeAsync(() => {
+    it('When modal mode is changed, overlay should be informed', customFakeAsync(() => {
         const fix = TestBed.createComponent(AlertComponent);
         fix.detectChanges();
 
@@ -412,7 +414,7 @@ describe('Dialog', () => {
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
     }));
 
-    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync(() => {
+    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DialogComponent);
         fix.detectChanges();
 
@@ -442,13 +444,13 @@ describe('Dialog', () => {
         let fix;
         let dialog;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(PositionSettingsDialogComponent);
             fix.detectChanges();
             dialog = fix.componentInstance.dialog;
         }));
 
-        it('Define different position settings ', fakeAsync(() => {
+        it('Define different position settings ', customFakeAsync(() => {
             const currentElement = fix.componentInstance;
             dialog.open();
             tick(16);
@@ -457,9 +459,9 @@ describe('Dialog', () => {
             expect(dialog.isOpen).toEqual(true);
             const firstContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
             const middleDialogPosition = document.documentElement.offsetHeight / 2 - firstContentRect.height / 2;
-            expect(firstContentRect.left).toEqual(0, 'OffsetLeft position check');
-            expect(firstContentRect.top).toBeGreaterThanOrEqual(middleDialogPosition - 2, 'OffsetTop position check');
-            expect(firstContentRect.top).toBeLessThanOrEqual(middleDialogPosition + 2, 'OffsetTop position check');
+            expect(firstContentRect.left, 'OffsetLeft position check').toEqual(0);
+            expect(firstContentRect.top, 'OffsetTop position check').toBeGreaterThanOrEqual(middleDialogPosition - 2);
+            expect(firstContentRect.top, 'OffsetTop position check').toBeLessThanOrEqual(middleDialogPosition + 2);
 
             dialog.close();
             tick(16);
@@ -477,9 +479,9 @@ describe('Dialog', () => {
             expect(dialog.isOpen).toEqual(true);
             const secondContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
             const topDialogPosition = document.documentElement.offsetWidth / 2 - secondContentRect.width / 2;
-            expect(secondContentRect.top).toEqual(0, 'OffsetTop position check');
-            expect(secondContentRect.left).toBeGreaterThanOrEqual(topDialogPosition - 2, 'OffsetLeft position check');
-            expect(secondContentRect.left).toBeLessThanOrEqual(topDialogPosition + 2, 'OffsetLeft position check');
+            expect(secondContentRect.top, 'OffsetTop position check').toEqual(0);
+            expect(secondContentRect.left, 'OffsetLeft position check').toBeGreaterThanOrEqual(topDialogPosition - 2);
+            expect(secondContentRect.left, 'OffsetLeft position check').toBeLessThanOrEqual(topDialogPosition + 2);
 
             dialog.close();
             tick(16);
@@ -492,18 +494,18 @@ describe('Dialog', () => {
             const currentElement = fix.componentInstance;
 
             // Check initial animation settings
-            expect(dialog.positionSettings.openAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+            expect(dialog.positionSettings.openAnimation.animation.type, 'Animation type is set').toEqual(8);
+            expect(dialog.positionSettings.openAnimation.options.params.duration, 'Animation duration is set to 200ms').toEqual('200ms');
 
-            expect(dialog.positionSettings.closeAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+            expect(dialog.positionSettings.closeAnimation.animation.type, 'Animation type is set').toEqual(8);
+            expect(dialog.positionSettings.closeAnimation.options.params.duration, 'Animation duration is set to 200ms').toEqual('200ms');
 
             dialog.positionSettings = currentElement.animationSettings;
             fix.detectChanges();
 
             // Check the new animation settings
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('800ms', 'Animation duration is set to 800ms');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('700ms', 'Animation duration is set to 700ms');
+            expect(dialog.positionSettings.openAnimation.options.params.duration, 'Animation duration is set to 800ms').toEqual('800ms');
+            expect(dialog.positionSettings.closeAnimation.options.params.duration, 'Animation duration is set to 700ms').toEqual('700ms');
         });
     });
 

@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../../test-utils/tree-grid-functions.spec';
 import {
@@ -9,6 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 
@@ -17,8 +18,8 @@ describe('IgxTreeGrid - search API #tGrid', () => {
     let fixNativeElement;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSearchComponent,
@@ -26,7 +27,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
                 IgxTreeGridSummariesScrollingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Child Collection', () => {
         beforeEach(() => {
@@ -408,17 +409,17 @@ const verifySearchResult = (nativeParent, expectedHighlightSpansCount, expectedA
     const activeSpan = getActiveSpan(nativeParent);
 
     if (actualAPISearchCount) {
-        expect(actualAPISearchCount).toBe(expectedHighlightSpansCount, 'incorrect highlight elements count returned from api');
+        expect(actualAPISearchCount, 'incorrect highlight elements count returned from api').toBe(expectedHighlightSpansCount);
     }
 
-    expect(spans.length).toBe(expectedHighlightSpansCount, 'incorrect highlight elements count');
+    expect(spans.length, 'incorrect highlight elements count').toBe(expectedHighlightSpansCount);
 
     if (expectedActiveSpanIndex !== -1) {
         // If active element should exist.
-        expect(activeSpan).toBe(spans[expectedActiveSpanIndex], 'incorrect active element');
+        expect(activeSpan, 'incorrect active element').toBe(spans[expectedActiveSpanIndex]);
     } else {
         // If active element should not exist. (used when spans.length is expected to be 0 as well)
-        expect(activeSpan).toBeNull('active element was found');
+        expect(activeSpan, 'active element was found').toBeNull();
     }
 };
 
@@ -436,7 +437,7 @@ const verifyVisibleCellValueDivsCount = (fix) => {
     allCells.forEach(cell => {
         const valueDivs: HTMLElement[] = Array.from(cell.nativeElement.querySelectorAll(CELL_VALUE_DIV_CSS_CLASS));
         // only one visible 'value div' should be present
-        expect(valueDivs.filter(div => !div.hidden).length).toBe(1, 'incorrect visible value divs count');
+        expect(valueDivs.filter(div => !div.hidden).length, 'incorrect visible value divs count').toBe(1);
     });
 };
 

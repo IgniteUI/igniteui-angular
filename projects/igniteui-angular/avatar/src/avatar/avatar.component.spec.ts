@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.component';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('Avatar', () => {
     const baseClass = 'igx-avatar';
 
@@ -17,8 +18,8 @@ describe('Avatar', () => {
         icon: `${baseClass}--icon`
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InitAvatarComponent,
                 AvatarWithAttribsComponent,
@@ -27,7 +28,7 @@ describe('Avatar', () => {
                 InitImageAvatarComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes avatar with auto-incremented id', () => {
         const fixture = TestBed.createComponent(InitAvatarComponent);

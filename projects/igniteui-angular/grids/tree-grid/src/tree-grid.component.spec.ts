@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { By } from '@angular/platform-browser';
@@ -18,13 +18,15 @@ import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
 
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
     let fix;
     let grid: IgxTreeGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridWrappedInContComponent,
@@ -35,15 +37,15 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 IgxTreeGridWithNoForeignKeyComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
             grid = fix.componentInstance.treeGrid;
             fix.detectChanges();
-        }));
+        });
 
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
             fix.detectChanges();
@@ -123,7 +125,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(horizontalScroll.children[0].offsetWidth).toBeLessThanOrEqual(801);
         });
 
-        it('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync(() => {
+        it('checks if attributes are correctly assigned when grid has or does not have data', customFakeAsync(() => {
             // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
             const container = fix.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
             expect(container.getAttribute('role')).toBe(null);
@@ -152,8 +154,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
-            jasmine.getEnv().allowRespy(true);
-            const warnSpy = spyOn(console, 'warn');
+            const warnSpy = vi.spyOn(console, 'warn');
             grid.primaryKey = 'testField';
             fix.detectChanges();
 
@@ -161,7 +162,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
-            warnSpy.calls.reset();
+            warnSpy.mockClear();
 
             const oldData = fix.componentInstance.data;
             const newData = fix.componentInstance.data.map(rec => Object.assign({}, rec, { testField: 0 }));
@@ -177,12 +178,11 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
-            jasmine.getEnv().allowRespy(false);
-        });
+            });
     });
 
     describe('Auto-generated columns', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridComponent);
             grid = fix.componentInstance;
             grid.autoGenerate = true;
@@ -191,7 +191,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             // the element ID and the testbed cannot find it to remove it.
             // The testbed is looking up components by [id^=root], so working around this by forcing root id
             grid.id = SAFE_DISPOSE_COMP_ID;
-        }));
+        });
 
         // afterEach(() => {
         //     // When doing pure unit tests, the grid doesn't get removed after the test, because it overrides
@@ -201,7 +201,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         //     element.remove();
         // });
 
-        it('should auto-generate all columns', fakeAsync(() => {
+        it('should auto-generate all columns', customFakeAsync(() => {
             grid.data = [];
             tick();
             fix.detectChanges();
@@ -222,7 +222,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
         }));
 
-        it('should auto-generate columns without childDataKey', fakeAsync(() => {
+        it('should auto-generate columns without childDataKey', customFakeAsync(() => {
             grid.data = [];
             tick();
             fix.detectChanges();
@@ -243,7 +243,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
         }));
 
-        it('should recreate columns when data changes and autoGenerate is true', fakeAsync(() => {
+        it('should recreate columns when data changes and autoGenerate is true', customFakeAsync(() => {
             grid.width = '500px';
             grid.height = '500px';
             grid.autoGenerate = true;
@@ -277,10 +277,10 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Loading Template', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridDefaultLoadingComponent);
             grid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('should auto-generate columns', async () => {
             fix.detectChanges();
@@ -298,13 +298,13 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Hide All', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             grid = fix.componentInstance.treeGrid;
             fix.detectChanges();
-        }));
+        });
 
-        it('should not render rows and headers group when all cols are hidden', fakeAsync(() => {
+        it('should not render rows and headers group when all cols are hidden', customFakeAsync(() => {
             grid.rowSelection = GridSelectionMode.multiple;
             grid.rowDraggable = true;
             tick();
@@ -376,11 +376,11 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Displaying empty grid message', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
             grid = fix.componentInstance.treeGrid;
             fix.detectChanges();
-        }));
+        });
 
         it('should display empty grid message when there is no data', () => {
             const data: any[] = grid.data;

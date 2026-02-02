@@ -684,6 +684,7 @@ export class CsvExportComponent {
 `import { Component } from '@angular/core';
 import { IgxCsvExporterService } from "igniteui-angular";
 
+import { describe, it, expect, beforeEach } from 'vitest';
 @Component({
     selector: "app-csv-export",
     styleUrls: ["./csv-export.component.scss"],

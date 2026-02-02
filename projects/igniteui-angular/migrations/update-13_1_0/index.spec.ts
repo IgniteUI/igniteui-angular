@@ -221,6 +221,7 @@ export class TestComponent {
             ).toEqual(
                 `
 import { Component } from '@angular/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
     IgxHierarchicalGridComponent
 } from 'igniteui-angular';

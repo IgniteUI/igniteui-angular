@@ -1,11 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridEditEventArgs } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 describe('IgxGrid - CRUD operations #grid', () => {
@@ -13,15 +15,15 @@ describe('IgxGrid - CRUD operations #grid', () => {
     let grid;
     let data;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, DefaultCRUDGridComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(customFakeAsync(() => {
         fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
         grid = fix.componentInstance.instance;
@@ -44,7 +46,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
     });
 
     // No longer supported - array mutations are not detected automatically, need ref change.
-    xit('should support adding rows by manipulating the `data` @Input of the grid', () => {
+    it.skip('should support adding rows by manipulating the `data` @Input of the grid', () => {
         // Add to the data array without changing the reference
         // with manual detection
         for (let i = 0; i < 10; i++) {
@@ -105,7 +107,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
     });
 
     // No longer supported - array mutations are not detected automatically, need ref change.
-    xit('should support removing rows by manipulating the `data` @Input of the grid', () => {
+    it.skip('should support removing rows by manipulating the `data` @Input of the grid', () => {
         // Remove from the data array without changing the reference
         // with manual detection
         fix.componentInstance.data.pop();

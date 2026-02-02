@@ -8,6 +8,7 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxTreeGridGroupingPipe } from 'igniteui-angular/grids/tree-grid';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridPinningActionsComponent, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxSummaryOperand, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 
+import { it } from 'vitest';
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">

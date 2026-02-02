@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { GridFunctions } from "../../../test-utils/grid-functions.spec";
@@ -8,6 +8,8 @@ import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular
 import { IgxCsvExporterService, IgxExcelExporterService, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { ExportUtilities } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';
 const TOOLBAR_ACTIONS_TAG = 'igx-grid-toolbar-actions';
@@ -31,8 +33,8 @@ const DATA = [
 
 describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 DefaultToolbarComponent,
@@ -43,14 +45,14 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 IgxCsvExporterService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Basic Tests - ', () => {
         let fixture: ComponentFixture<DefaultToolbarComponent>;
 
         const $ = (selector: string) => fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(DefaultToolbarComponent);
             fixture.detectChanges();
         }));
@@ -110,13 +112,13 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
         const $ = (selector: string) => fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(ToolbarActionsComponent);
             fixture.detectChanges();
             instance = fixture.componentInstance;
         }));
 
-        it('the buttons type should be set to "button"', fakeAsync(() => {
+        it('the buttons type should be set to "button"', customFakeAsync(() => {
             tick();
             fixture.detectChanges();
 
@@ -177,8 +179,8 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             $('#excelEntry').click();
             fixture.detectChanges();
 
-            expect(instance.exporterAction.isExporting).toBeFalse();
-            expect(instance.exporterAction.toolbar.showProgress).toBeFalse();
+            expect(instance.exporterAction.isExporting).toBeFalsy();
+            expect(instance.exporterAction.toolbar.showProgress).toBeFalsy();
         });
 
         it('toolbar exporter should include PDF option by default', () => {
@@ -224,7 +226,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             exporterButton.click();
             fixture.detectChanges();
 
-            spyOn(instance.exporterAction, 'export');
+            vi.spyOn(instance.exporterAction, 'export');
             $('#pdfEntry').click();
             fixture.detectChanges();
 
@@ -241,7 +243,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             exporterButton.click();
             fixture.detectChanges();
 
-            spyOn(ExportUtilities, 'saveBlobToFile');
+            vi.spyOn(ExportUtilities, 'saveBlobToFile');
             $('#pdfEntry').click();
             fixture.detectChanges();
 
@@ -258,8 +260,8 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             $('#pdfEntry').click();
             fixture.detectChanges();
 
-            expect(instance.exporterAction.isExporting).toBeFalse();
-            expect(instance.exporterAction.toolbar.showProgress).toBeFalse();
+            expect(instance.exporterAction.isExporting).toBeFalsy();
+            expect(instance.exporterAction.toolbar.showProgress).toBeFalsy();
         });
 
         it('Setting overlaySettings for each toolbar columns action', () => {
@@ -284,7 +286,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
         });
 
-        it('should initialize input property columnsAreaMaxHeight properly', fakeAsync(() => {
+        it('should initialize input property columnsAreaMaxHeight properly', customFakeAsync(() => {
             expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('100%');
 
             instance.pinningAction.columnsAreaMaxHeight = '10px';
@@ -302,8 +304,8 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('10px');
         }));
 
-        it('should emit columnToggle event when a column is shown/hidden via the column hiding action', fakeAsync(() => {
-            const spy = spyOn(instance.hidingAction.columnToggle, 'emit');
+        it('should emit columnToggle event when a column is shown/hidden via the column hiding action', customFakeAsync(() => {
+            const spy = vi.spyOn(instance.hidingAction.columnToggle, 'emit');
             const hidingUI = $(TOOLBAR_HIDING_TAG);
             const grid = fixture.componentInstance.grid;
             fixture.detectChanges();
@@ -322,7 +324,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 { column: grid.getColumnByName('ProductID'), checked: false });
 
             // test after closing and reopening the hiding UI
-            spy.calls.reset();
+            spy.mockClear();
             hidingActionButton.click();
             tick();
             fixture.detectChanges();

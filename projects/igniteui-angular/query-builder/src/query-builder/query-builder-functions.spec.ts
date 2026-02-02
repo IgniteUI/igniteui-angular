@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, tick } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -8,6 +8,7 @@ import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { QueryBuilderSelectors } from './query-builder.common';
 
+import { expect, vi } from 'vitest';
 export const SampleEntities = [
     {
         name: 'Products', fields: [
@@ -526,14 +527,14 @@ export class QueryBuilderFunctions {
      * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
      */
     public static verifyOperatorLine(operatorLine: HTMLElement, operator: string) {
-        expect(operator === 'and' || operator === 'or').toBe(true, 'operator must be \'and\' or \'or\'');
+        expect(operator === 'and' || operator === 'or', 'operator must be \'and\' or \'or\'').toBe(true);
 
         if (operator === 'and') {
-            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND)).toBe(true, 'incorrect operator line');
-            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR)).toBe(false, 'incorrect operator line');
+            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND), 'incorrect operator line').toBe(true);
+            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR), 'incorrect operator line').toBe(false);
         } else {
-            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND)).toBe(false, 'incorrect operator line');
-            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR)).toBe(true, 'incorrect operator line');
+            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_AND), 'incorrect operator line').toBe(false);
+            expect(operatorLine.classList.contains(QueryBuilderSelectors.FILTER_TREE_LINE_OR), 'incorrect operator line').toBe(true);
         }
     }
 
@@ -547,12 +548,10 @@ export class QueryBuilderFunctions {
         level = 0) {
         // Verify the entity select state.
         const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('igx-input-group');
-        expect(!entityInputGroup.classList.contains('igx-input-group--disabled')).toBe(entitySelectEnabled,
-            'incorrect entity select state');
+        expect(!entityInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect entity select state').toBe(entitySelectEnabled);
         // Verify the fields combo state.
         const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('igx-input-group');
-        expect(!fieldInputGroup.classList.contains('igx-input-group--disabled')).toBe(fieldComboEnabled,
-            'incorrect fields combo state');
+        expect(!fieldInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect fields combo state').toBe(fieldComboEnabled);
 
         if (columnSelectEnabled || operatorSelectEnabled || valueInputEnabled || commitButtonEnabled) {
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled, level);
@@ -567,19 +566,16 @@ export class QueryBuilderFunctions {
         level = 0) {
         // Verify the column select state.
         const columnInputGroup = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix, level).querySelector('igx-input-group');
-        expect(!columnInputGroup.classList.contains('igx-input-group--disabled')).toBe(columnSelectEnabled,
-            'incorrect column select state');
+        expect(!columnInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect column select state').toBe(columnSelectEnabled);
 
         // Verify the operator select state.
         const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, level).querySelector('igx-input-group');
-        expect(!operatorInputGroup.classList.contains('igx-input-group--disabled')).toBe(operatorSelectEnabled,
-            'incorrect operator select state');
+        expect(!operatorInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect operator select state').toBe(operatorSelectEnabled);
 
         // Verify the value input state.
         const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false, level);
         const valueInputGroup = Array.from(editModeContainer.querySelectorAll('igx-input-group'))[2];
-        expect(!valueInputGroup.classList.contains('igx-input-group--disabled')).toBe(valueInputEnabled,
-            'incorrect value input state');
+        expect(!valueInputGroup.classList.contains('igx-input-group--disabled'), 'incorrect value input state').toBe(valueInputEnabled);
 
         // Verify commit expression button state
         const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, level);
@@ -626,22 +622,22 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-button');
+                case 0: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 1: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 2: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('and'); break;
-                case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-icon'); break;
-                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 6: expect(element).toHaveClass('igx-chip'); break;
-                case 7: expect(element).toHaveClass('igx-icon'); break;
-                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 9: expect(element).toHaveClass('igx-chip'); break;
-                case 10: expect(element).toHaveClass('igx-icon'); break;
-                case 11: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 12: expect(element).toHaveClass('igx-button');
+                case 3: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 4: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 5: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 6: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 7: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 8: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 9: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 10: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 11: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 12: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Condition'); break;
-                case 13: expect(element).toHaveClass('igx-button');
+                case 13: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Group'); break;
             }
             i++;
@@ -654,7 +650,7 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element.firstChild).toHaveClass('igx-icon');
+                case 0: expect((element.firstChild as HTMLElement).classList.contains('igx-icon')).toBe(true);
                     expect(element.firstChild.textContent).toContain('add');
                     break;
             }
@@ -679,10 +675,10 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-icon-button'); break;
-                case 3: expect(element).toHaveClass('igx-icon-button'); break;
+                case 0: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 1: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 2: expect(element.classList.contains('igx-icon-button')).toBe(true); break;
+                case 3: expect(element.classList.contains('igx-icon-button')).toBe(true); break;
             }
             i++;
         });
@@ -694,19 +690,19 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-button'); break;
-                case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-icon'); break;
-                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 6: expect(element).toHaveClass('igx-chip'); break;
-                case 7: expect(element).toHaveClass('igx-icon'); break;
-                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 9: expect(element).toHaveClass('igx-button');
+                case 0: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 1: expect(element.classList.contains('igx-input-group__input')).toBe(true); break;
+                case 2: expect(element.classList.contains('igx-button')).toBe(true); break;
+                case 3: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 4: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 5: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 6: expect(element.classList.contains('igx-chip')).toBe(true); break;
+                case 7: expect(element.classList.contains('igx-icon')).toBe(true); break;
+                case 8: expect(element.classList.contains('igx-chip__remove')).toBe(true); break;
+                case 9: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Condition');
                     break;
-                case 10: expect(element).toHaveClass('igx-button');
+                case 10: expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Group');
                     break;
             }
@@ -720,10 +716,11 @@ export class QueryBuilderFunctions {
         const columnSpan = chipSpans[0];
         const operatorSpan = chipSpans[1];
         const valueSpan = chipSpans[2];
-        expect(columnSpan.textContent.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
-        expect(operatorSpan.textContent.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
+        expect(columnSpan.textContent.toLowerCase().trim(), 'incorrect chip column').toBe(columnText.toLowerCase());
+        expect(operatorSpan.textContent.toLowerCase().trim(), 'incorrect chip operator').toBe(operatorText.toLowerCase());
         if (valueSpan != undefined && valueText != undefined) {
-            expect(valueSpan.textContent.toLowerCase().trim().replaceAll(/\s/g, '')).toBe(valueText.toLowerCase().replaceAll(/\s/g, ''), 'incorrect chip filter value');
+            expect(valueSpan.textContent.toLowerCase().trim().replaceAll(/\s/g, ''), 'incorrect chip filter value')
+                .toBe(valueText.toLowerCase().replaceAll(/\s/g, ''));
         }
     };
 
@@ -731,19 +728,19 @@ export class QueryBuilderFunctions {
         const andLines = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.FILTER_TREE_LINE_AND}`));
         const orLines = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.FILTER_TREE_LINE_OR}`));
 
-        if (andLineCount) expect(andLines.length).toBe(andLineCount, "AND groups not the right count");
-        if (orLineCount) expect(orLines.length).toBe(orLineCount, "OR groups not the right count");
+        if (andLineCount) expect(andLines.length, "AND groups not the right count").toBe(andLineCount);
+        if (orLineCount) expect(orLines.length, "OR groups not the right count").toBe(orLineCount);
     };
 
     public static verifyRootAndSubGroupExpressionsCount(fix: ComponentFixture<any>, rootDirect: number, rootTotal: number = null, subGroupPath: number[] = null, subGroupDirect: number = null, subGroupTotal: number = null) {
         const rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-        expect(rootGroup).not.toBeNull('There is no root group.');
-        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length).toBe(rootDirect, 'Root direct condition count not correct');
-        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length).toBe(rootTotal, 'Root direct + child condition count not correct');
+        expect(rootGroup, 'There is no root group.').not.toBeNull();
+        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length, 'Root direct condition count not correct').toBe(rootDirect);
+        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length, 'Root direct + child condition count not correct').toBe(rootTotal);
         if (subGroupPath) {
             const subGroup = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, subGroupPath) as HTMLElement;
-            if (subGroupDirect) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, true).length).toBe(subGroupDirect, 'Child direct condition count not correct');
-            if (subGroupTotal) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, false).length).toBe(subGroupTotal, 'Child direct + child condition count not correct');
+            if (subGroupDirect) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, true).length, 'Child direct condition count not correct').toBe(subGroupDirect);
+            if (subGroupTotal) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, false).length, 'Child direct + child condition count not correct').toBe(subGroupTotal);
         }
     };
 
@@ -950,7 +947,7 @@ export class QueryBuilderFunctions {
         QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
         fix.detectChanges();
 
-        spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
+        vi.spyOn(dragDir.ghostElement, 'dispatchEvent');
 
         const target = moveDown ? 350 : 0;
         const shift = moveDown ? 1 : -1
@@ -1000,7 +997,8 @@ export class QueryBuilderFunctions {
         }
 
         //When dragged to the end, check results
-        expect(ghostPositionVisits).not.toContain(false,
-            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()}`);
+        expect(ghostPositionVisits, 
+            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()}`)
+            .not.toContain(false);
     }
 }

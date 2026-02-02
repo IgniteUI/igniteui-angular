@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ZipFiles } from './zip-helper.spec';
 import { IFileContent } from './zip-verification-wrapper.spec';
 
+import { it } from 'vitest';
 @Injectable()
 export class ExportTestDataService {
 

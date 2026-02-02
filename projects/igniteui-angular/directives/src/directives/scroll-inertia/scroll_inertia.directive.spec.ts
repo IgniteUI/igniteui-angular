@@ -1,20 +1,22 @@
 import { Component, Directive, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { wait } from '../../../../test-utils/ui-interactions.spec';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 IgxTestScrollInertiaDirective,
                 ScrollInertiaComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(ScrollInertiaComponent);
@@ -26,13 +28,12 @@ describe('Scroll Inertia Directive - Rendering', () => {
     });
 
     it('should initialize directive on non-scrollable container.', async () => {
-        expect(fix.componentInstance.scrInertiaDir).toBeDefined('scroll inertia initializing through markup failed');
+        expect(fix.componentInstance.scrInertiaDir, 'scroll inertia initializing through markup failed').toBeDefined();
         await fix.whenStable();
     });
 
     // Unit tests for inertia function.
-    it('inertia should accelerate and then deccelerate vertically.', async () => {
-        pending('This should be tested in the e2e test');
+    it.skip('inertia should accelerate and then deccelerate vertically.', async () => {
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
         // vertical inertia
@@ -50,8 +51,7 @@ describe('Scroll Inertia Directive - Rendering', () => {
         expect(end).toBeLessThan(mid);
     });
 
-    it('inertia should accelerate and then deccelerate horizontally.', async () => {
-        pending('This should be tested in the e2e test');
+    it.skip('inertia should accelerate and then deccelerate horizontally.', async () => {
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
         // horizontal inertia
@@ -186,7 +186,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     });
 
     // Unit tests for touch events with inertia - Chrome, FireFox, Safari.
-    it('should change scroll top for related scrollbar on touch start/move/end', fakeAsync(() => {
+    it('should change scroll top for related scrollbar on touch start/move/end', customFakeAsync(() => {
         let evt = {
             touches: [{
                 pageX: 0,
@@ -212,7 +212,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         expect(scrollContainerMock.scrollTop).toBeGreaterThan(3000);
     }));
 
-    it('should stop inertia if another touch event is initiated while inertia is executing.', fakeAsync(() => {
+    it('should stop inertia if another touch event is initiated while inertia is executing.', customFakeAsync(() => {
         let evt = {
             touches: [{
                 pageX: 0,
@@ -248,7 +248,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         expect(scrollContainerMock.scrollTop).toBeLessThan(1000);
     }));
 
-    it('should honor the defined swipeToleranceX.', fakeAsync(() => {
+    it('should honor the defined swipeToleranceX.', customFakeAsync(() => {
         // if scroll is initiated on Y and on X within the defined tolerance no scrolling should occur on X.
         let evt = {
             touches: [{
@@ -275,7 +275,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         expect(scrollContainerMock.scrollTop).toBeGreaterThan(100);
     }));
 
-    it('should change scroll left for related scrollbar on touch start/move/end', fakeAsync(() => {
+    it('should change scroll left for related scrollbar on touch start/move/end', customFakeAsync(() => {
         let evt = {
             touches: [{
                 pageX: 0,

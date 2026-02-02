@@ -182,6 +182,7 @@ export class TestComponent implements OnInit {
             .toEqual(`
 import { Component, OnInit } from '@angular/core';
 import { IgxMaskDirective } from 'igniteui-angular';
+import { describe, it, expect, beforeEach } from 'vitest';
 export class TestComponent implements OnInit {
     @ViewChild(IgxMaskDirective)
     public mask: IgxMaskDirective

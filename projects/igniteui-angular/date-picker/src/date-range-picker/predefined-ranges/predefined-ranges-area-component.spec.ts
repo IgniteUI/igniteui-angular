@@ -7,6 +7,7 @@ import { IDateRangePickerResourceStrings } from '../../../../core/src/core/i18n/
 import { IgxChipComponent } from '../../../../chips/src/chips/chip.component';
 import { Component, ViewChild } from '@angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxPredefinedRangesAreaComponent', () => {
   let fixture: ComponentFixture<PredefinedRangesDefaultComponent>;
   let component: PredefinedRangesDefaultComponent;
@@ -100,7 +101,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
     const ranges = predefinedRanges.ranges;
     expect(chips.length).toBe(ranges.length);
 
-    const emitSpy = spyOn(predefinedRanges.rangeSelect, 'emit');
+    const emitSpy = vi.spyOn(predefinedRanges.rangeSelect, 'emit');
 
     chips.forEach((de, i) => {
         (de.nativeElement as HTMLElement).click();

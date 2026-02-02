@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridSortingComponent } from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
@@ -6,15 +6,16 @@ import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxTreeGrid - Sorting #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxTreeGridSortingComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(IgxTreeGridSortingComponent);
@@ -111,8 +112,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
         });
 
-        it('should sort treeGrid by multiple expressions through API', () => {
-            pending('figure out how was this passing before');
+        it.skip('should sort treeGrid by multiple expressions through API', () => {
             // Test prerequisites (need to have multiple records with the same name on every level)
             treeGrid.data[0].Name = 'Ana Sanders';
             treeGrid.data[0].Employees[1].Name = 'Michael Langdon';

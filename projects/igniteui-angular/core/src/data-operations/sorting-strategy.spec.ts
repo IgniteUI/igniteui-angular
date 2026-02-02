@@ -2,6 +2,7 @@ import { DataGenerator } from './test-util/data-generator';
 import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
 import { IgxSorting } from './grid-sorting-strategy';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('Unit testing SortingStrategy', () => {
     let dataGenerator: DataGenerator;
     let data: any[];
@@ -28,19 +29,9 @@ describe('Unit testing SortingStrategy', () => {
     });
     it('tests `compareObjects`', () => {
         const strategy = DefaultSortingStrategy.instance();
-        expect(strategy.compareValues(1, 0) === 1 &&
-            strategy.compareValues(true, false) === 1 &&
-            strategy.compareValues('bc', 'adfc') === 1)
-            .toBeTruthy('compare first argument greater than second');
-        expect(strategy.compareValues(1, 2) === -1 &&
-            strategy.compareValues('a', 'b') === -1 &&
-            strategy.compareValues(false, true) === -1)
-            .toBeTruthy('compare 0, 1');
-        expect(strategy.compareValues(0, 0) === 0 &&
-            strategy.compareValues(true, true) === 0 &&
-            strategy.compareValues('test', 'test') === 0
-        )
-            .toBeTruthy('Comare equal variables');
+        expect(strategy.compareValues(1, 0) === 1 && strategy.compareValues(true, false) === 1 && strategy.compareValues('bc', 'adfc') === 1, 'compare first argument greater than second').toBeTruthy();
+        expect(strategy.compareValues(1, 2) === -1 && strategy.compareValues('a', 'b') === -1 && strategy.compareValues(false, true) === -1, 'compare 0, 1').toBeTruthy();
+        expect(strategy.compareValues(0, 0) === 0 && strategy.compareValues(true, true) === 0 && strategy.compareValues('test', 'test') === 0, 'Comare equal variables').toBeTruthy();
     });
     it('tests default settings', () => {
         (data[4] as { string: string }).string = 'ROW';

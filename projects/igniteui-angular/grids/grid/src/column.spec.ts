@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -26,6 +26,8 @@ import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - Column properties #grid', () => {
 
     registerLocaleData(localeFr);
@@ -34,8 +36,8 @@ describe('IgxGrid - Column properties #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 ColumnCellFormatterComponent,
                 ColumnHiddenFromMarkupComponent,
@@ -54,7 +56,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 DOMAttributesAsSettersComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should correctly initialize column templates', () => {
         const fix = TestBed.createComponent(TemplatedColumnsComponent);
@@ -168,7 +170,7 @@ describe('IgxGrid - Column properties #grid', () => {
         }
     });
 
-    it('should reflect the column in the DOM based on its index', fakeAsync(() => {
+    it('should reflect the column in the DOM based on its index', customFakeAsync(() => {
         const fix = TestBed.createComponent(ColumnCellFormatterComponent);
         fix.detectChanges();
 
@@ -195,7 +197,7 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(headers[1].nativeElement.textContent).toMatch('Name');
     }));
 
-    it('should support adding and removing columns through a declared iterable', fakeAsync(/** columnList.changes rAF */() => {
+    it('should support adding and removing columns through a declared iterable', customFakeAsync(/** columnList.changes rAF */() => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);
         fix.detectChanges();
 
@@ -216,7 +218,7 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(grid.columnList.last.field).toMatch('Name');
     }));
 
-    it('should add new column at the correct visible index', fakeAsync(() => {
+    it('should add new column at the correct visible index', customFakeAsync(() => {
         const fix = TestBed.createComponent(GridAddColumnComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
@@ -575,7 +577,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(unitsColumn._cells[3].nativeElement.innerText).toEqual('￥0');
         });
 
-        it('should display the currency symbol in edit mode correctly according the grid locale #ivy', fakeAsync(() => {
+        it('should display the currency symbol in edit mode correctly according the grid locale #ivy', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -643,7 +645,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0 €', '20 000 €', '39 004 €', '3 900,4 €']);
         });
 
-        it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs', fakeAsync(() => {
+        it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             tick();
             fix.detectChanges();
@@ -740,7 +742,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(discountColumn._cells[5].nativeElement.innerText).toEqual('2,7 %');
         });
 
-        it('should preview the percent value correctly when cell is in edit mode correctly', fakeAsync(() => {
+        it('should preview the percent value correctly when cell is in edit mode correctly', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
             fix.detectChanges();
 
@@ -794,7 +796,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '-70%', '1,100%', '2,153.9%', '215.39%']);
         });
 
-        it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs', fakeAsync(() => {
+        it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs', customFakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
             tick();
             fix.detectChanges();
@@ -893,7 +895,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(receiveTime._cells[5].nativeElement.innerText.normalize("NFKD")).toEqual('12:47 PM');
         });
 
-        it('DateTime: should preview the dateTime value correctly when cell is in edit mode correctly', fakeAsync(() => {
+        it('DateTime: should preview the dateTime value correctly when cell is in edit mode correctly', customFakeAsync(() => {
             const orderColumn = grid.getColumnByName('OrderDate');
             orderColumn.editable = true;
             fix.detectChanges();
@@ -932,7 +934,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(firstCell.nativeElement.innerText.normalize("NFKD")).toEqual('Dec 3, 2021, 3:15:22 PM');
         }));
 
-        it('Time: should preview the time value correctly when cell is in edit mode correctly', fakeAsync(() => {
+        it('Time: should preview the time value correctly when cell is in edit mode correctly', customFakeAsync(() => {
             const timeColumn = grid.getColumnByName('ReceiveTime');
             timeColumn.editable = true;
             fix.detectChanges();
@@ -988,7 +990,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ['Count', 'Earliest', 'Latest'], ['10', '6:40 AM', '8:20 PM']);
         });
 
-        it('DateTime: filtering UI list should be populated with correct values based on the pipeArgs', fakeAsync(() => {
+        it('DateTime: filtering UI list should be populated with correct values based on the pipeArgs', customFakeAsync(() => {
             const orderDateColumn = grid.getColumnByName('OrderDate');
             grid.allowFiltering = true;
             grid.filterMode = 'excelStyleFilter';
@@ -1025,7 +1027,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('8/18/16, 11:17 AM');
         }));
 
-        it('Time: filtering UI list should be populated with correct values based on the pipeArgs', fakeAsync(() => {
+        it('Time: filtering UI list should be populated with correct values based on the pipeArgs', customFakeAsync(() => {
             const timeColumn = grid.getColumnByName('ReceiveTime');
             grid.allowFiltering = true;
             fix.detectChanges();
@@ -1061,7 +1063,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText.normalize("NFKD")).toEqual('12:12 PM');
         }));
 
-        it('DateTime: dateTime input should be disabled when try to filter based on unary conditions - today or etc. #ivy', fakeAsync(() => {
+        it('DateTime: dateTime input should be disabled when try to filter based on unary conditions - today or etc. #ivy', customFakeAsync(() => {
             const orderDateColumn = grid.getColumnByName('OrderDate');
             grid.allowFiltering = true;
             grid.filterMode = 'excelStyleFilter';
@@ -1081,7 +1083,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(inputElement).not.toBeNull();
         }));
 
-        it('Date/Time/DateTime: Set editorOptions.dateTimeFormat as inputFormat for default cell editor', fakeAsync(() => {
+        it('Date/Time/DateTime: Set editorOptions.dateTimeFormat as inputFormat for default cell editor', customFakeAsync(() => {
             const producedDateColumn = grid.getColumnByName('ProducedDate');
             const orderDateColumn = grid.getColumnByName('OrderDate');
             const receiveTimeColumn = grid.getColumnByName('ReceiveTime');
@@ -1128,7 +1130,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(dateTimeEditor.nativeElement.value).toEqual('08-37-11 a');
         }));
 
-        it('DateTime: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', fakeAsync(() => {
+        it('DateTime: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', customFakeAsync(() => {
             const orderDateColumn = grid.getColumnByName('OrderDate');
             const firstCell = orderDateColumn._cells[0];
             expect(firstCell.nativeElement.innerText.normalize('NFKD')).toEqual('Oct 1, 2015, 11:37:22 AM');
@@ -1171,7 +1173,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
         }));
 
-        it('Date: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', fakeAsync(() => {
+        it('Date: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', customFakeAsync(() => {
             const producedDateColumn = grid.getColumnByName('ProducedDate');
             const firstCell = producedDateColumn._cells[0];
             expect(firstCell.nativeElement.innerText).toEqual('Oct 1, 2014');
@@ -1213,7 +1215,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
         }));
 
-        it('Time: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', fakeAsync(() => {
+        it('Time: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', customFakeAsync(() => {
             const receivedTimeColumn = grid.getColumnByName('ReceiveTime');
             const firstCell = receivedTimeColumn._cells[0];
             expect(firstCell.nativeElement.innerText.normalize('NFKD')).toEqual('8:37:11 AM');
@@ -1254,7 +1256,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((dateTimeEditor.nativeElement as any).value.normalize('NFKC')).toEqual('08:37 AM');
         }));
 
-        it('Date/Time/DateTime: Use default locale format as inputFormat when editorOptions/pipeArgs formats are null/empty ', fakeAsync(() => {
+        it('Date/Time/DateTime: Use default locale format as inputFormat when editorOptions/pipeArgs formats are null/empty ', customFakeAsync(() => {
             const producedDateColumn = grid.getColumnByName('ProducedDate');
             const orderDateColumn = grid.getColumnByName('OrderDate');
             const receiveTimeColumn = grid.getColumnByName('ReceiveTime');
@@ -1389,7 +1391,7 @@ describe('IgxGrid - Column properties #grid', () => {
             available: true
         }];
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxGridComponent);
             grid = fix.componentInstance;
             // For test fixture destroy
@@ -1397,16 +1399,16 @@ describe('IgxGrid - Column properties #grid', () => {
             grid.data = dataWithImages;
             grid.autoGenerate = true;
             fix.detectChanges();
-        }));
+        });
 
         it('should initialize correctly with autoGenerate and image data', () => {
             const column = grid.getColumnByName('avatar');
             expect(column.dataType).toBe(GridColumnDataType.Image);
-            expect(column.sortable).toBeFalse();
-            expect(column.groupable).toBeFalse();
-            expect(column.filterable).toBeFalse();
-            expect(column.editable).toBeFalse();
-            expect(column.hasSummary).toBeFalse();
+            expect(column.sortable).toBeFalsy();
+            expect(column.groupable).toBeFalsy();
+            expect(column.filterable).toBeFalsy();
+            expect(column.editable).toBeFalsy();
+            expect(column.hasSummary).toBeFalsy();
 
             const cell = column._cells[0];
             expect(cell.nativeElement.firstElementChild.tagName).toBe('IMG');
@@ -1417,7 +1419,7 @@ describe('IgxGrid - Column properties #grid', () => {
     });
 
     describe('Auto-sizing with width auto: ', () => {
-        it('should auto-size column in view on init.', fakeAsync(() => {
+        it('should auto-size column in view on init.', customFakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.detectChanges();
             tick();
@@ -1426,7 +1428,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns[1].width).toBe('207px');
         }));
 
-        it('should auto-size within minWidth/maxWidth bounds', fakeAsync(() => {
+        it('should auto-size within minWidth/maxWidth bounds', customFakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.componentInstance.columns = [
                 { field: 'ID', width: 'auto', minWidth: '100px', maxWidth: '200px' },
@@ -1468,7 +1470,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
         }));
 
-        it('should auto-size correctly when cell has custom template', fakeAsync(() => {
+        it('should auto-size correctly when cell has custom template', customFakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             const grid = fix.componentInstance.instance;
             fix.detectChanges();
@@ -1479,7 +1481,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(col.width).toBe('137px');
         }));
 
-        it('should auto-size after an initially hidden column is shown.', fakeAsync(() => {
+        it('should auto-size after an initially hidden column is shown.', customFakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.componentInstance.columns = [
                 { field: 'ID', width: 'auto', hidden: true },
@@ -1496,7 +1498,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(col.width).toBe('95px');
         }));
 
-        it('should auto-size initially pinned column.', fakeAsync(() => {
+        it('should auto-size initially pinned column.', customFakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.componentInstance.columns = [
                 { field: 'ID', width: 'auto', pinned: true },
@@ -1509,7 +1511,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(pinnedCol.width).toBe('97px');
         }));
 
-        it('should auto-size columns added in view after grid is resized', fakeAsync(() => {
+        it('should auto-size columns added in view after grid is resized', customFakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.componentInstance.columns = [
                 { field: 'ID', width: 'auto' },
@@ -1537,7 +1539,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
         }));
 
-        it('should auto-size on initial data loaded.', fakeAsync(() => {
+        it('should auto-size on initial data loaded.', customFakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.componentInstance.data = [];
             fix.componentInstance.columns = [
@@ -1569,7 +1571,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
         }));
 
-        it('should recalculate sizes via the recalculateAutoSizes API ', fakeAsync(() => {
+        it('should recalculate sizes via the recalculateAutoSizes API ', customFakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.detectChanges();
             tick();
@@ -1600,7 +1602,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
 
     describe('DOM attributes as setters', () => {
-        it('successfully renders a grid with DOM attributes as setters', fakeAsync(() => {
+        it('successfully renders a grid with DOM attributes as setters', customFakeAsync(() => {
             const fixture = TestBed.createComponent(DOMAttributesAsSettersComponent);
             fixture.detectChanges();
             tick();
@@ -1646,11 +1648,11 @@ describe('IgxGrid - Column properties #grid', () => {
                 .filter(attr => Boolean(attr));
 
             for (const attr of gridAttributes) {
-                expect(grid[attr]).toBe(true, `Grid attribute: '${attr}' failed`);
+                expect(grid[attr], `Grid attribute: '${attr}' failed`).toBe(true);
             }
 
             for (const attr of columnAttributes) {
-                expect(column[attr]).toBe(true, `Column attribute: '${attr}' failed`);
+                expect(column[attr], `Column attribute: '${attr}' failed`).toBe(true);
             }
         }))
     });
@@ -1675,6 +1677,7 @@ interface IColumnConfig {
     maxWidth?: string;
     hidden?: boolean;
     pinned?: boolean;
+    resizable?: boolean;
 }
 
 @Component({

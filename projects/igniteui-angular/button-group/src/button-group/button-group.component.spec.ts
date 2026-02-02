@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './button-group.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
@@ -7,6 +7,8 @@ import { IgxRadioComponent } from '../../../radio/src/radio/radio.component';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 import { IgxRadioGroupDirective } from 'igniteui-angular/radio';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 interface IButton {
     type?: string;
     ripple?: string;
@@ -45,8 +47,8 @@ class Button {
 
 
 describe('IgxButtonGroup', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 InitButtonGroupComponent,
@@ -57,7 +59,7 @@ describe('IgxButtonGroup', () => {
                 ButtonGroupButtonWithBoundSelectedOutputComponent,
             ]
         }).compileComponents();
-    }));
+    });
 
    it('should initialize buttonGroup with default values', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
@@ -99,7 +101,7 @@ describe('IgxButtonGroup', () => {
         fixture.detectChanges();
 
         const btnGroupInstance = fixture.componentInstance.buttonGroup;
-        spyOn(btnGroupInstance.selected, 'emit');
+        vi.spyOn(btnGroupInstance.selected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
         fixture.detectChanges();
@@ -128,7 +130,7 @@ describe('IgxButtonGroup', () => {
         const btnGroupInstance = fixture.componentInstance.buttonGroup;
         btnGroupInstance.buttons[0].select();
         btnGroupInstance.buttons[1].select();
-        spyOn(btnGroupInstance.deselected, 'emit');
+        vi.spyOn(btnGroupInstance.deselected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
         fixture.detectChanges();
@@ -204,7 +206,7 @@ describe('IgxButtonGroup', () => {
         const buttongroup = fixture.componentInstance.buttonGroup;
         buttongroup.selectionMode = 'singleRequired';
         await wait();
-        spyOn(buttongroup.deselected, 'emit');
+        vi.spyOn(buttongroup.deselected, 'emit');
 
         buttongroup.selectButton(0);
         await wait();
@@ -382,7 +384,7 @@ describe('IgxButtonGroup', () => {
         }
     });
 
-    it('should style the corresponding button as deselected when the value bound to the selected input changes', fakeAsync(() => {
+    it('should style the corresponding button as deselected when the value bound to the selected input changes', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ButtonGroupButtonWithBoundSelectedOutputComponent);
         fixture.detectChanges();
 
@@ -438,7 +440,7 @@ describe('IgxButtonGroup', () => {
 
         const buttonGroup = fixture.componentInstance.buttonGroup;
 
-        spyOn(buttonGroup.selected, 'emit').and.callThrough();
+        vi.spyOn(buttonGroup.selected, 'emit');
 
         buttonGroup.selectButton(0);
         await wait();
@@ -632,7 +634,7 @@ class ButtonGroupSelectionBoundToAnotherComponent {
 
     public selectedValue = 'Bar';
 
-    public onRadioChange(event: { value: string; }) {
+    public onRadioChange(event: { value?: string; }) {
         this.selectedValue = event.value;
     }
 

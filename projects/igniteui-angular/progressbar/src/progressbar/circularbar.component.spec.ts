@@ -1,20 +1,21 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IgxCircularProgressBarComponent } from './progressbar.component';
 import { hasClass } from "../../../test-utils/helper-utils.spec";
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxCircularProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxCircularProgressBarComponent>;
     let progress: IgxCircularProgressBarComponent;
     let circularBar: HTMLElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxCircularProgressBarComponent]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxCircularProgressBarComponent]
         }).compileComponents();
 

@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -19,12 +19,13 @@ import { IRowDataCancelableEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridNavigationService } from 'igniteui-angular';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridActionStripComponent,
@@ -39,7 +40,7 @@ describe('igxGridEditingActions #grid ', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base ', () => {
         beforeEach(() => {
@@ -136,7 +137,7 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.menu.selectItem(editMenuItem);
             fixture.detectChanges();
 
-            expect(row.inEditMode).toBeTrue();
+            expect(row.inEditMode).toBeTruthy();
 
             grid.gridAPI.crudService.endEdit();
             fixture.detectChanges();
@@ -170,7 +171,7 @@ describe('igxGridEditingActions #grid ', () => {
             UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBeFalsy();
         });
     });
 
@@ -194,7 +195,7 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should emit correct rowPinning arguments with pinning actions', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
             const row = grid.getRowByIndex(1);
 
             actionStrip.show(grid.rowList.toArray()[1]);
@@ -248,7 +249,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             expect(actionStrip.context).toBe(row);
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBeFalsy();
         });
         it('should auto-hide on mouse leave of row.', async () => {
             fixture = TestBed.createComponent(IgxActionStripOneRowComponent);
@@ -263,22 +264,22 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBeFalsy();
             UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBeTruthy();
         });
         it('should auto-hide on mouse leave of grid.', () => {
             const row = grid.getRowByIndex(0);
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBeFalsy();
             UIInteractions.simulateMouseEvent('mouseleave', grid.nativeElement, 0, 0);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBeTruthy();
         });
 
         it('should auto-hide on delete action click.', () => {
@@ -286,14 +287,14 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBeFalsy();
 
             const deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
             expect(deleteIcon.nativeElement.innerText).toBe('delete');
             deleteIcon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBeTruthy();
 
         });
 
@@ -302,14 +303,14 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBeFalsy();
 
             // bind to no data, which removes all rows.
             grid.data = [];
             grid.cdr.detectChanges();
 
-            expect((row.cdr as any).destroyed).toBeTrue();
-            expect(actionStrip.hidden).toBeTrue();
+            expect((row.cdr as any).destroyed).toBeTruthy();
+            expect(actionStrip.hidden).toBeTruthy();
         });
 
         it('should auto-hide if context row is cached.', () => {
@@ -327,11 +328,11 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             // not destroyed, but not in DOM anymore
-            expect((row.cdr as any).destroyed).toBeFalse();
+            expect((row.cdr as any).destroyed).toBeFalsy();
             expect(row.element.nativeElement.isConnected).toBe(false);
 
             // action strip should be hidden
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBeTruthy();
         });
     });
 
@@ -352,7 +353,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             expect(actionStripRoot.context).toBe(row);
-            expect(actionStripRoot.hidden).toBeFalse();
+            expect(actionStripRoot.hidden).toBeFalsy();
             expect(actionStripChild.context).toBeUndefined();
         });
 
@@ -369,7 +370,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             expect(actionStripChild.context).toBe(childRow);
-            expect(actionStripChild.hidden).toBeFalse();
+            expect(actionStripChild.hidden).toBeFalsy();
 
             expect(actionStripRoot.context).toBeUndefined();
         });
@@ -389,8 +390,8 @@ describe('igxGridEditingActions #grid ', () => {
             UIInteractions.simulateMouseEvent('mouseleave', hierarchicalGrid.nativeElement, 0, 0);
             fixture.detectChanges();
 
-            expect(actionStripRoot.hidden).toBeTrue();
-            expect(actionStripChild.hidden).toBeTrue();
+            expect(actionStripRoot.hidden).toBeTruthy();
+            expect(actionStripChild.hidden).toBeTruthy();
         });
     });
 
@@ -404,8 +405,8 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should allow deleting row', () => {
-            spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
-            spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowDelete, 'emit');
+            vi.spyOn(treeGrid.rowDeleted, 'emit');
             const row = treeGrid.rowList.toArray()[0];
             actionStrip.show(row);
             fixture.detectChanges();
@@ -437,8 +438,10 @@ describe('igxGridEditingActions #grid ', () => {
             deleteChildBtn.actionClick.emit();
             fixture.detectChanges();
 
-            expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
-            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnce();
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnce();
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith(rowDeletedArgs);
             expect(treeGrid.rowList.first.data['ID']).toBe(6);
         });
     });

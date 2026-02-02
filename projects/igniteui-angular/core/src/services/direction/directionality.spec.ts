@@ -2,6 +2,7 @@ import { TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { Component, DOCUMENT, inject as inject_1 } from '@angular/core';
 import { IgxDirectionality, DIR_DOCUMENT } from './directionality';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 interface FakeDoc {
     body: { dir?: string };
     documentElement: { dir?: string };
@@ -9,19 +10,19 @@ interface FakeDoc {
 
 describe('IgxDirectionality', () => {
     describe('DI', () => {
-        beforeEach(waitForAsync(() =>
-            TestBed.configureTestingModule({
+        beforeEach(async () =>
+            await TestBed.configureTestingModule({
                 imports: [InjectsIgxDirectionalityComponent]
             }).compileComponents()
-        ));
+        );
 
         it('should inject the document through the injectionToken properly', () => {
             const injectionToken = TestBed.inject(DIR_DOCUMENT);
             const document = TestBed.inject(DOCUMENT);
 
             expect(injectionToken).toEqual(document);
-            expect(injectionToken).toEqual(jasmine.any(Document));
-            expect(document).toBeTruthy(jasmine.any(Document));
+            expect(injectionToken).toEqual(expect.any(Document));
+            expect(document).toBeTruthy();
         });
 
         it('should read dir from html if not specified on the body', inject([DOCUMENT], () => {
@@ -30,7 +31,7 @@ describe('IgxDirectionality', () => {
 
             expect(component.dir.document).not.toBeNull();
             expect(component.dir.document).not.toBeUndefined();
-            expect(component.dir.document).toEqual(jasmine.any(Document));
+            expect(component.dir.document).toEqual(expect.any(Document));
         }));
 
     });

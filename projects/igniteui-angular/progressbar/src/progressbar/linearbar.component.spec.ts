@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
 import { hasClass } from "../../../test-utils/helper-utils.spec";
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxLinearProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxLinearProgressBarComponent>;
     let progress: IgxLinearProgressBarComponent;
     let linearBar: HTMLElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxLinearProgressBarComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxLinearProgressBarComponent);

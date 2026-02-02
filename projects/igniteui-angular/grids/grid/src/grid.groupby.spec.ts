@@ -1,6 +1,6 @@
-﻿import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
+import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
 import { formatNumber } from '@angular/common'
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxGridStateDirective } from 'igniteui-angular/grids/core';
@@ -21,6 +21,8 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - GroupBy #grid', () => {
 
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
@@ -30,8 +32,8 @@ describe('IgxGrid - GroupBy #grid', () => {
     const DISABLED_CHIP = 'igx-chip--disabled';
     const CHIP = 'igx-chip';
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 DefaultGridComponent,
@@ -46,7 +48,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 MultiColumnHeadersWithGroupingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     const checkGroups = (groupRows, expectedGroupOrder, grExpr?) => {
         // verify group rows are sorted correctly, their indexes in the grid are correct and their group records match the group value.
@@ -90,7 +92,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         });
     };
 
-    it('should allow grouping by different data types.', fakeAsync(() => {
+    it('should allow grouping by different data types.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
@@ -183,7 +185,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             [null, fix.componentInstance.prevDay, fix.componentInstance.today, fix.componentInstance.nextDay]);
     }));
 
-    it('should only account for year, month and day when grouping by \'date\' dataType column', fakeAsync(() => {
+    it('should only account for year, month and day when grouping by \'date\' dataType column', customFakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
         fix.detectChanges();
 
@@ -217,7 +219,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(rec1Date.getFullYear()).toEqual(rec2Date.getFullYear());
     }));
 
-    it('should only account for hours, minutes, seconds and ms when grouping by \'time\' dataType column', fakeAsync(() => {
+    it('should only account for hours, minutes, seconds and ms when grouping by \'time\' dataType column', customFakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
         fix.detectChanges();
 
@@ -259,7 +261,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(rec1Date.getMilliseconds()).toEqual(rec2Date.getMilliseconds());
     }));
 
-    it('should account for all date values when grouping by \'dateTime\' dataType column', fakeAsync(() => {
+    it('should account for all date values when grouping by \'dateTime\' dataType column', customFakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
         fix.detectChanges();
 
@@ -288,7 +290,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(rec1Date.getTime()).toEqual(rec2Date.getTime());
     }));
 
-    it('should display time value in the group by row when grouped by a \'time\' column', fakeAsync(() => {
+    it('should display time value in the group by row when grouped by a \'time\' column', customFakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
         fix.detectChanges();
 
@@ -305,7 +307,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(expectedValue1).toEqual(actualValue1);
     }));
 
-    it('should display time value in the group by row when grouped by a \'dateTime\' column', fakeAsync(() => {
+    it('should display time value in the group by row when grouped by a \'dateTime\' column', customFakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
         fix.detectChanges();
 
@@ -322,7 +324,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(expectedValue1).toEqual(actualValue1);
     }));
 
-    it('should allow grouping by multiple columns.', fakeAsync(() => {
+    it('should allow grouping by multiple columns.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         fix.componentInstance.height = null;
@@ -369,7 +371,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupingExpressions);
     }));
 
-    it('should allow grouping with a custom comparer', fakeAsync(() => {
+    it('should allow grouping with a custom comparer', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         fix.componentInstance.data[0].ReleaseDate = new Date(2017, 1, 1, 15, 30, 0, 0);
@@ -410,7 +412,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(5);
     }));
 
-    it('should allows expanding/collapsing groups.', fakeAsync(() => {
+    it('should allows expanding/collapsing groups.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -479,7 +481,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[0].expanded).toEqual(false);
     }));
 
-    it('should allow changing the order of the groupBy columns.', fakeAsync(() => {
+    it('should allow changing the order of the groupBy columns.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
@@ -528,7 +530,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupingExpressions);
     }));
 
-    it('should group records correctly when ignoreCase is set to true.', fakeAsync(() => {
+    it('should group records correctly when ignoreCase is set to true.', customFakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByCaseSensitiveComponent);
         fix.detectChanges();
 
@@ -552,7 +554,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupingExpressions);
     }));
 
-    it('should allow setting expand/collapse state', fakeAsync(() => {
+    it('should allow setting expand/collapse state', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -587,7 +589,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
-    it('should trigger an groupingDone event when a column is grouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when a column is grouped with the correct params.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -604,7 +606,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns.length).toEqual(0);
     }));
 
-    it('should trigger an groupingDone event when a column is ungrouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when a column is ungrouped with the correct params.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -627,7 +629,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns[0].field).toEqual('Released');
     }));
 
-    it('should trigger an groupingDone event when multiple columns are grouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when multiple columns are grouped with the correct params.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -651,7 +653,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns.length).toEqual(0);
     }));
 
-    it('should trigger an groupingDone event when multiple columns are ungrouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when multiple columns are ungrouped with the correct params.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -678,7 +680,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it(`should trigger an groupingDone event when the user pushes a new array of grouping expressions, which results in
-    both grouping and un-grouping at the same time.`, fakeAsync(() => {
+    both grouping and un-grouping at the same time.`, customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -709,14 +711,14 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.groupedColumns[0].field).toEqual('Downloads');
     }));
 
-    it('should update groupsRecords when groupingDone is emitted', fakeAsync(() => {
+    it('should update groupsRecords when groupingDone is emitted', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
 
         let groupsRecordsLength;
 
-        spyOn(grid.groupingDone, 'emit').and.callThrough();
+        vi.spyOn(grid.groupingDone, 'emit');
         grid.groupingDone.subscribe(() => {
             groupsRecordsLength = grid.groupsRecords.length;
         });
@@ -733,7 +735,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupsRecordsLength).toEqual(0);
     }));
 
-    it('should allow setting custom template for group row content and expand/collapse icons.', fakeAsync(() => {
+    it('should allow setting custom template for group row content and expand/collapse icons.', customFakeAsync(() => {
         const fix = TestBed.createComponent(CustomTemplateGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -765,7 +767,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     }));
 
-    it('should allow setting custom template for group row via Input.', fakeAsync(() => {
+    it('should allow setting custom template for group row via Input.', customFakeAsync(() => {
         const fix = TestBed.createComponent(CustomTemplateGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -778,7 +780,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(elem.innerText.trim()).toEqual('CUSTOM GROUP BY');
     }));
 
-    it('should have the correct ARIA attributes on the group rows.', fakeAsync(() => {
+    it('should have the correct ARIA attributes on the group rows.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -795,7 +797,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
-    it('should not apply grouping if the grouping expressions value is the same reference', fakeAsync(() => {
+    it('should not apply grouping if the grouping expressions value is the same reference', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
@@ -806,7 +808,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        spyOn(grid.groupingExpressionsChange, 'emit');
+        vi.spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
         const firstCellElem = grid.gridAPI.get_cell_by_index(2, 'Downloads');
         UIInteractions.simulateClickAndSelectEvent(firstCellElem);
@@ -814,7 +816,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(0);
     }));
 
-    it('should emit groupingExpressionsChange when a group is sorted through the chip', fakeAsync(() => {
+    it('should emit groupingExpressionsChange when a group is sorted through the chip', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
@@ -825,7 +827,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        spyOn(grid.groupingExpressionsChange, 'emit');
+        vi.spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
         const chips = grid.groupArea.chips;
         grid.groupArea.handleClick(chips.first.id);
@@ -833,7 +835,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(1);
     }));
 
-    it('should group unbound column with custom grouping strategy', fakeAsync(() => {
+    it('should group unbound column with custom grouping strategy', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         fix.componentInstance.data.forEach((r, i) => {
             r['fieldValue1'] = Math.floor(i / 3);
@@ -862,7 +864,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // no such column initially, so chip is disabled.
         const chips = grid.groupArea.chips;
-        expect(chips.first.disabled).toBeTrue();
+        expect(chips.first.disabled).toBeTruthy();
         const newCols = [...fix.componentInstance.columns];
         newCols.push({
             field: "NewColumn",
@@ -872,7 +874,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // column now exists and has groupable=true, so chip should be enabled.
-        expect(chips.first.disabled).toBeFalse();
+        expect(chips.first.disabled).toBeFalsy();
     });
 
     it('should update chip state on column groupable prop change', () => {
@@ -888,16 +890,16 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // initially should not be disabled.
         const chips = grid.groupArea.chips;
-        expect(chips.first.disabled).toBeFalse();
+        expect(chips.first.disabled).toBeFalsy();
 
         // should get disabled on groupable=false
         column.groupable = false;
         fix.detectChanges();
-        expect(chips.first.disabled).toBeTrue();
+        expect(chips.first.disabled).toBeTruthy();
     });
 
     // GroupBy + Sorting integration
-    it('should apply sorting on each group\'s records when non-grouped column is sorted.', fakeAsync(() => {
+    it('should apply sorting on each group\'s records when non-grouped column is sorted.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -928,7 +930,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should apply the specified sort order on the group rows when already grouped column is sorted in asc/desc order.',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.enableSorting = true;
@@ -962,7 +964,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         }));
 
-    it('should remove grouping when already grouped column is sorted with order "None" via the API.', fakeAsync(() => {
+    it('should remove grouping when already grouped column is sorted with order "None" via the API.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -992,7 +994,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     }));
 
-    it('should not be able to sort the column when is already grouped by', fakeAsync(() => {
+    it('should not be able to sort the column when is already grouped by', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -1008,7 +1010,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(sortIcon).toBeNull()
     }));
 
-    it('should group by the specified field when grouping by an already sorted field.', fakeAsync(() => {
+    it('should group by the specified field when grouping by an already sorted field.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -1049,7 +1051,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy + Virtualization integration
-    it('should virtualize data and group records.', fakeAsync(() => {
+    it('should virtualize data and group records.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
 
@@ -1069,7 +1071,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.rowList.toArray().length).toEqual(5);
     }));
 
-    it('should recalculate visible chunk data and scrollbar size when expanding/collapsing group rows.', fakeAsync(() => {
+    it('should recalculate visible chunk data and scrollbar size when expanding/collapsing group rows.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
 
@@ -1279,7 +1281,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     });
 
     // GroupBy + Filtering
-    it('should filters by the data records and renders their related groups.', fakeAsync(() => {
+    it('should filters by the data records and renders their related groups.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
@@ -1314,7 +1316,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy + RowSelectors
-    it('should render row selectors in group row and remove them when the selection mode is set to none.', fakeAsync(() => {
+    it('should render row selectors in group row and remove them when the selection mode is set to none.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '1200px';
@@ -1361,7 +1363,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('group row checkboxes should be checked when selectAll API is called or when header checkbox is clicked.',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1414,7 +1416,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`should select all records for group by pressing space when selectionMode is multiple
         and not all records within a group are selected and the groupRow is focused`,
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1437,12 +1439,12 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
-            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
+            const selectionSpy = vi.spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
 
             expect(selectionSpy).toHaveBeenCalledTimes(1);
-            const args = selectionSpy.calls.mostRecent().args[0];
+            const args = selectionSpy.mock.lastCall[0];
             expect(args.added.length).toBe(2);
             expect(grid.selectedRows.length).toEqual(2);
 
@@ -1465,7 +1467,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('should not affect current row selection by pressing space when selectionMode is single and the groupRow is focused',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1501,7 +1503,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`should deselect all records for group by pressing space when selectionMode is multiple
         and all records within a group are selected and the groupRow is focused`,
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1527,12 +1529,12 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
-            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
+            const selectionSpy = vi.spyOn(grid.rowSelectionChanging, 'emit');
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
 
             expect(selectionSpy).toHaveBeenCalledTimes(1);
-            const args = selectionSpy.calls.mostRecent().args[0];
+            const args = selectionSpy.mock.lastCall[0];
             expect(args.removed.length).toBe(2);
             expect(grid.selectedRows.length).toEqual(0);
 
@@ -1542,7 +1544,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('row selectors for all rows in certain group should be checked/unchecked if the checkbox for this group row is checked/unchecked',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1574,7 +1576,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('the group row selector state should be checked if all records in the group are selected',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1600,7 +1602,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('the group row selector state should be undetermined if some of the records in the group but not all are selected',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1626,7 +1628,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('the group row selectors should be disabled if the grid selection mode is single',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1649,7 +1651,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('group row checkbox should remain the right state after filter is applied, all rows are selected and filter is removed',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1686,7 +1688,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('group row checkbox should remain the right state after selecting all rows in group and adding a new row to that group',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1718,7 +1720,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('should select/deselect all rows in group from API',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1760,7 +1762,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('should select/deselect all rows in group from API with PrimaryKey',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             grid.primaryKey = 'ID';
@@ -1804,7 +1806,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('ARIA support for groupby row selectors',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -1846,7 +1848,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`edit selected row so it goes to another group where all rows are selected as well.
         The group row checkbox of the new group that the record becomes part of should be checked.`,
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.enableEditing = true;
@@ -1890,7 +1892,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`edit selected row so it goes to another group where all rows are not selected.
         The group row checkbox of the new group that the record becomes part of should be in indeterminate state.`,
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.enableEditing = true;
@@ -1933,7 +1935,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`edit non-selected row so it goes to another group where all rows are selected.
         The group row checkbox of the new group that the record becomes part of should become in indeterminate state.`,
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.enableEditing = true;
@@ -1976,7 +1978,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`edit the only non-selected row in a group so that it moves to another group
         and check whether the current group row checkbox becomes checked.`,
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.enableEditing = true;
@@ -2019,7 +2021,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`edit the only selected row in a group so that it moves to another group
         and check whether the current group row checkbox becomes unchecked.`,
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.enableEditing = true;
@@ -2061,7 +2063,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('groupRowCheckbox should be in the right state by deleting rows from that group',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -2104,7 +2106,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('should hide/show checkboxes when change hideRowSelectors',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.width = '1200px';
@@ -2139,7 +2141,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         }));
 
-    it('Should have the correct properties in the custom row selector template', fakeAsync(() => {
+    it('Should have the correct properties in the custom row selector template', customFakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByRowCustomSelectorsComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '1200px';
@@ -2160,7 +2162,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
         const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
 
-        spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
+        vi.spyOn(fix.componentInstance, 'onGroupByRowClick');
 
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
         fix.detectChanges();
@@ -2171,7 +2173,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextUnselect);
     }));
 
-    it('should update chips state when columns are added/removed', fakeAsync(() => {
+    it('should update chips state when columns are added/removed', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
         const cols = fix.componentInstance.columns;
         fix.componentInstance.columns = [];
@@ -2194,7 +2196,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy Row Formatting
-    it('should properly apply formatters, both custom and default ones for the default row value template', fakeAsync(() => {
+    it('should properly apply formatters, both custom and default ones for the default row value template', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         tick();
@@ -2221,7 +2223,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy + Resizing
-    it('should retain same size for group row after a column is resized.', fakeAsync(() => {
+    it('should retain same size for group row after a column is resized.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '1200px';
@@ -2263,7 +2265,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy + Hiding
-    it('should retain same size for group row after a column is hidden.', fakeAsync(() => {
+    it('should retain same size for group row after a column is hidden.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '1200px';
@@ -2290,7 +2292,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy + Pinning
-    it('should retain same size for group row after a column is pinned.', fakeAsync(() => {
+    it('should retain same size for group row after a column is pinned.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '500px';
@@ -2314,7 +2316,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy + Updating
-    it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', fakeAsync(() => {
+    it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '500px';
@@ -2415,7 +2417,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     });
 
     // GroupBy + Paging integration
-    it('should apply paging on both data records and group records.', fakeAsync(() => {
+    it('should apply paging on both data records and group records.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
@@ -2439,7 +2441,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.value).toEqual('Ignite UI for JavaScript');
     }));
 
-    it('should have groups with correct summaries with paging.', fakeAsync(() => {
+    it('should have groups with correct summaries with paging.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
@@ -2475,7 +2477,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[0].groupRow.value).toEqual('Ignite UI for Angular');
     }));
 
-    it('should persist groupby state between pages.', fakeAsync(() => {
+    it('should persist groupby state between pages.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
@@ -2530,7 +2532,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy Area
-    it('should apply group area if a column is grouped.', fakeAsync(() => {
+    it('should apply group area if a column is grouped.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -2544,7 +2546,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.groupArea).toBeDefined();
     }));
 
-    it('should apply group area if a column is groupable.', fakeAsync(() => {
+    it('should apply group area if a column is groupable.', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         tick();
@@ -2555,7 +2557,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(gridElement.clientHeight).toEqual(700);
     }));
 
-    it('should allow collapsing and expanding all group rows', fakeAsync(() => {
+    it('should allow collapsing and expanding all group rows', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -2632,7 +2634,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     });
 
     // GroupBy chip
-    it('should apply the chip correctly when there are grouping expressions applied and reordered', fakeAsync(() => {
+    it('should apply the chip correctly when there are grouping expressions applied and reordered', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
@@ -2675,7 +2677,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         checkChips(chips, grid.groupingExpressions);
     }));
 
-    it('should apply the chip correctly when there is grouping at runtime', fakeAsync(() => {
+    it('should apply the chip correctly when there is grouping at runtime', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -2689,7 +2691,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
     }));
 
-    it('should remove sorting when grouping is removed', fakeAsync(() => {
+    it('should remove sorting when grouping is removed', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -2709,7 +2711,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.sortingExpressions.length).toBe(0);
     }));
 
-    it('should change sorting direction when grouping changes direction', fakeAsync(() => {
+    it('should change sorting direction when grouping changes direction', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -2729,7 +2731,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[0].textContent.trim()).toBe('arrow_upward');
     }));
 
-    it('should change grouping direction when sorting changes direction', fakeAsync(() => {
+    it('should change grouping direction when sorting changes direction', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -2779,7 +2781,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     });
 
     it('should persist state for the correct group record when there are group records with the same fieldName and value.',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(GroupableGridComponent);
             const grid = fix.componentInstance.instance;
             fix.componentInstance.data = [
@@ -2826,7 +2828,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(similarGroupRows[1].expanded).toEqual(true);
         }));
 
-    it('should render disabled non-interactable chip for column that does not allow grouping.', fakeAsync(() => {
+    it('should render disabled non-interactable chip for column that does not allow grouping.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -2875,7 +2877,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(sChipDirection).toEqual('arrow_downward');
     }));
 
-    it('should remove expansion state when removing groups', fakeAsync(() => {
+    it('should remove expansion state when removing groups', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.data = [
@@ -2944,7 +2946,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[3].expanded).toEqual(true);
     }));
 
-    it('should remove expansion state of groups with higher group hierarchy', fakeAsync(() => {
+    it('should remove expansion state of groups with higher group hierarchy', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.data = [
@@ -3172,7 +3174,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait();
     });
 
-    it('should throw an error when grouping more than 10 colunms', fakeAsync(() => {
+    it('should throw an error when grouping more than 10 colunms', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.testData = [
@@ -3193,7 +3195,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(m).toBe('Maximum amount of grouped columns is 10.');
     }));
 
-    it('should not allow grouping by column with no name', fakeAsync(() => {
+    it('should not allow grouping by column with no name', customFakeAsync(() => {
         const fix = TestBed.createComponent(GroupByEmptyColumnFieldComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -3204,7 +3206,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.groupsRowList.toArray().length).toBe(0);
     }));
 
-    it('should display column header text in the grouping chip.', fakeAsync(() => {
+    it('should display column header text in the grouping chip.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -3222,7 +3224,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(chips[0].getAttribute('title')).toEqual('Custom Header Text');
     }));
 
-    it('should update grid sizes when columns are grouped/ungrouped.', fakeAsync(() => {
+    it('should update grid sizes when columns are grouped/ungrouped.', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.componentInstance.width = '400px';
         tick();
@@ -3283,7 +3285,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.unpinnedWidth).toEqual(expectedWidth);
     }));
 
-    it('should expose tree structure to access groups', fakeAsync(() => {
+    it('should expose tree structure to access groups', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -3322,7 +3324,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(lsubsubGroups[0].expression.fieldName).toBe('ProductName');
     }));
 
-    it('should allows expanding/collapsing groups extracted from the groupRows tree', fakeAsync(() => {
+    it('should allows expanding/collapsing groups extracted from the groupRows tree', customFakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -3367,7 +3369,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should allow setting groupingExpressions and sortingExpressions initially.',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             fix.componentInstance.enableSorting = true;
             const grid = fix.componentInstance.instance;
@@ -3393,7 +3395,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('should show horizontal scrollbar if column widths are equal to the grid width and a column is grouped.',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
 
             const grid = fix.componentInstance.instance;
@@ -3442,7 +3444,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     });
 
     it('should hide all the grouped columns when hideGroupedColumns option is initially set to "true"',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             grid.hideGroupedColumns = true;
@@ -3464,7 +3466,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('should show all the grid columns when hideGroupedColumns option is set to "false" at runtime, after being "true" initially',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             grid.hideGroupedColumns = true;
@@ -3490,7 +3492,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('should hide the grouped columns when hideGroupedColumns option is set to "true" at runtime, after being "false" initially',
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
             fix.detectChanges();
@@ -3516,7 +3518,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`should hide the grouped columns when hideGroupedColumns option is enabled,
     there are initially set groupingExpressions and columns are autogenerated`,
-        fakeAsync(() => {
+        customFakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             fix.detectChanges();
             const grid = fix.componentInstance.instance;
@@ -3532,7 +3534,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
         it('should hide all the grouped columns when hideGroupedColumns option is "true" and columns are set runtime',
-            fakeAsync(() => {
+            customFakeAsync(() => {
                 const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
                 fix.detectChanges();
                 const grid = fix.componentInstance.instance;
@@ -3850,14 +3852,14 @@ describe('IgxGrid - GroupBy #grid', () => {
         let state: IgxGridStateDirective;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(GridGroupByStateComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             state = fix.componentInstance.state;
         }));
 
-        it('should restore date/time columns groupBy expansion state and expand/collapse hierarchies correctly - issue #14619', fakeAsync(() => {
+        it('should restore date/time columns groupBy expansion state and expand/collapse hierarchies correctly - issue #14619', customFakeAsync(() => {
             grid.groupBy({
                 fieldName: 'DateField', dir: SortingDirection.Asc, ignoreCase: false
             });
@@ -3898,7 +3900,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupRows[2].expanded).toEqual(true);
         }));
 
-        it('should restore date/time columns groupBy expansion state in nested hierarchies correctly - issue #14619', fakeAsync(() => {
+        it('should restore date/time columns groupBy expansion state in nested hierarchies correctly - issue #14619', customFakeAsync(() => {
             grid.groupBy([{
                 fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
             }, {
@@ -3942,7 +3944,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupRows[6].expanded).toEqual(false);
         }));
 
-        it('should properly restore groupBy expansion state that was saved before the grid groupsExpanded property has changed', fakeAsync(() => {
+        it('should properly restore groupBy expansion state that was saved before the grid groupsExpanded property has changed', customFakeAsync(() => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
             });

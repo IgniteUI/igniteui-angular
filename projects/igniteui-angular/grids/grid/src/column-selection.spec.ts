@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../../test-utils/grid-samples.spec';
@@ -8,6 +8,8 @@ import { IColumnSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const SELECTED_COLUMN_CLASS = 'igx-grid-th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const SELECTED_FILTER_CELL_CLASS = 'igx-grid__filtering-cell--selected';
@@ -30,13 +32,13 @@ describe('IgxGrid - Column Selection #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 ProductsComponent, ColumnSelectionGroupTestComponent, NoopAnimationsModule
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base tests: ', () => {
         let colProductName: IgxColumnComponent;
@@ -54,7 +56,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('setting selected and selectable properties ', () => {
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             grid.columnList.forEach(column => {
                 expect(column.selectable).toBeTruthy();
                 expect(column.selected).toBeFalsy();
@@ -81,7 +83,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('selecting a column with mouse click', () => {
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             colProductName.selectable = false;
             fix.detectChanges();
 
@@ -93,7 +95,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID'],
                 added: ['ProductID'],
                 removed: [],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -112,7 +114,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['InStock'],
                 added: ['InStock'],
                 removed: ['ProductID'],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -125,7 +127,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: [],
                 added: [],
                 removed: ['InStock'],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -208,7 +210,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('verify method selectColumns', () => {
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             const colUnits = grid.getColumnByName('UnitsInStock');
             const colOrderDate = grid.getColumnByName('OrderDate');
             // select columns with array of fields
@@ -249,7 +251,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('verify method deselectColumns', () => {
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             grid.columns.forEach(col => col.selected = true);
 
             const colUnits = grid.getColumnByName('UnitsInStock');
@@ -280,7 +282,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('verify methods selectAllColumns  and deselectAllColumns', () => {
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             // select all columns
             grid.selectAllColumns();
             fix.detectChanges();
@@ -358,7 +360,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('selecting a column with ctrl + mouse click', () => {
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             colProductName.selectable = false;
             fix.detectChanges();
 
@@ -372,7 +374,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID'],
                 added: ['ProductID'],
                 removed: [],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -388,7 +390,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID', 'InStock'],
                 added: ['InStock'],
                 removed: [],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -410,7 +412,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID', 'InStock', 'OrderDate'],
                 added: ['OrderDate'],
                 removed: [],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -427,7 +429,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID', 'OrderDate'],
                 added: [],
                 removed: ['InStock'],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -443,14 +445,14 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['OrderDate'],
                 added: [],
                 removed: ['ProductID'],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
 
         it('selecting a column with shift + mouse click', () => {
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
             const colUnits = grid.getColumnByName('UnitsInStock');
             const colOrderDate = grid.getColumnByName('OrderDate');
             colUnits.selected = true;
@@ -468,7 +470,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['UnitsInStock', 'InStock'],
                 added: ['InStock'],
                 removed: [],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -485,7 +487,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['UnitsInStock', 'InStock', 'OrderDate'],
                 added: ['OrderDate'],
                 removed: [],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -504,7 +506,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['UnitsInStock', 'InStock', 'ProductID'],
                 added: ['ProductID'],
                 removed: ['OrderDate'],
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 cancel: false
             };
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -633,7 +635,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             const companyName = grid.getColumnByName('CompanyName');
             const contactName = grid.getColumnByName('ContactName');
             const contactTitle = grid.getColumnByName('ContactTitle');
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
 
             // verify setting selected true on a column group
             genInf.selected = true;
@@ -669,7 +671,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             const postalCode = grid.getColumnByName('PostalCode');
             const city = grid.getColumnByName('City');
             const address = grid.getColumnByName('Address');
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
 
             // verify setting selected true on a column group
             countryInf.selected = true;
@@ -697,7 +699,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             const companyName = grid.getColumnByName('CompanyName');
             const contactName = grid.getColumnByName('ContactName');
             const contactTitle = grid.getColumnByName('ContactTitle');
-            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+            vi.spyOn(grid.columnSelectionChanging, 'emit');
 
             // verify setting selected true on a column group
             contactName.selectable = false;
@@ -955,7 +957,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             colProductName = grid.getColumnByName('ProductName');
         });
 
-        it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
+        it('Filtering: Verify column selection when filter row is opened ', customFakeAsync(() => {
             grid.allowFiltering = true;
             fix.detectChanges();
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductID');
@@ -1086,7 +1088,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
         });
 
-        it('Moving: Verify that when move a column, it stays selected', fakeAsync(() => {
+        it('Moving: Verify that when move a column, it stays selected', customFakeAsync(() => {
             colProductID.selected = true;
             fix.detectChanges();
 
@@ -1099,7 +1101,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             expect(colProductID.visibleIndex).toEqual(1);
         }));
 
-        it('Paging: Verify column stays selected when change page', fakeAsync(() => {
+        it('Paging: Verify column stays selected when change page', customFakeAsync(() => {
             colProductName.selected = true;
             colProductID.selected = true;
             fix.componentInstance.paging = true;

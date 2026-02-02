@@ -1,3 +1,18 @@
+export interface CompanyData {
+    ID: string;
+    CompanyName: string;
+    ContactName: string;
+    ContactTitle: string;
+    Address: string;
+    City: string;
+    Region: string | null | undefined;
+    PostalCode: string;
+    Country: string;
+    Phone: string;
+    Fax: string;
+    ChildCompanies?: CompanyData[];
+    selected?: boolean;
+}
 
 export const SAMPLE_DATA = [
     {
@@ -453,7 +468,7 @@ export const SAMPLE_DATA = [
     }
 ];
 
-export const HIERARCHICAL_SAMPLE_DATA = [
+export const HIERARCHICAL_SAMPLE_DATA: CompanyData[] = [
     {
         ID: 'ALFKI',
         CompanyName: 'Alfreds Futterkiste',

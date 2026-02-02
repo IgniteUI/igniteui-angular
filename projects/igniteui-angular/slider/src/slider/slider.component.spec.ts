@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,6 +8,8 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const SLIDER_CLASS = '.igx-slider';
 const THUMB_TAG = 'igx-thumb';
 const THUMB_TO_CLASS = '.igx-slider-thumb-to';
@@ -31,10 +33,10 @@ interface FakeDoc {
 
 describe('IgxSlider', () => {
     let fakeDoc: FakeDoc;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fakeDoc = { body: {}, documentElement: {} };
 
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule,
                 SliderInitializeTestComponent,
@@ -54,7 +56,7 @@ describe('IgxSlider', () => {
                 { provide: ɵDIR_DOCUMENT, useFactory: () => fakeDoc }
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base tests', () => {
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
@@ -333,9 +335,9 @@ describe('IgxSlider', () => {
         });
 
         it('should not set value if value is nullish but not zero', () => {
-            spyOn(slider as any, 'isNullishButNotZero').and.returnValue(true);
-            const setValueSpy = spyOn(slider, 'setValue');
-            const positionHandlersAndUpdateTrackSpy = spyOn(slider as any, 'positionHandlersAndUpdateTrack');
+            vi.spyOn(slider as any, 'isNullishButNotZero').mockReturnValue(true);
+            const setValueSpy = vi.spyOn(slider, 'setValue');
+            const positionHandlersAndUpdateTrackSpy = vi.spyOn(slider as any, 'positionHandlersAndUpdateTrack');
 
             slider.writeValue(null);
             fixture.detectChanges();
@@ -351,9 +353,9 @@ describe('IgxSlider', () => {
         });
 
         it('should set value and update track when value is not nullish and not zero', () => {
-            spyOn(slider as any, 'isNullishButNotZero').and.returnValue(false);
-            const setValueSpy = spyOn(slider, 'setValue');
-            const positionHandlersAndUpdateTrackSpy = spyOn(slider as any, 'positionHandlersAndUpdateTrack');
+            vi.spyOn(slider as any, 'isNullishButNotZero').mockReturnValue(false);
+            const setValueSpy = vi.spyOn(slider, 'setValue');
+            const positionHandlersAndUpdateTrackSpy = vi.spyOn(slider as any, 'positionHandlersAndUpdateTrack');
 
             const value = 10;
             slider.writeValue(value);
@@ -364,8 +366,8 @@ describe('IgxSlider', () => {
         });
 
         it('should normalize value by step', () => {
-            spyOn(slider as any, 'isNullishButNotZero').and.returnValue(false);
-            const normalizeByStepSpy = spyOn(slider as any, 'normalizeByStep');
+            vi.spyOn(slider as any, 'isNullishButNotZero').mockReturnValue(false);
+            const normalizeByStepSpy = vi.spyOn(slider as any, 'normalizeByStep');
 
             const value = 10;
             slider.writeValue(value);
@@ -510,7 +512,7 @@ describe('IgxSlider', () => {
         });
 
         // K.D. Removing this functionality because of 0 benefit and lots of issues.
-        xit('should switch from lower to upper thumb and vice versa when the lower value is equal to the upper one', () => {
+        it.skip('should switch from lower to upper thumb and vice versa when the lower value is equal to the upper one', () => {
             slider.value = {
                 lower: 60,
                 upper: 60
@@ -845,9 +847,9 @@ describe('IgxSlider', () => {
 
             expect(slider).toBeDefined();
             expect(slider.upperLabel).toEqual('Winter');
-            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
-            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit').and.callThrough();
-            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit').and.callThrough();
+            const valueChangeSpy = vi.spyOn(slider.valueChange, 'emit');
+            const upperValueChangeSpy = vi.spyOn(slider.upperValueChange, 'emit');
+            const lowerValueChangeSpy = vi.spyOn(slider.lowerValueChange, 'emit');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
             fixture.detectChanges();
@@ -1136,9 +1138,9 @@ describe('IgxSlider', () => {
             expect(fromThumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
-            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
-            const lowerValueChangeSpy = spyOn<any>(slider.lowerValueChange, 'emit').and.callThrough();
-            const upperValueChangeSpy = spyOn<any>(slider.upperValueChange, 'emit').and.callThrough();
+            const valueChangeSpy = vi.spyOn(slider.valueChange, 'emit');
+            const lowerValueChangeSpy = vi.spyOn(slider.lowerValueChange, 'emit');
+            const upperValueChangeSpy = vi.spyOn(slider.upperValueChange, 'emit');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
@@ -1162,7 +1164,8 @@ describe('IgxSlider', () => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(3);
-            expect(upperValueChangeSpy).toHaveBeenCalledOnceWith(5);
+            expect(upperValueChangeSpy).toHaveBeenCalledOnce();
+            expect(upperValueChangeSpy).toHaveBeenCalledWith(5);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 2, upper: 6}, value: {lower: 2, upper: 5}});
         });
 
@@ -1456,7 +1459,7 @@ describe('IgxSlider', () => {
             fix.detectChanges();
 
             const instance = fix.componentInstance;
-            const spyOnDragFinished = spyOn<any>(instance.slider.dragFinished, 'emit').and.callThrough();
+            const spyOnDragFinished = vi.spyOn(instance.slider.dragFinished, 'emit');
             const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS));
             const thumbTo = fix.debugElement.query(By.css(THUMB_TO_CLASS));
             thumbTo.triggerEventHandler('focus', null);
@@ -1759,7 +1762,7 @@ describe('IgxSlider', () => {
     });
 
     describe('Form Component', () => {
-        it('Should correctly bind, update and get updated by ngModel', fakeAsync(() => {
+        it('Should correctly bind, update and get updated by ngModel', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SliderTemplateFormComponent);
             fixture.detectChanges();
             tick();
@@ -1797,7 +1800,7 @@ describe('IgxSlider', () => {
             expect(slider.value).toBe(formControl.value);
         });
 
-        it('Should respect the ngModelOptions updateOn: blur', fakeAsync(() => {
+        it('Should respect the ngModelOptions updateOn: blur', customFakeAsync(() => {
             const fixture = TestBed.createComponent(SliderTemplateFormComponent);
             fixture.componentInstance.updateOn = 'blur';
             fixture.componentInstance.value = 0;
@@ -1842,7 +1845,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
         });
 
-        it('should apply all ARIA properties correctly to both thumbs', fakeAsync(() => {
+        it('should apply all ARIA properties correctly to both thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1884,7 +1887,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-disabled')).toBe('true');
         }));
 
-        it('should apply correct tabindex to thumbs', fakeAsync(() => {
+        it('should apply correct tabindex to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1897,7 +1900,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('tabindex')).toBe('0');
         }));
 
-        it('should apply correct role to thumbs', fakeAsync(() => {
+        it('should apply correct role to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1910,7 +1913,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('role')).toBe('slider');
         }));
 
-        it('should apply aria-valuenow, aria-valuemin, and aria-valuemax to thumbs', fakeAsync(() => {
+        it('should apply aria-valuenow, aria-valuemin, and aria-valuemax to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1928,7 +1931,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-valuemax')).toBe(String(slider.maxValue));
         }));
 
-        it('should apply aria-valuenow to the thumbs', fakeAsync(() => {
+        it('should apply aria-valuenow to the thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1941,7 +1944,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-valuenow')).toBe(String(slider.upperLabel));
         }));
 
-        it('should update aria-valuenow when the slider value changes', fakeAsync(() => {
+        it('should update aria-valuenow when the slider value changes', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1964,7 +1967,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-valuenow')).toBe('70');
         }));
 
-        it('should apply aria-valuetext when labels are provided', fakeAsync(() => {
+        it('should apply aria-valuetext when labels are provided', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -1991,7 +1994,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-valuetext')).toBe('Medium');
         }));
 
-        it('should apply correct aria-label to thumbs', fakeAsync(() => {
+        it('should apply correct aria-label to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -2004,7 +2007,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-label')).toBe('Slider thumb to');
         }));
 
-        it('should apply correct aria-orientation to thumbs', fakeAsync(() => {
+        it('should apply correct aria-orientation to thumbs', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -2017,7 +2020,7 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-orientation')).toBe('horizontal');
         }));
 
-        it('should update aria-disabled when the slider is disabled', fakeAsync(() => {
+        it('should update aria-disabled when the slider is disabled', customFakeAsync(() => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -2253,3 +2256,5 @@ export class SliderWithValueAdjustmentComponent {
         upper: 20
     };
 }
+
+

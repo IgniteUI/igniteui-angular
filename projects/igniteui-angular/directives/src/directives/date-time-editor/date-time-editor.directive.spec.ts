@@ -1,7 +1,7 @@
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { formatDate, registerLocaleData } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject, Renderer2, ElementRef } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,11 +15,13 @@ import { DatePart } from 'igniteui-angular/core';
 import { MaskParsingService } from '../mask/mask-parsing.service';
 import { removeUnicodeSpaces } from 'igniteui-angular/test-utils/helper-utils.spec';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
-        let maskParsingService: jasmine.SpyObj<MaskParsingService>;
-        let renderer2: jasmine.SpyObj<Renderer2>;
+        let maskParsingService: any;
+        let renderer2: any;
         let elementRef: ElementRef;
         let inputFormat: string;
         let displayFormat: string;
@@ -38,9 +40,8 @@ describe('IgxDateTimeEditor', () => {
         beforeEach(() => {
             const mockNativeEl = document.createElement("div");
             (mockNativeEl as any).setSelectionRange = () => {};
-            maskParsingService = jasmine.createSpyObj('MaskParsingService',
-            ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask', 'parseValueFromMask']);
-            renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
+            maskParsingService = { parseMask: vi.fn(), restoreValueFromMask: vi.fn(), parseMaskValue: vi.fn(), applyMask: vi.fn(), parseValueFromMask: vi.fn() };
+            renderer2 = { setAttribute: vi.fn() };
             elementRef = { nativeElement: mockNativeEl };
 
             TestBed.configureTestingModule({
@@ -63,8 +64,8 @@ describe('IgxDateTimeEditor', () => {
 
                 const date = new Date(2000, 5, 6);
                 dateTimeEditor.value = date;
-                spyOn(dateTimeEditor.valueChange, 'emit');
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn(dateTimeEditor.valueChange, 'emit');
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.clear();
                 expect(dateTimeEditor.value).toBeNull();
@@ -185,7 +186,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2015, 11, 12);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
                 const date = dateTimeEditor.value.getDate();
                 const month = dateTimeEditor.value.getMonth();
 
@@ -203,7 +204,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2015, 11, 12);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
                 const date = dateTimeEditor.value.getDate();
 
                 dateTimeEditor.increment();
@@ -222,7 +223,7 @@ describe('IgxDateTimeEditor', () => {
                 const date = new Date(2015, 11, 12, 14, 35, 12);
                 dateTimeEditor.value = date;
                 dateTimeEditor.spinDelta = { date: 2, month: 2, year: 2, hours: 2, minutes: 2, seconds: 2 };
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment();
                 expect(dateTimeEditor.value.getDate()).toEqual(14);
@@ -244,7 +245,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2020, 1, 29);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment();
                 expect(dateTimeEditor.value.getDate()).toEqual(1);
@@ -258,7 +259,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2020, 11, 29);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.Month);
                 expect(dateTimeEditor.value.getMonth()).toEqual(0);
@@ -272,7 +273,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2020, 0, 31);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.Month);
                 expect(dateTimeEditor.value.getDate()).toEqual(29);
@@ -286,7 +287,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2020, 2, 11);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment();
                 expect(dateTimeEditor.value.getDate()).toEqual(12);
@@ -303,7 +304,7 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditor.spinLoop = false;
 
                 dateTimeEditor.value = new Date(2020, 2, 31);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.Date);
                 expect(dateTimeEditor.value.getDate()).toEqual(31);
@@ -320,7 +321,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2020, 2, 31);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
                 dateTimeEditor.increment(DatePart.Date);
                 expect(dateTimeEditor.value.getDate()).toEqual(1);
 
@@ -338,7 +339,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2010, 11, 10, 12, 10, 34, 555);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
                 const minutes = dateTimeEditor.value.getMinutes();
                 const seconds = dateTimeEditor.value.getSeconds();
                 const ms = dateTimeEditor.value.getMilliseconds();
@@ -364,7 +365,7 @@ describe('IgxDateTimeEditor', () => {
                  */
                 // do not use new Date. This test will fail if run between 23:00 and 23:59
                 dateTimeEditor.value = new Date(1900, 1, 1, 12, 0, 0, 0);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
                 const hours = dateTimeEditor.value.getHours();
 
                 dateTimeEditor.increment();
@@ -381,7 +382,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2019, 1, 20, 20, 5, 59);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.Seconds);
                 expect(dateTimeEditor.value.getMinutes()).toEqual(5);
@@ -395,7 +396,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2019, 1, 20, 20, 59, 12);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.Minutes);
                 expect(dateTimeEditor.value.getHours()).toEqual(20);
@@ -409,7 +410,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2019, 1, 20, 23, 13, 12);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.Hours);
                 expect(dateTimeEditor.value.getDate()).toEqual(20);
@@ -423,7 +424,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
                 dateTimeEditor.spinLoop = false;
                 dateTimeEditor.value = new Date(2019, 1, 20, 23, 0, 12);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.Hours);
                 expect(dateTimeEditor.value.getHours()).toEqual(23);
@@ -439,7 +440,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.value = new Date(2019, 1, 20, 23, 15, 0);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.Hours);
                 expect(dateTimeEditor.value.getHours()).toEqual(0);
@@ -458,7 +459,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditor.mask).toEqual('00 LL 0000-00 00-00-00');
 
                 dateTimeEditor.value = new Date(2020, 5, 12, 11, 15, 14);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+                vi.spyOn((dateTimeEditor as any), 'inputValue', 'get').mockReturnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.AmPm);
                 expect(dateTimeEditor.value).toEqual(new Date(2020, 5, 12, 23, 15, 14));
@@ -512,8 +513,8 @@ describe('IgxDateTimeEditor', () => {
         let inputElement: DebugElement;
         let dateTimeEditorDirective: IgxDateTimeEditorDirective;
         describe('Key interaction tests', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDateTimeEditorSampleComponent,
@@ -521,7 +522,7 @@ describe('IgxDateTimeEditor', () => {
                         IgxDateTimeEditorShadowDomComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(async () => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorSampleComponent);
                 fixture.detectChanges();
@@ -812,7 +813,7 @@ describe('IgxDateTimeEditor', () => {
                 result = formatDate(date, 'longTime', 'en-US').normalize("NFKD");
                 expect(removeUnicodeSpaces(inputElement.nativeElement.value)).toContain(result);
             });
-            it('should be able to apply custom display format.', fakeAsync(() => {
+            it('should be able to apply custom display format.', customFakeAsync(() => {
                 // default format
                 const date = new Date(2003, 3, 5, 0, 0, 0, 0);
                 fixture.componentInstance.date = new Date(2003, 3, 5, 0, 0, 0, 0);
@@ -897,7 +898,7 @@ describe('IgxDateTimeEditor', () => {
                 inputDate = ControlsFunction.formatDate(date, longDateOptions, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
             });
-            it('should clear input date on clear()', fakeAsync(() => {
+            it('should clear input date on clear()', customFakeAsync(() => {
                 const date = new Date(2003, 3, 5);
                 fixture.componentInstance.date = date;
                 fixture.detectChanges();
@@ -908,7 +909,7 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditorDirective.clear();
                 expect(inputElement.nativeElement.value).toEqual('');
             }));
-            it('should move the caret to the start/end of the portion with CTRL + arrow left/right keys.', fakeAsync(() => {
+            it('should move the caret to the start/end of the portion with CTRL + arrow left/right keys.', customFakeAsync(() => {
                 const date = new Date(2003, 4, 5);
                 fixture.componentInstance.date = date;
                 fixture.detectChanges();
@@ -1009,8 +1010,8 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual('../../.... ..:..:..:...');
             });
-            it('should be en/disabled when the input is en/disabled.', fakeAsync(() => {
-                spyOn(dateTimeEditorDirective, 'setDisabledState');
+            it('should be en/disabled when the input is en/disabled.', customFakeAsync(() => {
+                vi.spyOn(dateTimeEditorDirective, 'setDisabledState');
                 fixture.componentInstance.disabled = true;
                 fixture.detectChanges();
                 tick();
@@ -1027,7 +1028,7 @@ describe('IgxDateTimeEditor', () => {
                 const newDate = new Date(2004, 11, 18);
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
                 fixture.detectChanges();
-                spyOn(dateTimeEditorDirective.valueChange, 'emit');
+                vi.spyOn(dateTimeEditorDirective.valueChange, 'emit');
 
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
@@ -1045,7 +1046,7 @@ describe('IgxDateTimeEditor', () => {
                 const newDate = new Date(2012, 11, 12);
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
                 fixture.detectChanges();
-                spyOn(dateTimeEditorDirective.valueChange, 'emit');
+                vi.spyOn(dateTimeEditorDirective.valueChange, 'emit');
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulateTyping('121212', inputElement);
@@ -1058,7 +1059,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.componentInstance.minDate = new Date(2020, 1, 20);
                 fixture.componentInstance.maxDate = new Date(2020, 1, 25);
                 fixture.detectChanges();
-                spyOn(dateTimeEditorDirective.validationFailed, 'emit');
+                vi.spyOn(dateTimeEditorDirective.validationFailed, 'emit');
 
                 // date within the range
                 let inputDate = '22-02-2020';
@@ -1103,7 +1104,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.componentInstance.minDate = new Date(2000, 1, 1);
                 fixture.componentInstance.maxDate = new Date(2050, 1, 25);
                 fixture.detectChanges();
-                spyOn(dateTimeEditorDirective.validationFailed, 'emit').and.callThrough();
+                vi.spyOn(dateTimeEditorDirective.validationFailed, 'emit');
 
                 // valid date
                 let inputDate = '22-02-2020';
@@ -1128,7 +1129,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
-            it('should properly increment/decrement date-time portions on wheel', fakeAsync(() => {
+            it('should properly increment/decrement date-time portions on wheel', customFakeAsync(() => {
                 fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
                 fixture.detectChanges();
                 const today = new Date(2021, 12, 12);
@@ -1304,14 +1305,14 @@ describe('IgxDateTimeEditor', () => {
 
         describe('Form control tests: ', () => {
             let form: UntypedFormGroup;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDateTimeEditorFormComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorFormComponent);
                 fixture.detectChanges();
@@ -1320,7 +1321,7 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditorDirective = inputElement.injector.get(IgxDateTimeEditorDirective);
             });
             it('should validate properly when used as form control.', () => {
-                spyOn(dateTimeEditorDirective.validationFailed, 'emit').and.callThrough();
+                vi.spyOn(dateTimeEditorDirective.validationFailed, 'emit');
                 const dateEditor = form.controls['dateEditor'];
                 const inputDate = '99-99-9999';
 
@@ -1340,7 +1341,7 @@ describe('IgxDateTimeEditor', () => {
             it('should validate properly min/max value when used as form control.', () => {
                 fixture.componentInstance.minDate = new Date(2020, 2, 20);
                 fixture.componentInstance.maxDate = new Date(2020, 2, 25);
-                spyOn(dateTimeEditorDirective.validationFailed, 'emit');
+                vi.spyOn(dateTimeEditorDirective.validationFailed, 'emit');
                 const dateEditor = form.controls['dateEditor'];
 
                 let inputDate = '21-03-2020';

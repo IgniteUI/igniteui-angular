@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -12,6 +12,8 @@ import { DropPosition } from 'igniteui-angular/grids/core';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { SortingDirection } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxGrid - multi-column headers #grid', () => {
     let contactInf;
     let countryInf;
@@ -22,8 +24,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
     let countryCol;
     let emptyCol;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
@@ -31,7 +33,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 CollapsibleGroupsDynamicColComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests', () => {
         let fixture;
@@ -58,7 +60,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf);
             GridFunctions.verifyGroupIsExpanded(fixture, contactInf, false);
 
-            spyOn(addressInf.collapsibleChange, 'emit').and.callThrough();
+            vi.spyOn(addressInf.collapsibleChange, 'emit');
             addressInf.collapsible = false;
             fixture.detectChanges();
 
@@ -108,7 +110,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
 
         it('verify setting expanded to a column group', () => {
-            spyOn(addressInf.expandedChange, 'emit').and.callThrough();
+            vi.spyOn(addressInf.expandedChange, 'emit');
             addressInf.expanded = false;
             fixture.detectChanges();
 
@@ -133,7 +135,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
 
         it('verify setting expanded to a column group form UI', () => {
-            spyOn(addressInf.expandedChange, 'emit').and.callThrough();
+            vi.spyOn(addressInf.expandedChange, 'emit');
             GridFunctions.clickGroupExpandIndicator(fixture, addressInf);
             fixture.detectChanges();
 
@@ -162,9 +164,9 @@ describe('IgxGrid - multi-column headers #grid', () => {
             countryCol.visibleWhenCollapsed = false;
             regionInf.visibleWhenCollapsed = false;
             fixture.detectChanges();
-            spyOn(countryCol.visibleWhenCollapsedChange, 'emit').and.callThrough();
-            spyOn(cityInf.visibleWhenCollapsedChange, 'emit').and.callThrough();
-            spyOn(emptyCol.visibleWhenCollapsedChange, 'emit').and.callThrough();
+            vi.spyOn(countryCol.visibleWhenCollapsedChange, 'emit');
+            vi.spyOn(cityInf.visibleWhenCollapsedChange, 'emit');
+            vi.spyOn(emptyCol.visibleWhenCollapsedChange, 'emit');
 
             GridFunctions.verifyGroupIsExpanded(fixture, countryInf);
             GridFunctions.verifyColumnsAreHidden([countryCol, emptyCol, regionInf], false, 13);
@@ -208,9 +210,9 @@ describe('IgxGrid - multi-column headers #grid', () => {
             countryInf.expanded = false;
             fixture.detectChanges();
 
-            spyOn(regionInf.visibleWhenCollapsedChange, 'emit').and.callThrough();
-            spyOn(cityInf.visibleWhenCollapsedChange, 'emit').and.callThrough();
-            spyOn(countryCol.visibleWhenCollapsedChange, 'emit').and.callThrough();
+            vi.spyOn(regionInf.visibleWhenCollapsedChange, 'emit');
+            vi.spyOn(cityInf.visibleWhenCollapsedChange, 'emit');
+            vi.spyOn(countryCol.visibleWhenCollapsedChange, 'emit');
 
             // set visibleWhenCollapsed to true
             regionInf.visibleWhenCollapsed = true;
@@ -283,7 +285,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, generalInf, true, false, ['remove', 'add']);
         });
 
-        it('verify setting templates by property', fakeAsync(() => {
+        it('verify setting templates by property', customFakeAsync(() => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf);
 
             // Set template
@@ -307,19 +309,17 @@ describe('IgxGrid - multi-column headers #grid', () => {
         }));
     });
 
-    describe('Dynamic Columns Tests', () => {
+    describe.skip('Dynamic Columns Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 
         beforeEach(() => {
-            pending('The test will work when use Angular 9');
             fixture = TestBed.createComponent(CollapsibleGroupsDynamicColComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         });
 
         it('verify adding columns', () => {
-            pending('The test will work when use Angular 9');
             const firstGroup = GridFunctions.getColGroup(grid, 'First');
             GridFunctions.verifyGroupIsExpanded(fixture, firstGroup, false);
             fixture.detectChanges();
@@ -340,7 +340,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
 
         it('verify deleting columns', () => {
-            pending('The test will work when use Angular 9');
             const secondGroup = GridFunctions.getColGroup(grid, 'Second');
             GridFunctions.verifyGroupIsExpanded(fixture, secondGroup);
             fixture.detectChanges();
@@ -361,7 +360,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
 
         it('verify updating columns', () => {
-            pending('The test will work when use Angular 9');
             const secondGroup = GridFunctions.getColGroup(grid, 'Second');
             const firstGroup = GridFunctions.getColGroup(grid, 'First');
 
@@ -397,7 +395,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         let fixture;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -551,7 +549,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf, true, true);
         });
 
-        it('Moving: Verify that expanded state is preserved when move column group', fakeAsync(() => {
+        it('Moving: Verify that expanded state is preserved when move column group', customFakeAsync(() => {
             const generalInf = GridFunctions.getColGroup(grid, 'General Information');
 
             expect(addressInf.expanded).toBeTruthy();
