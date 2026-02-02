@@ -1,3 +1,4 @@
+import { IgxQueryBuilderComponent } from "../../../igniteui-angular/query-builder";
 import { IgxGridComponent } from "../../../igniteui-angular/grids/grid";
 import { IgxHierarchicalGridComponent } from "../../../igniteui-angular/grids/hierarchical-grid";
 import {
@@ -12,6 +13,7 @@ import { IgxPaginatorToken } from "../../../igniteui-angular/paginator/src/pagin
 import { IgxColumnGroupComponent } from "../../../igniteui-angular/grids/core/src/columns/column-group.component";
 import { IgxColumnComponent } from "../../../igniteui-angular/grids/core/src/columns/column.component";
 import { IgxColumnLayoutComponent } from "../../../igniteui-angular/grids/core/src/columns/column-layout.component";
+import { IgxQueryBuilderHeaderComponent } from "../../../igniteui-angular/query-builder/src/query-builder/query-builder-header.component";
 import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-editing-actions.component";
 import { IgxActionStripActionsToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-pinning-actions.component";
@@ -32,6 +34,7 @@ export const registerComponents = [
   IgxTreeGridComponent,
   IgxPivotGridComponent,
   IgxPivotDataSelectorComponent,
+  IgxQueryBuilderComponent,
 ];
 
 //// WARNING: Code below this line is auto-generated and any modifications will be overwritten
@@ -828,6 +831,29 @@ export var registerConfig = [
       "isLoading",
       "selectRowOnClick",
     ],
+  },
+  {
+    component: IgxQueryBuilderComponent,
+    selector: "igc-query-builder",
+    parents: [],
+    contentQueries: [],
+    additionalProperties: [],
+    methods: ["canCommit", "commit", "discard"],
+    templateProps: ["searchValueTemplate"],
+    boolProps: [
+      "showEntityChangeDialog",
+      "disableEntityChange",
+      "disableReturnFieldsChange",
+    ],
+  },
+  {
+    component: IgxQueryBuilderHeaderComponent,
+    selector: "igc-query-builder-header",
+    parents: [IgxQueryBuilderComponent],
+    contentQueries: [],
+    additionalProperties: [],
+    methods: [],
+    boolProps: ["showLegend"],
   },
   {
     component: IgxRowIslandComponent,
