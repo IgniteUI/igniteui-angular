@@ -2029,7 +2029,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.navigateTo(50, 16);
             fix.detectChanges();
-            await wait(60);
+            await wait(100);
             fix.detectChanges();
 
             expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');
