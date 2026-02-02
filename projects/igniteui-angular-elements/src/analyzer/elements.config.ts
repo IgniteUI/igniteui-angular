@@ -45,7 +45,13 @@ export var registerConfig = [
       IgxHierarchicalGridComponent,
       IgxRowIslandComponent,
     ],
-    contentQueries: [],
+    contentQueries: [
+      {
+        property: "actionButtons",
+        childType: IgxActionStripActionsToken,
+        isQueryList: true,
+      },
+    ],
     additionalProperties: [{ name: "cdr", writable: true }],
     methods: ["show", "hide"],
     boolProps: ["hidden"],
