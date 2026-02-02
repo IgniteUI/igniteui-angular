@@ -36,7 +36,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
         });
     }));
 

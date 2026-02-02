@@ -40,7 +40,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
         });
     }));
 
@@ -50,7 +50,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
             });
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fixture.detectChanges();
