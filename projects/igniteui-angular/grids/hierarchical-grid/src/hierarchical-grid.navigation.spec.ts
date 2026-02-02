@@ -172,13 +172,13 @@ describe('IgxHierarchicalGrid Navigation', () => {
         it('should allow navigating to start in child grid when child grid target row moves outside the parent view port.', async () => {
             hierarchicalGrid.verticalScrollContainer.scrollTo(2);
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const horizontalScrDir = childGrid.dataRowList.toArray()[0].virtDirRow;
             horizontalScrDir.scrollTo(6);
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             const childLastCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[3];
             GridFunctions.focusCell(fixture, childLastCell);
