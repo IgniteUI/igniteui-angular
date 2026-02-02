@@ -2,6 +2,11 @@ import { Component, DestroyRef, HostBinding, inject, Input } from '@angular/core
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 
+
+/* wcElementTag: igc-query-builder-header */
+/**
+* @igxParent IgxQueryBuilderComponent
+*/
 @Component({
     selector: 'igx-query-builder-header',
     templateUrl: 'query-builder-header.component.html'
