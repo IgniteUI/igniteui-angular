@@ -516,7 +516,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (this.igxForScrollOrientation === 'vertical' && this.viewObserver) {
             this._zone.runOutsideAngular(() => {
                 if (this.platformUtil.isBrowser) {
-                    this.viewObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => this.viewResizeNotify.next(entries));
                     this.viewObserver.observe(target);
                 }
             });
