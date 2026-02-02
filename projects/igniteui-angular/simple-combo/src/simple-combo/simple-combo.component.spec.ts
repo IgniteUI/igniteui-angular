@@ -69,7 +69,7 @@ describe('IgxSimpleCombo', () => {
             get: mockNgControl
         };
         mockSelection.get.mockReturnValue(new Set([]));
-        const platformUtil = null;
+        const platformUtil: any = { KEYMAP: {} };
         const mockDocument = {
             'body': document.createElement('div'),
             'defaultView': {
@@ -176,6 +176,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toEqual(selectedItem);
         });
         it('should emit owner on `opening` and `closing`', () => {
+            platformUtil.KEYMAP.TAB = 'Tab';
             combo.ngOnInit();
             vi.spyOn(combo.opening, 'emit');
             vi.spyOn(combo.closing, 'emit');
@@ -211,6 +212,7 @@ describe('IgxSimpleCombo', () => {
             combo.handleClosing(inputEvent);
             expect(inputEvent.cancel).toEqual(true);
             sub.unsubscribe();
+            platformUtil.KEYMAP = {};
         });
         it('should fire selectionChanging event on item selection', () => {
             const dropdown = { selectItem: vi.fn() };
@@ -1071,6 +1073,57 @@ describe('IgxSimpleCombo', () => {
             tick();
             fixture.detectChanges();
             expect(combo.collapsed).toBeTruthy();
+
+            combo.open();
+            fixture.detectChanges();
+
+            combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+            fixture.detectChanges();
+            expect(dropdown.focusedItem).toBeTruthy();
+            expect(dropdown.focusedItem.index).toEqual(1);
+
+            UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', dropdownContent);
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBeTruthy();
+        }));
+
+        it('should close the dropdown list on pressing Escape key and preserve the focus', customFakeAsync(() => {
+            combo.comboInput.nativeElement.focus();
+            fixture.detectChanges();
+
+            combo.open();
+            fixture.detectChanges();
+
+            const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+
+            combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Escape', dropdownContent);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBeTruthy();
+            expect(document.activeElement).toEqual(input.nativeElement);
+        }));
+
+        it('should clear the selection and preserve the focus when the combo is collapsed and Escape key is pressed', customFakeAsync(() => {
+            combo.comboInput.nativeElement.focus();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
+
+            combo.select(combo.data[2][combo.valueKey]);
+            fixture.detectChanges();
+            expect(combo.selection).toBeDefined();
+
+            combo.handleKeyDown(UIInteractions.getKeyboardEvent('keydown', 'Escape'));
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
+            expect(combo.selection).not.toBeDefined();
         }));
 
         it('should clear the selection on tab/blur if the search text does not match any value', () => {
@@ -1110,36 +1163,6 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.selection).toBeDefined()
             expect(combo.displayValue).toEqual('Wisconsin');
-        });
-
-        it('should toggle combo dropdown on Enter of the focused toggle icon', customFakeAsync(() => {
-            vi.spyOn(combo, 'toggle');
-            const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`));
-
-            UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
-            tick();
-            fixture.detectChanges();
-            expect(combo.toggle).toHaveBeenCalledTimes(1);
-            expect(combo.collapsed).toEqual(false);
-
-            UIInteractions.triggerEventHandlerKeyDown('Enter', toggleBtn);
-            tick();
-            fixture.detectChanges();
-            expect(combo.toggle).toHaveBeenCalledTimes(2);
-            expect(combo.collapsed).toEqual(true);
-        }));
-
-        it('should clear the selection on Enter of the focused clear icon', () => {
-            combo.select(combo.data[2][combo.valueKey]);
-            fixture.detectChanges();
-            expect(combo.selection).toBeDefined()
-            expect(input.nativeElement.value).toEqual('Massachusetts');
-
-            const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-            UIInteractions.triggerEventHandlerKeyDown('Enter', clearBtn);
-            fixture.detectChanges();
-            expect(input.nativeElement.value.length).toEqual(0);
-            expect(combo.selection).not.toBeDefined();
         });
 
         it('should not filter the data when disableFiltering is true', () => {
