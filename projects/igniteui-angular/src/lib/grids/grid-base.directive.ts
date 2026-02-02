@@ -31,7 +31,9 @@ import {
     ViewChild,
     ViewChildren,
     ViewContainerRef,
-    DOCUMENT
+    DOCUMENT,
+    SimpleChanges,
+    OnChanges
 } from '@angular/core';
 import { areEqualArrays, columnFieldPath, formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
@@ -210,7 +212,7 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
-    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit, OnChanges {
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
@@ -231,6 +233,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @WatchChanges()
     @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
@@ -4327,6 +4330,15 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._cdrRequests) {
             this.resetNotifyChanges();
             this.cdr.detectChanges();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.autoGenerate?.currentValue && this.data.length > 0 && this.columnList.length === 0) {
+            this.setupColumns()
         }
     }
 
