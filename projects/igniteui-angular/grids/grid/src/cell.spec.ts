@@ -156,7 +156,6 @@ describe('IgxGrid - Cell component #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, VirtualGridComponent],
-                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
