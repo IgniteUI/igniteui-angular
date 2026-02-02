@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } from '../../../test-utils/tree-grid-components.spec';
@@ -10,15 +10,15 @@ import { DefaultSortingStrategy } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('IgxTreeGrid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridGroupingComponent,
                 IgxTreeGridGroupByAreaTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fix;
     let treeGrid: IgxTreeGridComponent;

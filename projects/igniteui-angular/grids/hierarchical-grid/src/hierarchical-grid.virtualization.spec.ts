@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -21,8 +21,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
@@ -32,13 +32,14 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
         });
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+        await fixture.whenStable();
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
     });
@@ -443,8 +444,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
@@ -454,7 +455,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should show scrollbar after expanding a row with data loaded after initial view initialization', async () => {
         const fixture = TestBed.createComponent(IgxHierarchicalGridNoScrollTestComponent);

@@ -1,18 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixtureAutoDetect, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
 import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
 
 import { describe, it, expect, beforeEach } from 'vitest';
 describe('Filter', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [DeclarativeListTestComponent, DynamicListTestComponent],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should filter declaratively created list', () => {
         const fixture = TestBed.createComponent(DeclarativeListTestComponent);

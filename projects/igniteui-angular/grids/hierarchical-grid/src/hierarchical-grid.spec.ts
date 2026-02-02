@@ -22,8 +22,8 @@ import { IGridCreatedEventArgs } from './events';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
@@ -44,7 +44,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }))
+    });
 
     describe('Init IgxHierarchicalGrid #hGrid', () => {
         let fixture;

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxNavbarComponent, IgxNavbarTitleDirective, IgxNavbarActionDirective } from './navbar.component';
 
@@ -10,8 +10,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
 describe('IgxNavbar', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NavbarIntializeTestComponent,
                 NavbarCustomActionIconTestComponent,
@@ -21,7 +21,7 @@ describe('IgxNavbar', () => {
                 NavbarCustomIgxIconDirectiveTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fixture; let component; let domNavbar;
 

@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
@@ -56,8 +56,8 @@ describe('Excel Exporter', () => {
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ReorderedColumnsComponent,
@@ -93,25 +93,25 @@ describe('Excel Exporter', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         exporter = new IgxExcelExporterService();
         actualData = new FileContentData();
 
         // Spy the saveBlobToFile method so the files are not really created
         vi.spyOn(ExportUtilities as any, 'saveBlobToFile');
-    }));
+    });
 
-    afterEach(waitForAsync(() => {
+    afterEach(async () => {
         exporter.columnExporting.unsubscribe();
         exporter.rowExporting.unsubscribe();
-    }));
+    });
 
     describe('', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('GridExcelExport', 50);
-        }));
+        });
 
         it('should export grid as displayed.', async () => {
             const currentGrid: IgxGridComponent = null;
@@ -809,13 +809,13 @@ describe('Excel Exporter', () => {
     describe('', () => {
         let fix;
         let hGrid;
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('HierarchicalGridExcelExport');
             fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
             fix.detectChanges();
 
             hGrid = fix.componentInstance.hGrid;
-        }));
+        });
 
         it('should export hierarchical grid', async () => {
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalData);
@@ -1082,13 +1082,13 @@ describe('Excel Exporter', () => {
     describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('TreeGridExcelExport', 50);
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('should export tree grid as displayed with all groups expanded.', async () => {
             await exportAndVerify(treeGrid, options, actualData.treeGridData);
@@ -1268,13 +1268,13 @@ describe('Excel Exporter', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('MultiColumnHeaderGridExcelExport');
             fix = TestBed.createComponent(MultiColumnHeadersExportComponent);
             fix.detectChanges();
 
             grid = fix.componentInstance.grid;
-        }));
+        });
 
         it('should export grid with multi column headers', async () => {
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersData, false);
@@ -1362,9 +1362,9 @@ describe('Excel Exporter', () => {
         let fix;
         let grid: any;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('GirdSummariesExcelExport', 50);
-        }));
+        });
 
         it('should export grid with summaries based on summaryCalculationMode', async () => {
             fix = TestBed.createComponent(GroupedGridWithSummariesComponent);
@@ -1501,11 +1501,11 @@ describe('Excel Exporter', () => {
         let fix;
         let grid: IgxPivotGridComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('PivotGridExcelExport');
             fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
             fix.detectChanges();
-        }));
+        });
 
         it('should export pivot grid', async () => {
 

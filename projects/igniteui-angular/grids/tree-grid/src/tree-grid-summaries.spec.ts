@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxTreeGridSummariesComponent,
@@ -21,8 +21,8 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     const DEBOUNCETIME = 30;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSummariesComponent,
@@ -33,13 +33,13 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 IgxTreeGridSummariesKeyScroliingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
         });
-    }));
+    });
 
     describe('', () => {
         let fix;

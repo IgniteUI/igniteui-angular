@@ -1,6 +1,6 @@
 import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -82,8 +82,8 @@ describe('igxSelect', () => {
         expect(select.toggle).toHaveBeenCalledTimes(toggleCallCounter);
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxSelectSimpleComponent,
@@ -99,7 +99,7 @@ describe('igxSelect', () => {
                 IgxSelectWithIdComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         UIInteractions.clearOverlay();

@@ -1,5 +1,5 @@
 
-import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
@@ -19,15 +19,15 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
     let treeGrid: IgxTreeGridComponent;
     let gridContent: DebugElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Create', () => {
         describe('Child Collection', () => {

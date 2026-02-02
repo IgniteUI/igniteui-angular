@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent } from './snackbar.component';
@@ -10,15 +10,15 @@ import { IgxButtonDirective } from '../../../directives/src/directives/button/bu
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxSnackbar', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 SnackbarInitializeTestComponent,
                 SnackbarCustomContentComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fixture: ComponentFixture<SnackbarInitializeTestComponent>;
     let snackbar: IgxSnackbarComponent;
@@ -187,22 +187,22 @@ describe('IgxSnackbar', () => {
 });
 
 describe('IgxSnackbar with custom content', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 SnackbarCustomContentComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fixture: ComponentFixture<SnackbarCustomContentComponent>;
     let snackbar: IgxSnackbarComponent;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SnackbarCustomContentComponent);
         fixture.detectChanges();
         snackbar = fixture.componentInstance.snackbar;
-    }));
+    });
 
     it('should display a message, a custom content element and a button', () => {
         fixture.componentInstance.text = 'Undo';

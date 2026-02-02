@@ -1,5 +1,5 @@
 
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponent, IgxTreeGridFilteringRowEditingComponent } from '../../../test-utils/tree-grid-components.spec';
@@ -18,8 +18,8 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     let fix;
     let grid;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridFilteringComponent,
@@ -27,13 +27,13 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 IgxTreeGridFilteringESFTemplatesComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
         fix.detectChanges();
         grid = fix.componentInstance.treeGrid;
-    }));
+    });
 
     it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
         for (let i = 0; i < 5; i++) {
@@ -351,7 +351,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     describe('Tree grid ESF', () => {
         let tGrid: IgxTreeGridComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
             tGrid = fix.componentInstance.treeGrid;
 
@@ -360,7 +360,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tGrid.allowFiltering = true;
             tGrid.filterMode = FilterMode.excelStyleFilter;
             fix.detectChanges();
-        }));
+        });
 
         it('Should render and expand tree nodes correctly', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
@@ -776,7 +776,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     describe('Tree grid ESF templates', () => {
         let tGrid: IgxTreeGridComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridFilteringESFTemplatesComponent);
             tGrid = fix.componentInstance.treeGrid;
 
@@ -785,7 +785,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tGrid.allowFiltering = true;
             tGrid.filterMode = FilterMode.excelStyleFilter;
             fix.detectChanges();
-        }));
+        });
 
         it('Should use custom templates for ESF components instead of default ones.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
@@ -854,11 +854,11 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
     describe('Filtering: Row editing', () => {
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('should remove a filtered parent row from the filtered list', fakeAsync(() => {
             const newCellValue = 'John McJohn';

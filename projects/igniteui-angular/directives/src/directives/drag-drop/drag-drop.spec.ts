@@ -1,5 +1,5 @@
 import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2, inject } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait} from '../../../../test-utils/ui-interactions.spec';
 import { first } from 'rxjs/operators';
@@ -22,12 +22,12 @@ describe('General igxDrag/igxDrop', () => {
     let dropAreaRects = { top: 0, left: 0, right: 0, bottom: 0};
     let dragDirsRects = [{ top: 0, left: 0, right: 0, bottom: 0}];
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [TestDragDropComponent]
         })
         .compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(TestDragDropComponent);
@@ -1392,7 +1392,7 @@ describe('General igxDrag/igxDrop', () => {
 });
 
 describe('Linked igxDrag/igxDrop ', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [
                 TestDragDropLinkedSingleComponent,
@@ -1401,7 +1401,7 @@ describe('Linked igxDrag/igxDrop ', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
     it('should trigger enter/onDrop/leave events when element is dropped inside and is linked with it.', async () => {
         const fix = TestBed.createComponent(TestDragDropLinkedSingleComponent);
@@ -1874,12 +1874,12 @@ describe('Linked igxDrag/igxDrop ', () => {
 });
 
 describe('Nested igxDrag elements', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [TestDragDropNestedComponent]
         })
         .compileComponents();
-    }));
+    });
 
     it('should correctly move nested element using drag handle.', async () => {
         const fix = TestBed.createComponent(TestDragDropNestedComponent);

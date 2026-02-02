@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { wait } from '../../../test-utils/ui-interactions.spec';
@@ -14,13 +14,13 @@ describe('IgxGrid - CRUD operations #grid', () => {
     let grid;
     let data;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, DefaultCRUDGridComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(DefaultCRUDGridComponent);

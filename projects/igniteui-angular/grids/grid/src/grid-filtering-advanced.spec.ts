@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -25,8 +25,8 @@ import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchica
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridAdvancedFilteringColumnGroupComponent,
@@ -44,7 +44,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('General tests - ', () => {
         let fix: ComponentFixture<IgxGridAdvancedFilteringComponent>;

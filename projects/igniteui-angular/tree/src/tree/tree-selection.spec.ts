@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangeDetectorRef, ElementRef, EventEmitter, QueryList } from '@angular/core';
 import { IgxTreeComponent } from './tree.component';
@@ -13,15 +13,15 @@ import { IgxTreeSelectionSampleComponent, IgxTreeSimpleComponent } from './tree-
 
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 describe('IgxTree - Selection #treeView', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeSimpleComponent,
                 IgxTreeSelectionSampleComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('UI Interaction tests - None & BiState', () => {
         let fix;

@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
@@ -27,13 +27,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoScrollsComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(NoScrollsComponent);
@@ -216,19 +216,20 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VirtualGridComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(() => {
+        beforeEach(async () => {
             TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
             });
             fix = TestBed.createComponent(VirtualGridComponent);
+            await fix.whenStable();
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
@@ -706,13 +707,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     });
 
     describe('Group By navigation ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     IgxGridGroupByComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
         let fix;
         let grid: IgxGridComponent;

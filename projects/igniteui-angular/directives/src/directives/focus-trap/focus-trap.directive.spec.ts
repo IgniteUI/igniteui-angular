@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusTrapDirective } from './focus-trap.directive';
 
@@ -9,11 +9,11 @@ import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('igxFocusTrap', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, TrapFocusTestComponent]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

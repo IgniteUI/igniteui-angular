@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from './radio.component';
@@ -9,8 +9,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxRadio', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxRadioComponent,
@@ -24,7 +24,7 @@ describe('IgxRadio', () => {
                 RadioInvisibleLabelComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Init a radio', () => {
         const fixture = TestBed.createComponent(InitRadioComponent);

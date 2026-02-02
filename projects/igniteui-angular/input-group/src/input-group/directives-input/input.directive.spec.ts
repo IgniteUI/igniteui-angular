@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement, inject } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../input-group.component';
@@ -26,8 +26,8 @@ const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InputComponent,
                 TextareaComponent,
@@ -46,7 +46,7 @@ describe('IgxInput', () => {
                 FileInputFormComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes an input.', () => {
         const fixture = TestBed.createComponent(InputComponent);

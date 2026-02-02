@@ -1,5 +1,5 @@
 import { Component, ComponentRef, ElementRef, HostBinding, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
@@ -180,9 +180,9 @@ describe('igxOverlay', () => {
         { pattern: /:\s/g, replacement: ':' },
         { pattern: /red;/, replacement: 'red' }
     ];
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         UIInteractions.clearOverlay();
-    }));
+    });
 
     afterAll(() => {
         UIInteractions.clearOverlay();
@@ -318,17 +318,17 @@ describe('igxOverlay', () => {
     describe('Unit Tests: ', () => {
         let outlet: any;
         let outletRef: ElementRef;
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             outlet = document.createElement('div');
             outletRef = new ElementRef(outlet);
-            TestBed.configureTestingModule({
+            await TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent],
                 providers: [
                     { provide: ElementRef, useValue: outletRef },
                     IgxOverlayOutletDirective
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('OverlayElement should return a div attached to Document\'s body.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -1370,11 +1370,11 @@ describe('igxOverlay', () => {
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
             });
-        }));
+        });
         it('Should properly initialize Scroll Strategy - Block.', fakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
@@ -1544,11 +1544,11 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
             }).compileComponents();
-        }));
+        });
 
         // 1. Positioning Strategies
         // 1.1 Global (show components in the window center - default).
@@ -3531,11 +3531,11 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests - Scroll Strategies: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
             });
-        }));
+        });
         // If adding a component near the visible window borders(left,right,up,down)
         // it should be partially hidden and based on scroll strategy:
         it('Should not allow scrolling with scroll strategy is not passed.', fakeAsync(async () => {
@@ -4395,11 +4395,11 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests p3 (IgniteUI components): ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
             }).compileComponents();
-        }));
+        });
         it(`Should properly be able to render components that have no initial content(IgxCalendar, IgxAvatar)`, fakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();

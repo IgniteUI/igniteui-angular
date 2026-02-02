@@ -1,5 +1,5 @@
 import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusDirective } from './focus.directive';
 
@@ -12,8 +12,8 @@ import { IgxSwitchComponent } from '../../../../switch/src/switch/switch.compone
 
 import { describe, it, expect, beforeEach } from 'vitest';
 describe('igxFocus', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 SetFocusComponent,
@@ -22,7 +22,7 @@ describe('igxFocus', () => {
                 CheckboxPickerComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('The second element should be focused', fakeAsync(() => {
         const fix = TestBed.createComponent(SetFocusComponent);

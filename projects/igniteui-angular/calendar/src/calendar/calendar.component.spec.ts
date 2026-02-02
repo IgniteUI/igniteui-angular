@@ -4,7 +4,6 @@ import {
     tick,
     fakeAsync,
     flush,
-    waitForAsync,
     ComponentFixture,
 } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
@@ -129,8 +128,8 @@ describe("IgxCalendar - ", () => {
 
     describe("Basic -", () => {
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxCalendarSampleComponent,
@@ -139,20 +138,20 @@ describe("IgxCalendar - ", () => {
                     IgxCalendarValueComponent,
                 ],
             }).compileComponents();
-        }));
+        });
 
         describe("Calendar - ", () => {
             let fixture: ComponentFixture<any>;
             let calendar: IgxCalendarComponent;
             let dom: DebugElement;
 
-            beforeEach(waitForAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
 
                 fixture.detectChanges();
                 calendar = fixture.componentInstance.calendar;
                 dom = fixture.debugElement;
-            }));
+            });
             afterEach(() => {
                 fixture = undefined;
                 calendar = undefined;
@@ -1108,12 +1107,12 @@ describe("IgxCalendar - ", () => {
             describe("Keyboard Navigation - ", () => {
                 let component: DebugElement;
 
-                beforeEach(waitForAsync(() => {
+                beforeEach(async () => {
                     component = dom.query(
                         By.css(HelperTestFunctions.CALENDAR_WRAPPER_CLASS),
                     );
                     component.nativeElement.focus();
-                }));
+                });
 
                 it("Calendar keyboard navigation - PageUp/PageDown", () => {
                     UIInteractions.triggerKeyDownEvtUponElem(
@@ -1662,13 +1661,13 @@ describe("IgxCalendar - ", () => {
             });
 
             describe("Disabled special dates - ", () => {
-                beforeEach(waitForAsync(() => {
+                beforeEach(async () => {
                     fixture = TestBed.createComponent(
                         IgxCalendarDisabledSpecialDatesComponent,
                     );
                     fixture.detectChanges();
                     calendar = fixture.componentInstance.calendar;
-                }));
+                });
 
                 it("Should be able to set disabled and active dates as @Input", () => {
                     expect(calendar.specialDates).toEqual([
@@ -1784,12 +1783,12 @@ describe("IgxCalendar - ", () => {
             describe("Select and deselect dates - ", () => {
                 let ci: any;
 
-                beforeEach(waitForAsync(() => {
+                beforeEach(async () => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
                     ci = fixture.componentInstance;
                     calendar = ci.calendar;
-                }));
+                });
 
                 it('Deselect using API. Should deselect in "single" selection mode.', () => {
                     const date = calendar.viewDate;
@@ -2332,12 +2331,12 @@ describe("IgxCalendar - ", () => {
             });
 
             describe("Advanced KB Navigation - ", () => {
-                beforeEach(waitForAsync(() => {
+                beforeEach(async () => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
                     calendar = fixture.componentInstance.calendar;
                     dom = fixture.debugElement;
-                }));
+                });
 
                 it("Should navigate to the previous/next month via KB.", fakeAsync(() => {
                     const prev = dom.queryAll(
@@ -2860,7 +2859,7 @@ describe("IgxCalendar - ", () => {
             let prevMonthBtn: HTMLElement;
             let nextMonthBtn: HTMLElement;
 
-            beforeEach(waitForAsync(() => {
+            beforeEach(async () => {
                 TestBed.overrideProvider(LOCALE_ID, { useValue: "fr" });
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                 fixture.detectChanges();
@@ -2873,7 +2872,7 @@ describe("IgxCalendar - ", () => {
                 nextMonthBtn = dom.queryAll(
                     By.css(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS),
                 )[0].nativeElement;
-            }));
+            });
 
             it("Should increment/decrement months continuously on mousedown.", fakeAsync(() => {
                 expect(calendar.viewDate.getMonth()).toEqual(5);

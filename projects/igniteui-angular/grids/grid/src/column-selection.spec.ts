@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../../test-utils/grid-samples.spec';
@@ -31,13 +31,13 @@ describe('IgxGrid - Column Selection #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 ProductsComponent, ColumnSelectionGroupTestComponent, NoopAnimationsModule
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base tests: ', () => {
         let colProductName: IgxColumnComponent;

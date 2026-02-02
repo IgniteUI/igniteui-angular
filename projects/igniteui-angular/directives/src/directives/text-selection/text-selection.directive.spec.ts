@@ -1,12 +1,12 @@
 import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxTextSelectionDirective } from './text-selection.directive';
 
 import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxSelection', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [
                 TriggerTextSelectionComponent,
@@ -15,7 +15,7 @@ describe('IgxSelection', () => {
                 IgxTestFocusDirective
             ]
         });
-    }));
+    });
 
 
     it('Should select the text which is into the input', fakeAsync(() => {

@@ -27,8 +27,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let grid: IgxGridComponent;
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnLayoutPinningTestComponent,
@@ -41,7 +41,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Hiding ', () => {
         beforeEach(() => {

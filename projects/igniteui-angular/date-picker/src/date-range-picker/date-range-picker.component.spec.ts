@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { CustomDateRange, DateRange, PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
@@ -312,8 +312,8 @@ describe('IgxDateRangePicker', () => {
 
         describe('Single Input', () => {
             let singleInputElement: DebugElement;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         ReactiveFormsModule,
@@ -322,7 +322,7 @@ describe('IgxDateRangePicker', () => {
                         DateRangeReactiveFormComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
@@ -966,8 +966,8 @@ describe('IgxDateRangePicker', () => {
         describe('Two Inputs', () => {
             let startInput: DebugElement;
             let endInput: DebugElement;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         ReactiveFormsModule,
@@ -978,7 +978,7 @@ describe('IgxDateRangePicker', () => {
                         DateRangeReactiveFormComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(async () => {
                 fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
                 fixture.detectChanges();
@@ -1787,8 +1787,8 @@ describe('IgxDateRangePicker', () => {
         });
 
         describe('Rendering', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         DateRangeDefaultComponent,
@@ -1797,7 +1797,7 @@ describe('IgxDateRangePicker', () => {
                         DateRangeTwoInputsTestComponent
                     ]
                 }).compileComponents();
-            }));
+            });
 
             it('should render range separator', () => {
                 fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
@@ -2169,20 +2169,21 @@ describe('IgxDateRangePicker', () => {
 
             describe('Templated Calendar Header', () => {
                 let dateRangeDebugEl: DebugElement;
-                beforeEach(fakeAsync(() => {
-                    TestBed.configureTestingModule({
+                beforeEach(async () => {
+                    await TestBed.configureTestingModule({
                         imports: [DateRangeTemplatesComponent]
                     }).compileComponents();
 
                     fixture = TestBed.createComponent(DateRangeTemplatesComponent);
                     fixture.detectChanges();
+                    await fixture.whenStable();
                     dateRangeDebugEl = fixture.debugElement.queryAll(By.directive(IgxDateRangePickerComponent))[0];
                     dateRange = dateRangeDebugEl.componentInstance;
                     dateRange.mode = 'dialog';
                     dateRange.open();
-                    tick();
                     fixture.detectChanges();
-                }));
+                    await fixture.whenStable();
+                });
 
                 it('Should use the custom template for header title', fakeAsync(() => {
                     const headerTitleElement = dateRangeDebugEl.query(By.css(CSS_CLASS_CALENDAR_HEADER_TITLE));

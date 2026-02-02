@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -11,13 +11,13 @@ import { ExpressionUI } from 'igniteui-angular/grids/core';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGrid - Filtering actions #grid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 IgxGridFilteringComponent, NoopAnimationsModule
             ]
         }).compileComponents();
-    }));
+    });
 
     let fix; let grid;
     beforeEach(fakeAsync(() => {
@@ -1149,14 +1149,14 @@ describe('IgxGrid - Filtering actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering expression tree bindings #grid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringBindingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fix; let grid: IgxGridComponent;
     beforeEach(fakeAsync(() => {

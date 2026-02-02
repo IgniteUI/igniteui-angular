@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -27,8 +27,8 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         let rowDimension: DebugElement;
         let headerRow: DebugElement;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridMultipleRowComponent
@@ -37,7 +37,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                     IgxGridNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(fakeAsync(async () => {
             fixture = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
@@ -343,8 +343,8 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     describe('Row Dimension Expand/Collapse Keyboard Interactions', () => {
         let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridTestBaseComponent
@@ -353,7 +353,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                     IgxGridNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);

@@ -1,4 +1,4 @@
-import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
@@ -22,8 +22,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxQueryBuilder', () => {
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
         IgxQueryBuilderComponent,
@@ -32,7 +32,7 @@ describe('IgxQueryBuilder', () => {
         IgxComboComponent
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(fakeAsync(() => {
     fix = TestBed.createComponent(IgxQueryBuilderSampleTestComponent);

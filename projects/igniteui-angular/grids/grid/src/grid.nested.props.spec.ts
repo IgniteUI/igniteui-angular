@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, DebugElement, ViewChild } from '@angular/core';
@@ -204,13 +204,13 @@ describe('Grid - nested data source properties #grid', () => {
             fixture.detectChanges();
         };
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule, NestedPropertiesGridComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(NestedPropertiesGridComponent);
@@ -338,13 +338,13 @@ describe('Grid nested data advanced editing #grid', () => {
         fixture.detectChanges();
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, NestedPropertiesGrid2Component
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(NestedPropertiesGrid2Component);
@@ -498,13 +498,13 @@ describe('Edit cell with data of type Array #grid', () => {
         fixture.detectChanges();
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, NestedPropertyGridComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(NestedPropertyGridComponent);

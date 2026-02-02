@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -20,13 +20,13 @@ describe('IgxGrid - Cell component #grid', () => {
         let cellElem: DebugElement;
         let firstCell: CellType;
         let firstCellElem: CellType;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule, NoScrollsComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(NoScrollsComponent);
@@ -154,12 +154,12 @@ describe('IgxGrid - Cell component #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, VirtualGridComponent],
                 providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(VirtualGridComponent);
@@ -267,13 +267,13 @@ describe('IgxGrid - Cell component #grid', () => {
     });
 
     describe('iOS tests', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule, NoScrollsComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('Should not attach doubletap handler for non-iOS', () => {
             const addListenerSpy = vi.spyOn(HammerGesturesManager.prototype, 'addEventListener');
@@ -325,13 +325,13 @@ describe('IgxGrid - Cell component #grid', () => {
     });
 
     describe('No column widths', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule, NoColumnWidthGridComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should not make last column width 0 when no column width is set', () => {
             const fix = TestBed.createComponent(NoColumnWidthGridComponent);
@@ -345,13 +345,13 @@ describe('IgxGrid - Cell component #grid', () => {
     });
 
     describe('Cells styles', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule, ConditionalCellStyleTestComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should be able to conditionally style cells', fakeAsync(() => {
             const fixture = TestBed.createComponent(ConditionalCellStyleTestComponent);
@@ -377,13 +377,13 @@ describe('IgxGrid - Cell component #grid', () => {
     });
 
     describe('Cell properties', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule, IgxGridDateTimeColumnComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('verify that value of the cell title is correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridDateTimeColumnComponent);

@@ -31,8 +31,8 @@ describe('IgxGrid - GroupBy #grid', () => {
     const DISABLED_CHIP = 'igx-chip--disabled';
     const CHIP = 'igx-chip';
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 DefaultGridComponent,
@@ -47,7 +47,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 MultiColumnHeadersWithGroupingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     const checkGroups = (groupRows, expectedGroupOrder, grExpr?) => {
         // verify group rows are sorted correctly, their indexes in the grid are correct and their group records match the group value.

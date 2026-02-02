@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxTreeGridSelectionKeyComponent,
@@ -16,8 +16,8 @@ import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSelectionKeyComponent,
@@ -26,7 +26,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                 IgxTreeGridFKeySelectionWithTransactionComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Flat Data', () => {
         let fix;

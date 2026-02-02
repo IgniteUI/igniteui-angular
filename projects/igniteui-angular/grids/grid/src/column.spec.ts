@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -35,8 +35,8 @@ describe('IgxGrid - Column properties #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 ColumnCellFormatterComponent,
                 ColumnHiddenFromMarkupComponent,
@@ -55,7 +55,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 DOMAttributesAsSettersComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should correctly initialize column templates', () => {
         const fix = TestBed.createComponent(TemplatedColumnsComponent);
@@ -1390,7 +1390,7 @@ describe('IgxGrid - Column properties #grid', () => {
             available: true
         }];
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxGridComponent);
             grid = fix.componentInstance;
             // For test fixture destroy
@@ -1398,7 +1398,7 @@ describe('IgxGrid - Column properties #grid', () => {
             grid.data = dataWithImages;
             grid.autoGenerate = true;
             fix.detectChanges();
-        }));
+        });
 
         it('should initialize correctly with autoGenerate and image data', () => {
             const column = grid.getColumnByName('avatar');

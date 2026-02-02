@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
@@ -30,8 +30,8 @@ const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
 describe('IgxPivotGrid #pivotGrid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent,
@@ -42,15 +42,15 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Basic IgxPivotGrid #pivotGrid', () => {
         let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
-        }));
+        });
 
         it('should show empty template when there are no dimensions and values', () => {
             // whole pivotConfiguration is undefined
@@ -2160,10 +2160,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
     describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         let fixture: ComponentFixture<IgxPivotGridTestComplexHierarchyComponent>;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fixture.detectChanges();
-        }));
+        });
 
         it('should select/deselect the correct row', () => {
             fixture.detectChanges();
@@ -2312,10 +2312,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
     describe('IgxPivotGrid Resizing #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fixture.detectChanges();
-        }));
+        });
 
         it('should define grid with resizable columns.', fakeAsync(() => {
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
@@ -2540,12 +2540,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
         let pivotGrid: IgxPivotGridComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fixture.detectChanges();
 
             pivotGrid = fixture.componentInstance.pivotGrid;
-        }));
+        });
 
 
         it('should allow inserting new dimension.', () => {
@@ -3030,7 +3030,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
         let pivotGrid: IgxPivotGridComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fixture.detectChanges();
 
@@ -3041,7 +3041,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 rowLayout: PivotRowLayoutType.Horizontal
             };
             fixture.detectChanges();
-        }));
+        });
 
         it("should render row hierarchy horizontally.", () => {
             fixture.detectChanges();

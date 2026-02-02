@@ -23,8 +23,8 @@ describe('Column Pinning UI #grid', () => {
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnPinningTestComponent,
@@ -32,7 +32,7 @@ describe('Column Pinning UI #grid', () => {
                 ColumnPinningWithTemplateTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base', () => {
         beforeEach(() => {

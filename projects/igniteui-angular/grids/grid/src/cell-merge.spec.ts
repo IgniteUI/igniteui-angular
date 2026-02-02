@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
@@ -24,8 +24,8 @@ describe('IgxGrid - Cell merging #grid', () => {
     const CSS_CLASS_GRID_ROW = '.igx-grid__tr';
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, DefaultCellMergeGridComponent, ColumnLayoutTestComponent,
                 IgxHierarchicalGridTestBaseComponent, IgxTreeGridSelectionComponent
@@ -35,7 +35,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
 
 

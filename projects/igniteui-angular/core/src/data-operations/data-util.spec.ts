@@ -1,4 +1,4 @@
-import { waitForAsync } from '@angular/core/testing';
+import { } from '@angular/core/testing';
 import { DataGenerator } from './test-util/data-generator';
 
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from './sorting-strategy';
@@ -27,10 +27,10 @@ import { describe, it, expect, beforeEach } from 'vitest';
 const testSort = () => {
     let data: any[] = [];
     let dataGenerator: DataGenerator;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
-    }));
+    });
     describe('Test sorting', () => {
         it('sorts descending column \'number\'', () => {
             const se: ISortingExpression = {
@@ -96,7 +96,7 @@ const testGroupBy = () => {
     let dataGenerator: DataGenerator;
     let expr: ISortingExpression;
     let state: IGroupingState;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
         expr = {
@@ -110,7 +110,7 @@ const testGroupBy = () => {
             expansion: [],
             defaultExpanded: true
         };
-    }));
+    });
     describe('Test groupBy', () => {
         it('groups by descending column "boolean", expanded', () => {
             // sort

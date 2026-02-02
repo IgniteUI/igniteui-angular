@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './button-group.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
@@ -46,8 +46,8 @@ class Button {
 
 
 describe('IgxButtonGroup', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 InitButtonGroupComponent,
@@ -58,7 +58,7 @@ describe('IgxButtonGroup', () => {
                 ButtonGroupButtonWithBoundSelectedOutputComponent,
             ]
         }).compileComponents();
-    }));
+    });
 
    it('should initialize buttonGroup with default values', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);

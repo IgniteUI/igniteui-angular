@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBadgeComponent, IgxBadgeType } from './badge.component';
 
 import { describe, it, expect, beforeEach } from 'vitest';
 describe('Badge', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InitBadgeComponent,
                 InitBadgeWithDefaultsComponent,
@@ -16,7 +16,7 @@ describe('Badge', () => {
                 InitBadgeWithDotComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes outlined badge of type error', () => {
         const fixture = TestBed.createComponent(InitBadgeComponent);

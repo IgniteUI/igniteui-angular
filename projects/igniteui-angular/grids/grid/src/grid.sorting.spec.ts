@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -15,8 +15,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     let fixture;
     let grid: IgxGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 GridDeclaredColumnsComponent,
                 SortByParityComponent,
@@ -25,7 +25,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
                 IgxGridFormattedValuesSortingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(GridDeclaredColumnsComponent);

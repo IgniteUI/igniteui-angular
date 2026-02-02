@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxRippleDirective } from './ripple.directive';
 import { IgxButtonDirective } from '../button/button.directive';
 
 describe('IgxRipple', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 RippleButtonComponent,
                 RippleDisabledComponent,
@@ -16,7 +16,7 @@ describe('IgxRipple', () => {
                 RippleTargetComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Should initialize ripple directive on button', () => {
         const fixture = TestBed.createComponent(RippleButtonComponent);

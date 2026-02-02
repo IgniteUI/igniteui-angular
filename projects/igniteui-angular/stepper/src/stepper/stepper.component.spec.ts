@@ -82,8 +82,8 @@ describe('Rendering Tests', () => {
     let stepper: IgxStepperComponent;
 
     beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
+        async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxStepperSampleTestComponent,
@@ -91,7 +91,7 @@ describe('Rendering Tests', () => {
                     IgxStepperIndicatorNoShrinkComponent
                 ]
             }).compileComponents();
-        })
+        }
     );
     beforeEach(() => {
         fix = TestBed.createComponent(IgxStepperSampleTestComponent);

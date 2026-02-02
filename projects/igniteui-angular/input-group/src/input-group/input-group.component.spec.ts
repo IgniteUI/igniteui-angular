@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from './input-group.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -13,8 +13,8 @@ const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
 const INPUT_GROUP_SEARCH_CSS_CLASS = 'igx-input-group--search';
 
 describe('IgxInputGroup', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InputGroupComponent,
                 InputGroupBoxComponent,
@@ -26,7 +26,7 @@ describe('IgxInputGroup', () => {
                 InputGroupDisabledWithoutValueComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes an input group.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InputGroupDisabledComponent);

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
@@ -27,14 +27,14 @@ describe('IgxTree #treeView', () => {
         let mockNodesArray: IgxTreeNodeComponent<any>[] = [];
         let tree: IgxTreeComponent = null;
 
-        beforeEach(() => {
+        beforeEach(async () => {
             mockNodesArray = [];
             mockNavService = { register: vi.fn(), update_disabled_cache: vi.fn(), update_visible_cache: vi.fn(), init_invisible_cache: vi.fn(), setFocusedAndActiveNode: vi.fn(), handleKeydown: vi.fn() } as unknown as IgxTreeNavigationService;
             mockTreeService = { register: vi.fn(), collapse: vi.fn(), expand: vi.fn(), collapsing: vi.fn(), isExpanded: vi.fn() } as unknown as IgxTreeService;
             mockSelectionService = { register: vi.fn(), deselectNodesWithNoEvent: vi.fn(), ensureStateOnNodeDelete: vi.fn(), selectNodesWithNoEvent: vi.fn() } as unknown as IgxTreeSelectionService;
             mockElementRef = { nativeElement: document.createElement('div') } as unknown as ElementRef<any>;
 
-            TestBed.configureTestingModule({
+            await TestBed.configureTestingModule({
                 providers: [
                     { provide: IgxTreeNavigationService, useValue: mockNavService },
                     { provide: IgxTreeService, useValue: mockTreeService },
@@ -506,14 +506,14 @@ describe('IgxTree #treeView', () => {
         let fix: ComponentFixture<IgxTreeSampleComponent>;
         let tree: IgxTreeComponent;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxTreeSampleComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent<IgxTreeSampleComponent>(IgxTreeSampleComponent);

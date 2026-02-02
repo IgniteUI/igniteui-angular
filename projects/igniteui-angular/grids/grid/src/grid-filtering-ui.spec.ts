@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
@@ -51,8 +51,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
     registerLocaleData(localeDe);
     registerLocaleData(localeFr);
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -63,21 +63,22 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridFilteringNumericComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe(null, () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
         const today = SampleTestData.today;
 
-        beforeEach(fakeAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: INPUT_DEBOUNCE_TIME, useValue: 0 }]
             });
             fix = TestBed.createComponent(IgxGridFilteringComponent);
+            await fix.whenStable();
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-        }));
+        });
 
         // UI tests string column, empty input
         it('UI tests on string column changing conditions', fakeAsync(() => {
@@ -3197,8 +3198,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -3210,7 +3211,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridExternalESFTemplateComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe(null, () => {
         let fix: ComponentFixture<IgxGridFilteringComponent>;
@@ -7200,15 +7201,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CustomFilteringStrategyComponent
             ],
             providers: [{ provide: INPUT_DEBOUNCE_TIME, useValue: 0 }]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(CustomFilteringStrategyComponent);

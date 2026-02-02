@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -41,8 +41,8 @@ const CSS_CLASS_CALENDAR_WRAPPER_VERTICAL = 'igx-calendar__wrapper--vertical';
 
 describe('IgxDatePicker', () => {
     describe('Integration tests', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxDatePickerTestKbrdComponent,
@@ -54,7 +54,7 @@ describe('IgxDatePicker', () => {
                     IgxDatePickerReactiveFormComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         describe('Rendering', () => {
             let fixture: ComponentFixture<IgxDatePickerTestComponent>;
@@ -660,14 +660,15 @@ describe('IgxDatePicker', () => {
         describe('Templated Header', () => {
             let fixture: ComponentFixture<IgxDatePickerWithTemplatesComponent>;
 
-            beforeEach(fakeAsync(() => {
-              TestBed.configureTestingModule({
+            beforeEach(async () => {
+              await TestBed.configureTestingModule({
                 imports: [IgxDatePickerWithTemplatesComponent]
               }).compileComponents();
 
               fixture = TestBed.createComponent(IgxDatePickerWithTemplatesComponent);
+              await fixture.whenStable();
               fixture.detectChanges();
-            }));
+            });
 
             it('Should use the custom template for header title', fakeAsync(() => {
               const testDate = new Date(2024, 10, 11);

@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxSwitchComponent } from './switch.component';
@@ -9,8 +9,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxSwitch', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 InitSwitchComponent,
@@ -23,7 +23,7 @@ describe('IgxSwitch', () => {
                 IgxSwitchComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes', () => {
         const fixture = TestBed.createComponent(InitSwitchComponent);

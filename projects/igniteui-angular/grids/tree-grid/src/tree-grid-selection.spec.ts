@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import {
     IgxTreeGridSimpleComponent,
@@ -37,8 +37,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         const endEvent = new AnimationEvent('animationend');
         animationElem.dispatchEvent(endEvent);
     };
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
@@ -52,7 +52,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('API Row Selection', () => {
 

@@ -1,5 +1,5 @@
 import { Component, DebugElement, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
@@ -16,17 +16,17 @@ describe('IgcFormControlDirective - ', () => {
 
     describe('Unit tests: ', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             defineComponents(IgcRatingComponent);
 
-            TestBed.configureTestingModule({
+            await TestBed.configureTestingModule({
                 providers: [
                     { provide: ElementRef, useValue: elementRef },
                     { provide: Renderer2, useValue: renderer2Mock },
                     IgcFormControlDirective
                 ]
             });
-        }));
+        });
 
         const elementRef = { nativeElement: document.createElement('igc-rating') };
 
@@ -60,14 +60,14 @@ describe('IgcFormControlDirective - ', () => {
     });
 
     describe('ngModel two-way binding tests: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     IgxFormsControlComponent
                 ]
             }).compileComponents();
             defineComponents(IgcRatingComponent);
-        }));
+        });
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxFormsControlComponent);

@@ -12,21 +12,21 @@ const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 const COLLAPSIBLE_CLASS = 'igx-splitter-bar--collapsible';
 
 describe('IgxSplitter', () => {
-    beforeEach(waitForAsync(() =>
-        TestBed.configureTestingModule({
+    beforeEach(async() =>
+        await TestBed.configureTestingModule({
             imports: [
                 SplitterTestComponent
             ]
         }).compileComponents()
-    ));
+    );
     let fixture: ComponentFixture<SplitterTestComponent>;
     let splitter: IgxSplitterComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SplitterTestComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
-    }));
+    });
 
     it('should render pane content correctly in splitter.', () => {
         expect(splitter.panes.length).toBe(2);
@@ -333,19 +333,19 @@ describe('IgxSplitter', () => {
 });
 
 describe('IgxSplitter pane toggle', () => {
-    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(async () => await TestBed.configureTestingModule({
         imports: [
             SplitterTogglePaneComponent
         ]
-    }).compileComponents()));
+    }).compileComponents());
 
     let fixture; let splitter;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SplitterTogglePaneComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
         fixture.detectChanges();
-    }));
+    });
 
     it('should collapse/expand panes', () => {
         const pane1 = splitter.panes.toArray()[0];
@@ -437,18 +437,18 @@ describe('IgxSplitter pane toggle', () => {
 });
 
 describe('IgxSplitter pane collapse', () => {
-    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(async () => await TestBed.configureTestingModule({
         imports: [
             SplitterCollapsedPaneComponent
         ]
-    }).compileComponents()));
+    }).compileComponents());
 
     let fixture; let splitter;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SplitterCollapsedPaneComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
-    }));
+    });
 
     it('should reset sizes when pane is initially collapsed.', () => {
         const panes = splitter.panes.toArray();
@@ -469,20 +469,20 @@ describe('IgxSplitter pane collapse', () => {
 });
 
 describe('IgxSplitter resizing with minSize and browser window is shrinked', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 SplitterMinSiezComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fixture; let splitter;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SplitterMinSiezComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
-    }));
+    });
 
     it('should set the correct sizes when the user drags one pane to the end of another', () => {
         const pane1 = splitter.panes.toArray()[0];

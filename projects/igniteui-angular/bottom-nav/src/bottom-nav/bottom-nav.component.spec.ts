@@ -1,5 +1,5 @@
 import { QueryList } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -30,8 +30,8 @@ describe('IgxBottomNav', () => {
         { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] },
     ];
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 RouterTestingModule.withRoutes(testRoutes),
@@ -49,15 +49,15 @@ describe('IgxBottomNav', () => {
             ],
             providers: [RoutingTestGuard]
         }).compileComponents();
-    }));
+    });
 
     describe('Html Attributes', () => {
         let fixture;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(BottomNavTestHtmlAttributesComponent);
             fixture.detectChanges();
-        }));
+        });
 
         it('should set the correct attributes on the html elements', () => {
             const igxBottomNavs = document.querySelectorAll('igx-bottom-nav');
@@ -88,13 +88,13 @@ describe('IgxBottomNav', () => {
         let bottomNav;
         let tabItems: IgxBottomNavItemComponent[];
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TabBarTestComponent);
             fixture.detectChanges();
 
             bottomNav = fixture.componentInstance.bottomNav;
             tabItems = bottomNav.items.toArray();
-        }));
+        });
 
         it('should initialize igx-bottom-nav, igx-bottom-nav-content and igx-bottom-nav-item', () => {
             const panels: IgxBottomNavContentComponent[] = bottomNav.panels.toArray();
@@ -184,19 +184,19 @@ describe('IgxBottomNav', () => {
         let tabItems;
         let headers;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             router = TestBed.inject(Router);
             location = TestBed.inject(Location);
-        }));
+        });
 
         describe('', () => {
-            beforeEach(waitForAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(TabBarRoutingTestComponent);
                 fixture.detectChanges();
                 bottomNav = fixture.componentInstance.bottomNav;
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
-            }));
+            });
 
             it('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
                 fixture.ngZone.run(() => router.initialNavigation());
@@ -289,12 +289,12 @@ describe('IgxBottomNav', () => {
         let bottomNav;
         let tabItems;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TabBarTabsOnlyModeTestComponent);
             bottomNav = fixture.componentInstance.bottomNav;
             fixture.detectChanges();
             tabItems = bottomNav.items.toArray();
-        }));
+        });
 
         it('should retain the correct initial selection status', () => {
             const headers = tabItems.map(item => item.headerComponent.nativeElement);
@@ -319,7 +319,7 @@ describe('IgxBottomNav', () => {
         let indexChangingSpy;
 
         describe('', () => {
-            beforeEach(waitForAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(TabBarTestComponent);
                 fixture.detectChanges();
                 bottomNav = fixture.componentInstance.bottomNav;
@@ -328,7 +328,7 @@ describe('IgxBottomNav', () => {
                 itemChangeSpy = vi.spyOn(bottomNav.selectedItemChange, 'emit');
                 indexChangeSpy = vi.spyOn(bottomNav.selectedIndexChange, 'emit');
                 indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
-            }));
+            });
 
             it('Validate the fired events on clicking tab headers.', fakeAsync(() => {
                 tick(100);
@@ -377,7 +377,7 @@ describe('IgxBottomNav', () => {
             let router;
             let location;
             const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
-            beforeEach(waitForAsync(() => {
+            beforeEach(async () => {
                 router = TestBed.inject(Router);
                 location = TestBed.inject(Location);
                 fixture = TestBed.createComponent(TabBarRoutingTestComponent);
@@ -388,7 +388,7 @@ describe('IgxBottomNav', () => {
                 itemChangeSpy = vi.spyOn(bottomNav.selectedItemChange, 'emit');
                 indexChangeSpy = vi.spyOn(bottomNav.selectedIndexChange, 'emit');
                 indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
-            }));
+            });
 
             it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', fakeAsync(() => {
                 fixture.ngZone.run(() => router.initialNavigation());

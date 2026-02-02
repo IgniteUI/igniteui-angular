@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
 } from '@angular/forms';
@@ -86,8 +86,8 @@ describe('igxCombo', () => {
         const mockInjector = { get: vi.fn() };
         mockInjector.get.mockReturnValue(mockNgControl);
         mockSelection.get.mockReturnValue(new Set([]));
-        beforeEach(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [IgxComboComponent, NoopAnimationsModule],
                 providers: [
                     { provide: ElementRef, useValue: elementRef },
@@ -122,7 +122,7 @@ describe('igxCombo', () => {
         });
 
         afterAll(() => {
-            });
+        });
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             combo.ngOnInit();
@@ -380,11 +380,11 @@ describe('igxCombo', () => {
 
         describe('Combo selection API unit tests: ', () => {
             let selectionService: IgxSelectionAPIService;
-            beforeEach(() => {
+            beforeEach(async () => {
                 selectionService = new IgxSelectionAPIService();
                 TestBed.resetTestingModule();
 
-                TestBed.configureTestingModule({
+                await TestBed.configureTestingModule({
                     imports: [IgxComboComponent, NoopAnimationsModule],
                     providers: [
                         { provide: ElementRef, useValue: elementRef },
@@ -842,8 +842,8 @@ describe('igxCombo', () => {
     });
 
     describe('Combo feature tests: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxComboSampleComponent,
@@ -855,7 +855,7 @@ describe('igxCombo', () => {
                     IgxComboInTemplatedFormComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         describe('Initialization and rendering tests: ', () => {
             beforeEach(() => {

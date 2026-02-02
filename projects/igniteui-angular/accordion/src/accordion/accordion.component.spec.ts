@@ -16,16 +16,14 @@ const ACCORDION_TAG = 'IGX-ACCORDION';
 describe('Rendering Tests', () => {
     let fix: ComponentFixture<IgxAccordionSampleTestComponent>;
     let accordion: IgxAccordionComponent;
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    NoopAnimationsModule,
-                    IgxAccordionSampleTestComponent
-                ]
-            }).compileComponents();
-        })
-    );
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxAccordionSampleTestComponent
+            ]
+        }).compileComponents();
+    });
     beforeEach(() => {
         fix = TestBed.createComponent(IgxAccordionSampleTestComponent);
         fix.detectChanges();

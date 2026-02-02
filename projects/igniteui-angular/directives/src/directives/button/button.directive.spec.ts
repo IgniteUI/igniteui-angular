@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxButtonDirective } from './button.directive';
 
@@ -19,15 +19,15 @@ describe('IgxButton', () => {
         fab: `${baseClass}--fab`,
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 InitButtonComponent,
                 ButtonWithAttribsComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes a button', () => {
         const fixture = TestBed.createComponent(InitButtonComponent);

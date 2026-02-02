@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,8 +22,8 @@ import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('IgxGrid - Validation #grid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridValidationTestBaseComponent,
@@ -32,7 +32,7 @@ describe('IgxGrid - Validation #grid', () => {
                 IgxTreeGridValidationTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Basic Validation - ', () => {
         let fixture;

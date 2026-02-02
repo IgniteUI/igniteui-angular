@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ViewChild, Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,11 +10,11 @@ import { IgxButtonDirective } from '../../../directives/src/directives/button/bu
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxPaginator with default settings', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, DefaultPaginatorComponent]
         }).compileComponents();
-    }));
+    });
     it('should calculate number of pages correctly', () => {
         const fix = TestBed.createComponent(DefaultPaginatorComponent);
         fix.detectChanges();
@@ -235,11 +235,11 @@ describe('IgxPaginator with default settings', () => {
 });
 
 describe('IgxPaginator with custom settings', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, CustomizedPaginatorComponent]
         }).compileComponents();
-    }));
+    });
 
     it('should calculate correctly pages when custom select options are given', () => {
         const fix = TestBed.createComponent(CustomizedPaginatorComponent);

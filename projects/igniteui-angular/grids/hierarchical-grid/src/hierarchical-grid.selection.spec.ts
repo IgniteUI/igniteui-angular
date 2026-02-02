@@ -26,8 +26,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     let rowIsland2;
     const gridData = SampleTestData.generateHGridData(5, 3);
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
@@ -41,7 +41,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }))
+    });
 
     describe('Cell selection', () => {
         beforeEach(() => {

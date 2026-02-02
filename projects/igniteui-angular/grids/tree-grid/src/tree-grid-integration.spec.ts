@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import {
@@ -27,8 +27,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     let fix: ComponentFixture<any>;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
@@ -46,7 +46,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 { provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should have tree-column with a \'string\' dataType', () => {
         // Init test

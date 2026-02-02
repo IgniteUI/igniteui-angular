@@ -1,6 +1,6 @@
 
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
@@ -33,8 +33,8 @@ const enum IconPositionClass {
 }
 
 describe('igxExpansionPanel', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxExpansionPanelGridComponent,
@@ -44,7 +44,7 @@ describe('igxExpansionPanel', () => {
                 IgxExpansionPanelTooltipComponent
             ]
         }).compileComponents();
-    }));
+    });
 
 
     describe('General tests: ', () => {

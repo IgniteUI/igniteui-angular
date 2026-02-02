@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first, take } from 'rxjs/operators';
@@ -14,20 +14,20 @@ import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxPivotGridState #pivotGrid :', () => {
     let fixture;
     let pivotGrid;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxPivotGridPersistanceComponent],
             providers: [
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(IgxPivotGridPersistanceComponent);
         fixture.detectChanges();
         pivotGrid = fixture.componentInstance.pivotGrid;
-    }));
+    });
 
     it('getState should return correct JSON string.', () => {
         const state = fixture.componentInstance.state;

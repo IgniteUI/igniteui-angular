@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { By } from '@angular/platform-browser';
@@ -24,8 +24,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     let fix;
     let grid: IgxTreeGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridWrappedInContComponent,
@@ -36,15 +36,15 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 IgxTreeGridWithNoForeignKeyComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
             grid = fix.componentInstance.treeGrid;
             fix.detectChanges();
-        }));
+        });
 
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
             fix.detectChanges();
@@ -181,7 +181,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Auto-generated columns', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridComponent);
             grid = fix.componentInstance;
             grid.autoGenerate = true;
@@ -190,7 +190,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             // the element ID and the testbed cannot find it to remove it.
             // The testbed is looking up components by [id^=root], so working around this by forcing root id
             grid.id = SAFE_DISPOSE_COMP_ID;
-        }));
+        });
 
         // afterEach(() => {
         //     // When doing pure unit tests, the grid doesn't get removed after the test, because it overrides
@@ -276,10 +276,10 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Loading Template', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridDefaultLoadingComponent);
             grid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('should auto-generate columns', async () => {
             fix.detectChanges();
@@ -297,11 +297,11 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Hide All', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             grid = fix.componentInstance.treeGrid;
             fix.detectChanges();
-        }));
+        });
 
         it('should not render rows and headers group when all cols are hidden', fakeAsync(() => {
             grid.rowSelection = GridSelectionMode.multiple;
@@ -375,11 +375,11 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Displaying empty grid message', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
             grid = fix.componentInstance.treeGrid;
             fix.detectChanges();
-        }));
+        });
 
         it('should display empty grid message when there is no data', () => {
             const data: any[] = grid.data;

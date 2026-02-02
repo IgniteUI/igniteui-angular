@@ -21,8 +21,8 @@ describe('IgxGrid - search API #grid', () => {
     let fix: ComponentFixture<any>;
     let component; let grid: IgxGridComponent; let fixNativeElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 BasicGridSearchComponent,
@@ -31,7 +31,7 @@ describe('IgxGrid - search API #grid', () => {
                 ScrollableGridSearchComponent
             ]
         }).compileComponents();
-    }))
+    });
 
     describe('BasicGrid - ', () => {
         beforeEach(() => {

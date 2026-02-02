@@ -16,14 +16,14 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent],
             providers: [
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }))
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);

@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
@@ -7,13 +7,13 @@ import { IgxTextHighlightService } from './text-highlight.service';
 
 import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxHighlight', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [
                 HighlightLoremIpsumComponent
             ]
         });
-    }));
+    });
 
     it('Highlight inputs should have the proper values', () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);

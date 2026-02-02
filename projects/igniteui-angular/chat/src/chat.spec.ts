@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
+import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component'
 import { Component, signal, TemplateRef, viewChild } from '@angular/core';
 import type { IgcChatComponent, IgcChatMessage, IgcTextareaComponent } from 'igniteui-webcomponents';
@@ -10,11 +10,11 @@ describe('Chat wrapper', () => {
     let chatElement: IgcChatComponent;
     let fixture: ComponentFixture<IgxChatComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxChatComponent);
@@ -62,11 +62,11 @@ describe('Chat templates', () => {
     let fixture: ComponentFixture<ChatTemplatesBed>;
     let chatElement: IgcChatComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent, IgxChatMessageContextDirective, ChatTemplatesBed]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ChatTemplatesBed);
@@ -91,11 +91,11 @@ describe('Chat dynamic templates binding', () => {
     let fixture: ComponentFixture<ChatDynamicTemplatesBed>;
     let chatElement: IgcChatComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent, IgxChatMessageContextDirective, ChatDynamicTemplatesBed]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ChatDynamicTemplatesBed);

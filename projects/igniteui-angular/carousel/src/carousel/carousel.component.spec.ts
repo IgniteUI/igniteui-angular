@@ -1,5 +1,5 @@
 import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     IgxCarouselComponent,
@@ -18,10 +18,10 @@ describe('Carousel', () => {
     let mockElement: any;
     let mockElementRef: ElementRef;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         mockElement = document.createElement("div");
         mockElementRef = new ElementRef(mockElement);
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CarouselTestComponent,
@@ -35,7 +35,7 @@ describe('Carousel', () => {
                 IgxSlideComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests: ', () => {
         beforeEach(() => {

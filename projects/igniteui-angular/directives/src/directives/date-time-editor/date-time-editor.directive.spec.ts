@@ -1,7 +1,7 @@
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { formatDate, registerLocaleData } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject, Renderer2, ElementRef } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -512,8 +512,8 @@ describe('IgxDateTimeEditor', () => {
         let inputElement: DebugElement;
         let dateTimeEditorDirective: IgxDateTimeEditorDirective;
         describe('Key interaction tests', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDateTimeEditorSampleComponent,
@@ -521,7 +521,7 @@ describe('IgxDateTimeEditor', () => {
                         IgxDateTimeEditorShadowDomComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(async () => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorSampleComponent);
                 fixture.detectChanges();
@@ -1304,14 +1304,14 @@ describe('IgxDateTimeEditor', () => {
 
         describe('Form control tests: ', () => {
             let form: UntypedFormGroup;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDateTimeEditorFormComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorFormComponent);
                 fixture.detectChanges();

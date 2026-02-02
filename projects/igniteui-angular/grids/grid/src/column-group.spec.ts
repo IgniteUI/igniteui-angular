@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { DebugElement, QueryList } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,7 +31,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
     let grid: IgxGridComponent;
     let componentInstance;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -52,7 +52,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
     describe('Initialization and rendering tests: ', () => {
         it('should initialize a grid with column groups', () => {

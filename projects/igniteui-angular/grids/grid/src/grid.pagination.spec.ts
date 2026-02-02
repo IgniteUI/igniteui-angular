@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { GridWithUndefinedDataComponent } from '../../../test-utils/grid-samples.spec';
 import { PagingComponent, RemotePagingComponent } from '../../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -32,8 +32,8 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 
 describe('IgxGrid - Grid Paging #grid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 PagingComponent,
@@ -41,7 +41,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
                 RemotePagingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fix;
     let grid;

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -15,8 +15,8 @@ describe('Multi-View Calendar - ', () => {
     let fixture: ComponentFixture<any>
     let calendar: any;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 MultiViewCalendarSampleComponent,
@@ -24,14 +24,14 @@ describe('Multi-View Calendar - ', () => {
                 MultiViewNgModelSampleComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests - ', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
             fixture.detectChanges();
             calendar = fixture.componentInstance.calendar;
-        }));
+        });
 
         it('should render properly when monthsViewNumber is initially set or changed runtime', () => {
             const today = new Date(Date.now());

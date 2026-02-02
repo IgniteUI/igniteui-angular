@@ -1,5 +1,5 @@
 import { Component, ViewChild, Pipe, PipeTransform, ElementRef, inject } from '@angular/core';
-import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAutocompleteDirective, AutocompleteOverlaySettings } from './autocomplete.directive';
@@ -25,8 +25,8 @@ describe('IgxAutocomplete', () => {
     let input: IgxInputDirective;
     let dropDown: IgxDropDownComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 AutocompleteComponent,
@@ -34,16 +34,16 @@ describe('IgxAutocomplete', () => {
                 AutocompleteFormComponent
             ]
         }).compileComponents();
-    }));
+    });
     describe('General tests: ', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
             group = fixture.componentInstance.group;
             input = fixture.componentInstance.input;
             dropDown = fixture.componentInstance.dropDown;
-        }));
+        });
         it('Should open/close dropdown properly', fakeAsync(() => {
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();

@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent, IgxTooltipNestedTooltipsComponent } from '../../../../test-utils/tooltip-components.spec';
@@ -23,8 +23,8 @@ describe('IgxTooltip', () => {
     let tooltipTarget: IgxTooltipTargetDirective;
     let button: DebugElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTooltipSingleTargetComponent,
@@ -37,20 +37,20 @@ describe('IgxTooltip', () => {
             ]
         }).compileComponents();
         UIInteractions.clearOverlay();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();
     });
 
     describe('Single target with single tooltip', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTooltipSingleTargetComponent);
             fix.detectChanges();
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
             tooltipTarget = fix.componentInstance.tooltipTarget as IgxTooltipTargetDirective;
             button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
-        }));
+        });
 
         it('IgxTooltipTargetDirective default values', () => {
             expect(tooltipTarget.showDelay).toBe(200);
@@ -524,13 +524,13 @@ describe('IgxTooltip', () => {
     });
 
     describe('Plain string tooltip input', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTooltipPlainStringComponent);
             fix.detectChanges();
             button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
             tooltipTarget = fix.componentInstance.tooltipTarget;
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
-        }));
+        });
 
         it('IgxTooltip is initially hidden', fakeAsync(() => {
             unhoverElement(button);
@@ -562,13 +562,13 @@ describe('IgxTooltip', () => {
     });
 
     describe('Custom content tooltip', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTooltipWithNestedContentComponent);
             fix.detectChanges();
             button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
             tooltipTarget = fix.componentInstance.tooltipTarget;
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
-        }));
+        });
 
         it('Should not have max-width constraint for custom content tooltip', fakeAsync(() => {
             hoverElement(button);
@@ -609,7 +609,7 @@ describe('IgxTooltip', () => {
             expect(tooltip.arrow.style.left).toBe(arrowLeftOffset);
         };
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTooltipNestedTooltipsComponent);
             fix.detectChanges();
 
@@ -620,7 +620,7 @@ describe('IgxTooltip', () => {
             tooltip1 = fix.componentInstance.tooltipLevel1;
             tooltip2 = fix.componentInstance.tooltipLevel2;
             tooltip3 = fix.componentInstance.tooltipLevel3;
-        }));
+        });
 
         it('should show arrow for each tooltip', fakeAsync(() => {
             hoverElement(tooltipTarget1);
@@ -650,7 +650,7 @@ describe('IgxTooltip', () => {
         let buttonOne;
         let buttonTwo;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTooltipMultipleTargetsComponent);
             fix.detectChanges();
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
@@ -658,7 +658,7 @@ describe('IgxTooltip', () => {
             targetTwo = fix.componentInstance.targetTwo;
             buttonOne = fix.debugElement.query(By.css('.buttonOne'));
             buttonTwo = fix.debugElement.query(By.css('.buttonTwo'));
-        }));
+        });
 
         it('Same tooltip shows on different targets depending on which target is hovered', fakeAsync(() => {
             hoverElement(buttonOne);
@@ -956,13 +956,13 @@ describe('IgxTooltip', () => {
     });
 
     describe('Tooltip integration', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTooltipWithToggleActionComponent);
             fix.detectChanges();
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
             tooltipTarget = fix.componentInstance.tooltipTarget as IgxTooltipTargetDirective;
             button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
-        }));
+        });
 
         it('Correctly sets tooltip target when defined before igxToggleAction directive on same host - issue #14196', fakeAsync(() => {
             expect(tooltipTarget.target.element).toBe(tooltipNativeElement);
@@ -1095,13 +1095,13 @@ describe('IgxTooltip', () => {
     });
 
     describe('IgxTooltip placement and offset', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTooltipSingleTargetComponent);
             fix.detectChanges();
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
             tooltipTarget = fix.componentInstance.tooltipTarget as IgxTooltipTargetDirective;
             button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
-        }));
+        });
 
         afterEach(() => {
             UIInteractions.clearOverlay();

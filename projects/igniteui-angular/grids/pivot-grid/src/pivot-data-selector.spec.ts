@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { fakeAsync, TestBed, waitForAsync } from "@angular/core/testing";
+import { fakeAsync, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxExpansionPanelHeaderComponent } from 'igniteui-angular/expansion-panel';
@@ -22,13 +22,13 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe("Pivot data selector", () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, IgxPivotDataSelectorComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it("should initialize standalone before a grid is set ", () => {
         const fixture = TestBed.createComponent(IgxPivotDataSelectorComponent);
@@ -43,8 +43,8 @@ describe("Pivot data selector integration", () => {
     let selector: IgxPivotDataSelectorComponent;
     let pivotItems: (IPivotDimension | IPivotValue)[];
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent
@@ -53,7 +53,7 @@ describe("Pivot data selector integration", () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);

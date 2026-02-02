@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform, Renderer2 } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IgxMaskDirective } from './mask.directive';
 
@@ -13,8 +13,8 @@ import { PlatformUtil } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('igxMask', () => {
     // TODO: Refactor tests to reuse components
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 AlphanumSpaceMaskComponent,
                 AnyCharMaskComponent,
@@ -32,7 +32,7 @@ describe('igxMask', () => {
                 ReadonlyMaskTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes an input with default mask', () => {
         const fixture = TestBed.createComponent(DefMaskComponent);

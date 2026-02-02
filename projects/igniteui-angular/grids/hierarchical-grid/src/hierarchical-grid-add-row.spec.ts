@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxHierarchicalGridActionStripComponent } from '../../../test-utils/hierarchical-grid-components.spec';
@@ -19,8 +19,8 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
         animationElem.dispatchEvent(endEvent);
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridActionStripComponent
             ],
@@ -28,7 +28,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe(' Basic', () => {
         beforeEach(() => {

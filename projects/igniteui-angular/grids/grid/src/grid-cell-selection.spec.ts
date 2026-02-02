@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
@@ -21,8 +21,8 @@ import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } f
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('IgxGrid - Cell selection #grid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 SelectionWithScrollsComponent,
@@ -32,7 +32,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 IgxGridRowEditingWithoutEditableColumnsComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base', () => {
         let fix;

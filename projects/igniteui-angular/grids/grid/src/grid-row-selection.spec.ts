@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -22,8 +22,8 @@ const SCROLL_DEBOUNCETIME = 100;
 
 describe('IgxGrid - Row Selection #grid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 RowSelectionComponent,
@@ -34,7 +34,7 @@ describe('IgxGrid - Row Selection #grid', () => {
                 GridCustomSelectorsComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base tests', () => {
         let fix: ComponentFixture<RowSelectionComponent>;
@@ -2379,12 +2379,12 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix: ComponentFixture<GridCustomSelectorsComponent>;
         let grid;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(GridCustomSelectorsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             grid.rowSelection = GridSelectionMode.multiple;
-        }));
+        });
 
         it('Should have the correct properties in the custom row selector template', () => {
             const firstRow = grid.gridAPI.get_row_by_index(0);

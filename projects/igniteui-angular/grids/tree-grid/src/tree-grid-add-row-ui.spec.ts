@@ -1,5 +1,5 @@
 
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridEditActionsComponent, IgxTreeGridEditActionsPinningComponent } from '../../../test-utils/tree-grid-components.spec';
@@ -22,15 +22,15 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         animationElem.dispatchEvent(endEvent);
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridEditActionsComponent,
                 IgxTreeGridEditActionsPinningComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Basic', () => {
         beforeEach(() => {

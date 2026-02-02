@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement, QueryList, TemplateRef } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -58,14 +58,14 @@ describe('Row Drag Tests', () => {
                 let dragRows: DebugElement[];
                 let rowToDrag: IgxRowDirective;
 
-                beforeEach(waitForAsync(() => {
-                    TestBed.configureTestingModule({
+                beforeEach(async () => {
+                    await TestBed.configureTestingModule({
                         imports: [
                             NoopAnimationsModule,
                             IgxGridRowDraggableComponent
                         ]
                     }).compileComponents();
-                }));
+                });
 
                 beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
@@ -408,14 +408,14 @@ describe('Row Drag Tests', () => {
                 let rows: IgxRowDirective[];
                 let dragRows: DebugElement[];
 
-                beforeEach(waitForAsync(() => {
-                    TestBed.configureTestingModule({
+                beforeEach(async () => {
+                    await TestBed.configureTestingModule({
                         imports: [
                             NoopAnimationsModule,
                             IgxGridRowCustomGhostDraggableComponent
                         ]
                     }).compileComponents();
-                }));
+                });
                 beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
                     grid = fixture.componentInstance.instance;
@@ -494,14 +494,14 @@ describe('Row Drag Tests', () => {
             let dropGridRows: IgxRowDirective[];
             let dragRows: DebugElement[];
 
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxGridFeaturesRowDragComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
                 dragGrid = fixture.componentInstance.dragGrid;
@@ -947,8 +947,8 @@ describe('Row Drag Tests', () => {
         let dragRows: DebugElement[];
         let pointerMoveToDropEvent: PointerEvent;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxHierarchicalGridTestComponent,
@@ -958,7 +958,7 @@ describe('Row Drag Tests', () => {
                     IgxGridNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
         it('should be able to drag row on every hierarchical level', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
             fixture.detectChanges();
@@ -1100,14 +1100,14 @@ describe('Row Drag Tests', () => {
         let dragRows: DebugElement[];
         let pointerMoveToDropEvent: PointerEvent;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxTreeGridTestComponent
                 ]
             }).compileComponents();
-        }));
+        });
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxTreeGridTestComponent);
             fixture.detectChanges();

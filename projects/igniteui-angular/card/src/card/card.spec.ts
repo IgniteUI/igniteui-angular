@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     IgxCardComponent,
@@ -61,8 +61,8 @@ describe('Card', () => {
         media: `${baseClass}__media`
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InitCardComponent,
                 InitOutlinedCardComponent,
@@ -72,7 +72,7 @@ describe('Card', () => {
                 HorizontalCardComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes default card', () => {
         const fixture = TestBed.createComponent(InitCardComponent);

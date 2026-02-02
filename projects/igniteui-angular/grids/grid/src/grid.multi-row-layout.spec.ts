@@ -1,4 +1,4 @@
-﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+﻿import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,8 +19,8 @@ const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
 describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCE_TIME = 60;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnLayoutTestComponent,
@@ -30,7 +30,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should initialize a grid with 1 column group', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);

@@ -1,5 +1,4 @@
 import {
-    waitForAsync,
     TestBed,
     ComponentFixture,
     flushMicrotasks,
@@ -28,11 +27,11 @@ describe('IgxToast', () => {
         verticalStartPoint: VerticalAlignment.Middle
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxToastComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxToastComponent);

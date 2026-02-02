@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
@@ -21,8 +21,8 @@ import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGridState - input properties #grid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridStateComponent,
@@ -33,7 +33,7 @@ describe('IgxGridState - input properties #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should initialize an IgxGridState with default options object', () => {
         const defaultOptions = {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxRadioGroupDirective, RadioGroupAlignment } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
 
@@ -9,7 +9,7 @@ import { IgxRadioComponent } from '../../radio/radio.component';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxRadioGroupDirective', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -28,7 +28,7 @@ describe('IgxRadioGroupDirective', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
     it('Properly initialize the radio group buttons\' properties.', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupComponent);

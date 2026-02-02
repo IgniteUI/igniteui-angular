@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef } from '@angular/core';
-import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -486,8 +486,8 @@ describe('IgxTimePicker', () => {
 
         describe('Dropdown/dialog mode', () => {
             let fixture: ComponentFixture<IgxTimePickerTestComponent>;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         FormsModule,
                         NoopAnimationsModule,
@@ -495,7 +495,7 @@ describe('IgxTimePicker', () => {
                     ],
                     providers: [PlatformUtil]
                 }).compileComponents();
-            }));
+            });
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxTimePickerTestComponent);
                 fixture.detectChanges();
@@ -1141,11 +1141,11 @@ describe('IgxTimePicker', () => {
 
         describe('Rendering tests', () => {
             let fixture: ComponentFixture<IgxTimePickerTestComponent>;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [NoopAnimationsModule, IgxTimePickerTestComponent]
                 }).compileComponents();
-            }));
+            });
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxTimePickerTestComponent);
                 fixture.detectChanges();
@@ -1623,11 +1623,11 @@ describe('IgxTimePicker', () => {
 
         describe('Keyboard navigation', () => {
             let fixture: ComponentFixture<IgxTimePickerTestComponent>;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [NoopAnimationsModule, IgxTimePickerTestComponent]
                 }).compileComponents();
-            }));
+            });
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxTimePickerTestComponent);
                 fixture.detectChanges();
@@ -1708,11 +1708,11 @@ describe('IgxTimePicker', () => {
 
         describe('Projected elements', () => {
             let fixture: ComponentFixture<IgxTimePickerWithProjectionsComponent>;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [NoopAnimationsModule, IgxTimePickerWithProjectionsComponent]
                 }).compileComponents();
-            }));
+            });
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxTimePickerWithProjectionsComponent);
                 fixture.detectChanges();
@@ -1808,15 +1808,15 @@ describe('IgxTimePicker', () => {
         describe('FormControl integration', () => {
             let fixture: ComponentFixture<IgxTimePickerInFormComponent | IgxTimePickerReactiveFormComponent>;
 
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxTimePickerInFormComponent,
                         IgxTimePickerReactiveFormComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxTimePickerInFormComponent);
                 fixture.detectChanges();

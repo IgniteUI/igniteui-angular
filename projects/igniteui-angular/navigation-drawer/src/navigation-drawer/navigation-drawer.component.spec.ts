@@ -14,8 +14,8 @@ declare let Simulator: any;
 
 describe('Navigation Drawer', () => {
     let widthSpyOverride: any;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 TestComponentPinComponent,
                 TestComponentMiniComponent,
@@ -34,7 +34,7 @@ describe('Navigation Drawer', () => {
         // so for tests just force override the the `getWindowWidth`
         widthSpyOverride = vi.spyOn(IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
             .mockReturnValue(915 /* chosen at random by fair dice roll*/);
-    }));
+    });
 
     it('should initialize without DI service', waitForAsync(() => {
         TestBed.compileComponents().then(() => {

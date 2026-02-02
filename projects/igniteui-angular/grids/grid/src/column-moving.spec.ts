@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,8 +25,8 @@ describe('IgxGrid - Column Moving #grid', () => {
 
     let fixture; let grid: IgxGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 FormsModule,
                 NoopAnimationsModule,
@@ -36,7 +36,7 @@ describe('IgxGrid - Column Moving #grid', () => {
                 MultiColumnHeadersComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('', () => {
         beforeEach(() => {

@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
@@ -180,14 +180,14 @@ describe('IgxDropDown ', () => {
     });
     describe('User interaction tests', () => {
         describe('Selection & key navigation', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDropDownTestComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxDropDownTestComponent);
                 fixture.detectChanges();
@@ -833,15 +833,15 @@ describe('IgxDropDown ', () => {
             }));
         });
         describe('Other', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         DoubleIgxDropDownComponent,
                         InputWithDropDownDirectiveComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             it('should call preventDefault on a mousedown event when allowItemsFocus is disabled', () => {
                 fixture = TestBed.createComponent(InputWithDropDownDirectiveComponent);
                 fixture.detectChanges();
@@ -925,14 +925,14 @@ describe('IgxDropDown ', () => {
     describe('Virtualization tests', () => {
         let scroll: IgxForOfDirective<any>;
         let items;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     VirtualizedDropDownComponent
                 ]
             }).compileComponents();
-        }));
+        });
         beforeEach(() => {
             fixture = TestBed.createComponent(VirtualizedDropDownComponent);
             fixture.detectChanges();
@@ -1034,14 +1034,14 @@ describe('IgxDropDown ', () => {
     });
     describe('Rendering', () => {
         describe('Accessibility', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDropDownTestComponent,
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxDropDownTestComponent);
                 fixture.detectChanges();
@@ -1109,14 +1109,14 @@ describe('IgxDropDown ', () => {
             }));
         });
         describe('Grouped items', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         GroupDropDownComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(GroupDropDownComponent);
                 fixture.detectChanges();
@@ -1171,14 +1171,14 @@ describe('IgxDropDown ', () => {
             });
         });
         describe('Style and display density', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDropDownTestComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxDropDownTestComponent);
                 fixture.detectChanges();
@@ -1204,14 +1204,14 @@ describe('IgxDropDown ', () => {
         });
         describe('Input properties', () => {
             const customDDId = 'test-id-list';
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDropDownTestComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxDropDownTestComponent);
                 fixture.detectChanges();
@@ -1281,14 +1281,14 @@ describe('IgxDropDown ', () => {
             });
         });
         describe('Anchor element', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDropDownAnchorTestComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxDropDownAnchorTestComponent);
                 fixture.detectChanges();

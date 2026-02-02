@@ -1,6 +1,6 @@
 import { Component, DebugElement, ViewChild } from "@angular/core";
 import { IgxDaysViewComponent } from "./days-view.component";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-webcomponents';
 import { ScrollDirection } from "../calendar";
@@ -15,14 +15,14 @@ const TODAY = new Date(2024, 6, 12);
 describe("Days View Component", () => {
     const baseClass = "igx-days-view";
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [InitDaysViewComponent],
             providers: [
                 KeyboardNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     it("initializes a days-view component with auto-incremented id", () => {
         const fixture = TestBed.createComponent(InitDaysViewComponent);
@@ -161,7 +161,7 @@ describe("Days View Component", () => {
             new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 0),
         );
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(InitDaysViewComponent);
             el = fixture.debugElement.query(
                 By.css("igx-days-view"),
@@ -171,7 +171,7 @@ describe("Days View Component", () => {
 
             el.focus();
             fixture.detectChanges();
-        }));
+        });
 
         it("should navigate to the next day when pressing the right arrow key", () => {
             UIInteractions.triggerKeyDownEvtUponElem(
@@ -326,7 +326,7 @@ describe("Days View Component", () => {
         let el: HTMLElement;
         let instance: IgxDaysViewComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(InitDaysViewComponent);
             el = fixture.debugElement.query(
                 By.css("igx-days-view"),
@@ -336,7 +336,7 @@ describe("Days View Component", () => {
 
             el.focus();
             fixture.detectChanges();
-        }));
+        });
 
         it("should select the clicked date", () => {
             vi.spyOn(instance.dateSelected, "emit");

@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -417,8 +417,8 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Initialization and rendering tests: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     ReactiveFormsModule,
@@ -430,7 +430,7 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboNgModelComponent
                 ]
             }).compileComponents();
-        }));
+        });
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
             fixture.detectChanges();
@@ -808,8 +808,8 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Binding tests: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     ReactiveFormsModule,
@@ -820,7 +820,7 @@ describe('IgxSimpleCombo', () => {
                     ComboModelBindingComponent
                 ]
             }).compileComponents();
-        }));
+        });
         it('should bind combo data to array of primitive data', () => {
             fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
@@ -976,8 +976,8 @@ describe('IgxSimpleCombo', () => {
 
     describe('Keyboard navigation and interactions', () => {
         let dropdown: IgxComboDropDownComponent;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     ReactiveFormsModule,
@@ -989,7 +989,7 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboTabBehaviorTestComponent
                 ]
             }).compileComponents();
-        }));
+        });
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
             fixture.detectChanges();
@@ -2076,8 +2076,8 @@ describe('IgxSimpleCombo', () => {
     describe('Form control tests: ', () => {
         describe('Template form tests: ', () => {
             let inputGroupRequired: DebugElement;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         ReactiveFormsModule,
@@ -2085,14 +2085,14 @@ describe('IgxSimpleCombo', () => {
                         IgxSimpleComboInTemplatedFormComponent
                     ]
                 }).compileComponents();
-            }));
-            beforeEach(waitForAsync(() => {
+            });
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(IgxSimpleComboInTemplatedFormComponent);
                 fixture.detectChanges();
                 combo = fixture.componentInstance.testCombo;
                 input = fixture.debugElement.query(By.css(`${CSS_CLASS_INPUTGROUP} input`));
                 inputGroupRequired = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP_REQUIRED}`));
-            }));
+            });
             it('should properly initialize when used in a template form control', () => {
                 expect(combo.valid).toEqual(IgxInputState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
@@ -2335,8 +2335,8 @@ describe('IgxSimpleCombo', () => {
             }));
         });
         describe('Reactive form tests: ', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         ReactiveFormsModule,
@@ -2344,7 +2344,7 @@ describe('IgxSimpleCombo', () => {
                         IgxSimpleComboInReactiveFormComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSimpleComboInReactiveFormComponent);
                 fixture.detectChanges();
@@ -2627,8 +2627,8 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Selection tests: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     ReactiveFormsModule,
@@ -2638,7 +2638,7 @@ describe('IgxSimpleCombo', () => {
                     IgxComboRemoteDataInReactiveFormComponent
                 ]
             }).compileComponents();
-        }));
+        });
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
             fixture.detectChanges();
@@ -2761,14 +2761,14 @@ describe('IgxSimpleCombo', () => {
     describe('Integration', () => {
         let grid: IgxGridComponent;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxSimpleComboInGridComponent
                 ]
             }).compileComponents();
-        }));
+        });
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxSimpleComboInGridComponent);
             fixture.detectChanges();
