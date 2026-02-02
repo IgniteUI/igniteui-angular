@@ -81,7 +81,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
     }
 
     public override should_apply_number_style(column: ColumnType): boolean {
-        return column.dataType === GridColumnDataType.Number && column.visibleIndex !== 0;
+        return (column.dataType === GridColumnDataType.Number
+            || column.dataType === GridColumnDataType.Currency
+            || column.dataType === GridColumnDataType.Percent) && column.visibleIndex !== 0;
     }
 
     public override deleteRowById(rowID: any): any {
