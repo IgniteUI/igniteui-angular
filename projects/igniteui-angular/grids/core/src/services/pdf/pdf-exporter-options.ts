@@ -48,41 +48,7 @@ export class IgxPdfExporterOptions extends IgxExporterOptionsBase {
      */
     public fontSize = 10;
 
-     /**
-     * Custom font data for Unicode support (optional).
-     * If not provided, uses Helvetica (Latin characters only).
-     *
-     * @example
-     * ```typescript
-     * import { NOTO_SANS_FONT } from './fonts';
-     *
-     * const options = new IgxPdfExporterOptions('Export');
-     * options.customFont = {
-     *     data: NOTO_SANS_FONT,
-     *     name: 'NotoSans'
-     * };
-     * ```
-     */
-    public customFont?: PdfUnicodeFont;
-
     constructor(fileName: string) {
         super(fileName, '.pdf');
     }
-}
-
-/**
- * Font configuration for PDF export
- */
-export interface PdfUnicodeFont {
-    /** Base64-encoded font data */
-    data: string;
-    /** Font family name */
-    name: string;
-    /** Bold variant of the font (optional) */
-    bold?: {
-        /** Base64-encoded bold font data */
-        data: string;
-        /** Font family name (usually same as normal) */
-        name: string;
-    };
 }
