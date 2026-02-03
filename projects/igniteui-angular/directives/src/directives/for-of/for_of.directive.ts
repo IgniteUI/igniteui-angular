@@ -95,7 +95,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected platformUtil = inject(PlatformUtil);
     protected document = inject(DOCUMENT);
     private _igxForOf: U & T[] | null = null;
-    protected _embeddedViewSizesCache = new Map<EmbeddedViewRef<any>, number>();
+    protected _embeddedViewSizesCache = new WeakMap<EmbeddedViewRef<any>, number>();
 
     /**
      * Sets the data to be rendered.
@@ -534,7 +534,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
 
         if (this.viewObserver) {
-            this._embeddedViewSizesCache.clear();
             this.viewObserver.disconnect();
         }
     }
@@ -837,10 +836,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             || containerSize && endTopOffset - containerSize > 5;
     }
 
-    protected getEmbeddedViewSize(index:number ) {
+    protected getNodeSize(rNode: Element, _index: number): number {
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
         this.igxForSizePropName : 'height';
-        const rNode = this.embeddedViewNodes[index];
         const nodeSize = dimension === 'height' ?
             rNode.clientHeight + this.getMargin(rNode, dimension):
             rNode.clientWidth + this.getMargin(rNode, dimension);
@@ -860,10 +858,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
         const diffs = [];
         let totalDiff = 0;
-
+        const nodes = this.embeddedViewNodes;
         for (let index = 0; index < this._embeddedViews.length; index++) {
             const targetIndex = this.state.startIndex + index;
-            const nodeSize = this.getEmbeddedViewSize(index);
+            const nodeSize = this.getNodeSize(nodes[index], index);
             const oldVal = this.individualSizeCache[targetIndex];
             const currDiff = nodeSize - oldVal;
             diffs.push(currDiff);
@@ -880,12 +878,12 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             // update scrBar heights/widths
             const reducer = (acc, val) => acc + val;
 
-            const hSum = this.individualSizeCache.reduce(reducer);
-            if (hSum > this._maxSize) {
-                this._virtRatio = hSum / this._maxSize;
+            this._virtSize += totalDiff;
+            if (this._virtSize > this._maxSize) {
+                this._virtRatio = this._virtSize / this._maxSize;
             }
             this.scrollComponent.size = Math.min(this.scrollComponent.size + totalDiff, this._maxSize);
-            this._virtSize = hSum;
+
             if (!this.scrollComponent.destroyed) {
                 this.scrollComponent.cdr.detectChanges();
             }
@@ -995,12 +993,12 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     protected updateViewSizes(entries:ResizeObserverEntry[] ) {
-        entries.forEach((entry) => {
-            const index = parseInt(entry.target.getAttribute('data-index'), 0);
+        for (const entry of entries) {
+            const index = parseInt(entry.target.getAttribute('data-index'), 10);
             const height = entry.contentRect.height;
             const embView = this._embeddedViews[index - this.state.startIndex];
             this._embeddedViewSizesCache.set(embView, height);
-        });
+        }
         this.recalcUpdateSizes();
     }
 
@@ -1822,12 +1820,12 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         return totalSize;
     }
 
-    protected override getEmbeddedViewSize(index:number ) {
+    protected override getNodeSize(rNode: Element, index?: number): number {
         if (this.igxForScrollOrientation === 'vertical') {
             const view = this._embeddedViews[index];
             return this._embeddedViewSizesCache.get(view) || parseInt(this.igxForItemSize, 10);
         } else {
-            return super.getEmbeddedViewSize(index);
+            return super.getNodeSize(rNode, index);
         }
     }
 
