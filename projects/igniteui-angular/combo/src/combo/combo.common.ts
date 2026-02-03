@@ -1040,7 +1040,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
             this.dataPreLoad.emit(eventArgs);
         });
-        this.dropdown?.opening.subscribe((_args: IBaseCancelableBrowserEventArgs) => {
+        this.dropdown?.opened.subscribe((_args: IBaseCancelableBrowserEventArgs) => {
             // calculate the container size and item size based on the sizes from the DOM
             const dropdownContainerHeight = this.dropdownContainer.nativeElement.getBoundingClientRect().height;
             if (dropdownContainerHeight) {
