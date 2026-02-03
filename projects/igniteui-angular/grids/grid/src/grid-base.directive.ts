@@ -3688,21 +3688,25 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-        fromEvent(this.document, 'focusin')
-            .pipe(filter(() => !!this.navigation.activeNode), destructor)
-            .subscribe((event: FocusEvent) => {
-                if (this.crudService.cell || !this.navigation.activeNode) {
-                    return;
-                }
-                if (this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode) {
-                    return;
-                }
-                const target = event.target as Node;
-                if (target && this.nativeElement.contains(target)) {
-                    return;
-                }
-                Promise.resolve().then(() => this.clearActiveNode());
-            });
+        fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+            const activeNode = this.navigation.activeNode;
+
+            // In hierarchical grids, activation can be cleared by child highlight logic, leaving an empty object.
+            // If merging is enabled, clear cached active indexes to allow merge state to restore.
+            if (!Object.keys(activeNode).length && this.hasCellsToMerge) {
+                this._activeRowIndexes = null;
+                this.notifyChanges();
+            }
+
+            if (!this.crudService.cell && !!activeNode &&
+                ((event.target === this.tbody.nativeElement && activeNode.row >= 0 &&
+                    activeNode.row < this.dataView.length)
+                    || (event.target === this.theadRow.nativeElement && activeNode.row === -1)
+                    || (event.target === this.tfoot.nativeElement && activeNode.row === this.dataView.length)) &&
+                !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
+                this.clearActiveNode();
+            }
+        });
         this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.rowDeletedNotifier.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
