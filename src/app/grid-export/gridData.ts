@@ -1,6 +1,6 @@
 export const GRID_DATA: any[] = [{
     ProductID: 1,
-    ProductName: "Chai / 茶",
+    ProductName: "Chai",
     SupplierID: 1,
     CategoryID: 1,
     QuantityPerUnit: "10 boxes x 20 bags",
@@ -15,7 +15,7 @@ export const GRID_DATA: any[] = [{
     PercentInStock: 0.6807
   }, {
     ProductID: 2,
-    ProductName: "Chang / チャン",
+    ProductName: "Chang",
     SupplierID: 1,
     CategoryID: 1,
     QuantityPerUnit: "24 - 12 oz bottles",
@@ -30,7 +30,7 @@ export const GRID_DATA: any[] = [{
     PercentInStock: 0.7006
   }, {
     ProductID: 3,
-    ProductName: "Сироп / Aniseed Syrup",
+    ProductName: "Aniseed Syrup",
     SupplierID: 1,
     CategoryID: 2,
     QuantityPerUnit: "12 - 550 ml bottles",
