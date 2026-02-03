@@ -26,16 +26,12 @@
         &[popover] {
             // Reset popover defaults to use our positioning with !important to override UA styles
             position: fixed !important;
-            inset: 0 !important;
             margin: 0 !important;
             border: 0 !important;
             padding: 0 !important;
-            width: auto !important;
-            height: auto !important;
-            max-width: none !important;
-            max-height: none !important;
+            width: auto;
+            height: auto;
             overflow: visible !important;
-            background: transparent !important;
         }
     }
 
