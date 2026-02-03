@@ -349,14 +349,15 @@
     }
 
     %igx-stepper__step-content-wrapper {
-        padding-inline-start: calc(#{$v-line-indent} * 2);
+        margin-inline-start: $v-line-indent;
+        padding-inline-start: $v-line-indent;
         position: relative;
         min-height: if($variant == 'indigo', rem(24px), rem(32px));
 
         &::before {
             content: '';
             position: absolute;
-            inset-inline-start: calc(#{$v-line-indent} - (#{$separator-size} / 2));
+            inset-inline-start: calc(-#{$separator-size} / 2);
             top: calc(-#{$step-header-padding} + #{$title-gap});
             bottom: calc(-#{$step-header-padding} + #{$title-gap});
             width: $separator-size;
