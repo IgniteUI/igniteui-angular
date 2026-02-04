@@ -5,7 +5,7 @@ import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrat
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
 import { hasClass, setElementSize } from '../../test-utils/helper-utils.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { IgxHierarchicalGridTestBaseComponent } from '../hierarchical-grid/hierarchical-grid.spec';
@@ -1154,9 +1154,10 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const parentRowDE = parentRows[0];
                 const parentCells = parentRowDE.queryAll(By.css('.igx-grid__td'));
                 const parentCellDE = parentCells[1];
+                const activeChange = waitForActiveNodeChange(childGrid);
                 UIInteractions.simulateClickAndSelectEvent(parentCellDE.nativeElement);
-                parentCellDE.nativeElement.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
-                await wait(1);
+                await activeChange;
+                await wait(20);
                 fix.detectChanges();
 
                 GridFunctions.verifyColumnMergedState(childGrid, childCol, [
