@@ -301,6 +301,40 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
             });
 
+            it('should not return an out of bounds row index when navigating down from the last layout row', () => {
+                fix.componentInstance.data = SampleTestData.contactInfoDataFull().slice(0, 10);
+                fix.componentInstance.colGroups = [{
+                    group: 'group1',
+                    columns: [
+                        { field: 'ID', rowStart: 1, colStart: 1 },
+                        { field: 'CompanyName', rowStart: 1, colStart: 2 },
+                        { field: 'ContactName', rowStart: 1, colStart: 3 },
+                        { field: 'ContactTitle', rowStart: 1, colStart: 4 },
+                        { field: 'Address', rowStart: 1, colStart: 5 },
+                        { field: 'City', rowStart: 2, colStart: 1 },
+                        { field: 'Region', rowStart: 2, colStart: 2 },
+                        { field: 'PostalCode', rowStart: 2, colStart: 3 },
+                        { field: 'Phone', rowStart: 2, colStart: 4 },
+                        { field: 'Fax', rowStart: 2, colStart: 5 }
+                    ]
+                }];
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const lastRowIndex = grid.dataView.length - 1;
+                const navService = grid.navigation as IgxGridMRLNavigationService;
+                const col = grid.getColumnByName('City');
+                navService.setActiveNode({
+                    row: lastRowIndex,
+                    column: col.visibleIndex,
+                    layout: navService.layout(col.visibleIndex)
+                });
+
+                const nextPos = navService.getNextVerticalPosition();
+                expect(nextPos.row).toBe(lastRowIndex);
+                expect(nextPos.column).toBe(navService.activeNode.column);
+            });
+
             it('should navigate up correctly', () => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',

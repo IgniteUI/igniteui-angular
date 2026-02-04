@@ -16,6 +16,9 @@ All notable changes for each version of this project will be documented in this 
         <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
         ```
 
+- `IgxCombo`, `IgxSimpleCombo`
+    - Introduced the ability for Combo and Simple Combo to close the dropdown list and move the focus to the next focusable element on "Tab" press and clear the selection if the combo is collapsed on "Escape".
+
 ### Breaking Changes
 
 - `igxForOf`, `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`, `igxPivotGrid`
