@@ -3690,14 +3690,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
             const activeNode = this.navigation.activeNode;
-
-            // In hierarchical grids, activation can be cleared by child highlight logic, leaving an empty object.
-            // If merging is enabled, clear cached active indexes to allow merge state to restore.
-            if (!Object.keys(activeNode).length && this.hasCellsToMerge) {
-                this._activeRowIndexes = null;
-                this.notifyChanges();
-            }
-
             if (!this.crudService.cell && !!activeNode &&
                 ((event.target === this.tbody.nativeElement && activeNode.row >= 0 &&
                     activeNode.row < this.dataView.length)
