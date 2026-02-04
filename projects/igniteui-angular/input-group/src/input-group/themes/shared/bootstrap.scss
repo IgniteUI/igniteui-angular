@@ -108,7 +108,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
         @include type-style(body-1);
 
         min-height: 100%;
-        padding-block: pad-block(rem(4px), rem(8px), rem(12px)) 0;
+        padding-block: pad-block(rem(4px), rem(8px), rem(12px));
         padding-inline: pad-inline(rem(8px), rem(10px), rem(14px));
     }
 
