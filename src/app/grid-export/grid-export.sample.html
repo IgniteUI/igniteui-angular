@@ -8,7 +8,7 @@
         <igx-paginator></igx-paginator>
         <igx-column #col field="ProductID" header="Product ID" [headerClasses]="'prodId'">
         </igx-column>
-        <igx-column #col field="ProductName" header="フィルター" [headerClasses]="'prodId'" [hasSummary]="col.hasSummary">
+        <igx-column #col field="ProductName" header="Product Name" [headerClasses]="'prodId'" [hasSummary]="col.hasSummary">
             <ng-template igxCell let-cell="cell" let-val>
                 {{val}}
             </ng-template>
@@ -17,7 +17,7 @@
                 <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
             </ng-template>
         </igx-column>
-        <igx-column #col field="UnitPrice" header="Цена" [filterable]="false" [editable]="true" dataType="currency"
+        <igx-column #col field="UnitPrice" header="Price" [filterable]="false" [editable]="true" dataType="currency"
             [hasSummary]="true">
             <ng-template igxHeader let-col>
                 <div class="header-text">{{col.field}}</div>
