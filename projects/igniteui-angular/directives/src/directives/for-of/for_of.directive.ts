@@ -997,7 +997,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             const index = parseInt(entry.target.getAttribute('data-index'), 10);
             const height = entry.contentRect.height;
             const embView = this._embeddedViews[index - this.state.startIndex];
-            this._embeddedViewSizesCache.set(embView, height);
+            if (embView) {
+                this._embeddedViewSizesCache.set(embView, height);
+            }
         }
         this.recalcUpdateSizes();
     }
