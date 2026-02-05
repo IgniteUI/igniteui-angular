@@ -88,6 +88,13 @@ export class IgxGridToolbarComponent implements OnDestroy {
     @HostBinding('class.igx-grid-toolbar')
     public defaultStyle = true;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'presentation';
+
     protected _grid: GridType;
     protected sub: Subscription;
 
