@@ -471,7 +471,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public ngOnChanges(changes) {
+    public override ngOnChanges(changes) {
         this.layoutChange.emit(changes);
         if (!this.isInit) {
             this.initialChanges.push(changes);
