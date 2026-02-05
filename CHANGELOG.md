@@ -2,13 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 21.2.0
-
-### Breaking Changes
-
-- `igxForOf`, `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`, `igxPivotGrid`
-    - original `data` array mutations (like adding/removing/moving records in the original array) are no longer detected automatically. Components need an array ref change for the change to be detected.
-
 ## 21.1.0
 
 ### New Features
@@ -23,7 +16,16 @@ All notable changes for each version of this project will be documented in this 
         <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
         ```
 
-# Localization(i18n)
+### General
+- `IgxCombo`, `IgxSimpleCombo`
+    - Combo and Simple Combo now close the dropdown list and move the focus to the next focusable element on "Tab" press and clear the selection if the combo is collapsed on "Escape".
+
+### Breaking Changes
+
+- `igxForOf`, `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`, `igxPivotGrid`
+    - original `data` array mutations (like adding/removing/moving records in the original array) are no longer detected automatically. Components need an array ref change for the change to be detected.
+
+### Localization(i18n)
 
 - `IgxActionStrip`, `IgxBanner`, `IgxCalendar`, `IgxCarousel`, `IgxChip`, `IgxCombo`, `IgxDatePicker`, `IgxDateRangePicker`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxInputs`, `IgxList`, `IgxPaginator`, `IgxQueryBuilder`, `IgxTimePicker`, `IgxTree`
   - New `Intl` implementation for all currently supported components that format and render data like dates and numbers.

@@ -355,7 +355,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     private hasNextVerticalPosition(prev = false) {
         if ((prev && this.activeNode.row === 0 && (!this.isDataRow(this.activeNode.row) || this.activeNode.layout.rowStart === 1)) ||
-            (!prev && this.activeNode.row >= this.grid.dataView.length - 1 && this.activeNode.column === this.lastColIndexPerMRLBlock())) {
+            (!prev && this.activeNode.row >= this.grid.dataView.length - 1 &&
+                this.activeNode.layout.rowStart === this.lastRowStartPerBlock())) {
             return false;
         }
         return true;
