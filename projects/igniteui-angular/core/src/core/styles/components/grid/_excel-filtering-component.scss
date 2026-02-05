@@ -65,15 +65,24 @@
         }
 
         @include e(menu-footer) {
-            @extend %grid-excel-menu__footer !optional;
+            display: flex;
+            justify-content: space-between;
         }
 
         @include e(sort) {
-            @extend %grid-excel-sort !optional;
+            @extend %grid-excel-action--compact;
+
+            igx-buttongroup {
+                width: rem(208px);
+            }
         }
 
         @include e(move) {
-            @extend %grid-excel-move !optional;
+            @extend %grid-excel-action--compact;
+
+            igx-buttongroup {
+                width: rem(208px);
+            }
         }
 
         @include e(actions) {

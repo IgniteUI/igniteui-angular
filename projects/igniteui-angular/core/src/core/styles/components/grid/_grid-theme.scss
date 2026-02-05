@@ -874,7 +874,7 @@
         border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
         outline-style: none;
         position: relative;
-        background-clip: content-box !important;
+        //background-clip: content-box !important;
 
         &:hover {
             background: var-get($theme, 'row-hover-background');
@@ -945,7 +945,7 @@
         z-index: 4;
         cursor: move;
         border-inline-end: rem(1px) solid transparent;
-        background-clip: border-box;
+        //background-clip: border-box;
 
         igx-icon {
             --component-size: #{if($variant == 'indigo', 2, 3)};
@@ -1226,7 +1226,7 @@
         padding-block: 0;
         color: inherit;
         text-align: start;
-        background-clip: border-box !important;
+        //background-clip: border-box !important;
 
         @if $variant != 'indigo' {
             font-size: $grid-cell-fs;
@@ -1765,7 +1765,7 @@
         align-items: center;
         background: inherit;
         z-index: 4;
-        background-clip: border-box;
+        //background-clip: border-box;
     }
 
     %cbx-padding {
@@ -2115,7 +2115,7 @@
         border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
-        background-clip: border-box;
+        //background-clip: border-box;
 
         &::after {
             content: '';
@@ -2622,7 +2622,7 @@
         cursor: pointer;
         z-index: 3;
         color: var-get($theme, 'expand-icon-color');
-        background-clip: border-box;
+        //background-clip: border-box;
 
         &:focus {
             outline: none;
@@ -2660,7 +2660,7 @@
         background: inherit;
         border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
         z-index: 3;
-        background-clip: border-box;
+        //background-clip: border-box;
 
         igx-icon {
             display: flex;
@@ -2850,7 +2850,7 @@
         }
 
         padding-block: 0;
-        background-clip: border-box !important;
+        //background-clip: border-box !important;
         border-inline-start: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 

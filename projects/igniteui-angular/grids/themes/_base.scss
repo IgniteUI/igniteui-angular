@@ -11,6 +11,7 @@ $cell-font-size: rem(13px);
 $cell-line-height: rem(16px);
 $cell-editing-outline-width: rem(2px);
 $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+$grid-body-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'body-border-color');
 
 $cell-padding-sm: rem(12px);
 $cell-padding-md: rem(16px);
@@ -30,18 +31,19 @@ $pinned-shadow-size: #{rem(1px)};
         outline-style: none;
         color: inherit;
         text-align: start;
-        // TODO: Verify if this is needed, commenting out for now
-        background-clip: border-box !important;
-
         min-height: var(--cell-height);
         overflow: hidden;
+        padding-block: 0;
 
-        // Font size for the cell is different in the ingigo theme -> it simply uses the detail-1 styles for all cells
+        // (!) the background-clip: padding-box; makes sure the background never go under the border,
+        // this is very important especially of the borders have slide alpha
+        background-clip: padding-box !important;
+
+        // TODO Font size for the cell is different in the indigo theme -> it simply uses the detail-1 styles for all cells
         font-size: $cell-font-size;
         line-height: $cell-line-height;
 
-        padding-block: 0;
-        // The inline padding styles should be different in the indigo theme -> 8px, 12px, 16px
+        // TODO The inline padding styles should be different in the indigo theme -> 8px, 12px, 16px
         padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
     }
 
@@ -81,7 +83,7 @@ $pinned-shadow-size: #{rem(1px)};
         // Derived size variables for header, group area, and tree indentation
         --header-size: #{sizable(rem(32px), rem(40px), rem(50px))};
         --grouparea-size: #{sizable(rem(41px), rem(49px), rem(57px))};
-        --igx-tree-indent-size: #{sizable(rem(24px), rem(16px), rem(12px))};
+        --igx-tree-indent-size: #{sizable(rem(12px), rem(16px), rem(24px))};
 
         --_grid-head-font-size: #{rem(12px)};
 
@@ -243,9 +245,10 @@ $pinned-shadow-size: #{rem(1px)};
             display: flex;
             outline-style: none;
             border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
-            // TODO: Why is this needed?
-            background-clip: content-box !important;
 
+            // (!) the background-clip: padding-box; makes sure the background never go under the border,
+            // this is very important especially of the borders have slide alpha
+            background-clip: padding-box !important;
 
             .igx-display-container {
                 overflow: visible !important;
@@ -402,7 +405,7 @@ $pinned-shadow-size: #{rem(1px)};
             @extend %cell-display;
 
             // TODO the body column border should be transparent by default we should create new variables for it
-            border-inline-end: $grid-header-border;
+            border-inline-end: $grid-body-border;
 
             // Used for the active cell indicator
             &::after {
@@ -692,7 +695,8 @@ $pinned-shadow-size: #{rem(1px)};
 
             // Top border indicator
             &::after {
-                z-index: 1;
+                // This is do to the pinned border 9999 z-index
+                z-index: 10000;
                 box-shadow:
                     inset 0 rem(1px) 0 0 var-get($theme, 'edit-mode-color'),
                     inset 0 rem(-1px) 0 0 var-get($theme, 'edit-mode-color');
@@ -834,7 +838,10 @@ $pinned-shadow-size: #{rem(1px)};
                 var-get($theme, 'header-border-color');
             background: inherit;
             z-index: 1;
-            background-clip: border-box;
+
+            // (!) the background-clip: padding-box; makes sure the background never go under the border,
+            // this is very important especially of the borders have slide alpha
+            background-clip: padding-box !important;
 
             &::after {
                 content: '';
@@ -855,7 +862,6 @@ $pinned-shadow-size: #{rem(1px)};
             cursor: pointer;
             z-index: 3;
             color: var-get($theme, 'expand-icon-color');
-            background-clip: border-box;
 
             &:focus {
                 outline: none;
@@ -895,7 +901,6 @@ $pinned-shadow-size: #{rem(1px)};
             border-inline-end: rem(1px) solid
                 var-get($theme, 'header-border-color');
             z-index: 3;
-            background-clip: border-box;
 
             igx-icon {
                 display: flex;
@@ -984,7 +989,10 @@ $pinned-shadow-size: #{rem(1px)};
             align-items: center;
             background: inherit;
             z-index: 4;
-            background-clip: border-box;
+
+            // (!) the background-clip: padding-box; makes sure the background never go under the border,
+            // this is very important especially of the borders have slide alpha
+            background-clip: padding-box !important;
         }
 
         // Checkbox selection pushed to top (for header alignment)
@@ -1129,7 +1137,6 @@ $pinned-shadow-size: #{rem(1px)};
             height: var(--header-size);
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
             padding-block: 0;
-            background-clip: border-box !important;
             border-inline-end: $grid-header-border;
             border-bottom: $grid-header-border;
 
@@ -1278,8 +1285,7 @@ $pinned-shadow-size: #{rem(1px)};
             background: inherit;
             z-index: 4;
             cursor: move;
-            border-inline-end: rem(1px) solid transparent;
-            background-clip: border-box;
+            //border-inline-end: rem(1px) solid transparent;
 
             igx-icon {
                 --component-size: 3;
@@ -1633,18 +1639,22 @@ $pinned-shadow-size: #{rem(1px)};
             }
         }
 
-        // Filtering cell (advanced filtering)
-        @include e(filtering-cell) {
+        %filtering-cell {
             display: flex;
             align-items: center;
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
             padding-block: 0;
             overflow: hidden;
             border-inline-end: rem(1px) solid
-                var-get($theme, 'header-border-color');
+            var-get($theme, 'header-border-color');
             border-top: rem(1px) solid var-get($theme, 'header-border-color');
             height: var(--header-size);
+
+
+            // (!) the background-clip: padding-box; makes sure the background never go under the border,
+            // this is very important especially of the borders have slide alpha
             background-clip: padding-box !important;
+
 
             igx-chips-area {
                 width: 100%;
@@ -1660,8 +1670,16 @@ $pinned-shadow-size: #{rem(1px)};
             }
         }
 
+        // Filtering cell (advanced filtering)
+        @include e(filtering-cell) {
+            @extend %filtering-cell;
+        }
+
         // Filtering cell selected state
         @include e(filtering-cell, $m: selected) {
+            @extend %filtering-cell;
+
+            color: var-get($theme, 'header-selected-text-color');
             background: var-get($theme, 'header-selected-background');
 
             igx-chips-area {
@@ -1929,17 +1947,20 @@ $pinned-shadow-size: #{rem(1px)};
         flex: 1 1 0%;
         color: inherit;
         text-align: start;
-        // TODO: Verify if this is needed, commenting out for now
+
+        // (!) the background-clip: padding-box; makes sure the background never go under the border,
+        // this is very important especially of the borders have slide alpha
         background-clip: padding-box !important;
 
-        // Font size for the cell is different in the ingigo theme -> it simply uses the detail-1 styles for all cells
+        // TODO Font size for the cell is different in the indigo theme -> it simply uses the detail-1 styles for all cells
         line-height: $cell-line-height;
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: flex-end;
         min-width: 0;
         min-height: var(--header-size);
-        // The inline padding styles should be different in the indigo theme -> 8px, 12px, 16px
+
+        // TODO The inline padding styles should be different in the indigo theme -> 8px, 12px, 16px
         padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
         padding-block: 0;
         font-size: rem(12px);
@@ -1957,6 +1978,7 @@ $pinned-shadow-size: #{rem(1px)};
             cursor: pointer;
 
             igx-icon {
+                // TODO CHECK THIS FOR INDIGO
                 // @if $variant == 'indigo' {
                 //     --component-size: 2;
                 // }
@@ -1991,7 +2013,9 @@ $pinned-shadow-size: #{rem(1px)};
             align-items: center;
             justify-content: flex-end;
             user-select: none;
-            min-width: rem(30px); /* sort-icon + filter icon width */
+
+            /* sort-icon + filter icon width */
+            min-width: rem(30px);
             height: var(--header-size);
             align-self: flex-end;
 
