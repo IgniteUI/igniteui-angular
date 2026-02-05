@@ -144,6 +144,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
             this._updateExistingContext(this.igxTemplateOutletContext);
         }
     }
+
     private _useCachedView(cachedView: EmbeddedViewRef<any>) {
         // use view for specific template cached in the current template outlet
         // if view exists, but template has been changed and there is a view in the cache with the related template
@@ -151,8 +152,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
         // after that update its context.
         if (this._viewContainerRef.length > 0) {
             this.beforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
-            // Since the directive always inserts at index 0, we can safely detach at index 0
-            this._viewContainerRef.detach(0);
+            this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
         }
 
         this._viewRef = cachedView;
