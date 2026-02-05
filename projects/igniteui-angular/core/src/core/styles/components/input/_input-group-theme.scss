@@ -149,6 +149,7 @@
         [igxPrefix] {
             @extend %form-group-prefix;
             outline-style: none;
+            cursor: default;
 
             &:first-child {
                 @if $variant == 'fluent' {
@@ -164,6 +165,7 @@
         [igxSuffix] {
             @extend %form-group-suffix;
             outline-style: none;
+            cursor: default;
 
             &:last-child {
                 @if $variant == 'fluent' {
@@ -1425,7 +1427,6 @@
     }
 
     %form-group-input--hover {
-        cursor: pointer;
         color: var-get($theme, 'filled-text-hover-color');
 
         &::placeholder {
@@ -1434,7 +1435,6 @@
     }
 
     %form-group-input--focus {
-        cursor: text;
         color: var-get($theme, 'focused-text-color');
 
         &::placeholder {
