@@ -15,7 +15,6 @@ import { DebugElement, QueryList } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
-import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
 
 const DEBOUNCETIME = 100;
 
@@ -223,9 +222,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         }));
 
         beforeEach(() => {
-            TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
-            });
             fix = TestBed.createComponent(VirtualGridComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;

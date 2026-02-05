@@ -30,7 +30,6 @@ import {
     ViewContainerRef,
     DOCUMENT,
     inject,
-    InjectionToken
 } from '@angular/core';
 import {
     areEqualArrays,
@@ -111,15 +110,6 @@ import { CharSeparatedValueData, DropPosition, FilterMode, getUUID, GridCellMerg
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from 'igniteui-i18n-core';
 import { I18N_FORMATTER } from 'igniteui-angular/core';
 
-/**
- * Injection token for setting the throttle time used in grid virtual scroll.
- * @hidden
- */
-export const SCROLL_THROTTLE_TIME = /*@__PURE__*/new InjectionToken<number>('SCROLL_THROTTLE_TIME', {
-    factory: () => 40
-});
-
-
 interface IMatchInfoCache {
     row: any;
     index: number;
@@ -176,7 +166,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _diTransactions = inject(IgxGridTransaction, { optional: true });
     /** @hidden @internal */
     public i18nFormatter = inject(I18N_FORMATTER);
-    private readonly THROTTLE_TIME = inject(SCROLL_THROTTLE_TIME);
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
@@ -3730,7 +3719,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.scrollNotify.pipe(
             filter(() => !this._init),
-            throttleTime(this.THROTTLE_TIME, animationFrameScheduler, { leading: false, trailing: true }),
             destructor
         )
             .subscribe((event) => {
