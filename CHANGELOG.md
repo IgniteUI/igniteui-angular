@@ -24,6 +24,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `igxForOf`, `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`, `igxPivotGrid`
     - original `data` array mutations (like adding/removing/moving records in the original array) are no longer detected automatically. Components need an array ref change for the change to be detected.
+- `IgxGridGroupByAreaComponent` has moved from the `grids/core` to the `grids/grid` entry point. The `ng update` migration will prompt you to optionally migrate your imports to the new entry point.
 
 ### Localization(i18n)
 
