@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, input, OnInit, output, signal, viewChild } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, input, OnInit, output, signal, viewChild } from '@angular/core';
 import { DataPipelineConfiguration, FilterExpression, GridLiteSortingOptions, IgcGridLite, Keys, SortingExpression } from 'igniteui-grid-lite';
 import { IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
 
@@ -39,7 +39,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * @remarks
      * This property is ignored if any existing column configuration already exists in the grid.
      */
-    public readonly autoGenerate = input<boolean>(false);
+    public readonly autoGenerate = input(false, { transform: booleanAttribute });;
 
     /** Sort configuration property for the grid. */
     public readonly sortingOptions = input<IgxGridLiteSortingOptions>({
@@ -164,7 +164,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
     //#endregion
 
     /**
-     * @internal
+     * @hidden @internal
      */
     public ngOnInit(): void {
         IgcGridLite.register();

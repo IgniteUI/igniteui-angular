@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, contentChild, CUSTOM_ELEMENTS_SCHEMA, Directive, effect, EmbeddedViewRef, inject, input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, contentChild, CUSTOM_ELEMENTS_SCHEMA, Directive, effect, EmbeddedViewRef, inject, input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ColumnConfiguration, ColumnSortConfiguration, IgcCellContext, IgcHeaderContext, Keys, DataType } from 'igniteui-grid-lite';
 
 /** Configuration object for grid columns. */
@@ -88,25 +88,25 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
     public readonly width = input<string>();
 
     /** Indicates whether the column is hidden. */
-    public readonly hidden = input<boolean>(false);
+    public readonly hidden = input(false, { transform: booleanAttribute });
 
     /** Indicates whether the column is resizable. */
-    public readonly resizable = input<boolean>(false);
+    public readonly resizable = input(false, { transform: booleanAttribute });
 
     /** Indicates whether the column is sortable. */
-    public readonly sortable = input<boolean>(false);
+    public readonly sortable = input(false, { transform: booleanAttribute });
 
     /** Whether sort operations will be case sensitive. */
-    public readonly sortingCaseSensitive = input<boolean>(false);
+    public readonly sortingCaseSensitive = input(false, { transform: booleanAttribute });
 
     /** Sort configuration for the column (e.g., custom comparer). */
     public readonly sortConfiguration = input<IgxGridLiteColumnSortConfiguration<T>>();
 
     /** Indicates whether the column is filterable. */
-    public readonly filterable = input<boolean>(false);
+    public readonly filterable = input(false, { transform: booleanAttribute });
 
     /** Whether filter operations will be case sensitive. */
-    public readonly filteringCaseSensitive = input<boolean>(false);
+    public readonly filteringCaseSensitive = input(false, { transform: booleanAttribute });
 
     /** Custom header template for the column. */
     public readonly headerTemplate = input<TemplateRef<IgxGridLiteHeaderTemplateContext<T>>>();

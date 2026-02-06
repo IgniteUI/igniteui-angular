@@ -9,11 +9,11 @@
     field="firstName"
     dataType="string"
     header="First Name"
-    [width]="'250px'"
-    [sortable]="true"
-    [sortingCaseSensitive]="true"
-    [filterable]="true"
-    [filteringCaseSensitive]="false"
+    width="250px"
+    sortable
+    sortingCaseSensitive
+    filterable
+    filteringCaseSensitive
     [headerTemplate]="headerTemplate"
   >
   </igx-grid-lite-column>
@@ -22,7 +22,7 @@
     dataType="string"
     header="Last Name"
     [cellTemplate]="cellTemplate"
-    [sortable]="true"
+    sortable
   >
     <ng-template igxGridLiteHeader let-column let-parent="parent">
       <div>{{column.header}} Templated inline</div>
@@ -33,9 +33,9 @@
     field="age"
     dataType="number"
     header="Age"
-    [filterable]="true"
-    [resizable]="true"
-    [sortable]="true"
+    filterable
+    resizable
+    sortable
   ></igx-grid-lite-column>
   <igx-grid-lite-column field="active" dataType="boolean" header="Active">
     <ng-template
