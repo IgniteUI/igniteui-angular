@@ -21,7 +21,7 @@ export default [
         rules: {
             "@angular-eslint/component-selector": ["error", {
                 type: "element",
-                prefix: ["igx", "igc", "test"],
+                prefix: ["igx", "test"],
                 style: "kebab-case",
             }],
 
