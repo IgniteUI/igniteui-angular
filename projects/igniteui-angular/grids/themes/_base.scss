@@ -12,6 +12,7 @@ $cell-line-height: rem(16px);
 $cell-editing-outline-width: rem(2px);
 $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 $grid-body-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'body-border-color');
+$grid-active-state-border: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
 
 $cell-padding-sm: rem(12px);
 $cell-padding-md: rem(16px);
@@ -362,7 +363,7 @@ $pinned-shadow-size: #{rem(1px)};
             z-index: 10000;
 
             .igx-grid__hierarchical-expander--empty {
-                border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+                border-inline-end: $grid-header-border;
             }
         }
 
@@ -581,8 +582,7 @@ $pinned-shadow-size: #{rem(1px)};
 
         @include e(td, $m: active) {
             &::after {
-                box-shadow: inset 0 0 0 rem(1px)
-                    var-get($theme, 'cell-active-border-color');
+                box-shadow: $grid-active-state-border;
             }
         }
 
@@ -784,8 +784,7 @@ $pinned-shadow-size: #{rem(1px)};
 
         // Active row container
         @include e(tr-container, $m: active) {
-            box-shadow: inset 0 0 0 rem(1px)
-                var-get($theme, 'cell-active-border-color');
+            box-shadow: $grid-active-state-border;
         }
 
         // Action row (for row actions like edit, delete buttons)
@@ -834,8 +833,7 @@ $pinned-shadow-size: #{rem(1px)};
             justify-content: center;
             align-items: center;
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
-            border-inline-end: rem(1px) solid
-                var-get($theme, 'header-border-color');
+            border-inline-end: $grid-header-border;
             background: inherit;
             z-index: 1;
 
@@ -898,8 +896,7 @@ $pinned-shadow-size: #{rem(1px)};
         // Hierarchical expander in header
         @include e(hierarchical-expander, $m: header) {
             background: inherit;
-            border-inline-end: rem(1px) solid
-                var-get($theme, 'header-border-color');
+            border-inline-end: $grid-header-border;
             z-index: 3;
 
             igx-icon {
@@ -992,7 +989,7 @@ $pinned-shadow-size: #{rem(1px)};
 
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
             // this is very important especially of the borders have slide alpha
-            background-clip: padding-box !important;
+            background-clip: border-box !important;
         }
 
         // Checkbox selection pushed to top (for header alignment)
@@ -1016,12 +1013,21 @@ $pinned-shadow-size: #{rem(1px)};
 
         // Active group row
         @include e(group-row, $m: active) {
+            position: relative;
             background: var-get($theme, 'group-row-selected-background');
-            box-shadow: inset 0 0 0 rem(1px)
-                var-get($theme, 'cell-active-border-color');
 
             &:hover {
                 background: var-get($theme, 'group-row-selected-background');
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                inset: 0;
+                box-shadow: $grid-active-state-border;
+                z-index: 4
             }
         }
 
@@ -1115,11 +1121,6 @@ $pinned-shadow-size: #{rem(1px)};
             display: grid !important;
             background: inherit;
             position: relative;
-
-            .igx-grid-th,
-            .igx-grid__td:not(:only-child, :last-child) {
-                border-block-end: $grid-header-border;
-            }
         }
 
         // Pivot grid super-compact mode
@@ -1419,7 +1420,7 @@ $pinned-shadow-size: #{rem(1px)};
             // Color styles
             color: var-get($theme, 'filtering-row-text-color');
             background: var-get($theme, 'filtering-row-background');
-            border-bottom: rem(1px) solid var-get($theme, 'header-border-color');
+            border-bottom: $grid-header-border;
 
             // Compound components overrides
             igx-input-group {
@@ -1645,9 +1646,8 @@ $pinned-shadow-size: #{rem(1px)};
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
             padding-block: 0;
             overflow: hidden;
-            border-inline-end: rem(1px) solid
-            var-get($theme, 'header-border-color');
-            border-top: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-end: $grid-header-border;
+            border-top: $grid-header-border;
             height: var(--header-size);
 
 
@@ -1776,8 +1776,7 @@ $pinned-shadow-size: #{rem(1px)};
         @include e(summaries-patch) {
             position: relative;
             background: inherit;
-            border-inline-end: rem(1px) solid
-                var-get($theme, 'header-border-color');
+            border-inline-end: $grid-header-border;
             z-index: 1;
         }
 
@@ -2107,7 +2106,7 @@ $pinned-shadow-size: #{rem(1px)};
                 inset: 0;
                 width: 100%;
                 height: 100%;
-                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
+                box-shadow: $grid-active-state-border;
                 pointer-events: none;
             }
         }
@@ -2256,28 +2255,6 @@ $pinned-shadow-size: #{rem(1px)};
             }
             @extend %igx-grid-th--filtrable-sortable !optional;
         }
-
-        // @include mx(selectable, active) {
-        //     box-shadow: inset 0 0 0 rem(1px)
-        //         var-get($theme, 'cell-active-border-color');
-        //
-        //     border-inline-end-color: var-get(
-        //         $theme,
-        //         'cell-active-border-color'
-        //     );
-        //     border-bottom-color: var-get($theme, 'cell-active-border-color');
-        // }
-        //
-        // @include mx(selected, active) {
-        //     box-shadow: inset 0 0 0 rem(1px)
-        //         var-get($theme, 'cell-active-border-color');
-        //
-        //     border-inline-end-color: var-get(
-        //         $theme,
-        //         'cell-active-border-color'
-        //     );
-        //     border-bottom-color: var-get($theme, 'cell-active-border-color');
-        // }
 
         @include mx(selectable, sorted) {
             :where(.sort-icon) {
@@ -2461,8 +2438,7 @@ $pinned-shadow-size: #{rem(1px)};
         // Scrollbar thumb for header
         @include e(thumb) {
             background: var-get($theme, 'header-background');
-            border-inline-start: rem(1px) solid
-                var-get($theme, 'header-border-color');
+            border-inline-start: $grid-header-border;
         }
 
         // Pivot grid modifier
@@ -2595,6 +2571,16 @@ $pinned-shadow-size: #{rem(1px)};
             border-inline-end: 0;
             border-bottom: 0;
         }
+
+        .igx-grid__td {
+            border-inline-end: $grid-header-border;
+            border-bottom: $grid-header-border;
+        }
+
+        .igx-grid-th,
+        .igx-grid__td:not(:only-child, :last-child) {
+            border-block-end: $grid-header-border;
+        }
     }
 
     //// MRL row context - rows in multi-row layout
@@ -2604,7 +2590,7 @@ $pinned-shadow-size: #{rem(1px)};
         .igx-grid__hierarchical-expander--empty,
         .igx-grid__row-indentation,
         .igx-grid__drag-indicator {
-            border-bottom: rem(1px) solid var(--row-border-color);
+            border-bottom: $grid-header-border;
         }
     }
 
