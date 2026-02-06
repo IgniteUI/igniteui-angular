@@ -21,6 +21,21 @@ $cell-padding-lg: rem(24px);
 // The shadow size that simulates border glueth to the pinned border to make it thicker
 $pinned-shadow-size: #{rem(1px)};
 
+// Z-Indices
+$z-grid-base: 1;
+$z-grid-decoration: 2;
+$z-grid-interaction: 3;
+$z-grid-selection: 4;
+$z-grid-edit-indicator: 5;
+
+$z-grid-drag-ghost: 20;
+$z-grid-scroll-drag: 25;
+
+$z-grid-pinned-cell: 9999;
+$z-grid-pinned-row: 10000;
+$z-grid-scroll: 10001;
+$z-grid-overlay: 10002;
+$z-grid-loading: 10003;
 
 @include layer(base) {
     // Base cell display - used for both data cells and header cells
@@ -96,7 +111,7 @@ $pinned-shadow-size: #{rem(1px)};
         overflow: hidden;
         box-shadow: var-get($theme, 'grid-elevation');
         outline-style: none;
-        z-index: 1;
+        z-index: $z-grid-base;
 
         // Grid caption
         @include e(caption) {
@@ -122,7 +137,7 @@ $pinned-shadow-size: #{rem(1px)};
             background: var-get($theme, 'content-background');
             color: var-get($theme, 'content-text-color');
             overflow: hidden;
-            z-index: 1;
+            z-index: $z-grid-base;
             outline-style: none;
 
             &:focus {
@@ -179,7 +194,7 @@ $pinned-shadow-size: #{rem(1px)};
             flex-flow: row nowrap;
             width: 100%;
             background: var-get($theme, 'header-background');
-            z-index: 10001;
+            z-index: $z-grid-scroll;
         }
 
         // Scroll start section
@@ -204,13 +219,13 @@ $pinned-shadow-size: #{rem(1px)};
             outline-style: none;
             grid-row: 5;
             border-top: $grid-header-border;
-            z-index: 10001;
+            z-index: $z-grid-scroll;
 
             .igx-grid__tr {
                 position: relative;
                 background: inherit;
                 color: inherit;
-                z-index: 2;
+                z-index: $z-grid-decoration;
 
                 &:hover {
                     background: inherit;
@@ -326,7 +341,7 @@ $pinned-shadow-size: #{rem(1px)};
                 width: rem(4px);
                 height: 100%;
                 background: var-get($theme, 'row-highlight');
-                z-index: 3;
+                z-index: $z-grid-interaction;
             }
 
             // When highlighted row is also edited, offset the edited indicator
@@ -360,7 +375,7 @@ $pinned-shadow-size: #{rem(1px)};
         @include e(tr, $m: pinned) {
             position: relative;
             background: inherit;
-            z-index: 10000;
+            z-index: $z-grid-pinned-row;
 
             .igx-grid__hierarchical-expander--empty {
                 border-inline-end: $grid-header-border;
@@ -478,7 +493,7 @@ $pinned-shadow-size: #{rem(1px)};
 
         // Merged cell
         @include e(td, $m: merged) {
-            z-index: 1;
+            z-index: $z-grid-base;
             grid-row: 1 / -1;
         }
 
@@ -514,7 +529,7 @@ $pinned-shadow-size: #{rem(1px)};
         @include e(td, $m: pinned) {
             position: relative;
             background: inherit;
-            z-index: 9999;
+            z-index: $z-grid-pinned-cell;
 
             &::after {
                 width: calc(100% - $pinned-shadow-size);
@@ -696,7 +711,7 @@ $pinned-shadow-size: #{rem(1px)};
             // Top border indicator
             &::after {
                 // This is do to the pinned border 9999 z-index
-                z-index: 10000;
+                z-index: $z-grid-pinned-row;
                 box-shadow:
                     inset 0 rem(1px) 0 0 var-get($theme, 'edit-mode-color'),
                     inset 0 rem(-1px) 0 0 var-get($theme, 'edit-mode-color');
@@ -707,7 +722,7 @@ $pinned-shadow-size: #{rem(1px)};
         @include e(tr, $mods: (mrl, edit)) {
             &:first-of-type::after {
                 top: 0;
-                z-index: 5;
+                z-index: $z-grid-edit-indicator;
             }
         }
 
@@ -726,7 +741,7 @@ $pinned-shadow-size: #{rem(1px)};
         @include e(tr, $m: ghost) {
             background: var-get($theme, 'row-ghost-background');
             color: var-get($theme, 'row-drag-color');
-            z-index: 10002;
+            z-index: $z-grid-overlay;
         }
 
         // Group row
@@ -764,14 +779,14 @@ $pinned-shadow-size: #{rem(1px)};
                 position: absolute;
                 width: rem(2px);
                 height: 100%;
-                z-index: 10000;
+                z-index: $z-grid-pinned-row;
                 background: var-get($theme, 'edited-row-indicator');
             }
         }
 
         // Row editing overlay outlet container
         @include e(row-editing-outlet) {
-            z-index: 10000;
+            z-index: $z-grid-pinned-row;
             position: absolute;
         }
 
@@ -835,7 +850,7 @@ $pinned-shadow-size: #{rem(1px)};
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
             border-inline-end: $grid-header-border;
             background: inherit;
-            z-index: 1;
+            z-index: $z-grid-base;
 
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
             // this is very important especially of the borders have slide alpha
@@ -858,7 +873,7 @@ $pinned-shadow-size: #{rem(1px)};
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 3;
+            z-index: $z-grid-interaction;
             color: var-get($theme, 'expand-icon-color');
 
             &:focus {
@@ -897,7 +912,7 @@ $pinned-shadow-size: #{rem(1px)};
         @include e(hierarchical-expander, $m: header) {
             background: inherit;
             border-inline-end: $grid-header-border;
-            z-index: 3;
+            z-index: $z-grid-interaction;
 
             igx-icon {
                 display: flex;
@@ -958,7 +973,7 @@ $pinned-shadow-size: #{rem(1px)};
             padding-inline-end: sizable($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
             border-inline-end: $grid-header-border;
             background: var-get($theme, 'header-background');
-            z-index: 4;
+            z-index: $z-grid-selection;
             height: 100%;
 
             igx-icon {
@@ -985,7 +1000,7 @@ $pinned-shadow-size: #{rem(1px)};
             justify-content: center;
             align-items: center;
             background: inherit;
-            z-index: 4;
+            z-index: $z-grid-selection;
 
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
             // this is very important especially of the borders have slide alpha
@@ -1027,7 +1042,7 @@ $pinned-shadow-size: #{rem(1px)};
                 height: 100%;
                 inset: 0;
                 box-shadow: $grid-active-state-border;
-                z-index: 4
+                z-index: $z-grid-selection;
             }
         }
 
@@ -1052,7 +1067,7 @@ $pinned-shadow-size: #{rem(1px)};
             user-select: none;
             justify-content: center;
             align-items: center;
-            z-index: 1;
+            z-index: $z-grid-base;
             cursor: pointer;
             padding-inline-end: rem(12px);
             margin-inline-start: sizable(rem(12px), rem(16px), rem(24px));
@@ -1134,7 +1149,7 @@ $pinned-shadow-size: #{rem(1px)};
             align-items: center;
             background: inherit;
             overflow: hidden;
-            z-index: 3;
+            z-index: $z-grid-interaction;
             height: var(--header-size);
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
             padding-block: 0;
@@ -1284,7 +1299,7 @@ $pinned-shadow-size: #{rem(1px)};
             padding-block: 0;
             flex: 0 0 auto;
             background: inherit;
-            z-index: 4;
+            z-index: $z-grid-selection;
             cursor: move;
             //border-inline-end: rem(1px) solid transparent;
 
@@ -1320,7 +1335,7 @@ $pinned-shadow-size: #{rem(1px)};
             border: none;
             box-shadow: var(--drag-shadow);
             overflow: hidden;
-            z-index: 20;
+            z-index: $z-grid-drag-ghost;
 
             .igx-grid-th__title {
                 white-space: nowrap;
@@ -1372,7 +1387,7 @@ $pinned-shadow-size: #{rem(1px)};
             width: rem(15px);
             top: 0;
             height: 100%;
-            z-index: 25;
+            z-index: $z-grid-scroll-drag;
             inset-inline-start: 0;
         }
 
@@ -1381,7 +1396,7 @@ $pinned-shadow-size: #{rem(1px)};
             width: rem(15px);
             top: 0;
             height: 100%;
-            z-index: 25;
+            z-index: $z-grid-scroll-drag;
             inset-inline-end: 0;
         }
 
@@ -1390,7 +1405,7 @@ $pinned-shadow-size: #{rem(1px)};
             width: rem(15px);
             height: 100%;
             top: 0;
-            z-index: 25;
+            z-index: $z-grid-scroll-drag;
         }
 
         // ============================================================================
@@ -1409,7 +1424,7 @@ $pinned-shadow-size: #{rem(1px)};
             position: absolute;
             inset-inline-start: 0;
             bottom: 0;
-            z-index: 3;
+            z-index: $z-grid-interaction;
             grid-row: 2;
 
             // size & spacing styles
@@ -1777,7 +1792,7 @@ $pinned-shadow-size: #{rem(1px)};
             position: relative;
             background: inherit;
             border-inline-end: $grid-header-border;
-            z-index: 1;
+            z-index: $z-grid-base;
         }
 
         // ============================================================================
@@ -1787,18 +1802,18 @@ $pinned-shadow-size: #{rem(1px)};
         // Generic outlet for overlays
         @include e(outlet) {
             --ig-size: var(--grid-size);
-            z-index: 10002;
+            z-index: $z-grid-overlay;
             position: fixed;
         }
 
         // Loading outlet
         @include e(loading-outlet) {
-            z-index: 10003;
+            z-index: $z-grid-loading;
         }
 
         // Row editing outlet
         @include e(row-editing-outlet) {
-            z-index: 10000;
+            z-index: $z-grid-pinned-row;
             position: absolute;
         }
 
@@ -1808,7 +1823,7 @@ $pinned-shadow-size: #{rem(1px)};
             bottom: rem(16px);
             inset-inline-start: 50%;
             transform: translateX(-50%);
-            z-index: 10003;
+            z-index: $z-grid-loading;
         }
 
         // ============================================================================
@@ -1910,7 +1925,7 @@ $pinned-shadow-size: #{rem(1px)};
         min-height: var(--grouparea-size);
         padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
         padding-block: 0;
-        z-index: 2;
+        z-index: $z-grid-decoration;
         height: 100%;
         overflow: hidden;
 
@@ -2052,7 +2067,7 @@ $pinned-shadow-size: #{rem(1px)};
             top: 0;
             inset-inline-end: rem(-2px);
             height: 100%;
-            z-index: 2;
+            z-index: $z-grid-decoration;
         }
 
         @include e(resize-line) {
@@ -2060,7 +2075,7 @@ $pinned-shadow-size: #{rem(1px)};
             cursor: col-resize;
             width: rem(4px);
             background: var-get($theme, 'resize-line-color');
-            z-index: 2;
+            z-index: $z-grid-decoration;
 
             &::before,
             &::after {
@@ -2085,7 +2100,7 @@ $pinned-shadow-size: #{rem(1px)};
             width: rem(1px);
             height: 100%;
             top: 0;
-            z-index: 1;
+            z-index: $z-grid-base;
             inset-inline-start: rem(-1px);
         }
 
@@ -2094,7 +2109,7 @@ $pinned-shadow-size: #{rem(1px)};
             width: rem(1px);
             height: 100%;
             top: 0;
-            z-index: 1;
+            z-index: $z-grid-base;
             inset-inline-end: rem(-1px);
         }
 
@@ -2238,7 +2253,7 @@ $pinned-shadow-size: #{rem(1px)};
         @include m(filtering) {
             background: var-get($theme, 'filtering-header-background');
             color: var-get($theme, 'filtering-header-text-color');
-            z-index: 3;
+            z-index: $z-grid-interaction;
         }
 
         @include mx(filtrable, sortable) {
@@ -2330,7 +2345,7 @@ $pinned-shadow-size: #{rem(1px)};
             position: relative;
             background: inherit;
             color: inherit;
-            z-index: 2;
+            z-index: $z-grid-decoration;
 
             &:hover {
                 background: inherit;
@@ -2346,7 +2361,7 @@ $pinned-shadow-size: #{rem(1px)};
             color: var-get($theme, 'header-text-color');
             overflow: hidden;
             outline-style: none;
-            z-index: 2;
+            z-index: $z-grid-decoration;
 
             // WARN: BEM not followed here
             .igx-grid__tr {
