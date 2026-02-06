@@ -13,12 +13,12 @@ export type IgxGridLiteColumnSortConfiguration<T extends object = any> = ColumnS
  *
  * @example
  * ```html
- * <ng-template igxGridLiteHeaderTemplate let-column>
+ * <ng-template igxGridLiteHeader let-column>
  *   <div>{{column.header}}</div>
  * </ng-template>
  * ```
  */
-@Directive({ selector: '[igxGridLiteHeaderTemplate]' })
+@Directive({ selector: '[igxGridLiteHeader]' })
 export class IgxGridLiteHeaderTemplateDirective<T extends object = any> {
     public template = inject<TemplateRef<IgxGridLiteHeaderTemplateContext<T>>>(TemplateRef);
 
@@ -33,12 +33,12 @@ export class IgxGridLiteHeaderTemplateDirective<T extends object = any> {
  *
  * @example
  * ```html
- * <ng-template igxGridLiteCellTemplate let-value let-column="column" let-rowIndex="rowIndex" let-data="data">
+ * <ng-template igxGridLiteCell let-value let-column="column" let-rowIndex="rowIndex" let-data="data">
  *   <div>{{value}}</div>
  * </ng-template>
  * ```
  */
-@Directive({ selector: '[igxGridLiteCellTemplate]' })
+@Directive({ selector: '[igxGridLiteCell]' })
 export class IgxGridLiteCellTemplateDirective<T extends object = any> {
     public template = inject<TemplateRef<IgxGridLiteCellTemplateContext<T>>>(TemplateRef);
 

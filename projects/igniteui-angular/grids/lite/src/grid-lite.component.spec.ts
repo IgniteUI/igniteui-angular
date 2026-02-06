@@ -251,21 +251,21 @@ class GridComponentAutogenerate extends BasicGridComponent {
             <igx-grid-lite-column [field]="'name'" [header]="'Name'" [headerTemplate]="headerTemplate"></igx-grid-lite-column>
             <igx-grid-lite-column [field]="'active'" [header]="'Active'" [cellTemplate]="bodyTemplate"></igx-grid-lite-column>
             <igx-grid-lite-column [field]="'importance'" [header]="'Importance'">
-                <ng-template igxGridLiteHeaderTemplate let-column>
+                <ng-template igxGridLiteHeader let-column>
                     <div>{{column.header}} (Custom Inline)</div>
                 </ng-template>
             </igx-grid-lite-column>
             <igx-grid-lite-column [field]="'address'" [header]="'Full address'">
-                <ng-template igxGridLiteCellTemplate let-value>
+                <ng-template igxGridLiteCell let-value>
                     <span>{{value.city}}, {{value.code}}</span>
                 </ng-template>
             </igx-grid-lite-column>
 
-            <ng-template igxGridLiteHeaderTemplate let-column #headerTemplate>
+            <ng-template igxGridLiteHeader let-column #headerTemplate>
                 <div>{{column.header}} (Custom)</div>
             </ng-template>
 
-            <ng-template igxGridLiteCellTemplate let-value let-column="column" #bodyTemplate>
+            <ng-template igxGridLiteCell let-value let-column="column" #bodyTemplate>
                 @if (value === true) {
                     <span>Yes</span>
                 } @else {

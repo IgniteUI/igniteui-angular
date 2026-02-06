@@ -24,7 +24,7 @@
     [cellTemplate]="cellTemplate"
     [sortable]="true"
   >
-    <ng-template igxGridLiteHeaderTemplate let-column let-parent="parent">
+    <ng-template igxGridLiteHeader let-column let-parent="parent">
       <div>{{column.header}} Templated inline</div>
     </ng-template>
   </igx-grid-lite-column>
@@ -39,7 +39,7 @@
   ></igx-grid-lite-column>
   <igx-grid-lite-column field="active" dataType="boolean" header="Active">
     <ng-template
-      igxGridLiteCellTemplate
+      igxGridLiteCell
       let-value
       let-row="row"
       let-column="column"
@@ -51,7 +51,7 @@
 </igx-grid-lite>
 
 <ng-template
-  igxGridLiteHeaderTemplate
+  igxGridLiteHeader
   let-column
   let-parent="parent"
   #headerTemplate
@@ -61,7 +61,7 @@
 
 <ng-template
   #cellTemplate
-  igxGridLiteCellTemplate
+  igxGridLiteCell
   let-value
   let-row="row"
   let-column="column"
