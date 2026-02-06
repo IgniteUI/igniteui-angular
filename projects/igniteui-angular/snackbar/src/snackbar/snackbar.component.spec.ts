@@ -201,8 +201,9 @@ describe('IgxSnackbar', () => {
         const { marginLeft, marginRight, paddingLeft, paddingRight } = getComputedStyle(snackbar.element);
         const horizontalMargins = parseFloat(marginLeft) + parseFloat(marginRight);
         const horizontalPaddings = parseFloat(paddingLeft) + parseFloat(paddingRight);
+        const contentWidth = 200;
 
-        expect(snackbarRect.width).toEqual(200 + horizontalPaddings);
+        expect(snackbarRect.width).toEqual(contentWidth + horizontalPaddings);
         expect(overlayContentRect.width).toEqual(snackbarRect.width + horizontalMargins);
     });
 });
