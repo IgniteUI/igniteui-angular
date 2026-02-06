@@ -17,7 +17,7 @@ import { IGroupingExpression, ISortingExpression } from 'igniteui-angular/core';
  */
 @Component({
     selector: 'igx-grid-group-by-area',
-    templateUrl: 'group-by-area.component.html',
+    templateUrl: '../../../core/src/grouping/group-by-area.component.html',
     providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxGridGroupByAreaComponent }],
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
