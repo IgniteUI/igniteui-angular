@@ -64,6 +64,7 @@ export abstract class IgxForOfToken<T, U extends T[] = T[]> {
 
     public abstract chunkLoad: EventEmitter<IForOfState>;
     public abstract chunkPreload: EventEmitter<IForOfState>;
+    public abstract chunkSizeChange: EventEmitter<number>;
 
     public abstract scrollTo(index: number): void;
     public abstract getScrollForIndex(index: number, bottom?: boolean): number;
@@ -202,6 +203,13 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     @Output()
     public scrollbarVisibilityChanged = new EventEmitter<any>();
+
+    /**
+     * @hidden @internal
+     * An event that is emitted when chunk size is changing. Emits new value.
+     */
+    @Output()
+    public chunkSizeChange = new EventEmitter<number>();
 
     /**
      * An event that is emitted after the rendered content size of the igxForOf has been changed.
@@ -1453,6 +1461,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     protected applyChunkSizeChange() {
         const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this._calculateChunkSize();
+        if (chunkSize !== this.state.chunkSize) {
+            this.chunkSizeChange.emit(chunkSize);
+        }
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
