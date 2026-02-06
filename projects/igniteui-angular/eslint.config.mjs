@@ -27,7 +27,8 @@ export default [
 
             "@angular-eslint/directive-selector": ["error", {
                 type: ["attribute", "element"],
-                prefix: ["igx", "igc"],
+                prefix: ["igx", "ig"],
+                style: "camelCase",
             }],
 
             "@angular-eslint/no-input-rename": "off",
