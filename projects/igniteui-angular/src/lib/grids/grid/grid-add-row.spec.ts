@@ -1122,8 +1122,6 @@ describe('IgxGrid - Row Adding #grid', () => {
     });
 
     describe('ActionStrip - Dynamic Addition', () => {
-        let actionStrip: IgxActionStripComponent;
-
         beforeEach(() => {
             fixture = TestBed.createComponent(GridDynamicActionStripComponent);
             fixture.detectChanges();
