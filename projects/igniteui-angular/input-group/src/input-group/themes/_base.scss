@@ -108,11 +108,13 @@ $base-scale-size: (
         @include e(toggle-button) {
             color: var(--toggle-button-foreground);
             background: var(--toggle-button-background);
+            cursor: pointer;
         }
 
         @include e(clear-button) {
             color: var(--clear-button-foreground);
             background: var(--clear-button-background);
+            cursor: pointer;
         }
 
         @include e(clear-icon) {
