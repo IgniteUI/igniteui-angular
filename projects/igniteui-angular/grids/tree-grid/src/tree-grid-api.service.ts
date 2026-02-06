@@ -83,7 +83,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         if (expanded !== undefined) {
             return expanded;
         } else {
-            return record.children && record.children.length && record.level < grid.expansionDepth;
+            return record.children && !!record.children.length && record.level < grid.expansionDepth;
         }
     }
 
