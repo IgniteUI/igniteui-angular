@@ -718,7 +718,7 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
 }
 
 @Component({
-    selector: 'igx--test-fixed-mini',
+    selector: 'igx-test-fixed-mini',
     providers: [IgxNavigationService],
     imports: [
         IgxNavigationDrawerComponent,
