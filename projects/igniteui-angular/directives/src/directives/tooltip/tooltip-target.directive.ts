@@ -1,5 +1,5 @@
 import {
-    Directive, OnInit, OnDestroy, Output, ElementRef, ViewContainerRef,
+    Directive, OnInit, OnDestroy, Output, ViewContainerRef,
     Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2,
     EnvironmentInjector,
     createComponent,
@@ -425,7 +425,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionSettings);
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
-        this._overlayDefaults.cacheSize = false;
 
         this.target.closing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
             if (this.target.tooltipTarget !== this) {

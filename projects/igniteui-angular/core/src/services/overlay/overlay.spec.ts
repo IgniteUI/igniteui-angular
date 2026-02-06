@@ -569,8 +569,7 @@ describe('igxOverlay', () => {
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: true,
                 closeOnOutsideClick: true,
-                closeOnEscape: false,
-                cacheSize: true
+                closeOnEscape: false
             };
 
             spyOn(overlayInstance.contentAppending, 'emit');
@@ -3507,7 +3506,7 @@ describe('igxOverlay', () => {
         }));
 
         // 4. Css
-        it('Should use component initial container\'s properties based on cacheSize when it\'s with 100% width and shown in overlay element',
+        it('Should use component initial container\'s properties when is with 100% width and show in overlay element',
             fakeAsync(() => {
                 const fixture = TestBed.createComponent(WidthTestOverlayComponent);
                 fixture.detectChanges();
@@ -3526,16 +3525,6 @@ describe('igxOverlay', () => {
                 // content element has no height, so the shown element will calculate its own height by itself
                 // expect(overlayChild.style.height).toEqual('100%');
                 // expect(overlayChild.getBoundingClientRect().height).toEqual(280);
-
-                fixture.componentInstance.overlaySettings.cacheSize = false;
-                fixture.componentInstance.buttonElement.nativeElement.click();
-                tick();
-                const componentElement2 = fixture.componentInstance.customComponent.nativeElement;
-                expect(componentElement2.style.width).toEqual('100%');
-                expect(componentElement2.getBoundingClientRect().width).toEqual(123);
-                // Check overlay content element width
-                expect(componentElement2.parentElement.getBoundingClientRect().width).toEqual(123);
-                fixture.componentInstance.overlay.detachAll();
             }));
     });
 

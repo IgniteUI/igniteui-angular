@@ -3,10 +3,25 @@ import {
     OnDestroy, inject, HostListener,
     Renderer2,
     AfterViewInit,
+    Injectable,
 } from '@angular/core';
-import { OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
+import { IgxOverlayService, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
+import { OverlayInfo } from '../../../../core/src/services/overlay/utilities';
+
+/**
+ * Measures **after** moving the element into the overlay outlet so that parent
+ * style constraints do not affect the initial size.
+ */
+@Injectable()
+export class TooltipOverlayServiceHelper extends IgxOverlayService {
+    protected override setInitialSize(info: OverlayInfo, moveToOverlay: () => void): void {
+        moveToOverlay();
+        const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+        info.initialSize = { width: elementRect.width, height: elementRect.height };
+    }
+}
 
 let NEXT_ID = 0;
 /**
@@ -26,7 +41,13 @@ let NEXT_ID = 0;
 @Directive({
     exportAs: 'tooltip',
     selector: '[igxTooltip]',
-    standalone: true
+    standalone: true,
+    providers: [
+        {
+            provide: IgxOverlayService,
+            useClass: TooltipOverlayServiceHelper
+        }
+    ]
 })
 export class IgxTooltipDirective extends IgxToggleDirective implements AfterViewInit, OnDestroy {
     /**

@@ -134,12 +134,6 @@ export interface OverlaySettings {
      * Clicking on the elements in this collection will not close the overlay when closeOnOutsideClick = true.
      */
     excludeFromOutsideClick?: HTMLElement[];
-    /**
-     * @hidden @internal
-     * Controls whether element size is measured before (true) or after (false) moving to the overlay container.
-     * Default is true to retain element size.
-     */
-    cacheSize?: boolean;
 }
 
 export interface OverlayEventArgs extends IBaseEventArgs {

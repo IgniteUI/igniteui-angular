@@ -3,15 +3,34 @@ import {
     Component,
     EventEmitter,
     HostBinding,
+    Injectable,
     Input,
     OnInit,
     Output
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
-    PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+    IgxOverlayService, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 import { ToggleViewEventArgs, IgxButtonDirective, IgxNotificationsDirective } from 'igniteui-angular/directives';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
+import { OverlayInfo } from '../../../core/src/services/overlay/utilities';
+
+/**
+ * Measures **after** moving the element into the overlay outlet so that parent
+ * style constraints do not affect the initial size.
+ */
+@Injectable()
+export class SnackbarOverlayServiceHelper extends IgxOverlayService {
+    protected override setInitialSize(info: OverlayInfo, moveToOverlay: () => void): void {
+        moveToOverlay();
+        const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+        // Needs full element width (margins included) to set proper width for the overlay container.
+        // Otherwise, the snackbar appears smaller and the text inside it might be misaligned.
+        const styles = this.document.defaultView.getComputedStyle(info.elementRef.nativeElement);
+        const horizontalMargins = parseFloat(styles.marginLeft) + parseFloat(styles.marginRight);
+        info.initialSize = { width: elementRect.width + horizontalMargins, height: elementRect.height };
+    }
+}
 
 let NEXT_ID = 0;
 /**
@@ -34,7 +53,13 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-snackbar',
     templateUrl: 'snackbar.component.html',
-    imports: [IgxButtonDirective]
+    imports: [IgxButtonDirective],
+    providers: [
+        {
+            provide: IgxOverlayService,
+            useClass: SnackbarOverlayServiceHelper
+        }
+    ],
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective
     implements OnInit {
