@@ -10,10 +10,9 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
-    IgxOverlayService, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+    IgxOverlayService, OverlayInfo, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 import { ToggleViewEventArgs, IgxButtonDirective, IgxNotificationsDirective } from 'igniteui-angular/directives';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
-import { OverlayInfo } from '../../../core/src/services/overlay/utilities';
 
 /**
  * Measures **after** moving the element into the overlay outlet so that parent

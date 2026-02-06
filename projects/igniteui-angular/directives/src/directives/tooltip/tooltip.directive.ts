@@ -5,10 +5,9 @@ import {
     AfterViewInit,
     Injectable,
 } from '@angular/core';
-import { IgxOverlayService, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
+import { IgxOverlayService, OverlayInfo, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
-import { OverlayInfo } from '../../../../core/src/services/overlay/utilities';
 
 /**
  * Measures **after** moving the element into the overlay outlet so that parent
