@@ -123,10 +123,9 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
             if (template) {
                 this.headerTemplateFunc = (ctx: IgcHeaderContext<T>) => {
                     if (!this.headerViewRef) {
-                        const { column, ...rest } = ctx;
                         const angularContext = {
-                            ...rest,
-                            $implicit: column
+                            ...ctx,
+                            $implicit: ctx.column
                         }
                         this.headerViewRef = this._view.createEmbeddedView(template, angularContext);
                     }
@@ -147,10 +146,9 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
             if (template) {
                 this.cellTemplateFunc = (ctx: IgcCellContext<T>) => {
                     const oldViewRef = this.cellViewRefs.get(ctx.row.data);
-                    const { value, ...restContext } = ctx;
                     const angularContext = {
-                        ...restContext,
-                        $implicit: value,
+                        ...ctx,
+                        $implicit: ctx.value,
                     } as IgxGridLiteCellTemplateContext<T>;
                     if (!oldViewRef) {
                         const newViewRef = this._view.createEmbeddedView(template, angularContext);
@@ -174,7 +172,7 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
 /**
  * Context provided to the header template.
  */
-export type IgxGridLiteHeaderTemplateContext<T extends object = any> = Omit<IgcHeaderContext<T>, 'column'> & {
+export type IgxGridLiteHeaderTemplateContext<T extends object = any> = IgcHeaderContext<T> & {
     /**
      * The current configuration for the column.
      */
@@ -184,7 +182,7 @@ export type IgxGridLiteHeaderTemplateContext<T extends object = any> = Omit<IgcH
 /**
  * Context provided to the header template.
  */
-export type IgxGridLiteCellTemplateContext<T extends object = any> = Omit<IgcCellContext<T>, 'value'> & {
+export type IgxGridLiteCellTemplateContext<T extends object = any> = IgcCellContext<T> & {
     /**
      * The value from the data source for this cell.
      */
