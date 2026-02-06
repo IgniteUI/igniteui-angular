@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { FilteringLogic, IFilteringExpression } from 'igniteui-angular/core';
+import { Pipe, PipeTransform, TemplateRef } from '@angular/core';
+import { FieldType, FilteringLogic, IFilteringExpression } from 'igniteui-angular/core';
 
 @Pipe({
     name: 'fieldFormatter',
@@ -81,4 +81,12 @@ export const QueryBuilderSelectors = {
     QUERY_BUILDER_BODY: IGX_QUERY_BUILDER + '__main',
     QUERY_BUILDER_HEADER: IGX_QUERY_BUILDER + '__header',
     QUERY_BUILDER_TREE: IGX_QUERY_BUILDER + '-tree',
+}
+
+export interface IgxQueryBuilderSearchValueContext {
+    $implicit: any;
+    selectedField: FieldType;
+    selectedCondition: string;
+    /* blazorSuppress */
+    defaultSearchValueTemplate: TemplateRef<any>;
 }
