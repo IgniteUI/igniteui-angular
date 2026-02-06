@@ -149,7 +149,9 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     @HostBinding('class.igx-grid-th--number')
     public get numberStyle() {
-        return this.column.dataType === GridColumnDataType.Number;
+        return this.column.dataType === GridColumnDataType.Number
+            || this.column.dataType === GridColumnDataType.Currency
+            || this.column.dataType === GridColumnDataType.Percent;
     }
 
     @HostBinding('class.igx-grid-th--sortable')
