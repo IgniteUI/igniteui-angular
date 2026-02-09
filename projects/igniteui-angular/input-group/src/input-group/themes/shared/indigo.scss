@@ -249,13 +249,11 @@ $_theme: $indigo;
             }
 
             @include e(toggle-button) {
-                cursor: default;
                 color: var(--toggle-button-foreground-disabled);
                 background: var(--toggle-button-background-disabled);
             }
 
             @include e(clear-button) {
-                cursor: default;
                 color: var-get($_theme, 'disabled-text-color');
                 background: var-get($_theme, 'border-disabled-background');
             }
