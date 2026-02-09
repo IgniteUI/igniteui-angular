@@ -3525,6 +3525,7 @@ describe('igxOverlay', () => {
                 // content element has no height, so the shown element will calculate its own height by itself
                 // expect(overlayChild.style.height).toEqual('100%');
                 // expect(overlayChild.getBoundingClientRect().height).toEqual(280);
+                fixture.componentInstance.overlay.detachAll();
             }));
     });
 
@@ -4678,7 +4679,7 @@ export class TwoButtonsComponent {
     <div style="width: 420px; height: 280px;">
         <button class='300_button' igxToggle #button (click)='click($event)'>Show Overlay</button>
         <div #myCustomComponent class="customList" style="width: 100%; height: 100%;">
-            <p style="width: 123px;">Some Content</p>
+            Some Content
         </div>
     </div>`,
     styles: [`button {

@@ -5,7 +5,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { fadeIn, fadeOut, IAnimationParams, scaleInHorLeft, scaleInHorRight, scaleInVerBottom, scaleInVerTop, scaleOutHorLeft, scaleOutHorRight, scaleOutVerBottom, scaleOutVerTop, slideInBottom, slideInTop, slideOutBottom, slideOutTop } from 'igniteui-angular/animations';
 import { PlatformUtil } from '../../core/utils';
-import { IgxOverlayOutletDirective } from './utilities';
+import { IgxOverlayOutletDirective, OverlaySizeRegistry } from './utilities';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationService } from '../animation/animation';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
@@ -40,11 +40,11 @@ import {
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService implements OnDestroy {
     private _appRef = inject(ApplicationRef);
+    private document = inject(DOCUMENT);
     private _zone = inject(NgZone);
-    private animationService = inject<AnimationService>(IgxAngularAnimationService);
-
-    protected document = inject(DOCUMENT);
     protected platformUtil = inject(PlatformUtil);
+    private animationService = inject<AnimationService>(IgxAngularAnimationService);
+    private sizeRegistry = inject(OverlaySizeRegistry);
 
     /**
      * Emitted just before the overlay content starts to open.
@@ -558,24 +558,6 @@ export class IgxOverlayService implements OnDestroy {
         return info;
     }
 
-    /**
-     * Measures the element's initial size and controls *when* the element is moved into the overlay outlet.
-     *
-     * The elements inherit constraining parent styles, so
-     * for some of them (e.g., Tooltip, Snackbar) their pre-move size is incorrect.
-     * Those can **override** this method to measure **after** moving to get an accurate size.
-     *
-     * - **Default**: Measures in-place (current parent), then moves to the overlay.
-     *
-     * @param info OverlayInfo for the content being attached.
-     * @param moveToOverlay Moves the element into the overlay.
-     */
-    protected setInitialSize(info: OverlayInfo, moveToOverlay: () => void): void {
-        const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
-        info.initialSize = { width: elementRect.width, height: elementRect.height };
-        moveToOverlay();
-    }
-
     private _hide(id: string, event?: Event) {
         const info: OverlayInfo = this.getOverlayById(id);
         if (!info) {
@@ -1019,5 +1001,29 @@ export class IgxOverlayService implements OnDestroy {
             const size = componentSize || globalSize;
             info.size = size;
         }
+    }
+
+    /**
+     * Measures the element's initial size and controls *when* the element is moved into the overlay outlet.
+     *
+     * The elements inherit constraining parent styles, so
+     * for some of them (e.g., Tooltip, Snackbar) their pre-move size is incorrect.
+     * Those can **override** this method to measure **after** moving to get an accurate size.
+     *
+     * - **Default**: Measures in-place (current parent), then moves to the overlay.
+     *
+     * @param info OverlayInfo for the content being attached.
+     * @param moveToOverlay Moves the element into the overlay.
+     */
+    private setInitialSize(info: OverlayInfo, moveToOverlay: () => void): void {
+        const override = this.sizeRegistry.get(info);
+        if (override) {
+            override(info, moveToOverlay);
+            return;
+        }
+
+        const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+        info.initialSize = { width: elementRect.width, height: elementRect.height };
+        moveToOverlay();
     }
 }
