@@ -6,10 +6,10 @@
   [dataPipelineConfiguration]="dataPipelineConfiguration()"
   [sortingExpressions]="_sortingExpressions()"
   [filterExpressions]="_filteringExpressions()"
-  (sorting)="(sorting)"
-  (sorted)="(sorted)"
-  (filtering)="(filtering)"
-  (filtered)="(filtered)"
+  (sorting)="onSorting($any($event))"
+  (sorted)="onSorted($any($event))"
+  (filtering)="onFiltering($any($event))"
+  (filtered)="onFiltered($any($event))"
 >
   <ng-content></ng-content>
 </igc-grid-lite>

@@ -4,6 +4,10 @@
   [autoGenerate]="false"
   [sortingOptions]="sortingOptions"
   [sortingExpressions]="sortingExpressions"
+  (sorting)="logEvent('sorting', $event)"
+  (sorted)="logEvent('sorted', $event)"
+  (filtering)="logEvent('filtering', $event)"
+  (filtered)="logEvent('filtered', $event)"
 >
   <igx-grid-lite-column
     field="firstName"

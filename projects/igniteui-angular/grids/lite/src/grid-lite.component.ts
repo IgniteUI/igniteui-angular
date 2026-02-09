@@ -212,6 +212,28 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
 
     //#endregion
 
+    //#region Event handlers
 
+    protected onSorting(event: CustomEvent<SortingExpression<T>>): void {
+        event.stopPropagation();
+        this.sorting.emit(event);
+    }
+
+    protected onSorted(event: CustomEvent<SortingExpression<T>>): void {
+        event.stopPropagation();
+        this.sorted.emit(event);
+    }
+
+    protected onFiltering(event: CustomEvent<FilterExpression<T>>): void {
+        event.stopPropagation();
+        this.filtering.emit(event);
+    }
+
+    protected onFiltered(event: CustomEvent<FilterExpression<T>>): void {
+        event.stopPropagation();
+        this.filtered.emit(event);
+    }
+
+    //#endregion
 
 }

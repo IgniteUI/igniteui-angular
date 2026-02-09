@@ -35,4 +35,8 @@ export class GridLiteSampleComponent {
     constructor() {
         this.data = this.dataService.generateUsers(10);
     }
+
+    protected logEvent(name: string, event: any) {
+        console.log(name, event);
+    }
 }
