@@ -21,6 +21,7 @@ import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.dir
 import { IgxQueryBuilderSearchValueContext } from './query-builder.common';
 
 /* wcElementTag: igc-query-builder */
+/* blazorIndirectRender */
 /**
  * A component used for operating with complex filters by creating or editing conditions
  * and grouping them using AND/OR logic.
