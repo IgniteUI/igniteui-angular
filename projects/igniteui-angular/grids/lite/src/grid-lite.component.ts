@@ -154,13 +154,6 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
         return this.gridRef()?.nativeElement.dataView ?? [];
     }
 
-    /**
-     * The total number of items in the dataView collection.
-     */
-    public get totalItems(): number {
-        return this.gridRef()?.nativeElement.totalItems ?? 0;
-    }
-
     //#endregion
 
     /**
