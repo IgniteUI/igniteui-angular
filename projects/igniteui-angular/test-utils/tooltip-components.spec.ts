@@ -162,8 +162,7 @@ export class IgxTooltipWithCloseButtonComponent {
       </div>
     </div>
     `,
-    imports: [IgxTooltipDirective, IgxTooltipTargetDirective],
-    standalone: true
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipWithNestedContentComponent {
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip!: IgxTooltipDirective;
@@ -196,8 +195,7 @@ export class IgxTooltipWithNestedContentComponent {
       </div>
     </div>
     `,
-    imports: [IgxTooltipDirective, IgxTooltipTargetDirective],
-    standalone: true
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipNestedTooltipsComponent {
     @ViewChild('targetLevel1', { read: IgxTooltipTargetDirective, static: true }) public targetLevel1: IgxTooltipTargetDirective;
@@ -223,8 +221,7 @@ export class IgxTooltipNestedTooltipsComponent {
         <div #tooltip3="tooltip" igxTooltip>{{ message }}</div>
     </button>
     `,
-    imports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxIconComponent, IgxIconButtonDirective, IgxButtonDirective],
-    standalone: true
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxIconComponent, IgxIconButtonDirective, IgxButtonDirective]
 })
 export class IgxTooltipSizeComponent {
     @ViewChild('target1', { read: IgxTooltipTargetDirective, static: true }) public target1: IgxTooltipTargetDirective;
