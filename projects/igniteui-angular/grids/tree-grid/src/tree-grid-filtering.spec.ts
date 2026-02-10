@@ -770,6 +770,37 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
             expect(console.error).not.toHaveBeenCalled();
         }));
+
+        it('Should correctly filter grid when unselecting items from excel style filter', fakeAsync(() => {
+            // Open excel style filter on Name column (string column)
+            GridFunctions.clickExcelFilterIcon(fix, 'Name');
+            fix.detectChanges();
+            tick();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+
+            // Get initial row count (all rows should be visible)
+            const initialRowCount = tGrid.rowList.length;
+            expect(initialRowCount).toBeGreaterThan(0);
+
+            // Unselect the first item (after Select All checkbox)
+            // This corresponds to one of the actual data items
+            checkboxes[1].click();
+            tick();
+            fix.detectChanges();
+
+            // Apply the filter
+            GridFunctions.clickApplyExcelStyleFiltering(fix, null, 'igx-tree-grid');
+            fix.detectChanges();
+            tick();
+
+            // Verify that the grid is not empty and still has rows
+            // (all rows except the unselected one should be visible)
+            const filteredRowCount = tGrid.rowList.length;
+            expect(filteredRowCount).toBeGreaterThan(0, 'Grid should not be empty after unselecting one item');
+            expect(filteredRowCount).toBeLessThan(initialRowCount, 'Grid should have fewer rows after filtering');
+        }));
     });
 
     describe('Tree grid ESF templates', () => {
