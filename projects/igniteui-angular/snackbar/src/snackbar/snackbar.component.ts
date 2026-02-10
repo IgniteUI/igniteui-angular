@@ -225,5 +225,5 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective implements O
         const styles = this._document.defaultView.getComputedStyle(info.elementRef.nativeElement);
         const horizontalMargins = parseFloat(styles.marginLeft) + parseFloat(styles.marginRight);
         info.initialSize = { width: elementRect.width + horizontalMargins, height: elementRect.height };
-    };
+    }
 }

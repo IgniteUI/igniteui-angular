@@ -120,16 +120,16 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, A
     private _sizeRegistry = inject(OverlaySizeRegistry);
 
     /** @hidden */
+    public override ngOnInit() {
+        super.ngOnInit();
+        this._sizeRegistry.register(this.element, this.setInitialSize);
+    }
+
+    /** @hidden */
     public ngAfterViewInit(): void {
         if (this._platformUtil.isBrowser) {
             this._createArrow();
         }
-    }
-
-    /** @hidden */
-    public override ngOnInit() {
-        super.ngOnInit();
-        this._sizeRegistry.register(this.element, this.setInitialSize);
     }
 
     /** @hidden */
@@ -225,5 +225,5 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, A
         moveToOverlay();
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
         info.initialSize = { width: elementRect.width, height: elementRect.height };
-    };
+    }
 }
