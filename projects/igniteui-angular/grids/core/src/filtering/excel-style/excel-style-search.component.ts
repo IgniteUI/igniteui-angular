@@ -605,7 +605,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                             const selectedValues = new Set(selectedItems.map(item => item.value.toLowerCase()));
                             searchVal = new Set();
 
-                            this.esf.grid.data.forEach(item => {
+                            const gridData = this.esf.grid.flatData ?? this.esf.grid.data;
+                            gridData.forEach(item => {
                                 if (typeof item[this.esf.column.field] === "string" && selectedValues.has(item[this.esf.column.field]?.toLowerCase())) {
                                     searchVal.add(item[this.esf.column.field]);
                                 }
