@@ -422,7 +422,7 @@ export class IgxOverlayService implements OnDestroy {
         const closeAnimation = info.settings.positionStrategy.settings.closeAnimation;
         // Show the overlay using Popover API BEFORE positioning
         // This ensures the element is in the top layer when position calculations happen
-        if (info.wrapperElement && info.wrapperElement.isConnected && typeof info.wrapperElement.showPopover === 'function') {
+        if (info.wrapperElement?.isConnected && typeof info.wrapperElement.showPopover === 'function') {
             try {
                 info.wrapperElement.showPopover();
             } catch (_) {
