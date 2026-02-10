@@ -4679,7 +4679,7 @@ export class TwoButtonsComponent {
     <div style="width: 420px; height: 280px;">
         <button class='300_button' igxToggle #button (click)='click($event)'>Show Overlay</button>
         <div #myCustomComponent class="customList" style="width: 100%; height: 100%;">
-            <p style="width: 123px;">Some Content</p>
+            Some Content
         </div>
     </div>`,
     styles: [`button {
