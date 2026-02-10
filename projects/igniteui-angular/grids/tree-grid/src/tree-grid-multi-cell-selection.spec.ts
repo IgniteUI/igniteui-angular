@@ -34,7 +34,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 1 }]
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fix = TestBed.createComponent(IgxTreeGridSelectionKeyComponent);
             fix.detectChanges();
