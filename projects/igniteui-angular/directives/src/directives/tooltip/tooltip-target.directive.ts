@@ -400,7 +400,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.positionStrategy = new TooltipPositionStrategy(this._positionSettings);
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
-        this._overlayDefaults.cacheSize = false;
 
         this.target.closing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
             if (this.target.tooltipTarget !== this) {
