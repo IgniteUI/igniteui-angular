@@ -1,4 +1,4 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, input, OnInit, output, signal, viewChild } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, input, model, OnInit, output, viewChild } from '@angular/core';
 import { DataPipelineConfiguration, FilterExpression, GridLiteSortingOptions, IgcGridLite, Keys, SortingExpression } from 'igniteui-grid-lite';
 import { IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
 
@@ -19,11 +19,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
 
     //#region Internal state
 
-    private readonly gridRef = viewChild<ElementRef<IgcGridLite<T>>>('grid');
-
-    protected _sortingExpressions = signal<IgxGridLiteSortingExpression[]>([]);
-    protected _filteringExpressions = signal<IgxGridLiteFilteringExpression[]>([]);
-
+    private readonly gridRef = viewChild.required<ElementRef<IgcGridLite<T>>>('grid');
 
     //#endregion
 
@@ -50,6 +46,24 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * Configuration object which controls remote data operations for the grid.
      */
     public readonly dataPipelineConfiguration = input<IgxGridLiteDataPipelineConfiguration>();
+
+    /**
+     * The sort state for the grid.
+     *
+     * @remarks
+     * This is a two-way bindable property. It will be updated when sort operations
+     * complete through the UI.
+     */
+    public readonly sortingExpressions = model<IgxGridLiteSortingExpression<T>[]>([]);
+
+    /**
+     * The filter state for the grid.
+     *
+     * @remarks
+     * This is a two-way bindable property. It will be updated when filter operations
+     * complete through the UI.
+     */
+    public readonly filteringExpressions = model<IgxGridLiteFilteringExpression<T>[]>([]);
 
     //#endregion
 
@@ -99,36 +113,6 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
     //#region Getters / Setters
 
     /**
-     * Get the current sort state from the grid.
-     */
-    public get sortingExpressions(): IgxGridLiteSortingExpression[] {
-        return this.gridRef()?.nativeElement.sortingExpressions ?? [];
-    }
-
-    /**
-     * Set the sort state for the grid.
-     */
-    @Input()
-    public set sortingExpressions(value: IgxGridLiteSortingExpression[]) {
-        this._sortingExpressions.set(value);
-    }
-
-    /**
-     * Get the filter state for the grid.
-     */
-    public get filteringExpressions(): IgxGridLiteFilteringExpression[] {
-        return this.gridRef()?.nativeElement.filterExpressions ?? [];
-    }
-
-    /**
-     * Set the filter state for the grid.
-     */
-    @Input()
-    public set filteringExpressions(value: IgxGridLiteFilteringExpression[]) {
-        this._filteringExpressions.set(value);
-    }
-
-    /**
      * Get the column configuration of the grid.
      */
     public get columns(): IgxGridLiteColumnConfiguration<T>[] {
@@ -155,6 +139,29 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
     }
 
     //#endregion
+
+    constructor() {
+        // D.P. Temporary guarded assign instead of binding to prevent WC issue with setter logic re-doing sort/filter
+        effect(() => {
+            const grid = this.gridRef()?.nativeElement
+            if (!grid) return;
+            const newValue = this.filteringExpressions();
+            if (new Set(newValue).symmetricDifference(new Set(grid.filterExpressions)).size !== 0) {
+                grid.clearFilter();
+                grid.filterExpressions = newValue;
+            }
+        });
+        effect(() => {
+            const grid = this.gridRef()?.nativeElement
+            if (!grid) return;
+            const newValue = this.sortingExpressions();
+            if (new Set(newValue).symmetricDifference(new Set(grid.sortingExpressions)).size !== 0) {
+                grid.clearSort();
+                grid.sortingExpressions = newValue;
+            }
+        });
+
+    }
 
     /**
      * @hidden @internal
@@ -220,6 +227,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
     }
 
     protected onSorted(event: CustomEvent<SortingExpression<T>>): void {
+        this.sortingExpressions.set(this.gridRef()?.nativeElement.sortingExpressions ?? []);
         event.stopPropagation();
         this.sorted.emit(event);
     }
@@ -230,6 +238,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
     }
 
     protected onFiltered(event: CustomEvent<FilterExpression<T>>): void {
+        this.filteringExpressions.set(this.gridRef()?.nativeElement.filterExpressions ?? []);
         event.stopPropagation();
         this.filtered.emit(event);
     }

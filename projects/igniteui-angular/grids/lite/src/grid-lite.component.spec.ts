@@ -57,46 +57,62 @@ describe('IgxGridLiteComponent', () => {
             expect(gridComponent.rows.length).toBe(1);
         });
 
-        it('should update sortingExpressions through setter', async () => {
+        it('should update sortingExpressions model and emit sorted output when sorted event fires', async () => {
             const fixture = TestBed.createComponent(BasicGridComponent);
             fixture.detectChanges();
             await setUp(fixture);
 
             const gridComponent = fixture.componentInstance.grid();
+            const gridElement = fixture.nativeElement.querySelector('igc-grid-lite');
+            const sortedSpy = jasmine.createSpy('sorted');
+
+            gridComponent.sorted.subscribe(sortedSpy);
+            expect(gridComponent.sortingExpressions()).toEqual([]);
+
+            // Simulate the web component emitting the sorted event
             const expressions: IgxGridLiteSortingExpression<TestData>[] = [
                 { key: 'name', direction: 'ascending' }
             ];
-
-            let secondRow = gridComponent.rows[1];
-            expect(secondRow.cells[1].value).toBe('B');
-
-            gridComponent.sortingExpressions = expressions;
+            gridElement.sortingExpressions = expressions;
+            gridElement.dispatchEvent(new CustomEvent('sorted', { detail: expressions }));
             fixture.detectChanges();
-            await fixture.whenStable();
 
-            secondRow = gridComponent.rows[1];
-            expect(secondRow.cells[1].value).toBe('a');
+            expect(sortedSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ detail: expressions }));
+            expect(gridComponent.sortingExpressions().length).toBe(1);
+            expect(gridComponent.sortingExpressions()[0].key).toBe('name');
+
+            gridComponent.sortingExpressions.set([]);
+            fixture.detectChanges();
+            expect(gridElement.sortingExpressions).toEqual([]);
         });
 
-        it('should update filteringExpressions through setter', async () => {
+        it('should update filteringExpressions model and emit filtered output when filtered event fires', async () => {
             const fixture = TestBed.createComponent(BasicGridComponent);
             fixture.detectChanges();
             await setUp(fixture);
 
             const gridComponent = fixture.componentInstance.grid();
+            const gridElement = fixture.nativeElement.querySelector('igc-grid-lite');
+            const filteredSpy = jasmine.createSpy('filtered');
 
-            expect(gridComponent.dataView.length).toBe(8);
-            expect(gridComponent.dataView.some(item => !item.active)).toBeTrue();
+            gridComponent.filtered.subscribe(filteredSpy);
+            expect(gridComponent.filteringExpressions()).toEqual([]);
+
+            // Simulate the web component emitting the filtered event
             const expressions: IgxGridLiteFilteringExpression<TestData>[] = [
                 { key: 'active', condition: 'true', searchTerm: true }
             ];
-
-            gridComponent.filteringExpressions = expressions;
+            gridElement.filterExpressions = expressions;
+            gridElement.dispatchEvent(new CustomEvent('filtered', { detail: expressions }));
             fixture.detectChanges();
-            await fixture.whenStable();
 
-            expect(gridComponent.dataView.length).toBe(4);
-            expect(gridComponent.dataView.every(item => item.active)).toBeTrue();
+            expect(filteredSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ detail: expressions }));
+            expect(gridComponent.filteringExpressions().length).toBe(1);
+            expect(gridComponent.filteringExpressions()[0].key).toBe('active');
+
+            gridComponent.filteringExpressions.set([]);
+            fixture.detectChanges();
+            expect(gridElement.filterExpressions).toEqual([]);
         });
     });
 
