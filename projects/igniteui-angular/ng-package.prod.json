@@ -14,7 +14,6 @@
     "@igniteui/material-icons-extended",
     "igniteui-theming",
     "igniteui-i18n-core",
-    "igniteui-webcomponents",
-    "igniteui-grid-lite"
+    "igniteui-webcomponents"
   ]
 }
