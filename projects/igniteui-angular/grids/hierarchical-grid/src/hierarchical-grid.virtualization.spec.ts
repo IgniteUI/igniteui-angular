@@ -35,7 +35,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 1 }]
+            providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
         });
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();

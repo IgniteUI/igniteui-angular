@@ -116,7 +116,7 @@ import { I18N_FORMATTER } from 'igniteui-angular/core';
  * Injection token for setting the throttle time used in grid virtual scroll.
  * @hidden
  */
-export const SCROLL_THROTTLE_TIME_MULTIPLIER = /*@__PURE__*/new InjectionToken<number>('SCROLL_THROTTLE_TIME', {
+export const SCROLL_THROTTLE_TIME_MULTIPLIER = /*@__PURE__*/new InjectionToken<number>('SCROLL_THROTTLE_TIME_MULTIPLIER', {
     factory: () => 10
 });
 
@@ -179,6 +179,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     public i18nFormatter = inject(I18N_FORMATTER);
     private readonly THROTTLE_TIME_MULTIPLIER = inject(SCROLL_THROTTLE_TIME_MULTIPLIER);
     private throttleTime$ = new BehaviorSubject<number>(this.THROTTLE_TIME_MULTIPLIER);
+    /** @hidden @internal */
+    public throttleScheduler = animationFrameScheduler;
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
@@ -3735,7 +3737,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             throttle(() =>
                 this.throttleTime$.pipe(
                   take(1),
-                  switchMap(time => timer(time, animationFrameScheduler))
+                  switchMap(time => timer(time, this.throttleScheduler))
                 )
               ),
             destructor

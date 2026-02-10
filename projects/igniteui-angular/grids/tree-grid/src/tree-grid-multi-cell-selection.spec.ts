@@ -12,6 +12,7 @@ import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
+import { asyncScheduler } from 'rxjs';
 
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
@@ -41,6 +42,8 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
             detect = () => treeGrid.cdr.detectChanges();
+
+            treeGrid.throttleScheduler = asyncScheduler;
         });
 
         afterEach(() => {
