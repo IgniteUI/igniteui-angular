@@ -5,10 +5,15 @@ import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
-/** @hidden @internal */
-export type SetInitialSizeFn = (info: OverlayInfo, moveToOverlay: () => void) => void;
+type SetInitialSizeFn = (info: OverlayInfo, moveToOverlay: () => void) => void;
 
-/** @hidden @internal */
+/**
+ * Maps a host `HTMLElement` to a sizing strategy (`SetInitialSizeFn`).
+ *
+ * @hidden
+ * @internal
+ */
+
 @Injectable({ providedIn: 'root' })
 export class OverlaySizeRegistry {
     private readonly map = new Map<HTMLElement, SetInitialSizeFn>();
@@ -29,7 +34,6 @@ export class OverlaySizeRegistry {
         return this.map.get(info.elementRef.nativeElement);
     }
 }
-
 
 /**
  * Mark an element as an igxOverlay outlet container.

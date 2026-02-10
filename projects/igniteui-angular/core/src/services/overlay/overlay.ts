@@ -1008,7 +1008,7 @@ export class IgxOverlayService implements OnDestroy {
      *
      * The elements inherit constraining parent styles, so
      * for some of them (e.g., Tooltip, Snackbar) their pre-move size is incorrect.
-     * Those can **override** this method to measure **after** moving to get an accurate size.
+     * Those can register an override via `OverlaySizeRegistry` to measure **after** moving to get an accurate size.
      *
      * - **Default**: Measures in-place (current parent), then moves to the overlay.
      *
