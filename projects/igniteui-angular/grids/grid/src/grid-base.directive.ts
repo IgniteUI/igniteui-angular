@@ -3832,7 +3832,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.updateScrollThrottle(count * this.headerContainer.state.chunkSize);
         });
 
-        this.headerContainer.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
+        this.headerContainer?.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
             this.updateScrollThrottle(count * this.verticalScrollContainer.state.chunkSize);
         });
 
