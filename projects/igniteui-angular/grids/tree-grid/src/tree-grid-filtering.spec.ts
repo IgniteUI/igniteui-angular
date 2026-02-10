@@ -778,14 +778,15 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick();
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
-            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+            let checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
 
             // Get initial row count (all rows should be visible)
             const initialRowCount = tGrid.rowList.length;
             expect(initialRowCount).toBeGreaterThan(0);
 
-            // Unselect the first item (after Select All checkbox)
-            // This corresponds to one of the actual data items
+            // Unselect the first data item (checkboxes[0] is "Select All", checkboxes[1] is first actual item)
+            // Based on the test data, this should be a name value
+            const firstItemLabel = checkboxes[1].nativeElement.querySelector('.igx-checkbox__label').textContent.trim();
             checkboxes[1].click();
             tick();
             fix.detectChanges();
@@ -800,6 +801,13 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             const filteredRowCount = tGrid.rowList.length;
             expect(filteredRowCount).toBeGreaterThan(0, 'Grid should not be empty after unselecting one item');
             expect(filteredRowCount).toBeLessThan(initialRowCount, 'Grid should have fewer rows after filtering');
+
+            // Verify that the unselected value is not present in the filtered data
+            const filteredNames = tGrid.rowList.map(row => row.cells.toArray().find(cell => cell.column.field === 'Name')?.value);
+            expect(filteredNames).not.toContain(firstItemLabel, 'Unselected item should not be in filtered results');
+
+            // Verify that at least one other name is still present
+            expect(filteredNames.length).toBeGreaterThan(0, 'Some rows should remain after filtering');
         }));
     });
 
