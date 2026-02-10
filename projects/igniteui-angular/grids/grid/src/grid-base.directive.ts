@@ -3985,8 +3985,8 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected updateScrollThrottle(cells: number) {
         // for less than 100 no throttle, 10ms more for every 100 cells
-        const throttle = cells <= 100 ? 0 : Math.floor(cells / 100) * this.THROTTLE_TIME_MULTIPLIER;
-        this.throttleTime$.next(throttle);
+        const currentThrottle = cells <= 100 ? 0 : Math.floor(cells / 100) * this.THROTTLE_TIME_MULTIPLIER;
+        this.throttleTime$.next(currentThrottle);
     }
 
     /**
