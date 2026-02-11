@@ -368,6 +368,10 @@ export class IgxOverlayService implements OnDestroy {
         info.detached = true;
         this.finishAnimations(info);
         info.settings.scrollStrategy.detach();
+        // Dispose position strategy if it has a dispose method
+        if (typeof (info.settings.positionStrategy as any).dispose === 'function') {
+            (info.settings.positionStrategy as any).dispose();
+        }
         this.removeOutsideClickListener(info);
         this.removeResizeHandler();
         this.cleanUp(info);
