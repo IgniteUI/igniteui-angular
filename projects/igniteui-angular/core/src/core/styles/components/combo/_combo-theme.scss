@@ -184,6 +184,8 @@
         }
 
         %igx-combo__clear-button {
+            cursor: pointer;
+
             @if $variant == 'bootstrap' {
                 border-inline-end: rem(1px) solid var(--border-color);
             }
