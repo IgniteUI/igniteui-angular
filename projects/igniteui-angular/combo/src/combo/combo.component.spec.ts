@@ -1628,7 +1628,7 @@ describe('igxCombo', () => {
                     dropdown.toggle();
                     fixture.detectChanges();
                     expect(dropdown.items).toBeDefined();
-                    expect(dropdown.items.length).toEqual(8);
+                    expect(dropdown.items.length).toEqual(5);
                     dropdown.onFocus();
                     expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
                     expect(dropdown.focusedItem.focused).toEqual(true);

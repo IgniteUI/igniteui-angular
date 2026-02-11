@@ -32,6 +32,10 @@
             width: auto;
             height: auto;
             overflow: visible !important;
+
+            &:not(:popover-open) {
+                display: initial !important;
+            }
         }
     }
 
