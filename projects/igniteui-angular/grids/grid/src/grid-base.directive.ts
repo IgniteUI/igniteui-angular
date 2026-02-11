@@ -113,7 +113,7 @@ import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from '
 import { I18N_FORMATTER } from 'igniteui-angular/core';
 
 /**
- * Injection token for setting the throttle time used in grid virtual scroll.
+ * Injection token for setting the throttle time multiplier used in grid virtual scroll.
  * @hidden
  */
 export const SCROLL_THROTTLE_TIME_MULTIPLIER = /*@__PURE__*/new InjectionToken<number>('SCROLL_THROTTLE_TIME_MULTIPLIER', {
@@ -181,6 +181,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private throttleTime$ = new BehaviorSubject<number>(this.THROTTLE_TIME_MULTIPLIER);
     /** @hidden @internal */
     public throttleScheduler = animationFrameScheduler;
+    private readonly MAX_SCROLL_THROTTLE: number = 60;
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
@@ -3986,9 +3987,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected updateScrollThrottle(cells: number) {
-        // for less than 100 no throttle, 10ms more for every 100 cells
+        // for less than 100 - throttle 0, 10ms more for every 100 cells upto max of 60ms
         const currentThrottle = cells <= 100 ? 0 : Math.floor(cells / 100) * this.THROTTLE_TIME_MULTIPLIER;
-        this.throttleTime$.next(currentThrottle);
+        this.throttleTime$.next(Math.min(currentThrottle, this.MAX_SCROLL_THROTTLE));
     }
 
     /**
