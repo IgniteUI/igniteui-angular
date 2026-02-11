@@ -1,4 +1,4 @@
-import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject } from '@angular/core';
+import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject, ContentChildren, QueryList } from '@angular/core';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -19,8 +19,10 @@ import { IgxIconService } from 'igniteui-angular/icon';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderSearchValueContext } from './query-builder.common';
+import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 
 /* wcElementTag: igc-query-builder */
+/* blazorIndirectRender */
 /**
  * A component used for operating with complex filters by creating or editing conditions
  * and grouping them using AND/OR logic.
@@ -219,6 +221,18 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @ContentChild(IgxQueryBuilderSearchValueTemplateDirective)
     protected searchValueTemplateDirective: IgxQueryBuilderSearchValueTemplateDirective;
+
+
+
+    /* contentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: QueryBuilderHeaderCollection */
+    /* blazorCollectionItemName: QueryBuilderHeader */
+    /* ngQueryListName: queryBuilderHeaderCollection */
+    /** @hidden @internal */
+    @ContentChildren(IgxQueryBuilderHeaderComponent)
+    protected queryBuilderHeaderCollection: QueryList<IgxQueryBuilderHeaderComponent>;
 
     /**
      * @hidden @internal

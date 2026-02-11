@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { HORIZONTAL_NAV_KEYS, HEADER_KEYS, ColumnType } from 'igniteui-angular/core';
+import { ColumnType } from 'igniteui-angular/core';
+import { HORIZONTAL_NAV_KEYS, HEADER_KEYS } from './grid-navigation-keys';
 import { GridKeydownTargetType } from './common/enums';
 
 /** @hidden */
@@ -354,7 +355,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     private hasNextVerticalPosition(prev = false) {
         if ((prev && this.activeNode.row === 0 && (!this.isDataRow(this.activeNode.row) || this.activeNode.layout.rowStart === 1)) ||
-            (!prev && this.activeNode.row >= this.grid.dataView.length - 1 && this.activeNode.column === this.lastColIndexPerMRLBlock())) {
+            (!prev && this.activeNode.row >= this.grid.dataView.length - 1 &&
+                this.activeNode.layout.rowStart === this.lastRowStartPerBlock())) {
             return false;
         }
         return true;
