@@ -3207,6 +3207,156 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
+        it('Should reposition overlay when outlet is resized with ContainerPositionStrategy.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const outlet = fixture.componentInstance.divElement;
+            const outletElement = outlet.nativeElement;
+            outletElement.style.width = '800px';
+            outletElement.style.height = '600px';
+            outletElement.style.position = 'fixed';
+            outletElement.style.top = '100px';
+            outletElement.style.left = '200px';
+            outletElement.style.overflow = 'hidden';
+
+            fixture.detectChanges();
+            const overlaySettings: OverlaySettings = {
+                outlet,
+                positionStrategy: new ContainerPositionStrategy()
+            };
+
+            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent, overlaySettings);
+            fixture.componentInstance.overlay.show(id);
+            tick();
+
+            const overlayElement = outletElement.children[0];
+            let wrapperElement = overlayElement.children[0] as HTMLElement;
+
+            // Initial wrapper dimensions should match outlet
+            expect(wrapperElement.style.width).toBe('800px');
+            expect(wrapperElement.style.height).toBe('600px');
+
+            // Resize the outlet
+            outletElement.style.width = '1000px';
+            outletElement.style.height = '700px';
+
+            // Wait for ResizeObserver to fire
+            tick(100);
+            fixture.detectChanges();
+
+            // Wrapper should now match new outlet dimensions
+            wrapperElement = overlayElement.children[0] as HTMLElement;
+            const wrapperRect = wrapperElement.getBoundingClientRect();
+            expect(wrapperRect.width).toBeCloseTo(1000, 1);
+            expect(wrapperRect.height).toBeCloseTo(700, 1);
+
+            fixture.componentInstance.overlay.detachAll();
+        }));
+
+        it('Should maintain centering when outlet is resized with ContainerPositionStrategy.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const outlet = fixture.componentInstance.divElement;
+            const outletElement = outlet.nativeElement;
+            outletElement.style.width = '600px';
+            outletElement.style.height = '400px';
+            outletElement.style.position = 'fixed';
+            outletElement.style.top = '50px';
+            outletElement.style.left = '50px';
+            outletElement.style.overflow = 'hidden';
+
+            fixture.detectChanges();
+            const overlaySettings: OverlaySettings = {
+                outlet,
+                positionStrategy: new ContainerPositionStrategy()
+            };
+
+            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent, overlaySettings);
+            fixture.componentInstance.overlay.show(id);
+            tick();
+
+            const overlayElement = outletElement.children[0];
+            const wrapperElement = overlayElement.children[0] as HTMLElement;
+            let componentElement = wrapperElement.children[0].children[0];
+            let componentRect = componentElement.getBoundingClientRect();
+            let outletRect = outletElement.getBoundingClientRect();
+
+            // Verify initial centering
+            let horizontalCenter = Math.abs((componentRect.left + componentRect.width / 2) - (outletRect.left + outletRect.width / 2));
+            let verticalCenter = Math.abs((componentRect.top + componentRect.height / 2) - (outletRect.top + outletRect.height / 2));
+            expect(horizontalCenter).toBeLessThan(1);
+            expect(verticalCenter).toBeLessThan(1);
+
+            // Resize the outlet
+            outletElement.style.width = '900px';
+            outletElement.style.height = '600px';
+            outletElement.style.top = '100px';
+            outletElement.style.left = '100px';
+
+            // Wait for ResizeObserver to fire
+            tick(100);
+            fixture.detectChanges();
+
+            // Re-check centering with new dimensions
+            componentElement = wrapperElement.children[0].children[0];
+            componentRect = componentElement.getBoundingClientRect();
+            outletRect = outletElement.getBoundingClientRect();
+
+            horizontalCenter = Math.abs((componentRect.left + componentRect.width / 2) - (outletRect.left + outletRect.width / 2));
+            verticalCenter = Math.abs((componentRect.top + componentRect.height / 2) - (outletRect.top + outletRect.height / 2));
+            expect(horizontalCenter).toBeLessThan(1);
+            expect(verticalCenter).toBeLessThan(1);
+
+            fixture.componentInstance.overlay.detachAll();
+        }));
+
+        it('Should dispose ResizeObserver when dispose is called on ContainerPositionStrategy.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const outlet = fixture.componentInstance.divElement;
+            const outletElement = outlet.nativeElement;
+            outletElement.style.width = '800px';
+            outletElement.style.height = '600px';
+            outletElement.style.position = 'fixed';
+            outletElement.style.top = '100px';
+            outletElement.style.left = '200px';
+
+            fixture.detectChanges();
+            const positionStrategy = new ContainerPositionStrategy();
+            const overlaySettings: OverlaySettings = {
+                outlet,
+                positionStrategy
+            };
+
+            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent, overlaySettings);
+            fixture.componentInstance.overlay.show(id);
+            tick();
+
+            const overlayElement = outletElement.children[0];
+            const wrapperElement = overlayElement.children[0] as HTMLElement;
+
+            // Initial dimensions
+            expect(wrapperElement.style.width).toBe('800px');
+            expect(wrapperElement.style.height).toBe('600px');
+
+            // Dispose the strategy
+            positionStrategy.dispose();
+
+            // Resize the outlet
+            outletElement.style.width = '1000px';
+            outletElement.style.height = '700px';
+
+            // Wait for potential ResizeObserver callback
+            tick(100);
+            fixture.detectChanges();
+
+            // Dimensions should NOT have changed since observer was disposed
+            expect(wrapperElement.style.width).toBe('800px');
+            expect(wrapperElement.style.height).toBe('600px');
+
+            fixture.componentInstance.overlay.detachAll();
+        }));
+
         // 3. Interaction
         // 3.1 Modal
         it('Should apply a greyed-out mask layers when is modal.', fakeAsync(() => {
