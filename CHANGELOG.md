@@ -17,6 +17,10 @@ All notable changes for each version of this project will be documented in this 
         ```
 
 ### General
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - Improved performance by dynamically adjusting the scroll throttle based on the data displayed in grid.
+
 - `IgxCombo`, `IgxSimpleCombo`
     - Combo and Simple Combo now close the dropdown list and move the focus to the next focusable element on "Tab" press and clear the selection if the combo is collapsed on "Escape".
 
