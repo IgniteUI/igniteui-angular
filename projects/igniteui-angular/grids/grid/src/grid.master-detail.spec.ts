@@ -15,7 +15,7 @@ import { GridSummaryCalculationMode, IgxStringFilteringOperand, SortingDirection
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
-import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
 const DEBOUNCE_TIME = 60;
 const ROW_TAG = 'igx-grid-row';
@@ -46,7 +46,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
         });
     }));
 

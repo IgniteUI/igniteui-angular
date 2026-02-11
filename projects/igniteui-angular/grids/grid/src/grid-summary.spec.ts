@@ -18,7 +18,7 @@ import { DropPosition, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, Ig
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridSummaryCalculationMode, IColumnPipeArgs, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
-import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 describe('IgxGrid - Summaries #grid', () => {
 
@@ -1206,7 +1206,7 @@ describe('IgxGrid - Summaries #grid', () => {
         let grid;
         beforeEach(() => {
             TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fix = TestBed.createComponent(SummariesGroupByTransactionsComponent);
             fix.detectChanges();

@@ -10,7 +10,7 @@ import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../te
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
-import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -40,7 +40,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
+            providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
         });
     }));
 
@@ -50,7 +50,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fixture.detectChanges();
@@ -965,7 +965,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
     describe('IgxHierarchicalGrid Navigation API #hGrid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
             fixture.detectChanges();

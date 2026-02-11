@@ -94,8 +94,8 @@ import {
     onResourceChangeHandle
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
-import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
+import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
+import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile, throttle, take, switchMap } from 'rxjs/operators';
 import {
     IgxToggleDirective,
     IForOfDataChangeEventArgs,
@@ -113,11 +113,11 @@ import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from '
 import { I18N_FORMATTER } from 'igniteui-angular/core';
 
 /**
- * Injection token for setting the throttle time used in grid virtual scroll.
+ * Injection token for setting the throttle time multiplier used in grid virtual scroll.
  * @hidden
  */
-export const SCROLL_THROTTLE_TIME = /*@__PURE__*/new InjectionToken<number>('SCROLL_THROTTLE_TIME', {
-    factory: () => 40
+export const SCROLL_THROTTLE_TIME_MULTIPLIER = /*@__PURE__*/new InjectionToken<number>('SCROLL_THROTTLE_TIME_MULTIPLIER', {
+    factory: () => 10
 });
 
 
@@ -177,7 +177,11 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _diTransactions = inject(IgxGridTransaction, { optional: true });
     /** @hidden @internal */
     public i18nFormatter = inject(I18N_FORMATTER);
-    private readonly THROTTLE_TIME = inject(SCROLL_THROTTLE_TIME);
+    private readonly THROTTLE_TIME_MULTIPLIER = inject(SCROLL_THROTTLE_TIME_MULTIPLIER);
+    private throttleTime$ = new BehaviorSubject<number>(this.THROTTLE_TIME_MULTIPLIER);
+    /** @hidden @internal */
+    public throttleScheduler = animationFrameScheduler;
+    private readonly MAX_SCROLL_THROTTLE: number = 60;
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
@@ -3731,7 +3735,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.scrollNotify.pipe(
             filter(() => !this._init),
-            throttleTime(this.THROTTLE_TIME, animationFrameScheduler, { leading: false, trailing: true }),
+            throttle(() =>
+                this.throttleTime$.pipe(
+                  take(1),
+                  switchMap(time => timer(time, this.throttleScheduler))
+                )
+              ),
             destructor
         )
             .subscribe((event) => {
@@ -3820,6 +3829,14 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             this.evaluateLoadingState();
             this.updateMergedData();
+        });
+
+        this.verticalScrollContainer.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
+            this.updateScrollThrottle(count * this.headerContainer.state.chunkSize);
+        });
+
+        this.headerContainer?.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
+            this.updateScrollThrottle(count * this.verticalScrollContainer.state.chunkSize);
         });
 
         this.verticalScrollContainer.scrollbarVisibilityChanged.pipe(filter(() => !this._init), destructor).subscribe(() => {
@@ -3967,6 +3984,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected get mergedDataInView() {
         return this._mergedDataInView;
+    }
+
+    protected updateScrollThrottle(cells: number) {
+        // for less than 100 - throttle 0, 10ms more for every 100 cells upto max of 60ms
+        const currentThrottle = cells <= 100 ? 0 : Math.floor(cells / 100) * this.THROTTLE_TIME_MULTIPLIER;
+        this.throttleTime$.next(Math.min(currentThrottle, this.MAX_SCROLL_THROTTLE));
     }
 
     /**
