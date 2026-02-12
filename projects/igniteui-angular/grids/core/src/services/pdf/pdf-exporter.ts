@@ -47,8 +47,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
      */
     public override exportEnded = new EventEmitter<IPdfExportEndedEventArgs>();
 
-    private _currentFontName = 'helvetica';
-    private _currentBoldFontName = 'helvetica';
+    private _currentFontName;
+    private _currentBoldFontName;
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
         this._currentFontName = 'helvetica';
