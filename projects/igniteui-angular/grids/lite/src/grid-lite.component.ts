@@ -1,4 +1,4 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, inject, input, model, OnInit, output, viewChild, ViewEncapsulation } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, inject, input, model, OnInit } from '@angular/core';
 import { DataPipelineConfiguration, FilterExpression, GridLiteSortingOptions, IgcGridLite, Keys, SortingExpression } from 'igniteui-grid-lite';
 import { IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
 
@@ -14,14 +14,22 @@ class IgxGridLite<T extends object = any> extends IgcGridLite<T> {
     }
 }
 
+/**
+ * The Grid Lite is a web component for displaying data in a tabular format quick and easy.
+ *
+ * Out of the box it provides row virtualization, sort and filter operations (client and server side),
+ * the ability to template cells and headers and column hiding.
+ *
+ * @fires sorting - Emitted when sorting is initiated through the UI.
+ * @fires sorted - Emitted when a sort operation initiated through the UI has completed.
+ * @fires filtering - Emitted when filtering is initiated through the UI.
+ * @fires filtered - Emitted when a filter operation initiated through the UI has completed.
+ */
 @Component({
     selector: 'igx-grid-lite',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    // styles: `:host {
-    //     display: contents;
-    // }`,
     host: {
         '[data]': "data()",
         '[autoGenerate]': "autoGenerate()",
@@ -30,8 +38,7 @@ class IgxGridLite<T extends object = any> extends IgcGridLite<T> {
         '(sorted)': "onSorted($any($event))",
         '(filtered)': "onFiltered($any($event))"
     },
-    encapsulation: ViewEncapsulation.None,
-    templateUrl: './grid-lite.component.html'
+    template: `<ng-content></ng-content>`
 })
 
 export class IgxGridLiteComponent<T extends object = any> implements OnInit {
@@ -46,7 +53,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
     //#region Inputs
 
     /** The data source for the grid. */
-    public readonly data = input<any>([]);
+    public readonly data = input<T[]>([]);
 
     /**
      * Whether the grid will try to "resolve" its column configuration based on the passed
@@ -84,49 +91,6 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * complete through the UI.
      */
     public readonly filteringExpressions = model<IgxGridLiteFilteringExpression<T>[]>([]);
-
-    //#endregion
-
-    //#region Events
-
-    // /**
-    //  * Emitted when sorting is initiated through the UI.
-    //  * Returns the sort expression which will be used for the operation.
-    //  *
-    //  * @remarks
-    //  * The event is cancellable which prevents the operation from being applied.
-    //  * The expression can be modified prior to the operation running.
-    //  *
-    //  * @event
-    //  */
-    // public readonly sorting = output<CustomEvent<IgxGridLiteSortingExpression<T>>>();
-
-    // /**
-    //  * Emitted when a sort operation initiated through the UI has completed.
-    //  * Returns the sort expression used for the operation.
-    //  *
-    //  * @event
-    //  */
-    // public readonly sorted = output<CustomEvent<IgxGridLiteSortingExpression<T>>>();
-
-    // /**
-    //  * Emitted when filtering is initiated through the UI.
-    //  *
-    //  * @remarks
-    //  * The event is cancellable which prevents the operation from being applied.
-    //  * The expression can be modified prior to the operation running.
-    //  *
-    //  * @event
-    //  */
-    // public readonly filtering = output<CustomEvent<IgxGridLiteFilteringExpression<T>>>();
-
-    // /**
-    //  * Emitted when a filter operation initiated through the UI has completed.
-    //  * Returns the filter state for the affected column.
-    //  *
-    //  * @event
-    //  */
-    // public readonly filtered = output<CustomEvent<IgxGridLiteFilteringExpression<T>>>();
 
     //#endregion
 
