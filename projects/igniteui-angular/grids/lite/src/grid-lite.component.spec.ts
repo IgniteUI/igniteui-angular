@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { IgxGridLiteComponent, IgxGridLiteFilteringExpression, IgxGridLiteSortingExpression } from './grid-lite.component';
 import { IgxGridLiteColumnComponent, IgxGridLiteCellTemplateDirective, IgxGridLiteHeaderTemplateDirective, IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
 
-fdescribe('IgxGridLiteComponent', () => {
+describe('IgxGridLiteComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
