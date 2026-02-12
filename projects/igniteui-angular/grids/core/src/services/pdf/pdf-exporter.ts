@@ -225,11 +225,6 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 format: options.pageSize
             });
 
-            this._currentFontName = 'helvetica';
-
-            this._currentFontName = 'helvetica';
-            this._currentBoldFontName = 'helvetica';
-
             // Add custom Unicode font if provided
             if (options.customFont?.name?.trim() && options.customFont?.data?.trim()) {
                 try {
