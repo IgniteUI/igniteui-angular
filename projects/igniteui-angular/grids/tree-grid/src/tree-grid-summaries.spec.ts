@@ -1534,6 +1534,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         it('Should not change active summary cell when press Arrow Down and it is last summary row', async () => {
             treeGrid.expandAll();
             fix.detectChanges();
+            await wait(16);
 
             treeGrid.verticalScrollContainer.scrollTo(treeGrid.dataView.length - 1);
             await wait(100);
