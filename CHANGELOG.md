@@ -2,23 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 21.2.0
-
-### New Features
-
-- `IgxOverlayService`
-    - Integrated HTML Popover API into the overlay service for improved z-index management and layering control.
-    - The overlay service now uses the Popover API to place overlay elements in the top layer, eliminating z-index stacking issues.
-    - Improved positioning accuracy for container-based overlays with fixed container bounds.
-
-- `IgxCombo`, `IgxSimpleCombo`
-    - Introduced the ability for Combo and Simple Combo to close the dropdown list and move the focus to the next focusable element on "Tab" press and clear the selection if the combo is collapsed on "Escape".
-
-### Breaking Changes
-
-- `igxForOf`, `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`, `igxPivotGrid`
-    - original `data` array mutations (like adding/removing/moving records in the original array) are no longer detected automatically. Components need an array ref change for the change to be detected.
-
 ## 21.1.0
 
 ### New Features
@@ -32,6 +15,11 @@ All notable changes for each version of this project will be documented in this 
         <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'" [hideTriggers]="'keypress,blur'">info</igx-icon>
         <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
         ```
+
+- `IgxOverlayService`
+    - Integrated HTML Popover API into the overlay service for improved z-index management and layering control.
+    - The overlay service now uses the Popover API to place overlay elements in the top layer, eliminating z-index stacking issues.
+    - Improved positioning accuracy for container-based overlays with fixed container bounds.
 
 ### General
 
