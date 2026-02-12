@@ -297,7 +297,7 @@ class GridComponentTemplate extends BasicGridComponent {
 }
 
 async function setUp(fixture: ComponentFixture<any>) {
-    await customElements.whenDefined('igc-grid-lite');
+    await customElements.whenDefined('igx-grid-lite');
 
     const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
     const gridBody = gridElement?.renderRoot.querySelector('igc-virtualizer');

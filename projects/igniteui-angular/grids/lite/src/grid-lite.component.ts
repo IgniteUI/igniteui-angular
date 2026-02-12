@@ -12,6 +12,14 @@ class IgxGridLite<T extends object = any> extends IgcGridLite<T> {
     public static override get tagName() {
         return 'igx-grid-lite' as any;
     }
+    public static override register(): void {
+        // still call super for child components:
+        super.register();
+
+        if (!customElements.get(IgxGridLite.tagName)) {
+            customElements.define(IgxGridLite.tagName, IgxGridLite);
+        }
+    }
 }
 
 /**
@@ -45,7 +53,6 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
 
     //#region Internal state
 
-    // private readonly gridRef = viewChild.required<ElementRef<IgcGridLite<T>>>('grid');
     private readonly gridRef = inject(ElementRef) as ElementRef<IgxGridLite<T>>;
 
     //#endregion
@@ -150,10 +157,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * @hidden @internal
      */
     public ngOnInit(): void {
-        IgcGridLite.register();
-        if (!customElements.get(IgxGridLite.tagName)) {
-            customElements.define(IgxGridLite.tagName, IgxGridLite);
-        }
+        IgxGridLite.register();
     }
 
     //#region Public API
@@ -225,9 +229,9 @@ declare global {
   }
 
     interface HTMLElementEventMap {
-        'sorting': CustomEvent<SortingExpression<any>>;
-        'sorted': CustomEvent<SortingExpression<any>>;
-        'filtering': CustomEvent<FilterExpression<any>>;
-        'filtered': CustomEvent<FilterExpression<any>>;
+        'sorting': CustomEvent<IgxGridLiteSortingExpression<any>>;
+        'sorted': CustomEvent<IgxGridLiteSortingExpression<any>>;
+        'filtering': CustomEvent<IgxGridLiteFilteringExpression<any>>;
+        'filtered': CustomEvent<IgxGridLiteFilteringExpression<any>>;
     }
 }
