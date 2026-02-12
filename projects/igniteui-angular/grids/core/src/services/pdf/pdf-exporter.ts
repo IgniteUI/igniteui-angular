@@ -225,24 +225,25 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 format: options.pageSize
             });
 
+            const font = options.customFont;
             // Add custom Unicode font if provided
-            if (options.customFont?.name?.trim() && options.customFont?.data?.trim()) {
+            if (typeof font?.name === 'string' && font.name.trim() && typeof font?.data === 'string' && font.data.trim()) {
                 try {
-                    const fontFileName = `${options.customFont.name}.ttf`;
-                    pdf.addFileToVFS(fontFileName, options.customFont.data);
-                    pdf.addFont(fontFileName, options.customFont.name, 'normal');
-                    this._currentFontName = options.customFont.name;
+                    const fontFileName = `${font.name}.ttf`;
+                    pdf.addFileToVFS(fontFileName, font.data);
+                    pdf.addFont(fontFileName, font.name, 'normal');
+                    this._currentFontName = font.name;
 
                     // Register bold font if provided
-                    if (options.customFont.bold?.name?.trim() && options.customFont.bold?.data?.trim()) {
-                        const boldFontFileName = `${options.customFont.bold.name}.ttf`;
-                        pdf.addFileToVFS(boldFontFileName, options.customFont.bold.data);
-                        pdf.addFont(boldFontFileName, options.customFont.bold.name, 'bold');
-                        this._currentBoldFontName = options.customFont.bold.name;
+                    if (typeof font.bold?.name === 'string' && font.bold.name.trim() && typeof font.bold?.data === 'string' && font.bold.data.trim()) {
+                        const boldFontFileName = `${font.bold.name}.ttf`;
+                        pdf.addFileToVFS(boldFontFileName, font.bold.data);
+                        pdf.addFont(boldFontFileName, font.bold.name, 'bold');
+                        this._currentBoldFontName = font.bold.name;
                     } else {
                         // If no bold variant provided, use the normal font for bold as well
-                        pdf.addFont(fontFileName, options.customFont.name, 'bold');
-                        this._currentBoldFontName = options.customFont.name;
+                        pdf.addFont(fontFileName, font.name, 'bold');
+                        this._currentBoldFontName = font.name;
                     }
                 } catch (error) {
                     console.warn('Failed to load custom font, falling back to helvetica:', error);
