@@ -322,7 +322,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @HostBinding('style.--igx-nav-drawer-size')
+    @HostBinding('style.--ig-nav-drawer-size')
     public get normalSize() {
         if (!this.isOpen) {
             return '0px';
@@ -334,7 +334,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @HostBinding('style.--igx-nav-drawer-size--mini')
+    @HostBinding('style.--ig-nav-drawer-size--mini')
     public get miniSize() {
         if (this.miniTemplate && this.miniWidth) {
             return this.miniWidth;

@@ -95,7 +95,7 @@
     // in order to override the !important rule of .igx-icon--inactive.
     %igx-combo__case-icon {
         igx-icon {
-            --igx-icon-disabled-color: var(--ig-gray-600);
+            --ig-icon-disabled-color: var(--ig-gray-600);
 
             opacity: 1;
         }
@@ -159,8 +159,8 @@
 
     @if $variant == 'fluent' or $variant == 'bootstrap' {
         %igx-combo__search {
-            --igx-input-group-input-suffix-background: transparent;
-            --igx-input-group-input-suffix-background--focused: transparent;
+            --ig-input-group-input-suffix-background: transparent;
+            --ig-input-group-input-suffix-background--focused: transparent;
 
             .igx-input-group__bundle::after {
                 border-block-end-color: var(--border-color);
