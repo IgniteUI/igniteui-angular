@@ -102,7 +102,7 @@ export class IgxPdfExporterOptions extends IgxExporterOptionsBase {
      *
      * @example
      * Recommended fonts for Unicode support:
-     * - Noto Sans: Covers most Unicode scripts (https://fonts.google.com/noto/specimen/Noto+Sans)
+     * - Noto Sans: Covers most Unicode scripts (https://fonts.google.com/noto)
      * - Arial Unicode MS: Comprehensive Unicode coverage
      * - Source Han Sans: Excellent CJK (Chinese, Japanese, Korean) support
      *
