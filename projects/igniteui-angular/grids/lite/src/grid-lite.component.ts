@@ -27,10 +27,8 @@ class IgxGridLite<T extends object = any> extends IgcGridLite<T> {
         '[autoGenerate]': "autoGenerate()",
         '[sortingOptions]': "sortingOptions()",
         '[dataPipelineConfiguration]': "dataPipelineConfiguration()",
-        // '(sorting)': "onSorting($any($event))",
-        // '(sorted)': "onSorted($any($event))",
-        // '(filtering)': "onFiltering($any($event))",
-        // '(filtered)': "onFiltered($any($event))"
+        '(sorted)': "onSorted($any($event))",
+        '(filtered)': "onFiltered($any($event))"
     },
     encapsulation: ViewEncapsulation.None,
     templateUrl: './grid-lite.component.html'
@@ -188,7 +186,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * @hidden @internal
      */
     public ngOnInit(): void {
-        IgxGridLite.register();
+        IgcGridLite.register();
         if (!customElements.get(IgxGridLite.tagName)) {
             customElements.define(IgxGridLite.tagName, IgxGridLite);
         }
@@ -245,34 +243,12 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
 
     //#region Event handlers
 
-    protected onSorting(event: CustomEvent<SortingExpression<T>>): void {
-        if (event['__isPropagationStopped']) return;
-        event['__isPropagationStopped'] = true;
-        event.stopPropagation();
-        // this.sorting.emit(event);
-    }
-
-    protected onSorted(event: CustomEvent<SortingExpression<T>>): void {
-        if (event['__isPropagationStopped']) return;
-        event['__isPropagationStopped'] = true;
+    protected onSorted(_event: CustomEvent<SortingExpression<T>>): void {
         this.sortingExpressions.set(this.gridRef.nativeElement.sortingExpressions ?? []);
-        event.stopPropagation();
-        // this.sorted.emit(event);
     }
 
-    protected onFiltering(event: CustomEvent<FilterExpression<T>>): void {
-        if (event['__isPropagationStopped']) return;
-        event['__isPropagationStopped'] = true;
-        event.stopPropagation();
-        // this.filtering.emit(event);
-    }
-
-    protected onFiltered(event: CustomEvent<FilterExpression<T>>): void {
-        if (event['__isPropagationStopped']) return;
-        event['__isPropagationStopped'] = true;
+    protected onFiltered(_event: CustomEvent<FilterExpression<T>>): void {
         this.filteringExpressions.set(this.gridRef.nativeElement.filterExpressions ?? []);
-        event.stopPropagation();
-        // this.filtered.emit(event);
     }
 
     //#endregion
