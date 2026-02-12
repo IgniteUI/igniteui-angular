@@ -124,7 +124,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxActionStripActionsToken as any)
+    @ContentChildren(IgxActionStripActionsToken)
     public actionButtons: QueryList<IgxActionStripActionsToken>;
 
     /**
