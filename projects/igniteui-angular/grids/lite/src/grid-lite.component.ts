@@ -1,4 +1,4 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, input, model, OnInit, output, viewChild } from '@angular/core';
+import { AfterViewInit, booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, inject, input, model, OnDestroy, OnInit, output, viewChild, ViewEncapsulation } from '@angular/core';
 import { DataPipelineConfiguration, FilterExpression, GridLiteSortingOptions, IgcGridLite, Keys, SortingExpression } from 'igniteui-grid-lite';
 import { IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
 
@@ -12,14 +12,18 @@ export type IgxGridLiteFilteringExpression<T extends object = any> = FilterExpre
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    styles: `igx-grid-lite { display: contents; }`,
+    encapsulation: ViewEncapsulation.None,
     templateUrl: './grid-lite.component.html'
 })
 
-export class IgxGridLiteComponent<T extends object = any> implements OnInit {
+export class IgxGridLiteComponent<T extends object = any> implements OnInit, AfterViewInit, OnDestroy {
 
     //#region Internal state
 
     private readonly gridRef = viewChild.required<ElementRef<IgcGridLite<T>>>('grid');
+    private readonly elem = inject<ElementRef<HTMLElement>>(ElementRef);
+    private observer!: MutationObserver;
 
     //#endregion
 
@@ -168,6 +172,36 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      */
     public ngOnInit(): void {
         IgcGridLite.register();
+    }
+
+    /** @hidden @internal */
+    public ngAfterViewInit() {
+        const host = this.elem.nativeElement;
+        const child = this.gridRef().nativeElement;
+
+        for (const attr of Array.from(host.attributes)) {
+            child.setAttribute(attr.name, host.getAttribute(attr.name));
+        }
+
+        if (typeof MutationObserver === 'undefined') return;
+
+        this.observer = new MutationObserver((records) => {
+            for (const record of records) {
+                const value = host.getAttribute(record.attributeName);
+
+                if (value === null) {
+                    child.removeAttribute(record.attributeName);
+                } else {
+                    child.setAttribute(record.attributeName, value);
+                }
+            }
+        });
+        this.observer.observe(host, { attributes: true });
+    }
+
+    /** @hidden @internal */
+    public ngOnDestroy() {
+        this.observer?.disconnect();
     }
 
     //#region Public API
