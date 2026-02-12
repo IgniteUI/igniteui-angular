@@ -1,5 +1,5 @@
 import { registerI18n, setCurrentI18n } from 'igniteui-i18n-core';
-import { ByLevelTreeGridMergeStrategy, ColumnPinningPosition, DefaultMergeStrategy, DefaultTreeGridMergeStrategy, FilteringExpressionsTree, FilteringExpressionsTreeType, FilteringLogic, HorizontalAlignment, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy, NoopSortingStrategy, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
+import { ByLevelTreeGridMergeStrategy, ColumnPinningPosition, DefaultMergeStrategy, DefaultTreeGridMergeStrategy, FilteringExpressionsTree, FilteringExpressionsTreeType, FilteringLogic, HorizontalAlignment, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy, NoopSortingStrategy, SortingDirection, TransactionType, TransactionEventOrigin, VerticalAlignment } from 'igniteui-angular/core';
 import { DropPosition, GridPagingMode, IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IgxSummaryOperand, IgxTimeSummaryOperand, NoopPivotDimensionsStrategy, PivotDimensionType, RowPinningPosition } from 'igniteui-angular/grids/core';
 
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
@@ -49,4 +49,8 @@ export {
     // i18n
     registerI18n,
     setCurrentI18n,
+
+    // Transactions API
+    TransactionType,
+    TransactionEventOrigin
 }
