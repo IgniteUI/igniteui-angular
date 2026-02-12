@@ -231,6 +231,30 @@ describe('IgxPaginator with default settings', () => {
         expect(totalPages.innerText).toBe('1');
     });
 
+    it('should display the pager text ("of") in page navigation', () => {
+        const fix = TestBed.createComponent(DefaultPaginatorComponent);
+        fix.detectChanges();
+
+        const pageNavTextDiv = fix.debugElement.query(By.css('.igx-page-nav__text')).nativeElement;
+        const spans = pageNavTextDiv.querySelectorAll('span');
+        const paginator = fix.componentInstance.paginator;
+
+        // Should have 3 spans: current page, "of" text, total pages
+        expect(spans.length).toBe(3);
+
+        // Check current page
+        expect(spans[0].innerText.trim()).toBe('1');
+
+        // Check the "of" text
+        expect(spans[1].innerText.trim()).toBe('of');
+
+        // Check total pages
+        expect(spans[2].innerText.trim()).toBe('3');
+
+        // Verify the resource string is set
+        expect(paginator.resourceStrings.igx_paginator_pager_text).toBe('of');
+    });
+
 });
 
 describe('IgxPaginator with custom settings', () => {

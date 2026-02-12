@@ -28,7 +28,7 @@
     <span>{{ paginator.page + 1 }}</span>
     <span
         >&nbsp;{{
-            paginator.resourceStrings.igx_paginator_pager_text
+            paginator.resourceStrings.igx_paginator_pager_text || 'of'
         }}&nbsp;</span
     >
     <span>{{ paginator.totalPages || 1 }}</span>
