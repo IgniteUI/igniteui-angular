@@ -56,6 +56,7 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
     }
 
     private updatePosition(contentElement: HTMLElement): void {
+        // TODO: consider using new anchor() CSS function when it becomes more widely supported: https://caniuse.com/mdn-css_properties_anchor
         const parentRect = contentElement.parentElement.parentElement.getBoundingClientRect();
         contentElement.parentElement.style.width = `${parentRect.width}px`;
         contentElement.parentElement.style.height = `${parentRect.height}px`;
