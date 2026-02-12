@@ -51,6 +51,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
     private _currentBoldFontName = 'helvetica';
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
+        this._currentFontName = 'helvetica';
+        this._currentBoldFontName = 'helvetica';
         const firstDataElement = data[0];
         const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
         const isPivotGrid = firstDataElement?.type === ExportRecordType.PivotGridRecord;
@@ -246,7 +248,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                         this._currentBoldFontName = font.name;
                     }
                 } catch (error) {
-                    console.warn('Failed to load custom font, falling back to helvetica:', error);
+                    console.warn(`Failed to load custom font '${options.customFont.name}', falling back to helvetica:`, error);
                     this._currentFontName = 'helvetica';
                     this._currentBoldFontName = 'helvetica';
                 }
