@@ -3341,7 +3341,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detach(id);
 
             // Verify strategy was disposed by checking internal state
-            expect((positionStrategy as any)._resizeObserver).toBeNull();
+            expect((positionStrategy as any)._resizeSubscription).toBeNull();
             expect((positionStrategy as any)._contentElement).toBeNull();
             expect((positionStrategy as any)._outletElement).toBeNull();
         });

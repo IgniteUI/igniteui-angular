@@ -1,3 +1,5 @@
+import { Subscription } from 'rxjs';
+import { resizeObservable } from '../../../core/utils';
 import { PositionSettings } from '../utilities';
 import { GlobalPositionStrategy } from './global-position-strategy';
 
@@ -6,7 +8,7 @@ import { GlobalPositionStrategy } from './global-position-strategy';
  * These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection
  */
 export class ContainerPositionStrategy extends GlobalPositionStrategy {
-    private _resizeObserver: ResizeObserver;
+    private _resizeSubscription: Subscription;
     private _contentElement: HTMLElement;
     private _outletElement: HTMLElement;
 
@@ -23,7 +25,7 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         const outletElement = contentElement.parentElement.parentElement;
 
         // Set up resize observer if not already observing this element
-        if (!this._resizeObserver || this._outletElement !== outletElement) {
+        if (!this._resizeSubscription || this._outletElement !== outletElement) {
             this.dispose();
             this._contentElement = contentElement;
             this._outletElement = outletElement;
@@ -37,21 +39,20 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
      * Disposes the resize observer and cleans up references.
      */
     public dispose(): void {
-        if (this._resizeObserver) {
-            this._resizeObserver.disconnect();
-            this._resizeObserver = null;
+        if (this._resizeSubscription) {
+            this._resizeSubscription.unsubscribe();
+            this._resizeSubscription = null;
         }
         this._contentElement = null;
         this._outletElement = null;
     }
 
     private _setupResizeObserver(): void {
-        this._resizeObserver = new ResizeObserver(() => {
+        this._resizeSubscription = resizeObservable(this._outletElement).subscribe(() => {
             if (this._contentElement?.parentElement) {
                 this.updatePosition(this._contentElement);
             }
         });
-        this._resizeObserver.observe(this._outletElement);
     }
 
     private updatePosition(contentElement: HTMLElement): void {
