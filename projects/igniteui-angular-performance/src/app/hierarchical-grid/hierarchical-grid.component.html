@@ -1,0 +1,35 @@
+<div class="grid-wrapper">
+  <igx-hierarchical-grid
+    [showExpandAll]="true"
+    #grid
+    [data]="data"
+    [allowFiltering]="false"
+    [height]="'100%'"
+    [width]="'100%'"
+  >
+    @for (col of columns; track col) {
+      <igx-column
+        [field]="col.field"
+        [header]="col.header"
+        [sortable]="col.sortable"
+        [dataType]="col.dataType"
+        [width]="col.width"
+        [groupable]="col.groupable"
+      >
+      </igx-column>
+    }
+    <igx-row-island [height]="null" [width]="null" [key]="'childData'" [autoGenerate]="false">
+        @for (col of columns; track col) {
+            <igx-column
+              [field]="col.field"
+              [header]="col.header"
+              [sortable]="col.sortable"
+              [dataType]="col.dataType"
+              [width]="col.width"
+              [groupable]="col.groupable"
+            >
+            </igx-column>
+        }
+    </igx-row-island>
+</igx-hierarchical-grid>
+</div>

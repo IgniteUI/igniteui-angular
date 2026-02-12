@@ -842,7 +842,13 @@ export var registerConfig = [
     component: IgxQueryBuilderComponent,
     selector: "igc-query-builder",
     parents: [],
-    contentQueries: [],
+    contentQueries: [
+      {
+        property: "queryBuilderHeaderCollection",
+        childType: IgxQueryBuilderHeaderComponent,
+        isQueryList: true,
+      },
+    ],
     additionalProperties: [],
     methods: ["canCommit", "commit", "discard"],
     templateProps: ["searchValueTemplate"],

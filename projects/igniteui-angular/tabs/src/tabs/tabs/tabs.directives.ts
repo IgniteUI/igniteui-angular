@@ -1,13 +1,13 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-    selector: 'igx-tab-header-label,[igxTabHeaderLabel]',
+    selector: '[igxTabHeaderLabel],igx-tab-header-label',
     standalone: true
 })
 export class IgxTabHeaderLabelDirective { }
 
 @Directive({
-    selector: 'igx-tab-header-icon,[igxTabHeaderIcon]',
+    selector: '[igxTabHeaderIcon],igx-tab-header-icon',
     standalone: true
 })
 export class IgxTabHeaderIconDirective { }
