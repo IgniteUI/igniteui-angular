@@ -73,6 +73,6 @@ jobs:
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
       - name: Publish to coveralls.io
-        uses: coverallsapp/github-action@v2.3.6
+        uses: coverallsapp/github-action@v2
         with:
             github-token: ${{ github.token }}
