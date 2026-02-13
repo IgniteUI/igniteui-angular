@@ -565,6 +565,41 @@ describe('PDF Exporter', () => {
 
             exporter.exportData(SampleTestData.contactsData(), options);
         });
+
+        it('should reset font configuration when exporting again without customFont', (done) => {
+            let exportCallCount = 0;
+
+            // First export uses a custom font
+            options.customFont = {
+                name: 'CustomFont',
+                data: 'dummy-font-data'
+            } as any;
+
+            const subscription = exporter.exportEnded.subscribe((args) => {
+                exportCallCount++;
+
+                if (exportCallCount === 1) {
+                    // After the first export with custom font
+                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                    expect(args.pdf).toBeDefined();
+
+                    // Clear customFont and export again
+                    options.customFont = undefined as any;
+                    exporter.exportData(SampleTestData.contactsData(), options);
+                    return;
+                }
+
+                if (exportCallCount === 2) {
+                    // Second export should succeed and not reuse previous custom font settings
+                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(2);
+                    expect(args.pdf).toBeDefined();
+                    subscription.unsubscribe();
+                    done();
+                }
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
     });
 
     describe('Pivot Grid Export', () => {
