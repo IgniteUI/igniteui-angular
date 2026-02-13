@@ -47,6 +47,9 @@ export class IgxPdfExporterService extends IgxBaseExporter {
      */
     public override exportEnded = new EventEmitter<IPdfExportEndedEventArgs>();
 
+    private _currentFontName = 'helvetica';
+    private _currentBoldFontName = 'helvetica';
+
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
         const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
@@ -222,6 +225,37 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 format: options.pageSize
             });
 
+            const font = options.customFont;
+            // Add custom Unicode font if provided
+            if (typeof font?.name === 'string' && font.name.trim() && typeof font?.data === 'string' && font.data.trim()) {
+                try {
+                    const fontFileName = `${font.name}.ttf`;
+                    pdf.addFileToVFS(fontFileName, font.data);
+                    pdf.addFont(fontFileName, font.name, 'normal');
+                    this._currentFontName = font.name;
+
+                    // Register bold font if provided
+                    if (typeof font.bold?.name === 'string' && font.bold.name.trim() && typeof font.bold?.data === 'string' && font.bold.data.trim()) {
+                        const boldFontFileName = `${font.bold.name}.ttf`;
+                        pdf.addFileToVFS(boldFontFileName, font.bold.data);
+                        pdf.addFont(boldFontFileName, font.bold.name, 'bold');
+                        this._currentBoldFontName = font.bold.name;
+                    } else {
+                        // If no bold variant provided, use the normal font for bold as well
+                        pdf.addFont(fontFileName, font.name, 'bold');
+                        this._currentBoldFontName = font.name;
+                    }
+                } catch (error) {
+                    console.warn(`Failed to load custom font '${font.name}', falling back to helvetica:`, error);
+                    this._currentFontName = 'helvetica';
+                    this._currentBoldFontName = 'helvetica';
+                }
+            } else if (options.customFont) {
+                console.warn('Custom font configuration is incomplete (missing name or data), falling back to helvetica');
+                this._currentFontName = 'helvetica';
+                this._currentBoldFontName = 'helvetica';
+            }
+
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
             const margin = 40;
@@ -268,7 +302,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             }
 
             // Draw data rows
-            pdf.setFont('helvetica', 'normal');
+            pdf.setFont(this._currentFontName, 'normal');
 
             // Check if this is a tree grid export (tree grids can have both TreeGridRecord and DataRecord types for nested children)
             const isTreeGridExport = data.some(record => record.type === ExportRecordType.TreeGridRecord);
@@ -423,7 +457,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         allColumns?: any[]
     ): number {
         let yPosition = yStart;
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFont(this._currentBoldFontName, 'bold');
 
         // First, draw row dimension header labels (for pivot grids) if present
         // Draw headers if we have any row dimension headers, regardless of maxRowLevel
@@ -633,7 +667,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             yPosition = yStart + totalHeaderHeight;
         }
 
-        pdf.setFont('helvetica', 'normal');
+        pdf.setFont(this._currentFontName, 'normal');
         return yPosition;
     }
 
@@ -842,7 +876,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         tableWidth: number,
         options: IgxPdfExporterOptions
     ): void {
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFont(this._currentBoldFontName, 'bold');
         pdf.setFillColor(240, 240, 240);
 
         if (options.showTableBorders) {
@@ -908,7 +942,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             pdf.text(headerText, textX, textY);
         });
 
-        pdf.setFont('helvetica', 'normal');
+        pdf.setFont(this._currentFontName, 'normal');
     }
 
     private drawDataRow(
