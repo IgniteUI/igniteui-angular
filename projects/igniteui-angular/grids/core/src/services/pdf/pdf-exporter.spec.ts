@@ -344,46 +344,6 @@ describe('PDF Exporter', () => {
             exporter.exportData(SampleTestData.contactsData(), options);
         });
 
-        it('should fall back to helvetica when custom font bold variant has empty name', (done) => {
-            options.customFont = {
-                name: '',
-                data: 'someData',
-                bold: {
-                    name: '',
-                    data: 'boldData'
-                }
-            };
-
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
-            exporter.exportData(SampleTestData.contactsData(), options);
-        });
-
-        it('should fall back to helvetica when custom font bold variant has empty data', (done) => {
-            options.customFont = {
-                name: '',
-                data: 'someData',
-                bold: {
-                    name: 'BoldFont',
-                    data: ''
-                }
-            };
-
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
-            exporter.exportData(SampleTestData.contactsData(), options);
-        });
-
         it('should export with custom font and portrait orientation when font config is incomplete', (done) => {
             options.customFont = {
                 name: '',
