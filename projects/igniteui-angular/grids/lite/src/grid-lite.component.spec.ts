@@ -34,7 +34,7 @@ describe('IgxGridLiteComponent', () => {
             await setUp(fixture);
             fixture.detectChanges();
 
-            const gridElement = fixture.nativeElement.querySelector('igc-grid-lite');
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
             expect(gridElement).toBeTruthy();
             expect(gridElement.autoGenerate).toBeTrue();
             expect(gridElement.columns.length).toBe(5);
@@ -63,10 +63,10 @@ describe('IgxGridLiteComponent', () => {
             await setUp(fixture);
 
             const gridComponent = fixture.componentInstance.grid();
-            const gridElement = fixture.nativeElement.querySelector('igc-grid-lite');
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
             const sortedSpy = jasmine.createSpy('sorted');
 
-            gridComponent.sorted.subscribe(sortedSpy);
+            gridElement.addEventListener('sorted', sortedSpy);
             expect(gridComponent.sortingExpressions()).toEqual([]);
 
             // Simulate the web component emitting the sorted event
@@ -92,10 +92,10 @@ describe('IgxGridLiteComponent', () => {
             await setUp(fixture);
 
             const gridComponent = fixture.componentInstance.grid();
-            const gridElement = fixture.nativeElement.querySelector('igc-grid-lite');
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
             const filteredSpy = jasmine.createSpy('filtered');
 
-            gridComponent.filtered.subscribe(filteredSpy);
+            gridElement.addEventListener('filtered', filteredSpy);
             expect(gridComponent.filteringExpressions()).toEqual([]);
 
             // Simulate the web component emitting the filtered event
@@ -132,7 +132,7 @@ describe('IgxGridLiteComponent', () => {
 
 
             // Check header template
-            const gridElement = fixture.nativeElement.querySelector('igc-grid-lite');
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
             const headerRow = get(gridElement, 'igc-grid-lite-header-row');
             const headerCell = headerRow.headers.at(0);
             const headerText = get(headerCell, '[part~="title"]').innerText;
@@ -153,7 +153,7 @@ describe('IgxGridLiteComponent', () => {
 
 
             // Check header template
-            const gridElement = fixture.nativeElement.querySelector('igc-grid-lite');
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
             const headerRow = get(gridElement, 'igc-grid-lite-header-row');
             const headerCell = headerRow.headers.at(2);
             const headerText = get(headerCell, '[part~="title"]').innerText;
@@ -297,9 +297,9 @@ class GridComponentTemplate extends BasicGridComponent {
 }
 
 async function setUp(fixture: ComponentFixture<any>) {
-    await customElements.whenDefined('igc-grid-lite');
+    await customElements.whenDefined('igx-grid-lite');
 
-    const gridElement = fixture.nativeElement.querySelector('igc-grid-lite');
+    const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
     const gridBody = gridElement?.renderRoot.querySelector('igc-virtualizer');
     if (gridBody?.updateComplete) {
         await gridBody.updateComplete;
