@@ -6796,15 +6796,26 @@ export abstract class IgxGridBaseDirective implements GridType,
             const possibleWidth = this.getPossibleColumnWidth();
             if (possibleWidth === "0px") {
                 // all columns - hidden
-                this._columnWidth = possibleWidth;
+                // Do not update _columnWidth to preserve valid column widths for when columns are unhidden
+                // Only update column defaultWidth if _columnWidth is already set and not '0px'
+                if (this._columnWidth && this._columnWidth !== '0px') {
+                    this._updateColumnDefaultWidths();
+                }
+                this.resetCachedWidths();
+                return;
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
                 this._columnWidth =  this.minColumnWidth + 'px';
             }
         }
+        this._updateColumnDefaultWidths();
+        this.resetCachedWidths();
+    }
+
+    private _updateColumnDefaultWidths() {
         this._columns.forEach((column: IgxColumnComponent) => {
-            if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
+            if (this.hasColumnLayouts) {
                 const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
@@ -6812,7 +6823,6 @@ export abstract class IgxGridBaseDirective implements GridType,
                 column.resetCaches();
             }
         });
-        this.resetCachedWidths();
     }
 
     protected resetNotifyChanges() {
