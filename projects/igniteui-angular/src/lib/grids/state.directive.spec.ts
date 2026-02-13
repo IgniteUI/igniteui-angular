@@ -799,6 +799,47 @@ describe('IgxGridState - input properties #grid', () => {
         expect(prodIdColumn.colStart).toBe(1);
         expect(prodIdColumn.colEnd).toBe(1);
     });
+
+    it('should preserve column widths when restoring state with all columns hidden', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        // Store initial column widths
+        const initialWidths = grid.columns.map(col => col.width);
+        expect(initialWidths).toEqual(['150px', '150px', '140px', '110px']);
+
+        // Hide all columns
+        grid.columns.forEach(col => col.hidden = true);
+        fix.detectChanges();
+
+        // Verify all columns are hidden
+        expect(grid.columns.every(col => col.hidden)).toBe(true);
+
+        // Get and save the state with all columns hidden
+        const gridState = state.getState(false) as IGridState;
+        expect(gridState.columns.every(col => col.hidden)).toBe(true);
+
+        // Restore the state
+        state.setState(gridState);
+        fix.detectChanges();
+
+        // Verify all columns are still hidden
+        expect(grid.columns.every(col => col.hidden)).toBe(true);
+
+        // Unhide all columns
+        grid.columns.forEach(col => col.hidden = false);
+        fix.detectChanges();
+
+        // Verify column widths are preserved and not set to minimum
+        grid.columns.forEach((col, index) => {
+            expect(col.width).toBe(initialWidths[index], `Column ${index} width should be preserved`);
+            // The calcWidth should not be the minimum column width (136px default)
+            const calcWidth = parseFloat(col.calcWidth);
+            expect(calcWidth).toBeGreaterThan(grid.minColumnWidth);
+        });
+    });
 });
 
 class HelperFunctions {
