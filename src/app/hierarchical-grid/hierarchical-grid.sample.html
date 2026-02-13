@@ -3,7 +3,7 @@
     <button igxButton="contained" (click)="log()">Layout</button>
     <div class="density-chooser" style="margin-bottom: 16px">
         <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"
-            style="display: block; width: 500px"></igx-buttongroup>
+            style="width: 500px"></igx-buttongroup>
     </div>
     <button igxButton="contained" (click)="getState()">Get state</button>
     <igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" class="hgrid"

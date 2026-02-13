@@ -1,0 +1,6 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-excel-filter, material) {
+}
