@@ -235,3 +235,6 @@ declare global {
         'filtered': CustomEvent<IgxGridLiteFilteringExpression<any>>;
     }
 }
+
+// see https://github.com/ng-packagr/ng-packagr/issues/3233
+export {};
