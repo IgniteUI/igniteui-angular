@@ -39,6 +39,22 @@ All notable changes for each version of this project will be documented in this 
   - Added API to toggle off Angular's default formatting completely in favor of the new `Intl` implementation. Otherwise `Intl` will be used when a locale is not defined for Angular to use.
   - Old resources and API should still remain working and not experience any change in behavior, despite internally using the new localization as well.
 
+## New Features
+
+### PDF Exporter
+- **Custom Font Support for CJK and Arabic Scripts**: Added pre-configured font constants (licensed under SIL OFL 1.1) for easy PDF export with non-Latin character support:
+  - `NOTO_SANS_FONT` - Supports Latin, Cyrillic, and Greek characters
+  - `NOTO_SANS_CJK_FONT` - Supports Chinese, Japanese, and Korean characters (CJK)
+  - `NOTO_SANS_ARABIC_FONT` - Supports Arabic script and related languages
+  
+  These fonts can be imported from `igniteui-angular/grids/core` and used with `IgxPdfExporterOptions.customFont`:
+  
+  ```typescript
+  import { NOTO_SANS_CJK_FONT } from 'igniteui-angular/grids/core';
+  
+  const options = new IgxPdfExporterOptions('Export');
+  options.customFont = NOTO_SANS_CJK_FONT;
+  
 ## 21.0.0
 
 ### New Features

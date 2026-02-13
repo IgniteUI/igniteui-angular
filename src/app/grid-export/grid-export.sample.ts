@@ -4,7 +4,8 @@ import { DatePipe } from '@angular/common';
 import { HGRID_DATA } from './hGridData';
 import { GRID_DATA } from './gridData';
 import { TGRID_DATA } from './tGridData';
-import { ColumnType, IGridToolbarExportEventArgs, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxHierarchicalGridComponent, IgxIconComponent, IgxNumberSummaryOperand, IgxPaginatorComponent, IgxRowIslandComponent, IgxSummaryResult, IgxTreeGridComponent } from 'igniteui-angular';
+import { ColumnType, IGridToolbarExportEventArgs, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxHierarchicalGridComponent, IgxIconComponent, IgxNumberSummaryOperand, IgxPaginatorComponent, IgxPdfExporterOptions, IgxRowIslandComponent, IgxSummaryResult, IgxTreeGridComponent } from 'igniteui-angular';
+import { NOTO_SANS_CJK_FONT } from 'igniteui-angular/grids/core';
 
 class GridSummary {
     public operate(data?: any[]): IgxSummaryResult[] {
@@ -88,8 +89,11 @@ export class GridExportComponent {
 
     public configureExport(args: IGridToolbarExportEventArgs) {
         console.log(args);
-        // const options: IgxExporterOptionsBase = args.options;
+        const options: IgxPdfExporterOptions = args.options as IgxPdfExporterOptions;
 
+        // options.fileName = `Report_${new Date().toDateString()}`;
+                // Set the Japanese font explicitly
+        options.customFont = NOTO_SANS_CJK_FONT;
         // // Change exporter options
 
         // options.fileName = `Report_${new Date().toDateString()}`;
