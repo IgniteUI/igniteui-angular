@@ -68,7 +68,6 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         }
 
         const targetRect = (target as HTMLElement).getBoundingClientRect();
-        console.log('Target Rect:', targetRect);
         const viewPortRect = Util.getViewportRect(document);
         const rootMarin = {
             top: -Math.floor(targetRect.top),
@@ -76,7 +75,6 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
             left: -Math.floor(targetRect.left),
             right: -Math.floor(viewPortRect.width - targetRect.right),
         };
-        console.log('Root Margin:', rootMarin);
 
         // Create new IntersectionObserver to detect position changes
         this.intersectionObserver = new IntersectionObserver((entries) => {
@@ -102,7 +100,7 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         }, {
             root: null, // Observe relative to the viewport
             rootMargin: `${rootMarin.top}px ${rootMarin.right}px ${rootMarin.bottom}px ${rootMarin.left}px`,
-            threshold: 1
+            threshold: Array.from({ length: 101 }, (_, i) => i / 100) // Trigger on any visibility change
         });
 
         this.intersectionObserver.observe(target as HTMLElement);
