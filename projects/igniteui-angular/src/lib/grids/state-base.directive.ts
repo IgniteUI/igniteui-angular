@@ -208,7 +208,7 @@ export class IgxGridStateBaseDirective {
                     dataType: c.dataType,
                     hasSummary: c.hasSummary,
                     field: c.field,
-                    width: c.width,
+                    width: ((c as IgxColumnComponent).widthSetByUser || context.currGrid.columnWidthSetByUser) ? c.width : undefined,
                     header: c.header,
                     resizable: c.resizable,
                     searchable: c.searchable,
@@ -247,7 +247,18 @@ export class IgxGridStateBaseDirective {
                         } else {
                             ref1.children.reset([]);
                         }
+                        
+                        // Extract width to handle it separately
+                        const width = colState.width;
+                        delete colState.width;
+                        
                         Object.assign(ref1, colState);
+                        
+                        // Only restore width if it was explicitly set by the user (not undefined)
+                        if (width !== undefined) {
+                            ref1.width = width;
+                        }
+                        
                         ref1.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref1.parent));
@@ -264,7 +275,17 @@ export class IgxGridStateBaseDirective {
                             component.changeDetectorRef.detectChanges();
                         }
 
+                        // Extract width to handle it separately
+                        const width = colState.width;
+                        delete colState.width;
+                        
                         Object.assign(ref, colState);
+                        
+                        // Only restore width if it was explicitly set by the user (not undefined)
+                        if (width !== undefined) {
+                            ref.width = width;
+                        }
+                        
                         ref.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e =>  e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref.parent));
