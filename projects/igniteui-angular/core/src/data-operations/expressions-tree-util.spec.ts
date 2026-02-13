@@ -479,7 +479,7 @@ describe('Unit testing FilteringUtil', () => {
     });
 });
 
-fdescribe('Unit testing recreateExpression', () => {
+describe('Unit testing recreateExpression', () => {
 
     it('should recreate string expression with correct conditionName', () => {
         const fields: FieldType[] = [
