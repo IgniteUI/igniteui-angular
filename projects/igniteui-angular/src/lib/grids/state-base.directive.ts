@@ -231,6 +231,21 @@ export class IgxGridStateBaseDirective {
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IColumnState[]): void => {
                 const newColumns = [];
+                
+                // Helper to restore column state without auto-persisting widths
+                const restoreColumnState = (column: IgxColumnComponent | IgxColumnGroupComponent, colState: IColumnState) => {
+                    // Extract width to handle it separately
+                    const width = colState.width;
+                    delete colState.width;
+                    
+                    Object.assign(column, colState);
+                    
+                    // Only restore width if it was explicitly set by the user (not undefined)
+                    if (width !== undefined) {
+                        column.width = width;
+                    }
+                };
+                
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     const hasColumnLayouts = colState.columnLayout;
@@ -248,16 +263,7 @@ export class IgxGridStateBaseDirective {
                             ref1.children.reset([]);
                         }
                         
-                        // Extract width to handle it separately
-                        const width = colState.width;
-                        delete colState.width;
-                        
-                        Object.assign(ref1, colState);
-                        
-                        // Only restore width if it was explicitly set by the user (not undefined)
-                        if (width !== undefined) {
-                            ref1.width = width;
-                        }
+                        restoreColumnState(ref1, colState);
                         
                         ref1.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
@@ -275,16 +281,7 @@ export class IgxGridStateBaseDirective {
                             component.changeDetectorRef.detectChanges();
                         }
 
-                        // Extract width to handle it separately
-                        const width = colState.width;
-                        delete colState.width;
-                        
-                        Object.assign(ref, colState);
-                        
-                        // Only restore width if it was explicitly set by the user (not undefined)
-                        if (width !== undefined) {
-                            ref.width = width;
-                        }
+                        restoreColumnState(ref, colState);
                         
                         ref.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
