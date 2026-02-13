@@ -1,6 +1,8 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/typography/mixins' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/elevations' as *;
 @use 'styles/themes/standalone' as *;
 
 // TODO type style is throwing an error
@@ -12,6 +14,31 @@
     --_expander-icon-width: #{rem(16px)};
     --_hierarchical-action-icon: #{rem(16px)};
 
+    %cell-display {
+        // TODO THIS RETURNS NOT VALID TYPE STYLES
+        //@include type-style('detail-1');
+
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px))
+    }
+
+
+    @include e(filtering-row-main) {
+        igx-chips-area {
+            // Can't uae gap on the parent because dropdown container is present in the dom
+            margin-inline: rem(12px);
+            gap: rem(4px);
+        }
+    }
+
+    @include e(filtering-row) {
+        igx-input-group {
+            --size: calc(sizable(rem(32px), rem(40px), rem(48px)) - #{rem(8px)});
+        }
+    }
+
+    @include e(td) {
+        @extend %cell-display;
+    }
 
     @include e(td, $m: bool) {
         --component-size: 2;
@@ -77,6 +104,38 @@
 }
 
 @include themed-block(igx-grid-th, indigo) {
+    @extend %cell-display;
+
+    @include e(expander) {
+        --component-size: 2;
+    }
+
+    @include e(icons) {
+        .igx-excel-filter__icon {
+            --igx-icon-size: #{rem(12px)};
+        }
+    }
+
+    @include m(filtrable) {
+        :where(.igx-grid-th__title) {
+            opacity: .75;
+        }
+    }
+
+    @include m(sortable) {
+        @include e(icons) {
+            .sort-icon {
+                opacity: .75;
+            }
+        }
+    }
+
+    @include mx(filtrable, sortable) {
+        :where(.sort-icon) {
+            opacity: 1;
+        }
+    }
+
     @include e(title) {
         //@include type-style('detail-2', false)
     }
@@ -94,7 +153,7 @@
 
 @include themed-block(igx-grid-thead, indigo) {
     @include e(title) {
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        @extend %cell-display;
     }
 }
 
@@ -120,4 +179,10 @@
     @include e(count-badge) {
         --shadow: none;
     }
+}
+
+@include themed-block(igx-advanced-filter, indigo) {
+    background: contrast-color($color: 'gray', $variant: 900);
+    box-shadow: elevation(24);
+    border-radius: rem(10px);
 }

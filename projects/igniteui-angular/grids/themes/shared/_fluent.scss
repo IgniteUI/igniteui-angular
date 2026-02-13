@@ -13,3 +13,7 @@
         }
     }
 }
+
+@include themed-block(igx-advanced-filter, bootstrap) {
+    border-radius: rem(2px);
+}

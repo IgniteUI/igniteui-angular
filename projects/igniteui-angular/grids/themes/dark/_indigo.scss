@@ -1,17 +1,26 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/elevations' as *;
 @use 'styles/themes/standalone' as *;
 
 @include themed-block(igx-grid-th, indigo, dark) {
     @include m(sortable) {
         @include e(icons) {
             .sort-icon {
-                opacity: 0.85;
-
-                &:hover {
-                    opacity: 1;
-                }
+                opacity: .85;
             }
+        }
+    }
+
+    @include m(filtrable) {
+        :where(.igx-grid-th__title) {
+            opacity: .85;
+        }
+    }
+
+    @include m(fw) {
+        igx-icon {
+            --component-size: 3;
         }
     }
 }
@@ -52,4 +61,9 @@
             }
         }
     }
+}
+
+@include themed-block(igx-advanced-filter, indigo, dark) {
+    background: color($color: 'gray', $variant: 50);
+    box-shadow: elevation(23);
 }

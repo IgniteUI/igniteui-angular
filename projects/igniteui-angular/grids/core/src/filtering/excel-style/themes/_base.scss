@@ -96,8 +96,6 @@ $checkbox-indent: (
     }
 
     @include b(igx-excel-filter) {
-
-
         --component-size: var(--ig-size, var(--ig-size-large));
 
         display: block;
@@ -374,6 +372,15 @@ $checkbox-indent: (
             gap: rem(4px);
         }
 
+        // Filtering
+        @include e(secondary-header) {
+            border-block-end: rem(1px) solid color($color: 'gray', $variant: 300);
+
+            > h4 {
+                @include type-style('h6')
+            }
+        }
+
         @include e(filter-results) {
             position: absolute;
             width: rem(1px);
@@ -447,6 +454,10 @@ $checkbox-indent: (
             .igx-checkbox__label {
                 @include type-style('body-2');
             }
+        }
+
+        @include e(clear) {
+            flex-grow: 1;
         }
     }
 }

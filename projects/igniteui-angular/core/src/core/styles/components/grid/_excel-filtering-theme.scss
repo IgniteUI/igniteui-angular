@@ -269,10 +269,6 @@
         }
     }
 
-    %grid-excel-filter__clear {
-        flex-grow: 1;
-    }
-
     %grid-excel-filter__cancel + %grid-excel-filter__apply {
         margin-inline-start: rem(16px);
     }

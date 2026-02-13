@@ -3,6 +3,7 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/elevations' as *;
 @use 'styles/themes/standalone' as *;
 @use './light/tokens' as *;
 
@@ -52,14 +53,12 @@ $z-grid-loading: 10003;
         padding-block: 0;
 
         // (!) the background-clip: padding-box; makes sure the background never go under the border,
-        // this is very important especially of the borders have slide alpha
+        // this is very important especially if the borders have a slide alpha
         background-clip: padding-box !important;
 
-        // TODO Font size for the cell is different in the indigo theme -> it simply uses the detail-1 styles for all cells
         font-size: $cell-font-size;
         line-height: $cell-line-height;
 
-        // TODO The inline padding styles should be different in the indigo theme -> 8px, 12px, 16px
         padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
     }
 
@@ -200,6 +199,12 @@ $z-grid-loading: 10003;
         // Scroll start section
         @include e(scroll-start) {
             background: var-get($theme, 'header-background');
+            border-inline-end: $grid-header-border;
+        }
+
+        @include e(scroll-end) {
+            background: var-get($theme, 'header-background');
+            border-inline-start: $grid-header-border;
         }
 
         // Scroll main section
@@ -240,6 +245,10 @@ $z-grid-loading: 10003;
             &:focus {
                 outline: 0;
             }
+
+            &:empty {
+                display: none;
+            }
         }
 
         // Table footer thumb (scrollbar)
@@ -271,6 +280,17 @@ $z-grid-loading: 10003;
                 flex: 1;
                 min-width: 0;
             }
+
+            &:hover {
+                .igx-grid__td--column-selected {
+                    color: var-get($theme, 'row-selected-hover-text-color');
+                    background: var-get($theme, 'row-selected-hover-background');
+                }
+            }
+
+            .igx-grid__tr {
+                border-inline-start: rem(1px) solid transparent;
+            }
         }
 
         @include e(tr, $not: (header, selected)) {
@@ -284,12 +304,22 @@ $z-grid-loading: 10003;
         @include e(tr, $m: odd) {
             background: var-get($theme, 'row-odd-background');
             color: var-get($theme, 'row-odd-text-color');
+
+            .igx-grid__tr-action {
+                border-inline-end-color: var-get($theme, 'header-border-color') !important;
+                border-block-end: 0 !important;
+            }
         }
 
         // Row striping - even rows
         @include e(tr, $m: even) {
             background: var-get($theme, 'row-even-background');
             color: var-get($theme, 'row-even-text-color');
+
+            .igx-grid__tr-action {
+                border-inline-end-color: var-get($theme, 'header-border-color') !important;
+                border-block-end: 0 !important;
+            }
         }
 
         // Selected row state
@@ -305,17 +335,8 @@ $z-grid-loading: 10003;
             }
 
             &:hover {
-                background: var-get($theme, 'row-selected-hover-background');
                 color: var-get($theme, 'row-selected-hover-text-color');
-
-                // WARN: This doesn't follow the BEM structure, needs work
-                .igx-grid__td--column-selected {
-                    color: var-get($theme, 'row-selected-hover-text-color');
-                    background: var-get(
-                        $theme,
-                        'row-selected-hover-background'
-                    );
-                }
+                background: var-get($theme, 'row-selected-hover-background');
             }
         }
 
@@ -416,11 +437,21 @@ $z-grid-loading: 10003;
             }
         }
 
+        // Disabled row
+        @include e(tr-header-row) {
+            igx-pivot-row-header-group {
+                padding-inline-start: pad-inline($cell-padding-sm, $cell-padding-md, $cell-padding-sm);
+
+                .igx-grid-th {
+                    border-block-end: 0;
+                }
+            }
+        }
+
         // Cell (idle)
         @include e(td) {
             @extend %cell-display;
 
-            // TODO the body column border should be transparent by default we should create new variables for it
             border-inline-end: $grid-body-border;
 
             // Used for the active cell indicator
@@ -431,7 +462,6 @@ $z-grid-loading: 10003;
                 pointer-events: none;
             }
         }
-
         @include e(td, $m: centered) {
             justify-content: center;
         }
@@ -439,7 +469,6 @@ $z-grid-loading: 10003;
         @include e(td, $m: image) {
             justify-content: center;
         }
-
 
         @include e(td, $m: bool) {
             display: flex;
@@ -466,7 +495,7 @@ $z-grid-loading: 10003;
             flex-grow: 0;
             outline-style: none;
 
-            .igx-icon {
+            > .igx-icon {
                 --component-size: 3;
             }
         }
@@ -505,17 +534,17 @@ $z-grid-loading: 10003;
 
         // Merged cell when hovered
         @include e(td, $m: merged-hovered) {
-            background: var-get($theme, 'row-hover-background') !important;
             color: var-get($theme, 'row-hover-text-color');
+            background: var-get($theme, 'row-hover-background') !important;
         }
 
         // Merged cell when both selected and hovered
         @include e(td, $mods: (merged-selected, merged-hovered)) {
+            color: var-get($theme, 'row-selected-hover-text-color');
             background: var-get(
                 $theme,
                 'row-selected-hover-background'
             ) !important;
-            color: var-get($theme, 'row-selected-hover-text-color');
         }
 
         // Number cell (right-aligned)
@@ -613,27 +642,26 @@ $z-grid-loading: 10003;
             }
         }
 
-        @include e(td, $m: valid) {
-            &::after {
-                box-shadow: inset 0 0 0 rem(2px) color($color: 'success') !important;
-            }
-        }
-
         // Column selected (entire column is selected)
         @include e(td, $m: column-selected) {
             color: var-get($theme, 'row-selected-text-color');
             background: var-get($theme, 'row-selected-background');
+
+            &:hover {
+                color: var-get($theme, 'row-selected-hover-text-color');
+                background: var-get($theme, 'row-selected-hover-background');
+            }
         }
 
         // Cross-selected (cell + column selected)
         @include e(td, $mods: (selected, column-selected)) {
             color: var-get($theme, 'cell-selected-within-text-color');
             background: var-get($theme, 'cell-selected-within-background');
-        }
 
-        // Valid cell in edit mode
-        @include e(td, $mods: (editing, valid)) {
-            // Placeholder for valid state styling if needed
+            &:hover {
+                color: var-get($theme, 'cell-selected-within-text-color');
+                background: var-get($theme, 'cell-selected-within-background');
+            }
         }
 
         @include e(td, $m: editing) {
@@ -643,6 +671,9 @@ $z-grid-loading: 10003;
             &::after {
                 box-shadow: inset 0 0 0 #{$cell-editing-outline-width}
                     var-get($theme, 'edit-mode-color');
+
+                top: calc($cell-editing-outline-width / 2);
+                height: calc(100% - $cell-editing-outline-width)
             }
 
             igx-input-group {
@@ -687,29 +718,60 @@ $z-grid-loading: 10003;
         }
 
         @include e(td, $mods: (editing, invalid)) {
+            .igx-input-group__bundle {
+                &:focus-within {
+                    &::after {
+                        border: none !important;
+                    }
+                }
+            }
+
             &::after {
                 box-shadow: inset 0 0 0 #{$cell-editing-outline-width}
-                    color($color: 'error') !important;
+                color($color: 'error') !important;
+
+                top: calc($cell-editing-outline-width / 2);
+                height: calc(100% - $cell-editing-outline-width)
+            }
+        }
+
+        @include e(td, $m: invalid) {
+            padding-inline-end: rem(4px) !important;
+
+            > igx-icon {
+                --component-size: 1 !important;
+
+                color: color($color: 'error');
+            }
+        }
+
+        @include e(td, $mods: (editing, valid)) {
+            &::after {
+                box-shadow: inset 0 0 0 $cell-editing-outline-width color($color: 'success');
+                top: calc($cell-editing-outline-width / 2);
+                height: calc(100% - $cell-editing-outline-width)
+            }
+        }
+
+        @include e(td, $m: valid) {
+            > igx-icon {
+                --component-size: 1 !important;
             }
         }
 
         // Row editing state - active edit mode on a row
         @include e(tr, $m: edit) {
+            position: relative;
+
             &::after {
-                content: "";
+                content: '';
                 position: absolute;
                 height: 100%;
                 width: 100%;
                 inset: 0;
                 pointer-events: none;
                 user-select: none;
-           }
-        }
-        @include e(tr, $m: edit) {
-            position: relative;
 
-            // Top border indicator
-            &::after {
                 // This is do to the pinned border 9999 z-index
                 z-index: $z-grid-pinned-row;
                 box-shadow:
@@ -1024,6 +1086,16 @@ $z-grid-loading: 10003;
             outline-style: none;
             border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
             min-height: var(--header-size);
+
+            &::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                inset: 0;
+                pointer-events: none;
+                user-select: none;
+            }
         }
 
         // Active group row
@@ -1036,11 +1108,6 @@ $z-grid-loading: 10003;
             }
 
             &::after {
-                content: '';
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                inset: 0;
                 box-shadow: $grid-active-state-border;
                 z-index: $z-grid-selection;
             }
@@ -1053,7 +1120,8 @@ $z-grid-loading: 10003;
             justify-content: flex-start;
             flex: 1 1 auto;
             padding-inline-start: sizable(rem(12px), rem(16px), rem(24px));
-            min-height: sizable(rem(40px), rem(48px), rem(56px));
+            border-inline-end: $grid-body-border;
+            min-height: var(--cell-height);
 
             &:focus {
                 outline: transparent;
@@ -1122,7 +1190,7 @@ $z-grid-loading: 10003;
                 $indicator-padding-lg: $i * rem(18px);
 
                 .igx-grid__grouping-indicator {
-                    margin-inline-start: sizable(
+                    padding-inline-start: sizable(
                         #{$indicator-padding-sm},
                         #{$indicator-padding-md},
                         #{$indicator-padding-lg}
@@ -1141,6 +1209,27 @@ $z-grid-loading: 10003;
         // Pivot grid super-compact mode
         @include e(pivot, $m: super-compact) {
             --ig-size: 1 !important;
+
+            .igx-grid-th,
+            .igx-grid-thead__title,
+            .igx-grid-td {
+                padding: 0 rem(4px) !important;
+                min-height: rem(24px) !important;
+                height: rem(24px);
+            }
+
+            .igx-grid-th,
+            .igx-grid-thead__title {
+                > * {
+                    line-height: normal;
+                    align-self: initial;
+                    max-height: 100%;
+                }
+            }
+
+            .igx-grid__tr-pivot--row-area {
+                padding-bottom: rem(4px);
+            }
         }
 
         // Pivot row
@@ -1153,7 +1242,7 @@ $z-grid-loading: 10003;
             height: var(--header-size);
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
             padding-block: 0;
-            border-inline-end: $grid-header-border;
+            border-inline-start: $grid-header-border;
             border-bottom: $grid-header-border;
 
             igx-chips-area {
@@ -1199,6 +1288,11 @@ $z-grid-loading: 10003;
         }
 
         // Pivot row area
+        @include e(tr-pivot, $m: small-row-area) {
+            border-inline-start: 0;
+        }
+
+        // Pivot row area
         @include e(tr-pivot, $m: row-area) {
             height: auto !important;
             align-items: flex-end;
@@ -1223,36 +1317,23 @@ $z-grid-loading: 10003;
         // Pivot drop row area
         @include e(tr-pivot, $m: drop-row-area) {
             flex-grow: 1;
+            //border-inline-end: $grid-header-border;
+        }
+
+        @include e(tr-pivot, $m: row-area) {
+            border-block-end: $grid-header-border;
         }
 
         // Pivot filter row
         @include e(tr-pivot, $m: filter) {
             height: var(--header-size);
             border-inline-start: 0;
-            border-inline-end: 0;
-            border-bottom: $grid-header-border;
+            //border-block-end: $grid-header-border;
         }
 
         // Pivot group
         @include e(tr-pivot-group) {
             flex: 1;
-        }
-
-        // Pivot header row
-        @include e(tr-header-row) {
-	        //&:has(igx-pivot-row-dimension-header-group) {
-		    //    border-inline-end: $grid-header-border;
-	        //}
-
-            .igx-grid-th {
-                border-inline-end: none;
-            }
-
-            igx-pivot-row-dimension-header-group {
-                igx-pivot-row-dimension-header {
-                    align-items: center;
-                }
-            }
         }
 
         // Pivot column dimension leaf
@@ -1270,13 +1351,6 @@ $z-grid-loading: 10003;
                 > * {
                     visibility: hidden;
                 }
-            }
-        }
-
-        // Pivot tbody MRL dimension
-        @include e(tbody-pivot-mrl-dimension) {
-            .igx-grid-th {
-                border-bottom: none;
             }
         }
 
@@ -1301,7 +1375,7 @@ $z-grid-loading: 10003;
             background: inherit;
             z-index: $z-grid-selection;
             cursor: move;
-            //border-inline-end: rem(1px) solid transparent;
+            border-inline-end: rem(1px) solid transparent;
 
             igx-icon {
                 --component-size: 3;
@@ -1311,6 +1385,7 @@ $z-grid-loading: 10003;
         // Drag indicator in header
         @include e(drag-indicator, $m: header) {
             border-inline-end: $grid-header-border;
+            border-block-end: $grid-header-border;
         }
 
         // Drag indicator off/disabled state
@@ -1435,13 +1510,9 @@ $z-grid-loading: 10003;
             // Color styles
             color: var-get($theme, 'filtering-row-text-color');
             background: var-get($theme, 'filtering-row-background');
-            border-bottom: $grid-header-border;
 
             // Compound components overrides
             igx-input-group {
-                // TODO USE FOR INDIGO
-                //--size: calc(sizable(rem(32px), rem(40px), rem(48px)) - #{rem(8px)});
-
                 --size: calc(var(--cell-height) - #{rem(8px)}) !important;
 
                 width: 100% !important;
@@ -1578,7 +1649,6 @@ $z-grid-loading: 10003;
                 flex-wrap: nowrap;
 
                 // Can't uae gap on the parent because dropdown container is present in the dom
-                // TODO for indigo use rem(12px)
                 margin-inline: rem(8px);
                 gap: rem(4px);
             }
@@ -1664,7 +1734,6 @@ $z-grid-loading: 10003;
             border-inline-end: $grid-header-border;
             border-top: $grid-header-border;
             height: var(--header-size);
-
 
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
             // this is very important especially of the borders have slide alpha
@@ -1929,13 +1998,14 @@ $z-grid-loading: 10003;
         height: 100%;
         overflow: hidden;
 
+
         &:focus {
             outline-style: none;
         }
 
-        %igx-chip {
-            margin-block: pad-block(rem(4px), rem(8px), rem(8px));
-        }
+        //%igx-chip {
+        //    margin-block: pad-block(rem(4px), rem(8px), rem(8px));
+        //}
 
         @include e(connector) {
             display: inline-flex;
@@ -1953,6 +2023,10 @@ $z-grid-loading: 10003;
                 transform: scaleX(-1);
             }
         }
+
+        .igx-chip-area {
+            flex-grow: 1;
+        }
     }
 
     @include b(igx-grid-th) {
@@ -1966,7 +2040,6 @@ $z-grid-loading: 10003;
         // this is very important especially of the borders have slide alpha
         background-clip: padding-box !important;
 
-        // TODO Font size for the cell is different in the indigo theme -> it simply uses the detail-1 styles for all cells
         line-height: $cell-line-height;
         flex-flow: row nowrap;
         justify-content: space-between;
@@ -1974,12 +2047,12 @@ $z-grid-loading: 10003;
         min-width: 0;
         min-height: var(--header-size);
 
-        // TODO The inline padding styles should be different in the indigo theme -> 8px, 12px, 16px
         padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
         padding-block: 0;
         font-size: rem(12px);
         font-weight: 600;
         border-inline-end: $grid-header-border;
+        //border-block-end: $grid-header-border;
         overflow: hidden;
         transition: color 250ms ease-in-out;
         outline-style: none;
@@ -1992,11 +2065,6 @@ $z-grid-loading: 10003;
             cursor: pointer;
 
             igx-icon {
-                // TODO CHECK THIS FOR INDIGO
-                // @if $variant == 'indigo' {
-                //     --component-size: 2;
-                // }
-
                 color: var-get($theme, 'expand-icon-color');
             }
 
@@ -2037,16 +2105,11 @@ $z-grid-loading: 10003;
                 min-width: 0;
             }
 
-            .sort-icon {
+            .igx-excel-filter__icon {
                 position: relative;
                 display: flex;
 
-                // TODO: Adjust in indigo
-                // @if $variant != 'indigo' {
-                //     igx-icon {
-                //         --size: var(--igx-icon-size, #{rem(15px)});
-                //     }
-                // }
+                --igx-icon-size: #{rem(15px)};
 
                 &::after {
                     content: attr(data-sortIndex);
@@ -2156,12 +2219,26 @@ $z-grid-loading: 10003;
 
         @include m(sortable) {
             :where(.sort-icon) {
+                display: flex;
+                align-items: center;
                 cursor: pointer;
-                // TODO: This varies by theme if($variant == 'indigo', if($theme-variant == 'light', .75, .85), .7);
+                position: relative;
+
                 opacity: 0.7;
 
                 &:is(:hover) {
                     opacity: 1;
+                }
+
+                &::after {
+                    content: attr(data-sortIndex);
+                    position: absolute;
+                    top: rem(-5px);
+                    inset-inline-end: rem(-1px);
+                    font-size: rem(10px);
+                    text-align: end;
+                    font-family: sans-serif;
+                    line-height: rem(10px);
                 }
             }
         }
@@ -2190,22 +2267,10 @@ $z-grid-loading: 10003;
             background: var-get($theme, 'header-selected-background');
         }
 
-        @include m(selected) {
-            color: var-get($theme, 'header-selected-text-color');
-            background: var-get($theme, 'header-selected-background');
-
-            :where(.sort-icon::after) {
-                background: var-get($theme, 'header-selected-background');
-            }
-        }
-
         // TODO: Verify the class is really named 'filtrable' and not 'filterable'
         @include m(filtrable) {
             :where(.igx-grid-th__title) {
-                // TODO: Move to indigo theme overwrites
-                // @if $variant != 'indigo' {
-                //     opacity: .7;
-                // }
+                opacity: .7;
             }
         }
 
@@ -2233,21 +2298,27 @@ $z-grid-loading: 10003;
 
             &:dir(ltr) {
                 box-shadow: inset rem(-1px) 0 0 0 var-get($theme, 'pinned-border-color');
+                border-inline-end-color: var-get($theme, 'pinned-border-color');
             }
 
             &:dir(rtl) {
                 box-shadow: inset rem(1px) 0 0 0 var-get($theme, 'pinned-border-color');
+                border-inline-start-color: var-get($theme, 'pinned-border-color');
+            }
+        }
+
+        @include m(selected) {
+            color: var-get($theme, 'header-selected-text-color');
+            background: var-get($theme, 'header-selected-background');
+
+            :where(.sort-icon::after) {
+                background: var-get($theme, 'header-selected-background');
             }
         }
 
         @include m(fw) {
             flex-grow: 0;
             outline-style: none;
-
-            igx-icon {
-                // TODO: Move to indigo theme overwrites
-                --component-size: 3;
-            }
         }
 
         @include m(filtering) {
@@ -2260,9 +2331,6 @@ $z-grid-loading: 10003;
             :where(.sort-icon) {
                 cursor: pointer;
                 opacity: 0.7;
-
-                // TODO: move this to indigo theme overwrites
-                // opacity: if($variant == 'indigo', 1, 0.7);
 
                 :is(:hover) {
                     opacity: 1;
@@ -2337,7 +2405,7 @@ $z-grid-loading: 10003;
         overflow: hidden;
         background: var-get($theme, 'header-background');
         color: var-get($theme, 'header-text-color');
-        border-block-end: $grid-header-border;
+        //border-block-end: $grid-header-border;
 
         // TODO: This is completely upside down - doesn't follow BEM at all
         // Rows inside thead should not have hover effects
@@ -2393,7 +2461,7 @@ $z-grid-loading: 10003;
 
         // Pivot wrapper specific styling
         @include e(wrapper, $m: pivot) {
-            border-bottom: none;
+            border-block-end: none !important;
         }
 
         // Header title cell
@@ -2418,19 +2486,9 @@ $z-grid-loading: 10003;
         @include e(subgroup) {
             position: relative;
 
-            &::after {
-                width: calc(100% - var-get($theme, 'header-border-width'));
-            }
-
-            &:not(:last-of-type) {
+            &.igx-grid-thead__item.igx-grid-th--active {
                 &::after {
-                    height: calc(100% - var-get($theme, 'header-border-width'));
-                }
-            }
-
-            &:last-of-type {
-                .igx-grid-th {
-                    border-block-end: none;
+                    height: 100%;
                 }
             }
         }
@@ -2448,21 +2506,44 @@ $z-grid-loading: 10003;
             :where(.igx-grid-thead__title) {
                 flex: 0 0 auto;
             }
+
+            //&:last-child {
+            //    igx-pivot-row-dimension-header {
+            //        border-inline-end: 0;
+            //    }
+            //}
         }
 
         // Scrollbar thumb for header
         @include e(thumb) {
             background: var-get($theme, 'header-background');
-            border-inline-start: $grid-header-border;
+            border-block-end: $grid-header-border;
+        }
+
+        // TODO, SMART, BUT TEST IT
+        // This is what give us the ability to have header row that don't have actual row border
+        // but that border is created by the header cells themselves and this acts as a filler
+        // otherwise we have to write CSS rules to remove the bottom border of the last cells in MRL or filtering row layouts
+        .igx-display-container {
+            &::after {
+                content: '';
+                height: 100%;
+                flex-grow: 1;
+                border-bottom: $grid-header-border;
+            }
         }
 
         // Pivot grid modifier
         @include m(pivot) {
             display: flex;
 
-            //:where(.igx-grid-thead--virtualizationWrapper) {
-            //    border-inline-end: $grid-header-border;
-            //}
+            .igx-grid-thead--virtualizationWrapper {
+                border-inline-start: $grid-header-border;
+            }
+
+            @include e(wrapper) {
+                border-block-end: $grid-header-border;
+            }
         }
 
         // Virtualization wrapper
@@ -2474,7 +2555,13 @@ $z-grid-loading: 10003;
         @include m(virtualizationContainer) {
             height: 100%;
             overflow: visible;
-            align-self: end;
+            //border-inline-start: $grid-header-border;
+
+            .igx-grid__tr-pivot--columnDimensionLeaf {
+                &::after {
+                    display: none;
+                }
+            }
         }
     }
 
@@ -2483,6 +2570,7 @@ $z-grid-loading: 10003;
         align-items: center;
         justify-content: flex-start;
         min-width: rem(80px);
+        width: 100%;
         height: sizable(rem(24px), rem(24px), rem(32px));
         padding-block: 0;
         padding-inline: pad-inline($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
@@ -2544,11 +2632,94 @@ $z-grid-loading: 10003;
         }
     }
 
+    @include b(igx-advanced-filter) {
+        background: color($color: 'surface', $variant: 500);
+        box-shadow: elevation(24);
+
+        igx-query-builder {
+            box-shadow: none !important;
+            border: none !important;
+            border-radius: inherit !important;
+        }
+
+        igx-query-builder-header {
+            cursor: grab;
+        }
+
+        .igx-excel-filter__secondary-footer {
+            --ig-size: 2;
+
+            display: flex;
+            justify-content: space-between;
+            padding-inline: pad-inline(rem(24px));
+            padding-block-end: pad-block(rem(24px));
+
+            .igx-excel-filter__clear {
+                flex-grow: 1;
+            }
+
+            .igx-excel-filter__apply,
+            .igx-excel-filter__cancel {
+                flex-grow: 0;
+            }
+        }
+
+        .igx-excel-filter__cancel + .igx-excel-filter__apply {
+            margin-inline-start: rem(16px);
+        }
+    }
+
     // ============================================================================
     // NOTE: Context-Specific Nested Rules
     // These rules handle nested contexts that don't fit cleanly into the BEM model
     // ============================================================================
     // Thead context - elements styled differently when inside thead
+
+    igx-pivot-row-dimension-content {
+        .igx-grid__tr-header-row {
+            border-inline-end: $grid-header-border;
+        }
+    }
+
+    igx-pivot-row-dimension-header.igx-grid-th {
+        align-items: center;
+    }
+
+    igx-pivot-row-dimension-header-group {
+        &::after {
+            height: 100% !important;
+        }
+    }
+
+    igx-pivot-row-header-group {
+        &::after {
+            inset-inline-start: calc(var-get($theme, 'header-border-width') * -1) !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        igx-pivot-row-dimension-header.igx-grid-th {
+            .igx-grid-th__icons {
+                align-self: center;
+            }
+        }
+
+        &:only-child,
+        &:last-child {
+            igx-pivot-row-dimension-header.igx-grid-th {
+                border-inline-end: 0 !important;
+            }
+        }
+    }
+
+    igx-pivot-row-header-group igx-pivot-row-dimension-header .igx-grid-th__icons {
+        padding-inline-end: pad-inline($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
+    }
+
+    .igx-pivot-grid-row-filler__wrapper .igx-grid-thead__wrapper .igx-grid-th {
+        height: 100%;
+    }
+
     .igx-grid-thead {
         .igx-grid__header-indentation {
             igx-icon {
@@ -2583,18 +2754,19 @@ $z-grid-loading: 10003;
         }
 
         .igx-grid-thead__title {
-            border-inline-end: 0;
             border-bottom: 0;
         }
 
         .igx-grid__td {
-            border-inline-end: $grid-header-border;
-            border-bottom: $grid-header-border;
+            border-inline-end: $grid-body-border;
+
+            border-block-end: $grid-body-border;
         }
 
-        .igx-grid-th,
-        .igx-grid__td:not(:only-child, :last-child) {
-            border-block-end: $grid-header-border;
+        .igx-grid-thead__title,
+        .igx-grid__th,
+        .igx-grid__td, {
+            border-inline-end-color: var-get($theme, 'header-border-color');
         }
     }
 
@@ -2607,6 +2779,13 @@ $z-grid-loading: 10003;
         .igx-grid__drag-indicator {
             border-bottom: $grid-header-border;
         }
+
+        .igx-grid__td:only-child,
+        .igx-grid__td:last-child {
+            border-block-end: 0;
+        }
+
+        background-clip: padding-box !important;
     }
 
     // Grid checkbox styles
@@ -2642,6 +2821,10 @@ $z-grid-loading: 10003;
         }
     }
 
+    .igx-grid-thead__wrapper:not(.igx-grid-thead__wrapper--pivot) {
+        border-block-end: $grid-header-border;
+    }
+
     @for $i from 1 through 10 {
         $level-sm: calc(#{$i * $cell-padding-sm} + var(--_expander-icon-width));
         $level-md: calc(#{$i * $cell-padding-md} + var(--_expander-icon-width));
@@ -2666,4 +2849,5 @@ $z-grid-loading: 10003;
             }
         }
     }
+
 }

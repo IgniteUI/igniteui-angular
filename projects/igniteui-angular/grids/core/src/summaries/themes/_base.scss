@@ -12,7 +12,7 @@ $_theme: $material;
 		style: var-get($_theme, 'pinned-border-width') var-get($_theme, 'pinned-border-style'),
 		color: var-get($_theme, 'pinned-border-color')
 	);
-	
+
 	@include b(igx-grid-summary) {
 		position: relative;
 		display: flex;
@@ -23,10 +23,10 @@ $_theme: $material;
 		background: var-get($_theme, 'background-color', inherit);
 		overflow: hidden;
 		outline-style: none;
-		
-		// TODO MAYBE WE SHOULD RENAME THIS VARIABLE SO THE CAN BE USED IN THE SUMMARY AND BODY
-		border-inline-end: var(--header-border-width) var(--header-border-style) var(--header-border-color);
-		
+
+		// TODO MAYBE WE SHOULD RENAME THIS VARIABLES SO THE CAN BE USED IN THE SUMMARY AND grid BODY
+		border-inline-end: var(--header-border-width) var(--header-border-style) var-get($_theme, 'border-color');
+
 		@include e(item) {
 			display: flex;
 			align-items: center;
@@ -35,86 +35,86 @@ $_theme: $material;
 			padding-inline: 0;
 			font-size: rem(12px);
 		}
-		
+
 		@include e(label) {
 			@include ellipsis();
-			
+
 			color: var-get($_theme, 'label-color');
 			min-width: rem(30px);
 			margin-inline-end: rem(3px);
-			
+
 			&:hover {
 				color: var-get($_theme, 'label-hover-color');
 			}
 		}
-		
+
 		@include e(result) {
 			@include ellipsis();
-			
+
 			color: var-get($_theme, 'result-color');
 			font-weight: 600;
 			flex: 1 1 auto;
 			text-align: end;
 		}
-		
+
 		@include m(pinned) {
 			position: relative;
 			z-index: 1;
 		}
-		
+
 		@include mx(active, pinned) {
 			&::after {
 				width: calc(100% - rem(1px));
 			}
 		}
-		
+
 		@include m(pinned-first) {
 			border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
-			
+
 			&:dir(ltr) {
 				box-shadow: inset rem(1px) 0 0 0 var-get($_theme, 'pinned-border-color');
 			}
-			
+
 			&:dir(rtl) {
 				box-shadow: inset rem(-1px) 0 0 0 var-get($_theme, 'pinned-border-color');
 			}
-			
+
 			@media print {
 				border-inline-start: map.get($cell-pin, 'style') #999;
 			}
 		}
-		
+
 		@include m(pinned-last) {
 			border-inline-end: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
-			
+
 			&::after {
 				inset-inline-start: rem(1px);
 			}
-			
+
 			@media print {
 				border-inline-end: map.get($cell-pin, 'style') #999;
 			}
-			
+
 			&:dir(ltr) {
 				box-shadow: inset rem(-1px) 0 0 0 var-get($_theme, 'pinned-border-color');
 			}
-			
+
 			&:dir(rtl) {
 				box-shadow: inset rem(1px) 0 0 0 var-get($_theme, 'pinned-border-color');
 			}
 		}
-		
+
 		@include m(fw) {
 			flex-grow: 0;
 		}
-		
+
 		&::after {
 			content: '';
 			position: absolute;
 			inset: 0;
 			pointer-events: none;
 		}
-		
+
 		@include m(active) {
 			&::after {
 				width: 100%;
@@ -123,9 +123,5 @@ $_theme: $material;
 				pointer-events: none;
 			}
 		}
-	}
-	
-	.igx-grid-summary:not(.igx-grid-summary--pinned, :only-child) {
-		border-inline-end-color: transparent;
 	}
 }
