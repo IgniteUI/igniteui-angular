@@ -457,6 +457,7 @@ describe('PDF Exporter', () => {
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
                 done();
             });
 
@@ -472,6 +473,7 @@ describe('PDF Exporter', () => {
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
                 done();
             });
 
