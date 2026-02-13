@@ -572,7 +572,7 @@ describe('PDF Exporter', () => {
             // First export uses a custom font
             options.customFont = {
                 name: 'CustomFont',
-                data: 'dummy-font-data'
+                data: ''
             } as any;
 
             const subscription = exporter.exportEnded.subscribe((args) => {
