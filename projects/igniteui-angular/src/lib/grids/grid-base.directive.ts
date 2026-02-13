@@ -6833,10 +6833,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (possibleWidth === "0px") {
                 // all columns - hidden
                 // Do not update _columnWidth to preserve valid column widths for when columns are unhidden
-                // Only update column defaultWidth if _columnWidth is already set
-                if (this._columnWidth) {
+                // Only update column defaultWidth if _columnWidth is already set and not '0px'
+                if (this._columnWidth && this._columnWidth !== '0px') {
                     this._columns.forEach((column: IgxColumnComponent) => {
-                        if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
+                        if (this.hasColumnLayouts && this._columnWidth !== '0px') {
                             const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                             column.defaultWidth = columnWidthCombined + 'px';
                         } else {
@@ -6854,7 +6854,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
         }
         this._columns.forEach((column: IgxColumnComponent) => {
-            if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
+            if (this.hasColumnLayouts && this._columnWidth !== '0px') {
                 const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
