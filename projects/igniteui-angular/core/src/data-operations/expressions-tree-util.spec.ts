@@ -477,9 +477,6 @@ describe('Unit testing FilteringUtil', () => {
         expect(nestedCondition.condition.name).toBe('greaterThan');
         expect(nestedCondition.condition.logic(200, nestedCondition.searchVal)).toBe(true);
     });
-});
-
-describe('Unit testing recreateExpression', () => {
 
     it('should recreate string expression with correct conditionName', () => {
         const fields: FieldType[] = [
