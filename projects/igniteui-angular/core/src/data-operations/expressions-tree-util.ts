@@ -125,7 +125,7 @@ function getFilteringCondition(dataType: string, name: string): IFilteringOperat
  */
 function recreateOperatorFromDataType(expression: IFilteringExpression, dataType: string): IFilteringOperation {
     if (!expression.condition?.logic) {
-        return getFilteringCondition(dataType, expression.conditionName || expression.condition?.name);
+        return getFilteringCondition(dataType, expression.condition?.name || expression.conditionName);
     }
 
     return expression.condition;
@@ -138,14 +138,14 @@ function recreateOperatorFromDataType(expression: IFilteringExpression, dataType
  * @param fields An array of fields to use for recreating the expression.
  * @returns The recreated expression.
  */
-function recreateExpression(expression: IFilteringExpression, fields: FieldType[]): IFilteringExpression {
+export function recreateExpression(expression: IFilteringExpression, fields: FieldType[]): IFilteringExpression {
     const field = fields?.find(f => f.field === expression.fieldName);
 
     if (field && !expression.condition?.logic) {
         if (!field.filters) {
             expression.condition = recreateOperatorFromDataType(expression, field.dataType);
         } else {
-            expression.condition = field.filters.condition(expression.conditionName || expression.condition?.name);
+            expression.condition = field.filters.condition(expression.condition?.name || expression.conditionName);
         }
     }
 
@@ -153,10 +153,7 @@ function recreateExpression(expression: IFilteringExpression, fields: FieldType[
         throw Error('Wrong `conditionName`, `condition` or `field` provided! It is possible that there is a type mismatch between the condition type and field type.');
     }
 
-    if (!expression.conditionName) {
-        expression.conditionName = expression.condition?.name;
-    }
-
+    expression.conditionName = expression.condition?.name;
     expression.searchVal = recreateSearchValue(expression.searchVal, field?.dataType);
 
     return expression;
