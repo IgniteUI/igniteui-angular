@@ -1,6 +1,4 @@
-import { Subscription } from 'rxjs';
-import { resizeObservable } from '../../../core/utils';
-import { PositionSettings } from '../utilities';
+import { IntersectionObserverHelper, PositionSettings } from '../utilities';
 import { GlobalPositionStrategy } from './global-position-strategy';
 
 /**
@@ -8,7 +6,7 @@ import { GlobalPositionStrategy } from './global-position-strategy';
  * These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection
  */
 export class ContainerPositionStrategy extends GlobalPositionStrategy {
-    private _resizeSubscription: Subscription;
+    private observerHelper = new IntersectionObserverHelper();
     private _contentElement: HTMLElement;
     private _outletElement: HTMLElement;
 
@@ -24,35 +22,28 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
         const outletElement = contentElement.parentElement.parentElement;
 
-        // Set up resize observer if not already observing this element
-        if (!this._resizeSubscription || this._outletElement !== outletElement) {
+        // Set up intersection observer if not already observing this element
+        if (this._outletElement !== outletElement) {
             this.dispose();
             this._contentElement = contentElement;
             this._outletElement = outletElement;
-            this._setupResizeObserver();
+            this.observerHelper.setupIntersectionObserver(
+                outletElement,
+                contentElement.ownerDocument,
+                () => this.updatePosition(this._contentElement)
+            );
         }
 
         this.updatePosition(contentElement);
     }
 
     /**
-     * Disposes the resize observer and cleans up references.
+     * Disposes the observer and cleans up references.
      */
     public dispose(): void {
-        if (this._resizeSubscription) {
-            this._resizeSubscription.unsubscribe();
-            this._resizeSubscription = null;
-        }
+        this.observerHelper.dispose();
         this._contentElement = null;
         this._outletElement = null;
-    }
-
-    private _setupResizeObserver(): void {
-        this._resizeSubscription = resizeObservable(this._outletElement).subscribe(() => {
-            if (this._contentElement?.parentElement) {
-                this.updatePosition(this._contentElement);
-            }
-        });
     }
 
     private updatePosition(contentElement: HTMLElement): void {
@@ -65,4 +56,3 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         this.setPosition(contentElement);
     }
 }
-
