@@ -24,6 +24,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`, `IgxSimpleCombo`
     - Combo and Simple Combo now close the dropdown list and move the focus to the next focusable element on "Tab" press and clear the selection if the combo is collapsed on "Escape".
 
+### Behavioral Changes
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Cell Selection is now cleared when changing the expand/collapse state of column grouping, master-detail, tree and hierarchical grids to ensure non-erroneous behavior when underlying indexes are modified.
+
 ### Breaking Changes
 
 - `igxForOf`, `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`, `igxPivotGrid`
