@@ -332,3 +332,104 @@ export class Util {
     }
 }
 
+/**
+ * @hidden @internal
+ * Helper class for managing IntersectionObserver-based position updates
+ * Used by position strategies that need to reposition overlays when target elements move
+ */
+export class IntersectionObserverHelper {
+    private intersectionObserver: IntersectionObserver | null = null;
+    private updateFrameId: number | null = null;
+    private previousRect: DOMRect | null = null;
+
+    /**
+     * Sets up IntersectionObserver for a target element and provides position update callbacks
+     * @param target The element to observe
+     * @param doc The document context
+     * @param onPositionUpdate Callback function to reposition the overlay
+     */
+    public setupIntersectionObserver(
+        target: HTMLElement | null,
+        doc: Document | null,
+        onPositionUpdate: () => void
+    ): void {
+        if (!target || !doc || !(target instanceof HTMLElement)) {
+            return;
+        }
+
+        // Only set up observer once - don't recreate it on every position() call
+        if (this.intersectionObserver) {
+            return;
+        }
+
+        // Store initial position
+        this.previousRect = target.getBoundingClientRect();
+
+        // Set up IntersectionObserver to trigger position checks
+        // Use rootMargin to detect when element enters/exits observable area
+        this.intersectionObserver = new IntersectionObserver(
+            (_entries) => {
+                // When IntersectionObserver detects visibility change, start continuous polling
+                this.startPositionUpdateLoop(target, onPositionUpdate);
+            },
+            {
+                root: null,
+                rootMargin: '0px', // Expand detection area to catch layout shifts
+                threshold: [1] // Detect when element becomes partially or fully visible
+            }
+        );
+
+        this.intersectionObserver.observe(target);
+    }
+
+    /**
+     * Starts the position update loop that continuously checks if the target element has moved
+     */
+    private startPositionUpdateLoop(target: HTMLElement, onPositionUpdate: () => void): void {
+        // Clear any existing frame
+        if (this.updateFrameId !== null) {
+            return;
+        }
+
+        const checkAndUpdate = () => {
+            if (!target) {
+                this.updateFrameId = null;
+                return;
+            }
+
+            // Check if target has actually moved
+            const currentRect = target.getBoundingClientRect();
+            if (this.previousRect &&
+                (currentRect.top !== this.previousRect.top ||
+                    currentRect.left !== this.previousRect.left ||
+                    currentRect.width !== this.previousRect.width ||
+                    currentRect.height !== this.previousRect.height)) {
+                // Element has moved - update stored position and trigger position update
+                this.previousRect = currentRect;
+                onPositionUpdate();
+            }
+
+            // Continue polling while element is visible
+            this.updateFrameId = requestAnimationFrame(checkAndUpdate);
+        };
+
+        this.updateFrameId = requestAnimationFrame(checkAndUpdate);
+    }
+
+    /**
+     * Cleans up the IntersectionObserver and animation frame
+     */
+    public dispose(): void {
+        if (this.intersectionObserver) {
+            this.intersectionObserver.disconnect();
+            this.intersectionObserver = null;
+        }
+
+        if (this.updateFrameId !== null) {
+            cancelAnimationFrame(this.updateFrameId);
+            this.updateFrameId = null;
+        }
+
+        this.previousRect = null;
+    }
+}
