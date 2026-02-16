@@ -7266,8 +7266,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         const pagingHeight = this.getPagingFooterHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const scrHeight = this.getComputedHeight(this.scr.nativeElement);
-        const borderTop = parseFloat(styles.getPropertyValue('border-top'));
-        const borderBottom = parseFloat(styles.getPropertyValue('border-bottom'));
+        const borderTop = parseFloat(styles.getPropertyValue('border-top')) || 0;
+        const borderBottom = parseFloat(styles.getPropertyValue('border-bottom')) || 0;
 
         const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
