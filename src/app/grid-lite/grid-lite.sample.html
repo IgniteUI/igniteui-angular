@@ -1,0 +1,76 @@
+<igx-grid-lite
+  #grid
+  class="grid"
+  [data]="data"
+  [autoGenerate]="false"
+  [sortingOptions]="sortingOptions"
+  [sortingExpressions]="sortingExpressions"
+  (sorting)="logEvent('sorting', $event)"
+  (sorted)="logEvent('sorted', $event)"
+  (filtering)="logEvent('filtering', $event)"
+  (filtered)="logEvent('filtered', $event)"
+>
+  <igx-grid-lite-column
+    field="firstName"
+    dataType="string"
+    header="First Name"
+    width="250px"
+    sortable
+    sortingCaseSensitive
+    filterable
+    filteringCaseSensitive
+    [headerTemplate]="headerTemplate"
+  >
+  </igx-grid-lite-column>
+  <igx-grid-lite-column
+    field="lastName"
+    dataType="string"
+    header="Last Name"
+    [cellTemplate]="cellTemplate"
+    sortable
+  >
+    <ng-template igxGridLiteHeader let-column let-parent="parent">
+      <div>{{column.header}} Templated inline</div>
+    </ng-template>
+  </igx-grid-lite-column>
+
+  <igx-grid-lite-column
+    field="age"
+    dataType="number"
+    header="Age"
+    filterable
+    resizable
+    sortable
+  ></igx-grid-lite-column>
+  <igx-grid-lite-column field="active" dataType="boolean" header="Active">
+    <ng-template
+      igxGridLiteCell
+      let-value
+      let-row="row"
+      let-column="column"
+      let-parent="parent"
+    >
+      <div>Cell {{value}}</div>
+    </ng-template>
+  </igx-grid-lite-column>
+</igx-grid-lite>
+
+<ng-template
+  igxGridLiteHeader
+  let-column
+  let-parent="parent"
+  #headerTemplate
+>
+  <div>{{column.header}} Templated</div>
+</ng-template>
+
+<ng-template
+  #cellTemplate
+  igxGridLiteCell
+  let-value
+  let-row="row"
+  let-column="column"
+  let-parent="parent"
+>
+  <div>Cell [{{row.index}}, {{column.field}}]: {{value}} {{row.data}}</div>
+</ng-template>
