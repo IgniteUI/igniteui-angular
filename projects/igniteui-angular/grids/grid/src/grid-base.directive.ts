@@ -7169,20 +7169,24 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!this._height) {
             return null;
         }
+        const styles = this.document.defaultView.getComputedStyle(this.nativeElement);
         const actualTheadRow = this.getTheadRowHeight();
         const footerHeight = this.getFooterHeight();
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingFooterHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const scrHeight = this.getComputedHeight(this.scr.nativeElement);
+        const borderTop = parseFloat(styles.getPropertyValue('border-top'));
+        const borderBottom = parseFloat(styles.getPropertyValue('border-bottom'));
+
         const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
-            scrHeight;
+            scrHeight + borderTop + borderBottom;
 
         let gridHeight = 0;
 
         if (this.isPercentHeight) {
-            const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('height');
+            const computed = styles.getPropertyValue('height');
             const autoSize = this._shouldAutoSize(renderedHeight);
             if (autoSize || computed.indexOf('%') !== -1) {
                 const bodyHeight = this.getDataBasedBodyHeight();
