@@ -346,7 +346,6 @@ export class IgxOverlayService implements OnDestroy {
         info.settings = eventArgs.settings;
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
-        let elementRect: DOMRect;
         // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
         this.getComponentSize(info);
         this.setInitialSize(
