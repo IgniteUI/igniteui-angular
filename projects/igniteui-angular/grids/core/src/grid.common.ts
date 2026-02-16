@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { ConnectedPositioningStrategy, Util } from 'igniteui-angular/core';
+import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { VerticalAlignment, PositionSettings, Point } from 'igniteui-angular/core';
 import { IgxForOfSyncService } from 'igniteui-angular/directives';
 import { scaleInVerBottom, scaleInVerTop } from 'igniteui-angular/animations';
@@ -28,6 +28,12 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     public isTopInitialPosition = null;
     public override settings: RowEditPositionSettings;
     private intersectionObserver: IntersectionObserver | null = null;
+    private previousRect: DOMRect | null = null;
+    private contentElement: HTMLElement | null = null;
+    private sizeConfig: { width: number; height: number } | null = null;
+    private targetElement: HTMLElement | null = null;
+    private document: Document | null = null;
+    private updateFrameId: number | null = null;
 
     public override position(contentElement: HTMLElement, _size: { width: number; height: number }, document?: Document, initialCall?: boolean,
         target?: Point | HTMLElement): void {
@@ -51,59 +57,79 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         super.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight },
             document, initialCall, targetElement);
 
-        this.setupIntersectionObserver(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight }, document, initialCall, targetElement);
+        this.setupIntersectionObserver(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight }, document, targetElement);
     }
 
-    private previousRect: DOMRect | null = null;
+    private setupIntersectionObserver(contentElement: HTMLElement, sizeConfig: { width: number; height: number }, doc?: Document, target?: HTMLElement): void {
+        if (!target || !doc || !(target instanceof HTMLElement))
+            return;
 
-    private setupIntersectionObserver(contentElement: HTMLElement, _size: { width: number; height: number }, document?: Document, initialCall?: boolean,
-        target?: Point | HTMLElement): void {
-        // Clean up existing observer
+        // Store references for repositioning
+        this.contentElement = contentElement;
+        this.sizeConfig = sizeConfig;
+        this.targetElement = target;
+        this.document = doc;
+
+        // Only set up observer once - don't recreate it on every position() call
         if (this.intersectionObserver) {
-            this.intersectionObserver.disconnect();
-        }
-
-        if (!target || !document) {
             return;
         }
 
-        const targetRect = (target as HTMLElement).getBoundingClientRect();
-        const viewPortRect = Util.getViewportRect(document);
-        const rootMarin = {
-            top: -Math.floor(targetRect.top),
-            bottom: -Math.floor(viewPortRect.height -targetRect.bottom),
-            left: -Math.floor(targetRect.left),
-            right: -Math.floor(viewPortRect.width - targetRect.right),
+        // Store initial position
+        this.previousRect = target.getBoundingClientRect();
+
+        // Set up IntersectionObserver to trigger position checks
+        // Use rootMargin to detect when element enters/exits observable area
+        this.intersectionObserver = new IntersectionObserver(
+            (_entries) => {
+                // When IntersectionObserver detects visibility change, start continuous polling
+                this.startPositionUpdateLoop();
+            },
+            {
+                root: null,
+                rootMargin: '0px', // Expand detection area to catch layout shifts
+                threshold: [1] // Detect when element becomes partially or fully visible
+            }
+        );
+
+        this.intersectionObserver.observe(target);
+    }
+
+    private startPositionUpdateLoop(): void {
+        // Clear any existing frame
+        if (this.updateFrameId !== null) {
+            return;
+        }
+
+        const checkAndUpdate = () => {
+            if (!this.targetElement || !this.contentElement || !this.document || !this.sizeConfig) {
+                this.updateFrameId = null;
+                return;
+            }
+
+            // Check if target has actually moved
+            const currentRect = this.targetElement.getBoundingClientRect();
+            if (this.previousRect &&
+                (currentRect.top !== this.previousRect.top ||
+                    currentRect.left !== this.previousRect.left ||
+                    currentRect.width !== this.previousRect.width ||
+                    currentRect.height !== this.previousRect.height)) {
+                // Element has moved - update stored position and reposition the overlay
+                this.previousRect = currentRect;
+                this.position(
+                    this.contentElement,
+                    this.sizeConfig,
+                    this.document,
+                    false,
+                    this.targetElement
+                );
+            }
+
+            // Continue polling while element is visible
+            this.updateFrameId = requestAnimationFrame(checkAndUpdate);
         };
 
-        // Create new IntersectionObserver to detect position changes
-        this.intersectionObserver = new IntersectionObserver((entries) => {
-            for (const entry of entries) {
-                const rect = entry.boundingClientRect;
-                // const rect = entry.target.getBoundingClientRect();
-                if (this.previousRect) {
-                    if (rect.top !== this.previousRect.top ||
-                        rect.left !== this.previousRect.left ||
-                        rect.width !== this.previousRect.width ||
-                        rect.height !== this.previousRect.height) {
-                        this.position(
-                            contentElement,
-                            { width: _size.width, height: _size.height },
-                            document,
-                            false,
-                            target
-                        );
-                    }
-                }
-                this.previousRect = rect;
-            }
-        }, {
-            root: null, // Observe relative to the viewport
-            rootMargin: `${rootMarin.top}px ${rootMarin.right}px ${rootMarin.bottom}px ${rootMarin.left}px`,
-            threshold: Array.from({ length: 101 }, (_, i) => i / 100) // Trigger on any visibility change
-        });
-
-        this.intersectionObserver.observe(target as HTMLElement);
+        this.updateFrameId = requestAnimationFrame(checkAndUpdate);
     }
 
     /**
@@ -114,6 +140,15 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
             this.intersectionObserver.disconnect();
             this.intersectionObserver = null;
         }
-        this.previousRect = null;
+
+        if (this.updateFrameId !== null) {
+            cancelAnimationFrame(this.updateFrameId);
+            this.updateFrameId = null;
+        }
+
+        this.contentElement = null;
+        this.sizeConfig = null;
+        this.targetElement = null;
+        this.document = null;
     }
 }
