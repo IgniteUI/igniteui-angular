@@ -63,9 +63,11 @@ jobs:
         working-directory: dist/igniteui-angular-i18n
 
       - name: Publish igniteui-angular
+        if: false
         run: npm publish --tag ${NPM_TAG}
         working-directory: dist/igniteui-angular
 
       - name: Publish igniteui-angular-i18n
+        if: false
         run: npm publish --tag ${NPM_TAG}
         working-directory: dist/igniteui-angular-i18n
