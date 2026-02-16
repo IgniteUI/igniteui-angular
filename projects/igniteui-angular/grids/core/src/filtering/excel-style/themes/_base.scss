@@ -123,14 +123,13 @@ $checkbox-indent: (
             // TODO: The border-radius should not be hardcoded.
             border-radius: border-radius(rem(4px));
 
-            // TODO Create a schema prop that matches the --filtering-row-background and use it here.
-            background: color($color: 'gray', $variant: 50);
+            background: var(--filtering-row-background);
 
             .igx-button-group {
                 --elevation: none !important;
 
-                // TODO Create a schema prop that matches the --filtering-row-background and use it here.
-                --item-background: #{ color($color: 'gray', $variant: 50)} !important;
+
+                --item-background: var(--filtering-row-background);
 
                 --item-hover-background: #{color($color: 'gray', $variant: 100)} !important;
                 --item-selected-background: #{color($color: 'gray', $variant: 100)} !important;
@@ -414,8 +413,8 @@ $checkbox-indent: (
             width: 100%;
         }
 
-        @include m(compact) {
-            @include e(sort) {
+        @include e(menu, $m: compact) {
+            .igx-excel-filter__sort {
                 @extend %grid-excel-action--compact;
 
                 igx-buttongroup {
@@ -424,11 +423,10 @@ $checkbox-indent: (
 
                 header {
                     @include type-style('body-2');
-                    text-transform: capitalize;
                 }
             }
 
-            @include e(move) {
+            igx-excel-filter__move {
                 @extend %grid-excel-action--compact;
 
                 igx-buttongroup {
@@ -437,15 +435,17 @@ $checkbox-indent: (
 
                 header {
                     @include type-style('body-2');
+
                     text-transform: capitalize;
+
                 }
             }
 
-            @include e(menu-header) {
+            .igx-excel-filter__menu-header {
                 @include type-style('subtitle-1')
             }
 
-            @include e(action) {
+           .igx-excel-filter__menu-header-actions {
                 span {
                     @include type-style('body-2');
                 }

@@ -26,6 +26,11 @@
 }
 
 @include themed-block(igx-grid, indigo, dark) {
+    --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
+    --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+    --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+
+
     @include e(td, $m: bool) {
         .igx-icon--error {
             color: color($color: 'gray', $variant: 500);

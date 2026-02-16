@@ -287,10 +287,6 @@ $z-grid-loading: 10003;
                     background: var-get($theme, 'row-selected-hover-background');
                 }
             }
-
-            .igx-grid__tr {
-                border-inline-start: rem(1px) solid transparent;
-            }
         }
 
         @include e(tr, $not: (header, selected)) {
@@ -917,13 +913,6 @@ $z-grid-loading: 10003;
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
             // this is very important especially of the borders have slide alpha
             background-clip: padding-box !important;
-
-            &::after {
-                content: '';
-                position: absolute;
-                width: 100%;
-                height: rem(1px);
-            }
         }
 
         // Hierarchical grid expander (expand/collapse child grids)
@@ -1317,18 +1306,12 @@ $z-grid-loading: 10003;
         // Pivot drop row area
         @include e(tr-pivot, $m: drop-row-area) {
             flex-grow: 1;
-            //border-inline-end: $grid-header-border;
-        }
-
-        @include e(tr-pivot, $m: row-area) {
-            border-block-end: $grid-header-border;
         }
 
         // Pivot filter row
         @include e(tr-pivot, $m: filter) {
             height: var(--header-size);
             border-inline-start: 0;
-            //border-block-end: $grid-header-border;
         }
 
         // Pivot group
@@ -1632,6 +1615,8 @@ $z-grid-loading: 10003;
 
             [igxIconButton] {
                 --ig-size: 1;
+
+                aspect-ratio: 1;
                 color: var-get($theme, 'filtering-row-text-color');
             }
         }
@@ -1710,7 +1695,7 @@ $z-grid-loading: 10003;
             margin-inline: rem(8px);
             overflow: visible;
 
-            &::after {
+            &::before {
                 display: block;
                 position: absolute;
                 width: rem(10px);
@@ -2039,20 +2024,17 @@ $z-grid-loading: 10003;
         // (!) the background-clip: padding-box; makes sure the background never go under the border,
         // this is very important especially of the borders have slide alpha
         background-clip: padding-box !important;
-
         line-height: $cell-line-height;
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: flex-end;
         min-width: 0;
         min-height: var(--header-size);
-
         padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
         padding-block: 0;
         font-size: rem(12px);
         font-weight: 600;
         border-inline-end: $grid-header-border;
-        //border-block-end: $grid-header-border;
         overflow: hidden;
         transition: color 250ms ease-in-out;
         outline-style: none;
@@ -2430,6 +2412,7 @@ $z-grid-loading: 10003;
             overflow: hidden;
             outline-style: none;
             z-index: $z-grid-decoration;
+            border-bottom: $grid-header-border;
 
             // WARN: BEM not followed here
             .igx-grid__tr {
@@ -2518,19 +2501,6 @@ $z-grid-loading: 10003;
         @include e(thumb) {
             background: var-get($theme, 'header-background');
             border-block-end: $grid-header-border;
-        }
-
-        // TODO, SMART, BUT TEST IT
-        // This is what give us the ability to have header row that don't have actual row border
-        // but that border is created by the header cells themselves and this acts as a filler
-        // otherwise we have to write CSS rules to remove the bottom border of the last cells in MRL or filtering row layouts
-        .igx-display-container {
-            &::after {
-                content: '';
-                height: 100%;
-                flex-grow: 1;
-                border-bottom: $grid-header-border;
-            }
         }
 
         // Pivot grid modifier
@@ -2675,12 +2645,6 @@ $z-grid-loading: 10003;
     // ============================================================================
     // Thead context - elements styled differently when inside thead
 
-    igx-pivot-row-dimension-content {
-        .igx-grid__tr-header-row {
-            border-inline-end: $grid-header-border;
-        }
-    }
-
     igx-pivot-row-dimension-header.igx-grid-th {
         align-items: center;
     }
@@ -2704,6 +2668,12 @@ $z-grid-loading: 10003;
             }
         }
 
+        igx-pivot-row-dimension-header {
+            .igx-grid-th__icons {
+                padding-inline-end: pad-inline($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
+            }
+        }
+
         &:only-child,
         &:last-child {
             igx-pivot-row-dimension-header.igx-grid-th {
@@ -2712,12 +2682,14 @@ $z-grid-loading: 10003;
         }
     }
 
-    igx-pivot-row-header-group igx-pivot-row-dimension-header .igx-grid-th__icons {
-        padding-inline-end: pad-inline($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
-    }
+    .igx-pivot-grid-row-filler__wrapper {
+        .igx-grid-thead__wrapper {
+            height: 100%;
 
-    .igx-pivot-grid-row-filler__wrapper .igx-grid-thead__wrapper .igx-grid-th {
-        height: 100%;
+            .igx-grid-th {
+                height: 100%;
+            }
+        }
     }
 
     .igx-grid-thead {
@@ -2753,21 +2725,16 @@ $z-grid-loading: 10003;
             display: flex;
         }
 
-        .igx-grid-thead__title {
-            border-bottom: 0;
-        }
-
-        .igx-grid__td {
-            border-inline-end: $grid-body-border;
-
-            border-block-end: $grid-body-border;
-        }
-
         .igx-grid-thead__title,
-        .igx-grid__th,
-        .igx-grid__td, {
-            border-inline-end-color: var-get($theme, 'header-border-color');
+        .igx-grid__td,
+        .igx-grid-th {
+            border-inline-end: $grid-header-border;
+            border-block-end: $grid-header-border;
         }
+    }
+
+    .igx-grid-thead__wrapper.igx-grid__tr--mrl {
+        border-block-end: 0 !important;
     }
 
     //// MRL row context - rows in multi-row layout

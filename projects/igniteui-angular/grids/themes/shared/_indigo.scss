@@ -13,6 +13,9 @@
     --grouparea-size: #{sizable(rem(40px), rem(48px), rem(55px))};
     --_expander-icon-width: #{rem(16px)};
     --_hierarchical-action-icon: #{rem(16px)};
+    --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
+    --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+    --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
 
     %cell-display {
         // TODO THIS RETURNS NOT VALID TYPE STYLES
