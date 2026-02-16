@@ -26,6 +26,7 @@ import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
 import { CalendarDay } from '../calendar/common/model';
+import { OverlaySizeRegistry } from '../services/overlay/utilities';
 
 // The number of milliseconds in one day
 const DEBOUNCE_TIME = 16;
@@ -64,6 +65,7 @@ describe('IgxDateRangePicker', () => {
         let mockCalendar: IgxCalendarComponent;
         let mockDaysView: any;
         let mockAnimationService: AnimationService;
+        let mockOverlaySizeRegistry: OverlaySizeRegistry;
         let mockCdr: any;
         const elementRef = { nativeElement: null };
         const platform = {} as any;
@@ -134,8 +136,9 @@ describe('IgxDateRangePicker', () => {
             mockNgZone = {};
             mockPlatformUtil = { isIOS: false };
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
+            mockOverlaySizeRegistry = new OverlaySizeRegistry();
             overlay = new IgxOverlayService(
-                mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
+                mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService, mockOverlaySizeRegistry);
             mockCalendar = new IgxCalendarComponent(platform, 'en');
 
             mockDaysView = {

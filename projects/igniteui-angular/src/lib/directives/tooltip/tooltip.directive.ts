@@ -3,9 +3,10 @@ import {
     OnDestroy, inject, DOCUMENT, HostListener,
     Renderer2,
     AfterViewInit,
+    OnInit,
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { OverlaySettings } from '../../services/overlay/utilities';
+import { OverlayInfo, OverlaySettings, OverlaySizeRegistry } from '../../services/overlay/utilities';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
@@ -32,7 +33,7 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]',
     standalone: true
 })
-export class IgxTooltipDirective extends IgxToggleDirective implements AfterViewInit, OnDestroy {
+export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
@@ -122,6 +123,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     private _document = inject(DOCUMENT);
     private _renderer = inject(Renderer2);
     private _platformUtil = inject(PlatformUtil);
+    private _sizeRegistry = inject(OverlaySizeRegistry);
 
     /** @hidden */
     constructor(
@@ -142,6 +144,12 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     }
 
     /** @hidden */
+    public override ngOnInit() {
+        super.ngOnInit();
+        this._sizeRegistry.register(this.element, this.setInitialSize);
+    }
+
+    /** @hidden */
     public ngAfterViewInit(): void {
         if (this._platformUtil.isBrowser) {
             this._createArrow();
@@ -159,6 +167,8 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
         if (this.arrow) {
             this._removeArrow();
         }
+
+        this._sizeRegistry.clear(this.element);
     }
 
     /**
@@ -233,5 +243,15 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
 
     private onDocumentTouchStart(event) {
         this.tooltipTarget?.onDocumentTouchStart(event);
+    }
+
+    /**
+    * Measures **after** moving the element into the overlay outlet so that parent
+    * style constraints do not affect the initial size.
+    */
+    private setInitialSize = (info: OverlayInfo, moveToOverlay: () => void) => {
+        moveToOverlay();
+        const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+        info.initialSize = { width: elementRect.width, height: elementRect.height };
     }
 }

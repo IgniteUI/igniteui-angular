@@ -40,6 +40,7 @@ import {
     OverlayEventArgs,
     OverlayInfo,
     OverlaySettings,
+    OverlaySizeRegistry,
     Point,
     PositionSettings,
     RelativePosition,
@@ -138,8 +139,7 @@ export class IgxOverlayService implements OnDestroy {
         scrollStrategy: new NoOpScrollStrategy(),
         modal: true,
         closeOnOutsideClick: true,
-        closeOnEscape: false,
-        cacheSize: true
+        closeOnEscape: false
     };
 
     constructor(
@@ -147,7 +147,8 @@ export class IgxOverlayService implements OnDestroy {
         @Inject(DOCUMENT) private document: any,
         private _zone: NgZone,
         protected platformUtil: PlatformUtil,
-        @Inject(IgxAngularAnimationService) private animationService: AnimationService) {
+        @Inject(IgxAngularAnimationService) private animationService: AnimationService,
+        private sizeRegistry: OverlaySizeRegistry) {
         this._document = this.document;
     }
 
@@ -346,17 +347,12 @@ export class IgxOverlayService implements OnDestroy {
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         let elementRect: DOMRect;
-        // Get the element rect size before moving it into the overlay to cache its size.
-        if (info.settings.cacheSize) {
-            elementRect = info.elementRef.nativeElement.getBoundingClientRect();
-        }
         // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
         this.getComponentSize(info);
-        this.moveElementToOverlay(info);
-        if (!info.settings.cacheSize) {
-            elementRect = info.elementRef.nativeElement.getBoundingClientRect();
-        }
-        info.initialSize = { width: elementRect.width, height: elementRect.height };
+        this.setInitialSize(
+            info,
+            () => this.moveElementToOverlay(info)
+        );
         // Update the container size after moving if there is size.
         if (info.size) {
             info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
@@ -1020,5 +1016,29 @@ export class IgxOverlayService implements OnDestroy {
             const size = componentSize || globalSize;
             info.size = size;
         }
+    }
+
+    /**
+     * Measures the element's initial size and controls *when* the element is moved into the overlay outlet.
+     *
+     * The elements inherit constraining parent styles, so
+     * for some of them (e.g., Tooltip, Snackbar) their pre-move size is incorrect.
+     * Those can register an override via `OverlaySizeRegistry` to measure **after** moving to get an accurate size.
+     *
+     * - **Default**: Measures in-place (current parent), then moves to the overlay.
+     *
+     * @param info OverlayInfo for the content being attached.
+     * @param moveToOverlay Moves the element into the overlay.
+     */
+    private setInitialSize(info: OverlayInfo, moveToOverlay: () => void): void {
+        const override = this.sizeRegistry.get(info);
+        if (override) {
+            override(info, moveToOverlay);
+            return;
+        }
+
+        const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+        info.initialSize = { width: elementRect.width, height: elementRect.height };
+        moveToOverlay();
     }
 }
