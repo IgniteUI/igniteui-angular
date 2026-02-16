@@ -75,11 +75,15 @@
         bottom: 0;
         width: var(--igx-nav-drawer-size);
         inset-inline-start: 0;
-        z-index: 999;
         transition: width, padding, transform;
         transition-timing-function: $in-out-quad;
         box-shadow: var-get($theme, 'elevation');
         padding: $aside-padding;
+
+        // popover override/reset:
+        margin: 0;
+        inset: auto;
+        border: none;
 
         @if $variant != 'fluent' {
             border-inline-end: rem(1px) solid var-get($theme, 'border-color');
@@ -98,7 +102,6 @@
     %aside--pinned {
         position: relative;
         box-shadow: none;
-        z-index: 0;
     }
 
     %aside--collapsed--right {
@@ -182,7 +185,12 @@
         width: 100%;
         height: 100%;
         visibility: visible;
-        z-index: 999;
+
+        // popover override/reset:
+        margin: 0;
+        inset: auto;
+        padding: 0;
+        border: none;
     }
 
     %overlay-panning {
