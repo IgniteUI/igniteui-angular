@@ -44,11 +44,13 @@
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             [igxGridForOfVariableSizes]="false"
             #verticalScrollContainer (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
+            <div [attr.data-index]="rowIndex">
             <ng-template
                 [igxTemplateOutlet]="recordTemplate"
                 [igxTemplateOutletContext]="getContext(rowData, rowIndex)"
                 (cachedViewLoaded)="cachedViewLoaded($event)">
             </ng-template>
+            </div>
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
             <igx-pivot-row [gridID]="id" [index]="rowIndex" [data]="rowData"
