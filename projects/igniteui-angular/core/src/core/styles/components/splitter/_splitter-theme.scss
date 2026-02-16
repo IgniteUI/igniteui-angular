@@ -15,14 +15,18 @@
 
     $variant: map.get($theme, '_meta', 'theme');
 
-    //splitter-size + borders
-    $splitter-size: unitless(map.get($theme, 'size')) + 2;
+    $base-font-size: 16;
+
+    //splitter-size (convert rem to px) + padding
+    $splitter-size: unitless(map.get($theme, 'size')) * $base-font-size + 2;
 
     //calculate the value for the slim(indigo) splitter
     $slim-splitter: calc( 1 / $splitter-size);
 
     %igx-splitter-base {
         &[aria-orientation='horizontal'] {
+            padding-block: rem(1px);
+
             [dir='rtl'] & {
                 flex-direction: row-reverse !important;
             }
@@ -126,10 +130,8 @@
         flex-grow: 1;
         justify-content: center;
         align-items: center;
-        background: $splitter-color;
-        border: rem(1px) solid $splitter-color;
+        background: hsla(from $splitter-color h s l / 0.68);
         z-index: 99;
-        opacity: .68;
         transition: opacity .15s $out-quad !important;
 
         @if $variant != 'indigo' {
@@ -156,31 +158,36 @@
 
         &:hover {
             transition: all .25s ease-out;
-            opacity: 1;
+            background: $splitter-color;
         }
     }
 
     %igx-splitter-bar--focus {
         // Remove the default browser outline styles
-        outline: transparent solid rem(1px);
-        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focus-color');
+        outline: none;
+        box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-color');
+        transition: box-shadow .15s ease-in;
+        z-index: 100;
 
         @if $variant == 'indigo' {
-            box-shadow: none;
-
-            %indigo-splitter-bar {
-                background: var-get($theme, 'focus-color');
-                border-color: var-get($theme, 'focus-color');
-
-                &.igx-splitter-bar--collapsible {
-                    @extend %show-controls;
-                    @extend %expand-bars;
-                }
+            %indigo-splitter-bar.igx-splitter-bar--collapsible {
+                @extend %show-controls;
+                @extend %expand-bars;
             }
+        }
+
+        &:hover {
+            box-shadow: none;
+            transition: box-shadow .25s ease-out;
         }
     }
 
+    %igx-splitter-bar--active {
+        background: var-get($theme, 'bar-color-active');
+    }
+
     %igx-splitter-bar--vertical {
+        padding-inline: rem(1px);
         flex-direction: column;
         height: 100%;
 
@@ -200,6 +207,10 @@
     %igx-splitter-handle {
         background: var-get($theme, 'handle-color');
         border-radius: var-get($theme, 'border-radius');
+    }
+
+    %igx-splitter-handle--active {
+        background: var-get($theme, 'handle-color-active');
     }
 
     %igx-splitter-handle--horizontal {
@@ -231,7 +242,7 @@
     }
 
     %igx-splitter-expander--start {
-        border-bottom: var-get($theme, 'size') solid var-get($theme, 'expander-color');
+        border-block-end: var-get($theme, 'size') solid var-get($theme, 'expander-color');
 
         &::before {
             @extend %igx-splitter-hitbox;
@@ -242,9 +253,12 @@
         }
     }
 
+    %igx-splitter-expander--start--active {
+        border-block-end-color: var-get($theme, 'expander-color-active');
+    }
+
     %igx-splitter-expander--end {
-        border-bottom: unset;
-        border-top: var-get($theme, 'size') solid var-get($theme, 'expander-color');
+        border-block-start: var-get($theme, 'size') solid var-get($theme, 'expander-color');
 
         &::before {
             @extend %igx-splitter-hitbox;
@@ -255,10 +269,14 @@
         }
     }
 
+    %igx-splitter-expander--end--active {
+        border-block-start-color: var-get($theme, 'expander-color-active');
+    }
+
     %igx-splitter-expander--start-vertical {
-        border-top: var-get($theme, 'size') solid transparent;
+        border-block-start: var-get($theme, 'size') solid transparent;
         border-inline-end: var-get($theme, 'size') solid var-get($theme, 'expander-color');
-        border-bottom: var-get($theme, 'size') solid transparent;
+        border-block-end: var-get($theme, 'size') solid transparent;
         border-inline-start: unset;
 
         &::before {
@@ -270,10 +288,15 @@
         }
     }
 
+    %igx-splitter-expander--start-vertical--active {
+        border-block-end-color: transparent;
+        border-inline-end-color: var-get($theme, 'expander-color-active');
+    }
+
     %igx-splitter-expander--end-vertical {
-        border-top: var-get($theme, 'size') solid transparent;
+        border-block-start: var-get($theme, 'size') solid transparent;
         border-inline-end: unset;
-        border-bottom: var-get($theme, 'size') solid transparent;
+        border-block-end: var-get($theme, 'size') solid transparent;
         border-inline-start: var-get($theme, 'size') solid var-get($theme, 'expander-color');
 
         &::before {
@@ -283,5 +306,10 @@
             height: calc(#{map.get($theme, 'size')} * 4);
             width: calc(#{map.get($theme, 'size')} * 3);
         }
+    }
+
+    %igx-splitter-expander--end-vertical--active {
+        border-block-start-color: transparent;
+        border-inline-start-color: var-get($theme, 'expander-color-active');
     }
 }
