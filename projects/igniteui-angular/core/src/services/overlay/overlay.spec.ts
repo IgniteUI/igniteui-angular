@@ -1,6 +1,12 @@
-import { Component, ComponentRef, ElementRef, HostBinding, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ComponentRef, ElementRef, HostBinding, inject, Injector, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { PlatformUtil } from 'igniteui-angular';
+import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
+import { IgxAvatarComponent } from 'igniteui-angular/avatar';
+import { IgxCalendarComponent } from 'igniteui-angular/calendar';
+import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
+import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { first } from 'rxjs/operators';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
@@ -19,6 +25,7 @@ import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     HorizontalAlignment,
     IgxOverlayOutletDirective,
+    IntersectionObserverHelper,
     OffsetMode,
     OverlayCancelableEventArgs,
     OverlayEventArgs,
@@ -27,12 +34,6 @@ import {
     PositionSettings,
     VerticalAlignment
 } from './utilities';
-import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
-import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
-import { IgxAvatarComponent } from 'igniteui-angular/avatar';
-import { IgxCalendarComponent } from 'igniteui-angular/calendar';
-import { IgxToggleDirective } from 'igniteui-angular/directives';
-import { PlatformUtil } from 'igniteui-angular';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -3308,7 +3309,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         });
 
-        it('Should dispose ResizeObserver when overlay is detached.', async () => {
+        it('Should dispose IntersectionObserver when overlay is detached.', async () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
 
             const outlet = fixture.componentInstance.divElement;
@@ -3321,6 +3322,8 @@ describe('igxOverlay', () => {
 
             fixture.detectChanges();
             const positionStrategy = new ContainerPositionStrategy();
+            const observerHelper = (positionStrategy as any).observerHelper as IntersectionObserverHelper;
+            spyOn(observerHelper, 'dispose').and.callThrough();
             const overlaySettings: OverlaySettings = {
                 outlet,
                 positionStrategy
@@ -3341,9 +3344,9 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detach(id);
 
             // Verify strategy was disposed by checking internal state
-            expect((positionStrategy as any)._resizeSubscription).toBeNull();
             expect((positionStrategy as any)._contentElement).toBeNull();
             expect((positionStrategy as any)._outletElement).toBeNull();
+            expect(observerHelper.dispose).toHaveBeenCalled();
         });
 
         // 3. Interaction
