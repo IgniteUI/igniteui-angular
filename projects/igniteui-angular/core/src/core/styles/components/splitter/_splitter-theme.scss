@@ -132,7 +132,7 @@
         align-items: center;
         background: hsla(from $splitter-color h s l / 0.68);
         z-index: 99;
-        transition: opacity .15s $out-quad !important;
+        transition: background .15s $out-quad !important;
 
         @if $variant != 'indigo' {
             @extend %hide-controls;
