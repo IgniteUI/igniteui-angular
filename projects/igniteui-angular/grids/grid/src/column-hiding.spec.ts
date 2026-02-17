@@ -536,8 +536,10 @@ describe('Column Hiding UI #grid', () => {
             grid.columnList.forEach((col) => col.hidden = true);
             tick(30);
             fix.detectChanges();
+            // Column widths should be preserved when all columns are hidden
+            // This allows proper width restoration when columns are unhidden
             grid.columnList.forEach((col) => {
-                expect(col.width).toBe('0px');
+                expect(col.width).not.toBe('0px', 'Column width should not be 0px when hidden');
             });
             fixEl = fix.nativeElement;
             gridEl = grid.nativeElement;
