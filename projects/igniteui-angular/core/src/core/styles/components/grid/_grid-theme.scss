@@ -508,6 +508,7 @@
         grid-template-rows: auto auto auto 1fr auto auto;
         grid-template-columns: 100%;
         overflow: hidden;
+        contain: inline-size;
         box-shadow: $grid-shadow;
 
         @if $variant == 'fluent' {

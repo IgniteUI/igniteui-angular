@@ -86,7 +86,8 @@
         "@angular/forms": "21",
         "hammerjs": "^2.0.8",
         "@types/hammerjs": "^2.0.46",
-        "igniteui-webcomponents": "^6.5.0"
+        "igniteui-webcomponents": "^6.5.0",
+        "igniteui-grid-lite": "~0.4.0"
     },
     "peerDependenciesMeta": {
         "hammerjs": {
@@ -96,6 +97,9 @@
             "optional": true
         },
         "igniteui-webcomponents": {
+            "optional": true
+        },
+        "igniteui-grid-lite": {
             "optional": true
         }
     },
