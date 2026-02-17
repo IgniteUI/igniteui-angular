@@ -6,6 +6,11 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
 /**
+ * @hidden @internal
+ */
+export const getIntersectionObserver = () => globalThis.window?.IntersectionObserver;
+
+/**
  * Mark an element as an igxOverlay outlet container.
  * Directive instance is exported as `overlay-outlet` to be assigned to templates variables:
  * ```html
@@ -357,6 +362,12 @@ export class IntersectionObserverHelper {
             return;
         }
 
+        const intersectionObserver = getIntersectionObserver();
+        // Check if IntersectionObserver is available (not supported in older browsers or SSR)
+        if (!intersectionObserver) {
+            return;
+        }
+
         // Only set up observer once - don't recreate it on every position() call
         if (this.intersectionObserver) {
             return;
@@ -367,7 +378,7 @@ export class IntersectionObserverHelper {
 
         // Set up IntersectionObserver to trigger position checks
         // Use rootMargin to detect when element enters/exits observable area
-        this.intersectionObserver = new IntersectionObserver(
+        this.intersectionObserver = new intersectionObserver(
             (_entries) => {
                 // When IntersectionObserver detects visibility change, start continuous polling
                 this.startPositionUpdateLoop(target, onPositionUpdate);
