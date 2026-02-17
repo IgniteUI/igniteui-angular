@@ -82,6 +82,7 @@
         // additional popover overrides:
         margin: 0;
         border: none;
+        display: block;
 
         @if $variant != 'fluent' {
             border-inline-end: rem(1px) solid var-get($theme, 'border-color');
@@ -188,6 +189,7 @@
         margin: 0;
         padding: 0;
         border: none;
+        display: block;
     }
 
     %overlay-panning {
