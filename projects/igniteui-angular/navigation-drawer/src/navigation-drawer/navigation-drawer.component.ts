@@ -848,7 +848,8 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private togglePopover(show: boolean) {
-        if (!this.drawer) return;
+        // check element and functionality exist:
+        if (typeof this.drawer?.showPopover !== 'function') return;
 
         const popoverOpen = this.drawer.matches(':popover-open');
         if (show === popoverOpen) return;
