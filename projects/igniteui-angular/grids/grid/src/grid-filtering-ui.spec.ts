@@ -132,6 +132,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
+
+            let operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'startsWith', 'Net');
             verifyFilterUIPosition(filterUIRow, grid);
             verifyFilterRowUI(input, close, reset, false);
             expect(grid.rowList.length).toEqual(1);
@@ -143,6 +148,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
+            operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'endsWith', 'script');
             expect(grid.rowList.length).toEqual(2);
             verifyFilterRowUI(input, close, reset, false);
 
@@ -7538,6 +7547,7 @@ const verifyGridSubmenuSize = (gridNativeElement: HTMLElement, expectedSize: ɵS
 const verifyFilteringExpression = (operand: IFilteringExpression, fieldName: string, conditionName: string, searchVal: any) => {
     expect(operand.fieldName).toBe(fieldName);
     expect(operand.condition.name).toBe(conditionName);
+    expect(operand.conditionName).toBe(conditionName);
     expect(operand.searchVal).toEqual(searchVal);
 };
 
