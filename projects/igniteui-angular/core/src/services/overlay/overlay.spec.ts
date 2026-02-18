@@ -8,7 +8,7 @@ import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { first } from 'rxjs/operators';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { IgxOverlayService } from './overlay';
 import { ContainerPositionStrategy } from './position';
