@@ -375,18 +375,35 @@ export class IntersectionObserverHelper {
 
         // Store initial position
         this.previousRect = target.getBoundingClientRect();
+        const viewPortRect = Util.getViewportRect(document);
+        const rootMarin = {
+            top: -Math.floor(this.previousRect.top),
+            bottom: -Math.floor(viewPortRect.height - this.previousRect.bottom),
+            left: -Math.floor(this.previousRect.left),
+            right: -Math.floor(viewPortRect.width - this.previousRect.right),
+        };
 
         // Set up IntersectionObserver to trigger position checks
         // Use rootMargin to detect when element enters/exits observable area
         this.intersectionObserver = new intersectionObserver(
             (_entries) => {
-                // When IntersectionObserver detects visibility change, start continuous polling
-                this.startPositionUpdateLoop(target, onPositionUpdate);
+                for (const entry of _entries) {
+                    const currentRect = entry.boundingClientRect;
+                    if (this.previousRect) {
+                        if (currentRect.top !== this.previousRect.top ||
+                            currentRect.left !== this.previousRect.left ||
+                            currentRect.width !== this.previousRect.width ||
+                            currentRect.height !== this.previousRect.height) {
+                            // When IntersectionObserver detects visibility change, start continuous polling
+                            this.startPositionUpdateLoop(target, onPositionUpdate);
+                        }
+                    }
+                }
             },
             {
                 root: null,
-                rootMargin: '0px', // Expand detection area to catch layout shifts
-                threshold: [1] // Detect when element becomes partially or fully visible
+                rootMargin: `${rootMarin.top}px ${rootMarin.right}px ${rootMarin.bottom}px ${rootMarin.left}px`, // Expand detection area to catch layout shifts
+                threshold: Array.from({ length: 1001 }, (_, i) => i / 1000) // Detect when element becomes partially or fully visible
             }
         );
 
@@ -403,10 +420,6 @@ export class IntersectionObserverHelper {
         }
 
         const checkAndUpdate = () => {
-            if (!target) {
-                this.updateFrameId = null;
-                return;
-            }
 
             // Check if target has actually moved
             const currentRect = target.getBoundingClientRect();
@@ -418,6 +431,9 @@ export class IntersectionObserverHelper {
                 // Element has moved - update stored position and trigger position update
                 this.previousRect = currentRect;
                 onPositionUpdate();
+            } else{
+                this.updateFrameId = null;
+                return;
             }
 
             // Continue polling while element is visible
