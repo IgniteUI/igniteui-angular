@@ -45,6 +45,7 @@ All notable changes for each version of this project will be documented in this 
         <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'" [hideTriggers]="'keypress,blur'">info</igx-icon>
         <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
         ```
+- `IgxNavigationDrawer` - Integrated HTML Popover API to place overlay elements when not pinned in the top layer, eliminating z-index stacking issues.
 
 - `IgxOverlayService`
     - Integrated HTML Popover API into the overlay service for improved z-index management and layering control.
