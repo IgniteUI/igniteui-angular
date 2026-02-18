@@ -45,8 +45,6 @@ const CLASS_OVERLAY_MAIN = 'igx-overlay';
 const CLASS_SCROLLABLE_DIV = 'scrollableDiv';
 const DEBOUNCE_TIME = 16;
 
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 // Utility function to get all applied to element css from all sources.
 const css = (element) => {
     const sheets = document.styleSheets;
