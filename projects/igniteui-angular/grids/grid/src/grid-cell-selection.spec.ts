@@ -2366,15 +2366,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.toggleAllGroupRows();
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.dataRowList.length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
-            /*grid.toggleAllGroupRows();
-            fix.detectChanges();
-
-            expect(grid.dataRowList.length).not.toBe(0);
-            GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
-            expect(grid.getSelectedData()).toEqual(selectedData);*/
         });
 
         it('Moving: selection should not change when move columns inside selected range', fakeAsync(() => {

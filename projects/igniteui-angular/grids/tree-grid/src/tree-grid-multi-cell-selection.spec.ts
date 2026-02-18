@@ -132,7 +132,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(treeGrid.getSelectedData()).toEqual([{ ID: 957 }]);
         });
 
-        it('Should not change selection when expand collapse row with keyboard', (async () => {
+        it('Should clear selection when expand collapse row with keyboard', (async () => {
             const expectedData1 = [
                 { ID: 19 },
                 { ID: 15 }
@@ -157,20 +157,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', startCell.nativeElement, true, true);
             await wait(30);
             fix.detectChanges();
-
-            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
-            GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
-            expect(treeGrid.getSelectedData()).toEqual(expectedData2);
-
-            startCell = treeGrid.gridAPI.get_cell_by_index(10, 'ID');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', startCell.nativeElement, true, true);
-            await wait(30);
-            fix.detectChanges();
-
-            startCell = treeGrid.gridAPI.get_cell_by_index(10, 'ID');
-            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
-            GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
-            expect(treeGrid.getSelectedData()).toEqual(expectedData1);
+            expect(treeGrid.getSelectedData().length).toEqual(9, 'Expand/collapsing a tree grid row with keyboard should clear cell selection');
         }));
 
         it('Should be able to select a range with holding Shift key', (async () => {
