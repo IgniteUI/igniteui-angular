@@ -125,7 +125,10 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         const context = this.strip.context;
         const grid = context.grid;
         grid.scrollTo(context.data, 0);
-        this.strip.hide();
+
+        if (this.asMenuItems) {
+            this.strip.hide();
+        }
     }
 
     private registerSVGIcons(): void {
