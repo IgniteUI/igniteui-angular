@@ -157,7 +157,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', startCell.nativeElement, true, true);
             await wait(30);
             fix.detectChanges();
-            expect(treeGrid.getSelectedData().length).toEqual(9, 'Expand/collapsing a tree grid row with keyboard should clear cell selection');
+            expect(treeGrid.getSelectedData().length).toEqual(0, 'Expand/collapsing a tree grid row with keyboard should clear cell selection');
         }));
 
         it('Should be able to select a range with holding Shift key', (async () => {
