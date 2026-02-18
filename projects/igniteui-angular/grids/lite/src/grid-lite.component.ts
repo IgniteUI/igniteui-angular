@@ -44,7 +44,8 @@ class IgxGridLite<T extends object = any> extends IgcGridLite<T> {
         '[sortingOptions]': "sortingOptions()",
         '[dataPipelineConfiguration]': "dataPipelineConfiguration()",
         '(sorted)': "onSorted($any($event))",
-        '(filtered)': "onFiltered($any($event))"
+        '(filtered)': "onFiltered($any($event))",
+        'adopt-root-styles': '',
     },
     template: `<ng-content></ng-content>`
 })
