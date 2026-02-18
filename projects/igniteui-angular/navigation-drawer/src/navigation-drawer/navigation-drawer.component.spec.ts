@@ -230,7 +230,7 @@ describe('Navigation Drawer', () => {
             fixture = TestBed.createComponent(TestComponentMiniComponent);
             fixture.detectChanges();
             asideElem = fixture.debugElement.query(By.css('.igx-nav-drawer__aside--mini'));
-            cssProp = getComputedStyle(asideElem.nativeElement).getPropertyValue('--igx-nav-drawer-size--mini');
+            cssProp = getComputedStyle(asideElem.nativeElement).getPropertyValue('--ig-nav-drawer-size--mini');
 
             expect(cssProp).toEqual('56px');
 
