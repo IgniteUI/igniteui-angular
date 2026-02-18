@@ -115,7 +115,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         // UI tests string column with value in input
-        it('UI tests on string column', fakeAsync(() => {
+        fit('UI tests on string column', fakeAsync(() => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -132,6 +132,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
+            let operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'startsWith', 'Net');
             verifyFilterUIPosition(filterUIRow, grid);
             verifyFilterRowUI(input, close, reset, false);
             expect(grid.rowList.length).toEqual(1);
@@ -142,6 +146,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.typeValueInFilterRowInput('script', fix, input);
             tick();
             fix.detectChanges();
+
+            operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'endsWith', 'script');
 
             expect(grid.rowList.length).toEqual(2);
             verifyFilterRowUI(input, close, reset, false);
