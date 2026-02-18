@@ -1,4 +1,5 @@
-export const TGRID_DATA = [
+import { IProductNode } from "../models/product-category.interface";
+export const TGRID_DATA: IProductNode[] = [
     { ID: 1, ParentID: -1, Name: 'Foods', UnitPrice: 0, AddedDate: new Date('2009-06-19'), Discontinued: false },
     { ID: 101, ParentID: 1, Name: 'Chef Antons Gumbo Mix', UnitPrice: 21.35, AddedDate: new Date('2011-11-11'), Discontinued: true },
     { ID: 102, ParentID: 1, Name: 'Grandmas Boysenberry Spread', UnitPrice: 25, AddedDate: new Date('2017-12-17'), Discontinued: false },
