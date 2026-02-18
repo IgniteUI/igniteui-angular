@@ -214,6 +214,315 @@ describe('PDF Exporter', () => {
         expect(args.pdf).toBeDefined();
     });
 
+    describe('Custom Font Support', () => {
+        beforeEach(() => {
+            spyOn(console, 'warn');
+        });
+
+        it('should export without custom font when customFont is not set', (done) => {
+            expect(options.customFont).toBeUndefined();
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle custom font being set to null', (done) => {
+            options.customFont = null as any;
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle custom font being set to undefined', (done) => {
+            options.customFont = undefined;
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should fall back to helvetica when custom font with empty name is provided', (done) => {
+            options.customFont = {
+                name: '',
+                data: 'someBase64Data'
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should fall back to helvetica when custom font with empty data is provided', (done) => {
+            options.customFont = {
+                name: 'TestFont',
+                data: ''
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should fall back to helvetica when custom font with both empty name and data is provided', (done) => {
+            options.customFont = {
+                name: '',
+                data: ''
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should export with custom font and portrait orientation when font config is incomplete', (done) => {
+            options.customFont = {
+                name: '',
+                data: ''
+            };
+            options.pageOrientation = 'portrait';
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should export with incomplete custom font and different page sizes', (done) => {
+            const pageSizes = ['a3', 'letter'];
+            let completed = 0;
+
+            const exportNext = (index: number) => {
+                if (index >= pageSizes.length) {
+                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(pageSizes.length);
+                    done();
+                    return;
+                }
+
+                const opts = new IgxPdfExporterOptions('Test');
+                opts.pageSize = pageSizes[index];
+                opts.customFont = {
+                    name: '',
+                    data: ''
+                };
+
+                exporter.exportEnded.pipe(first()).subscribe(() => {
+                    completed++;
+                    exportNext(completed);
+                });
+
+                exporter.exportData(SampleTestData.contactsData(), opts);
+            };
+
+            exportNext(0);
+        });
+
+        it('should export with incomplete custom font and table borders disabled', (done) => {
+            options.customFont = {
+                name: '',
+                data: ''
+            };
+            options.showTableBorders = false;
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle customFont object with only name property', (done) => {
+            options.customFont = {
+                name: 'TestFont'
+            } as any;
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle customFont object with only data property', (done) => {
+            options.customFont = {
+                data: 'someData'
+            } as any;
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle customFont as empty object', (done) => {
+            options.customFont = {} as any;
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle customFont with whitespace-only name', (done) => {
+            options.customFont = {
+                name: '   ',
+                data: 'someData'
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle customFont with whitespace-only data', (done) => {
+            options.customFont = {
+                name: 'TestFont',
+                data: '   '
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                expect(console.warn).toHaveBeenCalled();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle customFont with bold variant set to null', (done) => {
+            options.customFont = {
+                name: '',
+                data: '',
+                bold: null as any
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle customFont with bold variant set to undefined', (done) => {
+            options.customFont = {
+                name: '',
+                data: '',
+                bold: undefined
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle customFont with bold as empty object', (done) => {
+            options.customFont = {
+                name: '',
+                data: '',
+                bold: {} as any
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should reset font configuration when exporting again without customFont', (done) => {
+            let exportCallCount = 0;
+
+            // First export uses a custom font
+            options.customFont = {
+                name: 'CustomFont',
+                data: ''
+            } as any;
+
+            const subscription = exporter.exportEnded.subscribe((args) => {
+                exportCallCount++;
+
+                if (exportCallCount === 1) {
+                    // After the first export with custom font
+                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                    expect(args.pdf).toBeDefined();
+
+                    // Clear customFont and export again
+                    options.customFont = undefined as any;
+                    exporter.exportData(SampleTestData.contactsData(), options);
+                    return;
+                }
+
+                if (exportCallCount === 2) {
+                    // Second export should succeed and not reuse previous custom font settings
+                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(2);
+                    expect(args.pdf).toBeDefined();
+                    subscription.unsubscribe();
+                    done();
+                }
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+    });
+
     describe('Pivot Grid Export', () => {
         it('should export pivot grid with single dimension', async () => {
             const pivotData: IExportRecord[] = [

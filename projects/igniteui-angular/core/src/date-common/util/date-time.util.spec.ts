@@ -686,7 +686,7 @@ describe(`DateTimeUtil Unit tests`, () => {
 
         // returns the equivalent of the predefined numeric formats as date parts
         // should be transformed as inputFormats for editing (numeric year, 2-digit parts for the rest)
-        expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'short')).toBe('MM/dd/yyyy, hh:mm tt');
+        expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'short')).toBe('MM/dd/yyyy, hh:mm tt');
         expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'shortDate')).toBe('MM/dd/yyyy');
         expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'shortTime').normalize('NFKD')).toBe('hh:mm tt');
         expect(DateTimeUtil.getNumericInputFormat(locale, angularFormatter, 'mediumTime').normalize('NFKD')).toBe('hh:mm:ss tt');

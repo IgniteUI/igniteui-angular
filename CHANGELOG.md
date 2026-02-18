@@ -2,21 +2,39 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 21.2.0
-
-### New Features
-
-- `IgxCombo`, `IgxSimpleCombo`
-    - Introduced the ability for Combo and Simple Combo to close the dropdown list and move the focus to the next focusable element on "Tab" press and clear the selection if the combo is collapsed on "Escape".
-
-### Breaking Changes
-
-- `igxForOf`, `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`, `igxPivotGrid`
-    - original `data` array mutations (like adding/removing/moving records in the original array) are no longer detected automatically. Components need an array ref change for the change to be detected.
-
 ## 21.1.0
 
 ### New Features
+
+- `IgxPdfExporterService`
+    - Added `customFont` property to `IgxPdfExporterOptions` for Unicode character support in PDF exports. By default, the PDF exporter uses Helvetica, which only supports basic Latin characters. When exporting data containing non-Latin characters (Cyrillic, Chinese, Japanese, Arabic, Hebrew, special symbols, etc.), you can now provide a custom TrueType font (TTF) with the required character glyphs.
+
+        ```typescript
+        import { IgxPdfExporterService, IgxPdfExporterOptions } from 'igniteui-angular/grids/core';
+        import { NOTO_SANS_REGULAR, NOTO_SANS_BOLD } from './fonts/noto-sans';
+
+        constructor(private pdfExporter: IgxPdfExporterService) {}
+
+        exportWithUnicodeSupport() {
+            const options = new IgxPdfExporterOptions('GridExport');
+            options.customFont = {
+                name: 'NotoSans',
+                data: NOTO_SANS_REGULAR,  // Base64-encoded TTF font data
+                bold: {
+                    name: 'NotoSans-Bold',
+                    data: NOTO_SANS_BOLD  // Optional: Base64-encoded bold TTF font data
+                }
+            };
+            
+            this.pdfExporter.export(this.grid, options);
+        }
+        ```
+
+        Key features:
+        - Supports any TrueType font (TTF) provided as Base64-encoded data
+        - Optional bold font variant for header styling
+        - Automatic fallback to Helvetica if custom font loading fails
+        - Works with all grid types (IgxGrid, IgxTreeGrid, IgxHierarchicalGrid, IgxPivotGrid)
 
 - `IgxTooltipTarget`
     - Added new properties:
@@ -27,8 +45,23 @@ All notable changes for each version of this project will be documented in this 
         <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'" [hideTriggers]="'keypress,blur'">info</igx-icon>
         <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
         ```
+- `IgxNavigationDrawer` - Integrated HTML Popover API to place overlay elements when not pinned in the top layer, eliminating z-index stacking issues.
 
-# Localization(i18n)
+### General
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - Improved performance by dynamically adjusting the scroll throttle based on the data displayed in grid.
+
+- `IgxCombo`, `IgxSimpleCombo`
+    - Combo and Simple Combo now close the dropdown list and move the focus to the next focusable element on "Tab" press and clear the selection if the combo is collapsed on "Escape".
+
+### Breaking Changes
+
+- `igxForOf`, `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`, `igxPivotGrid`
+    - original `data` array mutations (like adding/removing/moving records in the original array) are no longer detected automatically. Components need an array ref change for the change to be detected.
+- `IgxGridGroupByAreaComponent` has moved from the `grids/core` to the `grids/grid` entry point. The `ng update` migration will prompt you to optionally migrate your imports to the new entry point.
+
+### Localization(i18n)
 
 - `IgxActionStrip`, `IgxBanner`, `IgxCalendar`, `IgxCarousel`, `IgxChip`, `IgxCombo`, `IgxDatePicker`, `IgxDateRangePicker`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxInputs`, `IgxList`, `IgxPaginator`, `IgxQueryBuilder`, `IgxTimePicker`, `IgxTree`
   - New `Intl` implementation for all currently supported components that format and render data like dates and numbers.

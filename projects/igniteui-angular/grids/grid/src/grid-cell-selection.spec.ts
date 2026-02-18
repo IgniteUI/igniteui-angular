@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
-import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 import {
     SelectionWithScrollsComponent,
     SelectionWithTransactionsComponent,
@@ -982,7 +982,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();

@@ -187,11 +187,12 @@ describe('IgxGrid - Cell merging #grid', () => {
                 hasClass(mergedCell, 'igx-grid__td--merged-hovered', true);
             });
 
-            it('should set correct size to merged cell that spans multiple rows that have different sizes.', () => {
+            it('should set correct size to merged cell that spans multiple rows that have different sizes.', async() => {
                 const col = grid.getColumnByName('ID');
                 col.bodyTemplate = fix.componentInstance.customTemplate;
                 fix.detectChanges();
-                grid.verticalScrollContainer.recalcUpdateSizes();
+                await wait(100);
+                fix.detectChanges();
                 grid.dataRowList.toArray().forEach(x => x.cdr.detectChanges());
                 const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
                 // one row is 100px, other is 200, 2px border

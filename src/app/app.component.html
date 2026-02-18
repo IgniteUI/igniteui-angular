@@ -1,7 +1,7 @@
 <div class="main">
     <igx-nav-drawer #navdrawer
         [enableGestures]="drawerState.enableGestures" id="navdrawer"
-        [isOpen]="drawerState.open"
+        [(isOpen)]="drawerState.open"
         [(pin)]="drawerState.pin" [position]="drawerState.position">
 
         <ng-template igxDrawer>

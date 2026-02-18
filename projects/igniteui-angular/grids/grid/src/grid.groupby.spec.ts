@@ -169,11 +169,11 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(8);
 
-        const expectedValue1 = groupRows[1].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
+        const expectedValue1 = groupRows[1].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
         const actualValue1 = groupRows[1].element.nativeElement.querySelector('.igx-group-label__text').textContent;
-        const expectedValue2 = groupRows[2].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
+        const expectedValue2 = groupRows[2].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
         const actualValue2 = groupRows[2].element.nativeElement.querySelector('.igx-group-label__text').textContent;
-        const expectedValue3 = groupRows[3].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
+        const expectedValue3 = groupRows[3].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
         const actualValue3 = groupRows[3].element.nativeElement.querySelector('.igx-group-label__text').textContent;
 
         expect(actualValue1).toEqual(expectedValue1);
@@ -302,7 +302,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         const groupRows = grid.groupsRowList.toArray();
-        const expectedValue1 = groupRows[0].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
+        const expectedValue1 = groupRows[0].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
         const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent;
         expect(expectedValue1).toEqual(actualValue1);
     }));
@@ -319,7 +319,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         const groupRows = grid.groupsRowList.toArray();
-        const expectedValue1 = groupRows[0].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[4].textContent;
+        const expectedValue1 = groupRows[0].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[4].textContent;
         const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent;
         expect(expectedValue1).toEqual(actualValue1);
     }));

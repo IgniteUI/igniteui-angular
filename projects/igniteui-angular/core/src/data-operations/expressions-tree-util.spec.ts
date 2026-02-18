@@ -1,6 +1,6 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { recreateTree, recreateTreeFromFields } from './expressions-tree-util';
+import { recreateExpression, recreateTree, recreateTreeFromFields } from './expressions-tree-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 import type { EntityType, FieldType } from './grid-types';
 
@@ -478,4 +478,30 @@ describe('Unit testing FilteringUtil', () => {
         expect(nestedCondition.condition.name).toBe('greaterThan');
         expect(nestedCondition.condition.logic(200, nestedCondition.searchVal)).toBe(true);
     });
+
+    it('should recreate string expression with correct conditionName', () => {
+        const fields: FieldType[] = [
+            { field: 'Name', dataType: 'string' }
+        ];
+
+        // such expression will exist if user has changed the condition OR restore grid state through the IgxGridState directive
+        const expression: IFilteringExpression = {
+            fieldName: 'Name',
+            conditionName: 'contains',
+            searchVal: 'test',
+            condition: {
+                name: 'startsWith',
+                iconName: 'starts_with',
+                isUnary: false,
+            }
+        };
+
+        const result = recreateExpression(expression, fields);
+
+        expect(result.condition).toBe(IgxStringFilteringOperand.instance().condition('startsWith'));
+        expect(result.condition.logic).toBeDefined();
+        expect(result.conditionName).toBe('startsWith');
+        expect(result.searchVal).toBe('test');
+    });
+
 });

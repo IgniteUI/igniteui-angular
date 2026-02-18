@@ -851,6 +851,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
             fixture.detectChanges();
+            await wait(16);
 
             expect(grid.rowList.length).toEqual(8);
             expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -

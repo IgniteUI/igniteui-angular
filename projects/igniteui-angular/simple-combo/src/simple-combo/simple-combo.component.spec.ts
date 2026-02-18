@@ -2095,6 +2095,29 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(document.activeElement).toEqual(thirdComboInput.nativeElement);
         }));
+
+        it('should lose focus when user closes combo by clicking outside', fakeAsync(() => {
+            // Initially combo is not focused
+            expect(document.activeElement).not.toBe(input.nativeElement);
+
+            // Click inside combo input to focus it
+            input.triggerEventHandler('focus', {});
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            // Verify combo is focused and opened
+            expect(document.activeElement).toBe(input.nativeElement);
+            expect(combo.collapsed).toBe(false);
+
+            // Simulate outside click by clicking on document body
+            // This triggers the blur event which is what happens on outside clicks
+            input.triggerEventHandler('blur', {});
+            document.body.click();
+            tick();
+            fixture.detectChanges();
+
+            expect(document.activeElement).not.toBe(input.nativeElement);
+        }));
     });
 
     describe('Form control tests: ', () => {
