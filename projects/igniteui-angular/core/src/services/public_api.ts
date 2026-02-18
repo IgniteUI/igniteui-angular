@@ -7,7 +7,7 @@ export * from './overlay/overlay';
 export * from './overlay/position';
 export * from './overlay/scroll';
 export {
-    AbsolutePosition, ConnectedFit, HorizontalAlignment, IntersectionObserverHelper, OffsetMode, OverlayAnimationEventArgs, OverlayCancelableEventArgs, OverlayClosingEventArgs,
+    AbsolutePosition, ConnectedFit, HorizontalAlignment, OffsetMode, OverlayAnimationEventArgs, OverlayCancelableEventArgs, OverlayClosingEventArgs,
     OverlayCreateSettings, OverlayEventArgs, OverlaySettings, Point, PositionSettings, RelativePosition, RelativePositionStrategy, Size, VerticalAlignment, Util,
     IgxOverlayOutletDirective
 } from './overlay/utilities';

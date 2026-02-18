@@ -25,7 +25,6 @@ import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     HorizontalAlignment,
     IgxOverlayOutletDirective,
-    IntersectionObserverHelper,
     OffsetMode,
     OverlayCancelableEventArgs,
     OverlayEventArgs,
@@ -3320,8 +3319,7 @@ describe('igxOverlay', () => {
 
             fixture.detectChanges();
             const positionStrategy = new ContainerPositionStrategy();
-            const observerHelper = (positionStrategy as any).observerHelper as IntersectionObserverHelper;
-            spyOn(observerHelper, 'dispose').and.callThrough();
+            spyOn(positionStrategy, 'dispose').and.callThrough();
             const overlaySettings: OverlaySettings = {
                 outlet,
                 positionStrategy
@@ -3342,9 +3340,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detach(id);
 
             // Verify strategy was disposed by checking internal state
-            expect((positionStrategy as any)._contentElement).toBeNull();
-            expect((positionStrategy as any)._outletElement).toBeNull();
-            expect(observerHelper.dispose).toHaveBeenCalled();
+            expect(positionStrategy.dispose).toHaveBeenCalled();
         });
 
         // 3. Interaction

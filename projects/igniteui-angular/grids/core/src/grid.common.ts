@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
 import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
-import { VerticalAlignment, PositionSettings, Point, IntersectionObserverHelper } from 'igniteui-angular/core';
+import { VerticalAlignment, PositionSettings, Point, Util } from 'igniteui-angular/core';
 import { IgxForOfSyncService } from 'igniteui-angular/directives';
 import { scaleInVerBottom, scaleInVerTop } from 'igniteui-angular/animations';
 
@@ -27,9 +27,24 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     public isTop = false;
     public isTopInitialPosition = null;
     public override settings: RowEditPositionSettings;
-    private observerHelper = new IntersectionObserverHelper();
+    private cleanUp: () => void;
 
     public override position(contentElement: HTMLElement, _size: { width: number; height: number }, document?: Document, initialCall?: boolean,
+        target?: Point | HTMLElement): void {
+        this.internalPosition(contentElement, _size, document, initialCall, target);
+        // Use the IntersectionObserverHelper to manage position updates when the target moves
+        if (this.cleanUp) {
+            this.cleanUp();
+        }
+        const targetElement: HTMLElement = target as HTMLElement; // current grid.row
+        this.cleanUp = Util.setupIntersectionObserver(
+            targetElement,
+            document,
+            () => this.internalPosition(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight }, document, false, targetElement)
+        );
+    }
+
+    private internalPosition(contentElement: HTMLElement, _size: { width: number; height: number }, document?: Document, initialCall?: boolean,
         target?: Point | HTMLElement): void {
         const container = this.settings.container; // grid.tbody
         const targetElement: HTMLElement = target as HTMLElement; // current grid.row
@@ -50,19 +65,14 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
 
         super.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight },
             document, initialCall, targetElement);
-
-        // Use the IntersectionObserverHelper to manage position updates when the target moves
-        this.observerHelper.setupIntersectionObserver(
-            targetElement,
-            document,
-            () => this.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight }, document, false, targetElement)
-        );
     }
 
     /**
      * Cleans up the IntersectionObserver and stored references
      */
     public dispose(): void {
-        this.observerHelper.dispose();
+        if (this.cleanUp) {
+            this.cleanUp();
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { IntersectionObserverHelper, PositionSettings } from '../utilities';
+import { PositionSettings, Util } from '../utilities';
 import { GlobalPositionStrategy } from './global-position-strategy';
 
 /**
@@ -6,10 +6,7 @@ import { GlobalPositionStrategy } from './global-position-strategy';
  * These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection
  */
 export class ContainerPositionStrategy extends GlobalPositionStrategy {
-    private observerHelper = new IntersectionObserverHelper();
-    private _contentElement: HTMLElement;
-    private _outletElement: HTMLElement;
-
+    private cleanUp: () => void;
     constructor(settings?: PositionSettings) {
         super(settings);
     }
@@ -18,22 +15,22 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
      * Position the element based on the PositionStrategy implementing this interface.
      */
     public override position(contentElement: HTMLElement): void {
+        // Set up intersection observer
+        if (this.cleanUp) {
+            this.cleanUp();
+        }
+        const outletElement = contentElement.parentElement.parentElement;
+        this.cleanUp = Util.setupIntersectionObserver(
+            outletElement,
+            contentElement.ownerDocument,
+            () => this.internalPosition(contentElement)
+        );
+        this.internalPosition(contentElement);
+    }
+
+    private internalPosition(contentElement: HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
-        const outletElement = contentElement.parentElement.parentElement;
-
-        // Set up intersection observer if not already observing this element
-        if (this._outletElement !== outletElement) {
-            this.dispose();
-            this._contentElement = contentElement;
-            this._outletElement = outletElement;
-            this.observerHelper.setupIntersectionObserver(
-                outletElement,
-                contentElement.ownerDocument,
-                () => this.updatePosition(this._contentElement)
-            );
-        }
-
         this.updatePosition(contentElement);
     }
 
@@ -41,9 +38,9 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
      * Disposes the observer and cleans up references.
      */
     public dispose(): void {
-        this.observerHelper.dispose();
-        this._contentElement = null;
-        this._outletElement = null;
+        if (this.cleanUp) {
+            this.cleanUp();
+        }
     }
 
     private updatePosition(contentElement: HTMLElement): void {

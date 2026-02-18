@@ -8,7 +8,7 @@ import { IScrollStrategy } from './scroll';
 /**
  * @hidden @internal
  */
-export const getIntersectionObserver = () => globalThis.window?.IntersectionObserver;
+const getIntersectionObserver = () => globalThis.window?.IntersectionObserver;
 
 /**
  * Mark an element as an igxOverlay outlet container.
@@ -335,128 +335,71 @@ export class Util {
 
         return 0;
     }
-}
-
-/**
- * @hidden @internal
- * Helper class for managing IntersectionObserver-based position updates
- * Used by position strategies that need to reposition overlays when target elements move
- */
-export class IntersectionObserverHelper {
-    private intersectionObserver: IntersectionObserver | null = null;
-    private updateFrameId: number | null = null;
-    private previousRect: DOMRect | null = null;
-
     /**
      * Sets up IntersectionObserver for a target element and provides position update callbacks
-     * @param target The element to observe
+     * @param element The element to observe
      * @param doc The document context
      * @param onPositionUpdate Callback function to reposition the overlay
      */
-    public setupIntersectionObserver(
-        target: HTMLElement | null,
+    public static setupIntersectionObserver(
+        element: HTMLElement | null,
         doc: Document | null,
         onPositionUpdate: () => void
-    ): void {
-        if (!target || !doc || !(target instanceof HTMLElement)) {
-            return;
+    ): () => void {
+        let io: IntersectionObserver | null = null;
+        let timeoutId: NodeJS.Timeout;
+
+        const cleanUp = () => {
+            io?.disconnect();
+            io = null;
+            clearTimeout(timeoutId);
         }
 
-        const intersectionObserver = getIntersectionObserver();
-        // Check if IntersectionObserver is available (not supported in older browsers or SSR)
-        if (!intersectionObserver) {
-            return;
-        }
-
-        // Only set up observer once - don't recreate it on every position() call
-        if (this.intersectionObserver) {
-            return;
-        }
-
-        // Store initial position
-        this.previousRect = target.getBoundingClientRect();
-        const viewPortRect = Util.getViewportRect(document);
-        const rootMarin = {
-            top: -Math.floor(this.previousRect.top),
-            bottom: -Math.floor(viewPortRect.height - this.previousRect.bottom),
-            left: -Math.floor(this.previousRect.left),
-            right: -Math.floor(viewPortRect.width - this.previousRect.right),
-        };
-
-        // Set up IntersectionObserver to trigger position checks
-        // Use rootMargin to detect when element enters/exits observable area
-        this.intersectionObserver = new intersectionObserver(
-            (_entries) => {
-                for (const entry of _entries) {
-                    const currentRect = entry.boundingClientRect;
-                    if (this.previousRect) {
-                        if (currentRect.top !== this.previousRect.top ||
-                            currentRect.left !== this.previousRect.left ||
-                            currentRect.width !== this.previousRect.width ||
-                            currentRect.height !== this.previousRect.height) {
-                            // When IntersectionObserver detects visibility change, start continuous polling
-                            this.startPositionUpdateLoop(target, onPositionUpdate);
-                        }
-                    }
-                }
-            },
-            {
-                root: null,
-                rootMargin: `${rootMarin.top}px ${rootMarin.right}px ${rootMarin.bottom}px ${rootMarin.left}px`, // Expand detection area to catch layout shifts
-                threshold: Array.from({ length: 1001 }, (_, i) => i / 1000) // Detect when element becomes partially or fully visible
-            }
-        );
-
-        this.intersectionObserver.observe(target);
-    }
-
-    /**
-     * Starts the position update loop that continuously checks if the target element has moved
-     */
-    private startPositionUpdateLoop(target: HTMLElement, onPositionUpdate: () => void): void {
-        // Clear any existing frame
-        if (this.updateFrameId !== null) {
-            return;
-        }
-
-        const checkAndUpdate = () => {
-
-            // Check if target has actually moved
-            const currentRect = target.getBoundingClientRect();
-            if (this.previousRect &&
-                (currentRect.top !== this.previousRect.top ||
-                    currentRect.left !== this.previousRect.left ||
-                    currentRect.width !== this.previousRect.width ||
-                    currentRect.height !== this.previousRect.height)) {
-                // Element has moved - update stored position and trigger position update
-                this.previousRect = currentRect;
+        const refresh = (skip = false, threshold = 1) => {
+            cleanUp();
+            if (!skip) {
                 onPositionUpdate();
-            } else{
-                this.updateFrameId = null;
+            }
+
+            if (!element || !doc) {
                 return;
             }
 
-            // Continue polling while element is visible
-            this.updateFrameId = requestAnimationFrame(checkAndUpdate);
-        };
+            const intersectionObserver = getIntersectionObserver();
+            // Check if IntersectionObserver is available (not supported in older browsers or SSR)
+            if (!intersectionObserver) {
+                return;
+            }
 
-        this.updateFrameId = requestAnimationFrame(checkAndUpdate);
-    }
+            // Store initial position
+            const rect = element.getBoundingClientRect();
+            const viewPortRect = Util.getViewportRect(document);
+            const rootMarin = {
+                top: -Math.floor(rect.top),
+                right: -Math.floor(viewPortRect.width - rect.right),
+                bottom: -Math.floor(viewPortRect.height - rect.bottom),
+                left: -Math.floor(rect.left),
+            };
+            const options = {
+                rootMargin: `${rootMarin.top}px ${rootMarin.right}px ${rootMarin.bottom}px ${rootMarin.left}px`,
+                threshold: Math.max(0, Math.min(1, threshold)) || 1,
+            };
 
-    /**
-     * Cleans up the IntersectionObserver and animation frame
-     */
-    public dispose(): void {
-        if (this.intersectionObserver) {
-            this.intersectionObserver.disconnect();
-            this.intersectionObserver = null;
+            let isFirstUpdate = true;
+            io = new intersectionObserver((e) => {
+                const ratio = e[0].intersectionRatio;
+                if (ratio !== threshold) {
+                    if (!isFirstUpdate) {
+                        return refresh();
+                    }
+                    refresh(false, ratio);
+                }
+
+                isFirstUpdate = false;
+            }, options);
+            io.observe(element);
         }
-
-        if (this.updateFrameId !== null) {
-            cancelAnimationFrame(this.updateFrameId);
-            this.updateFrameId = null;
-        }
-
-        this.previousRect = null;
+        refresh(true);
+        return cleanUp;
     }
 }
