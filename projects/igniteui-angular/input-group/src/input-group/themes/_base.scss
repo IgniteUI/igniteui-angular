@@ -95,24 +95,26 @@ $base-scale-size: (
         [igxPrefix] {
             color: var-get($theme, 'input-prefix-color');
             background: var-get($theme, 'input-prefix-background');
+            cursor: default;
         }
 
         igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
         [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
             color: var-get($theme, 'input-suffix-color');
             background: var-get($theme, 'input-suffix-background');
+            cursor: default;
         }
 
         @include e(toggle-button) {
-            cursor: pointer;
             color: var(--toggle-button-foreground);
             background: var(--toggle-button-background);
+            cursor: pointer;
         }
 
         @include e(clear-button) {
-            cursor: pointer;
             color: var(--clear-button-foreground);
             background: var(--clear-button-background);
+            cursor: pointer;
         }
 
         @include e(clear-icon) {
@@ -526,6 +528,11 @@ $base-scale-size: (
             @include e(toggle-button) {
                 color: var(--toggle-button-foreground-disabled);
                 background: var(--toggle-button-background-disabled);
+                cursor: default;
+            }
+
+            @include e(clear-button) {
+                cursor: default;
             }
 
             @include e(clear-icon) {
@@ -550,5 +557,16 @@ $base-scale-size: (
             /* stylelint-enable max-nesting-depth */
         }
 
+    }
+
+    igx-combo .igx-input-group:not(.igx-input-group--disabled),
+    igx-select .igx-input-group:not(.igx-input-group--disabled) {
+        .igx-input-group__input,
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            cursor: pointer;
+        }
     }
 }
