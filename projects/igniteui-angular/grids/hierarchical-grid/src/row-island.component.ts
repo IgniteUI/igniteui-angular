@@ -103,6 +103,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this.key = value;
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the resource strings.
      *

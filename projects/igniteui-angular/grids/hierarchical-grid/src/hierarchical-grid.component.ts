@@ -577,6 +577,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this._hGridSchema;
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the resource strings.
      *
