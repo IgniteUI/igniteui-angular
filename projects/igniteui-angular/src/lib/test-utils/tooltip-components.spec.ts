@@ -2,6 +2,9 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { ITooltipHideEventArgs, ITooltipShowEventArgs, IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 
 @Component({
     template: `
@@ -203,4 +206,32 @@ export class IgxTooltipNestedTooltipsComponent {
     @ViewChild('tooltipLevel1', { read: IgxTooltipDirective, static: true }) public tooltipLevel1: IgxTooltipDirective;
     @ViewChild('tooltipLevel2', { read: IgxTooltipDirective, static: true }) public tooltipLevel2: IgxTooltipDirective;
     @ViewChild('tooltipLevel3', { read: IgxTooltipDirective, static: true }) public tooltipLevel3: IgxTooltipDirective;
+}
+
+@Component({
+    template: `
+    <div #target1 style="background: red; width: 20px; height: 20px;" [igxTooltipTarget]="tooltip1">
+        <div #tooltip1="tooltip" igxTooltip>{{ message }}</div>
+    </div>
+    <button #target2 igxIconButton="flat" [igxTooltipTarget]="tooltip2">
+        <igx-icon>palette</igx-icon>
+        <div #tooltip2="tooltip" igxTooltip>{{ message }}</div>
+    </button>
+    <button #target3 igxButton="flat" [igxTooltipTarget]="tooltip3">
+        Button
+        <div #tooltip3="tooltip" igxTooltip>{{ message }}</div>
+    </button>
+    `,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxIconComponent, IgxIconButtonDirective, IgxButtonDirective]
+})
+export class IgxTooltipSizeComponent {
+    @ViewChild('target1', { read: IgxTooltipTargetDirective, static: true }) public target1: IgxTooltipTargetDirective;
+    @ViewChild('target2', { read: IgxTooltipTargetDirective, static: true }) public target2: IgxTooltipTargetDirective;
+    @ViewChild('target3', { read: IgxTooltipTargetDirective, static: true }) public target3: IgxTooltipTargetDirective;
+
+    @ViewChild('tooltip1', { read: IgxTooltipDirective, static: true }) public tooltip1: IgxTooltipDirective;
+    @ViewChild('tooltip2', { read: IgxTooltipDirective, static: true }) public tooltip2: IgxTooltipDirective;
+    @ViewChild('tooltip3', { read: IgxTooltipDirective, static: true }) public tooltip3: IgxTooltipDirective;
+
+    public message: string = 'Long tooltip message for testing purposes';
 }

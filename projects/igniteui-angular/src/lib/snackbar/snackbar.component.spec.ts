@@ -14,7 +14,8 @@ describe('IgxSnackbar', () => {
             imports: [
                 NoopAnimationsModule,
                 SnackbarInitializeTestComponent,
-                SnackbarCustomContentComponent
+                SnackbarCustomContentComponent,
+                SnackbarSizeTestComponent
             ]
         }).compileComponents();
     }));
@@ -183,6 +184,28 @@ describe('IgxSnackbar', () => {
         expect(customPositionSettings.openAnimation.options.params).toEqual({duration: '1000ms'});
         expect(customPositionSettings.minSize).toEqual({height: 100, width: 100});
     });
+
+    it('correctly sizes the snackbar/overlay content when inside an element - issue #16458', () => {
+        const fix = TestBed.createComponent(SnackbarSizeTestComponent);
+        fix.detectChanges();
+        snackbar = fix.componentInstance.snackbar;
+
+        const parentDivRect = snackbar.element.parentElement.getBoundingClientRect();
+        expect(parentDivRect.width).toBe(600);
+
+        snackbar.open();
+        fix.detectChanges();
+
+        const snackbarRect = snackbar.element.getBoundingClientRect();
+        const overlayContentRect = snackbar.element.parentElement.getBoundingClientRect();
+        const { marginLeft, marginRight, paddingLeft, paddingRight } = getComputedStyle(snackbar.element);
+        const horizontalMargins = parseFloat(marginLeft) + parseFloat(marginRight);
+        const horizontalPaddings = parseFloat(paddingLeft) + parseFloat(paddingRight);
+        const contentWidth = 200;
+
+        expect(snackbarRect.width).toEqual(contentWidth + horizontalPaddings);
+        expect(overlayContentRect.width).toEqual(snackbarRect.width + horizontalMargins);
+    });
 });
 
 describe('IgxSnackbar with custom content', () => {
@@ -272,4 +295,18 @@ class SnackbarInitializeTestComponent {
 class SnackbarCustomContentComponent {
     @ViewChild(IgxSnackbarComponent, { static: true }) public snackbar: IgxSnackbarComponent;
     public text: string;
+}
+
+@Component({
+    template: `
+    <div style="width: 600px;">
+        <igx-snackbar #snackbar>
+            <div style="width: 200px;">Snackbar Message</div>
+        </igx-snackbar>
+    </div>
+    `,
+    imports: [IgxSnackbarComponent]
+})
+class SnackbarSizeTestComponent {
+    @ViewChild(IgxSnackbarComponent, { static: true }) public snackbar: IgxSnackbarComponent;
 }
