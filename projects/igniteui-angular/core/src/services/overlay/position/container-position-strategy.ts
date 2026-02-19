@@ -6,7 +6,7 @@ import { GlobalPositionStrategy } from './global-position-strategy';
  * These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection
  */
 export class ContainerPositionStrategy extends GlobalPositionStrategy {
-    private cleanUp: () => void;
+    private io: IntersectionObserver | null = null;
     constructor(settings?: PositionSettings) {
         super(settings);
     }
@@ -16,11 +16,9 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
      */
     public override position(contentElement: HTMLElement): void {
         // Set up intersection observer
-        if (this.cleanUp) {
-            this.cleanUp();
-        }
+        this.io?.disconnect();
         const outletElement = contentElement.parentElement.parentElement;
-        this.cleanUp = Util.setupIntersectionObserver(
+        this.io = Util.setupIntersectionObserver(
             outletElement,
             contentElement.ownerDocument,
             () => this.internalPosition(contentElement)
@@ -38,9 +36,8 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
      * Disposes the observer and cleans up references.
      */
     public dispose(): void {
-        if (this.cleanUp) {
-            this.cleanUp();
-        }
+        this.io?.disconnect();
+        this.io = null;
     }
 
     private updatePosition(contentElement: HTMLElement): void {

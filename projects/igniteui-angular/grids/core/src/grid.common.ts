@@ -27,17 +27,15 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     public isTop = false;
     public isTopInitialPosition = null;
     public override settings: RowEditPositionSettings;
-    private cleanUp: () => void;
+    private io: IntersectionObserver | null = null;
 
     public override position(contentElement: HTMLElement, _size: { width: number; height: number }, document?: Document, initialCall?: boolean,
         target?: Point | HTMLElement): void {
         this.internalPosition(contentElement, _size, document, initialCall, target);
         // Use the IntersectionObserverHelper to manage position updates when the target moves
-        if (this.cleanUp) {
-            this.cleanUp();
-        }
+        this.io?.disconnect();
         const targetElement: HTMLElement = target as HTMLElement; // current grid.row
-        this.cleanUp = Util.setupIntersectionObserver(
+        this.io = Util.setupIntersectionObserver(
             targetElement,
             document,
             () => this.internalPosition(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight }, document, false, targetElement)
@@ -71,8 +69,7 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
      * Cleans up the IntersectionObserver and stored references
      */
     public dispose(): void {
-        if (this.cleanUp) {
-            this.cleanUp();
-        }
+        this.io?.disconnect();
+        this.io = null;
     }
 }

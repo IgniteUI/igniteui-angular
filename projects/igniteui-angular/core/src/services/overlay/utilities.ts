@@ -345,61 +345,31 @@ export class Util {
         element: HTMLElement | null,
         doc: Document | null,
         onPositionUpdate: () => void
-    ): () => void {
-        let io: IntersectionObserver | null = null;
-        let timeoutId: NodeJS.Timeout;
-
-        const cleanUp = () => {
-            io?.disconnect();
-            io = null;
-            clearTimeout(timeoutId);
+    ): IntersectionObserver | null {
+        const intersectionObserver = getIntersectionObserver();
+        if (!intersectionObserver) {
+            return null;
         }
-
-        const refresh = (skip = false, threshold = 1) => {
-            cleanUp();
-            if (!skip) {
-                onPositionUpdate();
-            }
-
-            if (!element || !doc) {
-                return;
-            }
-
-            const intersectionObserver = getIntersectionObserver();
-            // Check if IntersectionObserver is available (not supported in older browsers or SSR)
-            if (!intersectionObserver) {
-                return;
-            }
-
-            // Store initial position
-            const rect = element.getBoundingClientRect();
-            const viewPortRect = Util.getViewportRect(document);
-            const rootMarin = {
-                top: -Math.floor(rect.top),
-                right: -Math.floor(viewPortRect.width - rect.right),
-                bottom: -Math.floor(viewPortRect.height - rect.bottom),
-                left: -Math.floor(rect.left),
-            };
-            const options = {
-                rootMargin: `${rootMarin.top}px ${rootMarin.right}px ${rootMarin.bottom}px ${rootMarin.left}px`,
-                threshold: Math.max(0, Math.min(1, threshold)) || 1,
-            };
-
-            let isFirstUpdate = true;
-            io = new intersectionObserver((e) => {
-                const ratio = e[0].intersectionRatio;
-                if (ratio !== threshold) {
-                    if (!isFirstUpdate) {
-                        return refresh();
-                    }
-                    refresh(false, ratio);
-                }
-
-                isFirstUpdate = false;
-            }, options);
-            io.observe(element);
+        if (!element || !doc) {
+            return null;
         }
-        refresh(true);
-        return cleanUp;
+        const rect = element.getBoundingClientRect();
+        const viewPortRect = Util.getViewportRect(document);
+        const rootMargin = {
+            top: -Math.abs(rect.top),
+            right: -Math.abs(viewPortRect.width - rect.right),
+            bottom: -Math.abs(viewPortRect.height - rect.bottom),
+            left: -Math.abs(rect.left),
+        };
+        const options = {
+            rootMargin: `${rootMargin.top}px ${rootMargin.right}px ${rootMargin.bottom}px ${rootMargin.left}px`,
+            threshold: Array.from({ length: 1001 }, (_, i) => i / 1000), // Thresholds from 0 to 1 with step of 0.001
+            root: doc
+        };
+        const io = new intersectionObserver((_e) => {
+            onPositionUpdate();
+        }, options);
+        io.observe(element);
+        return io;
     }
 }
