@@ -3,6 +3,7 @@
 @use 'sass:string';
 @use 'sass:list';
 @use '../../../igniteui-angular/core/src/core/styles/themes' as igx;
+@use 'igniteui-theming/sass/themes/config' as theme;
 @use './variables' as vars;
 
 /// Prefix used for 'global' component CSS vars
@@ -25,44 +26,50 @@ $elements-selector-prefix: 'igc';
 /// @access private
 /// @param {Map} $theme_schema - The component's theme schema
 /// @return {Map} - Updated component theme schema
-@function updateElementName($theme_schema) {
-    $prefix: 'ig';
+@function update-element($theme_schema) {
     $result: $theme_schema;
 
-    @if map.has-key($theme_schema, "name") {
-        $name: map.get($theme_schema, "name");
-        $selector: map.get($theme_schema, "selector") or $name;
+    @if map.has-key($theme_schema, '_meta', 'name') {
+        $name: map.get($theme_schema, '_meta', 'name');
+        $selector: map.get($theme_schema, 'selector') or $name;
         $modified: ();
 
-        // @debug "name: #{$name}";
-
-        @if string.index($name, 'igx-') {
-            $name: list.nth(string.split($name, 'igx-'), -1);
-            $name: '#{$elements-var-prefix}-#{$name}';
-            // @debug "name after: #{$name}";
-            $modified: map.merge($modified, (name: $name));
+        // For exposed components also update the selector with updated element prefix
+        @if list.index(vars.$allowed, #{igx-#{$name}}) {
+            $selector: update-selectors($selector);
         }
 
-        // For exposed components also modify selector with updated element prefix:
-        @if list.index(vars.$allowed, map.get($theme_schema, "name")) {
-            // @debug "selector before: #{$selector}";
-            $selector: updateSelectors($selector);
-            // @debug "selector after: #{$selector}";
-        }
+        $modified: map.merge(
+            $modified,
+            (
+                selector: $selector,
+            )
+        );
 
-        $modified: map.merge($modified, (selector: $selector));
-
+        // INFO: Weird use case! I'm not aware of any component using this, but just in case...
         @if map.has-key($theme_schema, 'themes') {
             $themes: map.get($theme_schema, 'themes');
-            $newThemes: ();
+            $new: ();
+
             @each $name, $sub_schema in $themes {
-                $newThemes: map.set($newThemes, $name, updateElementName($sub_schema));
+                $newThemes: map.set(
+                    $newThemes,
+                    $name,
+                    update-element($sub_schema)
+                );
             }
-            $modified: map.merge($modified, (themes: $newThemes));
+
+            $modified: map.deep-merge(
+                $modified,
+                (
+                    themes: $new,
+                )
+            );
         }
 
         $result: map.merge($result, $modified);
     }
+
     @return $result;
 }
 
@@ -70,7 +77,7 @@ $elements-selector-prefix: 'igc';
 /// @access private
 /// @param {String} $selector - The selector(s) to update
 /// @return {String} - Updated selector(s) with `igc-` prefixed equivalents
-@function updateSelectors($selector) {
+@function update-selectors($selector) {
     $result: ();
 
     @each $sel in $selector {
@@ -83,7 +90,7 @@ $elements-selector-prefix: 'igc';
         }
     }
 
-    @return "#{$result}";
+    @return '#{$result}';
 }
 
 /// Generates an Ignite UI for Angular Elements global theme.
@@ -96,18 +103,13 @@ $elements-selector-prefix: 'igc';
 /// @requires $light-material-schema
 /// @requires {function} is-component
 /// @requires {function} is-used
-@mixin elements-theme(
-    $palette,
-    $schema,
-    $exclude,
-    // $roundness,
-    // $elevation,
-    // $elevations,
-) {
+@mixin elements-theme($palette, $schema, $exclude) {
+    @include theme.configure-variable-prefix($elements-var-prefix);
+
     @include igx.theme-internal(
         $palette: $palette,
         $exclude: $exclude,
         $schema: $schema,
-        $theme-handler: meta.get-function("updateElementName")
+        $theme-handler: meta.get-function('update-element')
     );
 }
