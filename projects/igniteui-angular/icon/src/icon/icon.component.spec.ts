@@ -7,6 +7,7 @@ import type { IconType } from './types';
 
 import { By } from "@angular/platform-browser";
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe("Icon", () => {
 
     describe("Component", () => {

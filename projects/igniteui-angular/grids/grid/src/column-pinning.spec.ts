@@ -13,6 +13,7 @@ import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxColumnActionsComponent } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('Column Pinning UI #grid', () => {
     let fix: ComponentFixture<ColumnPinningTestComponent>;
     let grid: IgxGridComponent;
@@ -22,8 +23,8 @@ describe('Column Pinning UI #grid', () => {
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnPinningTestComponent,
@@ -31,7 +32,7 @@ describe('Column Pinning UI #grid', () => {
                 ColumnPinningWithTemplateTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base', () => {
         beforeEach(() => {
@@ -143,8 +144,8 @@ describe('Column Pinning UI #grid', () => {
         });
 
         it('columnPin event is fired on toggling checkboxes.', waitForAsync(() => {
-            spyOn(grid.columnPin, 'emit').and.callThrough();
-            spyOn(grid.columnPinned, 'emit').and.callThrough();
+            vi.spyOn(grid.columnPin, 'emit');
+            vi.spyOn(grid.columnPinned, 'emit');
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
             fix.detectChanges();
@@ -205,8 +206,8 @@ describe('Column Pinning UI #grid', () => {
         }));
 
         it('columnPin event should fire when pinning and unpining using api', waitForAsync(() => {
-            spyOn(grid.columnPin, 'emit').and.callThrough();
-            spyOn(grid.columnPinned, 'emit').and.callThrough();
+            vi.spyOn(grid.columnPin, 'emit');
+            vi.spyOn(grid.columnPinned, 'emit');
 
             grid.columnList.get(0).pin();
 

@@ -1,13 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxReadOnlyInputDirective } from './read-only-input.directive';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';;
 import { By } from '@angular/platform-browser';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxReadOnlyInputDirective', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -15,7 +16,7 @@ describe('IgxReadOnlyInputDirective', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
     it('should update readOnly property and `igx-input-group--readonly` class correctly', () => {
         const fixture = TestBed.createComponent(TestComponent);
@@ -23,38 +24,38 @@ describe('IgxReadOnlyInputDirective', () => {
 
         const inputGroupDebug = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
         const inputGroupEl = inputGroupDebug.nativeElement as HTMLElement;
-        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeFalse();
+        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeFalsy();
 
         const inputDebug = fixture.debugElement.query(By.css('input'));
         const inputEl = inputDebug.nativeElement as HTMLInputElement;
-        expect(inputEl.readOnly).toBeFalse();
+        expect(inputEl.readOnly).toBeFalsy();
 
         fixture.componentInstance.datePicker.readOnly = true;
         fixture.detectChanges();
-        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeTrue();
-        expect(inputEl.readOnly).toBeTrue();
+        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeTruthy();
+        expect(inputEl.readOnly).toBeTruthy();
 
         fixture.componentInstance.datePicker.readOnly = false;
         fixture.detectChanges();
-        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeFalse();
-        expect(inputEl.readOnly).toBeFalse();
+        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeFalsy();
+        expect(inputEl.readOnly).toBeFalsy();
 
         // When the date-picker component is in dialog mode, the native input is always readonly
         fixture.componentInstance.datePicker.mode = 'dialog';
         fixture.detectChanges();
-        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeFalse();
-        expect(inputEl.readOnly).toBeTrue();
+        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeFalsy();
+        expect(inputEl.readOnly).toBeTruthy();
 
         fixture.componentInstance.datePicker.readOnly = true;
         fixture.detectChanges();
-        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeTrue();
-        expect(inputEl.readOnly).toBeTrue();
+        expect(inputGroupEl.classList.contains('igx-input-group--readonly')).toBeTruthy();
+        expect(inputEl.readOnly).toBeTruthy();
     });
 });
 
 @Component({
     template: `<igx-date-picker></igx-date-picker>`,
-    imports: [IgxDatePickerComponent, IgxReadOnlyInputDirective]
+    imports: [IgxDatePickerComponent]
 })
 class TestComponent {
     @ViewChild(IgxDatePickerComponent, { static: true })

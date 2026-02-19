@@ -1,11 +1,13 @@
 import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxTextSelectionDirective } from './text-selection.directive';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxSelection', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [
                 TriggerTextSelectionComponent,
@@ -14,10 +16,10 @@ describe('IgxSelection', () => {
                 IgxTestFocusDirective
             ]
         });
-    }));
+    });
 
 
-    it('Should select the text which is into the input', fakeAsync(() => {
+    it('Should select the text which is into the input', customFakeAsync(() => {
         const fix = TestBed.createComponent(TriggerTextSelectionComponent);
         fix.detectChanges();
 
@@ -28,7 +30,7 @@ describe('IgxSelection', () => {
         expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
     }));
 
-    it('Should select the text when the input is clicked', fakeAsync(()=> {
+    it('Should select the text when the input is clicked', customFakeAsync(()=> {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         fix.detectChanges();
 
@@ -44,7 +46,7 @@ describe('IgxSelection', () => {
             .toEqual(inputNativeElem.value);
     }));
 
-    it('Should check if the value is selected if based on input type', fakeAsync(() => {
+    it('Should check if the value is selected if based on input type', customFakeAsync(() => {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         const selectableTypes: Types[] = [
             { "text" : "Some Values!" },
@@ -128,7 +130,7 @@ describe('IgxSelection', () => {
         expect(inputNativeElem.selectionStart).toEqual(inputNativeElem.selectionEnd);
     });
 
-    it('should apply selection properly if present on an element with multiple focus handlers', fakeAsync(() => {
+    it('should apply selection properly if present on an element with multiple focus handlers', customFakeAsync(() => {
         const fix = TestBed.createComponent(TextSelectionWithMultipleFocusHandlersComponent);
         fix.detectChanges();
 

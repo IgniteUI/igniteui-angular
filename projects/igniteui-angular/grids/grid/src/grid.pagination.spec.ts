@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { GridWithUndefinedDataComponent } from '../../../test-utils/grid-samples.spec';
 import { PagingComponent, RemotePagingComponent } from '../../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,11 +8,13 @@ import { GridFunctions, PAGER_CLASS } from '../../../test-utils/grid-functions.s
 import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../../test-utils/controls-functions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const grid = fix.componentInstance.grid;
 
     expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
-    expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
+    expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(rowsCount);
 
     if (pagerText != null) {
         expect(grid.nativeElement.querySelector(PAGER_CLASS)).toBeDefined();
@@ -31,8 +33,8 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 
 describe('IgxGrid - Grid Paging #grid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 PagingComponent,
@@ -40,7 +42,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
                 RemotePagingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fix;
     let grid;
@@ -48,7 +50,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
     describe('General', () => {
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fix = TestBed.createComponent(PagingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -86,7 +88,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             // Goto page 3 through API and listen for event
-            spyOn(paginator.pagingDone, 'emit');
+            vi.spyOn(paginator.pagingDone, 'emit');
             paginator.paginate(2);
 
             fix.detectChanges();
@@ -148,14 +150,14 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(5, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(5);
             expect(grid.totalRecords).toBe(10);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA02', []);
 
             grid.totalRecords = 4;
             fix.detectChanges();
 
-            expect(paginator.perPage).toEqual(5, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(5);
             expect(grid.totalRecords).toBe(4);
             verifyGridPager(fix, 4, '1', '1\xA0of\xA01', []);
         });
@@ -164,7 +166,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         it('change paging settings UI', () => {
             fix.detectChanges();
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(3, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(3);
 
             verifyGridPager(fix, 3, '1', '1\xA0of\xA04', []);
 
@@ -174,7 +176,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             ControlsFunction.clickDropDownItem(fix, 2);
 
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(10, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(10);
             verifyGridPager(fix, 10, '1', '1\xA0of\xA01', []);
         });
 
@@ -185,7 +187,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(2, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(2);
             verifyGridPager(fix, 2, '1', '1\xA0of\xA05', []);
 
             // Turn off paging
@@ -211,7 +213,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             expect(grid.paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(2, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(2);
             verifyGridPager(fix, 2, '3', '2\xA0of\xA05', []);
 
             // Change page size to be 5
@@ -435,7 +437,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
     });
 
-    it('should not throw error when data is undefined', fakeAsync(() => {
+    it('should not throw error when data is undefined', customFakeAsync(() => {
         let errorMessage = '';
         fix = TestBed.createComponent(GridWithUndefinedDataComponent);
         try {
@@ -452,7 +454,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         expect(grid.rowList.length).toBe(5);
     }));
 
-    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', fakeAsync(() => {
+    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', customFakeAsync(() => {
         fix = TestBed.createComponent(RemotePagingComponent);
         fix.detectChanges();
         tick();
@@ -461,7 +463,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         expect(grid.paginator.totalPages).toBe(4);
     }));
 
-    it('should get correct rowIndex in remote paging', fakeAsync(() => {
+    it('should get correct rowIndex in remote paging', customFakeAsync(() => {
         fix = TestBed.createComponent(RemotePagingComponent);
         fix.detectChanges();
         tick();

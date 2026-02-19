@@ -1,17 +1,25 @@
 {
   "extends": "../../tsconfig.json",
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "controlFlowPreventingContentProjection": "suppress"
+      }
+    }
+  },
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "types": [
-      "jasmine",
       "node",
       "hammerjs"
     ]
   },
+  "files": [],
   "exclude": [
-    "migrations/**/*.spec.ts",
-    "schematics/**/*.spec.ts",
-    "cypress/**/*.spec.ts"
+    "migrations",
+    "schematics",
+    "cypress",
+    "node_modules"
   ],
   "include": [
     "**/*.spec.ts",

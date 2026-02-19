@@ -1,5 +1,5 @@
 import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusDirective } from './focus.directive';
 
@@ -10,9 +10,11 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxRadioComponent } from '../../../../radio/src/radio/radio.component';
 import { IgxSwitchComponent } from '../../../../switch/src/switch/switch.component';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('igxFocus', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 SetFocusComponent,
@@ -21,9 +23,9 @@ describe('igxFocus', () => {
                 CheckboxPickerComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    it('The second element should be focused', fakeAsync(() => {
+    it('The second element should be focused', customFakeAsync(() => {
         const fix = TestBed.createComponent(SetFocusComponent);
         fix.detectChanges();
 
@@ -34,7 +36,7 @@ describe('igxFocus', () => {
         expect(document.activeElement).toBe(secondElem);
     }));
 
-    it('Should select the last input element when click the button', fakeAsync(() => {
+    it('Should select the last input element when click the button', customFakeAsync(() => {
         const fix = TestBed.createComponent(TriggerFocusOnClickComponent);
         fix.detectChanges();
 
@@ -47,7 +49,7 @@ describe('igxFocus', () => {
         expect(document.activeElement).toBe(lastDiv);
     }));
 
-    it('Should not focus when the focus state is set to false', fakeAsync(() => {
+    it('Should not focus when the focus state is set to false', customFakeAsync(() => {
         const fix = TestBed.createComponent(NoFocusComponent);
         fix.detectChanges();
         tick(16);
@@ -92,7 +94,7 @@ describe('igxFocus', () => {
         expect(directivew.nativeElement).toBe(elementRef.nativeElement);
     });
 
-    it('Should correctly focus igx-checkbox, igx-radio, igx-switch and igx-date-picker', fakeAsync(() => {
+    it('Should correctly focus igx-checkbox, igx-radio, igx-switch and igx-date-picker', customFakeAsync(() => {
         const fix = TestBed.createComponent(CheckboxPickerComponent);
         fix.detectChanges();
         tick(16);

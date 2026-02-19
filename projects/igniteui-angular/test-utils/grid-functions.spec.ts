@@ -1,6 +1,6 @@
 import { DebugElement, QueryList } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { ComponentFixture, tick } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group/src/public_api';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { UIInteractions, wait } from './ui-interactions.spec';
@@ -14,6 +14,7 @@ import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { IgxGridComponent, IgxGridExpandableCellComponent, IgxGridRowComponent } from 'igniteui-angular/grids/grid';
 import { IgxPivotRowComponent } from 'igniteui-angular/grids/pivot-grid/src/pivot-row.component';
 
+import { it, expect } from 'vitest';
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
 const SUMMARY_CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
@@ -307,29 +308,28 @@ export class GridFunctions {
     }
 
     public static verifyColumnIsHidden(column, isHidden: boolean, visibleColumnsCount: number) {
-        expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
+        expect(column.hidden, 'Hidden is not ' + isHidden).toBe(isHidden);
 
         const visibleColumns = column.grid.visibleColumns;
-        expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
-        expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+        expect(visibleColumns.length, 'Unexpected visible columns count!').toBe(visibleColumnsCount);
+        expect(visibleColumns.findIndex((col) => col === column) > -1, 'Unexpected result for visibleColumns collection!').toBe(!isHidden);
     }
 
     public static verifyColumnsAreHidden(columns, isHidden: boolean, visibleColumnsCount: number) {
         const visibleColumns = columns[0].grid.visibleColumns;
         columns.forEach(column => {
-            expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
-            expect(visibleColumns.findIndex((col) => col === column) > -1)
-                .toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+            expect(column.hidden, 'Hidden is not ' + isHidden).toBe(isHidden);
+            expect(visibleColumns.findIndex((col) => col === column) > -1, 'Unexpected result for visibleColumns collection!').toBe(!isHidden);
         });
-        expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
+        expect(visibleColumns.length, 'Unexpected visible columns count!').toBe(visibleColumnsCount);
     }
 
     public static verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
-        expect(column.pinned).toBe(isPinned, 'Pinned is not ' + isPinned);
+        expect(column.pinned, 'Pinned is not ' + isPinned).toBe(isPinned);
 
         const pinnedColumns = column.grid.pinnedColumns;
-        expect(pinnedColumns.length).toBe(pinnedColumnsCount, 'Unexpected pinned columns count!');
-        expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
+        expect(pinnedColumns.length, 'Unexpected pinned columns count!').toBe(pinnedColumnsCount);
+        expect(pinnedColumns.findIndex((col) => col === column) > -1, 'Unexpected result for pinnedColumns collection!').toBe(isPinned);
     }
 
     public static verifyUnpinnedAreaWidth(grid: GridType, expectedWidth: number, includeScrollWidth = true) {

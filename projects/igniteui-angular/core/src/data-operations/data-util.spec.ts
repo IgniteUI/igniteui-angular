@@ -1,4 +1,4 @@
-import { waitForAsync } from '@angular/core/testing';
+import { } from '@angular/core/testing';
 import { DataGenerator } from './test-util/data-generator';
 
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from './sorting-strategy';
@@ -22,14 +22,15 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/public_api';
 import { DefaultDataCloneStrategy } from './data-clone-strategy';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 /* Test sorting */
 const testSort = () => {
     let data: any[] = [];
     let dataGenerator: DataGenerator;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
-    }));
+    });
     describe('Test sorting', () => {
         it('sorts descending column \'number\'', () => {
             const se: ISortingExpression = {
@@ -80,8 +81,8 @@ const testSort = () => {
                 strategy: DefaultSortingStrategy.instance()
             };
             let res = DataUtil.sort(data, [se0]);
-            expect(dataGenerator.getValuesForColumn(res, 'number'))
-                .toEqual([3, 2, 1, 0, 4], 'expressionDefaults.ignoreCase = false');
+            expect(dataGenerator.getValuesForColumn(res, 'number'), 'expressionDefaults.ignoreCase = false')
+                .toEqual([3, 2, 1, 0, 4]);
             se0.ignoreCase = true;
             res = DataUtil.sort(data, [se0]);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
@@ -95,7 +96,7 @@ const testGroupBy = () => {
     let dataGenerator: DataGenerator;
     let expr: ISortingExpression;
     let state: IGroupingState;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
         expr = {
@@ -109,7 +110,7 @@ const testGroupBy = () => {
             expansion: [],
             defaultExpanded: true
         };
-    }));
+    });
     describe('Test groupBy', () => {
         it('groups by descending column "boolean", expanded', () => {
             // sort

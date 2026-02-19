@@ -1,3 +1,4 @@
+import { expect } from 'vitest';
 
 export class CSVWrapper {
     private _data: string;
@@ -10,7 +11,7 @@ export class CSVWrapper {
     }
 
     public verifyData(expectedData: string, message?: string) {
-        expect(this._data).toBe(expectedData, message);
+        expect(this._data, message).toBe(expectedData);
     }
 
     public get noHeadersStringData() {

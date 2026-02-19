@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusTrapDirective } from './focus-trap.directive';
 
@@ -7,12 +7,14 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/time-picker.component';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('igxFocusTrap', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, TrapFocusTestComponent]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -91,7 +93,7 @@ describe('igxFocusTrap', () => {
         expect(document.activeElement).toEqual(button.nativeElement);
     });
 
-    it('should trap focus on element with non-focusable elements', fakeAsync(() => {
+    it('should trap focus on element with non-focusable elements', customFakeAsync(() => {
         const fix = TestBed.createComponent(TrapFocusTestComponent);
         fix.detectChanges();
 
@@ -117,7 +119,7 @@ describe('igxFocusTrap', () => {
         expect(document.activeElement).toEqual(focusTrap.nativeElement);
     }));
 
-    it('should be able to set focusTrap dynamically', fakeAsync(() => {
+    it('should be able to set focusTrap dynamically', customFakeAsync(() => {
         const fix = TestBed.createComponent(TrapFocusTestComponent);
         fix.detectChanges();
 

@@ -1,5 +1,5 @@
 import { ViewChild, Component, DebugElement, OnInit, QueryList } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -15,6 +15,7 @@ import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -22,8 +23,8 @@ describe('Row Pinning #grid', () => {
 
     let fix;
     let grid: IgxGridComponent;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 GridRowConditionalStylingComponent,
@@ -37,7 +38,7 @@ describe('Row Pinning #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('', () => {
         beforeEach(() => {
@@ -145,7 +146,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit rowPinning on pin/unpin.', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
 
             let row = grid.getRowByIndex(0);
             const rowID = row.key;
@@ -173,7 +174,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit correct rowPinning arguments on pin/unpin.', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
 
             const row = grid.getRowByIndex(5);
             const rowID = row.key;
@@ -229,7 +230,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit rowPinned on pin/unpin.', () => {
-            spyOn(grid.rowPinned, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinned, 'emit');
 
             const row = grid.getRowByIndex(0);
             const rowID = row.key;
@@ -256,7 +257,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it(`Should be able to cancel rowPinning on pin/unpin event.`, () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
             let sub = grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
                 e.cancel = true;
             });
@@ -405,8 +406,8 @@ describe('Row Pinning #grid', () => {
             const rowType = grid.getRowByIndex(1);
 
             expect(renderedRow).toBeDefined();
-            expect(renderedRow.disabled).toBeTrue();
-            expect(rowType.disabled).toBeTrue();
+            expect(renderedRow.disabled).toBeTruthy();
+            expect(rowType.disabled).toBeTruthy();
         });
 
         it('should search in both pinned and unpinned rows.', () => {
@@ -1366,7 +1367,7 @@ describe('Row Pinning #grid', () => {
 
         it('should pin rows on OnInit.', () => {
             fix.detectChanges();
-            expect(grid.hasPinnedRecords).toBeTrue();
+            expect(grid.hasPinnedRecords).toBeTruthy();
         });
     });
 
@@ -1384,10 +1385,10 @@ describe('Row Pinning #grid', () => {
             const fourthRow = grid.gridAPI.get_row_by_index(3);
 
             expect(firstRow).toBeDefined();
-            expect(firstRow.nativeElement.classList.contains('eventRow')).toBeTrue();
-            expect(firstRow.nativeElement.classList.contains('oddRow')).toBeFalse();
-            expect(fourthRow.nativeElement.classList.contains('eventRow')).toBeFalse();
-            expect(fourthRow.nativeElement.classList.contains('oddRow')).toBeTrue();
+            expect(firstRow.nativeElement.classList.contains('eventRow')).toBeTruthy();
+            expect(firstRow.nativeElement.classList.contains('oddRow')).toBeFalsy();
+            expect(fourthRow.nativeElement.classList.contains('eventRow')).toBeFalsy();
+            expect(fourthRow.nativeElement.classList.contains('oddRow')).toBeTruthy();
         });
 
         it('Should apply custom CSS bindings to the grid cells/rows. Check the style attribute to match each binding', () => {

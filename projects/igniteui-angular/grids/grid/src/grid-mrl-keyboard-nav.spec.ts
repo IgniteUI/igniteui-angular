@@ -1,5 +1,5 @@
-﻿import { Component, ViewChild } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -13,6 +13,9 @@ import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const DEBOUNCE_TIME = 60;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
@@ -21,12 +24,12 @@ const CELL_BLOCK = `.${GRID_MRL_BLOCK}`;
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, ColumnLayoutTestComponent],
             providers: [IgxGridMRLNavigationService]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -1008,7 +1011,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         });
 
         describe('Column Moving Integration', () => {
-            it('tab navigation should follow correct sequence if a column is moved.', fakeAsync(() => {
+            it('tab navigation should follow correct sequence if a column is moved.', customFakeAsync(() => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
                     // row span 3

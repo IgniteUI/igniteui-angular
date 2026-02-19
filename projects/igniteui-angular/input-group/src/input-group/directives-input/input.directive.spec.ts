@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement, inject } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../input-group.component';
@@ -11,6 +11,8 @@ import { IgxLabelDirective } from '../directives-label/label.directive';
 import { IgxMaskDirective } from 'igniteui-angular/directives';
 import { IgxSuffixDirective } from '../directives-suffix/suffix.directive';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
@@ -25,8 +27,8 @@ const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InputComponent,
                 TextareaComponent,
@@ -45,7 +47,7 @@ describe('IgxInput', () => {
                 FileInputFormComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes an input.', () => {
         const fixture = TestBed.createComponent(InputComponent);
@@ -97,7 +99,7 @@ describe('IgxInput', () => {
         expect(igxInput.placeholder).toBe('Test');
     });
 
-    it('should have an initial filled style when data bound.', fakeAsync(() => {
+    it('should have an initial filled style when data bound.', customFakeAsync(() => {
         const fixture = TestBed.createComponent(InitiallyFilledInputComponent);
         fixture.detectChanges();
 
@@ -269,7 +271,7 @@ describe('IgxInput', () => {
         expect(requiredInputGroups.length).toBe(6);
     });
 
-    it('When updating two inputs with same attribute names through ngModel, label should responds', fakeAsync(() => {
+    it('When updating two inputs with same attribute names through ngModel, label should responds', customFakeAsync(() => {
 
         const fix = TestBed.createComponent(InputsWithSameNameAttributesComponent);
         fix.detectChanges();
@@ -293,7 +295,7 @@ describe('IgxInput', () => {
         });
     }));
 
-    it('should not draw input as invalid when updated through ngModel and input is pristine and untouched', fakeAsync(() => {
+    it('should not draw input as invalid when updated through ngModel and input is pristine and untouched', customFakeAsync(() => {
         const fix = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fix.detectChanges();
 
@@ -338,7 +340,7 @@ describe('IgxInput', () => {
         expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
     });
 
-    it('should correctly update state of input without model when updated trough code', fakeAsync(() => {
+    it('should correctly update state of input without model when updated trough code', customFakeAsync(() => {
         const fixture = TestBed.createComponent(RequiredInputComponent);
         fixture.detectChanges();
 
@@ -362,7 +364,7 @@ describe('IgxInput', () => {
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
     }));
 
-    it('should correctly update state of input when updated through ngModel, no user interactions', fakeAsync(() => {
+    it('should correctly update state of input when updated through ngModel, no user interactions', customFakeAsync(() => {
         const fixture = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fixture.detectChanges();
 
@@ -401,7 +403,7 @@ describe('IgxInput', () => {
         expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
     }));
 
-    it('should correctly update state of input when value is changed via reactive, no user interactions', fakeAsync(() => {
+    it('should correctly update state of input when value is changed via reactive, no user interactions', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
@@ -442,7 +444,7 @@ describe('IgxInput', () => {
         expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
     }));
 
-    it('should correctly update state of input when updated through ngModel, with user interactions', fakeAsync(() => {
+    it('should correctly update state of input when updated through ngModel, with user interactions', customFakeAsync(() => {
         const fixture = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fixture.detectChanges();
 
@@ -489,7 +491,7 @@ describe('IgxInput', () => {
         expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
     }));
 
-    it('should correctly update state of input when value is changed via reactive, with user interactions', fakeAsync(() => {
+    it('should correctly update state of input when value is changed via reactive, with user interactions', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
@@ -535,7 +537,7 @@ describe('IgxInput', () => {
         expect(input.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
     }));
 
-    it('should correctly update enabled/disabled state of igxInput when changed via reactive form', fakeAsync(() => {
+    it('should correctly update enabled/disabled state of igxInput when changed via reactive form', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
         const igxInput = fixture.componentInstance.strIgxInput;
@@ -688,7 +690,7 @@ describe('IgxInput', () => {
         expect(igxInput.value).toBe('Test');
     });
 
-    it('Should properly initialize when used as a reactive form control - without initial validators/toggle validators', fakeAsync(() => {
+    it('Should properly initialize when used as a reactive form control - without initial validators/toggle validators', customFakeAsync(() => {
         const fix = TestBed.createComponent(InputReactiveFormComponent);
         fix.detectChanges();
         // 1) check if label's --required class and its asterisk are applied
@@ -823,7 +825,7 @@ describe('IgxInput', () => {
         expect(model.inputValue).toEqual('');
     });
 
-    it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+    it('Should update validity state when programmatically setting errors on reactive form controls', customFakeAsync(() => {
         const fix = TestBed.createComponent(InputReactiveFormComponent);
         fix.detectChanges();
 
@@ -856,7 +858,7 @@ describe('IgxInput', () => {
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
     }));
 
-    it('should keep state as initial on type when there are no errors and validators on reactive form controls', fakeAsync(() => {
+    it('should keep state as initial on type when there are no errors and validators on reactive form controls', customFakeAsync(() => {
         const fix = TestBed.createComponent(InputReactiveFormComponent);
         fix.detectChanges();
 
@@ -889,7 +891,7 @@ describe('IgxInput', () => {
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
     }));
 
-    it('should mark the reactive form control as touched when igxInput loses focus', fakeAsync(() => {
+    it('should mark the reactive form control as touched when igxInput loses focus', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
@@ -910,7 +912,7 @@ describe('IgxInput', () => {
         expect(formControl.touched).toBe(true);
     }));
 
-    it('should update validity when control is marked as touched', fakeAsync(() => {
+    it('should update validity when control is marked as touched', customFakeAsync(() => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
@@ -1317,7 +1319,7 @@ class InputReactiveFormComponent {
 
 @Component({
     template: `
-        <form [formGroup]="formWithFileInput" (ngSubmit)="onSubmit()">
+        <form [formGroup]="formWithFileInput">
             <igx-input-group #igxInputGroup>
                 <input igxInput #fileInput name="fileInput" type="file" formControlName="fileInput" />
                 <label igxLabel for="fileInput">File Name</label>

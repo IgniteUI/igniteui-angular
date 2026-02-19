@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     IgxCardComponent,
@@ -16,6 +16,7 @@ import { IgxButtonDirective } from '../../../directives/src/directives/button/bu
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxIconButtonDirective } from '../../../directives/src/directives/button/icon-button.directive';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('Card', () => {
     // TODO: Refactor card tests to reuse components
     const baseClass = 'igx-card';
@@ -60,8 +61,8 @@ describe('Card', () => {
         media: `${baseClass}__media`
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InitCardComponent,
                 InitOutlinedCardComponent,
@@ -71,7 +72,7 @@ describe('Card', () => {
                 HorizontalCardComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes default card', () => {
         const fixture = TestBed.createComponent(InitCardComponent);
@@ -82,9 +83,9 @@ describe('Card', () => {
         expect(card).toBeDefined();
         expect(card.getAttribute('role')).toEqual('group');
 
-        expect(card).toHaveClass(`${baseClass}`);
-        expect(card).not.toHaveClass(classes.elevated);
-        expect(card).not.toHaveClass(classes.horizontal);
+        expect(card.classList.contains(`${baseClass}`)).toBe(true);
+        expect(card.classList.contains(classes.elevated)).toBe(false);
+        expect(card.classList.contains(classes.horizontal)).toBe(false);
         expect(card.id).toContain(`${baseClass}-`);
     });
 
@@ -96,7 +97,7 @@ describe('Card', () => {
         const card = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
         expect(instance.horizontal).toEqual(true);
-        expect(card).toHaveClass(classes.horizontal);
+        expect(card.classList.contains(classes.horizontal)).toBe(true);
     });
 
     it('Initializes card header', () => {
@@ -110,8 +111,8 @@ describe('Card', () => {
         // expect(header.getAttribute('role')).toEqual('header');
         expect(header.getAttribute('role')).toBeNull();
 
-        expect(header).toHaveClass(classes.header.base);
-        expect(header).not.toHaveClass(classes.header.vertical);
+        expect(header.classList.contains(classes.header.base)).toBe(true);
+        expect(header.classList.contains(classes.header.vertical)).toBe(false);
     });
 
     it('Initializes vertical card header', () => {
@@ -119,7 +120,7 @@ describe('Card', () => {
         fixture.detectChanges();
 
         const header = fixture.debugElement.query(By.css('igx-card-header')).nativeElement;
-        expect(header).toHaveClass(classes.header.vertical);
+        expect(header.classList.contains(classes.header.vertical)).toBe(true);
     });
 
     it('Initializes title, subtitle, and thumb in header', () => {
@@ -131,15 +132,15 @@ describe('Card', () => {
         const subtitle = fixture.debugElement.query(By.directive(IgxCardHeaderSubtitleDirective));
 
         // Check to see if thumbnail has been inserted in the thumbnail section;
-        expect(thumb.parent.nativeElement).toHaveClass(classes.header.thumb);
+        expect(thumb.parent.nativeElement.classList.contains(classes.header.thumb)).toBe(true);
 
         // Check to see if the title and subtitle have been
         // inserted in the titles section;
-        expect(title.parent.nativeElement).toHaveClass(classes.header.titles);
-        expect(subtitle.parent.nativeElement).toHaveClass(classes.header.titles);
+        expect(title.parent.nativeElement.classList.contains(classes.header.titles)).toBe(true);
+        expect(subtitle.parent.nativeElement.classList.contains(classes.header.titles)).toBe(true);
 
-        expect(title.nativeElement).toHaveClass(classes.header.title);
-        expect(subtitle.nativeElement).toHaveClass(classes.header.subtitle);
+        expect(title.nativeElement.classList.contains(classes.header.title)).toBe(true);
+        expect(subtitle.nativeElement.classList.contains(classes.header.subtitle)).toBe(true);
 
         // Validate Content
         expect(thumb.nativeElement.textContent).toEqual('Thumb');
@@ -166,7 +167,7 @@ describe('Card', () => {
 
         expect(media).toBeDefined();
         expect(mediaContent.textContent).toEqual('media');
-        expect(media.nativeElement).toHaveClass(classes.media);
+        expect(media.nativeElement.classList.contains(classes.media)).toBe(true);
     });
 
     it('Initializes actions with buttons', () => {
@@ -176,9 +177,9 @@ describe('Card', () => {
         const actions = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
 
         expect(actions).toBeDefined();
-        expect(actions).toHaveClass(classes.actions.base);
-        expect(actions).not.toHaveClass(classes.actions.justify);
-        expect(actions).not.toHaveClass(classes.actions.vertical);
+        expect(actions.classList.contains(classes.actions.base)).toBe(true);
+        expect(actions.classList.contains(classes.actions.justify)).toBe(false);
+        expect(actions.classList.contains(classes.actions.vertical)).toBe(false);
     });
 
     it('Should use Material Icons font-family for igx-icon in card content', () => {
@@ -199,7 +200,7 @@ describe('Card', () => {
         const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
 
         expect(actionsInstance.vertical).toEqual(true);
-        expect(actionsElement).toHaveClass(classes.actions.vertical);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(true);
     });
 
     it('Should align actions horizontally and vertically when explicitly set', () => {
@@ -213,7 +214,7 @@ describe('Card', () => {
         fixture.detectChanges();
 
         expect(actionsInstance.vertical).toEqual(false);
-        expect(actionsElement).not.toHaveClass(classes.actions.vertical);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(false);
     });
 
     it('Should display icon buttons after regular buttons by default', () => {

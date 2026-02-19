@@ -1,6 +1,6 @@
 import { Component, DebugElement, ViewChild } from "@angular/core";
 import { IgxDaysViewComponent } from "./days-view.component";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-webcomponents';
 import { ScrollDirection } from "../calendar";
@@ -9,19 +9,20 @@ import { CalendarDay } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { DayDigitPipe } from "igniteui-angular/calendar/src/calendar/day-digit.pipe";
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const TODAY = new Date(2024, 6, 12);
 
 describe("Days View Component", () => {
     const baseClass = "igx-days-view";
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [InitDaysViewComponent],
             providers: [
                 KeyboardNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     it("initializes a days-view component with auto-incremented id", () => {
         const fixture = TestBed.createComponent(InitDaysViewComponent);
@@ -138,12 +139,12 @@ describe("Days View Component", () => {
         // 1. Verify Programmatic Access (formattedDate method)
         // Should return the raw formatted string from the formatter (with suffix)
         const programmaticResult = daysView.formattedDate(date);
-        expect(programmaticResult).toBe('25日', 'Programmatic API should return the full locale string (including suffix, in this case 日)');
+        expect(programmaticResult, 'Programmatic API should return the full locale string (including suffix, in this case 日)').toBe('25日');
 
         // 2. Verify Pipe Logic
         // The pipe takes the formatted string "25日" and strips non-digits to return "25"
         const pipeResult = pipe.transform(programmaticResult, daysView.formatViews);
-        expect(pipeResult).toBe('25', 'Pipe should strip non-numeric characters from the input string');
+        expect(pipeResult, 'Pipe should strip non-numeric characters from the input string').toBe('25');
 
         // 3. Confirm the difference implies the pipe did its job
         expect(programmaticResult).not.toEqual(pipeResult);
@@ -160,7 +161,7 @@ describe("Days View Component", () => {
             new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 0),
         );
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(InitDaysViewComponent);
             el = fixture.debugElement.query(
                 By.css("igx-days-view"),
@@ -170,7 +171,7 @@ describe("Days View Component", () => {
 
             el.focus();
             fixture.detectChanges();
-        }));
+        });
 
         it("should navigate to the next day when pressing the right arrow key", () => {
             UIInteractions.triggerKeyDownEvtUponElem(
@@ -236,8 +237,8 @@ describe("Days View Component", () => {
         });
 
         it("should select the activeDate when pressing the enter key", () => {
-            spyOn(instance.dateSelected, "emit");
-            spyOn(instance.selected, "emit");
+            vi.spyOn(instance.dateSelected, "emit");
+            vi.spyOn(instance.selected, "emit");
 
             instance.activeDate = firstDay.add("day", 4).native;
             fixture.detectChanges();
@@ -290,7 +291,7 @@ describe("Days View Component", () => {
         });
 
         it("should emit pageChaged event when the active date is in the previous/next months", () => {
-            spyOn(instance.pageChanged, "emit");
+            vi.spyOn(instance.pageChanged, "emit");
             instance.activeDate = firstDay.native;
             fixture.detectChanges();
 
@@ -325,7 +326,7 @@ describe("Days View Component", () => {
         let el: HTMLElement;
         let instance: IgxDaysViewComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(InitDaysViewComponent);
             el = fixture.debugElement.query(
                 By.css("igx-days-view"),
@@ -335,11 +336,11 @@ describe("Days View Component", () => {
 
             el.focus();
             fixture.detectChanges();
-        }));
+        });
 
         it("should select the clicked date", () => {
-            spyOn(instance.dateSelected, "emit");
-            spyOn(instance.selected, "emit");
+            vi.spyOn(instance.dateSelected, "emit");
+            vi.spyOn(instance.selected, "emit");
 
             const day = fixture.debugElement.query(
                 By.css(
@@ -362,7 +363,7 @@ describe("Days View Component", () => {
         });
 
         it("should emit pageChanged when clicking on a date outside the previous/next months", () => {
-            spyOn(instance.pageChanged, "emit");
+            vi.spyOn(instance.pageChanged, "emit");
 
             let days = fixture.debugElement.queryAll(
                 By.css(".igx-days-view__date--inactive"),

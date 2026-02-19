@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxHierarchicalGridActionStripComponent } from '../../../test-utils/hierarchical-grid-components.spec';
@@ -7,6 +7,7 @@ import { By } from '@angular/platform-browser';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -18,8 +19,8 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
         animationElem.dispatchEvent(endEvent);
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridActionStripComponent
             ],
@@ -27,7 +28,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe(' Basic', () => {
         beforeEach(() => {
@@ -41,26 +42,26 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             const row = hierarchicalGrid.rowList.first;
             hierarchicalGrid.expandRow(row.key);
             fixture.detectChanges();
-            expect(row.expanded).toBeTrue();
+            expect(row.expanded).toBeTruthy();
 
             row.beginAddRow();
             fixture.detectChanges();
-            expect(row.expanded).toBeFalse();
-            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
+            expect(row.expanded).toBeFalsy();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBeTruthy();
         });
 
         it('Should allow the expansion of a newly added (commited) record', async () => {
             const row = hierarchicalGrid.rowList.first;
             hierarchicalGrid.expandRow(row.key);
             fixture.detectChanges();
-            expect(row.expanded).toBeTrue();
+            expect(row.expanded).toBeTruthy();
 
             row.beginAddRow();
             fixture.detectChanges();
             endTransition();
-            expect(row.expanded).toBeFalse();
+            expect(row.expanded).toBeFalsy();
 
-            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBeTruthy();
             hierarchicalGrid.gridAPI.crudService.endEdit(true);
             fixture.detectChanges();
             hierarchicalGrid.addRowSnackbar.triggerAction();
@@ -71,10 +72,10 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
 
             const newRowData = hierarchicalGrid.data[hierarchicalGrid.data.length - 1];
             const newRow = hierarchicalGrid.rowList.find(r => r.key === newRowData[hierarchicalGrid.primaryKey]);
-            expect(newRow.expanded).toBeFalse();
+            expect(newRow.expanded).toBeFalsy();
             hierarchicalGrid.expandRow(newRow.key);
             fixture.detectChanges();
-            expect(newRow.expanded).toBeTrue();
+            expect(newRow.expanded).toBeTruthy();
         });
 
         it('Should allow adding to child grid for parent row that has null/undefined child collection.', async () => {

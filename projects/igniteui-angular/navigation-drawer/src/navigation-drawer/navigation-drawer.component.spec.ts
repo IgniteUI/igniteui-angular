@@ -8,13 +8,14 @@ import { IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective, IgxNavDra
 import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular/directives';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
 
 describe('Navigation Drawer', () => {
-    let widthSpyOverride: jasmine.Spy;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    let widthSpyOverride: any;
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 TestComponentPinComponent,
                 TestComponentMiniComponent,
@@ -31,9 +32,9 @@ describe('Navigation Drawer', () => {
 
         // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
         // so for tests just force override the the `getWindowWidth`
-        widthSpyOverride = spyOn(IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
-            .and.returnValue(915 /* chosen at random by fair dice roll*/);
-    }));
+        widthSpyOverride = vi.spyOn(IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
+            .mockReturnValue(915 /* chosen at random by fair dice roll*/);
+    });
 
     it('should initialize without DI service', waitForAsync(() => {
         TestBed.compileComponents().then(() => {
@@ -157,10 +158,10 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
             drawer = fixture.componentInstance.navDrawer;
 
-            spyOn(drawer.closing, 'emit');
-            spyOn(drawer.closed, 'emit');
-            spyOn(drawer.opening, 'emit');
-            spyOn(drawer.opened, 'emit');
+            vi.spyOn(drawer.closing, 'emit');
+            vi.spyOn(drawer.closed, 'emit');
+            vi.spyOn(drawer.opening, 'emit');
+            vi.spyOn(drawer.opened, 'emit');
 
             const _re = drawer.open(true);
             fixture.detectChanges();
@@ -208,7 +209,7 @@ describe('Navigation Drawer', () => {
     it('should update with dynamic min template', waitForAsync(() => {
 
         // immediate requestAnimationFrame for testing
-        spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
+        vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => {
             callback(0); return 0;
         });
         const template = `<igx-nav-drawer [miniWidth]="'56px'">
@@ -364,82 +365,61 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should toggle on edge swipe gesture', (done) => {
+    it('should toggle on edge swipe gesture', async () => {
         let fixture: ComponentFixture<TestComponentDIComponent>;
 
-        TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TestComponentDIComponent);
-            fixture.detectChanges();
-            expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
+        await TestBed.compileComponents();
+        fixture = TestBed.createComponent(TestComponentDIComponent);
+        fixture.detectChanges();
+        expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
-            // timeouts are +50 on the gesture to allow the swipe to be detected and triggered after the touches:
-            return swipe(document.body, 80, 10, 100, 250, 0);
-        })
-            .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen)
-                    .toEqual(false, 'should ignore swipes too far away from the edge');
-                return swipe(document.body, 10, 10, 150, 250, 0);
-            })
-            .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen).toEqual(true, 'Should accept edge swipe');
-                return swipe(document.body, 180, 10, 150, -180, 0);
-            })
-            .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
-                done();
-            })
-            .catch(() => {
-                done();
-            });
+        // timeouts are +50 on the gesture to allow the swipe to be detected and triggered after the touches:
+        await swipe(document.body, 80, 10, 100, 250, 0);
+        expect(fixture.componentInstance.navDrawer.isOpen, 'should ignore swipes too far away from the edge').toEqual(false)
+        await swipe(document.body, 10, 10, 150, 250, 0);
+        expect(fixture.componentInstance.navDrawer.isOpen, 'Should accept edge swipe').toEqual(true);
+        await swipe(document.body, 180, 10, 150, -180, 0);
+        expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
     }, 10000);
 
-    it('should toggle on edge pan gesture', (done) => {
+    it('should toggle on edge pan gesture', async () => {
         let navDrawer;
         let fixture: ComponentFixture<TestComponentDIComponent>;
 
-        // Using bare minimum of timeouts, jasmine.DEFAULT_TIMEOUT_INTERVAL can be modified only in beforeEach
-        TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TestComponentDIComponent);
-            fixture.detectChanges();
-            navDrawer = fixture.componentInstance.navDrawer;
-            navDrawer.width = '280px';
-            navDrawer.miniWidth = '68px';
-            fixture.detectChanges();
+        // Using bare minimum of timeouts
+        await TestBed.compileComponents();
+        fixture = TestBed.createComponent(TestComponentDIComponent);
+        fixture.detectChanges();
+        navDrawer = fixture.componentInstance.navDrawer;
+        navDrawer.width = '280px';
+        navDrawer.miniWidth = '68px';
+        fixture.detectChanges();
 
-            expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
+        expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
-            const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
+        const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
 
-                // mid gesture
-                expect(navDrawer.drawer.classList).toContain('panning');
-                expect(navDrawer.drawer.style.transform)
-                    .toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/, 'Drawer should be moving with the pan');
-                listener();
-            });
+            // mid gesture
+            expect(navDrawer.drawer.classList).toContain('panning');
+            expect(navDrawer.drawer.style.transform, 'Drawer should be moving with the pan')
+                .toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/);
+            listener();
+        });
 
-            return pan(document.body, 10, 10, 150, 20, 0);
-        })
-            .then(() => {
-                expect(navDrawer.isOpen).toEqual(false, 'should ignore too short pan');
+        await pan(document.body, 10, 10, 150, 20, 0);
+        expect(navDrawer.isOpen, 'should ignore too short pan').toEqual(false);
 
-                // valid pan
-                return pan(document.body, 10, 10, 100, 200, 0);
-            }).then(() => {
-                expect(navDrawer.isOpen).toEqual(true, 'should open on valid pan');
+        // valid pan
+        await pan(document.body, 10, 10, 100, 200, 0);
+        expect(navDrawer.isOpen, 'should open on valid pan').toEqual(true);
 
-                // not enough distance, closing
-                return pan(document.body, 200, 10, 100, -20, 0);
-            }).then(() => {
-                expect(navDrawer.isOpen).toEqual(true, 'should remain open on too short pan');
+        // not enough distance, closing
+        await pan(document.body, 200, 10, 100, -20, 0);
+        expect(navDrawer.isOpen, 'should remain open on too short pan').toEqual(true);
 
-                // close
-                return pan(document.body, 250, 10, 100, -200, 0);
-            }).then(() => {
-                expect(navDrawer.isOpen).toEqual(false, 'should close on valid pan');
-                done();
-            }).catch(() => {
-                done();
-            });
+        // close
+        await pan(document.body, 250, 10, 100, -200, 0);
+        expect(navDrawer.isOpen, 'should close on valid pan').toEqual(false);
     }, 10000);
 
     it('should update edge zone with mini width', waitForAsync(() => {
@@ -558,8 +538,8 @@ describe('Navigation Drawer', () => {
         await fixture.whenStable();
 
         // defaults:
-        expect(fixture.componentInstance.navDrawer.pin).toBe(false, 'Should be initially unpinned');
-        expect(fixture.componentInstance.pin).toBe(false, 'Parent component pin should update initially');
+        expect(fixture.componentInstance.navDrawer.pin, 'Should be initially unpinned').toBe(false);
+        expect(fixture.componentInstance.pin, 'Parent component pin should update initially').toBe(false);
 
         // manual pin override
         fixture.componentInstance.pin = true;
@@ -568,39 +548,39 @@ describe('Navigation Drawer', () => {
 
         // wait for debounce
         await wait(200);
-        expect(fixture.componentInstance.navDrawer.pin).toBe(false, `Shouldn't change state on resize if window width is the same`);
-        expect(fixture.componentInstance.pin).toBe(true, 'Parent component pin remain on resize if window width is the same');
+        expect(fixture.componentInstance.navDrawer.pin, `Shouldn't change state on resize if window width is the same`).toBe(false);
+        expect(fixture.componentInstance.pin, 'Parent component pin remain on resize if window width is the same').toBe(true);
         fixture.componentInstance.pin = true;
         fixture.detectChanges();
 
-        widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
+        widthSpyOverride.mockReturnValue(fixture.componentInstance.pinThreshold);
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
         await wait(200);
-        expect(fixture.componentInstance.navDrawer.pin).toBe(true, 'Should pin on window resize over threshold');
-        expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on window resize over threshold');
+        expect(fixture.componentInstance.navDrawer.pin, 'Should pin on window resize over threshold').toBe(true);
+        expect(fixture.componentInstance.pin, 'Parent pin update on window resize over threshold').toBe(true);
 
-        widthSpyOverride.and.returnValue(768);
+        widthSpyOverride.mockReturnValue(768);
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
         await wait(200);
-        expect(fixture.componentInstance.navDrawer.pin).toBe(false, 'Should un-pin on window resize below threshold');
-        expect(fixture.componentInstance.pin).toBe(false, 'Parent pin update on window resize below threshold');
+        expect(fixture.componentInstance.navDrawer.pin, 'Should un-pin on window resize below threshold').toBe(false);
+        expect(fixture.componentInstance.pin, 'Parent pin update on window resize below threshold').toBe(false);
         fixture.componentInstance.pinThreshold = 500;
         expect(() => fixture.detectChanges()).not.toThrow();
         await fixture.whenStable();
-        expect(fixture.componentInstance.navDrawer.pin).toBe(true, 'Should re-pin on window resize over threshold');
-        expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on re-pin');
+        expect(fixture.componentInstance.navDrawer.pin, 'Should re-pin on window resize over threshold').toBe(true);
+        expect(fixture.componentInstance.pin, 'Parent pin update on re-pin').toBe(true);
     });
 
-    it('should get correct window width', (done) => {
+    it('should get correct window width', () => {
         const originalWidth = window.innerWidth;
         const drawer = TestBed.inject(IgxNavigationDrawerComponent);
 
         // re-enable `getWindowWidth`
-        const widthSpy = (widthSpyOverride as jasmine.Spy).and.callThrough();
+        const widthSpy = (widthSpyOverride as any);
         let width = widthSpy.call(drawer);
         expect(width).toEqual(originalWidth);
 
@@ -608,7 +588,6 @@ describe('Navigation Drawer', () => {
         width = widthSpy.call(drawer);
         expect(width).toEqual(screen.width);
         (window as any).innerWidth = originalWidth;
-        done();
     });
 
     it('should retain classes added in markup, fix for #6508', () => {

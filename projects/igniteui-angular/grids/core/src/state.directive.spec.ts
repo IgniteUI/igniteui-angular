@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
@@ -19,9 +19,10 @@ import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, 
 import { IColumnState, IGridState } from './state-base.directive';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 describe('IgxGridState - input properties #grid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridStateComponent,
@@ -32,7 +33,7 @@ describe('IgxGridState - input properties #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should initialize an IgxGridState with default options object', () => {
         const defaultOptions = {
@@ -55,8 +56,8 @@ describe('IgxGridState - input properties #grid', () => {
 
         const state = fix.componentInstance.state;
 
-        expect(state).toBeDefined('IgxGridState directive is initialized');
-        expect(state.options).toEqual(jasmine.objectContaining(defaultOptions));
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
+        expect(state.options).toEqual(expect.objectContaining(defaultOptions));
     });
 
     it('should initialize an IgxGridState with correct options input', () => {
@@ -79,7 +80,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
 
         const state = fix.componentInstance.state;
-        expect(state.options).toEqual(jasmine.objectContaining(optionsInput));
+        expect(state.options).toEqual(expect.objectContaining(optionsInput));
     });
 
     it('getState should return correct JSON string', () => {
@@ -90,7 +91,7 @@ describe('IgxGridState - input properties #grid', () => {
         const state = fix.componentInstance.state;
 
         const gridState = state.getState();
-        expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
+        expect(gridState, 'JSON string representation of the initial grid state is not correct').toBe(initialGridState);
     });
 
     it('getState should return correct IGridState object when using default options', () => {
@@ -164,7 +165,7 @@ describe('IgxGridState - input properties #grid', () => {
         const filtering = grid.filteringExpressionsTree;
 
         let gridState = state.getState(true, 'filtering');
-        expect(gridState).toBe('{"filtering":{"filteringOperands":[],"operator":0}}', 'JSON string');
+        expect(gridState, 'JSON string').toBe('{"filtering":{"filteringOperands":[],"operator":0}}');
 
         gridState = state.getState(false, ['filtering']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
@@ -380,7 +381,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         const grid = fix.componentInstance.grid;
-        spyOn(grid.columnInit, 'emit').and.callThrough();
+        vi.spyOn(grid.columnInit, 'emit');
         const columnsState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"selectable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"selectable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":false,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const columnsStateObject = JSON.parse(columnsState);
@@ -774,7 +775,7 @@ describe('IgxGridState - input properties #grid', () => {
 
         const gridColumnState = state.getState(false, 'columns') as IGridState;
         const group1 = gridColumnState.columns.find(x => x.field === 'group1');
-        expect(group1.columnLayout).toBeTrue();
+        expect(group1.columnLayout).toBeTruthy();
 
         const prodId = gridColumnState.columns.find(x => x.field === 'ProductID');
         expect(prodId.columnLayout).toBeFalsy();
@@ -792,10 +793,10 @@ describe('IgxGridState - input properties #grid', () => {
 
         const group1Column = grid.getColumnByName("group1");
         const prodIdColumn = grid.getColumnByName("ProductID");
-        expect(group1Column.columnLayout).toBeTrue();
-        expect(group1Column.pinned).toBeTrue();
-        expect(prodIdColumn.pinned).toBeTrue();
-        expect(prodIdColumn.columnLayoutChild).toBeTrue();
+        expect(group1Column.columnLayout).toBeTruthy();
+        expect(group1Column.pinned).toBeTruthy();
+        expect(prodIdColumn.pinned).toBeTruthy();
+        expect(prodIdColumn.columnLayoutChild).toBeTruthy();
         expect(prodIdColumn.parent).toBe(group1Column);
         expect(prodIdColumn.rowStart).toBe(1);
         expect(prodIdColumn.rowEnd).toBe(4);
@@ -856,42 +857,42 @@ describe('IgxGridState - input properties #grid', () => {
 class HelperFunctions {
     public static verifyColumns(columns: IColumnState[], gridState: IGridState) {
         columns.forEach((c, index) => {
-            expect(gridState.columns[index]).toEqual(jasmine.objectContaining(c));
+            expect(gridState.columns[index]).toEqual(expect.objectContaining(c));
         });
     }
 
     public static verifySortingExpressions(sortingExpressions: ISortingExpression[], gridState: IGridState) {
         sortingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.sorting[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.sorting[i]));
         });
     }
 
     public static verifyGroupingExpressions(groupingExpressions: IGroupingExpression[], gridState: IGridState) {
         groupingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.groupBy.expressions[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.groupBy.expressions[i]));
         });
     }
 
     public static verifyGroupingExpansion(groupingExpansion: IGroupByExpandState[], groupBy: IGroupingState) {
         groupingExpansion.forEach((exp, i) => {
-            expect(exp).toEqual(jasmine.objectContaining(groupBy.expansion[i]));
+            expect(exp).toEqual(expect.objectContaining(groupBy.expansion[i]));
         });
     }
 
     public static verifyFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
-        expect(expressions.fieldName).toBe(gridState.filtering.fieldName, 'Filtering expression field name is not correct');
-        expect(expressions.operator).toBe(gridState.filtering.operator, 'Filtering expression operator value is not correct');
+        expect(expressions.fieldName, 'Filtering expression field name is not correct').toBe(gridState.filtering.fieldName);
+        expect(expressions.operator, 'Filtering expression operator value is not correct').toBe(gridState.filtering.operator);
         expressions.filteringOperands.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.filtering.filteringOperands[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.filtering.filteringOperands[i]));
         });
     }
 
     public static verifyAdvancedFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
         if (gridState.advancedFiltering) {
-            expect(expressions.fieldName).toBe(gridState.advancedFiltering.fieldName, 'Filtering expression field name is not correct');
-            expect(expressions.operator).toBe(gridState.advancedFiltering.operator, 'Filtering expression operator value is not correct');
+            expect(expressions.fieldName, 'Filtering expression field name is not correct').toBe(gridState.advancedFiltering.fieldName);
+            expect(expressions.operator, 'Filtering expression operator value is not correct').toBe(gridState.advancedFiltering.operator);
             expressions.filteringOperands.forEach((expr, i) => {
-                expect(expr).toEqual(jasmine.objectContaining(gridState.advancedFiltering.filteringOperands[i]));
+                expect(expr).toEqual(expect.objectContaining(gridState.advancedFiltering.filteringOperands[i]));
             });
         } else {
             expect(expressions).toBeFalsy();
@@ -899,7 +900,7 @@ class HelperFunctions {
     }
 
     public static verifyPaging(paging: IPagingState, gridState: IGridState) {
-        expect(paging).toEqual(jasmine.objectContaining(gridState.paging));
+        expect(paging).toEqual(expect.objectContaining(gridState.paging));
     }
 
     public static verifyMoving(moving: boolean, gridState: IGridState){
@@ -914,7 +915,7 @@ class HelperFunctions {
 
     public static verifyCellSelection(selectedCells: GridSelectionRange[], gridState: IGridState) {
         selectedCells.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.cellSelection[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.cellSelection[i]));
         });
     }
 

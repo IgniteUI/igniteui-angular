@@ -1,3 +1,4 @@
+import { expect, vi } from 'vitest';
 import { EventEmitter, QueryList } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -67,11 +68,15 @@ export class TreeTestFunctions {
 
     public static createNodeSpy(
         properties: { [key: string]: any } = null,
-        methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): jasmine.SpyObj<IgxTreeNode<any>> {
+        methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): any {
         if (!properties) {
-            return jasmine.createSpyObj<IgxTreeNodeComponent<any>>(methodNames);
+            const spy: any = {};
+            methodNames.forEach(m => spy[m] = vi.fn());
+            return spy;
         }
-        return jasmine.createSpyObj<IgxTreeNodeComponent<any>>(methodNames, properties);
+        const spy: any = { ...properties };
+        methodNames.forEach(m => spy[m] = vi.fn());
+        return spy;
     }
 
     public static createNodeSpies(
@@ -82,7 +87,7 @@ export class TreeTestFunctions {
         allChildren?: any[]
     ): IgxTreeNodeComponent<any>[] {
         const nodesArr = [];
-        const mockEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
+        const mockEmitter: EventEmitter<boolean> = { emit: vi.fn() } as unknown as EventEmitter<boolean>;
         for (let i = 0; i < count; i++) {
             nodesArr.push(this.createNodeSpy({
                 level,
@@ -99,14 +104,15 @@ export class TreeTestFunctions {
         return nodesArr;
     }
 
-    public static createQueryListSpy(nodes: IgxTreeNodeComponent<any>[]): jasmine.SpyObj<QueryList<IgxTreeNodeComponent<any>>> {
-        const mockQuery = jasmine.createSpyObj(['toArray', 'filter', 'forEach']);
+    public static createQueryListSpy(nodes: IgxTreeNodeComponent<any>[]): any {
+        const mockQuery: any = {
+            toArray: vi.fn(() => nodes),
+            filter: vi.fn((cb) => nodes.filter(cb)),
+            forEach: vi.fn((cb) => nodes.forEach(cb))
+        };
         Object.defineProperty(mockQuery, 'first', { value: nodes[0], enumerable: true });
         Object.defineProperty(mockQuery, 'last', { value: nodes[nodes.length - 1], enumerable: true });
         Object.defineProperty(mockQuery, 'length', { value: nodes.length, enumerable: true });
-        mockQuery.toArray.and.returnValue(nodes);
-        mockQuery.filter.and.callFake((cb) => nodes.filter(cb));
-        mockQuery.forEach.and.callFake((cb) => nodes.forEach(cb));
         return mockQuery;
     }
 }

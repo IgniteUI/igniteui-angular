@@ -1,15 +1,17 @@
 import { Component, ViewChild, ViewChildren, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from './radio.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 describe('IgxRadio', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxRadioComponent,
@@ -23,7 +25,7 @@ describe('IgxRadio', () => {
                 RadioInvisibleLabelComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Init a radio', () => {
         const fixture = TestBed.createComponent(InitRadioComponent);
@@ -59,7 +61,7 @@ describe('IgxRadio', () => {
         expect(domRadio.id).toBe('customRadio');
     });
 
-    it('Binding to ngModel', fakeAsync(() => {
+    it('Binding to ngModel', customFakeAsync(() => {
         const fixture = TestBed.createComponent(RadioWithModelComponent);
         fixture.detectChanges();
 
@@ -131,7 +133,7 @@ describe('IgxRadio', () => {
         expect(nativeRadio.getAttribute('aria-labelledby')).toEqual(null);
     });
 
-    it('Disabled state', fakeAsync(() => {
+    it('Disabled state', customFakeAsync(() => {
         const fixture = TestBed.createComponent(DisabledRadioComponent);
         // Requires two async change detection cycles to setup disabled on the component and then native element
         fixture.detectChanges();
@@ -209,7 +211,7 @@ describe('IgxRadio', () => {
         expect(radioInstance.checked).toBe(false);
     });
 
-    it('Should work properly with ngModel', fakeAsync(() => {
+    it('Should work properly with ngModel', customFakeAsync(() => {
         const fixture = TestBed.createComponent(RadioFormComponent);
         fixture.detectChanges();
         tick();
@@ -310,7 +312,7 @@ class DisabledRadioComponent {
     @for (item of ['Foo', 'Bar']; track item) {
         <igx-radio #radios
             [value]="item"
-            [(ngModel)]="Foo"
+            [ngModel]="item"
             required>
             {{item}}
         </igx-radio>

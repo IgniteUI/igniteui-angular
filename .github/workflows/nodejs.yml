@@ -29,7 +29,9 @@ jobs:
             node-version: ${{ matrix.node-version }}
             cache: 'npm'
       - name: Install packages
-        run: npm ci
+        run: npm install
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
       - name: Lint Lib
         run: npm run lint:lib
         env:

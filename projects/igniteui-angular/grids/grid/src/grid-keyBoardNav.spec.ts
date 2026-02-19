@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
@@ -17,6 +17,8 @@ import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
 const DEBOUNCETIME = 100;
 
 describe('IgxGrid - Keyboard navigation #grid', () => {
@@ -25,13 +27,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoScrollsComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(NoScrollsComponent);
@@ -127,7 +129,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
 
         it('Should emit when activeNode ref is changed', () => {
-            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+            vi.spyOn(grid.activeNodeChange, 'emit');
 
             const args: IActiveNodeChangeEventArgs = {
                 row: 0,
@@ -165,7 +167,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
 
         it('should emit activeNodeChange once when you click over the same element', () => {
-            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+            vi.spyOn(grid.activeNodeChange, 'emit');
 
             gridContent.triggerEventHandler('focus', null);
             fix.detectChanges();
@@ -214,19 +216,20 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VirtualGridComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(() => {
+        beforeEach(async () => {
             TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fix = TestBed.createComponent(VirtualGridComponent);
+            await fix.whenStable();
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
@@ -686,7 +689,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit').and.callThrough();
+            const gridKeydown = vi.spyOn(grid.gridKeydown, 'emit');
 
             const cell = grid.gridAPI.get_cell_by_index(1, '2');
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -704,13 +707,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     });
 
     describe('Group By navigation ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     IgxGridGroupByComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
         let fix;
         let grid: IgxGridComponent;
@@ -869,7 +872,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(1);
-            expect(row.focused).toBeTrue();
+            expect(row.focused).toBeTruthy();
         }));
 
         it('should persist last selected cell column index when navigate through group rows.', async () => {
@@ -1023,7 +1026,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(rowEl);
             fix.detectChanges();
 
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit').and.callThrough();
+            const gridKeydown = vi.spyOn(grid.gridKeydown, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Enter', rowEl.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -1044,3 +1047,5 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
     });
 });
+
+

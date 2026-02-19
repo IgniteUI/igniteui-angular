@@ -4,6 +4,7 @@ import { Component, inject } from '@angular/core';
 import { IconMeta, IgxIconService } from 'igniteui-angular';
 import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 describe('Icon broadcast service', () => {
     let fixture: ComponentFixture<BroadcastServiceComponent>;
     let broadcastChannel: BroadcastChannel;

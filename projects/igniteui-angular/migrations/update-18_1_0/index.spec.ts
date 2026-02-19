@@ -157,6 +157,7 @@ export class PaginatorTestComponent {
         const expectedContent =  `import { Component } from '@angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 @Component({
     selector: 'app-paginator-test',
     templateUrl: './paginator-test.component.html',

@@ -370,9 +370,9 @@ export class ColumnDefinitions {
         <igx-column [field]="'ProductName'" dataType="string" [filterable]="true" [sortable]="true"
                     [resizable]="true" [hasSummary]="true" [editable]="true"></igx-column>
         <igx-column [field]="'Downloads'" dataType="number" [filterable]="true" [sortable]="true"
-                    [resizable]="true" [moveable]="true"></igx-column>
+                    [resizable]="true"></igx-column>
         <igx-column [field]="'Released'" dataType="boolean" [filterable]="true" [resizable]="true"
-                    [moveable]="true" [editable]="true"></igx-column>
+                    [editable]="true"></igx-column>
         <igx-column [field]="'ReleaseDate'" dataType="date" [header]="'ReleaseDate'" [filterable]="true"
                     [sortable]="true" [resizable]="true" [editable]="true">
         </igx-column>

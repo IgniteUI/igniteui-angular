@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -10,6 +10,8 @@ import { DebugElement } from '@angular/core';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxGridNavigationService, PivotRowLayoutType } from 'igniteui-angular/grids/core';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const DEBOUNCE_TIME = 250;
 const PIVOT_TBODY_CSS_CLASS = '.igx-grid__tbody';
 const PIVOT_ROW_DIMENSION_CONTENT = 'igx-pivot-row-dimension-content';
@@ -26,8 +28,8 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         let rowDimension: DebugElement;
         let headerRow: DebugElement;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridMultipleRowComponent
@@ -36,9 +38,9 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                     IgxGridNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(fakeAsync(async () => {
+        beforeEach(customFakeAsync(async () => {
             fixture = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
             fixture.detectChanges();
             pivotGrid = fixture.componentInstance.pivotGrid;
@@ -342,8 +344,8 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     describe('Row Dimension Expand/Collapse Keyboard Interactions', () => {
         let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridTestBaseComponent
@@ -352,9 +354,9 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                     IgxGridNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(customFakeAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
         }));
@@ -365,7 +367,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             let allHeaders = fixture.debugElement.queryAll(
                 By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(5, 'There should initially be 5 row dimension headers');
+            expect(allHeaders.length, 'There should initially be 5 row dimension headers').toBe(5);
 
             UIInteractions.simulateClickAndSelectEvent(allHeaders[0]);
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', rowDimension[0], true);
@@ -374,7 +376,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             allHeaders = fixture.debugElement.queryAll(
                 By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(1, 'There should be only 1 row dimension header after collapse with Alt + ArrowUp');
+            expect(allHeaders.length, 'There should be only 1 row dimension header after collapse with Alt + ArrowUp').toBe(1);
 
             UIInteractions.simulateClickAndSelectEvent(allHeaders[0]);
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', rowDimension[0], true);
@@ -383,7 +385,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             allHeaders = fixture.debugElement.queryAll(
                 By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(5, 'There should be 5 row dimension headers after expand with Alt + ArrowDown');
+            expect(allHeaders.length, 'There should be 5 row dimension headers after expand with Alt + ArrowDown').toBe(5);
 
             UIInteractions.simulateClickAndSelectEvent(allHeaders[0]);
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', rowDimension[0], true);
@@ -392,7 +394,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             allHeaders = fixture.debugElement.queryAll(
                 By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(1, 'There should be 1 row dimension header after collapse with Alt + ArrowLeft');
+            expect(allHeaders.length, 'There should be 1 row dimension header after collapse with Alt + ArrowLeft').toBe(1);
 
             UIInteractions.simulateClickAndSelectEvent(allHeaders[0]);
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', rowDimension[0], true);
@@ -401,7 +403,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             allHeaders = fixture.debugElement.queryAll(
                 By.directive(IgxPivotRowDimensionHeaderComponent));
 
-            expect(allHeaders.length).toBe(5, 'There should be 5 row dimension headers after expand with Alt + ArrowRight');
+            expect(allHeaders.length, 'There should be 5 row dimension headers after expand with Alt + ArrowRight').toBe(5);
         });
     });
 });

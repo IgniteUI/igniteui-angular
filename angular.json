@@ -102,26 +102,6 @@
             "buildTarget": "igniteui-dev-demos:build"
           }
         },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles/styles.scss"
-            ],
-            "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ]
-          }
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
@@ -180,36 +160,26 @@
             "production": {
               "project": "projects/igniteui-angular/ng-package.prod.json",
               "tsConfig": "projects/igniteui-angular/tsconfig.lib.prod.json"
+            },
+            "test": {
+              "project": "projects/igniteui-angular/ng-package.json",
+              "tsConfig": "projects/igniteui-angular/tsconfig.lib.json"
             }
           }
+
         },
         "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing",
-              "hammerjs"
-            ],
-            "styles": [
-              "src/styles/styles.scss",
-              "projects/igniteui-angular/test.css"
-            ],
-            "assets": [
-              "projects/igniteui-angular/test-utils/assets"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules"
+          "builder": "@angular/build:unit-test",
+            "options": {
+              "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
+              "buildTarget": "::test",
+              "browsers": ["chromiumHeadless"],
+              "exclude": [
+                "**/migrations/**",
+                "**/schematics/**",
+                "**/cypress/**"
               ]
-            },
-            "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
-            "karmaConfig": "projects/igniteui-angular/karma.conf.js",
-            "exclude": [
-                "migrations",
-                "schematics"
-            ]
-          }
+            }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
@@ -362,26 +332,11 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "projects/igniteui-angular-elements/src/test.ts",
-            "polyfills":  [
-              "projects/igniteui-angular-elements/src/polyfills.ts"
-            ],
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
-            "karmaConfig": "projects/igniteui-angular-elements/karma.conf.js",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/igniteui-angular-elements/src/favicon.ico",
-              "projects/igniteui-angular-elements/src/assets"
-            ],
-            "styles": [
-              "projects/igniteui-angular-elements/src/styles.scss"
-            ],
-            "stylePreprocessorOptions": {
-                "includePaths": ["node_modules"]
-            },
-            "scripts": []
+            "include": ["**/*.spec.ts"],
+            "coverage": true
           }
         }
       }
@@ -473,21 +428,6 @@
           "options": {
             "buildTarget": "bundle-test:build"
           }
-        },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
-            "tsConfig": "projects/bundle-test/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "styles": [
-              "projects/bundle-test/src/styles.scss"
-            ],
-            "scripts": []
-          }
         }
       }
     },
@@ -559,26 +499,6 @@
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
-        },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
-            "tsConfig": "projects/igniteui-angular-performance/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/igniteui-angular-performance/public"
-              }
-            ],
-            "styles": [
-              "projects/igniteui-angular-performance/src/styles.scss"
-            ]
-          }
         }
       }
     }

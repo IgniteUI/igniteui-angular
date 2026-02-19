@@ -3,8 +3,9 @@ import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
+import { GridPagingMode, IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
 
+import { it } from 'vitest';
 @Component({
     template: `
         <igx-grid
@@ -113,7 +114,7 @@ export class PagingComponent extends GridWithSizeComponent {
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class RemotePagingComponent extends GridWithSizeComponent {
-    public pagingMode = 'remote';
+    public pagingMode = GridPagingMode.Remote;
     public perPage = 3;
     public totalRecords = 10;
     public override data = SampleTestData.personJobDataFull();
@@ -128,7 +129,7 @@ export class SelectionComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true" [exportExcel]="exportExcel" [exportCsv]="exportCsv"`, '', ''),
+    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true"`, '', ''),
     imports: [IgxGridComponent]
 })
 export class GridWithToolbarComponent extends GridWithSizeComponent {

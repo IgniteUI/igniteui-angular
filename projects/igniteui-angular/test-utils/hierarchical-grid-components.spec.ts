@@ -12,6 +12,7 @@ import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-an
 import { IgxAdvancedFilteringDialogComponent, IgxCellHeaderTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowSelectorDirective, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalTransactionServiceFactory } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-grid-base.directive';
 
+import { it } from 'vitest';
 @Component({
     selector: 'igx-hierarchical-grid-test-base',
     template: `

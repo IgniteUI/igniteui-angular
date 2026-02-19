@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first, take } from 'rxjs/operators';
@@ -10,27 +10,28 @@ import { IgxPivotRowDimensionHeaderComponent } from 'igniteui-angular/grids/pivo
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxPivotGridState #pivotGrid :', () => {
     let fixture;
     let pivotGrid;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxPivotGridPersistanceComponent],
             providers: [
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(IgxPivotGridPersistanceComponent);
         fixture.detectChanges();
         pivotGrid = fixture.componentInstance.pivotGrid;
-    }));
+    });
 
     it('getState should return correct JSON string.', () => {
         const state = fixture.componentInstance.state;
-        expect(state).toBeDefined('IgxGridState directive is initialized');
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
         const jsonString = state.getState(true);
         const expectedObj = {
             "columns": [
@@ -231,7 +232,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
     it('should successfully restore the selected rows.', () => {
         pivotGrid.rowSelection = 'single';
         const state = fixture.componentInstance.state;
-        expect(state).toBeDefined('IgxGridState directive is initialized');
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
         const headerRow = fixture.nativeElement.querySelectorAll('igx-pivot-row-dimension-content')[2];
         const header = headerRow.querySelector('igx-pivot-row-dimension-header');
         header.click();

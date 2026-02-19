@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild } from '@angular/core';
 import { IgxIconButtonDirective } from './icon-button.directive';
@@ -6,6 +6,7 @@ import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { By } from '@angular/platform-browser';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 
+import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxIconButton', () => {
 
     const baseClass = 'igx-icon-button';
@@ -15,14 +16,14 @@ describe('IgxIconButton', () => {
         outlined: `${baseClass}--outlined`,
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IconButtonComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Should properly initialize an icon button', () => {
         const fixture = TestBed.createComponent(IconButtonComponent);

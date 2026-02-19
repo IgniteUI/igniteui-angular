@@ -1,6 +1,8 @@
 import { NgModuleRef } from '@angular/core';
 import { TestBed, getTestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 
+import { beforeAll, afterAll } from 'vitest';
+
 const checkLeaksAvailable = typeof window.gc === 'function';
 
 const debug = false;
@@ -33,7 +35,7 @@ interface ConfigureOptions {
  */
 
 export const configureTestSuite = (configureActionOrOptions?: (() => TestBed) | ConfigureOptions, options: ConfigureOptions = {}) => {
-    setupJasmineCurrentTest();
+    //setupJasmineCurrentTest();
 
     const configureAction = typeof configureActionOrOptions === 'function' ? configureActionOrOptions : undefined;
     options = (configureActionOrOptions && typeof configureActionOrOptions === 'object') ? configureActionOrOptions : options;
@@ -65,14 +67,14 @@ export const configureTestSuite = (configureActionOrOptions?: (() => TestBed) | 
             componentRefs = [];
             testBed.createComponent = function () {
                 const fixture = originCreateComponent.apply(testBed, arguments);
-                if (!_skipLeakCheck) {
+                /*if (!_skipLeakCheck) {
                     componentRefs.push({ test: jasmine['currentTest'].fullName, ref: new WeakRef(fixture.componentInstance) });
-                }
+                }*/
                 return fixture;
             };
         }
 
-        jasmine.getEnv().allowRespy(true);
+        // jasmine.getEnv().allowRespy(true);
     });
 
     if (configureAction) {
@@ -156,7 +158,7 @@ export function skipLeakCheck(fn: () => void | Promise<unknown>) {
     }
 }
 
-let setupJasmineCurrentTestDone = false;
+/*let setupJasmineCurrentTestDone = false;
 function setupJasmineCurrentTest() {
     if (!setupJasmineCurrentTestDone) {
         jasmine.getEnv().addReporter({
@@ -170,3 +172,4 @@ function setupJasmineCurrentTest() {
         setupJasmineCurrentTestDone = true;
     }
 }
+*/

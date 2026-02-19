@@ -1,5 +1,5 @@
 import { Component, ViewChild, Pipe, PipeTransform, ElementRef, inject } from '@angular/core';
-import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAutocompleteDirective, AutocompleteOverlaySettings } from './autocomplete.directive';
@@ -11,6 +11,8 @@ import { IgxRippleDirective } from '../../../../directives/src/directives/ripple
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 import { IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { customFakeAsync } from 'igniteui-angular/test-utils/customFakeAsync';
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
@@ -24,8 +26,8 @@ describe('IgxAutocomplete', () => {
     let input: IgxInputDirective;
     let dropDown: IgxDropDownComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 AutocompleteComponent,
@@ -33,17 +35,17 @@ describe('IgxAutocomplete', () => {
                 AutocompleteFormComponent
             ]
         }).compileComponents();
-    }));
+    });
     describe('General tests: ', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
             group = fixture.componentInstance.group;
             input = fixture.componentInstance.input;
             dropDown = fixture.componentInstance.dropDown;
-        }));
-        it('Should open/close dropdown properly', fakeAsync(() => {
+        });
+        it('Should open/close dropdown properly', customFakeAsync(() => {
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
@@ -73,24 +75,24 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
         }));
-        it('Should close dropdown on Tab without calling super.handleKeyDown', fakeAsync(() => {
-            spyOn(autocomplete, 'handleKeyDown').and.callThrough();
-            spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown').and.callThrough();
+        it('Should close dropdown on Tab without calling super.handleKeyDown', async () => {
+            vi.spyOn(autocomplete, 'handleKeyDown');
+            vi.spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown');
 
             input.nativeElement.focus();
             UIInteractions.setInputElementValue(input, 's', fixture);
-            tick();
+            await fixture.whenStable();
             expect(dropDown.collapsed).toBeFalsy();
 
             // IgxDropDownItemNavigationDirective handleKeyDown is not called when dropdown is closed on Tab
             UIInteractions.triggerKeyDownEvtUponElem('Tab', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(dropDown.collapsed).toBeTruthy();
             expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(1);
             expect(IgxDropDownItemNavigationDirective.prototype.handleKeyDown).toHaveBeenCalledTimes(0);
-        }));
-        it('Should open drop down on (Alt+)ArrowUp/ArrowDown', fakeAsync(() => {
+        });
+        it('Should open drop down on (Alt+)ArrowUp/ArrowDown', customFakeAsync(() => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             tick();
             fixture.detectChanges();
@@ -136,11 +138,11 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
         }));
-        it('Should close the dropdown when no items match the filter', fakeAsync(() => {
+        it('Should close the dropdown when no items match the filter', customFakeAsync(() => {
             expect((autocomplete as any).collapsed).toEqual(true);
-            spyOn(autocomplete.target, 'close').and.callThrough();
-            spyOn(autocomplete, 'open').and.callThrough();
-            spyOn(autocomplete.target, 'open').and.callThrough();
+            vi.spyOn(autocomplete.target, 'close');
+            vi.spyOn(autocomplete, 'open');
+            vi.spyOn(autocomplete.target, 'open');
             expect(autocomplete.target.close).not.toHaveBeenCalled();
             UIInteractions.setInputElementValue(input, 'a', fixture);
             tick();
@@ -166,9 +168,9 @@ describe('IgxAutocomplete', () => {
 
 
         }));
-        it('Should close the dropdown when disabled dynamically', fakeAsync(() => {
-            spyOn(autocomplete.target, 'open').and.callThrough();
-            spyOn(autocomplete.target, 'close').and.callThrough();
+        it('Should close the dropdown when disabled dynamically', customFakeAsync(() => {
+            vi.spyOn(autocomplete.target, 'open');
+            vi.spyOn(autocomplete.target, 'close');
 
             UIInteractions.setInputElementValue(input, 's', fixture);
             tick();
@@ -190,7 +192,7 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
         }));
-        it('Should not close the dropdown when clicked on a input or the group', fakeAsync(() => {
+        it('Should not close the dropdown when clicked on a input or the group', customFakeAsync(() => {
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
@@ -214,7 +216,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
         }));
-        it('Should select item and close dropdown with ENTER and do not close it with SPACE key', fakeAsync(() => {
+        it('Should select item and close dropdown with ENTER and do not close it with SPACE key', customFakeAsync(() => {
             let startsWith = 's';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
@@ -243,7 +245,7 @@ describe('IgxAutocomplete', () => {
             expect(fixture.componentInstance.townSelected).toBe('bu');
             expect(input.value).toBe('bu');
         }));
-        it('Should not open dropdown with ENTER key', fakeAsync(() => {
+        it('Should not open dropdown with ENTER key', customFakeAsync(() => {
             let startsWith = 's';
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
 
@@ -276,7 +278,7 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.value).toBe(fixture.componentInstance.towns[0]);
         }));
-        it('Should not open dropdown and select items with SPACE key', fakeAsync(() => {
+        it('Should not open dropdown and select items with SPACE key', customFakeAsync(() => {
             let startsWith = 'd';
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
 
@@ -327,9 +329,9 @@ describe('IgxAutocomplete', () => {
             expect(dropdownList.nativeElement.attributes['aria-hidden'].value).toEqual('true');
             expect(dropdownListScrollElement.children.length).toEqual(0);
         });
-        it('Should not open dropdown when disabled', fakeAsync(() => {
+        it('Should not open dropdown when disabled', customFakeAsync(() => {
             fixture.detectChanges();
-            spyOn(autocomplete.target, 'open').and.callThrough();
+            vi.spyOn(autocomplete.target, 'open');
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
 
             autocomplete.disabled = true;
@@ -376,7 +378,7 @@ describe('IgxAutocomplete', () => {
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
         }));
-        it('Should select item when drop down item is clicked', fakeAsync(() => {
+        it('Should select item when drop down item is clicked', customFakeAsync(() => {
             input.nativeElement.focus();
             expect(input.nativeElement as Element).toBe(document.activeElement);
             const startsWith = 's';
@@ -393,7 +395,7 @@ describe('IgxAutocomplete', () => {
             expect(input.value).toBe(filteredTowns[0]);
             expect(input.nativeElement as Element).toBe(document.activeElement);
         }));
-        it('Should filter and select duplicated items properly', fakeAsync(() => {
+        it('Should filter and select duplicated items properly', customFakeAsync(() => {
             fixture.componentInstance.towns.push('Sofia', 'Sofia');
             fixture.detectChanges();
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
@@ -527,7 +529,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropdownListScrollElement.children.length).toEqual(0);
         });
-        it('Should not preserve selected value', fakeAsync(() => {
+        it('Should not preserve selected value', customFakeAsync(() => {
             let startsWith = 'q';
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
 
@@ -567,7 +569,7 @@ describe('IgxAutocomplete', () => {
             expect(input.nativeElement.value).toEqual(startsWith);
             expect(fixture.componentInstance.townSelected).toBe(startsWith);
         }));
-        it('Should auto-highlight first suggestion', fakeAsync(() => {
+        it('Should auto-highlight first suggestion', customFakeAsync(() => {
             let startsWith = 's';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
@@ -599,10 +601,10 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.items[1].focused).toBeFalsy();
             expect(dropDown.items[1].value).toBe(filteredTowns[1]);
         }));
-        it('Should trigger selectionChanging event on item selection', fakeAsync(() => {
+        it('Should trigger selectionChanging event on item selection', customFakeAsync(() => {
             let startsWith = 'st';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
-            spyOn(autocomplete.selectionChanging, 'emit').and.callThrough();
+            vi.spyOn(autocomplete.selectionChanging, 'emit');
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             tick();
 
@@ -632,8 +634,8 @@ describe('IgxAutocomplete', () => {
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             expect(fixture.componentInstance.townSelected).toBe('s');
         }));
-        it('Should trigger selectionChanging only once when the event is cancelled (issue #7483)', fakeAsync(() => {
-            spyOn(autocomplete.selectionChanging, 'emit').and.callThrough();
+        it('Should trigger selectionChanging only once when the event is cancelled (issue #7483)', customFakeAsync(() => {
+            vi.spyOn(autocomplete.selectionChanging, 'emit');
 
             fixture.componentInstance.selectionChanging = (args) => {
                 args.cancel = true;
@@ -661,14 +663,14 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.selectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(autocomplete.selectionChanging.emit).toHaveBeenCalledWith({ value: 'Sofia', cancel: true });
         }));
-        it('Should call onInput/open/close methods properly', fakeAsync(() => {
+        it('Should call onInput/open/close methods properly', customFakeAsync(() => {
             let startsWith = 'g';
-            spyOn(autocomplete, 'onInput').and.callThrough();
-            spyOn(autocomplete, 'handleKeyDown').and.callThrough();
-            spyOn(autocomplete, 'close').and.callThrough();
-            spyOn(autocomplete.target, 'close').and.callThrough();
-            spyOn(autocomplete.target, 'open').and.callThrough();
-            spyOn(autocomplete.target.opening, 'emit').and.callThrough();
+            vi.spyOn(autocomplete, 'onInput');
+            vi.spyOn(autocomplete, 'handleKeyDown');
+            vi.spyOn(autocomplete, 'close');
+            vi.spyOn(autocomplete.target, 'close');
+            vi.spyOn(autocomplete.target, 'open');
+            vi.spyOn(autocomplete.target.opening, 'emit');
 
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             tick();
@@ -698,7 +700,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.target.close).toHaveBeenCalledTimes(2);
 
             // IgxDropDownItemNavigationDirective handleKeyDown is not called when dropdown is closed
-            spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown').and.callThrough();
+            vi.spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown');
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             fixture.detectChanges();
             tick();
@@ -715,7 +717,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.target.opening.emit).toHaveBeenCalledTimes(2);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(2);
         }));
-        it('Should navigate through dropdown items with arrow up/down keys', fakeAsync(() => {
+        it('Should navigate through dropdown items with arrow up/down keys', customFakeAsync(() => {
             UIInteractions.setInputElementValue(input, 'a', fixture);
             tick();
             expect(dropDown.items[0].focused).toBeTruthy();
@@ -745,7 +747,7 @@ describe('IgxAutocomplete', () => {
                 code: 'Home',
                 preventDefault: () => {}
             };
-            spyOn(mockObj, 'preventDefault');
+            vi.spyOn(mockObj, 'preventDefault');
             const inputDebug = fixture.debugElement.queryAll(By.css('.' + INPUT_CSS_CLASS))[0];
             inputDebug.triggerEventHandler('keydown', mockObj);
             expect(mockObj.preventDefault).not.toHaveBeenCalled();
@@ -769,7 +771,7 @@ describe('IgxAutocomplete', () => {
             const dropDownAny = dropDown as any;
             expect(dropDownAny.scrollContainer.getBoundingClientRect().width).toEqual(600);
         });
-        it('Should render aria attributes properly', fakeAsync(() => {
+        it('Should render aria attributes properly', customFakeAsync(() => {
             expect(input.nativeElement.attributes['autocomplete'].value).toEqual('off');
             expect(input.nativeElement.attributes['role'].value).toEqual('combobox');
             expect(input.nativeElement.attributes['aria-autocomplete'].value).toEqual('list');
@@ -786,7 +788,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');
         }));
-        it('Should accept Japanese input', fakeAsync(() => {
+        it('Should accept Japanese input', customFakeAsync(() => {
             UIInteractions.setInputElementValue(input, '東京', fixture);
             fixture.detectChanges();
             tick();
@@ -796,7 +798,7 @@ describe('IgxAutocomplete', () => {
         }));
     });
     describe('Positioning settings tests', () => {
-        it('Panel settings - direction and startPoint: top', fakeAsync(() => {
+        it('Panel settings - direction and startPoint: top', customFakeAsync(() => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.componentInstance.settings = {
                 positionStrategy: new ConnectedPositioningStrategy({
@@ -823,7 +825,7 @@ describe('IgxAutocomplete', () => {
             expect(ddRect.left).toEqual(gRect.left);
         }));
 
-        it('Panel settings - direction: left; StartPoint: right', fakeAsync(() => {
+        it('Panel settings - direction: left; StartPoint: right', customFakeAsync(() => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.componentInstance.settings = {
                 positionStrategy: new ConnectedPositioningStrategy({
@@ -852,7 +854,7 @@ describe('IgxAutocomplete', () => {
         }));
     });
     describe('Other elements integration tests', () => {
-        it('Should be instantiated properly on HTML input', fakeAsync(() => {
+        it('Should be instantiated properly on HTML input', customFakeAsync(() => {
             fixture = TestBed.createComponent(AutocompleteInputComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
@@ -879,7 +881,7 @@ describe('IgxAutocomplete', () => {
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(plainInput.nativeElement.value).toBe(filteredTowns[0]);
         }));
-        it('Should be instantiated properly on HTML textarea', fakeAsync(() => {
+        it('Should be instantiated properly on HTML textarea', customFakeAsync(() => {
             fixture = TestBed.createComponent(AutocompleteInputComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
@@ -906,7 +908,7 @@ describe('IgxAutocomplete', () => {
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(textarea.nativeElement.value).toBe(filteredTowns[0]);
         }));
-        it('Should be instantiated properly on ReactiveForm', fakeAsync(() => {
+        it('Should be instantiated properly on ReactiveForm', customFakeAsync(() => {
             fixture = TestBed.createComponent(AutocompleteFormComponent);
             fixture.detectChanges();
             tick();
@@ -957,7 +959,7 @@ export class IgxAutocompletePipeStartsWith implements PipeTransform {
         <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'
-            [igxAutocompleteSettings]='settings' (selectionChanging)="selectionChanging($event)"/>
+            [igxAutocompleteSettings]='settings' (selectionChanging)="selectionChanging()"/>
         <label igxLabel for="towns">Towns</label>
         <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
     </igx-input-group>
@@ -1037,13 +1039,12 @@ class AutocompleteInputComponent extends AutocompleteComponent {
         <igx-input-group>
             <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
             <input igxInput name="towns" formControlName="towns" type="text" required
-                [igxAutocomplete]='townsPanel'
-                [igxAutocompleteSettings]='settings' />
+                [igxAutocomplete]='townsPanel' />
             <label igxLabel for="towns">Towns</label>
             <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
         </igx-input-group>
         <igx-drop-down #townsPanel>
-            @for (town of towns | startsWith:townSelected; track town+$index) {
+            @for (town of towns; track town+$index) {
                 <igx-drop-down-item [value]="town">
                     {{town}}
                 </igx-drop-down-item>
@@ -1055,6 +1056,7 @@ class AutocompleteInputComponent extends AutocompleteComponent {
     `,
     imports: [
         ReactiveFormsModule,
+        IgxAutocompleteDirective,
         IgxInputGroupComponent,
         IgxInputDirective,
         IgxLabelDirective,
@@ -1062,9 +1064,7 @@ class AutocompleteInputComponent extends AutocompleteComponent {
         IgxRippleDirective,
         IgxDropDownComponent,
         IgxDropDownItemComponent,
-        IgxIconComponent,
-        IgxAutocompleteDirective,
-        IgxAutocompletePipeStartsWith,
+        IgxIconComponent
     ]
 })
 

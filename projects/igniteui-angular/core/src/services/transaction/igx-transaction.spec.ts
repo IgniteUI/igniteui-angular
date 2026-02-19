@@ -3,6 +3,7 @@ import { Transaction, TransactionType, HierarchicalTransaction } from './transac
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
 
+import { describe, it, expect, vi } from 'vitest';
 describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
         it('Should initialize transactions log properly', () => {
@@ -158,7 +159,7 @@ describe('IgxTransaction', () => {
 
         it('Should add ADD type transaction - all feasible paths, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
-            spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+            vi.spyOn(trans.onStateUpdate, 'emit');
             expect(trans).toBeDefined();
 
             // ADD
@@ -663,7 +664,7 @@ describe('IgxTransaction', () => {
 
         it('Should add pending transaction and push it to transaction log, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
-            spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+            vi.spyOn(trans.onStateUpdate, 'emit');
 
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
@@ -713,7 +714,7 @@ describe('IgxTransaction', () => {
 
         it('Should not add pending transaction and push it to transaction log, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
-            spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+            vi.spyOn(trans.onStateUpdate, 'emit');
 
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
@@ -1034,7 +1035,7 @@ describe('IgxTransaction', () => {
         it('Should emit onStateUpdate once when commiting a hierarchical transaction', () => {
             const data = SampleTestData.employeeTreeData();
             const transaction = new IgxHierarchicalTransactionService();
-            spyOn(transaction.onStateUpdate, 'emit').and.callThrough();
+            vi.spyOn(transaction.onStateUpdate, 'emit');
             expect(transaction).toBeDefined();
 
             const updateTransaction: HierarchicalTransaction = {
