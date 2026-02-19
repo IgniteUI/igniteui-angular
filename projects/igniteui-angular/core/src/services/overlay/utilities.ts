@@ -354,7 +354,7 @@ export class Util {
             return null;
         }
         const rect = element.getBoundingClientRect();
-        const viewPortRect = Util.getViewportRect(document);
+        const viewPortRect = Util.getViewportRect(doc);
         const rootMargin = {
             top: -Math.abs(rect.top),
             right: -Math.abs(viewPortRect.width - rect.right),
