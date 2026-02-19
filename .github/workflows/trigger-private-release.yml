@@ -1,0 +1,22 @@
+name: Trigger Private Repo Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  dispatch-to-private-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send repository dispatch to private repo
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.CLASSIC_PAT_GITHUB }}
+          repository: IgniteUI/igniteui-actions
+          event-type: public-release-created
+          client-payload: |
+            {
+              "release_tag": "${{ github.event.release.tag_name }}",
+              "public_repo": "${{ github.repository }}"
+            }
