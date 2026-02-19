@@ -4334,6 +4334,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
         });
 
+
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer?.getScroll()?.removeEventListener('scroll', this.horizontalScrollHandler);

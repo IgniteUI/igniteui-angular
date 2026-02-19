@@ -21,15 +21,9 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         this.io = Util.setupIntersectionObserver(
             outletElement,
             contentElement.ownerDocument,
-            () => this.internalPosition(contentElement)
+            () => this.updatePosition(contentElement)
         );
         this.internalPosition(contentElement);
-    }
-
-    private internalPosition(contentElement: HTMLElement): void {
-        contentElement.classList.add('igx-overlay__content--relative');
-        contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
-        this.updatePosition(contentElement);
     }
 
     /**
@@ -40,6 +34,13 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         this.io = null;
     }
 
+    private internalPosition(contentElement: HTMLElement): void {
+        contentElement.classList.add('igx-overlay__content--relative');
+        contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
+        this.setPosition(contentElement);
+        this.updatePosition(contentElement);
+    }
+
     private updatePosition(contentElement: HTMLElement): void {
         // TODO: consider using new anchor() CSS function when it becomes more widely supported: https://caniuse.com/mdn-css_properties_anchor
         const parentRect = contentElement.parentElement.parentElement.getBoundingClientRect();
@@ -47,6 +48,5 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         contentElement.parentElement.style.height = `${parentRect.height}px`;
         contentElement.parentElement.style.top = `${parentRect.top}px`;
         contentElement.parentElement.style.left = `${parentRect.left}px`;
-        this.setPosition(contentElement);
     }
 }
