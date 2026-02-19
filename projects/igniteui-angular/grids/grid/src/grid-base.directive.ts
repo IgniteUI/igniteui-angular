@@ -4058,6 +4058,13 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.setUpPaginator();
         });
+
+        this.actionStripComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.actionStrip) {
+                this.actionStrip.menuOverlaySettings.outlet = this.outlet;
+            }
+        });
+
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
