@@ -368,6 +368,10 @@ export class IgxOverlayService implements OnDestroy {
         info.detached = true;
         this.finishAnimations(info);
         info.settings.scrollStrategy.detach();
+        // Dispose position strategy if it has a dispose method
+        if (typeof (info.settings.positionStrategy as any).dispose === 'function') {
+            (info.settings.positionStrategy as any).dispose();
+        }
         this.removeOutsideClickListener(info);
         this.removeResizeHandler();
         this.cleanUp(info);
@@ -420,6 +424,15 @@ export class IgxOverlayService implements OnDestroy {
         this.updateSize(info);
         const openAnimation = info.settings.positionStrategy.settings.openAnimation;
         const closeAnimation = info.settings.positionStrategy.settings.closeAnimation;
+        // Show the overlay using Popover API BEFORE positioning
+        // This ensures the element is in the top layer when position calculations happen
+        if (info.wrapperElement?.isConnected && typeof info.wrapperElement.showPopover === 'function') {
+            try {
+                info.wrapperElement.showPopover();
+            } catch (_) {
+                // Popover API call failed, element may already be showing
+            }
+        }
         info.settings.positionStrategy.position(
             info.elementRef.nativeElement.parentElement,
             { width: info.initialSize.width, height: info.initialSize.height },
@@ -646,6 +659,8 @@ export class IgxOverlayService implements OnDestroy {
     private getWrapperElement(): HTMLElement {
         const wrapper: HTMLElement = this._document.createElement('div');
         wrapper.classList.add('igx-overlay__wrapper');
+        // Use Popover API to place element in top layer, eliminating need for z-index
+        wrapper.setAttribute('popover', 'manual');
         return wrapper;
     }
 
@@ -700,6 +715,16 @@ export class IgxOverlayService implements OnDestroy {
         if (info.wrapperElement) {
             // to eliminate flickering show the element just before animation start
             info.wrapperElement.style.visibility = 'hidden';
+            // Hide from popover top layer if element is connected, showing, and API is available
+            if (info.wrapperElement.isConnected &&
+                typeof info.wrapperElement.hidePopover === 'function' &&
+                info.wrapperElement.matches(':popover-open')) {
+                try {
+                    info.wrapperElement.hidePopover();
+                } catch (_) {
+                    // Hide failed, element may not be in popover state
+                }
+            }
         }
         if (!info.closeAnimationDetaching) {
             this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
