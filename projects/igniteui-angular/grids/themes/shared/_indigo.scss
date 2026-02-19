@@ -1,0 +1,191 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/typography/mixins' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/elevations' as *;
+@use 'styles/themes/standalone' as *;
+
+// TODO type style is throwing an error
+
+@include themed-block(igx-grid, indigo) {
+    --cell-height: #{sizable(rem(32px), rem(40px), rem(48px))};
+    --header-size: #{sizable(rem(32px), rem(40px), rem(48px))};
+    --grouparea-size: #{sizable(rem(40px), rem(48px), rem(55px))};
+    --_expander-icon-width: #{rem(16px)};
+    --_hierarchical-action-icon: #{rem(16px)};
+    --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
+    --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+    --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+
+    %cell-display {
+        // TODO THIS RETURNS NOT VALID TYPE STYLES
+        //@include type-style('detail-1');
+
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px))
+    }
+
+
+    @include e(filtering-row-main) {
+        igx-chips-area {
+            // Can't uae gap on the parent because dropdown container is present in the dom
+            margin-inline: rem(12px);
+            gap: rem(4px);
+        }
+    }
+
+    @include e(filtering-row) {
+        igx-input-group {
+            --size: calc(sizable(rem(32px), rem(40px), rem(48px)) - #{rem(8px)});
+        }
+    }
+
+    @include e(td) {
+        @extend %cell-display;
+    }
+
+    @include e(td, $m: bool) {
+        --component-size: 2;
+
+        .igx-icon--error {
+            color: color($color: 'gray', $variant: 500);
+        }
+    }
+
+    @include e(tr, $m: edited) {
+        &::before {
+            width: rem(4px);
+        }
+    }
+
+    @include e(tr, $m: header) {
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(tr-action) {
+        &:last-of-type {
+            min-height: sizable(rem(32px), rem(40px), rem(48px));
+        }
+    }
+
+    @include e(tree-grouping-indicator) {
+        margin-inline-end: rem(4px);
+
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(hierarchical-expander) {
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(header-indentation) {
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(group-content) {
+        padding-inline-start: 0;
+    }
+
+    @include e(grouping-indicator) {
+        padding-inline-end: rem(16px);
+
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(tr-pivot) {
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+}
+
+@include themed-block(igx-grid-th, indigo) {
+    @extend %cell-display;
+
+    @include e(expander) {
+        --component-size: 2;
+    }
+
+    @include e(icons) {
+        .igx-excel-filter__icon {
+            --igx-icon-size: #{rem(12px)};
+        }
+    }
+
+    @include m(filtrable) {
+        :where(.igx-grid-th__title) {
+            opacity: .75;
+        }
+    }
+
+    @include m(sortable) {
+        @include e(icons) {
+            .sort-icon {
+                opacity: .75;
+            }
+        }
+    }
+
+    @include mx(filtrable, sortable) {
+        :where(.sort-icon) {
+            opacity: 1;
+        }
+    }
+
+    @include e(title) {
+        //@include type-style('detail-2', false)
+    }
+
+    @include e(icons) {
+        .sort-icon igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(group-title) {
+        //@include type-style('detail-2', false);
+    }
+}
+
+@include themed-block(igx-grid-thead, indigo) {
+    @include e(title) {
+        @extend %cell-display;
+    }
+}
+
+@include themed-block(igx-drop-area, indigo) {
+    padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+}
+
+@include themed-block(igx-group-label, indigo) {
+    @include e(text) {
+        //@include type-style('detail-1', false);
+    }
+
+    @include e(icon) {
+        @at-root igx-icon#{&} {
+            --component-size: 2;
+        }
+    }
+
+    @include e(column-name) {
+        //@include type-style('detail-2', false);
+    }
+
+    @include e(count-badge) {
+        --shadow: none;
+    }
+}
+
+@include themed-block(igx-advanced-filter, indigo) {
+    background: contrast-color($color: 'gray', $variant: 900);
+    box-shadow: elevation(24);
+    border-radius: rem(10px);
+}
