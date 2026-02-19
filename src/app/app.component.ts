@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
 
     public drawerState = {
         enableGestures: true,
-        open: true,
+        open: signal(true),
         pin: false,
         pinThreshold: 768,
         position: 'left',
