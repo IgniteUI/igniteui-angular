@@ -36,6 +36,9 @@ jobs:
       - name: Build igniteui-angular-i18n
         run: npm run build:i18n
 
+      - name: Build igniteui-angular-extras
+        run: npm run build:extras 
+
       - name: Define npm tag
         run: |
             if [[ ${VERSION} == *"alpha"* || ${VERSION} == *"beta"* || ${VERSION} == *"rc"* ]]; then echo "NPM_TAG=next"; else echo "NPM_TAG=latest"; fi >> $GITHUB_ENV
@@ -54,6 +57,12 @@ jobs:
             cp ../../projects/igniteui-angular-i18n/LICENSE LICENSE
         working-directory: dist/igniteui-angular-i18n
 
+      - name: Copy extras files
+        run: |
+            cp ../../projects/igniteui-angular-extras/README.md README.md
+            cp ../../projects/igniteui-angular-extras/LICENSE LICENSE
+        working-directory: dist/igniteui-angular-extras
+
       - name: Create igniteui-angular version
         run: npm version ${VERSION} --no-git-tag-version --save --verbose
         working-directory: dist/igniteui-angular
@@ -62,6 +71,10 @@ jobs:
         run: npm version ${VERSION} --no-git-tag-version --save
         working-directory: dist/igniteui-angular-i18n
 
+      - name: Create igniteui-angular-extras version
+        run: npm version ${VERSION} --no-git-tag-version --save
+        working-directory: dist/igniteui-angular-extras
+
       - name: Publish igniteui-angular
         run: npm publish --tag ${NPM_TAG}
         working-directory: dist/igniteui-angular
@@ -69,3 +82,7 @@ jobs:
       - name: Publish igniteui-angular-i18n
         run: npm publish --tag ${NPM_TAG}
         working-directory: dist/igniteui-angular-i18n
+
+      - name: Publish igniteui-angular-extras
+        run: npm publish --tag ${NPM_TAG}
+        working-directory: dist/igniteui-angular-extras
