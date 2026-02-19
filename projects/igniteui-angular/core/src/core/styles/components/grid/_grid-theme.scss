@@ -436,43 +436,43 @@
     igx-tree-grid {
         @if $variant == 'material' {
             @if $theme-variant == 'light' {
-                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
-                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 300)};
-                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
+                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 300)};
+                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
             }
             @if $theme-variant == 'dark' {
-                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
-                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
+                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
             }
         }
 
         @if $variant == 'fluent' {
             @if $theme-variant == 'dark' {
-                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
-                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
+                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
             }
         }
 
         @if $variant == 'bootstrap' {
             @if $theme-variant == 'dark' {
-                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
-                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
+                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
             }
         }
 
         @if $variant == 'indigo' {
             @if $theme-variant == 'light' {
-                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
-                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
+                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
             }
             @if $theme-variant == 'dark' {
-                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
-                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
+                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
             }
         }
     }
@@ -501,7 +501,7 @@
             map.get($grouparea-min-height, 'comfortable')
         )};
 
-        --igx-tree-indent-size: #{sizable(rem(12px), rem(16px), rem(24px))};
+        --ig-tree-indent-size: #{sizable(rem(12px), rem(16px), rem(24px))};
 
         position: relative;
         display: grid;
@@ -1284,9 +1284,9 @@
 
         > igx-icon {
             color: color($color: 'error');
-            width: var(--igx-icon-size, rem(18px));
-            height: var(--igx-icon-size, rem(18px));
-            font-size: var(--igx-icon-size, rem(18px));
+            width: var(--ig-icon-size, rem(18px));
+            height: var(--ig-icon-size, rem(18px));
+            font-size: var(--ig-icon-size, rem(18px));
         }
 
         %grid-cell-text {
@@ -1544,7 +1544,7 @@
 
             @if $variant != 'indigo' {
                 igx-icon {
-                    --size: var(--igx-icon-size, #{rem(15px)});
+                    --size: var(--ig-icon-size, #{rem(15px)});
                 }
             }
 
@@ -2175,9 +2175,9 @@
         margin: 0 rem(4px);
 
         igx-icon {
-            width: var(--igx-icon-size, #{rem(16px)});
-            height: var(--igx-icon-size, #{rem(16px)});
-            font-size: var(--igx-icon-size, #{rem(16px)});
+            width: var(--ig-icon-size, #{rem(16px)});
+            height: var(--ig-icon-size, #{rem(16px)});
+            font-size: var(--ig-icon-size, #{rem(16px)});
         }
 
         [dir='rtl'] & {
