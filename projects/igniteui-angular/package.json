@@ -104,7 +104,7 @@
         }
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~21.0.1480"
+        "@igniteui/angular-schematics": "~21.1.1490-beta.0"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json",

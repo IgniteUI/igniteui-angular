@@ -47,6 +47,11 @@ All notable changes for each version of this project will be documented in this 
         ```
 - `IgxNavigationDrawer` - Integrated HTML Popover API to place overlay elements when not pinned in the top layer, eliminating z-index stacking issues.
 
+- `IgxOverlayService`
+    - Integrated HTML Popover API into the overlay service for improved z-index management and layering control.
+    - The overlay service now uses the Popover API to place overlay elements in the top layer, eliminating z-index stacking issues.
+    - Improved positioning accuracy for container-based overlays with fixed container bounds.
+
 ### General
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
