@@ -1,9 +1,39 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { ComponentRef, Directive, ElementRef, inject, Injector, NgZone } from '@angular/core';
+import { ComponentRef, Directive, ElementRef, inject, Injectable, Injector, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
+
+type SetInitialSizeFn = (info: OverlayInfo, moveToOverlay: () => void) => void;
+
+/**
+ * Maps a host `HTMLElement` to a sizing strategy (`SetInitialSizeFn`).
+ *
+ * @hidden
+ * @internal
+ */
+
+@Injectable({ providedIn: 'root' })
+export class OverlaySizeRegistry {
+    private readonly map = new Map<HTMLElement, SetInitialSizeFn>();
+
+    public register(host: HTMLElement, fn: SetInitialSizeFn): void {
+        this.map.set(host, fn);
+    }
+
+    public clear(host: HTMLElement): void {
+        this.map.delete(host);
+    }
+
+    public get(info: OverlayInfo): SetInitialSizeFn | undefined {
+        if (!info.elementRef || !info.elementRef.nativeElement) {
+            return;
+        }
+
+        return this.map.get(info.elementRef.nativeElement);
+    }
+}
 
 /**
  * @hidden @internal

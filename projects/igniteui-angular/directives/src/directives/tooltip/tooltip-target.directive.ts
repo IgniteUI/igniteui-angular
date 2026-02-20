@@ -1,5 +1,5 @@
 import {
-    Directive, OnInit, OnDestroy, Output, ElementRef, ViewContainerRef,
+    Directive, OnInit, OnDestroy, Output, ViewContainerRef,
     Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2,
     EnvironmentInjector,
     createComponent,

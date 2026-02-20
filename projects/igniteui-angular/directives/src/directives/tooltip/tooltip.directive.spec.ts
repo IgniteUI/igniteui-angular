@@ -2,7 +2,7 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent, IgxTooltipNestedTooltipsComponent } from '../../../../test-utils/tooltip-components.spec';
+import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent, IgxTooltipNestedTooltipsComponent, IgxTooltipSizeComponent } from '../../../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../../../core/src/services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
@@ -32,7 +32,8 @@ describe('IgxTooltip', () => {
                 IgxTooltipWithToggleActionComponent,
                 IgxTooltipWithCloseButtonComponent,
                 IgxTooltipWithNestedContentComponent,
-                IgxTooltipNestedTooltipsComponent
+                IgxTooltipNestedTooltipsComponent,
+                IgxTooltipSizeComponent
             ]
         }).compileComponents();
         UIInteractions.clearOverlay();
@@ -979,6 +980,31 @@ describe('IgxTooltip', () => {
             fix.detectChanges();
 
             expect(fix.componentInstance.toggleDir.collapsed).toBe(false);
+        }));
+
+        it('correctly sizes the tooltip/overlay content when inside an element - issue #16458', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxTooltipSizeComponent);
+            fixture.detectChanges();
+
+            fixture.componentInstance.target1.showTooltip();
+            fixture.componentInstance.target2.showTooltip();
+            fixture.componentInstance.target3.showTooltip();
+            flush();
+
+            const tooltip1Rect = fixture.componentInstance.tooltip1.element.getBoundingClientRect();
+            const tooltip2Rect = fixture.componentInstance.tooltip2.element.getBoundingClientRect();
+            const tooltip3Rect = fixture.componentInstance.tooltip3.element.getBoundingClientRect();
+
+            const tooltip1ParentRect = fixture.componentInstance.tooltip1.element.parentElement.getBoundingClientRect();
+            const tooltip2ParentRect = fixture.componentInstance.tooltip2.element.parentElement.getBoundingClientRect();
+            const tooltip3ParentRect = fixture.componentInstance.tooltip3.element.parentElement.getBoundingClientRect();
+
+            expect(tooltip1Rect.width).toEqual(tooltip1ParentRect.width);
+            expect(tooltip1Rect.height).toEqual(tooltip1ParentRect.height);
+            expect(tooltip2Rect.width).toEqual(tooltip2ParentRect.width);
+            expect(tooltip2Rect.height).toEqual(tooltip2ParentRect.height);
+            expect(tooltip3Rect.width).toEqual(tooltip3ParentRect.width);
+            expect(tooltip3Rect.height).toEqual(tooltip3ParentRect.height);
         }));
     });
 
