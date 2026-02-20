@@ -2231,6 +2231,34 @@ describe('IgxSimpleCombo', () => {
 
             expect(document.activeElement).not.toBe(input.nativeElement);
         }));
+
+        it('should sync searchValue/filterValue on writeValue and keep selection on blur', fakeAsync(() => {
+            combo.searchValue = combo.filterValue = 'zzz';
+
+            combo.writeValue('Connecticut');
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.displayValue).toEqual('Connecticut');
+            expect(combo.searchValue).toEqual('Connecticut');
+            expect(combo.filterValue).toEqual('Connecticut');
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.selection).toBeDefined();
+            expect(combo.selection.field).toEqual('Connecticut');
+            expect(combo.displayValue).toEqual('Connecticut');
+            expect(input.nativeElement.value).toEqual('Connecticut');
+        }));
     });
 
     describe('Form control tests: ', () => {
