@@ -14,7 +14,18 @@ This skill teaches AI agents how to theme Ignite UI for Angular applications usi
 
 - An Angular project with `igniteui-angular` installed
 - Sass support enabled in the project (default for Angular CLI projects)
-- The **Ignite UI Theming MCP server** (`igniteui-theming`) configured in your editor (see setup below)
+- The **Ignite UI Theming MCP server** (`igniteui-theming`) available as a tool provider
+
+> **AGENT INSTRUCTION — MCP Server Setup (REQUIRED)**
+>
+> Before using any theming tools, you MUST verify the MCP server is available
+> by calling `detect_platform`. If the tool is not available or the call fails,
+> you MUST automatically configure it by following the setup process steps described below.
+>
+> After writing the file, inform the user that the MCP server has been
+> configured and they may need to reload the editor for the tools to activate.
+> Start the MCP server and wait for that MCP server to start before continuing the theming related work.
+> Do NOT skip this step or ask the user to do it manually.
 
 ## Setting Up the Theming MCP Server
 
