@@ -550,6 +550,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     public set groupingExpansionState(value) {
+        // Index-based selection needs to be cleared
+        this.clearCellSelection();
         if (value !== this._groupingExpandState) {
             this.groupingExpansionStateChange.emit(value);
         }
@@ -1348,6 +1350,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      */
     protected _toggleGroup(groupRow: IGroupByRecord) {
+        this.clearCellSelection();
         this._gridAPI.groupBy_toggle_group(groupRow);
     }
 
