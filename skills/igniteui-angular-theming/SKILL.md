@@ -1,3 +1,9 @@
+---
+name: igniteui-angular-theming
+description: Customize Ignite UI Angular styling using the igniteui-theming MCP server for AI-assisted theming
+user-invokable: true
+---
+
 # Ignite UI for Angular — Theming Skill
 
 ## Description
@@ -20,12 +26,10 @@ Create or edit `.vscode/mcp.json` in your project:
 
 ```json
 {
-  "mcp": {
-    "servers": {
-      "igniteui-theming": {
-        "command": "npx",
-        "args": ["-y", "igniteui-theming", "igniteui-theming-mcp"]
-      }
+  "servers": {
+    "igniteui-theming": {
+      "command": "npx",
+      "args": ["-y", "igniteui-theming", "igniteui-theming-mcp"]
     }
   }
 }

@@ -1,3 +1,9 @@
+---
+name: igniteui-angular-grids
+description: Build data-rich Angular apps with Ignite UI Grid, Tree Grid, Hierarchical Grid, and Pivot Grid
+user-invokable: true
+---
+
 # Ignite UI for Angular — Data Grids Skill
 
 ## Description

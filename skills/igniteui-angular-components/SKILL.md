@@ -1,3 +1,9 @@
+---
+name: igniteui-angular-components
+description: Build Angular apps with Ignite UI standalone components, form controls, layout, and data display
+user-invokable: true
+---
+
 # Ignite UI for Angular — Components & Layout Skill
 
 ## Description
