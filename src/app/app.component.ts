@@ -367,6 +367,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Events'
         },
         {
+            link: '/gridDataAnalysis',
+            icon: 'view_column',
+            name: 'Grid Data Analysis'
+        },
+        {
             link: '/gridFinJS',
             icon: 'view_column',
             name: 'Grid FinJS'
