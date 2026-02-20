@@ -3839,6 +3839,33 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
+        it('Should keep conditionName in sync when changing condition in ESF custom dialog.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            // Open custom dialog with 'contains' condition (index 0 in cascade menu for string column)
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(100);
+
+            // set first expression's value
+            GridFunctions.setInputValueESF(fix, 0, 'Net');
+            tick(100);
+
+            // change first expression's operator from 'contains' to 'startsWith' (index 2 for string column)
+            GridFunctions.setOperatorESF(fix, 0, 2);
+            tick(100);
+
+            GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+
+            const operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'startsWith', 'Net');
+        }));
+
         it('Should filter grid via custom dialog - 3 expressions.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Released');
 
