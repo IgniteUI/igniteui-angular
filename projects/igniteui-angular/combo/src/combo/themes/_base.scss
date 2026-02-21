@@ -29,7 +29,7 @@ $theme: $base;
         }
 
         @include e(search) {
-            --igx-input-group-border-border-radius: 0;
+            --ig-input-group-border-border-radius: 0;
 
             padding-inline: var(--_search-input-inline-padding);
             padding-block: var(--_search-input-block-padding);
@@ -48,7 +48,7 @@ $theme: $base;
             background: transparent;
 
             .igx-icon--inactive {
-                --igx-icon-disabled-color: color($color: 'gray', $variant: 600);
+                --ig-icon-disabled-color: color($color: 'gray', $variant: 600);
 
                 opacity: 1;
             }

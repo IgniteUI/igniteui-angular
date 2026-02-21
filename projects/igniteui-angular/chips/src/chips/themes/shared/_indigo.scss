@@ -8,7 +8,7 @@ $_theme: $indigo;
 
 @include themed-block(igx-chip, indigo) {
     @include e(item) {
-        --igx-icon-size: #{sizable(rem(14px), rem(14px), rem(16px))};
+        --ig-icon-size: #{sizable(rem(14px), rem(14px), rem(16px))};
         --affix-margin: calc(#{sizable(rem(1px), rem(3px), rem(4px))} * -1);
 
         padding-inline: #{sizable(rem(3px), rem(5px), rem(7px))};

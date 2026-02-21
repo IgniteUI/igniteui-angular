@@ -17,7 +17,7 @@ $_theme: $indigo;
             color: var-get($_theme, 'item-hover-icon-color');
         }
     }
-    
+
     %hover-selected {
         background: var-get($_theme, 'item-selected-hover-background');
         color: var-get($_theme, 'item-selected-hover-text-color');
@@ -37,7 +37,6 @@ $_theme: $indigo;
             $icon-size: rem(16px);
 
             --ig-icon-size: #{$icon-size};
-            --igx-icon-size: #{$icon-size};
         }
 
         &:hover {

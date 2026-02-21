@@ -6,7 +6,7 @@
 @use '../light/tokens' as *;
 
 @include themed-block(igx-badge, indigo) {
-    --igx-icon-size: #{sizable(rem(8px), rem(10px), rem(12px))};
+    --ig-icon-size: #{sizable(rem(8px), rem(10px), rem(12px))};
 
     @include type-style('button', false) {
         font-size: sizable(rem(9px), rem(10px), var(--ig-button-font-size));

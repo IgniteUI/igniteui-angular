@@ -45,7 +45,7 @@ $theme: $material;
     }
 
     @include b(igx-tabs-header-button) {
-        --igx-ripple-color: var(--button-ripple-color);
+        --ig-ripple-color: var(--button-ripple-color);
 
         display: flex;
         align-items: center;

@@ -40,8 +40,8 @@ $_theme: $material;
 
     @include b(igx-nav-drawer) {
         // TODO: These should probably be a part of the design tokens schema
-        --igx-nav-drawer-size: #{rem(240px)};
-        --igx-nav-drawer-size--mini: var(--nav-drawer-size--mini);
+        --ig-nav-drawer-size: #{rem(240px)};
+        --ig-nav-drawer-size--mini: var(--nav-drawer-size--mini);
 
         flex-basis: 0;
         transition: flex-basis;
@@ -50,21 +50,22 @@ $_theme: $material;
         flex-shrink: 0;
 
         @include m(pinned) {
-            flex-basis: var(--igx-nav-drawer-size);
+            flex-basis: var(--ig-nav-drawer-size);
         }
 
         @include mx(mini, pinned) {
-            flex-basis: calc(var(--igx-mini-nav-drawer-size, var(--igx-nav-drawer-size--mini)) + rem(1px));
+            flex-basis: calc(var(--ig-mini-nav-drawer-size, var(--ig-nav-drawer-size--mini)) + rem(1px));
         }
 
         @include e(aside) {
             position: fixed;
+            display: block;
             height: 100%;
             min-height: 100%;
             overflow-x: hidden;
             background: var-get($_theme, 'background');
             inset: 0 auto;
-            width: var(--igx-nav-drawer-size);
+            width: var(--ig-nav-drawer-size);
             inset-inline-start: 0;
             transition: width, padding, transform;
             transition-timing-function: $ease-in-out-quad;
@@ -76,7 +77,6 @@ $_theme: $material;
             // additional popover overrides:
             margin: 0;
             border: none;
-            display: block;
         }
 
         @include e(aside, panning) {
@@ -111,7 +111,7 @@ $_theme: $material;
 
         @include e(aside, mini) {
             transition-duration: .3s;
-            width: var(--igx-nav-drawer-size--mini);
+            width: var(--ig-nav-drawer-size--mini);
             min-width: fit-content;
 
             [igxDrawerItem] {
@@ -127,7 +127,7 @@ $_theme: $material;
 
         @include e(aside, normal) {
             transition-duration: .3s;
-            width: var(--igx-nav-drawer-size);
+            width: var(--ig-nav-drawer-size);
         }
 
         @include e(aside, pinned) {
@@ -223,9 +223,9 @@ $_theme: $material;
             box-shadow: none;
 
             igx-icon {
-                width: var(--igx-icon-size, rem(24px));
-                height: var(--igx-icon-size, rem(24px));
-                font-size: var(--igx-icon-size, rem(24px));
+                width: var(--ig-icon-size, rem(24px));
+                height: var(--ig-icon-size, rem(24px));
+                font-size: var(--ig-icon-size, rem(24px));
                 margin: 0;
             }
 

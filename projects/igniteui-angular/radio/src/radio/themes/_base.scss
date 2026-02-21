@@ -110,7 +110,7 @@ $_theme: $material;
             color: var-get($_theme, 'label-color');
             user-select: none;
 
-            --igx-ripple-color: #{var-get($_theme, 'empty-color')};
+            --ig-ripple-color: #{var-get($_theme, 'empty-color')};
 
             &::before,
             &::after {
@@ -180,7 +180,7 @@ $_theme: $material;
 
         @include m(checked) {
             @include e(composite) {
-                --igx-ripple-color: #{var-get($_theme, 'fill-color')};
+                --ig-ripple-color: #{var-get($_theme, 'fill-color')};
 
                 &::before {
                     border: var(--border-width) solid
@@ -293,7 +293,7 @@ $_theme: $material;
 
         @include m(invalid) {
             @include e(composite) {
-                --igx-ripple-color: #{var-get($_theme, 'error-color')};
+                --ig-ripple-color: #{var-get($_theme, 'error-color')};
 
                 &::after {
                     border: var(--border-width) solid

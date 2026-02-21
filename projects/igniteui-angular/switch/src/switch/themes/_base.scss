@@ -125,7 +125,7 @@ $_theme: $material;
             transition: $input-transition;
             transition-delay: var(--_transition-delay);
 
-            --igx-ripple-color: #{var-get($_theme, 'track-off-color')};
+            --ig-ripple-color: #{var-get($_theme, 'track-off-color')};
         }
 
         @include e(composite-thumb) {
@@ -217,7 +217,7 @@ $_theme: $material;
                 background: var-get($_theme, 'track-on-color');
                 border-color: var-get($_theme, 'border-on-color');
 
-                --igx-ripple-color: #{var-get($_theme, 'thumb-on-color')};
+                --ig-ripple-color: #{var-get($_theme, 'thumb-on-color')};
             }
 
             @include e(composite-thumb) {
