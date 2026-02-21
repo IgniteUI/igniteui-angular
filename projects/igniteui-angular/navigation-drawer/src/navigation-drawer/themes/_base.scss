@@ -54,7 +54,7 @@ $_theme: $material;
         }
 
         @include mx(mini, pinned) {
-            flex-basis: calc(var(--igx-mini-nav-drawer-size, #{var(--igx-nav-drawer-size--mini)}) + rem(1px));
+            flex-basis: calc(var(--igx-mini-nav-drawer-size, var(--igx-nav-drawer-size--mini)) + rem(1px));
         }
 
         @include e(aside) {
@@ -63,17 +63,20 @@ $_theme: $material;
             min-height: 100%;
             overflow-x: hidden;
             background: var-get($_theme, 'background');
-            top: 0;
-            bottom: 0;
+            inset: 0 auto;
             width: var(--igx-nav-drawer-size);
             inset-inline-start: 0;
-            z-index: 999;
             transition: width, padding, transform;
             transition-timing-function: $ease-in-out-quad;
             box-shadow: var-get($_theme, 'elevation');
             padding: var(--aside-padding);
             border-inline-end: rem(1px) solid var-get($_theme, 'border-color');
             border-radius: var-get($_theme, 'border-radius');
+
+            // additional popover overrides:
+            margin: 0;
+            border: none;
+            display: block;
         }
 
         @include e(aside, panning) {
@@ -108,7 +111,7 @@ $_theme: $material;
 
         @include e(aside, mini) {
             transition-duration: .3s;
-            width: #{var(--igx-nav-drawer-size--mini)};
+            width: var(--igx-nav-drawer-size--mini);
             min-width: fit-content;
 
             [igxDrawerItem] {
@@ -130,7 +133,6 @@ $_theme: $material;
         @include e(aside, pinned) {
             position: relative;
             box-shadow: none;
-            z-index: 0;
         }
 
         @include e(aside, $mods: (pinned, collapsed)) {
@@ -150,11 +152,16 @@ $_theme: $material;
             transition-delay: 0s, 0s;
             position: absolute;
             inset-inline-start: 0;
-            top: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
             visibility: visible;
-            z-index: 999;
+
+            // additional popover overrides:
+            margin: 0;
+            padding: 0;
+            border: none;
+            display: block;
         }
 
         @include e(overlay, panning) {
