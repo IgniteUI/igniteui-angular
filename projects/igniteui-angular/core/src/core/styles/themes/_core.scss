@@ -163,6 +163,7 @@
     @include gauge.component();
     @include geo-map.component();
     @include graph.component();
+    @include grid.component();
     @include highlight.component();
     @include icon-button.component();
     @include label.component();
