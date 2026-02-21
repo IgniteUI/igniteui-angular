@@ -862,7 +862,6 @@ export class IgxNavigationDrawerComponent implements
                 this.renderer.setStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
             } else {
                 this.renderer.setStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
-                this.renderer.setStyle(this.drawer, '-webkit-transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
             }
             if (opacity !== undefined) {
                 this.renderer.setStyle(this.overlay, 'opacity', opacity);

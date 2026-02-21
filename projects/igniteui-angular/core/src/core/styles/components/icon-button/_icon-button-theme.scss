@@ -105,7 +105,7 @@
                     color var(--_init-transition, 0.15s) ease-out,
                     background var(--_init-transition, 0.15s) ease-out;
 
-                &::after {
+                ::after {
                     position: absolute;
                     content: '';
                     pointer-events: none;
