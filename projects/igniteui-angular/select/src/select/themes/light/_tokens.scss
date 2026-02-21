@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/select' as *;
+
+$base: digest-schema($light-select);
+$material: digest-schema($material-select);
+$bootstrap: digest-schema($bootstrap-select);
+$fluent: digest-schema($fluent-select);
+$indigo: digest-schema($indigo-select);

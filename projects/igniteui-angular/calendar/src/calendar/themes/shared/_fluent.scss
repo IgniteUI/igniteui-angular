@@ -1,0 +1,44 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'igniteui-theming/sass/animations/index' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-calendar, fluent) {
+    @include e(header) {
+        padding: rem(16px);
+    }
+
+    @include e(pickers, $m: 'days') {
+        gap: rem(40px);
+    }
+
+    @include e(body) {
+        column-gap: rem(44px);
+    }
+
+    @include e(header-year) {
+        @include type-style(overline);
+        margin: 0;
+    }
+
+    @include e(header-date) {
+        @include type-style(h4);
+        margin: 0;
+    }
+
+    @include m(vertical) {
+        @include e(header) {
+            min-width: rem(168px);
+            width: rem(168px);
+        }
+
+        @include e(header-date) {
+            margin: 0;
+        }
+    }
+}
