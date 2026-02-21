@@ -11,14 +11,14 @@
     }
 }
 
-/// Includes a block element (@see block) for a specific component, theme, and variant.
+/// Includes a block element for a specific component, theme, and variant.
 /// @access private
 /// @group bem
 /// @param {String} $component - The class selector of the component.
 /// @param {String} $theme - The target theme - material, bootstrap, fluent, indigo.
 /// @param {String} $variant - The target variant - light, dark.
 /// @requires {mixin} b
-/// @example scss
+/// @output The styles defined within the block will be scoped to elements matching the specified theme and variant.
 @mixin themed-block($component, $theme, $variant: null) {
     $_theme: '' + $theme;
 
@@ -45,7 +45,7 @@
 /// @param {Map} $tokens - The resolved component schemas/tokens for each theme.
 /// @param {String} $variant - The target variant - light, dark.
 /// @requires {mixin} themed-block
-/// @example scss
+/// @output The CSS variables defined within the tokens will be scoped to elements matching each theme and variant.
 @mixin themes($component, $tokens, $variant) {
     @each $theme in ('material', 'bootstrap', 'fluent', 'indigo') {
         @include themed-block($component, $theme, $variant) {
@@ -75,6 +75,7 @@
 ///   $result: split-map($colors, (primary, secondary));
 ///   // $result[1] = (primary: blue, secondary: green)
 ///   // $result[2] = (tertiary: yellow, quaternary: purple)
+/// @returns A list containing two maps: the first with the picked keys and the second with the remaining keys.
 @function split-map($map, $pick-keys) {
     $map-1: ();
     $map-2: ();
