@@ -72,12 +72,12 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            user-select: none;
-            outline-style: none;
-            -webkit-tap-highlight-color: transparent;
-            overflow: hidden;
-            white-space: nowrap;
+            width: var(--ig-icon-size, #{$icon-in-button-size});
+            height: var(--ig-icon-size, #{$icon-in-button-size});
+            font-size: var(--ig-icon-size, #{$icon-in-button-size});
+        }
+
+        @if $variant == 'fluent' {
             transition:
                 box-shadow var(--_init-transition, 0.2s) ease-in,
                 background var(--_init-transition, 0.15s) ease-out;

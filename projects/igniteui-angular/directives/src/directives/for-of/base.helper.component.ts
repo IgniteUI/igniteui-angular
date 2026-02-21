@@ -43,11 +43,6 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         this._scrollNativeSize = this.calculateScrollNativeSize();
     }
 
-    @HostListener('scroll', ['$event'])
-    public onScroll(event) {
-        this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
-    }
-
 
     public ngAfterViewInit() {
         this._afterViewInit = true;

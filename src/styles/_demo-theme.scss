@@ -13,30 +13,12 @@ body {
 
 @include core();
 @include typography($font-family: $typeface, $type-scale: $type-scale);
-@include theme(
-    $palette: $palette,
-    $schema: $schema,
-);
-
-
-.indigo {
-    --ig-theme-variant: dark;
-
-    @include palette($dark-indigo-palette);
-}
-
-.indigo-avatar {
-    @include css-vars(avatar-theme($schema: $dark-indigo-schema));
-}
-
-.dock {
-    @include css-vars(dock-manager-theme());
-}
+@include theme($palette: $palette, $schema: $schema);
 
 .nav-header {
     @if $variant == 'light' {
-        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg');
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg.png');
     } @else {
-        @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg');
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg.png');
     }
 }

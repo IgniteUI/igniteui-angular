@@ -93,7 +93,7 @@
 
         @if $variant != 'indigo' {
             igx-icon {
-                --size: var(--igx-icon-size, #{rem(15px)});
+                --size: var(--ig-icon-size, #{rem(15px)});
             }
         }
     }
@@ -190,6 +190,8 @@
                 &:not(:nth-child(1)) {
                     margin: 0;
                 }
+
+                @include type-style('button');
             }
         }
 
@@ -544,9 +546,9 @@
             }
 
             igx-icon {
-                width: var(--igx-icon-size, #{$tree-node-expander-size});
-                height: var(--igx-icon-size, #{$tree-node-expander-size});
-                font-size: var(--igx-icon-size, #{$tree-node-expander-size});
+                width: var(--ig-icon-size, #{$tree-node-expander-size});
+                height: var(--ig-icon-size, #{$tree-node-expander-size});
+                font-size: var(--ig-icon-size, #{$tree-node-expander-size});
             }
 
             > igx-checkbox,
@@ -692,9 +694,9 @@
         }
 
         igx-icon {
-            width: var(--igx-icon-size, #{rem(18px)});
-            height: var(--igx-icon-size, #{rem(18px)});
-            font-size: var(--igx-icon-size, #{rem(18px)});
+            width: var(--ig-icon-size, #{rem(18px)});
+            height: var(--ig-icon-size, #{rem(18px)});
+            font-size: var(--ig-icon-size, #{rem(18px)});
         }
     }
 
@@ -804,10 +806,6 @@
         %cbx-label {
             @include type-style('body-2');
         }
-    }
-
-    %igx-group-item {
-        @include type-style('button');
     }
 
     %grid-excel-menu__secondary--cosy {
