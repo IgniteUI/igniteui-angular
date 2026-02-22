@@ -187,15 +187,45 @@ $dark-palette: palette(
 
 ## Component-Level Theming
 
-Override individual component appearance using component theme functions and the `tokens` mixin:
+Override individual component appearance using component theme functions and the `tokens` mixin.
+
+> **AGENT INSTRUCTION — No Hardcoded Colors (CRITICAL)**
+>
+> Once a palette has been generated (via `palette()` in Sass or `create_palette` / `create_theme` via MCP),
+> **every color reference MUST come from the generated palette tokens** — never hardcode hex/RGB/HSL values.
+>
+> Use `var(--ig-primary-500)`, `var(--ig-secondary-300)`, `var(--ig-surface-500)`, etc. in CSS,
+> or the `get_color` MCP tool to obtain the correct token reference.
+>
+> **WRONG** (hardcoded hex — breaks theme switching, ignores the palette):
+> ```scss
+> $custom-avatar: avatar-theme(
+>   $background: #E91E63,
+>   $color: #FFFFFF
+> );
+> ```
+>
+> **RIGHT** (palette token — stays in sync with the theme):
+> ```scss
+> $custom-avatar: avatar-theme(
+>   $schema: $light-material-schema,
+>   $background: var(--ig-primary-500),
+>   $color: var(--ig-primary-500-contrast)
+> );
+> ```
+>
+> This applies to **all** style code: component themes, custom CSS rules, Sass variables used
+> for borders/backgrounds/text, Angular `host` bindings, and inline styles.
+> The only place raw hex values belong is the **initial `palette()` call** that seeds the color system.
+> Everything downstream must reference the palette.
 
 ```scss
 @use 'igniteui-angular/theming' as *;
 
 $custom-avatar: avatar-theme(
   $schema: $light-material-schema,
-  $background: #E91E63,
-  $color: white
+  $background: var(--ig-primary-500),
+  $color: var(--ig-primary-500-contrast)
 );
 
 igx-avatar {
@@ -289,7 +319,7 @@ Tool: get_component_design_tokens
 Params: { component: "grid" }
 ```
 
-Then:
+Then use **palette token references** (not hardcoded hex values) for every color:
 
 ```
 Tool: create_component_theme
@@ -299,11 +329,16 @@ Params: {
   variant: "light",
   component: "grid",
   tokens: {
-    "header-background": "#E3F2FD",
-    "header-text-color": "#1565C0"
+    "header-background": "var(--ig-primary-50)",
+    "header-text-color": "var(--ig-primary-800)"
   }
 }
 ```
+
+> **Reminder**: After a palette is generated, all token values passed to
+> `create_component_theme` must reference palette CSS custom properties
+> (e.g., `var(--ig-primary-500)`, `var(--ig-secondary-A200)`,
+> `var(--ig-gray-100)`). Never pass raw hex values like `"#E3F2FD"`.
 
 ### Step 4 — Generate a Palette
 
@@ -330,7 +365,9 @@ Tool: set_spacing  → { spacing: 0.75, component: "grid" }
 Tool: set_roundness → { radiusFactor: 0.8 }
 ```
 
-### Step 6 — Reference Palette Colors
+### Step 6 — Reference Palette Colors (MANDATORY for All Color Usage)
+
+After a palette is generated, **always** use the `get_color` tool to obtain the correct CSS custom property reference. Never hardcode hex/RGB/HSL values in component themes, custom CSS, or Sass variables.
 
 ```
 Tool: get_color
@@ -343,6 +380,14 @@ Params: { color: "primary", variant: "600", contrast: true }
 Params: { color: "primary", opacity: 0.5 }
 → hsl(from var(--ig-primary-500) h s l / 0.5)
 ```
+
+Use these token references everywhere:
+- Component theme `tokens` values
+- Custom CSS rules (`color`, `background`, `border-color`, `fill`, `stroke`, etc.)
+- Sass variables for derived values (`$sidebar-bg: var(--ig-surface-500);`)
+- Angular `host` style bindings
+
+The **only** place raw hex values are acceptable is in the initial `palette()` call or the `create_palette` / `create_theme` MCP tool inputs that seed the color system.
 
 ### Loading Reference Data
 
@@ -357,6 +402,55 @@ Use `read_resource` with these URIs for preset values and documentation:
 | `theming://guidance/colors/roles` | Semantic color roles |
 | `theming://guidance/colors/rules` | Light/dark theme rules |
 | `theming://platforms/angular` | Angular platform specifics |
+
+## Referencing Colors in Custom Styles
+
+After a theme is applied, the palette is available as CSS custom properties on `:root`. Use these tokens in all custom CSS — never introduce standalone hex/RGB variables for colors that the palette already provides.
+
+### Correct: Palette Tokens
+
+```scss
+// All colors come from the theme — respects palette changes and dark/light switching
+.sidebar {
+  background: var(--ig-surface-500);
+  color: var(--ig-gray-900);
+  border-right: 1px solid var(--ig-gray-200);
+}
+
+.accent-badge {
+  background: var(--ig-secondary-500);
+  color: var(--ig-secondary-500-contrast);
+}
+
+.hero-section {
+  // Semi-transparent primary overlay
+  background: hsl(from var(--ig-primary-500) h s l / 0.12);
+}
+```
+
+### Incorrect: Hardcoded Values
+
+```scss
+// WRONG — these break when the palette changes and ignore dark/light mode
+$primary-color: #00838F;      // ✗ hardcoded
+$secondary-color: #3D5AFE;    // ✗ hardcoded
+$surface-color: #F0F5FA;      // ✗ hardcoded
+
+.sidebar {
+  background: $surface-color;  // ✗ not a palette token
+  color: #333;                 // ✗ not a palette token
+}
+```
+
+### When Raw Hex Values Are OK
+
+Raw hex values are acceptable **only** in these contexts:
+
+1. **`palette()` call** — the initial seed colors that generate the full palette
+2. **`create_palette` / `create_theme` MCP tool inputs** — the base colors passed to the tool
+3. **Non-palette decorative values** — e.g., a one-off SVG illustration color that intentionally stays fixed regardless of theme
+
+Everything else must use `var(--ig-<family>-<shade>)` tokens.
 
 ## Common Patterns
 
@@ -406,3 +500,4 @@ If using the licensed `@infragistics/igniteui-angular` package, set `licensed: t
 6. **Use `@include core()` once** before `@include theme()` in your global styles
 7. **Component themes use `@include tokens($theme)`** inside a selector to emit CSS custom properties
 8. **For compound components**, follow the full checklist returned by `get_component_design_tokens` — theme each child component with its scoped selector
+9. **Never hardcode colors after palette generation** — once a palette is created, every color in component themes, custom CSS, and Sass variables must use `var(--ig-<family>-<shade>)` palette tokens (e.g., `var(--ig-primary-500)`, `var(--ig-gray-200)`). Raw hex/RGB/HSL values are only acceptable in the initial `palette()` seed call. This ensures themes remain consistent, switchable (light/dark), and maintainable
