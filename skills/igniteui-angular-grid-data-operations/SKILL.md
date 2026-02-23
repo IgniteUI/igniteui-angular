@@ -1,7 +1,7 @@
 ````skill
 ---
 name: igniteui-angular-grid-data-operations
-description: Sorting, filtering, grouping, paging, remote data, virtualization, and Excel-style editing patterns for Ignite UI Angular grids
+description: Cell editing, row editing, batch editing, sorting, filtering, grouping, paging, remote data, and virtualization patterns for Ignite UI Angular grids
 user-invokable: true
 ---
 
@@ -9,14 +9,14 @@ user-invokable: true
 
 ## Description
 
-This skill teaches AI agents how to implement **data manipulation patterns** with Ignite UI for Angular grids. It covers sorting, filtering, grouping, paging, remote data binding, virtualization, batch editing, Excel-style workflows, and how to wire up services correctly.
+This skill teaches AI agents how to implement **data manipulation patterns** with Ignite UI for Angular grids. It covers cell editing, row editing, batch editing, sorting, filtering, grouping, paging, remote data binding, virtualization, and how to wire up services correctly.
 
 > **When to use this skill vs. the Data Grids skill**
 >
 > | Skill | Focus |
 > |---|---|
 > | **Data Grids** (`igniteui-angular-grids`) | Grid structure — choosing a grid type, column configuration, templates, layout, selection, toolbar, export |
-> | **Grid Data Operations** (this skill) | Data manipulation — sorting, filtering, grouping, paging, remote data, state persistence, batch editing workflows |
+> | **Grid Data Operations** (this skill) | Data manipulation — editing (cell/row/batch), sorting, filtering, grouping, paging, remote data, state persistence |
 >
 > If the user's question is about *what* to render (columns, templates, grid type), use the Data Grids skill. If it's about *how data flows* (sorting, filtering, remote services, transactions), use this skill.
 
@@ -735,9 +735,176 @@ The `(dataPreLoad)` event fires with an `IForOfState` containing:
 - `startIndex` — the first visible row index
 - `chunkSize` — number of rows the grid needs
 
+## Editing Data Through the Grid
+
+> **AGENT INSTRUCTION:** When a user says they want to "edit data through the grid", "make the grid editable", or "allow CRUD in the grid", use this section to pick the right editing mode before writing any code.
+
+### Choosing an Editing Mode
+
+| Mode | When to use | Key properties |
+|---|---|---|
+| **Cell editing** | Each cell saves immediately when the user confirms or leaves it. Good for quick single-field corrections. | `[editable]="true"` on columns + `(cellEditDone)` |
+| **Row editing** | User edits multiple cells in a row and confirms/cancels the whole row at once. **Best for most CRUD UIs.** | `[rowEditable]="true"` + `[editable]="true"` on columns + `(rowEditDone)` |
+| **Batch editing** | Accumulate many changes across multiple rows with undo/redo, then commit or discard all at once. | `[batchEditing]="true"` + `[rowEditable]="true"` |
+
+> **Default recommendation:** use **row editing** for most data management UIs (e.g., "edit available cars"). It prevents half-edited data from being visible and gives users a clear Done/Cancel flow per row.
+
+### Cell Editing (Immediate)
+
+The simplest mode. Each cell saves the moment the user tabs away or presses Enter.
+
+```typescript
+import { Component, ChangeDetectionStrategy, signal, viewChild, inject } from '@angular/core';
+import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
+import { IGridEditDoneEventArgs } from 'igniteui-angular/grids/core';
+
+@Component({
+  selector: 'app-cars-grid',
+  imports: [IGX_GRID_DIRECTIVES],
+  templateUrl: './cars-grid.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class CarsGridComponent {
+  gridRef = viewChild.required<IgxGridComponent>('grid');
+  private carService = inject(CarService);
+  protected cars = signal<Car[]>([]);
+
+  constructor() {
+    this.carService.getCars().subscribe(data => this.cars.set(data));
+  }
+
+  onCellEditDone(event: IGridEditDoneEventArgs) {
+    // Persist the single-cell change immediately
+    const updatedCar = { ...event.rowData, [event.column.field]: event.newValue };
+    this.carService.updateCar(updatedCar).subscribe();
+  }
+}
+```
+
+```html
+<igx-grid #grid
+  [data]="cars()"
+  [primaryKey]="'id'"
+  [autoGenerate]="false"
+  (cellEditDone)="onCellEditDone($event)"
+  height="600px">
+  <igx-column field="make" header="Make" [editable]="true" [sortable]="true"></igx-column>
+  <igx-column field="model" header="Model" [editable]="true" [sortable]="true"></igx-column>
+  <igx-column field="year" header="Year" dataType="number" [editable]="true" [sortable]="true"></igx-column>
+  <igx-column field="price" header="Price" dataType="number" [editable]="true" [sortable]="true"></igx-column>
+  <igx-column field="available" header="Available" dataType="boolean" [editable]="true"></igx-column>
+</igx-grid>
+```
+
+### Row Editing (Recommended for CRUD)
+
+Users click into a row, edit cells, then click **Done** or **Cancel** — changes only apply when Done is pressed. An overlay toolbar appears automatically.
+
+```typescript
+import { Component, ChangeDetectionStrategy, signal, viewChild, inject } from '@angular/core';
+import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataEventArgs } from 'igniteui-angular/grids/core';
+
+@Component({
+  selector: 'app-cars-grid',
+  imports: [IGX_GRID_DIRECTIVES],
+  templateUrl: './cars-grid.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class CarsGridComponent {
+  gridRef = viewChild.required<IgxGridComponent>('grid');
+  private carService = inject(CarService);
+  protected cars = signal<Car[]>([]);
+
+  constructor() {
+    this.carService.getCars().subscribe(data => this.cars.set(data));
+  }
+
+  onRowEditDone(event: IGridEditDoneEventArgs) {
+    // event.newValue contains the full updated row object
+    this.carService.updateCar(event.newValue).subscribe();
+  }
+
+  onRowAdded(event: IRowDataEventArgs) {
+    // Persist the newly added row; optionally replace local data with server response
+    this.carService.createCar(event.data).subscribe(created => {
+      this.cars.update(cars => cars.map(c => c === event.data ? created : c));
+    });
+  }
+
+  onRowDeleted(event: IRowDataEventArgs) {
+    this.carService.deleteCar(event.data.id).subscribe();
+  }
+
+  addCar() {
+    // Programmatically start a new row at the end
+    this.gridRef().beginAddRowByIndex(this.cars().length);
+  }
+
+  deleteCar(carId: number) {
+    this.gridRef().deleteRow(carId);
+  }
+}
+```
+
+```html
+<igx-grid #grid
+  [data]="cars()"
+  [primaryKey]="'id'"
+  [autoGenerate]="false"
+  [rowEditable]="true"
+  (rowEditDone)="onRowEditDone($event)"
+  (rowAdded)="onRowAdded($event)"
+  (rowDeleted)="onRowDeleted($event)"
+  height="600px">
+
+  <igx-column field="make" header="Make" [editable]="true" [sortable]="true"></igx-column>
+  <igx-column field="model" header="Model" [editable]="true" [sortable]="true"></igx-column>
+  <igx-column field="year" header="Year" dataType="number" [editable]="true" [sortable]="true"></igx-column>
+  <igx-column field="price" header="Price" dataType="number" [editable]="true" [sortable]="true"></igx-column>
+  <igx-column field="available" header="Available" dataType="boolean" [editable]="true"></igx-column>
+
+  <!-- Action strip: shows Edit and Delete buttons on row hover; Add Row button in toolbar -->
+  <igx-action-strip>
+    <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
+  </igx-action-strip>
+</igx-grid>
+
+<button (click)="addCar()">Add Car</button>
+```
+
+> **Key inputs summary:**
+> - `[rowEditable]="true"` — enables the Done/Cancel overlay per row
+> - `[editable]="true"` on each `igx-column` — marks which fields the user can change
+> - `[primaryKey]`— **required** for editing to work
+> - `[autoGenerate]="false"` — always define columns explicitly when editing is enabled so you control which fields are editable
+> - `<igx-action-strip>` with `<igx-grid-editing-actions>` — adds hover Edit/Delete buttons and an optional Add Row button automatically
+
+### Programmatic Row Adding with Default Values
+
+When starting a new row programmatically, pre-populate fields using `(cellEditEnter)` on the new row:
+
+```typescript
+onCellEditEnter(event: IGridEditEventArgs) {
+  if (event.isAddRow && event.column.field === 'available') {
+    event.cellEditArgs.newValue = true; // default new cars to available
+  }
+  if (event.isAddRow && event.column.field === 'year') {
+    event.cellEditArgs.newValue = new Date().getFullYear();
+  }
+}
+```
+
+```html
+<igx-grid #grid ... (cellEditEnter)="onCellEditEnter($event)">
+```
+
+---
+
 ## Batch Editing & Transactions
 
 > **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. **Pivot Grid does NOT support batch editing.**
+> Use batch editing when users need to **edit many rows at once** and commit or discard all changes together, with undo/redo support.
 
 ### Enabling Batch Editing
 
@@ -1473,24 +1640,26 @@ export class MasterDetailComponent {
 
 ## Key Rules
 
-1. **Use the correct component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
-2. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports (with `CUSTOM_ELEMENTS_SCHEMA`)
-3. **Set `[primaryKey]`** — required for editing, batch transactions, selection, row adding, and row operations (Flat, Tree, Hierarchical, Pivot grids; NOT Grid Lite)
-4. **Set `dataType` on every column** — enables correct filtering operands, sorting behavior, and editors
-5. **Cancelable events** — use `event.cancel = true` in `(sorting)`, `(filtering)`, `(cellEdit)`, `(rowEdit)`, `(paging)` to prevent the action
-6. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
-7. **Remote data requires `[totalItemCount]`** — without it, the virtual scrollbar won't size correctly
-8. **Remote data requires noop strategies** — apply `NoopSortingStrategy` and `NoopFilteringStrategy` to disable client-side operations when the server handles them
-9. **Track sort/filter state for remote operations** — store current expressions and include them in every server request
-10. **Batch editing requires `[primaryKey]`** — call `endEdit(true)` before `transactions.undo()`/`redo()`, commit via `transactions.commit(data)`
-11. **Virtualization is automatic** — don't wrap grids in virtual scroll containers; just set a fixed `height`
-12. **Debounce rapid virtual scroll** — use `debounceTime` on `(dataPreLoad)` to avoid flooding the server
-13. **State persistence** — use `IgxGridStateDirective` to save/restore sort, filter, group, and column configuration; functions (formatters, strategies, summaries) must be reapplied via `stateParsed` event
-14. **Use `filteringExpressionsTree` for programmatic filtering** — `advancedFilteringExpressionsTree` is only for the advanced filtering dialog
-15. **Validation** — use template-driven validators on columns (`required`, `min`, `max`, `email`, `pattern`) or reactive validators via `(formGroupCreated)`
-16. **GroupBy is Flat Grid only** — Tree Grid uses hierarchy, Hierarchical Grid uses row islands, Pivot Grid uses dimensions
-17. **Tree Grid filtering is recursive** — parents of matching children are always shown and auto-expanded
-18. **Hierarchical Grid levels are independent** — sorting/filtering/paging don't cascade; configure on `<igx-row-island>`
-19. **Pivot Grid is read-only** — no editing, paging, or standard filtering/sorting; use `pivotConfiguration` for all data operations
-20. **Grid Lite has its own API** — uses `IgxGridLiteSortingExpression`/`IgxGridLiteFilteringExpression` (NOT `ISortingExpression`/`FilteringExpressionsTree`), `dataPipelineConfiguration` for remote ops (NOT noop strategies), and has no editing, grouping, paging, summaries, or selection
+1. **Choose the right editing mode** — cell editing (`[editable]` + `(cellEditDone)`) for immediate per-cell saves; row editing (`[rowEditable]="true"` + `(rowEditDone)`) for confirm/cancel per row (**recommended default for CRUD**); batch editing (`[batchEditing]="true"`) for accumulate-then-commit with undo/redo
+2. **`[primaryKey]` is required for all editing** — row editing, batch editing, row adding, and row deletion all depend on it (Flat, Tree, Hierarchical, Pivot grids; NOT Grid Lite)
+3. **Always set `[autoGenerate]="false"` when editing** — define columns explicitly and mark each with `[editable]="true"` to control exactly what users can change
+4. **Use the correct component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
+5. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports (with `CUSTOM_ELEMENTS_SCHEMA`)
+6. **Set `dataType` on every column** — enables correct filtering operands, sorting behavior, and editors
+7. **Cancelable events** — use `event.cancel = true` in `(sorting)`, `(filtering)`, `(cellEdit)`, `(rowEdit)`, `(paging)` to prevent the action
+8. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
+9. **Remote data requires `[totalItemCount]`** — without it, the virtual scrollbar won't size correctly
+10. **Remote data requires noop strategies** — apply `NoopSortingStrategy` and `NoopFilteringStrategy` to disable client-side operations when the server handles them
+11. **Track sort/filter state for remote operations** — store current expressions and include them in every server request
+12. **Batch editing requires `[primaryKey]`** — call `endEdit(true)` before `transactions.undo()`/`redo()`, commit via `transactions.commit(data)`
+13. **Virtualization is automatic** — don't wrap grids in virtual scroll containers; just set a fixed `height`
+14. **Debounce rapid virtual scroll** — use `debounceTime` on `(dataPreLoad)` to avoid flooding the server
+15. **State persistence** — use `IgxGridStateDirective` to save/restore sort, filter, group, and column configuration; functions (formatters, strategies, summaries) must be reapplied via `stateParsed` event
+16. **Use `filteringExpressionsTree` for programmatic filtering** — `advancedFilteringExpressionsTree` is only for the advanced filtering dialog
+17. **Validation** — use template-driven validators on columns (`required`, `min`, `max`, `email`, `pattern`) or reactive validators via `(formGroupCreated)`
+18. **GroupBy is Flat Grid only** — Tree Grid uses hierarchy, Hierarchical Grid uses row islands, Pivot Grid uses dimensions
+19. **Tree Grid filtering is recursive** — parents of matching children are always shown and auto-expanded
+20. **Hierarchical Grid levels are independent** — sorting/filtering/paging don't cascade; configure on `<igx-row-island>`
+21. **Pivot Grid is read-only** — no editing, paging, or standard filtering/sorting; use `pivotConfiguration` for all data operations
+22. **Grid Lite has its own API** — uses `IgxGridLiteSortingExpression`/`IgxGridLiteFilteringExpression` (NOT `ISortingExpression`/`FilteringExpressionsTree`), `dataPipelineConfiguration` for remote ops (NOT noop strategies), and has no editing, grouping, paging, summaries, or selection
 ````

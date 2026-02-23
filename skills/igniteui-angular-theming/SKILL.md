@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-theming
-description: Customize Ignite UI Angular styling using the igniteui-theming MCP server for AI-assisted theming
+description: Customize Ignite UI components styling using the igniteui-theming MCP server for AI-assisted theming
 user-invokable: true
 ---
 
