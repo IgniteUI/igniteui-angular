@@ -12,7 +12,7 @@ This skill teaches AI agents how to theme Ignite UI for Angular applications usi
 
 ## Prerequisites
 
-- An Angular project with `igniteui-angular` installed
+- An Angular project with `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users
 - Sass support enabled in the project (default for Angular CLI projects)
 - The **Ignite UI Theming MCP server** (`igniteui-theming`) available as a tool provider
 
@@ -125,6 +125,11 @@ The quickest way to theme an app is to include a pre-built CSS file in `angular.
 "styles": ["node_modules/igniteui-angular/styles/igniteui-angular.css"]
 ```
 
+> **Licensed package users:** replace `igniteui-angular` with `@infragistics/igniteui-angular` in the path:
+> ```json
+> "styles": ["node_modules/@infragistics/igniteui-angular/styles/igniteui-angular.css"]
+> ```
+
 Available pre-built CSS files:
 
 | File | Theme |
@@ -138,16 +143,17 @@ Available pre-built CSS files:
 | `igniteui-indigo-light.css` | Indigo Light |
 | `igniteui-indigo-dark.css` | Indigo Dark |
 
-All files are located under `node_modules/igniteui-angular/styles/`.
+All files are located under `node_modules/igniteui-angular/styles/` (or `node_modules/@infragistics/igniteui-angular/styles/` for the licensed package).
 
 ## Custom Sass Theme (Manual)
 
 Create a `styles.scss` file and include it in `angular.json`:
 
 ```scss
+// Open-source package
 @use 'igniteui-angular/theming' as *;
-
-// 1. Palette
+// Licensed package — same Sass API, different import path
+// @use '@infragistics/igniteui-angular/theming' as *;
 $my-palette: palette(
   $primary: #1976D2,
   $secondary: #FF9800,

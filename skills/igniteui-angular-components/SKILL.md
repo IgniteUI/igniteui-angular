@@ -13,7 +13,7 @@ This skill teaches AI agents how to properly use Ignite UI for Angular UI compon
 ## Prerequisites
 
 - Angular 20+ project
-- `igniteui-angular` installed via `npm install igniteui-angular` (or `@infragistics/igniteui-angular` for licensed users)
+- `igniteui-angular` installed via `npm install igniteui-angular`, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
 - A theme applied (see the Theming skill)
 
 ## Architecture
@@ -22,8 +22,12 @@ All Ignite UI components are **standalone** — no NgModules needed. Import comp
 
 ```typescript
 import { Component } from '@angular/core';
+// Open-source package
 import { IgxButtonDirective } from 'igniteui-angular/button';
 import { IgxDialogComponent } from 'igniteui-angular/dialog';
+// Licensed package — identical structure, different prefix
+// import { IgxButtonDirective } from '@infragistics/igniteui-angular/button';
+// import { IgxDialogComponent } from '@infragistics/igniteui-angular/dialog';
 
 @Component({
   selector: 'app-example',
@@ -36,20 +40,29 @@ export class ExampleComponent {}
 
 ### Multi-Entry-Point Imports
 
-Each component has its own entry point. Always import from the specific entry point, NOT from the main `igniteui-angular` barrel:
+Each component has its own entry point. Always import from the specific entry point, NOT from the root barrel.
+
+This rule applies to **both** the open-source and licensed packages:
 
 ```typescript
-// CORRECT — tree-shakeable
+// CORRECT — open-source package, tree-shakeable
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
-// AVOID — pulls in entire library
+// CORRECT — licensed package, same entry-point structure
+import { IgxComboComponent } from '@infragistics/igniteui-angular/combo';
+import { IgxDatePickerComponent } from '@infragistics/igniteui-angular/date-picker';
+
+// AVOID — pulls in entire library (wrong for BOTH package variants)
 import { IgxComboComponent, IgxDatePickerComponent } from 'igniteui-angular';
+import { IgxComboComponent, IgxDatePickerComponent } from '@infragistics/igniteui-angular';
 ```
+
+> **AGENT INSTRUCTION:** Before generating import statements, check `package.json` to determine which package variant is installed (`igniteui-angular` or `@infragistics/igniteui-angular`). Use that package name as the prefix for all entry-point imports. For example, if the project uses `@infragistics/igniteui-angular`, every import path must use `@infragistics/igniteui-angular/<entry-point>` — never the root barrel.
 
 ### Convenience Directive Collections
 
-For complex components with many sub-directives, use the provided directive arrays:
+For complex components with many sub-directives, use the provided directive arrays. Replace `igniteui-angular` with `@infragistics/igniteui-angular` in all entry-point paths if using the licensed package:
 
 | Token | Entry Point | Includes |
 |---|---|---|

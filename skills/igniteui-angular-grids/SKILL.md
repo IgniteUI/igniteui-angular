@@ -20,7 +20,7 @@ This skill teaches AI agents how to build rich data grid experiences with Ignite
 ## Prerequisites
 
 - Angular 20+ project
-- `igniteui-angular` installed
+- `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
 - A theme applied (see the Theming skill)
 
 ## Choosing the Right Grid
@@ -38,6 +38,8 @@ Ask these questions in order:
 5. **Is the data a flat list/table with enterprise features needed** (editing, batch editing, grouping, paging, export, etc.)? → **Flat Grid**
 
 ### Grid Types Overview
+
+Entry points below use the `igniteui-angular` prefix. Replace with `@infragistics/igniteui-angular` for the licensed package.
 
 | Grid | Selector | Component | Directives | Entry Point |
 |---|---|---|---|---|
@@ -73,9 +75,20 @@ Ask these questions in order:
 
 ### Imports
 
+> **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Always import from the specific entry point of whichever package is installed. Never import from the root barrel of either package.
+
 ```typescript
-import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
+// Open-source package — import from specific entry points
 import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
+
+// Licensed package — same entry-point structure, different prefix
+// import { IgxGridComponent, IGX_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/grid';
+
+// AVOID — never import from the root barrel (wrong for BOTH variants)
+// import { IgxGridComponent } from 'igniteui-angular';
+// import { IgxGridComponent } from '@infragistics/igniteui-angular';
+
+import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
 
 @Component({
   selector: 'app-users-grid',

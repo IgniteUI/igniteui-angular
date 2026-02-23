@@ -23,17 +23,20 @@ This skill teaches AI agents how to implement **data manipulation patterns** wit
 ## Prerequisites
 
 - Angular 20+ project
-- `igniteui-angular` installed
+- `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
 - A theme applied (see the Theming skill)
 - Familiarity with the Data Grids skill for grid setup basics
 
 ## Accessing the Grid Instance
 
-All programmatic data operations require a reference to the grid component. Use `viewChild` with the **correct component type** for your grid:
+All programmatic data operations require a reference to the grid component. Use `viewChild` with the **correct component type** for your grid.
+
+> **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Replace the package prefix in every import accordingly. Always use specific entry points — never the root barrel of either package.
 
 ```typescript
 import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
 
+// Open-source package — import from specific entry points
 // Grid Lite (separate npm package — requires `npm install igniteui-grid-lite`)
 import { IgxGridLiteComponent } from 'igniteui-angular/grids/lite';
 // Flat Grid
@@ -44,6 +47,16 @@ import { IgxTreeGridComponent, IGX_TREE_GRID_DIRECTIVES } from 'igniteui-angular
 import { IgxHierarchicalGridComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES } from 'igniteui-angular/grids/hierarchical-grid';
 // Pivot Grid
 import { IgxPivotGridComponent, IGX_PIVOT_GRID_DIRECTIVES } from 'igniteui-angular/grids/pivot-grid';
+
+// Licensed package — same entry-point paths, different prefix:
+// import { IgxGridComponent, IGX_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/grid';
+// import { IgxTreeGridComponent, IGX_TREE_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/tree-grid';
+// import { IgxHierarchicalGridComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/hierarchical-grid';
+// import { IgxPivotGridComponent, IGX_PIVOT_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/pivot-grid';
+
+// AVOID — never import from the root barrel (wrong for BOTH variants)
+// import { IgxGridComponent } from 'igniteui-angular';
+// import { IgxGridComponent } from '@infragistics/igniteui-angular';
 ```
 
 ### Flat Grid Example
