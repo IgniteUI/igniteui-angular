@@ -97,6 +97,8 @@ If the MCP server is running, the `detect_platform` tool will analyze your `pack
 
 ## Theming Architecture
 
+> **Docs:** [Theming Overview](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index) · [Palette](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/palettes) · [Typography](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/typography) · [Elevations](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/elevations)
+
 The Ignite UI theming system is built on four pillars:
 
 | Concept | Purpose |
@@ -147,6 +149,12 @@ All files are located under `node_modules/igniteui-angular/styles/` (or `node_mo
 
 ## Custom Sass Theme (Manual)
 
+> **AGENT INSTRUCTION — Sass Theming Docs**: If the user explicitly asks to build a Sass-based theme or configure Sass, refer to the dedicated Sass documentation:
+> - [Sass Theming Overview](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/index)
+> - [Sass Configuration](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/configuration)
+> - [Sass Palettes](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/palettes)
+> - [Sass Component Themes](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/component-themes)
+
 Create a `styles.scss` file and include it in `angular.json`:
 
 ```scss
@@ -192,6 +200,8 @@ $dark-palette: palette(
 ```
 
 ## Component-Level Theming
+
+> **Docs:** [Component Themes](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/component-themes)
 
 Override individual component appearance using component theme functions and the `tokens` mixin.
 
@@ -256,6 +266,8 @@ Workflow for compound components:
 
 ### Sizing
 
+> **Docs:** [Display Density / Sizing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/display-density)
+
 Controls the size of components via `--ig-size` (values: 1 = small, 2 = medium, 3 = large):
 
 ```css
@@ -267,6 +279,8 @@ igx-grid { --ig-size: 1; }
 ```
 
 ### Spacing
+
+> **Docs:** [Spacing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/spacing)
 
 Controls internal padding via `--ig-spacing` (1 = default, 0.5 = compact, 2 = spacious):
 

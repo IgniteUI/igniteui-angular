@@ -115,6 +115,8 @@ For complex components with many sub-directives, use the provided directive arra
 
 ### Form Controls
 
+> **Docs:** [Angular Reactive Form Validation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/angular-reactive-form-validation)
+
 #### Input Group
 
 ```html
@@ -130,6 +132,8 @@ For complex components with many sub-directives, use the provided directive arra
 Types: `line` (default), `border`, `box`, `search`.
 
 #### Combo (Multi-Select Dropdown)
+
+> **Docs:** [Combo Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo)
 
 ```html
 <igx-combo
@@ -149,6 +153,8 @@ Events: `(opening)`, `(opened)`, `(closing)`, `(closed)`, `(selectionChanging)`,
 
 #### Simple Combo (Single-Select)
 
+> **Docs:** [Combo — Single Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo#single-selection)
+
 ```html
 <igx-simple-combo
   [data]="countries"
@@ -163,6 +169,8 @@ Same API as `igx-combo` but restricted to single selection.
 
 #### Select
 
+> **Docs:** [Select Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select)
+
 ```html
 <igx-select [(ngModel)]="selectedRole" placeholder="Choose role">
   @for (role of roles; track role.id) {
@@ -172,6 +180,8 @@ Same API as `igx-combo` but restricted to single selection.
 ```
 
 #### Date Picker
+
+> **Docs:** [Date Picker](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-picker)
 
 ```html
 <igx-date-picker
@@ -187,6 +197,8 @@ Implements `ControlValueAccessor` and `Validator`.
 
 #### Date Range Picker
 
+> **Docs:** [Date Range Picker](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-range-picker)
+
 ```html
 <igx-date-range-picker [(ngModel)]="dateRange">
   <igx-date-range-start>
@@ -200,12 +212,16 @@ Implements `ControlValueAccessor` and `Validator`.
 
 #### Time Picker
 
+> **Docs:** [Date Time Editor](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-time-editor)
+
 ```html
 <igx-time-picker [(ngModel)]="selectedTime" [inputFormat]="'HH:mm'" [is24HourFormat]="true">
 </igx-time-picker>
 ```
 
 #### Calendar
+
+> **Docs:** [Calendar Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar)
 
 ```html
 <igx-calendar
@@ -220,6 +236,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 #### Checkbox, Radio, Switch
 
+> **Docs:** [Checkbox](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox) · [Radio Button](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio-button) · [Switch](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch)
+
 ```html
 <igx-checkbox [(ngModel)]="rememberMe">Remember me</igx-checkbox>
 
@@ -231,6 +249,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 #### Slider
 
+> **Docs:** [Slider Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider/slider)
+
 ```html
 <igx-slider [type]="SliderType.RANGE" [minValue]="0" [maxValue]="100"
             [lowerBound]="20" [upperBound]="80">
@@ -239,7 +259,11 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 ### Layout Components
 
+> **Docs:** [Layout](https://www.infragistics.com/products/ignite-ui-angular/angular/components/layout)
+
 #### Tabs
+
+> **Docs:** [Tabs Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)
 
 ```html
 <igx-tabs [(selectedIndex)]="activeTab">
@@ -261,6 +285,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 #### Bottom Navigation
 
+> **Docs:** [Bottom Navigation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar)
+
 ```html
 <igx-bottom-nav [(selectedIndex)]="activeNavItem">
   <igx-bottom-nav-item>
@@ -271,6 +297,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 ```
 
 #### Stepper
+
+> **Docs:** [Stepper Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper)
 
 ```html
 <igx-stepper [linear]="true" [orientation]="'horizontal'">
@@ -290,6 +318,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 #### Accordion
 
+> **Docs:** [Accordion Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/accordion)
+
 ```html
 <igx-accordion [singleBranchExpand]="true">
   <igx-expansion-panel>
@@ -303,6 +333,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 #### Splitter
 
+> **Docs:** [Splitter Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/splitter)
+
 ```html
 <igx-splitter [type]="SplitterType.Horizontal">
   <igx-splitter-pane [size]="'30%'">Left panel</igx-splitter-pane>
@@ -311,6 +343,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 ```
 
 #### Navigation Drawer
+
+> **Docs:** [Navigation Drawer](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)
 
 ```html
 <igx-nav-drawer [isOpen]="drawerOpen" [pinThreshold]="1024">
@@ -332,6 +366,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 #### List
 
+> **Docs:** [List Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list)
+
 ```html
 <igx-list>
   <igx-list-item [isHeader]="true">Contacts</igx-list-item>
@@ -348,6 +384,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 #### Tree
 
+> **Docs:** [Tree Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)
+
 ```html
 <igx-tree [selection]="'BiCascade'">
   @for (node of data; track node.id) {
@@ -362,6 +400,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 ```
 
 #### Card
+
+> **Docs:** [Card Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card)
 
 ```html
 <igx-card>
@@ -388,6 +428,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 #### Dialog
 
+> **Docs:** [Dialog Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)
+
 ```html
 <igx-dialog #confirmDialog [isModal]="true" [closeOnEscape]="true">
   <igx-dialog-title>Confirm Delete</igx-dialog-title>
@@ -403,6 +445,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 #### Snackbar
 
+> **Docs:** [Snackbar Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar)
+
 ```html
 <igx-snackbar #snackbar [displayTime]="3000" [autoHide]="true">
   Item saved successfully
@@ -414,11 +458,15 @@ In TypeScript: `this.snackbar.open()`.
 
 #### Toast
 
+> **Docs:** [Toast Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast)
+
 ```html
 <igx-toast #toast [displayTime]="2000">Operation complete</igx-toast>
 ```
 
 #### Banner
+
+> **Docs:** [Banner Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner)
 
 ```html
 <igx-banner #banner>
@@ -435,6 +483,8 @@ In TypeScript: `this.snackbar.open()`.
 
 #### Chips
 
+> **Docs:** [Chip Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip)
+
 ```html
 <igx-chips-area>
   @for (tag of tags; track tag) {
@@ -445,6 +495,8 @@ In TypeScript: `this.snackbar.open()`.
 
 #### Avatar & Badge
 
+> **Docs:** [Avatar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar) · [Badge](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge)
+
 ```html
 <igx-avatar [src]="user.photo" shape="circle" size="large">
   <igx-badge igxAvatarBadge [type]="'success'" [icon]="'check'"></igx-badge>
@@ -452,6 +504,8 @@ In TypeScript: `this.snackbar.open()`.
 ```
 
 #### Icon
+
+> **Docs:** [Icon Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon)
 
 ```html
 <!-- Material icon (default) -->
@@ -472,6 +526,8 @@ constructor() {
 
 #### Carousel
 
+> **Docs:** [Carousel Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel)
+
 ```html
 <igx-carousel [interval]="3000" [pause]="true" [loop]="true">
   @for (slide of slides; track slide.id) {
@@ -483,6 +539,8 @@ constructor() {
 ```
 
 #### Paginator
+
+> **Docs:** [Paginator Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/paginator)
 
 ```html
 <igx-paginator
@@ -496,6 +554,8 @@ constructor() {
 
 #### Progress Indicators
 
+> **Docs:** [Linear Progress](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear-progress) · [Circular Progress](https://www.infragistics.com/products/ignite-ui-angular/angular/components/circular-progress)
+
 ```html
 <igx-linear-bar [value]="75" [max]="100" [type]="'info'" [striped]="true"></igx-linear-bar>
 
@@ -503,6 +563,8 @@ constructor() {
 ```
 
 #### Chat (AI Chat Component)
+
+> **Docs:** [Chat Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chat)
 
 ```html
 <igx-chat [messages]="messages" [isSendDisabled]="isLoading" (sendMessage)="onSend($event)">
@@ -512,6 +574,8 @@ constructor() {
 ## Directives
 
 ### Button Variants
+
+> **Docs:** [Button Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)
 
 ```html
 <button igxButton="flat">Flat</button>
@@ -523,11 +587,15 @@ constructor() {
 
 ### Ripple Effect
 
+> **Docs:** [Ripple Directive](https://www.infragistics.com/products/ignite-ui-angular/angular/components/ripple)
+
 ```html
 <button igxButton="raised" igxRipple>Click me</button>
 ```
 
 ### Tooltip
+
+> **Docs:** [Tooltip Directive](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)
 
 ```html
 <button [igxTooltipTarget]="tooltipRef">Hover me</button>
@@ -535,6 +603,8 @@ constructor() {
 ```
 
 ### Drag and Drop
+
+> **Docs:** [Drag and Drop](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drag-drop)
 
 ```html
 <div igxDrag>Drag me</div>

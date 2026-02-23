@@ -136,6 +136,8 @@ export class CompanyGridComponent {
 
 ## Sorting
 
+> **Docs:** [Sorting](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sorting) · [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/sorting) · [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/sorting)
+
 > **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level sorting instead (see Pivot Grid section). **Grid Lite** uses a different sorting API (`sort()`, `clearSort()`, `IgxGridLiteSortingExpression`) — see the Grid Lite Data Operations section.
 >
 > **Tree Grid behavior**: sorting is applied per-level — children are sorted among their siblings, not globally flattened.
@@ -228,6 +230,8 @@ class PrioritySortStrategy implements ISortingStrategy {
 ```
 
 ## Filtering
+
+> **Docs:** [Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/filtering) · [Excel-Style](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/excel-style-filtering) · [Advanced](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/advanced-filtering) (substitute URL prefix per grid type)
 
 > **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level filtering instead (see Pivot Grid section). **Grid Lite** uses a different filtering API (`filter()`, `clearFilter()`, `IgxGridLiteFilteringExpression`) — see the Grid Lite Data Operations section.
 >
@@ -357,6 +361,8 @@ onFilteringDone(event: IFilteringEventArgs) {
 
 ## Grouping (Flat Grid Only)
 
+> **Docs:** [Group By](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby)
+
 > **NOTE**: GroupBy is **exclusive to the Flat Grid** (`igx-grid`). Tree Grid uses its natural hierarchy. Hierarchical Grid uses row islands. Pivot Grid uses dimensions.
 
 ### Template-Driven Grouping
@@ -426,6 +432,8 @@ const monthGroupComparer = (a: Date, b: Date) => {
 ```
 
 ## Paging
+
+> **Docs:** [Paging — Remote Paging](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging) (substitute URL prefix per grid type)
 
 ### Using the Paginator Component
 
@@ -518,6 +526,8 @@ export class RemotePagingComponent {
 ```
 
 ## Remote Data Operations
+
+> **Docs:** [Remote Data Operations](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations) (substitute URL prefix per grid type)
 
 ### The Problem
 
@@ -751,6 +761,8 @@ The `(dataPreLoad)` event fires with an `IForOfState` containing:
 
 ### Cell Editing (Immediate)
 
+> **Docs:** [Cell Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/cell-editing)
+
 The simplest mode. Each cell saves the moment the user tabs away or presses Enter.
 
 ```typescript
@@ -797,6 +809,8 @@ export class CarsGridComponent {
 ```
 
 ### Row Editing (Recommended for CRUD)
+
+> **Docs:** [Row Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-editing)
 
 Users click into a row, edit cells, then click **Done** or **Cancel** — changes only apply when Done is pressed. An overlay toolbar appears automatically.
 
@@ -902,6 +916,8 @@ onCellEditEnter(event: IGridEditEventArgs) {
 ---
 
 ## Batch Editing & Transactions
+
+> **Docs:** [Batch Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/batch-editing) (substitute URL prefix per grid type)
 
 > **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. **Pivot Grid does NOT support batch editing.**
 > Use batch editing when users need to **edit many rows at once** and commit or discard all changes together, with undo/redo support.
@@ -1084,6 +1100,8 @@ onCellEdit(event: IGridEditEventArgs) {
 
 ## Validation
 
+> **Docs:** [Validation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/validation)
+
 ### Template-Driven Validation
 
 Apply Angular validators directly on columns:
@@ -1128,6 +1146,8 @@ this.gridRef().validation.clear(recordId);
 ```
 
 ## Summaries
+
+> **Docs:** [Summaries](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/summaries) (substitute URL prefix per grid type)
 
 ### Built-In Summaries
 
@@ -1179,6 +1199,8 @@ When grouping is enabled, summaries appear for each group. Control this with:
 ```
 
 ## State Persistence
+
+> **Docs:** [State Persistence](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/state-persistence) (substitute URL prefix per grid type)
 
 ### Saving and Restoring Grid State
 
@@ -1277,6 +1299,8 @@ onColumnInit(column: IgxColumnComponent) {
 
 ## Tree Grid Data Operations
 
+> **Docs:** [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid) · [Load on Demand](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/load-on-demand)
+
 ### Recursive Filtering Behavior
 
 Tree Grid filtering is **inclusive** — when a child matches, all its ancestors are kept visible (marked as `isFilteredOutParent`) and auto-expanded. This is the default `TreeGridFilteringStrategy`.
@@ -1330,6 +1354,8 @@ this.treeGridRef().deleteRow(2); // deletes row 2 and all its children
 ```
 
 ## Hierarchical Grid Data Operations
+
+> **Docs:** [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid) · [Load on Demand](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/load-on-demand)
 
 ### Independent Grid Levels
 
@@ -1393,6 +1419,8 @@ Setting `[batchEditing]="true"` on the root hierarchical grid automatically prop
 > **NOTE**: Each child grid instance has its **own** `TransactionService`. Commits must be done per grid instance.
 
 ## Pivot Grid Data Operations
+
+> **Docs:** [Pivot Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid)
 
 > **IMPORTANT**: The Pivot Grid does NOT use standard sorting, filtering, editing, or paging APIs. All data operations are controlled through `pivotConfiguration`.
 

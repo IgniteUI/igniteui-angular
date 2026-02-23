@@ -41,13 +41,21 @@ Ask these questions in order:
 
 Entry points below use the `igniteui-angular` prefix. Replace with `@infragistics/igniteui-angular` for the licensed package.
 
-| Grid | Selector | Component | Directives | Entry Point |
-|---|---|---|---|---|
-| **Grid Lite** | `igx-grid-lite` | `IgxGridLiteComponent` | Individual imports | `igniteui-angular/grids/lite` |
-| **Flat Grid** | `igx-grid` | `IgxGridComponent` | `IGX_GRID_DIRECTIVES` | `igniteui-angular/grids/grid` |
-| **Tree Grid** | `igx-tree-grid` | `IgxTreeGridComponent` | `IGX_TREE_GRID_DIRECTIVES` | `igniteui-angular/grids/tree-grid` |
-| **Hierarchical Grid** | `igx-hierarchical-grid` | `IgxHierarchicalGridComponent` | `IGX_HIERARCHICAL_GRID_DIRECTIVES` | `igniteui-angular/grids/hierarchical-grid` |
-| **Pivot Grid** | `igx-pivot-grid` | `IgxPivotGridComponent` | `IGX_PIVOT_GRID_DIRECTIVES` | `igniteui-angular/grids/pivot-grid` |
+| Grid | Selector | Component | Directives | Entry Point | Docs |
+|---|---|---|---|---|---|
+| **Grid Lite** | `igx-grid-lite` | `IgxGridLiteComponent` | Individual imports | `igniteui-angular/grids/lite` | — |
+| **Flat Grid** | `igx-grid` | `IgxGridComponent` | `IGX_GRID_DIRECTIVES` | `igniteui-angular/grids/grid` | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) |
+| **Tree Grid** | `igx-tree-grid` | `IgxTreeGridComponent` | `IGX_TREE_GRID_DIRECTIVES` | `igniteui-angular/grids/tree-grid` | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid) |
+| **Hierarchical Grid** | `igx-hierarchical-grid` | `IgxHierarchicalGridComponent` | `IGX_HIERARCHICAL_GRID_DIRECTIVES` | `igniteui-angular/grids/hierarchical-grid` | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid) |
+| **Pivot Grid** | `igx-pivot-grid` | `IgxPivotGridComponent` | `IGX_PIVOT_GRID_DIRECTIVES` | `igniteui-angular/grids/pivot-grid` | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid) |
+
+> **AGENT INSTRUCTION — Documentation URL Pattern**: For grid-specific topics (sorting, filtering, editing, paging, etc.), docs URLs follow this naming pattern per grid type:
+> - Flat Grid: `.../components/grid/{topic}`
+> - Tree Grid: `.../components/treegrid/{topic}`
+> - Hierarchical Grid: `.../components/hierarchicalgrid/{topic}`
+> - Pivot Grid: `.../components/pivotGrid/{topic}`
+>
+> Example: the sorting topic is `/grid/sorting`, `/treegrid/sorting`, `/hierarchicalgrid/sorting`, `/pivotGrid/sorting`. Docs links in the sections below use the Flat Grid URL; substitute the prefix above for the other grid types.
 
 ### Feature Availability per Grid Type
 
@@ -72,6 +80,8 @@ Entry points below use the `igniteui-angular` prefix. Replace with `@infragistic
 | Row virtualization | Yes | Yes (rows + columns) | Yes (rows + columns) | Yes (rows + columns) | Yes |
 
 ## Quick Start
+
+> **Docs:** [Flat Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) · [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid) · [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid) · [Pivot Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid)
 
 ### Imports
 
@@ -127,6 +137,8 @@ export class UsersGridComponent {
 
 ## Column Configuration
 
+> **Docs:** [Column Types](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-types)
+
 ### Data Types
 
 Set `dataType` to enable proper formatting, filtering, sorting, and editing:
@@ -144,6 +156,8 @@ Set `dataType` to enable proper formatting, filtering, sorting, and editing:
 | `image` | Image rendering (read-only) |
 
 ### Column Templates
+
+> **Docs:** [Column Configuration](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#angular-grid-column-configuration)
 
 Override default rendering with template directives:
 
@@ -183,6 +197,8 @@ Override default rendering with template directives:
 
 ### Column Groups
 
+> **Docs:** [Collapsible Column Groups](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/collapsible-column-groups)
+
 Group columns under a shared header:
 
 ```html
@@ -199,6 +215,8 @@ Group columns under a shared header:
 
 ### Multi-Row Layout (MRL)
 
+> **Docs:** [Multi-Row Layout](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/multi-row-layout)
+
 Create complex cell layouts spanning multiple rows/columns:
 
 ```html
@@ -211,6 +229,8 @@ Create complex cell layouts spanning multiple rows/columns:
 
 ### Column Pinning
 
+> **Docs:** [Column Pinning](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-pinning)
+
 ```html
 <igx-column field="name" [pinned]="true"></igx-column>
 ```
@@ -218,6 +238,8 @@ Create complex cell layouts spanning multiple rows/columns:
 Or programmatically: `this.gridRef().pinColumn('name')`.
 
 ## Sorting
+
+> **Docs:** [Sorting](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sorting) (substitute URL prefix per grid type — see instruction above)
 
 ```html
 <igx-grid
@@ -241,6 +263,8 @@ Events: `(sorting)` (cancelable), `(sortingDone)`.
 
 ### Quick Filter (Row Filter)
 
+> **Docs:** [Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/filtering)
+
 ```html
 <igx-grid [allowFiltering]="true" [filterMode]="'quickFilter'">
   <igx-column field="name" [filterable]="true"></igx-column>
@@ -249,13 +273,17 @@ Events: `(sorting)` (cancelable), `(sortingDone)`.
 
 ### Excel-Style Filter
 
+> **Docs:** [Excel-Style Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/excel-style-filtering)
+
 ```html
-<igx-grid [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+<igx-grid [allowFiltering]="true" [filterMode]="'excelStyleFilter']">
   <igx-column field="name" [filterable]="true"></igx-column>
 </igx-grid>
 ```
 
 ### Advanced Filtering Dialog
+
+> **Docs:** [Advanced Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/advanced-filtering)
 
 ```html
 <igx-grid [allowAdvancedFiltering]="true">
@@ -277,6 +305,8 @@ Events: `(filtering)` (cancelable), `(filteringDone)`.
 
 ### Row Selection
 
+> **Docs:** [Row Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-selection)
+
 ```html
 <igx-grid [rowSelection]="'multiple'" [primaryKey]="'id'" [(selectedRows)]="selectedIds">
   <!-- Optional: Custom row selector checkbox -->
@@ -291,11 +321,15 @@ Modes: `'none'`, `'single'`, `'multiple'`, `'multipleCascade'` (tree grids).
 
 ### Cell Selection
 
+> **Docs:** [Cell Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/cell-selection)
+
 ```html
 <igx-grid [cellSelection]="'multiple'"></igx-grid>
 ```
 
 ### Column Selection
+
+> **Docs:** [Column Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-selection)
 
 ```html
 <igx-grid [columnSelection]="'multiple'">
@@ -309,6 +343,8 @@ Events: `(rowSelectionChanging)`, `(columnSelectionChanging)`, `(selected)` (cel
 
 ### Cell Editing
 
+> **Docs:** [Cell Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/cell-editing)
+
 ```html
 <igx-column field="name" [editable]="true"></igx-column>
 ```
@@ -316,6 +352,8 @@ Events: `(rowSelectionChanging)`, `(columnSelectionChanging)`, `(selected)` (cel
 Double-click or press Enter to enter edit mode. Events: `(cellEditEnter)`, `(cellEdit)` (cancelable), `(cellEditDone)`, `(cellEditExit)`.
 
 ### Row Editing
+
+> **Docs:** [Row Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-editing)
 
 ```html
 <igx-grid [rowEditable]="true" [primaryKey]="'id'">
@@ -333,6 +371,8 @@ Double-click or press Enter to enter edit mode. Events: `(cellEditEnter)`, `(cel
 Events: `(rowEditEnter)`, `(rowEdit)` (cancelable), `(rowEditDone)`, `(rowEditExit)`.
 
 ### Batch Editing (Transactions)
+
+> **Docs:** [Batch Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/batch-editing)
 
 ```html
 <igx-grid [batchEditing]="true" [primaryKey]="'id'" [rowEditable]="true"></igx-grid>
@@ -354,6 +394,8 @@ this.gridRef().transactions.clear();
 
 ### Adding and Deleting Rows
 
+> **Docs:** [Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-adding)
+
 ```typescript
 // Add row
 this.gridRef().addRow({ id: 999, name: 'New User', email: 'new@example.com' });
@@ -369,6 +411,8 @@ Events: `(rowAdded)`, `(rowDeleted)`, `(rowAdd)` (cancelable), `(rowDelete)` (ca
 
 ### Validation
 
+> **Docs:** [Validation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/validation)
+
 Built-in validators on columns:
 
 ```html
@@ -383,6 +427,8 @@ emailValidators = [Validators.required, Validators.email];
 Events: `(formGroupCreated)`, `(validationStatusChange)`.
 
 ## Grouping (Grid only)
+
+> **Docs:** [Group By](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby)
 
 ```html
 <igx-grid [data]="data()" [groupsExpanded]="true">
@@ -403,6 +449,8 @@ this.gridRef().clearGrouping('category');
 ```
 
 ## Summaries
+
+> **Docs:** [Summaries](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/summaries) (substitute URL prefix per grid type — see instruction above)
 
 Enable per-column summaries:
 
@@ -464,6 +512,8 @@ priceRangeMerge: IgxCellMergeStrategy = {
 
 ## Toolbar
 
+> **Docs:** [Toolbar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/toolbar)
+
 ```html
 <igx-grid [data]="data()">
   <igx-grid-toolbar>
@@ -484,6 +534,8 @@ priceRangeMerge: IgxCellMergeStrategy = {
 
 ### Excel Export
 
+> **Docs:** [Excel Export](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-excel)
+
 ```typescript
 import { IgxExcelExporterService, IgxExcelExporterOptions } from 'igniteui-angular/grids/core';
 
@@ -500,6 +552,8 @@ export class MyComponent {
 
 ### CSV Export
 
+> **Docs:** [CSV Export](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-csv)
+
 ```typescript
 import { IgxCsvExporterService, IgxCsvExporterOptions, CsvFileTypes } from 'igniteui-angular/grids/core';
 
@@ -513,6 +567,8 @@ export class MyComponent {
 ```
 
 ## Tree Grid
+
+> **Docs:** [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)
 
 For data with parent-child relationships **within a single schema** (e.g., org charts, file systems, categories).
 
@@ -583,6 +639,8 @@ export class OrgTreeComponent {
 - **Summaries** are computed per tree level
 
 ## Hierarchical Grid
+
+> **Docs:** [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid)
 
 For master-detail data where **each level has a different schema** (e.g., Companies → Departments → Employees). Each level is defined by a **Row Island** blueprint.
 
@@ -844,6 +902,8 @@ dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
 
 ## Pivot Grid
 
+> **Docs:** [Pivot Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid)
+
 For **pivot table analytics** where users reshape data by dragging dimensions between rows, columns, filters, and values.
 
 > **IMPORTANT**: The Pivot Grid is fundamentally different from the other three grids. Standard grid features like cell editing, row editing, batch editing, paging, column pinning, column moving, row dragging, and standard filtering/sorting are **disabled**. All data operations are driven by the `pivotConfiguration`.
@@ -903,6 +963,8 @@ Provide a drag-and-drop UI for users to reshape the pivot interactively:
 
 ## Virtualization & Performance
 
+> **Docs:** [Virtualization](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general-changelog-dv)
+
 Grids use virtualization by default for both rows and columns — no setup needed. For remote data/paging:
 
 ```html
@@ -911,6 +973,8 @@ Grids use virtualization by default for both rows and columns — no setup neede
 ```
 
 ## Row Drag
+
+> **Docs:** [Row Drag](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-drag)
 
 ```html
 <igx-grid [rowDraggable]="true" (rowDragStart)="onDragStart($event)" (rowDragEnd)="onDragEnd($event)">
@@ -921,6 +985,8 @@ Grids use virtualization by default for both rows and columns — no setup neede
 ```
 
 ## Action Strip
+
+> **Docs:** [Action Strip](https://www.infragistics.com/products/ignite-ui-angular/angular/components/action-strip)
 
 Overlay actions on a row:
 
@@ -935,6 +1001,8 @@ Overlay actions on a row:
 ```
 
 ## Master-Detail (Grid only)
+
+> **Docs:** [Master-Detail](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/master-detail)
 
 Expand rows to show arbitrary detail content:
 
