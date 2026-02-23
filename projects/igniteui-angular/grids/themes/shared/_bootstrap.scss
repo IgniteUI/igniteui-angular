@@ -1,5 +1,6 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
 @use 'styles/themes/standalone' as *;
 
 @include themed-block(igx-grid-th, bootstrap) {
@@ -16,4 +17,9 @@
 
 @include themed-block(igx-advanced-filter, bootstrap) {
     border-radius: rem(4px);
+
+    .igx-excel-filter__secondary-footer {
+        padding: rem(16px);
+        border-top: rem(1px) solid color($color: 'gray', $variant: 300);
+    }
 }

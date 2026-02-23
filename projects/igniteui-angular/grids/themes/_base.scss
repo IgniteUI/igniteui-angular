@@ -12,9 +12,9 @@ $cell-font-size: rem(13px);
 $cell-line-height: rem(16px);
 $cell-editing-outline-width: rem(2px);
 $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
-$grid-body-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'body-border-color');
-$grid-active-state-border: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
-
+$grid-body-column-border-odd: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-odd');
+$grid-body-column-border-even: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-even');
+$grid-active-state-border: var-get($theme, 'header-border-width')  var-get($theme, 'active-state-border-style') var-get($theme, 'cell-active-border-color');
 $cell-padding-sm: rem(12px);
 $cell-padding-md: rem(16px);
 $cell-padding-lg: rem(24px);
@@ -28,10 +28,8 @@ $z-grid-decoration: 2;
 $z-grid-interaction: 3;
 $z-grid-selection: 4;
 $z-grid-edit-indicator: 5;
-
 $z-grid-drag-ghost: 20;
 $z-grid-scroll-drag: 25;
-
 $z-grid-pinned-cell: 9999;
 $z-grid-pinned-row: 10000;
 $z-grid-scroll: 10001;
@@ -286,6 +284,10 @@ $z-grid-loading: 10003;
                     color: var-get($theme, 'row-selected-hover-text-color');
                     background: var-get($theme, 'row-selected-hover-background');
                 }
+
+                .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                    border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
+                }
             }
         }
 
@@ -305,6 +307,12 @@ $z-grid-loading: 10003;
                 border-inline-end-color: var-get($theme, 'header-border-color') !important;
                 border-block-end: 0 !important;
             }
+
+            .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                // The border is part of the body cells but the color of the border
+                // depends on the row background since we want it to be invisible unless a user change it
+                border-inline-end: $grid-body-column-border-odd;
+            }
         }
 
         // Row striping - even rows
@@ -312,11 +320,18 @@ $z-grid-loading: 10003;
             background: var-get($theme, 'row-even-background');
             color: var-get($theme, 'row-even-text-color');
 
+            .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                // The border is part of the body cells but the color of the border
+                // depends on the row background since we want it to be invisible unless a user change it
+                border-inline-end: $grid-body-column-border-even;
+            }
+
             .igx-grid__tr-action {
                 border-inline-end-color: var-get($theme, 'header-border-color') !important;
                 border-block-end: 0 !important;
             }
         }
+
 
         // Selected row state
         @include e(tr, $m: selected) {
@@ -330,9 +345,18 @@ $z-grid-loading: 10003;
                 background: var-get($theme, 'cell-selected-within-background');
             }
 
+            .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
+            }
+
+
             &:hover {
                 color: var-get($theme, 'row-selected-hover-text-color');
                 background: var-get($theme, 'row-selected-hover-background');
+
+                .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                    border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
+                }
             }
         }
 
@@ -448,8 +472,6 @@ $z-grid-loading: 10003;
         @include e(td) {
             @extend %cell-display;
 
-            border-inline-end: $grid-body-border;
-
             // Used for the active cell indicator
             &::after {
                 content: '';
@@ -555,23 +577,11 @@ $z-grid-loading: 10003;
             position: relative;
             background: inherit;
             z-index: $z-grid-pinned-cell;
-
-            &::after {
-                width: calc(100% - $pinned-shadow-size);
-            }
         }
 
         // First pinned column (left border)
         @include e(td, $m: pinned-first) {
             border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
-
-            &:dir(ltr) {
-                box-shadow: inset $pinned-shadow-size 0 0 0 var-get($theme, 'pinned-border-color');
-            }
-
-            &:dir(rtl) {
-                box-shadow: inset calc($pinned-shadow-size * -1) 0 0 0 var-get($theme, 'pinned-border-color');
-            }
 
             &::after {
                 width: calc(100% - $pinned-shadow-size);
@@ -583,14 +593,6 @@ $z-grid-loading: 10003;
         // Last pinned column (right border)
         @include e(td, $m: pinned-last) {
             border-inline-end: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
-
-            &:dir(ltr) {
-                box-shadow: inset calc($pinned-shadow-size * -1) 0 0 0 var-get($theme, 'pinned-border-color');
-            }
-
-            &:dir(rtl) {
-                box-shadow: inset $pinned-shadow-size 0 0 0 var-get($theme, 'pinned-border-color');
-            }
         }
 
         // Pinned cell when selected
@@ -622,7 +624,7 @@ $z-grid-loading: 10003;
 
         @include e(td, $m: active) {
             &::after {
-                box-shadow: $grid-active-state-border;
+                border: $grid-active-state-border;
             }
         }
 
@@ -667,40 +669,33 @@ $z-grid-loading: 10003;
             &::after {
                 box-shadow: inset 0 0 0 #{$cell-editing-outline-width}
                     var-get($theme, 'edit-mode-color');
-
-                top: calc($cell-editing-outline-width / 2);
-                height: calc(100% - $cell-editing-outline-width)
             }
 
-            igx-input-group {
+            .igx-input-group {
                 --size: 100% !important;
+                --igx-input-group-border-color: transparent;
+                --igx-input-group-hover-border-color: transparent;
+                --igx-input-group-focused-border-color: transparent;
+                --igx-input-group-focused-secondary-color: transparent;
+                --igx-input-group-disabled-border-color: transparent;
 
                 width: 100%;
                 overflow: hidden;
 
-                // I don't like this, customize via CSS variables instead?
                 .igx-input-group__bundle {
-                    background: transparent !important;
-                    border: none !important;
-                    box-shadow: none !important;
-
-                    &::before {
-                        content: none !important;
-                    }
-
+                    &::before,
                     &::after {
                         display: none;
                     }
                 }
 
-                input {
+                .igx-input-group__input {
                     --input-font-size: #{$cell-font-size};
                     --input-line-height: #{$cell-line-height};
 
                     font-size: var(--input-font-size) !important;
                     line-height: var(--input-line-height) !important;
-                    box-shadow: none !important;
-                    border: none !important;
+
                 }
             }
 
@@ -784,11 +779,6 @@ $z-grid-loading: 10003;
             }
         }
 
-        // Multi-row layout row
-        @include e(tr, $m: mrl) {
-            // TODO TEMPORARY TO TEST
-            //border-bottom-color: transparent;
-        }
 
         // Dragging row state
         @include e(tr, $m: drag) {
@@ -857,7 +847,7 @@ $z-grid-loading: 10003;
 
         // Active row container
         @include e(tr-container, $m: active) {
-            box-shadow: $grid-active-state-border;
+            border: $grid-active-state-border;
         }
 
         // Action row (for row actions like edit, delete buttons)
@@ -1097,7 +1087,7 @@ $z-grid-loading: 10003;
             }
 
             &::after {
-                box-shadow: $grid-active-state-border;
+                border: $grid-active-state-border;
                 z-index: $z-grid-selection;
             }
         }
@@ -1109,7 +1099,7 @@ $z-grid-loading: 10003;
             justify-content: flex-start;
             flex: 1 1 auto;
             padding-inline-start: sizable(rem(12px), rem(16px), rem(24px));
-            border-inline-end: $grid-body-border;
+            border-inline-end: $grid-body-column-border-odd;
             min-height: var(--cell-height);
 
             &:focus {
@@ -1368,7 +1358,6 @@ $z-grid-loading: 10003;
         // Drag indicator in header
         @include e(drag-indicator, $m: header) {
             border-inline-end: $grid-header-border;
-            border-block-end: $grid-header-border;
         }
 
         // Drag indicator off/disabled state
@@ -1551,6 +1540,11 @@ $z-grid-loading: 10003;
 
                 .igx-input-group__bundle-main {
                     padding-inline-start: 0 !important;
+                    margin: 0 !important;
+                    border: 0 !important;
+                    outline: none !important;
+                    box-shadow: none !important;
+                    background: transparent !important;
                 }
 
                 color: var-get($theme, 'filtering-row-text-color') !important;
@@ -1579,6 +1573,10 @@ $z-grid-loading: 10003;
                 .igx-input-group__bundle-start,
                 .igx-input-group__bundle-end {
                     margin: 0 !important;
+                    border: 0 !important;
+                    outline: none !important;
+                    box-shadow: none !important;
+                    background: transparent !important;
                 }
 
                 .igx-input-group__bundle,
@@ -2166,7 +2164,7 @@ $z-grid-loading: 10003;
                 inset: 0;
                 width: 100%;
                 height: 100%;
-                box-shadow: $grid-active-state-border;
+                border: $grid-active-state-border;
                 pointer-events: none;
             }
         }
@@ -2175,7 +2173,7 @@ $z-grid-loading: 10003;
             &::after {
                 inset-block-start: 0;
                 inset-inline-start: 0;
-                width: calc(100% - rem(2px));
+                width: calc(100% - var-get($theme, 'pinned-border-width')) !important;
             }
         }
 
@@ -2259,6 +2257,10 @@ $z-grid-loading: 10003;
         @include m(pinned) {
             position: relative;
             background: inherit;
+
+            &::after {
+                width: calc(100% - $pinned-shadow-size) !important;
+            }
         }
 
         // Pinned header (first pinned column)
@@ -2266,11 +2268,11 @@ $z-grid-loading: 10003;
             border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
 
             &:dir(ltr) {
-                box-shadow: inset rem(1px) 0 0 0 var-get($theme, 'pinned-border-color');
+                border-inline-start-color: var-get($theme, 'pinned-border-color');
             }
 
             &:dir(rtl) {
-                box-shadow: inset rem(-1px) 0 0 0 var-get($theme, 'pinned-border-color');
+                border-inline-end-color: var-get($theme, 'pinned-border-color');
             }
         }
 
@@ -2279,13 +2281,13 @@ $z-grid-loading: 10003;
             border-inline-end: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
 
             &:dir(ltr) {
-                box-shadow: inset rem(-1px) 0 0 0 var-get($theme, 'pinned-border-color');
                 border-inline-end-color: var-get($theme, 'pinned-border-color');
+                border-inline-end-width: var-get($theme, 'pinned-border-width');
             }
 
             &:dir(rtl) {
-                box-shadow: inset rem(1px) 0 0 0 var-get($theme, 'pinned-border-color');
                 border-inline-start-color: var-get($theme, 'pinned-border-color');
+                border-inline-start-width: var-get($theme, 'pinned-border-width');
             }
         }
 
@@ -2728,14 +2730,14 @@ $z-grid-loading: 10003;
         .igx-grid-thead__title,
         .igx-grid__td,
         .igx-grid-th {
-            border-inline-end: $grid-header-border;
-            border-block-end: $grid-header-border;
+            border-inline-end: $grid-header-border !important;
+            border-block-end: $grid-header-border !important;
         }
     }
 
-    .igx-grid-thead__wrapper.igx-grid__tr--mrl {
-        border-block-end: 0 !important;
-    }
+    //.igx-grid-thead__wrapper.igx-grid__tr--mrl {
+    //    border-block-end: 0 !important;
+    //}
 
     //// MRL row context - rows in multi-row layout
     .igx-grid__tr--mrl {
@@ -2785,6 +2787,12 @@ $z-grid-loading: 10003;
     .igx-grid-thead__item.igx-grid-th--active {
         &::after {
             width: calc(100% - var-get($theme, 'header-border-width'));
+        }
+
+        &.igx-grid-thead__subgroup {
+            &::after {
+                height: calc(100% - var-get($theme, 'header-border-width'));
+            }
         }
     }
 
