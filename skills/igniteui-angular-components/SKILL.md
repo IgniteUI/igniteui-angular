@@ -16,6 +16,40 @@ This skill teaches AI agents how to properly use Ignite UI for Angular UI compon
 - `igniteui-angular` installed via `npm install igniteui-angular`, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
 - A theme applied (see the Theming skill)
 
+## Application Setup
+
+> **AGENT INSTRUCTION:** Before adding any Ignite UI component, verify that `app.config.ts` (or `app.module.ts`) contains the required providers listed below. Missing `provideAnimations()` is the most common cause of runtime errors with overlay and animated components (Dialog, Combo, Select, Date Picker, Snackbar, Toast, Banner, Navigation Drawer, Dropdown). Always check and update `app.config.ts` when scaffolding a new feature.
+
+### Required Providers (`app.config.ts`)
+
+```typescript
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { HammerModule } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { provideIgniteIntl } from 'igniteui-angular/core'; // '@infragistics/igniteui-angular/core' for licensed
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideAnimations(),          // REQUIRED — all overlay and animated components
+    importProvidersFrom(HammerModule), // REQUIRED — touch gesture support (Slider, Drag & Drop)
+    provideRouter(appRoutes),
+    provideIgniteIntl(),          // recommended — localization for grids, date/time pickers, etc.
+  ]
+};
+```
+
+| Provider | Package | Required for |
+|---|---|---|
+| `provideAnimations()` | `@angular/platform-browser/animations` | **All overlay and animated components** — Dialog, Combo, Select, Dropdown, Date/Time Picker, Snackbar, Toast, Banner, Navigation Drawer, Carousel, Overlay service |
+| `importProvidersFrom(HammerModule)` | `@angular/platform-browser` | Touch gestures — Slider, Drag & Drop, swipe interactions |
+| `provideIgniteIntl()` | `igniteui-angular/core` | Localization for grids, date/time pickers, and other components that display formatted values |
+
+> **`provideAnimationsAsync()`** is an alternative to `provideAnimations()` that lazy-loads the animations module — prefer it for SSR or when optimizing initial bundle size:
+> ```typescript
+> import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+> ```
+
 ## Architecture
 
 All Ignite UI components are **standalone** — no NgModules needed. Import components directly into your component's `imports` array:
@@ -350,6 +384,8 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 ### Feedback & Overlays
 
+> **AGENT INSTRUCTION:** All components in this section rely on Angular animations and the Ignite UI overlay system. Before using them, ensure `provideAnimations()` (or `provideAnimationsAsync()`) is present in `app.config.ts`. If it is missing, add it — otherwise these components will throw runtime errors or silently fail to animate.
+
 #### Dialog
 
 ```html
@@ -544,13 +580,14 @@ export class MyFormComponent {
 
 ## Key Rules
 
-1. **Always import from specific entry points** — avoid the main `igniteui-angular` barrel for tree-shaking
-2. **All components are standalone** — do NOT set `standalone: true` in component decorators (it's the default in Angular 20+)
-3. **Use `ChangeDetectionStrategy.OnPush`** for all components
-4. **Use Angular signals** for state management (`signal()`, `computed()`)
-5. **Use native control flow** — `@if`, `@for`, `@switch` instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-6. **Use `host` property** instead of `@HostBinding`/`@HostListener` decorators
-7. **Prefer reactive forms** for form-heavy components
-8. **Use `igxRipple`** on interactive elements for Material-style feedback
-9. **Use `input()` signal** instead of `@Input()` decorator for component inputs
-10. **Use `output()` function** instead of `@Output()` decorator for component outputs
+1. **Always check `app.config.ts` first** — add `provideAnimations()` from `@angular/platform-browser/animations` before using any overlay or animated component (Dialog, Combo, Select, Date Picker, Snackbar, Toast, Banner, Navigation Drawer). This is the most common source of runtime errors in new projects.
+2. **Always import from specific entry points** — avoid the main `igniteui-angular` barrel for tree-shaking
+3. **All components are standalone** — do NOT set `standalone: true` in component decorators (it's the default in Angular 20+)
+4. **Use `ChangeDetectionStrategy.OnPush`** for all components
+5. **Use Angular signals** for state management (`signal()`, `computed()`)
+6. **Use native control flow** — `@if`, `@for`, `@switch` instead of `*ngIf`, `*ngFor`, `*ngSwitch`
+7. **Use `host` property** instead of `@HostBinding`/`@HostListener` decorators
+8. **Prefer reactive forms** for form-heavy components
+9. **Use `igxRipple`** on interactive elements for Material-style feedback
+10. **Use `input()` signal** instead of `@Input()` decorator for component inputs
+11. **Use `output()` function** instead of `@Output()` decorator for component outputs
