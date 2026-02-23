@@ -257,4 +257,72 @@ describe('ng-add schematics', () => {
     tree.delete(`${sourceRoot}/styles.styl`);
   });
 
+  describe('AI skills', () => {
+    it('should create .github/copilot-instructions.md when addAISkills is true and agent is copilot', async () => {
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: true, aiSkillsAgent: 'copilot' }, tree);
+      expect(tree.exists('.github/copilot-instructions.md')).toBe(true);
+      const content = tree.readContent('.github/copilot-instructions.md');
+      expect(content).toContain('# Persona');
+    });
+
+    it('should create CLAUDE.md when addAISkills is true and agent is claude', async () => {
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: true, aiSkillsAgent: 'claude' }, tree);
+      expect(tree.exists('CLAUDE.md')).toBe(true);
+      const content = tree.readContent('CLAUDE.md');
+      expect(content).toContain('# Persona');
+    });
+
+    it('should create .cursor/skills/igniteui-angular.md when addAISkills is true and agent is cursor', async () => {
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: true, aiSkillsAgent: 'cursor' }, tree);
+      expect(tree.exists('.cursor/skills/igniteui-angular.md')).toBe(true);
+      const content = tree.readContent('.cursor/skills/igniteui-angular.md');
+      expect(content).toContain('# Persona');
+    });
+
+    it('should create file at custom path when addAISkills is true and agent is custom', async () => {
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: true, aiSkillsAgent: 'custom', customSkillsPath: 'custom/ai-skills.md' }, tree);
+      expect(tree.exists('custom/ai-skills.md')).toBe(true);
+      const content = tree.readContent('custom/ai-skills.md');
+      expect(content).toContain('# Persona');
+    });
+
+    it('should NOT create AI skills files when addAISkills is false', async () => {
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: false }, tree);
+      expect(tree.exists('.github/copilot-instructions.md')).toBe(false);
+      expect(tree.exists('CLAUDE.md')).toBe(false);
+      expect(tree.exists('.cursor/skills/igniteui-angular.md')).toBe(false);
+    });
+
+    it('should NOT overwrite existing .github/copilot-instructions.md', async () => {
+      const existingContent = '# Existing instructions';
+      tree.create('.github/copilot-instructions.md', existingContent);
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: true, aiSkillsAgent: 'copilot' }, tree);
+      expect(tree.readContent('.github/copilot-instructions.md')).toEqual(existingContent);
+    });
+
+    it('should NOT overwrite existing CLAUDE.md', async () => {
+      const existingContent = '# Existing Claude instructions';
+      tree.create('CLAUDE.md', existingContent);
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: true, aiSkillsAgent: 'claude' }, tree);
+      expect(tree.readContent('CLAUDE.md')).toEqual(existingContent);
+    });
+
+    it('should NOT overwrite existing .cursor/skills/igniteui-angular.md', async () => {
+      const existingContent = '# Existing Cursor skills';
+      tree.create('.cursor/skills/igniteui-angular.md', existingContent);
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: true, aiSkillsAgent: 'cursor' }, tree);
+      expect(tree.readContent('.cursor/skills/igniteui-angular.md')).toEqual(existingContent);
+    });
+
+    it('should default to copilot agent when aiSkillsAgent is not specified', async () => {
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: true }, tree);
+      expect(tree.exists('.github/copilot-instructions.md')).toBe(true);
+    });
+
+    it('should skip when custom agent is selected but no path is provided', async () => {
+      await runner.runSchematic('ng-add', { resetCss: false, addAISkills: true, aiSkillsAgent: 'custom', customSkillsPath: '' }, tree);
+      expect(tree.files.filter(f => f.includes('skills') || f.includes('copilot') || f.includes('CLAUDE')).length).toBe(0);
+    });
+  });
+
 });

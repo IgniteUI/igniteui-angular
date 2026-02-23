@@ -15,6 +15,32 @@
             "description": "Add HammerJS",
             "default": false,
             "x-prompt": "Add HammerJS setup for touch-specific interactions support?"
+        },
+        "addAISkills": {
+            "type": "boolean",
+            "description": "Add AI coding skills for your IDE",
+            "default": true,
+            "x-prompt": "Would you like to add AI coding skills for your IDE? (writes AI instruction files for Copilot, Claude, or Cursor)"
+        },
+        "aiSkillsAgent": {
+            "type": "string",
+            "description": "Select which AI agent to configure",
+            "default": "copilot",
+            "x-prompt": {
+                "message": "Which AI agent would you like to configure?",
+                "type": "list",
+                "items": [
+                    { "value": "copilot", "label": "GitHub Copilot (.github/copilot-instructions.md)" },
+                    { "value": "claude", "label": "Anthropic Claude (CLAUDE.md)" },
+                    { "value": "cursor", "label": "Cursor (.cursor/skills/)" },
+                    { "value": "custom", "label": "Add custom path" }
+                ]
+            }
+        },
+        "customSkillsPath": {
+            "type": "string",
+            "description": "Custom path for AI skills file (only used when 'custom' agent is selected)",
+            "default": ""
         }
     },
     "required": []

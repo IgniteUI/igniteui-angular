@@ -76,6 +76,10 @@ module.exports.copySchematics = (cb) => {
         '!**/tsconfig.json'
     ]).pipe(gulp.dest('./dist/igniteui-angular/schematics'));
 
+    gulp.src([
+        './projects/igniteui-angular/skills/**/*'
+    ]).pipe(gulp.dest('./dist/igniteui-angular/skills'));
+
     cb();
 };
 

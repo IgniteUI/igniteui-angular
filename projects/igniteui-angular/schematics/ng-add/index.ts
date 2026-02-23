@@ -5,6 +5,7 @@ import type { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
 import { logSuccess, addDependencies } from '../utils/dependency-handler';
 import { addResetCss } from './add-normalize';
+import { addAISkills } from './add-ai-skills';
 import { createHost } from '../utils/util';
 
 const addNormalize = (options: Options): Rule =>
@@ -23,6 +24,7 @@ const addNormalize = (options: Options): Rule =>
 export default (options: Options): Rule => chain([
     addNormalize(options),
     addDependencies(options),
+    addAISkills(options),
     installPackageJsonDependencies(options),
     logSuccess(options)
 ]);

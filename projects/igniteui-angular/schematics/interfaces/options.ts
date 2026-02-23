@@ -3,4 +3,7 @@ export interface Options {
     polyfills: boolean;
     resetCss: boolean;
     addHammer: boolean;
+    addAISkills: boolean;
+    aiSkillsAgent: string;
+    customSkillsPath: string;
 }
