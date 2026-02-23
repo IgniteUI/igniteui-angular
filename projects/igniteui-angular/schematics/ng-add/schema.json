@@ -20,7 +20,7 @@
             "type": "boolean",
             "description": "Add AI coding skills for your IDE",
             "default": true,
-            "x-prompt": "Would you like to add AI coding skills for your IDE? (writes AI instruction files for Copilot, Claude, or Cursor)"
+            "x-prompt": "Would you like to add AI coding skills for your IDE? (writes AI instruction files for Copilot, Claude, Cursor, or a custom path)"
         },
         "aiSkillsAgent": {
             "type": "string",
