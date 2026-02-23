@@ -35,7 +35,7 @@ $_theme: $fluent;
         @include type-style(body-2);
 
         padding-inline: pad-inline(rem(8px));
-        padding-block: pad-block(rem(6px), rem(10px), rem(14px)) 0;
+        padding-block: pad-block(rem(6px), rem(10px), rem(14px));
     }
 
     @include e(file-input) {
@@ -89,7 +89,7 @@ $_theme: $fluent;
 
         igx-suffix,
         [igxSuffix] {
-            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
+            color: var(--ig-input-group-input-suffix-color--focused, var(--ig-gray-900));
         }
     }
 
@@ -113,14 +113,14 @@ $_theme: $fluent;
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            color: var(--igx-input-group-disabled-text-color, var(--ig-gray-500));
+            color: var(--ig-input-group-disabled-text-color, var(--ig-gray-500));
         }
     }
 
     @include mx(readonly, search, focused) {
         igx-suffix,
         [igxSuffix] {
-            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
+            color: var(--ig-input-group-input-suffix-color--focused, var(--ig-gray-900));
         }
     }
 

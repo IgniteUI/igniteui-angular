@@ -153,24 +153,8 @@
         inherits: true;
     }
 
-    // Component styles
-    @include ripple.component();
-    @include action-strip.component();
-    @include avatar.component();
-    @include badge.component();
-    @include banner.component();
-    @include bottom-nav.component();
+    // Global component styles either angular directives or shared component styles
     @include button.component();
-    @include button-group.component();
-    @include divider.component();
-    @include calendar.component();
-    @include card.component();
-    @include carousel.component();
-    @include checkbox.component();
-    @include chip.component();
-    @include column-actions.component();
-    @include combo.component();
-    @include select.component();
     @include category-chart.component();
     @include data-chart.component();
     @include doughnut-chart.component();
@@ -179,47 +163,18 @@
     @include gauge.component();
     @include geo-map.component();
     @include graph.component();
-    @include pie-chart.component();
-    @include shape-chart.component();
-    @include sparkline.component();
-    @include date-picker.component();
-    @include date-range-picker.component();
-    @include dialog.component();
-    @include dock-manager.component();
-    @include rating.component();
-    @include drop-down.component();
-    @include expansion-panel.component();
     @include grid.component();
-    @include grid-summary.component();
-    @include grid-toolbar.component();
-    @include pivot-data-selector.component();
     @include highlight.component();
-    @include icon.component();
     @include icon-button.component();
-    @include input-group.component();
     @include label.component();
-    @include list.component();
-    @include navbar.component();
-    @include navdrawer.component();
     @include overlay.component();
-    @include paginator.component();
-    @include linear-progress.component();
-    @include circular-progress.component();
-    @include radio.component();
-    @include query-builder.component();
+    @include pie-chart.component();
+    @include ripple.component();
+    @include shape-chart.component();
     @include scrollbar.component();
-    @include slider.component();
-    @include splitter.component();
-    @include snackbar.component();
-    @include switch.component();
-    @include stepper.component();
-    @include tabs.component();
-    @include toast.component();
+    @include sparkline.component();
     @include tooltip.component();
-    @include time-picker.component();
-    @include tree.component();
     @include watermark.component();
-    @include file-input.component();
 
     // Build the component dependency-tree
     @include base.dependecy-tree(base.$components);

@@ -15,8 +15,8 @@ $theme: $material;
         --badge-size: var(--component-size);
         --_badge-size: #{var-get($theme, 'size')};
 
-        --igx-icon-size: #{sizable(rem(12px), rem(14px), rem(16px))};
-        --igx-icon-color: #{var-get($theme, 'icon-color')};
+        --ig-icon-size: #{sizable(rem(12px), rem(14px), rem(16px))};
+        --ig-icon-color: #{var-get($theme, 'icon-color')};
 
         display: inline-flex;
         justify-content: center;

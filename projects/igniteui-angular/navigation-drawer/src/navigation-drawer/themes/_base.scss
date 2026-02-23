@@ -40,40 +40,40 @@ $_theme: $material;
 
     @include b(igx-nav-drawer) {
         // TODO: These should probably be a part of the design tokens schema
-        --igx-nav-drawer-size: #{rem(240px)};
-        --igx-nav-drawer-size--mini: var(--nav-drawer-size--mini);
+        --ig-nav-drawer-size: #{rem(240px)};
+        --ig-nav-drawer-size--mini: var(--nav-drawer-size--mini);
+        --ig-nav-drawer-transition-duration: .3s;
 
-        flex-basis: 0;
-        transition: flex-basis;
-        transition-duration: .3s;
-        transition-timing-function: $ease-out-quad;
-        flex-shrink: 0;
+        transition-duration: var(--ig-nav-drawer-transition-duration);
+        flex: auto 0 0;
 
         @include m(pinned) {
-            flex-basis: var(--igx-nav-drawer-size);
+            flex-basis: var(--ig-nav-drawer-size);
         }
 
         @include mx(mini, pinned) {
-            flex-basis: calc(var(--igx-mini-nav-drawer-size, #{var(--igx-nav-drawer-size--mini)}) + rem(1px));
+            flex-basis: calc(var(--ig-mini-nav-drawer-size, var(--ig-nav-drawer-size--mini)) + rem(1px));
         }
 
         @include e(aside) {
             position: fixed;
+            display: block;
             height: 100%;
             min-height: 100%;
             overflow-x: hidden;
             background: var-get($_theme, 'background');
-            top: 0;
-            bottom: 0;
-            width: var(--igx-nav-drawer-size);
+            inset: 0 auto;
+            width: var(--ig-nav-drawer-size);
             inset-inline-start: 0;
-            z-index: 999;
-            transition: width, padding, transform;
-            transition-timing-function: $ease-in-out-quad;
             box-shadow: var-get($_theme, 'elevation');
             padding: var(--aside-padding);
             border-inline-end: rem(1px) solid var-get($_theme, 'border-color');
             border-radius: var-get($_theme, 'border-radius');
+            contain: content paint layout;
+
+            // additional popover overrides:
+            margin: 0;
+            border: none;
         }
 
         @include e(aside, panning) {
@@ -107,8 +107,8 @@ $_theme: $material;
         }
 
         @include e(aside, mini) {
-            transition-duration: .3s;
-            width: #{var(--igx-nav-drawer-size--mini)};
+            transition-duration: var(--ig-nav-drawer-transition-duration);
+            width: var(--ig-nav-drawer-size--mini);
             min-width: fit-content;
 
             [igxDrawerItem] {
@@ -123,14 +123,13 @@ $_theme: $material;
         }
 
         @include e(aside, normal) {
-            transition-duration: .3s;
-            width: var(--igx-nav-drawer-size);
+            transition-duration: var(--ig-nav-drawer-transition-duration);
+            width: var(--ig-nav-drawer-size);
         }
 
         @include e(aside, pinned) {
             position: relative;
             box-shadow: none;
-            z-index: 0;
         }
 
         @include e(aside, $mods: (pinned, collapsed)) {
@@ -138,23 +137,27 @@ $_theme: $material;
             width: 0;
             overflow: hidden;
             border: none;
-            padding: 0;
+            padding-inline: 0;
         }
 
         @include e(overlay) {
             opacity: 1;
             background: color(null, 'gray', 500, .54);
             transition: opacity, visibility;
-            transition-duration: .3s, .3s;
-            transition-timing-function: ease-in, step-start;
+            transition-duration: var(--ig-nav-drawer-transition-duration), var(--ig-nav-drawer-transition-duration);
             transition-delay: 0s, 0s;
             position: absolute;
             inset-inline-start: 0;
-            top: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
             visibility: visible;
-            z-index: 999;
+
+            // additional popover overrides:
+            margin: 0;
+            padding: 0;
+            border: none;
+            display: block;
         }
 
         @include e(overlay, panning) {
@@ -168,7 +171,6 @@ $_theme: $material;
         }
 
         @include e(overlay, hidden) {
-            transition-timing-function: ease-in-out, step-end;
             visibility: hidden;
             opacity: 0;
         }
@@ -205,6 +207,7 @@ $_theme: $material;
         text-decoration: none;
         border: none;
         justify-content: flex-start;
+        contain: paint layout content;
 
         igx-icon {
             --component-size: 3;
@@ -216,9 +219,9 @@ $_theme: $material;
             box-shadow: none;
 
             igx-icon {
-                width: var(--igx-icon-size, rem(24px));
-                height: var(--igx-icon-size, rem(24px));
-                font-size: var(--igx-icon-size, rem(24px));
+                width: var(--ig-icon-size, rem(24px));
+                height: var(--ig-icon-size, rem(24px));
+                font-size: var(--ig-icon-size, rem(24px));
                 margin: 0;
             }
 

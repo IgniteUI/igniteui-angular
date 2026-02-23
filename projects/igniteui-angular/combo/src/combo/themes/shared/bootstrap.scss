@@ -7,7 +7,7 @@ $_theme: $bootstrap;
 
 @include themed-block(igx-combo, bootstrap) {
     @include e(search) {
-        --igx-input-group-border-border-radius: 0;
+        --ig-input-group-border-border-radius: 0;
 
         igx-input-group {
             --size: #{rem(28px)};

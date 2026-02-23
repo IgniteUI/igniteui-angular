@@ -1,5 +1,6 @@
 import {
     AfterContentInit,
+    afterRenderEffect,
     Component,
     ContentChild,
     ElementRef,
@@ -15,7 +16,9 @@ import {
     Renderer2,
     booleanAttribute,
     ViewEncapsulation,
-    inject
+    inject,
+    signal,
+    computed
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
@@ -69,9 +72,17 @@ export class IgxNavigationDrawerComponent implements
     OnChanges {
     private elementRef = inject<ElementRef>(ElementRef);
     private _state = inject(IgxNavigationService, { optional: true });
-    protected renderer = inject(Renderer2);
+    private renderer = inject(Renderer2);
     private _touchManager = inject(HammerGesturesManager);
     private platformUtil = inject(PlatformUtil);
+
+    private _isOpen = signal(false);
+    private _pinned = signal(false);
+    private _miniTemplate = signal<IgxNavDrawerMiniTemplateDirective | undefined>(undefined);
+    private _visibleOverlay = computed<boolean>(() => {
+        return !this._pinned() && (this._isOpen() || !!this._miniTemplate());
+    });
+    private _closingAnimation = signal(false);
 
 
     /** @hidden @internal */
@@ -160,7 +171,14 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [pin]="false"></igx-nav-drawer>
      * ```
      */
-    @Input({ transform: booleanAttribute }) public pin = false;
+    @Input({ transform: booleanAttribute })
+    public get pin(): boolean {
+        return this._pinned();
+    }
+    public set pin(v: boolean) {
+        this._pinned.set(v);
+    }
+
 
     /**
      * Width of the drawer in its open state.
@@ -257,11 +275,9 @@ export class IgxNavigationDrawerComponent implements
     @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
     protected contentTemplate: IgxNavDrawerTemplateDirective;
 
-    @ViewChild('aside', { static: true }) private _drawer: ElementRef;
-    @ViewChild('overlay', { static: true }) private _overlay: ElementRef;
-    @ViewChild('dummy', { static: true }) private _styleDummy: ElementRef;
-
-    private _isOpen = false;
+    @ViewChild('aside', { static: true }) private _drawer: ElementRef<HTMLElement>;
+    @ViewChild('overlay', { static: true }) private _overlay: ElementRef<HTMLElement>;
+    @ViewChild('dummy', { static: true }) private _styleDummy: ElementRef<HTMLElement>;
 
     /**
      * State of the drawer.
@@ -284,11 +300,11 @@ export class IgxNavigationDrawerComponent implements
      */
     @Input({ transform: booleanAttribute })
     public get isOpen() {
-        return this._isOpen;
+        return this._isOpen();
     }
     public set isOpen(value) {
-        this._isOpen = value;
-        this.isOpenChange.emit(this._isOpen);
+        this._isOpen.set(value);
+        this.isOpenChange.emit(value);
     }
 
     /**
@@ -310,13 +326,11 @@ export class IgxNavigationDrawerComponent implements
             return this.contentTemplate.template;
         }
     }
-
-    private _miniTemplate: IgxNavDrawerMiniTemplateDirective;
     /**
      * @hidden
      */
     public get miniTemplate(): IgxNavDrawerMiniTemplateDirective {
-        return this._miniTemplate;
+        return this._miniTemplate();
     }
 
     /**
@@ -324,13 +338,13 @@ export class IgxNavigationDrawerComponent implements
      */
     @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective })
     public set miniTemplate(v: IgxNavDrawerMiniTemplateDirective) {
-        this._miniTemplate = v;
+        this._miniTemplate.set(v);
     }
 
     /** @hidden @internal */
     @HostBinding('class.igx-nav-drawer--mini')
     public get isMini(): boolean {
-        return !!this._miniTemplate && !this.isOpen;
+        return !!this.miniTemplate && !this.isOpen;
     }
 
     /** @hidden @internal */
@@ -342,7 +356,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @HostBinding('style.--igx-nav-drawer-size')
+    @HostBinding('style.--ig-nav-drawer-size')
     public get normalSize() {
         if (!this.isOpen) {
             return '0px';
@@ -354,7 +368,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @HostBinding('style.--igx-nav-drawer-size--mini')
+    @HostBinding('style.--ig-nav-drawer-size--mini')
     public get miniSize() {
         if (this.miniTemplate && this.miniWidth) {
             return this.miniWidth;
@@ -381,14 +395,14 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     public get drawer() {
-        return this._drawer.nativeElement;
+        return this._drawer?.nativeElement;
     }
 
     /**
      * @hidden
      */
     public get overlay() {
-        return this._overlay.nativeElement;
+        return this._overlay?.nativeElement;
     }
 
     /**
@@ -458,6 +472,13 @@ export class IgxNavigationDrawerComponent implements
      */
     public get state() {
         return this._state;
+    }
+
+    constructor() {
+        afterRenderEffect(() => {
+            if (this._closingAnimation()) return;
+            this.togglePopover(this._visibleOverlay());
+        });
     }
 
     /**
@@ -592,6 +613,8 @@ export class IgxNavigationDrawerComponent implements
 
         this.closing.emit();
 
+        // TODO: intersection observer for close popover instead of transitionend
+        this._closingAnimation.set(true);
         this.isOpen = false;
         this.elementRef.nativeElement.addEventListener('transitionend', this.toggleClosedEvent, false);
     }
@@ -839,12 +862,27 @@ export class IgxNavigationDrawerComponent implements
                 this.renderer.setStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
             } else {
                 this.renderer.setStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
-                this.renderer.setStyle(this.drawer, '-webkit-transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
             }
             if (opacity !== undefined) {
                 this.renderer.setStyle(this.overlay, 'opacity', opacity);
             }
         });
+    }
+
+    private togglePopover(show: boolean) {
+        // check element and functionality exist:
+        if (typeof this.drawer?.showPopover !== 'function') return;
+
+        const popoverOpen = this.drawer.matches(':popover-open');
+        if (show === popoverOpen) return;
+
+        if (show) {
+            this.overlay.showPopover();
+            this.drawer.showPopover();
+        } else {
+            this.overlay.hidePopover();
+            this.drawer.hidePopover();
+        }
     }
 
     private toggleOpenedEvent = () => {
@@ -854,6 +892,7 @@ export class IgxNavigationDrawerComponent implements
 
     private toggleClosedEvent = () => {
         this.elementRef.nativeElement.removeEventListener('transitionend', this.toggleClosedEvent, false);
+        this._closingAnimation.set(false);
         this.closed.emit();
     };
 }

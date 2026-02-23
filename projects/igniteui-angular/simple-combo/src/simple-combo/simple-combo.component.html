@@ -26,8 +26,8 @@
     </ng-container>
 
     @if (hasSelectedItem) {
-        <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
-            (click)="handleClear($event)" (keydown)="handleClearKeyDown($event)" [tabindex]="disabled ? -1 : 0" role="button">
+        <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button igx-input-group__clear-button"
+            (click)="handleClear($event)">
             @if (clearIconTemplate) {
                 <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
             }
@@ -45,8 +45,7 @@
         </igx-suffix>
     }
 
-    <igx-suffix class="igx-input-group__toggle-button igx-combo__toggle-button" (click)="onClick($event)" (keydown)="handleToggleKeyDown($event)"
-        [tabindex]="disabled ? -1 : 0" role="button">
+    <igx-suffix class="igx-input-group__toggle-button igx-combo__toggle-button" (click)="onClick($event)">
         @if (toggleIconTemplate) {
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         }

@@ -452,6 +452,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
     }
 
+    /* blazorCSSuppress */
     public override get advancedFilteringExpressionsTree(): IFilteringExpressionsTree {
         return super.advancedFilteringExpressionsTree;
     }
@@ -620,6 +621,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    /* blazorCSSuppress */
     public override get resourceStrings() {
         return super.resourceStrings;
     }

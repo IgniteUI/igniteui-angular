@@ -21,7 +21,6 @@ import {
     IgxGridCRUDService,
     IgxGridDetailTemplateDirective,
     IgxGridDragSelectDirective,
-    IgxGridGroupByAreaComponent,
     IgxGridHeaderRowComponent,
     IgxGridMasterDetailContext,
     IgxGridMRLNavigationService,
@@ -49,6 +48,7 @@ import {
 } from 'igniteui-angular/grids/core';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
+import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { take, takeUntil } from 'rxjs/operators';
 import { cloneArray, IBaseEventArgs, IGridGroupingStrategy, IGroupByExpandState, IGroupByRecord, IGroupingExpression, IgxOverlayOutletDirective, ISortingExpression } from 'igniteui-angular/core';
 import { IgxGridDetailsPipe } from './grid.details.pipe';

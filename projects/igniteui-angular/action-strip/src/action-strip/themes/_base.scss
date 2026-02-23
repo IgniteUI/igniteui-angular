@@ -58,7 +58,6 @@ $_theme: $material;
                 --component-size: var(--action-strip-size);
 
                 --ig-icon-size: #{$icon-size};
-                --igx-icon-size: #{$icon-size};
             }
         }
 
@@ -107,7 +106,7 @@ $_theme: $material;
 
             > [igxButton] {
                 margin-inline-start: rem(4px);
-    
+
                 &:first-of-type {
                     margin-inline-start: 0;
                 }

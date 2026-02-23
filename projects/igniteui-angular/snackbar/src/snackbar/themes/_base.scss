@@ -16,9 +16,9 @@ $theme: $material;
 
         // TODO: These properties work now, but they alter the design compared to before,
         // we need to verify if they are needed at all.
-        // Seems like the --igx-button-foreground is needed in the fluent theme;
-        // --igx-button-background: transparent;
-        // --igx-button-foreground: #{var-get($theme, 'button-color')};
+        // Seems like the --ig-button-foreground is needed in the fluent theme;
+        // --ig-button-background: transparent;
+        // --ig-button-foreground: #{var-get($theme, 'button-color')};
 
         position: relative;
         display: flex;

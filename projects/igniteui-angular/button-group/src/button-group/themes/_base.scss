@@ -8,7 +8,8 @@ $_theme: $material;
 
 @include layer(base) {
     @include b(igx-button-group) {
-        --item-min-width: rem(42px);
+        --item-min-width: #{rem(42px)};
+        --ig-icon-size: #{rem(18px)};
 
         display: flex;
         box-shadow: var-get($_theme, 'elevation');
@@ -198,14 +199,14 @@ $_theme: $material;
                     margin-top: rem(-1px) !important;
                     margin-inline-start: 0;
                 }
-        
+
                 &:first-of-type {
                     border-start-start-radius: inherit;
                     border-start-end-radius: inherit;
                     border-end-start-radius: 0;
                     border-end-end-radius: 0;
                 }
-        
+
                 &:last-of-type {
                     border-start-start-radius: 0;
                     border-start-end-radius: 0;

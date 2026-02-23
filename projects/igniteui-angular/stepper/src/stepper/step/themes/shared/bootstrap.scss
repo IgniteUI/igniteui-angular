@@ -133,7 +133,7 @@ $_theme: $bootstrap;
         min-width: $indicator-size;
 
         > igx-icon {
-            --size: var(--igx-icon-size, #{rem(18px)});
+            --size: var(--ig-icon-size, #{rem(18px)});
         }
 
         > igx-icon,

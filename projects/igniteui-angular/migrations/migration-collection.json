@@ -258,6 +258,20 @@
             "factory": "./update-21_0_0_import-migration",
             "recommended": true,
             "optional": true
+        },
+        "migration-52": {
+            "version": "21.1.0",
+            "description": "Migrates IgxGridGroupByAreaComponent import from grids/core to grids/grid",
+            "factory": "./update-21_1_0_import-migration",
+            "recommended": true,
+            "optional": true
+        },
+        "migration-53": {
+            "version": "21.1.0",
+            "description": "Migrates --igx-* CSS variables to --ig-* for better consistency between component frameworks",
+            "factory": "./update-21_1_0_css-migration",
+            "recommended": true,
+            "optional": true
         }
     }
 }

@@ -25,11 +25,11 @@ $_theme: $material;
             input {
                 transform: none;
             }
-    
+
             [igxPrefix] {
                 box-sizing: content-box;
             }
-    
+
             .igx-input-group__bundle-main {
                 padding-top: 0 !important;
             }
@@ -82,7 +82,7 @@ $_theme: $material;
         }
 
         igx-icon {
-            --size: var(--igx-icon-size, #{rem(18px)});
+            --size: var(--ig-icon-size, #{rem(18px)});
         }
 
         @include e(header) {
@@ -98,11 +98,11 @@ $_theme: $material;
                 padding: 0 rem(8px);
                 box-sizing: content-box !important;
             }
-    
+
             .igx-chip__item {
                 height: sizable(rem(18px), rem(20px), rem(22px));
             }
-    
+
             .igx-chip__content {
                 padding: 0 rem(2px);
             }
@@ -160,7 +160,7 @@ $_theme: $material;
             z-index: 10;
 
             igx-icon {
-                --size: var(--igx-icon-size, #{rem(18px)});
+                --size: var(--ig-icon-size, #{rem(18px)});
             }
         }
 

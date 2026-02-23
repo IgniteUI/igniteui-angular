@@ -23,7 +23,7 @@ $theme: $material;
         min-width: fit-content;
 
         igx-divider {
-            --igx-divider-color: #{var-get($theme, 'divider-color')};
+            --ig-divider-color: #{var-get($theme, 'divider-color')};
         }
 
         @include e(header) {
@@ -176,7 +176,7 @@ $theme: $material;
 
             @include e(header) {
                 min-width: rem(168px);
-            }            
+            }
 
             @include e(body) {
                 flex-grow: 1;

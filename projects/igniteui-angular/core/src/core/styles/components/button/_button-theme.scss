@@ -1,3 +1,4 @@
+/* stylelint-disable max-nesting-depth */
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:list';
@@ -62,11 +63,6 @@
             ),
             $variant
         );
-
-        $button-transition: color var(--_init-transition, #{$time}) ease-in-out,
-            background-color var(--_init-transition, #{$time}) ease-in-out,
-            border-color var(--_init-transition, #{$time}) ease-in-out,
-            box-shadow var(--_init-transition, #{$time}) ease-in-out;
 
         $button-disabled-shadow: none;
 
@@ -219,7 +215,8 @@
                 'fluent': none,
                 'bootstrap': 0 0 0 rem(4px)
                     var-get($contained-theme, 'shadow-color'),
-                'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+                'indigo': 0 0 0 rem(3px)
+                    var-get($contained-theme, 'shadow-color'),
             ),
             $variant
         );
@@ -230,7 +227,8 @@
                 'fluent': none,
                 'bootstrap': 0 0 0 rem(4px)
                     var-get($contained-theme, 'shadow-color'),
-                'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+                'indigo': 0 0 0 rem(3px)
+                    var-get($contained-theme, 'shadow-color'),
             ),
             $variant
         );
@@ -289,6 +287,12 @@
         }
 
         %igx-button-display {
+            --_button-transition:
+                color var(--_init-transition, #{$time}) ease-in-out,
+                background-color var(--_init-transition, #{$time}) ease-in-out,
+                border-color var(--_init-transition, #{$time}) ease-in-out,
+                box-shadow var(--_init-transition, #{$time}) ease-in-out;
+
             @include sizable();
 
             position: relative;
@@ -314,7 +318,7 @@
             -webkit-tap-highlight-color: transparent;
             overflow: hidden;
             white-space: nowrap;
-            transition: $button-transition;
+            transition: var(--_button-transition);
             gap: pad-inline(
                 map.get($items-gap, 'compact'),
                 map.get($items-gap, 'cosy'),
@@ -329,10 +333,10 @@
                 --component-size: var(--ig-size, var(--ig-size-large));
                 display: flex;
                 justify-content: center;
-                width: var(--igx-icon-size, #{$icon-in-button-size});
-                height: var(--igx-icon-size, #{$icon-in-button-size});
-                font-size: var(--igx-icon-size, #{$icon-in-button-size});
-                transition: $button-transition;
+                width: var(--ig-icon-size, #{$icon-in-button-size});
+                height: var(--ig-icon-size, #{$icon-in-button-size});
+                font-size: var(--ig-icon-size, #{$icon-in-button-size});
+                transition: var(--_button-transition);
             }
         }
 
@@ -358,7 +362,10 @@
         }
 
         %igx-button--flat {
-            --component-size: var(--ig-size, #{var-get($flat-theme, 'default-size')});
+            --component-size: var(
+                --ig-size,
+                #{var-get($flat-theme, 'default-size')}
+            );
             background: var-get($flat-theme, 'background');
             color: var-get($flat-theme, 'foreground');
             border-radius: var-get($flat-theme, 'border-radius');
@@ -445,7 +452,11 @@
                 &::after {
                     @extend %fluent-border;
 
-                    box-shadow: 0 0 0 rem(1px) var-get($flat-theme, 'focus-visible-border-color');
+                    box-shadow: 0
+                        0
+                        0
+                        rem(1px)
+                        var-get($flat-theme, 'focus-visible-border-color');
                 }
             }
 
@@ -461,7 +472,10 @@
         }
 
         %igx-button--outlined {
-            --component-size: var(--ig-size, #{var-get($outlined-theme, 'default-size')});
+            --component-size: var(
+                --ig-size,
+                #{var-get($outlined-theme, 'default-size')}
+            );
             background: var-get($outlined-theme, 'background');
             color: var-get($outlined-theme, 'foreground');
             border-color: var-get($outlined-theme, 'border-color');
@@ -525,9 +539,12 @@
         %igx-button--outlined-focused {
             background: var-get($outlined-theme, 'focus-visible-background');
             color: var-get($outlined-theme, 'focus-visible-foreground');
-            border-color: var-get($outlined-theme, 'focus-visible-border-color');
+            border-color: var-get(
+                $outlined-theme,
+                'focus-visible-border-color'
+            );
 
-            @if $variant == 'material'  or $variant == 'bootstrap' {
+            @if $variant == 'material' or $variant == 'bootstrap' {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
                 }
@@ -538,9 +555,17 @@
             }
 
             @if $variant == 'bootstrap' {
-                box-shadow: 0 0 0 rem(4px) var-get($outlined-theme, 'shadow-color');
+                box-shadow: 0
+                    0
+                    0
+                    rem(4px)
+                    var-get($outlined-theme, 'shadow-color');
             } @else if $variant == 'indigo' {
-                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
+                box-shadow: 0
+                    0
+                    0
+                    rem(3px)
+                    var-get($outlined-theme, 'shadow-color');
             }
 
             &:hover {
@@ -575,13 +600,20 @@
                 &::after {
                     @extend %fluent-border;
 
-                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
+                    box-shadow: 0
+                        0
+                        0
+                        rem(1px)
+                        var-get($outlined-theme, 'focus-visible-border-color');
                 }
             }
         }
 
         %igx-button--contained {
-            --component-size: var(--ig-size, #{var-get($contained-theme, 'default-size')});
+            --component-size: var(
+                --ig-size,
+                #{var-get($contained-theme, 'default-size')}
+            );
             color: var-get($contained-theme, 'foreground');
             background: var-get($contained-theme, 'background');
             border-color: var-get($contained-theme, 'border-color');
@@ -642,7 +674,10 @@
         %igx-button--contained-focused {
             background: var-get($contained-theme, 'focus-visible-background');
             color: var-get($contained-theme, 'focus-visible-foreground');
-            border-color: var-get($contained-theme, 'focus-visible-border-color');
+            border-color: var-get(
+                $contained-theme,
+                'focus-visible-border-color'
+            );
 
             igx-icon {
                 color: var-get($contained-theme, 'icon-color');
@@ -660,7 +695,11 @@
                 &::after {
                     @extend %fluent-border;
 
-                    box-shadow: 0 0 0 rem(1px) var-get($contained-theme, 'focus-visible-border-color');
+                    box-shadow: 0
+                        0
+                        0
+                        rem(1px)
+                        var-get($contained-theme, 'focus-visible-border-color');
                 }
             }
 
@@ -703,7 +742,7 @@
             align-items: center;
             outline: none;
             cursor: pointer;
-            transition: $button-transition;
+            transition: var(--_button-transition);
             user-select: none;
             -webkit-tap-highlight-color: transparent;
             overflow: hidden;
@@ -712,7 +751,10 @@
         }
 
         %igx-button--fab {
-            --component-size: var(--ig-size, #{var-get($fab-theme, 'default-size')});
+            --component-size: var(
+                --ig-size,
+                #{var-get($fab-theme, 'default-size')}
+            );
             padding-block: pad-block(
                 map.get($button-floating-padding-block, 'compact'),
                 map.get($button-floating-padding-block, 'cosy'),
@@ -728,7 +770,10 @@
                 padding-inline: pad-inline(
                     map.get($button-floating-padding-indigo-inline, 'compact'),
                     map.get($button-floating-padding-indigo-inline, 'cosy'),
-                    map.get($button-floating-padding-indigo-inline, 'comfortable')
+                    map.get(
+                        $button-floating-padding-indigo-inline,
+                        'comfortable'
+                    )
                 );
             }
 
@@ -805,8 +850,14 @@
                 &::after {
                     @extend %fluent-border;
                     $btn-indent: rem(2px);
-                    border-radius: calc(#{var-get($fab-theme, 'border-radius')} - #{$btn-indent});
-                    box-shadow: 0 0 0 rem(1px) var-get($fab-theme, 'focus-visible-border-color');
+                    border-radius: calc(
+                        #{var-get($fab-theme, 'border-radius')} - #{$btn-indent}
+                    );
+                    box-shadow: 0
+                        0
+                        0
+                        rem(1px)
+                        var-get($fab-theme, 'focus-visible-border-color');
                 }
             }
 
@@ -854,7 +905,6 @@
         }
     }
 }
-
 /// Adds typography styles for the igx-button component.
 /// Uses the 'button' category from the typographic scale.
 /// @group typography
