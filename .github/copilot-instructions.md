@@ -119,5 +119,6 @@ Here is a link to the most recent Angular style guide https://angular.dev/style-
 Domain-specific skills for AI-assisted development are located in the [`skills/`](../skills/) directory. Each sub-folder contains a `SKILL.md` file that teaches agents how to work with a particular area of the library:
 
 - [`skills/igniteui-angular-components`](../skills/igniteui-angular-components/SKILL.md) — Components & Layout
-- [`skills/igniteui-angular-grids`](../skills/igniteui-angular-grids/SKILL.md) — Data Grids
+- [`skills/igniteui-angular-grids`](../skills/igniteui-angular-grids/SKILL.md) — Data Grids (structure, columns, templates, layout)
+- [`skills/igniteui-angular-grid-data-operations`](../skills/igniteui-angular-grid-data-operations/SKILL.md) — Grid Data Operations (sorting, filtering, grouping, paging, remote data, state management)
 - [`skills/igniteui-angular-theming`](../skills/igniteui-angular-theming/SKILL.md) — Theming & Styling (includes MCP server setup)

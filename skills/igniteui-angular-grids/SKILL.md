@@ -10,6 +10,13 @@ user-invokable: true
 
 This skill teaches AI agents how to build rich data grid experiences with Ignite UI for Angular. It covers the four grid types (Grid, Tree Grid, Hierarchical Grid, Pivot Grid), column configuration, sorting, filtering, editing, selection, grouping, summaries, export, and advanced features like batch editing, cell merging, multi-row layouts, and virtualization.
 
+> **Related Skill: Grid Data Operations & State Management**
+>
+> This skill focuses on **grid structure** — choosing a grid type, configuring columns, templates, layout, selection, toolbar, and export.
+> For **data manipulation patterns** — remote data binding, programmatic sorting/filtering/grouping, paging, batch editing workflows, state persistence, and wiring up services — see the dedicated [`igniteui-angular-grid-data-operations`](../igniteui-angular-grid-data-operations/SKILL.md) skill.
+>
+> If the user's question is about *what* to render, use this skill. If it's about *how data flows*, use the Data Operations skill.
+
 ## Prerequisites
 
 - Angular 20+ project
@@ -30,8 +37,8 @@ This skill teaches AI agents how to build rich data grid experiences with Ignite
 ### Imports
 
 ```typescript
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
-import { IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
+import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
+import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
 
 @Component({
   selector: 'app-users-grid',
@@ -40,6 +47,9 @@ import { IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersGridComponent {
+  // Signal-based view child — use #grid on the template element
+  gridRef = viewChild.required<IgxGridComponent>('grid');
+
   protected users = signal<User[]>([]);
 }
 ```
@@ -47,7 +57,7 @@ export class UsersGridComponent {
 ### Basic Grid
 
 ```html
-<igx-grid
+<igx-grid #grid
   [data]="users()"
   [primaryKey]="'id'"
   [autoGenerate]="false"
@@ -155,7 +165,7 @@ Create complex cell layouts spanning multiple rows/columns:
 <igx-column field="name" [pinned]="true"></igx-column>
 ```
 
-Or programmatically: `grid.pinColumn('name')`.
+Or programmatically: `this.gridRef().pinColumn('name')`.
 
 ## Sorting
 
@@ -171,8 +181,8 @@ Or programmatically: `grid.pinColumn('name')`.
 Programmatic sorting:
 
 ```typescript
-grid.sort({ fieldName: 'name', dir: SortingDirection.Asc, ignoreCase: true });
-grid.clearSort();
+this.gridRef().sort({ fieldName: 'name', dir: SortingDirection.Asc, ignoreCase: true });
+this.gridRef().clearSort();
 ```
 
 Events: `(sorting)` (cancelable), `(sortingDone)`.
@@ -206,9 +216,9 @@ Events: `(sorting)` (cancelable), `(sortingDone)`.
 ### Programmatic Filtering
 
 ```typescript
-grid.filter('name', 'John', IgxStringFilteringOperand.instance().condition('contains'), true);
-grid.clearFilter('name');
-grid.clearFilter(); // clear all
+this.gridRef().filter('name', 'John', IgxStringFilteringOperand.instance().condition('contains'), true);
+this.gridRef().clearFilter('name');
+this.gridRef().clearFilter(); // clear all
 ```
 
 Events: `(filtering)` (cancelable), `(filteringDone)`.
@@ -280,29 +290,29 @@ Events: `(rowEditEnter)`, `(rowEdit)` (cancelable), `(rowEditDone)`, `(rowEditEx
 
 ```typescript
 // Commit all changes
-grid.transactions.commit(grid.data);
+this.gridRef().transactions.commit(this.gridRef().data);
 
 // Undo last change
-grid.transactions.undo();
+this.gridRef().transactions.undo();
 
 // Redo
-grid.transactions.redo();
+this.gridRef().transactions.redo();
 
 // Discard all changes
-grid.transactions.clear();
+this.gridRef().transactions.clear();
 ```
 
 ### Adding and Deleting Rows
 
 ```typescript
 // Add row
-grid.addRow({ id: 999, name: 'New User', email: 'new@example.com' });
+this.gridRef().addRow({ id: 999, name: 'New User', email: 'new@example.com' });
 
 // Delete row by primary key
-grid.deleteRow(42);
+this.gridRef().deleteRow(42);
 
 // Open add-row UI at top or bottom
-grid.beginAddRowByIndex(0); // at top
+this.gridRef().beginAddRowByIndex(0); // at top
 ```
 
 Events: `(rowAdded)`, `(rowDeleted)`, `(rowAdd)` (cancelable), `(rowDelete)` (cancelable).
@@ -338,8 +348,8 @@ Events: `(formGroupCreated)`, `(validationStatusChange)`.
 Programmatic:
 
 ```typescript
-grid.groupBy({ fieldName: 'category', dir: SortingDirection.Asc });
-grid.clearGrouping('category');
+this.gridRef().groupBy({ fieldName: 'category', dir: SortingDirection.Asc });
+this.gridRef().clearGrouping('category');
 ```
 
 ## Summaries
@@ -612,5 +622,7 @@ Grids support copy to clipboard by default. Configure via:
 6. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
 7. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
 8. **For large datasets** use remote operations: listen to `(dataPreLoad)`, `(sortingDone)`, `(filteringDone)` and fetch server-side
-9. **Batch editing** requires `[primaryKey]` — call `grid.transactions.commit(grid.data)` to persist changes
+9. **Batch editing** requires `[primaryKey]` — call `this.gridRef().transactions.commit(this.gridRef().data)` to persist changes
 10. **Tree Grid**: use `[primaryKey]` + `[foreignKey]` for flat data or `[childDataKey]` for nested objects
+11. **Access the grid via `viewChild`** — use `gridRef = viewChild.required<IgxGridComponent>('grid')` with `#grid` on the template for all programmatic API calls
+12. **For data operation patterns** (remote data, paging, state persistence, batch editing workflows) — see the [Grid Data Operations skill](../igniteui-angular-grid-data-operations/SKILL.md)

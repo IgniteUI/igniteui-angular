@@ -48,6 +48,7 @@ This repository ships with **Copilot Skills** — structured knowledge files tha
 |:------|:-----|:------------|
 | Components & Layout | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | Standalone components, form controls, overlays, layout |
 | Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Grid, Tree Grid, Hierarchical Grid, Pivot Grid |
+| Grid Data Operations | [`skills/igniteui-angular-grid-data-operations/SKILL.md`](skills/igniteui-angular-grid-data-operations/SKILL.md) | Sorting, filtering, grouping, paging, remote data, state management |
 | Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Palettes, typography, elevations, component themes, MCP server |
 
 #### How It Works
