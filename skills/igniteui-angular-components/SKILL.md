@@ -652,12 +652,4 @@ export class MyFormComponent {
 
 1. **Always check `app.config.ts` first** — add `provideAnimations()` from `@angular/platform-browser/animations` before using any overlay or animated component (Dialog, Combo, Select, Date Picker, Snackbar, Toast, Banner, Navigation Drawer). This is the most common source of runtime errors in new projects.
 2. **Always import from specific entry points** — avoid the main `igniteui-angular` barrel for tree-shaking
-3. **All components are standalone** — do NOT set `standalone: true` in component decorators (it's the default in Angular 20+)
-4. **Use `ChangeDetectionStrategy.OnPush`** for all components
-5. **Use Angular signals** for state management (`signal()`, `computed()`)
-6. **Use native control flow** — `@if`, `@for`, `@switch` instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-7. **Use `host` property** instead of `@HostBinding`/`@HostListener` decorators
-8. **Prefer reactive forms** for form-heavy components
-9. **Use `igxRipple`** on interactive elements for Material-style feedback
-10. **Use `input()` signal** instead of `@Input()` decorator for component inputs
-11. **Use `output()` function** instead of `@Output()` decorator for component outputs
+3. **Use `igxRipple`** on interactive elements for Material-style feedback
