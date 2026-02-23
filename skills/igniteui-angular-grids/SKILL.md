@@ -23,14 +23,51 @@ This skill teaches AI agents how to build rich data grid experiences with Ignite
 - `igniteui-angular` installed
 - A theme applied (see the Theming skill)
 
-## Grid Types Overview
+## Choosing the Right Grid
 
-| Grid | Selector | Use Case | Entry Point |
-|---|---|---|---|
-| **Grid** | `igx-grid` | Flat tabular data | `igniteui-angular/grids/grid` |
-| **Tree Grid** | `igx-tree-grid` | Hierarchical parent-child data in one flat array | `igniteui-angular/grids/tree-grid` |
-| **Hierarchical Grid** | `igx-hierarchical-grid` | Master-detail data with different schemas per level | `igniteui-angular/grids/hierarchical-grid` |
-| **Pivot Grid** | `igx-pivot-grid` | Pivot table analytics | `igniteui-angular/grids/pivot-grid` |
+Ignite UI has **five grid types**. Picking the correct one is the most important decision — each has different data structures, features, and constraints.
+
+### Grid Selection Decision Guide
+
+Ask these questions in order:
+
+1. **Does the user need a lightweight, read-only data display** with sorting, filtering, and virtualization but no editing, selection, or paging? → **Grid Lite** (open-source, MIT licensed)
+2. **Does the user need pivot-table analytics** (rows/columns/values/aggregations that users can drag-and-drop to reshape)? → **Pivot Grid**
+3. **Does the data have parent-child relationships where each level has a DIFFERENT schema** (e.g., Companies → Departments → Employees)? → **Hierarchical Grid**
+4. **Does the data have parent-child relationships within a SINGLE schema** (e.g., Employees with a `managerId` field, or nested children arrays)? → **Tree Grid**
+5. **Is the data a flat list/table with enterprise features needed** (editing, batch editing, grouping, paging, export, etc.)? → **Flat Grid**
+
+### Grid Types Overview
+
+| Grid | Selector | Component | Directives | Entry Point |
+|---|---|---|---|---|
+| **Grid Lite** | `igx-grid-lite` | `IgxGridLiteComponent` | Individual imports | `igniteui-angular/grids/lite` |
+| **Flat Grid** | `igx-grid` | `IgxGridComponent` | `IGX_GRID_DIRECTIVES` | `igniteui-angular/grids/grid` |
+| **Tree Grid** | `igx-tree-grid` | `IgxTreeGridComponent` | `IGX_TREE_GRID_DIRECTIVES` | `igniteui-angular/grids/tree-grid` |
+| **Hierarchical Grid** | `igx-hierarchical-grid` | `IgxHierarchicalGridComponent` | `IGX_HIERARCHICAL_GRID_DIRECTIVES` | `igniteui-angular/grids/hierarchical-grid` |
+| **Pivot Grid** | `igx-pivot-grid` | `IgxPivotGridComponent` | `IGX_PIVOT_GRID_DIRECTIVES` | `igniteui-angular/grids/pivot-grid` |
+
+### Feature Availability per Grid Type
+
+| Feature | Grid Lite | Flat Grid | Tree Grid | Hierarchical Grid | Pivot Grid |
+|---|---|---|---|---|---|
+| Column sorting | Yes | Yes | Yes (per-level) | Yes (per grid level) | Per-dimension only |
+| Column filtering | Yes | Yes | Yes (recursive — keeps matching parents) | Yes (per grid level) | Per-dimension only |
+| GroupBy | No | **Exclusive** | No (use tree hierarchy) | No | Inherent via dimensions |
+| Paging | No | Yes | Yes | Yes (each level independent) | No |
+| Batch editing | No | Yes | Yes (hierarchical transactions) | Yes (propagated from root) | No |
+| Cell / Row editing | No | Yes | Yes | Yes (per grid level) | No |
+| Row adding | No | Yes | Yes (with parent support) | Yes (per grid level) | No |
+| Master-Detail | No | **Exclusive** | No | No (use row islands) | No |
+| Row selection | No | Yes | Yes + `multipleCascade` | Yes (per grid level) | Limited |
+| Load on demand | No | No | **Exclusive** | No | No |
+| Column pinning / moving | No | Yes | Yes | Yes | No |
+| Column hiding | Yes | Yes | Yes | Yes | No |
+| Column resizing | Yes | Yes | Yes | Yes | No |
+| Summaries | No | Yes | Yes (per-level) | Yes (per grid level) | Horizontal summaries only |
+| State persistence | No | Yes | Yes | Yes + row island state | Pivot config serialization |
+| Remote data ops | `dataPipelineConfiguration` | Events + noop strategies | Events + noop strategies | Events + noop strategies | N/A |
+| Row virtualization | Yes | Yes (rows + columns) | Yes (rows + columns) | Yes (rows + columns) | Yes |
 
 ## Quick Start
 
@@ -464,38 +501,96 @@ export class MyComponent {
 
 ## Tree Grid
 
-For data with parent-child relationships:
+For data with parent-child relationships **within a single schema** (e.g., org charts, file systems, categories).
+
+### Two Data Binding Modes
+
+**Mode 1: Flat data with foreign key** — rows reference their parent via a foreign key:
+
+```typescript
+import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
+import { IgxTreeGridComponent, IGX_TREE_GRID_DIRECTIVES } from 'igniteui-angular/grids/tree-grid';
+
+@Component({
+  selector: 'app-org-tree',
+  imports: [IGX_TREE_GRID_DIRECTIVES],
+  templateUrl: './org-tree.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class OrgTreeComponent {
+  treeGridRef = viewChild.required<IgxTreeGridComponent>('treeGrid');
+  employees = signal<Employee[]>([
+    { id: 1, name: 'CEO', managerId: -1, title: 'CEO' },
+    { id: 2, name: 'VP Engineering', managerId: 1, title: 'VP' },
+    { id: 3, name: 'Developer', managerId: 2, title: 'Dev' },
+  ]);
+}
+```
 
 ```html
-<igx-tree-grid
+<igx-tree-grid #treeGrid
   [data]="employees()"
   [primaryKey]="'id'"
   [foreignKey]="'managerId'"
   [autoGenerate]="false"
   [rowSelection]="'multipleCascade'"
   height="600px">
-
   <igx-column field="name" header="Name" [sortable]="true"></igx-column>
   <igx-column field="title" header="Title"></igx-column>
-  <igx-column field="department" header="Department" [groupable]="true"></igx-column>
-
 </igx-tree-grid>
 ```
 
-Key properties:
-- `[primaryKey]` + `[foreignKey]` — flat data with foreign key relation
-- `[primaryKey]` + `[childDataKey]` — nested object data
+**Mode 2: Nested object data** — each row contains its children in an array property:
 
-```typescript
-import { IGX_TREE_GRID_DIRECTIVES } from 'igniteui-angular/grids/tree-grid';
+```html
+<igx-tree-grid #treeGrid
+  [data]="departments()"
+  [primaryKey]="'id'"
+  [childDataKey]="'children'"
+  [autoGenerate]="false"
+  height="600px">
+  <igx-column field="name" header="Name"></igx-column>
+  <igx-column field="headCount" header="Employees" dataType="number"></igx-column>
+</igx-tree-grid>
 ```
+
+### Tree Grid Unique Features
+
+- **Cascade selection**: `[rowSelection]="'multipleCascade'"` — selecting a parent selects all children; indeterminate state propagates up
+- **Cascade delete**: `[cascadeOnDelete]="true"` (default) — deleting a parent removes all descendants
+- **Load on demand**: `[loadChildrenOnDemand]="loadChildren"` — lazy-load children when a row is expanded
+- **Expansion depth**: `[expansionDepth]="2"` — control initial expansion level (`Infinity` by default)
+- **Add child row**: `treeGridRef().addRow(data, parentRowID)` — add a row as a child of a specific parent
+
+### Tree Grid Data Operation Behavior
+
+- **Filtering is recursive**: when a child matches, its parent is always shown (even if the parent doesn't match). Matched parents are auto-expanded.
+- **Sorting is per-level**: children are sorted within their parent, not globally flattened
+- **Batch editing** uses `HierarchicalTransactionService` — transactions carry a `path` array tracing the parent hierarchy for proper undo/redo
+- **Summaries** are computed per tree level
 
 ## Hierarchical Grid
 
-For master-detail data with different schemas at each level:
+For master-detail data where **each level has a different schema** (e.g., Companies → Departments → Employees). Each level is defined by a **Row Island** blueprint.
+
+```typescript
+import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
+import { IgxHierarchicalGridComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES } from 'igniteui-angular/grids/hierarchical-grid';
+
+@Component({
+  selector: 'app-company-grid',
+  imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES],
+  templateUrl: './company-grid.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class CompanyGridComponent {
+  hGridRef = viewChild.required<IgxHierarchicalGridComponent>('hGrid');
+  companies = signal<Company[]>([]);
+}
+```
 
 ```html
-<igx-hierarchical-grid
+<igx-hierarchical-grid #hGrid
   [data]="companies()"
   [primaryKey]="'id'"
   [autoGenerate]="false"
@@ -504,11 +599,11 @@ For master-detail data with different schemas at each level:
   <igx-column field="name" header="Company"></igx-column>
   <igx-column field="industry" header="Industry"></igx-column>
 
-  <igx-row-island [key]="'departments'" [autoGenerate]="false">
+  <igx-row-island [key]="'departments'" [autoGenerate]="false" [primaryKey]="'deptId'">
     <igx-column field="name" header="Department"></igx-column>
     <igx-column field="headCount" header="Employees" dataType="number"></igx-column>
 
-    <igx-row-island [key]="'employees'" [autoGenerate]="false">
+    <igx-row-island [key]="'employees'" [autoGenerate]="false" [primaryKey]="'empId'">
       <igx-column field="name" header="Name"></igx-column>
       <igx-column field="role" header="Role"></igx-column>
     </igx-row-island>
@@ -517,39 +612,281 @@ For master-detail data with different schemas at each level:
 </igx-hierarchical-grid>
 ```
 
-```typescript
-import { IGX_HIERARCHICAL_GRID_DIRECTIVES } from 'igniteui-angular/grids/hierarchical-grid';
+### How Row Islands Work
+
+- A `<igx-row-island>` defines the **blueprint** (columns, features, templates) for all child grids at that level
+- The `[key]` property specifies which property of the parent row's data holds the child array
+- Row islands can be **nested** — an `igx-row-island` can contain another for deeper levels
+- Each expanded row creates a **full grid instance** — be aware of memory usage with very deep/wide hierarchies
+
+### Accessing Child Grid Instances
+
+Use the `(gridCreated)` event on the row island:
+
+```html
+<igx-row-island [key]="'orders'" (gridCreated)="onChildGridCreated($event)">
+  <igx-column field="orderId" header="Order"></igx-column>
+</igx-row-island>
 ```
+
+```typescript
+onChildGridCreated(event: IGridCreatedEventArgs) {
+  const childGrid = event.grid;
+  // Configure the child grid instance, load data, etc.
+}
+```
+
+### Hierarchical Grid Data Operation Behavior
+
+- **Sorting and filtering do NOT cascade** — each grid level is independent with its own state
+- **Configure features on the row island** and all child grids at that level inherit them
+- **Batch editing propagates**: setting `[batchEditing]="true"` on the root automatically enables it on all child grids
+- **State persistence** recursively saves/restores state for each child grid instance, keyed by row island ID + parent row ID
+
+## Grid Lite
+
+The **lightest grid option** — an open-source (MIT licensed) Web Component with an Angular wrapper. Use it for **read-only data display** with sorting, filtering, column hiding/resizing, and row virtualization. It has **no editing, no selection, no paging, no grouping, no summaries, no export**.
+
+> **When to recommend Grid Lite vs. Flat Grid**: If the user only needs to display data with basic sorting/filtering and doesn't need editing, batch operations, paging, grouping, summaries, or export, Grid Lite is the lighter, faster choice. If any of those enterprise features are needed, use the Flat Grid.
+
+### Installation
+
+Grid Lite requires a **separate npm package**:
+
+```bash
+npm install igniteui-grid-lite
+```
+
+### Setup
+
+```typescript
+import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
+import {
+  IgxGridLiteComponent,
+  IgxGridLiteColumnComponent,
+  IgxGridLiteCellTemplateDirective,
+  IgxGridLiteHeaderTemplateDirective
+} from 'igniteui-angular/grids/lite';
+
+@Component({
+  selector: 'app-users-lite',
+  imports: [
+    IgxGridLiteComponent,
+    IgxGridLiteColumnComponent,
+    IgxGridLiteCellTemplateDirective,
+    IgxGridLiteHeaderTemplateDirective
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],  // Required — Grid Lite is a Web Component
+  templateUrl: './users-lite.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class UsersLiteComponent {
+  gridRef = viewChild<IgxGridLiteComponent<User>>('grid');
+  data: User[] = [];
+}
+```
+
+### Template
+
+```html
+<igx-grid-lite #grid
+  [data]="data"
+  [autoGenerate]="false"
+  [sortingOptions]="{ mode: 'multiple' }">
+
+  <igx-grid-lite-column
+    field="name"
+    dataType="string"
+    header="Name"
+    sortable
+    filterable
+    resizable>
+  </igx-grid-lite-column>
+
+  <igx-grid-lite-column
+    field="age"
+    dataType="number"
+    header="Age"
+    sortable
+    filterable>
+  </igx-grid-lite-column>
+
+  <igx-grid-lite-column field="active" dataType="boolean" header="Active">
+    <ng-template igxGridLiteCell let-value>
+      <span>{{ value ? 'Yes' : 'No' }}</span>
+    </ng-template>
+  </igx-grid-lite-column>
+</igx-grid-lite>
+```
+
+### Column Configuration
+
+Columns use `<igx-grid-lite-column>` with these inputs:
+
+| Input | Type | Description |
+|---|---|---|
+| `field` | `string` | Data property key (required) |
+| `dataType` | `'string' \| 'number' \| 'boolean' \| 'date'` | Column data type |
+| `header` | `string` | Header text |
+| `width` | `string` | CSS width (e.g., `'250px'`) |
+| `hidden` | `boolean` | Hide the column |
+| `resizable` | `boolean` | Allow column resizing |
+| `sortable` | `boolean` | Enable sorting |
+| `filterable` | `boolean` | Enable filtering |
+| `sortingCaseSensitive` | `boolean` | Case-sensitive sorting |
+| `filteringCaseSensitive` | `boolean` | Case-sensitive filtering |
+
+### Templates
+
+Cell and header templates use dedicated directives:
+
+```html
+<igx-grid-lite-column field="status" header="Status">
+  <!-- Custom cell template -->
+  <ng-template igxGridLiteCell let-value let-row="row" let-column="column">
+    <span [class]="value">{{ value }}</span>
+  </ng-template>
+
+  <!-- Custom header template -->
+  <ng-template igxGridLiteHeader let-column>
+    <strong>{{ column.header }}</strong>
+  </ng-template>
+</igx-grid-lite-column>
+```
+
+### Sorting & Filtering API
+
+```typescript
+// Sort programmatically
+this.gridRef().sort({ key: 'name', direction: 'ascending' });
+this.gridRef().sort([
+  { key: 'name', direction: 'ascending' },
+  { key: 'age', direction: 'descending' }
+]);
+this.gridRef().clearSort('name');
+this.gridRef().clearSort(); // clear all
+
+// Filter programmatically
+this.gridRef().filter({ key: 'age', condition: 'greaterThan', searchTerm: 21 });
+this.gridRef().clearFilter('age');
+this.gridRef().clearFilter(); // clear all
+```
+
+### Two-Way Binding for Sort/Filter State
+
+```html
+<igx-grid-lite #grid
+  [data]="data"
+  [(sortingExpressions)]="sortExprs"
+  [(filteringExpressions)]="filterExprs"
+  (sorting)="onSorting($event)"
+  (sorted)="onSorted($event)"
+  (filtering)="onFiltering($event)"
+  (filtered)="onFiltered($event)">
+</igx-grid-lite>
+```
+
+Events: `(sorting)` (cancelable), `(sorted)`, `(filtering)` (cancelable), `(filtered)`.
+
+### Remote Data Operations
+
+Use `dataPipelineConfiguration` to intercept sort/filter and delegate to the server:
+
+```typescript
+import { IgxGridLiteDataPipelineConfiguration } from 'igniteui-angular/grids/lite';
+
+dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
+  sort: async (params) => {
+    // params.grid — the grid instance
+    // params.data — current data
+    // params.type — 'sort'
+    const sorted = await this.dataService.sortRemote(params.grid.sortingExpressions);
+    return sorted;
+  },
+  filter: async (params) => {
+    const filtered = await this.dataService.filterRemote(params.grid.filteringExpressions);
+    return filtered;
+  }
+};
+```
+
+```html
+<igx-grid-lite #grid
+  [data]="data"
+  [dataPipelineConfiguration]="dataPipeline">
+</igx-grid-lite>
+```
+
+### Grid Lite Key Differences from Flat Grid
+
+- **Separate package**: `npm install igniteui-grid-lite`
+- **Requires `CUSTOM_ELEMENTS_SCHEMA`** in the component's `schemas`
+- **No directives bundle** — import `IgxGridLiteComponent`, `IgxGridLiteColumnComponent`, and template directives individually
+- **No `[primaryKey]`** — not needed (no editing, selection, or row operations)
+- **No editing** of any kind (cell, row, batch)
+- **No selection** (row, cell, column)
+- **No paging, grouping, summaries, pinning, moving, export**
+- **Column config differs**: uses `field` (not `field` on `<igx-column>`), `sortable`/`filterable` are boolean attributes
+- **Remote data**: uses `dataPipelineConfiguration` (async callback) instead of noop strategies + events
 
 ## Pivot Grid
 
-For pivot table analytics:
+For **pivot table analytics** where users reshape data by dragging dimensions between rows, columns, filters, and values.
+
+> **IMPORTANT**: The Pivot Grid is fundamentally different from the other three grids. Standard grid features like cell editing, row editing, batch editing, paging, column pinning, column moving, row dragging, and standard filtering/sorting are **disabled**. All data operations are driven by the `pivotConfiguration`.
+
+```typescript
+import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
+import { IgxPivotGridComponent, IGX_PIVOT_GRID_DIRECTIVES } from 'igniteui-angular/grids/pivot-grid';
+import { IPivotConfiguration, IgxPivotNumericAggregate } from 'igniteui-angular/grids/pivot-grid';
+
+@Component({
+  selector: 'app-sales-pivot',
+  imports: [IGX_PIVOT_GRID_DIRECTIVES],
+  templateUrl: './sales-pivot.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class SalesPivotComponent {
+  pivotGridRef = viewChild.required<IgxPivotGridComponent>('pivotGrid');
+  salesData = signal<Sale[]>([]);
+
+  pivotConfig: IPivotConfiguration = {
+    columns: [{ memberName: 'Quarter', enabled: true }],
+    rows: [{ memberName: 'Region', enabled: true }],
+    values: [{
+      member: 'Revenue',
+      aggregate: { aggregator: IgxPivotNumericAggregate.sum, key: 'SUM', label: 'Sum' },
+      enabled: true
+    }],
+    filters: [{ memberName: 'Year', enabled: true }]
+  };
+}
+```
 
 ```html
-<igx-pivot-grid
+<igx-pivot-grid #pivotGrid
   [data]="salesData()"
   [pivotConfiguration]="pivotConfig"
-  [autoGenerate]="false"
   height="600px">
 </igx-pivot-grid>
 ```
 
-```typescript
-pivotConfig: IPivotConfiguration = {
-  columns: [{ memberName: 'Quarter', enabled: true }],
-  rows: [{ memberName: 'Region', enabled: true }],
-  values: [{
-    member: 'Revenue',
-    aggregate: { aggregator: IgxPivotNumericAggregate.sum, key: 'SUM', label: 'Sum' },
-    enabled: true
-  }],
-  filters: [{ memberName: 'Year', enabled: true }]
-};
+### Pivot Data Selector
+
+Provide a drag-and-drop UI for users to reshape the pivot interactively:
+
+```html
+<igx-pivot-data-selector [grid]="pivotGridRef()"></igx-pivot-data-selector>
+<igx-pivot-grid #pivotGrid [data]="salesData()" [pivotConfiguration]="pivotConfig"></igx-pivot-grid>
 ```
 
-```typescript
-import { IGX_PIVOT_GRID_DIRECTIVES } from 'igniteui-angular/grids/pivot-grid';
-```
+### Pivot Grid Data Operations
+
+- **Filtering**: Per-dimension only — set the `filter` property on an `IPivotDimension`, NOT `[allowFiltering]`
+- **Sorting**: Per-dimension only — set `sortable: true` and `sortDirection` on an `IPivotDimension`
+- **Aggregation**: Configured via `IPivotValue.aggregate` (e.g., `IgxPivotNumericAggregate.sum`, `.average`, `.min`, `.max`, `.count`)
+- **Columns are auto-generated** from the pivot configuration — do not define `<igx-column>` manually
+- **State persistence**: Serializes the entire `pivotConfiguration` (dimensions, values, filters)
 
 ## Virtualization & Performance
 
@@ -614,15 +951,18 @@ Grids support copy to clipboard by default. Configure via:
 
 ## Key Rules
 
-1. **Always set `[primaryKey]`** — required for editing, selection, row operations
-2. **Use `IGX_GRID_DIRECTIVES`** (or tree/hierarchical/pivot variants) for convenience imports
-3. **Set `[autoGenerate]="false"`** and define columns explicitly for production grids
-4. **Set `dataType` on every column** for correct filtering, sorting, editing, and summaries
-5. **Cancelable events** — use `event.cancel = true` in `(rowEdit)`, `(cellEdit)`, `(sorting)`, `(filtering)` to prevent the action
-6. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
-7. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
-8. **For large datasets** use remote operations: listen to `(dataPreLoad)`, `(sortingDone)`, `(filteringDone)` and fetch server-side
-9. **Batch editing** requires `[primaryKey]` — call `this.gridRef().transactions.commit(this.gridRef().data)` to persist changes
-10. **Tree Grid**: use `[primaryKey]` + `[foreignKey]` for flat data or `[childDataKey]` for nested objects
-11. **Access the grid via `viewChild`** — use `gridRef = viewChild.required<IgxGridComponent>('grid')` with `#grid` on the template for all programmatic API calls
-12. **For data operation patterns** (remote data, paging, state persistence, batch editing workflows) — see the [Grid Data Operations skill](../igniteui-angular-grid-data-operations/SKILL.md)
+1. **Pick the right grid type first** — Grid Lite for lightweight read-only display, Flat Grid for enterprise tabular data, Tree Grid for single-schema parent-child, Hierarchical Grid for multi-schema levels, Pivot Grid for analytics reshaping
+2. **Always set `[primaryKey]`** — required for editing, selection, row operations (Flat, Tree, Hierarchical, Pivot grids; NOT Grid Lite)
+3. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports
+4. **Use the right component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
+5. **Set `[autoGenerate]="false"`** and define columns explicitly for production grids (except Pivot Grid where columns are auto-generated)
+6. **Set `dataType` on every column** for correct filtering, sorting, editing, and summaries
+7. **Cancelable events** — use `event.cancel = true` in `(rowEdit)`, `(cellEdit)`, `(sorting)`, `(filtering)` to prevent the action
+8. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
+9. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
+10. **Grid Lite requires `CUSTOM_ELEMENTS_SCHEMA`** and `igniteui-grid-lite` npm package — it has no editing, selection, paging, or export
+11. **Tree Grid**: use `[primaryKey]` + `[foreignKey]` for flat data or `[childDataKey]` for nested objects; filtering is recursive (parents of matching children are always shown)
+12. **Hierarchical Grid**: sorting/filtering/paging are independent per level; configure features on the `<igx-row-island>` blueprint
+13. **Pivot Grid is read-only** — editing, paging, pinning, column moving, row dragging are all disabled; use `pivotConfiguration` for all data operations
+14. **GroupBy is Flat Grid only** — Tree Grid uses hierarchy, Hierarchical Grid uses row islands, Pivot Grid uses dimensions
+15. **For data operation patterns** (remote data, paging, state persistence, batch editing workflows) — see the [Grid Data Operations skill](../igniteui-angular-grid-data-operations/SKILL.md)
