@@ -1,4 +1,3 @@
-````skill
 ---
 name: igniteui-angular-grid-data-operations
 description: Cell editing, row editing, batch editing, sorting, filtering, grouping, paging, remote data, and virtualization patterns for Ignite UI Angular grids
@@ -97,8 +96,8 @@ export class OrgTreeComponent {
 ```html
 <igx-tree-grid #treeGrid
   [data]="employees()"
-  [primaryKey]="'id'"
-  [foreignKey]="'managerId'"
+  primaryKey="id"
+  foreignKey="managerId"
   height="600px">
   <igx-column field="name" [sortable]="true" [filterable]="true"></igx-column>
 </igx-tree-grid>
@@ -123,16 +122,16 @@ export class CompanyGridComponent {
 ```html
 <igx-hierarchical-grid #hGrid
   [data]="companies()"
-  [primaryKey]="'id'"
+  primaryKey="id"
   height="600px">
   <igx-column field="name" [sortable]="true"></igx-column>
-  <igx-row-island [key]="'orders'" [primaryKey]="'orderId'">
+  <igx-row-island key="orders" primaryKey="orderId">
     <igx-column field="orderId" [sortable]="true"></igx-column>
   </igx-row-island>
 </igx-hierarchical-grid>
 ```
 
-> **CRITICAL**: Every programmatic example in this skill uses Flat Grid (`IgxGridComponent`) by default. For Tree Grid substitute `IgxTreeGridComponent` and `#treeGrid`. For Hierarchical Grid substitute `IgxHierarchicalGridComponent` and `#hGrid`. The sorting, filtering, and editing APIs are the same across all three grid types (Flat, Tree, Hierarchical). **Pivot Grid does NOT support standard sorting/filtering/editing APIs** — see the Pivot Grid section. **Grid Lite has its own lightweight sorting/filtering API** — see the Grid Lite Data Operations section.
+> **CRITICAL**: Every programmatic example in this skill uses Flat Grid (`IgxGridComponent`) by default. For Tree Grid substitute `IgxTreeGridComponent` and `#treeGrid`. For Hierarchical Grid substitute `IgxHierarchicalGridComponent` and `#hGrid`. The sorting, filtering, and editing APIs are either the same or very similar across all three grid types (Flat, Tree, Hierarchical). **Pivot Grid does NOT support standard sorting/filtering/editing APIs** — see the Pivot Grid section. **Grid Lite has its own lightweight sorting/filtering API** — see the Grid Lite Data Operations section.
 
 ## Sorting
 
@@ -152,7 +151,7 @@ Enable sorting on individual columns and optionally bind the sorting state:
 <igx-grid #grid
   [data]="data()"
   [(sortingExpressions)]="sortExprs"
-  [sortingOptions]="{ mode: 'multiple' }">
+  [sortingOptions]="{ mode: 'single' }">
   <igx-column field="name" [sortable]="true"></igx-column>
   <igx-column field="date" dataType="date" [sortable]="true"></igx-column>
   <igx-column field="amount" dataType="number" [sortable]="true"></igx-column>
@@ -160,8 +159,8 @@ Enable sorting on individual columns and optionally bind the sorting state:
 ```
 
 Sorting modes:
-- `'single'` — only one column sorted at a time (default)
-- `'multiple'` — multi-column sorting via Shift+click
+- `'multiple'` — multi-column sorting in order (default)
+- `'single'` — only one column sorted at a time
 
 ### Programmatic Sorting
 
@@ -1690,4 +1689,3 @@ export class MasterDetailComponent {
 20. **Hierarchical Grid levels are independent** — sorting/filtering/paging don't cascade; configure on `<igx-row-island>`
 21. **Pivot Grid is read-only** — no editing, paging, or standard filtering/sorting; use `pivotConfiguration` for all data operations
 22. **Grid Lite has its own API** — uses `IgxGridLiteSortingExpression`/`IgxGridLiteFilteringExpression` (NOT `ISortingExpression`/`FilteringExpressionsTree`), `dataPipelineConfiguration` for remote ops (NOT noop strategies), and has no editing, grouping, paging, summaries, or selection
-````
