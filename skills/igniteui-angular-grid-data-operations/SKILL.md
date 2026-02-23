@@ -1,4 +1,3 @@
-````skill
 ---
 name: igniteui-angular-grid-data-operations
 description: Cell editing, row editing, batch editing, sorting, filtering, grouping, paging, remote data, and virtualization patterns for Ignite UI Angular grids
@@ -1690,4 +1689,3 @@ export class MasterDetailComponent {
 20. **Hierarchical Grid levels are independent** — sorting/filtering/paging don't cascade; configure on `<igx-row-island>`
 21. **Pivot Grid is read-only** — no editing, paging, or standard filtering/sorting; use `pivotConfiguration` for all data operations
 22. **Grid Lite has its own API** — uses `IgxGridLiteSortingExpression`/`IgxGridLiteFilteringExpression` (NOT `ISortingExpression`/`FilteringExpressionsTree`), `dataPipelineConfiguration` for remote ops (NOT noop strategies), and has no editing, grouping, paging, summaries, or selection
-````
