@@ -259,8 +259,6 @@ Selection modes: `'single'`, `'multi'`, `'range'`.
 
 ### Layout Components
 
-> **Docs:** [Layout](https://www.infragistics.com/products/ignite-ui-angular/angular/components/layout)
-
 #### Tabs
 
 > **Docs:** [Tabs Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)
