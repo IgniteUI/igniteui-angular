@@ -425,6 +425,5 @@ Provide a drag-and-drop UI for users to reshape the pivot interactively:
 - **[Grid Paging & Remote](../igniteui-angular-grid-paging-remote/SKILL.md)** — Paging, remote data operations, virtualization, multi-grid coordination
 - **[Grid Editing](../igniteui-angular-grid-editing/SKILL.md)** — Cell editing, row editing, batch editing, validation, summaries
 - **[Grid State](../igniteui-angular-grid-state/SKILL.md)** — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
-- **[Grid State](../igniteui-angular-grid-state/SKILL.md)** — State persistence and grid-type-specific data operations
 - **[Theming](../igniteui-angular-theming/SKILL.md)** — Grid styling and theming
 - **[Components](../igniteui-angular-components/SKILL.md)** — Non-grid Ignite UI components
