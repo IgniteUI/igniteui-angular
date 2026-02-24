@@ -15,7 +15,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     let skillsPath = normalize(`.claude/skills`);
     const agentsPath = normalize(`.agents/skills`);
     const cursortSkills = normalize(`.cursor/skills`);
-    const githubSkills = normalize(`.agents/skills`);
+    const githubSkills = normalize(`.github/skills`);
 
     if (host.getDir(agentsPath).subdirs.length)
         skillsPath = agentsPath;

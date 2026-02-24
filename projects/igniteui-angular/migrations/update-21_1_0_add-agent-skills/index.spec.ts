@@ -54,6 +54,17 @@ describe(`Add Agent skills`, () => {
         expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBeFalse();
     });
 
+    it('should copy skill files to .github/skills when that directory already has content', async () => {
+        addPackageSkills(appTree, packagePath);
+        appTree.create('/.github/skills/existing-skill/SKILL.md', '# Existing Skill');
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.exists('/.github/skills/igniteui-angular-components/SKILL.md')).toBeTrue();
+        expect(tree.exists('/.github/skills/igniteui-angular-grids/SKILL.md')).toBeTrue();
+        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBeFalse();
+    });
+
     it('should use the licensed package skills when only the licensed package is installed', async () => {
         addPackageSkills(appTree, licensedPackagePath, IG_LICENSED_PACKAGE_NAME);
 
