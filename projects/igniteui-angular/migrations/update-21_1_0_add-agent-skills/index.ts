@@ -14,13 +14,13 @@ import { IG_LICENSED_PACKAGE_NAME, IG_PACKAGE_NAME } from '../common/tsUtils';
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     let skillsPath = normalize(`.claude/skills`);
     const agentsPath = normalize(`.agents/skills`);
-    const cursortSkills = normalize(`.cursor/skills`);
+    const cursorSkills = normalize(`.cursor/skills`);
     const githubSkills = normalize(`.github/skills`);
 
     if (host.getDir(agentsPath).subdirs.length)
         skillsPath = agentsPath;
-    if (host.getDir(cursortSkills).subdirs.length)
-        skillsPath = cursortSkills;
+    if (host.getDir(cursorSkills).subdirs.length)
+        skillsPath = cursorSkills;
     if (host.getDir(githubSkills).subdirs.length)
         skillsPath = githubSkills;
 
