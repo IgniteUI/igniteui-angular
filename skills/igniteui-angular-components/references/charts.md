@@ -9,11 +9,17 @@ Ignite UI for Angular Charts provides 65+ chart types for data visualization. Ch
 - `@infragistics/igniteui-angular-charts` — Licensed version with same API (ProGet)
 
 ### Main Chart Components
-- **`IgxCategoryChartComponent`** — Simplified API for area, bar, column charts; auto-detects best visualization
-- **`IgxFinancialChartComponent`** — Stock/candlestick charts with OHLC data, indicators, and volume panes
-- **`IgxDataChartComponent`** — Advanced chart with explicit axis, series, and annotation control (>65 types)
-- **`IgxPieChartComponent`** — Part-to-whole pie and donut charts
-- **`IgxDataPieChartComponent`** — Simplified API version for pie charts
+
+> **IMPORTANT — Not Standalone Components**: Chart components from `igniteui-angular-charts` are **NOT** Angular standalone components (they predate the standalone API). They must always be imported via their **NgModule**. Standalone Angular components (Angular 14+) can still import NgModules directly in their `imports` array — this is fully supported.
+
+| Component | NgModule to import | Description |
+|---|---|---|
+| `IgxCategoryChartComponent` | `IgxCategoryChartModule` | Simplified API for area, bar, column charts |
+| `IgxFinancialChartComponent` | `IgxFinancialChartModule` | Stock/candlestick charts with OHLC data |
+| `IgxDataChartComponent` | `IgxDataChartModule` | Advanced: explicit axes, series, >65 chart types |
+| `IgxPieChartComponent` | `IgxPieChartModule` | Part-to-whole pie and donut charts |
+| `IgxDataPieChartComponent` | `IgxDataPieChartModule` | Simplified API for pie charts |
+| `IgxLegendComponent` | `IgxLegendModule` | Shared legend component |
 
 ### When to use each:
 - **Category Chart** → Use for simple area/bar/column; let framework auto-configure
@@ -27,11 +33,14 @@ Ignite UI for Angular Charts provides 65+ chart types for data visualization. Ch
 
 ### Data Binding
 ```typescript
-// All chart components require ItemsSource (array of data objects)
-chartComponent.itemsSource = [
+// Category Chart uses 'dataSource' to bind data (auto-detects numeric fields)
+chartComponent.dataSource = [
   { month: 'Jan', revenue: 5000 },
   { month: 'Feb', revenue: 6500 }
 ];
+
+// Data Chart uses 'itemsSource' and explicit series configuration
+chartComponent.itemsSource = dataArray;
 ```
 
 ### Chart Type Selection
@@ -41,10 +50,25 @@ chartComponent.itemsSource = [
 - **Pie Chart**: No chartType needed; inherent pie structure
 
 ### Required Properties
-- `itemsSource` — Data array (required for all charts)
-- `valueMemberPath` — For Category/Financial/Pie charts; which property contains numeric values
-- `labelMemberPath` or `legendLabelMemberPath` — Category/label data
-- `xAxisLabel` / `yAxisLabel` — Axis title properties
+
+**IgxCategoryChartComponent** (simplest API; auto-detects numeric & string columns):
+- `dataSource` — Data array (required)
+- `chartType` — Chart type (Area, Bar, Column, Line, etc.)
+- Component auto-detects: first string column → X-axis labels, numeric columns → Y-axis data
+
+**IgxDataChartComponent** (advanced; requires explicit configuration):
+- `itemsSource` — Data array (required)
+- `valueMemberPath` — Which property contains numeric values (for series)
+- Requires explicit axis and series components
+
+**IgxFinancialChartComponent** (stock data):
+- `dataSource` — Data array with date + OHLC columns
+- `openMemberPath`, `highMemberPath`, `lowMemberPath`, `closeMemberPath` — OHLC field names
+
+**IgxPieChartComponent**:
+- `dataSource` — Data array
+- `labelMemberPath` — Field with category labels
+- `valueMemberPath` — Field with numeric values
 
 ### Responsive & Sizing
 - Charts auto-resize with container
@@ -193,33 +217,30 @@ chartComponent.itemsSource = [
 
 ## Common API Members by Chart Type
 
-### IgxCategoryChartComponent (Area, Bar*, Column, Line, etc.)
+### IgxCategoryChartComponent (Area, Bar, Column, Line, etc.)
 ```typescript
-chartType: ChartType;
-itemsSource: any[];
-valueMemberPath: string;
-categoryXAxis: boolean;
-xAxisTitle: string;
-yAxisTitle: string;
-xAxisLabelLocation: AxisLabelLocation;
+// Required
+dataSource: any[];           // Data array (auto-detects numeric fields)
+chartType: ChartType;        // Area, Bar, Column, Line, Waterfall, etc.
+
+// Common optional inputs
+xAxisTitle: string;          // X-axis label
+yAxisTitle: string;          // Y-axis label
+xAxisLabelLocation: AxisLabelLocation;  // Axis label alignment
 yAxisLabelLocation: AxisLabelLocation;
-yAxisMinimumValue: number;
-yAxisMaximumValue: number;
-brushes: string[];
-outlines: string[];
-markerTypes: MarkerType[];
-markerBrushes: string[];
-markerOutlines: string[];
-showDefaultTooltip: boolean;
-toolTipType: ToolTipType;
-isHorizontalZoomEnabled: boolean;
-isVerticalZoomEnabled: boolean;
-crosshairsDisplayMode: CrosshairsDisplayMode;
-highlightingMode: HighlightingMode;
+yAxisMinimumValue: number;   // Y-axis minimum
+yAxisMaximumValue: number;   // Y-axis maximum
+brushes: string[];           // Series colors (fill)
+outlines: string[];          // Series colors (outline)
+markerTypes: MarkerType[];   // Marker shapes (Circle, Square, etc.)
+markerBrushes: string[];     // Marker fill colors
+markerOutlines: string[];    // Marker outline colors
+toolTipType: ToolTipType;    // Tooltip display mode
+highlightingMode: HighlightingMode;     // Hover highlight behavior
 highlightingBehavior: HighlightingBehavior;
-trendLineType: TrendLineType;
-transitionInMode: TransitionInMode;
-transitionDuration: number;
+trendLineType: TrendLineType;           // Trendline visualization
+transitionInMode: TransitionInMode;     // Animation on load
+transitionInDuration: number;           // Animation duration (milliseconds)
 ```
 
 ### IgxFinancialChartComponent (Stock/Candlestick/OHLC)
@@ -272,30 +293,24 @@ highlightingMode: HighlightingMode;
 
 ## Import Paths
 
-All charts come from `igniteui-angular-charts` entry point:
+> **Chart components are NOT standalone** — always import via their NgModule, never by component class. Standalone Angular components can import NgModules directly in their `imports` array.
+
+### NgModule imports (required for all project types)
 
 ```typescript
-// Category, Financial, Data Chart components
-import { 
-  IgxCategoryChartComponent,
-  IgxFinancialChartComponent,
-  IgxDataChartComponent,
-  // Series components
-  IgxAreaSeriesComponent,
-  IgxBarSeriesComponent,
-  IgxColumnSeriesComponent,
-  IgxLineSeriesComponent,
-  // ...
-  // Axes
-  IgxCategoryXAxisComponent,
-  IgxNumericYAxisComponent,
-  // Annotations
-  IgxCrosshairLayerComponent,
-  IgxFinalValueLayerComponent,
-  IgxCalloutLayerComponent,
-  // Data Legend
-  IgxDataLegendComponent,
-  // Enums
+// NgModules — import these into your standalone component's 'imports' array
+// or into an NgModule's 'imports' array
+import {
+  IgxCategoryChartModule,    // provides IgxCategoryChartComponent
+  IgxFinancialChartModule,   // provides IgxFinancialChartComponent
+  IgxDataChartModule,        // provides IgxDataChartComponent + all series/axes
+  IgxPieChartModule,         // provides IgxPieChartComponent
+  IgxDataPieChartModule,     // provides IgxDataPieChartComponent
+  IgxLegendModule,           // provides IgxLegendComponent
+} from 'igniteui-angular-charts';
+
+// Enums and types — these ARE plain TS exports and can be imported directly
+import {
   ChartType,
   FinancialChartType,
   MarkerType,
@@ -312,14 +327,73 @@ import {
   VolumeType,
   AxisMode
 } from 'igniteui-angular-charts';
-
-// Pie charts
-import {
-  IgxPieChartComponent,
-  IgxDataPieChartComponent,
-  IgxLegendComponent
-} from 'igniteui-angular-charts';
 ```
+
+### Standalone component example
+
+```typescript
+import { Component } from '@angular/core';
+import {
+  IgxCategoryChartModule,
+  ChartType
+} from 'igniteui-angular-charts';
+
+@Component({
+  selector: 'app-sales-chart',
+  imports: [
+    IgxCategoryChartModule  // ✅ Import the NgModule, NOT IgxCategoryChartComponent
+  ],
+  template: `
+    <igx-category-chart
+      [dataSource]="data"
+      chartType="Column"
+      xAxisTitle="Month"
+      yAxisTitle="Revenue ($)"
+      [transitionInMode]="'FromZero'"
+      [transitionInDuration]="400">
+    </igx-category-chart>
+  `
+})
+export class SalesChartComponent {
+  data = [
+    { month: 'Jan', revenue: 5000 },
+    { month: 'Feb', revenue: 6500 },
+    { month: 'Mar', revenue: 7200 }
+  ];
+}
+```
+
+### Common errors and fixes
+
+**Error 1: NG2011 — component not standalone**
+```
+// ❌ WRONG: importing component directly
+import { IgxCategoryChartComponent } from 'igniteui-angular-charts';
+@Component({ imports: [IgxCategoryChartComponent] })
+
+// ✅ CORRECT: import the NgModule instead
+import { IgxCategoryChartModule } from 'igniteui-angular-charts';
+@Component({ imports: [IgxCategoryChartModule] })
+```
+
+**Error 2: NG8002 — can't bind to property (incorrect inputs)**
+```
+// ❌ WRONG: using IgxDataChartComponent or generic property names
+<igx-category-chart
+  [itemsSource]="data"         <!-- Use 'dataSource' instead -->
+  [valueMemberPath]="'value'"  <!-- Auto-detected for Category Chart -->
+  [showDefaultTooltip]="true"  <!-- Not a valid input -->
+  [transitionDuration]="400">  <!-- Use 'transitionInDuration' -->
+
+// ✅ CORRECT: use Category Chart's actual inputs
+<igx-category-chart
+  [dataSource]="data"
+  chartType="Column"
+  [transitionInMode]="'FromZero'"
+  [transitionInDuration]="400">
+```
+
+**Key difference**: IgxCategoryChartComponent **auto-detects** numeric columns and requires minimal configuration. For fine-grained control over field mapping and series types, use `IgxDataChartComponent` instead (but it requires explicit series and axis components).
 
 ---
 
