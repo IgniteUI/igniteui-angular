@@ -6,14 +6,15 @@
 @forward 'igniteui-theming/sass/bem';
 
 @mixin layer($name) {
-    @layer ig.#{$name} {
+    $_layer: 'ig.' + $name;
+
+    @layer #{$_layer} {
         @content;
     }
 }
 
 /// Includes a block element for a specific component, theme, and variant.
 /// @access private
-/// @group bem
 /// @param {String} $component - The class selector of the component.
 /// @param {String} $theme - The target theme - material, bootstrap, fluent, indigo.
 /// @param {String} $variant - The target variant - light, dark.
@@ -59,10 +60,6 @@
 ///
 /// @param {Map} $map - The original map to split
 /// @param {List} $pick-keys - List of keys to include in the first returned map
-///
-/// @return {List} A list containing two maps:
-///   - First map contains key-value pairs where keys are in $pick-keys
-///   - Second map contains all remaining key-value pairs
 ///
 /// @example scss
 ///   $colors: (
