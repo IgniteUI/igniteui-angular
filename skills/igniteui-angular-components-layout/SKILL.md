@@ -14,7 +14,7 @@ It is a companion to the **igniteui-angular-components** skill which covers form
 
 ## Prerequisites & Setup
 
-For application setup, required providers (`provideAnimations()`, `HammerModule`, `provideIgniteIntl()`), architecture details, and multi-entry-point import patterns, see the **igniteui-angular-components** skill.
+For application setup, required providers (`provideAnimations()`, `provideIgniteIntl()`), architecture details, and multi-entry-point import patterns, see the **igniteui-angular-components** skill.
 
 All components below are **standalone** — import them directly into your component's `imports` array from their specific entry points (e.g., `igniteui-angular/tabs`, `igniteui-angular/dialog`). Replace `igniteui-angular` with `@infragistics/igniteui-angular` if using the licensed package.
 

@@ -27,14 +27,13 @@ For layout, data display, feedback/overlay components, and directives, see the *
 ```typescript
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { HammerModule } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { provideIgniteIntl } from 'igniteui-angular/core'; // '@infragistics/igniteui-angular/core' for licensed
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),          // REQUIRED — all overlay and animated components
-    importProvidersFrom(HammerModule), // REQUIRED — touch gesture support (Slider, Drag & Drop)
+    // importProvidersFrom(HammerModule), // NOT REQUIRED — for Pan gesture support  (List, Nav Drawer, Slider, Drag & Drop)
     provideRouter(appRoutes),
     provideIgniteIntl(),          // recommended — localization for grids, date/time pickers, etc.
   ]
@@ -44,7 +43,7 @@ export const appConfig: ApplicationConfig = {
 | Provider | Package | Required for |
 |---|---|---|
 | `provideAnimations()` | `@angular/platform-browser/animations` | **All overlay and animated components** — Dialog, Combo, Select, Dropdown, Date/Time Picker, Snackbar, Toast, Banner, Navigation Drawer, Carousel, Overlay service |
-| `importProvidersFrom(HammerModule)` | `@angular/platform-browser` | Touch gestures — Slider, Drag & Drop, swipe interactions |
+| `importProvidersFrom(HammerModule)` | `@angular/platform-browser` | OPTIONAL — touch gestures (Slider, Drag & Drop, swipe interactions) |
 | `provideIgniteIntl()` | `igniteui-angular/core` | Localization for grids, date/time pickers, and other components that display formatted values |
 
 > **`provideAnimationsAsync()`** is an alternative to `provideAnimations()` that lazy-loads the animations module — prefer it for SSR or when optimizing initial bundle size:
