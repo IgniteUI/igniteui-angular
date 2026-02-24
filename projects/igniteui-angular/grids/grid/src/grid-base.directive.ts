@@ -8099,7 +8099,11 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected updateDefaultRowHeight() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
-            const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            const targetCell = this.dataRowList.first.cells.toArray().find((x:IgxGridCellComponent) => !x.isMerged);
+            if (!targetCell) {
+                return;
+            }
+            const height = parseFloat(this.document.defaultView.getComputedStyle(targetCell.nativeElement)?.getPropertyValue('height'));
             if (height) {
                 this._defaultRowHeight = height;
             } else {
