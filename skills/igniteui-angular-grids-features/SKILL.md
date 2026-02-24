@@ -317,13 +317,15 @@ Grids support copy to clipboard by default. Configure via:
 2. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
 3. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
 4. **GroupBy is Flat Grid only** — Tree Grid uses hierarchy, Hierarchical Grid uses row islands, Pivot Grid uses dimensions
-5. **For data operation patterns** (remote data, paging, state persistence, batch editing workflows) — see the [Grid Data Operations skill](../igniteui-angular-grid-data-operations/SKILL.md)
+5. **For data operation patterns** — see the [Grid Data Operations skill](../igniteui-angular-grid-data-operations/SKILL.md) (sorting, filtering, grouping), [Grid Paging & Remote skill](../igniteui-angular-grid-paging-remote/SKILL.md) (paging, remote data, virtualization), [Grid Editing skill](../igniteui-angular-grid-editing/SKILL.md) (editing, validation, summaries), and [Grid State skill](../igniteui-angular-grid-state/SKILL.md) (state persistence, grid-type-specific operations)
 
 ## Related Skills
 
 - **[Grid Setup & Configuration](../igniteui-angular-grids/SKILL.md)** — Grid type selection, column configuration, sorting, filtering, selection
 - **[Grid Types](../igniteui-angular-grids-types/SKILL.md)** — Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid specifics
-- **[Grid Data Operations](../igniteui-angular-grid-data-operations/SKILL.md)** — Remote data, paging, state persistence, batch editing workflows
-- **[Grid Editing](../igniteui-angular-grid-editing/SKILL.md)** — Detailed editing implementation patterns
+- **[Grid Data Operations](../igniteui-angular-grid-data-operations/SKILL.md)** — Sorting, filtering, grouping, and canonical grid import patterns
+- **[Grid Paging & Remote](../igniteui-angular-grid-paging-remote/SKILL.md)** — Paging, remote data operations, virtualization, multi-grid coordination
+- **[Grid Editing](../igniteui-angular-grid-editing/SKILL.md)** — Cell editing, row editing, batch editing, validation, summaries
+- **[Grid State](../igniteui-angular-grid-state/SKILL.md)** — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
 - **[Theming](../igniteui-angular-theming/SKILL.md)** — Grid styling and theming
 - **[Components](../igniteui-angular-components/SKILL.md)** — Non-grid Ignite UI components

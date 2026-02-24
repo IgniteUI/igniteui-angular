@@ -120,5 +120,8 @@ Domain-specific skills for AI-assisted development are located in the [`skills/`
 
 - [`skills/igniteui-angular-components`](../skills/igniteui-angular-components/SKILL.md) — Components & Layout
 - [`skills/igniteui-angular-grids`](../skills/igniteui-angular-grids/SKILL.md) — Data Grids (structure, columns, templates, layout)
-- [`skills/igniteui-angular-grid-data-operations`](../skills/igniteui-angular-grid-data-operations/SKILL.md) — Grid Data Operations (sorting, filtering, grouping, paging, remote data, state management)
+- [`skills/igniteui-angular-grid-data-operations`](../skills/igniteui-angular-grid-data-operations/SKILL.md) — Grid Data Operations (sorting, filtering, grouping, canonical grid import patterns)
+- [`skills/igniteui-angular-grid-paging-remote`](../skills/igniteui-angular-grid-paging-remote/SKILL.md) — Grid Paging & Remote (paging, remote data operations, virtualization, multi-grid coordination)
+- [`skills/igniteui-angular-grid-editing`](../skills/igniteui-angular-grid-editing/SKILL.md) — Grid Editing (cell editing, row editing, batch editing, validation, summaries)
+- [`skills/igniteui-angular-grid-state`](../skills/igniteui-angular-grid-state/SKILL.md) — Grid State (state persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite operations)
 - [`skills/igniteui-angular-theming`](../skills/igniteui-angular-theming/SKILL.md) — Theming & Styling (includes MCP server setup)

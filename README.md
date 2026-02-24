@@ -48,7 +48,10 @@ This repository ships with **Copilot Skills** — structured knowledge files tha
 |:------|:-----|:------------|
 | Components & Layout | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | Standalone components, form controls, overlays, layout |
 | Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Grid, Tree Grid, Hierarchical Grid, Pivot Grid |
-| Grid Data Operations | [`skills/igniteui-angular-grid-data-operations/SKILL.md`](skills/igniteui-angular-grid-data-operations/SKILL.md) | Sorting, filtering, grouping, paging, remote data, state management |
+| Grid Data Operations | [`skills/igniteui-angular-grid-data-operations/SKILL.md`](skills/igniteui-angular-grid-data-operations/SKILL.md) | Sorting, filtering, grouping, and canonical grid import patterns |
+| Grid Paging & Remote | [`skills/igniteui-angular-grid-paging-remote/SKILL.md`](skills/igniteui-angular-grid-paging-remote/SKILL.md) | Paging, remote data operations, virtualization, multi-grid coordination |
+| Grid Editing | [`skills/igniteui-angular-grid-editing/SKILL.md`](skills/igniteui-angular-grid-editing/SKILL.md) | Cell editing, row editing, batch editing, validation, summaries |
+| Grid State | [`skills/igniteui-angular-grid-state/SKILL.md`](skills/igniteui-angular-grid-state/SKILL.md) | State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite operations |
 | Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Palettes, typography, elevations, component themes, MCP server |
 
 #### How It Works
