@@ -3500,7 +3500,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initLocale();
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
-        this.cdr.detach();
         this.selectionService.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe((args: any[]) => {
             this.selectedRowsChange.emit(args);
         });
@@ -3896,6 +3895,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      */
     public ngOnInit() {
+        this.cdr.detach();
         this._setupServices();
         this._setupListeners();
         this.rowListDiffer = this.differs.find([]).create(null);
