@@ -1,23 +1,9 @@
----
-name: igniteui-angular-grid-paging-remote
-description: "Paging, remote data operations, virtualization, and multi-grid coordination patterns for Ignite UI Angular grids. Use when users ask to add paging to a grid, load data from a server with server-side sorting, filtering, or paging, implement virtual scrolling with remote data, or coordinate a master-detail grid layout."
-user-invokable: true
----
+# Grid Paging, Remote Data & Virtualization
 
-# Ignite UI for Angular — Grid Paging, Remote Data & Virtualization
-
-## Description
-
-This skill teaches AI agents how to implement **paging, remote data operations, virtualization, and multi-grid coordination** with Ignite UI for Angular grids. It covers paginator setup, server-side sorting/filtering/paging, virtual scroll with remote data, and master-detail grid patterns.
-
-> **For grid import patterns and accessing grid instances, see the [`igniteui-angular-grid-data-operations`](../igniteui-angular-grid-data-operations/SKILL.md) skill.**
-
-## Prerequisites
-
-- Angular 20+ project
-- `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
-- A theme applied (see the Theming skill)
-- Familiarity with the Data Grids skill for grid setup basics
+> **Part of the [`igniteui-angular-grids`](../SKILL.md) skill hub.**
+> For grid import patterns and `viewChild` access — see [`data-operations.md`](./data-operations.md).
+> For editing and validation — see [`editing.md`](./editing.md).
+> For state persistence — see [`state.md`](./state.md).
 
 ## Paging
 
@@ -241,8 +227,6 @@ export class RemoteGridComponent {
 When using Excel-style filtering with remote data, provide a strategy to fetch unique column values from the server:
 
 ```typescript
-import { IColumnPipeArgs } from 'igniteui-angular/grids/core';
-
 // Tell the grid how to load unique values for Excel-style filter lists
 uniqueValuesStrategy = (column: any, tree: any, done: (values: any[]) => void) => {
   this.dataService.getUniqueValues(column.field).subscribe(values => done(values));
@@ -394,11 +378,11 @@ export class MasterDetailComponent {
 7. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, or `IGX_PIVOT_GRID_DIRECTIVES`
 8. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
 
-## Related Skills
+## See Also
 
-- [`igniteui-angular-grid-data-operations`](../igniteui-angular-grid-data-operations/SKILL.md) — Sorting, filtering, grouping, and canonical grid import patterns
-- [`igniteui-angular-grid-editing`](../igniteui-angular-grid-editing/SKILL.md) — Cell editing, row editing, batch editing, validation, and summaries
-- [`igniteui-angular-grid-state`](../igniteui-angular-grid-state/SKILL.md) — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
-- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — Grid structure, column configuration, templates, layout, selection, toolbar, export
-- [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) — Components & Layout
-- [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) — Theming & Styling
+- [`data-operations.md`](./data-operations.md) — Sorting, filtering, grouping, and canonical grid import patterns
+- [`editing.md`](./editing.md) — Cell editing, row editing, batch editing, validation, summaries
+- [`state.md`](./state.md) — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
+- [`structure.md`](./structure.md) — Grid structure, column configuration, templates, layout, selection
+- [`../../igniteui-angular-components/SKILL.md`](../../igniteui-angular-components/SKILL.md) — Non-grid Ignite UI components
+- [`../../igniteui-angular-theming/SKILL.md`](../../igniteui-angular-theming/SKILL.md) — Theming & Styling

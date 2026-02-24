@@ -1,33 +1,10 @@
----
-name: igniteui-angular-grid-data-operations
-description: "Sorting, filtering, grouping, and canonical grid import patterns for Ignite UI Angular grids. Use when users ask to sort, filter, or group grid data programmatically or via the template, work with sorting/filtering expressions, import a grid component, or access a grid instance with viewChild."
-user-invokable: true
----
+# Grid Data Operations — Sorting, Filtering & Grouping
 
-# Ignite UI for Angular — Grid Sorting, Filtering & Grouping
-
-## Description
-
-This skill teaches AI agents how to implement **sorting, filtering, and grouping** with Ignite UI for Angular grids. It also provides the **canonical grid import patterns** and grid instance access that all sibling grid skills reference.
-
-> **When to use this skill vs. the Data Grids skill**
->
-> | Skill | Focus |
-> |---|---|
-> | **Data Grids** (`igniteui-angular-grids`) | Grid structure — choosing a grid type, column configuration, templates, layout, selection, toolbar, export |
-> | **Grid Data Operations** (this skill) | Sorting, filtering, grouping, and canonical grid import patterns |
-> | **Grid Paging & Remote** (`igniteui-angular-grid-paging-remote`) | Paging, remote data operations, virtualization, multi-grid coordination |
-> | **Grid Editing** (`igniteui-angular-grid-editing`) | Cell editing, row editing, batch editing, validation, summaries |
-> | **Grid State** (`igniteui-angular-grid-state`) | State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations |
->
-> If the user's question is about *what* to render (columns, templates, grid type), use the Data Grids skill. If it's about *how data flows* (sorting, filtering, remote services, transactions), use this skill and its siblings.
-
-## Prerequisites
-
-- Angular 20+ project
-- `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
-- A theme applied (see the Theming skill)
-- Familiarity with the Data Grids skill for grid setup basics
+> **Part of the [`igniteui-angular-grids`](../SKILL.md) skill hub.**
+> For grid setup, column config — see [`structure.md`](./structure.md).
+> For paging and remote data — see [`paging-remote.md`](./paging-remote.md).
+> For editing and validation — see [`editing.md`](./editing.md).
+> For state persistence — see [`state.md`](./state.md).
 
 ## Accessing the Grid Instance
 
@@ -134,13 +111,13 @@ export class CompanyGridComponent {
 </igx-hierarchical-grid>
 ```
 
-> **CRITICAL**: Every programmatic example in this skill uses Flat Grid (`IgxGridComponent`) by default. For Tree Grid substitute `IgxTreeGridComponent` and `#treeGrid`. For Hierarchical Grid substitute `IgxHierarchicalGridComponent` and `#hGrid`. The sorting, filtering, and editing APIs are either the same or very similar across all three grid types (Flat, Tree, Hierarchical). **Pivot Grid does NOT support standard sorting/filtering/editing APIs** — see the [Grid State skill](../igniteui-angular-grid-state/SKILL.md). **Grid Lite has its own lightweight sorting/filtering API** — see the [Grid State skill](../igniteui-angular-grid-state/SKILL.md).
+> **CRITICAL**: Every programmatic example in this file uses Flat Grid (`IgxGridComponent`) by default. For Tree Grid substitute `IgxTreeGridComponent` and `#treeGrid`. For Hierarchical Grid substitute `IgxHierarchicalGridComponent` and `#hGrid`. The sorting, filtering, and editing APIs are either the same or very similar across all three grid types (Flat, Tree, Hierarchical). **Pivot Grid does NOT support standard sorting/filtering/editing APIs** — see [`state.md`](./state.md). **Grid Lite has its own lightweight sorting/filtering API** — see [`state.md`](./state.md).
 
 ## Sorting
 
 > **Docs:** [Sorting](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sorting) · [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/sorting) · [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/sorting)
 
-> **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level sorting instead (see [Grid State skill](../igniteui-angular-grid-state/SKILL.md)). **Grid Lite** uses a different sorting API — see the [Grid State skill](../igniteui-angular-grid-state/SKILL.md).
+> **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level sorting instead (see [`state.md`](./state.md)). **Grid Lite** uses a different sorting API — see [`state.md`](./state.md).
 >
 > **Tree Grid behavior**: sorting is applied per-level — children are sorted among their siblings, not globally flattened.
 >
@@ -235,7 +212,7 @@ class PrioritySortStrategy implements ISortingStrategy {
 
 > **Docs:** [Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/filtering) · [Excel-Style](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/excel-style-filtering) · [Advanced](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/advanced-filtering) (substitute URL prefix per grid type)
 
-> **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level filtering instead (see [Grid State skill](../igniteui-angular-grid-state/SKILL.md)). **Grid Lite** uses a different filtering API — see the [Grid State skill](../igniteui-angular-grid-state/SKILL.md).
+> **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level filtering instead (see [`state.md`](./state.md)). **Grid Lite** uses a different filtering API — see [`state.md`](./state.md).
 >
 > **Tree Grid behavior**: filtering is **recursive** — when a child matches, all its ancestor rows are shown (even if they don't match) and auto-expanded.
 >
@@ -448,11 +425,11 @@ const monthGroupComparer = (a: Date, b: Date) => {
 8. **Hierarchical Grid levels are independent** — sorting/filtering don't cascade; configure on `<igx-row-island>`
 9. **Use `filteringExpressionsTree` for programmatic filtering** — `advancedFilteringExpressionsTree` is only for the advanced filtering dialog
 
-## Related Skills
+## See Also
 
-- [`igniteui-angular-grid-paging-remote`](../igniteui-angular-grid-paging-remote/SKILL.md) — Paging, remote data operations, virtualization, and multi-grid coordination
-- [`igniteui-angular-grid-editing`](../igniteui-angular-grid-editing/SKILL.md) — Cell editing, row editing, batch editing, validation, and summaries
-- [`igniteui-angular-grid-state`](../igniteui-angular-grid-state/SKILL.md) — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
-- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — Grid structure, column configuration, templates, layout, selection, toolbar, export
-- [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) — Components & Layout
-- [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) — Theming & Styling
+- [`paging-remote.md`](./paging-remote.md) — Paging, remote data operations, virtualization, multi-grid coordination
+- [`editing.md`](./editing.md) — Cell editing, row editing, batch editing, validation, summaries
+- [`state.md`](./state.md) — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
+- [`structure.md`](./structure.md) — Grid structure, column configuration, templates, layout, selection
+- [`../../igniteui-angular-components/SKILL.md`](../../igniteui-angular-components/SKILL.md) — Non-grid Ignite UI components
+- [`../../igniteui-angular-theming/SKILL.md`](../../igniteui-angular-theming/SKILL.md) — Theming & Styling

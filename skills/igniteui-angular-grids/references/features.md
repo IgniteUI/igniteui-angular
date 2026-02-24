@@ -1,23 +1,13 @@
----
-name: igniteui-angular-grids-features
-description: "Editing, grouping, summaries, toolbar, export, and other advanced features for Ignite UI Angular grids. Use when users ask to add a toolbar, export grid data to Excel or CSV, group rows by a column, add row drag-and-drop, show an action strip, merge cells, or move and pin columns."
-user-invokable: true
----
+# Grid Features — Grouping, Summaries, Toolbar, Export, Row Drag & More
 
-# Ignite UI for Angular — Grid Features Skill
-
-## Description
-
-This skill covers advanced grid features for Ignite UI for Angular: cell editing, row editing, batch editing, row adding/deleting, validation, grouping, summaries, cell merging, toolbar, export (Excel & CSV), virtualization, row drag, action strip, master-detail, and clipboard.
-
-> **Related Skill: Grid Setup & Configuration**
->
-> For grid type selection, column configuration, sorting, filtering, and selection — see the [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skill.
-> For Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid specifics — see [`igniteui-angular-grids-types`](../igniteui-angular-grids-types/SKILL.md).
+> **Part of the [`igniteui-angular-grids`](../SKILL.md) skill hub.**
+> For grid setup, column config, sorting, filtering, selection — see [`structure.md`](./structure.md).
+> For Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid specifics — see [`types.md`](./types.md).
+> For full editing coverage (cell/row/batch) — see [`editing.md`](./editing.md).
 
 ## Editing
 
-> **Full editing coverage is in the [`igniteui-angular-grid-editing`](../igniteui-angular-grid-editing/SKILL.md) skill**, which includes cell editing, row editing, batch editing with transactions, row adding/deleting, validation, and summaries. Use that skill for any editing task.
+> **Full editing coverage is in [`editing.md`](./editing.md)**, which includes cell editing, row editing, batch editing with transactions, row adding/deleting, validation, and summaries. Use that reference for any editing task.
 
 Quick reference:
 
@@ -49,9 +39,11 @@ this.gridRef().groupBy({ fieldName: 'category', dir: SortingDirection.Asc });
 this.gridRef().clearGrouping('category');
 ```
 
+For advanced programmatic grouping patterns — see [`data-operations.md`](./data-operations.md).
+
 ## Summaries
 
-> **Full summaries coverage (built-in and custom summary operands) is in the [`igniteui-angular-grid-editing`](../igniteui-angular-grid-editing/SKILL.md) skill.**
+> **Full summaries coverage (built-in and custom summary operands) is in [`editing.md`](./editing.md).**
 
 Quick reference — enable per-column summaries:
 
@@ -141,14 +133,14 @@ export class MyComponent {
 
 ## Virtualization & Performance
 
-> **Docs:** [Virtualization](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general-changelog-dv)
-
 Grids use virtualization by default for both rows and columns — no setup needed. For remote data/paging:
 
 ```html
 <igx-grid [data]="data()" [totalItemCount]="totalCount" (dataPreLoad)="onDataPreLoad($event)">
 </igx-grid>
 ```
+
+For full remote virtualization patterns — see [`paging-remote.md`](./paging-remote.md).
 
 ## Row Drag
 
@@ -214,15 +206,13 @@ Grids support copy to clipboard by default. Configure via:
 2. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
 3. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
 4. **GroupBy is Flat Grid only** — Tree Grid uses hierarchy, Hierarchical Grid uses row islands, Pivot Grid uses dimensions
-5. **For data operation patterns** — see the [Grid Data Operations skill](../igniteui-angular-grid-data-operations/SKILL.md) (sorting, filtering, grouping), [Grid Paging & Remote skill](../igniteui-angular-grid-paging-remote/SKILL.md) (paging, remote data, virtualization), [Grid Editing skill](../igniteui-angular-grid-editing/SKILL.md) (editing, validation, summaries), and [Grid State skill](../igniteui-angular-grid-state/SKILL.md) (state persistence, grid-type-specific operations)
 
-## Related Skills
+## See Also
 
-- **[Grid Setup & Configuration](../igniteui-angular-grids/SKILL.md)** — Grid type selection, column configuration, sorting, filtering, selection
-- **[Grid Types](../igniteui-angular-grids-types/SKILL.md)** — Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid specifics
-- **[Grid Data Operations](../igniteui-angular-grid-data-operations/SKILL.md)** — Sorting, filtering, grouping, and canonical grid import patterns
-- **[Grid Paging & Remote](../igniteui-angular-grid-paging-remote/SKILL.md)** — Paging, remote data operations, virtualization, multi-grid coordination
-- **[Grid Editing](../igniteui-angular-grid-editing/SKILL.md)** — Cell editing, row editing, batch editing, validation, summaries
-- **[Grid State](../igniteui-angular-grid-state/SKILL.md)** — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
-- **[Theming](../igniteui-angular-theming/SKILL.md)** — Grid styling and theming
-- **[Components](../igniteui-angular-components/SKILL.md)** — Non-grid Ignite UI components
+- [`structure.md`](./structure.md) — Column config, sorting UI, filtering UI, selection
+- [`types.md`](./types.md) — Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid specifics
+- [`data-operations.md`](./data-operations.md) — Programmatic sorting, filtering, grouping
+- [`paging-remote.md`](./paging-remote.md) — Paging, remote data operations, virtualization
+- [`editing.md`](./editing.md) — Cell editing, row editing, batch editing, validation, summaries
+- [`state.md`](./state.md) — State persistence
+- [`../../igniteui-angular-theming/SKILL.md`](../../igniteui-angular-theming/SKILL.md) — Grid styling and theming

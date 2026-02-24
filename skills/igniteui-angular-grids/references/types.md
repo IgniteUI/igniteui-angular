@@ -1,19 +1,9 @@
----
-name: igniteui-angular-grids-types
-description: "Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid specifics for Ignite UI Angular. Use when users ask to implement a tree grid for parent-child data (org charts, file systems), a hierarchical grid for multi-schema master-detail data, a lightweight read-only grid (Grid Lite), or a pivot table with drag-and-drop dimensions and aggregations."
-user-invokable: true
----
+# Grid Types — Tree Grid, Hierarchical Grid, Grid Lite & Pivot Grid
 
-# Ignite UI for Angular — Grid Types Skill
-
-## Description
-
-This skill covers the specifics of each specialized Ignite UI for Angular grid type: Tree Grid (single-schema parent-child data), Hierarchical Grid (multi-schema master-detail data), Grid Lite (lightweight read-only display), and Pivot Grid (pivot table analytics).
-
-> **Related Skill: Grid Setup & Configuration**
->
-> For the grid type selection guide, shared column configuration, sorting, filtering, and selection — see the [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skill.
-> For editing, grouping, summaries, toolbar, export, and other features — see [`igniteui-angular-grids-features`](../igniteui-angular-grids-features/SKILL.md).
+> **Part of the [`igniteui-angular-grids`](../SKILL.md) skill hub.**
+> For the grid type selection guide and feature availability — see the hub.
+> For shared column config, sorting, filtering, selection — see [`structure.md`](./structure.md).
+> For editing, grouping, toolbar, export — see [`features.md`](./features.md).
 
 ## Tree Grid
 
@@ -86,6 +76,8 @@ export class OrgTreeComponent {
 - **Sorting is per-level**: children are sorted within their parent, not globally flattened
 - **Batch editing** uses `HierarchicalTransactionService` — transactions carry a `path` array tracing the parent hierarchy for proper undo/redo
 - **Summaries** are computed per tree level
+
+---
 
 ## Hierarchical Grid
 
@@ -162,6 +154,8 @@ onChildGridCreated(event: IGridCreatedEventArgs) {
 - **Configure features on the row island** and all child grids at that level inherit them
 - **Batch editing propagates**: setting `[batchEditing]="true"` on the root automatically enables it on all child grids
 - **State persistence** recursively saves/restores state for each child grid instance, keyed by row island ID + parent row ID
+
+---
 
 ## Grid Lite
 
@@ -349,6 +343,8 @@ dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
 - **Column config differs**: uses `field` (not `field` on `<igx-column>`), `sortable`/`filterable` are boolean attributes
 - **Remote data**: uses `dataPipelineConfiguration` (async callback) instead of noop strategies + events
 
+---
+
 ## Pivot Grid
 
 > **Docs:** [Pivot Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid)
@@ -410,6 +406,8 @@ Provide a drag-and-drop UI for users to reshape the pivot interactively:
 - **Columns are auto-generated** from the pivot configuration — do not define `<igx-column>` manually
 - **State persistence**: Serializes the entire `pivotConfiguration` (dimensions, values, filters)
 
+---
+
 ## Key Rules
 
 1. **Tree Grid**: use `[primaryKey]` + `[foreignKey]` for flat data or `[childDataKey]` for nested objects; filtering is recursive (parents of matching children are always shown)
@@ -417,13 +415,12 @@ Provide a drag-and-drop UI for users to reshape the pivot interactively:
 3. **Pivot Grid is read-only** — editing, paging, pinning, column moving, row dragging are all disabled; use `pivotConfiguration` for all data operations
 4. **Grid Lite requires `CUSTOM_ELEMENTS_SCHEMA`** and `igniteui-grid-lite` npm package — it has no editing, selection, paging, or export
 
-## Related Skills
+## See Also
 
-- **[Grid Setup & Configuration](../igniteui-angular-grids/SKILL.md)** — Grid type selection guide, column config, sorting, filtering, selection
-- **[Grid Features](../igniteui-angular-grids-features/SKILL.md)** — Editing, grouping, summaries, toolbar, export
-- **[Grid Data Operations](../igniteui-angular-grid-data-operations/SKILL.md)** — Sorting, filtering, grouping, and canonical grid import patterns
-- **[Grid Paging & Remote](../igniteui-angular-grid-paging-remote/SKILL.md)** — Paging, remote data operations, virtualization, multi-grid coordination
-- **[Grid Editing](../igniteui-angular-grid-editing/SKILL.md)** — Cell editing, row editing, batch editing, validation, summaries
-- **[Grid State](../igniteui-angular-grid-state/SKILL.md)** — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
-- **[Theming](../igniteui-angular-theming/SKILL.md)** — Grid styling and theming
-- **[Components](../igniteui-angular-components/SKILL.md)** — Non-grid Ignite UI components
+- [`structure.md`](./structure.md) — Grid setup, column config, sorting UI, filtering UI, selection
+- [`features.md`](./features.md) — Grouping, summaries, toolbar, export, row drag, action strip
+- [`data-operations.md`](./data-operations.md) — Programmatic sorting, filtering, grouping, canonical import patterns
+- [`paging-remote.md`](./paging-remote.md) — Paging, remote data operations, virtualization
+- [`editing.md`](./editing.md) — Cell editing, row editing, batch editing, validation, summaries
+- [`state.md`](./state.md) — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
+- [`../../igniteui-angular-theming/SKILL.md`](../../igniteui-angular-theming/SKILL.md) — Grid styling and theming

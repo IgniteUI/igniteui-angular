@@ -1,23 +1,9 @@
----
-name: igniteui-angular-grid-editing
-description: "Cell editing, row editing, batch editing, validation, and summaries patterns for Ignite UI Angular grids. Use when users ask to make a grid editable, implement cell or row editing, enable batch editing with undo/redo, add CRUD operations to a grid, validate grid input, or display column summaries."
-user-invokable: true
----
+# Grid Editing — Cell Editing, Row Editing, Batch Editing & Validation
 
-# Ignite UI for Angular — Grid Editing, Validation & Summaries
-
-## Description
-
-This skill teaches AI agents how to implement **editing, validation, and summary** patterns with Ignite UI for Angular grids. It covers cell editing, row editing, batch editing with transactions, Excel-style editing workflows, editing events, validation (template-driven and reactive), and built-in/custom summaries.
-
-> **For grid import patterns and accessing grid instances, see the [`igniteui-angular-grid-data-operations`](../igniteui-angular-grid-data-operations/SKILL.md) skill.**
-
-## Prerequisites
-
-- Angular 20+ project
-- `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
-- A theme applied (see the Theming skill)
-- Familiarity with the Data Grids skill for grid setup basics
+> **Part of the [`igniteui-angular-grids`](../SKILL.md) skill hub.**
+> For grid import patterns and `viewChild` access — see [`data-operations.md`](./data-operations.md).
+> For state persistence — see [`state.md`](./state.md).
+> For paging and remote data — see [`paging-remote.md`](./paging-remote.md).
 
 ## Editing Data Through the Grid
 
@@ -164,7 +150,7 @@ export class CarsGridComponent {
 > **Key inputs summary:**
 > - `[rowEditable]="true"` — enables the Done/Cancel overlay per row
 > - `[editable]="true"` on each `igx-column` — marks which fields the user can change
-> - `[primaryKey]`— **required** for editing to work
+> - `[primaryKey]` — **required** for editing to work
 > - `[autoGenerate]="false"` — always define columns explicitly when editing is enabled so you control which fields are editable
 > - `<igx-action-strip>` with `<igx-grid-editing-actions>` — adds hover Edit/Delete buttons and an optional Add Row button automatically
 
@@ -484,11 +470,11 @@ When grouping is enabled, summaries appear for each group. Control this with:
 8. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, or `IGX_PIVOT_GRID_DIRECTIVES`
 9. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
 
-## Related Skills
+## See Also
 
-- [`igniteui-angular-grid-data-operations`](../igniteui-angular-grid-data-operations/SKILL.md) — Sorting, filtering, grouping, and canonical grid import patterns
-- [`igniteui-angular-grid-paging-remote`](../igniteui-angular-grid-paging-remote/SKILL.md) — Paging, remote data operations, virtualization, and multi-grid coordination
-- [`igniteui-angular-grid-state`](../igniteui-angular-grid-state/SKILL.md) — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
-- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — Grid structure, column configuration, templates, layout, selection, toolbar, export
-- [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) — Components & Layout
-- [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) — Theming & Styling
+- [`data-operations.md`](./data-operations.md) — Sorting, filtering, grouping, and canonical grid import patterns
+- [`paging-remote.md`](./paging-remote.md) — Paging, remote data operations, virtualization
+- [`state.md`](./state.md) — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
+- [`structure.md`](./structure.md) — Grid structure, column configuration, templates, layout, selection
+- [`../../igniteui-angular-components/SKILL.md`](../../igniteui-angular-components/SKILL.md) — Non-grid Ignite UI components
+- [`../../igniteui-angular-theming/SKILL.md`](../../igniteui-angular-theming/SKILL.md) — Theming & Styling

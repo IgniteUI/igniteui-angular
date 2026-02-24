@@ -1,23 +1,9 @@
----
-name: igniteui-angular-grid-state
-description: "State persistence and grid-type-specific data operations (Tree Grid, Hierarchical Grid, Pivot Grid, Grid Lite) for Ignite UI Angular grids. Use when users ask to save or restore grid state, persist sorting or filtering across sessions, or work with data operations specific to Tree Grid (recursive filtering, hierarchical transactions), Hierarchical Grid (independent levels), Pivot Grid (dimensions), or Grid Lite (lightweight sorting and filtering)."
-user-invokable: true
----
+# Grid State Persistence & Grid-Type-Specific Operations
 
-# Ignite UI for Angular — Grid State Persistence & Grid-Type-Specific Operations
-
-## Description
-
-This skill teaches AI agents how to implement **state persistence** and **grid-type-specific data operations** with Ignite UI for Angular grids. It covers saving/restoring grid state, Tree Grid recursive filtering and batch editing, Hierarchical Grid independent levels, Pivot Grid dimension-based operations, and Grid Lite sorting/filtering/remote data.
-
-> **For grid import patterns and accessing grid instances, see the [`igniteui-angular-grid-data-operations`](../igniteui-angular-grid-data-operations/SKILL.md) skill.**
-
-## Prerequisites
-
-- Angular 20+ project
-- `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
-- A theme applied (see the Theming skill)
-- Familiarity with the Data Grids skill for grid setup basics
+> **Part of the [`igniteui-angular-grids`](../SKILL.md) skill hub.**
+> For grid import patterns and `viewChild` access — see [`data-operations.md`](./data-operations.md).
+> For Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite setup — see [`types.md`](./types.md).
+> For paging and remote data — see [`paging-remote.md`](./paging-remote.md).
 
 ## State Persistence
 
@@ -452,11 +438,11 @@ These data operations are **NOT available** in Grid Lite:
 7. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports (with `CUSTOM_ELEMENTS_SCHEMA`)
 8. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
 
-## Related Skills
+## See Also
 
-- [`igniteui-angular-grid-data-operations`](../igniteui-angular-grid-data-operations/SKILL.md) — Sorting, filtering, grouping, and canonical grid import patterns
-- [`igniteui-angular-grid-paging-remote`](../igniteui-angular-grid-paging-remote/SKILL.md) — Paging, remote data operations, virtualization, and multi-grid coordination
-- [`igniteui-angular-grid-editing`](../igniteui-angular-grid-editing/SKILL.md) — Cell editing, row editing, batch editing, validation, and summaries
-- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — Grid structure, column configuration, templates, layout, selection, toolbar, export
-- [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) — Components & Layout
-- [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) — Theming & Styling
+- [`data-operations.md`](./data-operations.md) — Sorting, filtering, grouping, and canonical grid import patterns
+- [`paging-remote.md`](./paging-remote.md) — Paging, remote data operations, virtualization
+- [`editing.md`](./editing.md) — Cell editing, row editing, batch editing, validation, summaries
+- [`structure.md`](./structure.md) — Grid structure, column configuration, templates, layout, selection
+- [`../../igniteui-angular-components/SKILL.md`](../../igniteui-angular-components/SKILL.md) — Non-grid Ignite UI components
+- [`../../igniteui-angular-theming/SKILL.md`](../../igniteui-angular-theming/SKILL.md) — Theming & Styling

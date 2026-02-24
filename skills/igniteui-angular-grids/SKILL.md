@@ -1,30 +1,55 @@
 ---
 name: igniteui-angular-grids
-description: "Grid structure, column configuration, sorting, filtering, and selection for Ignite UI Angular grids. Use when users ask to create a grid, display tabular data, choose the right grid type, configure columns (templates, pinning, resizing, data types), or enable sorting, filtering, or row/cell selection."
+description: "All grid topics for Ignite UI Angular: grid setup, column configuration, sorting, filtering, selection, editing, grouping, summaries, toolbar, export, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid. Use for any grid-related question."
 user-invokable: true
 ---
 
-# Ignite UI for Angular — Data Grids Skill
+# Ignite UI for Angular — Data Grids
 
-## Description
+## MANDATORY AGENT PROTOCOL — YOU MUST FOLLOW THIS BEFORE PRODUCING ANY OUTPUT
 
-This skill teaches AI agents how to set up Ignite UI for Angular data grids, choose the right grid type, configure columns, and implement sorting, filtering, and selection. It covers the five grid types (Grid, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) at a high level with column configuration, data types, templates, and basic data operations.
+**This file is a routing hub only. It contains NO code examples and NO API details.**
 
-> **Related Skills**
->
-> This skill focuses on **grid structure** — choosing a grid type, configuring columns, templates, layout, sorting, filtering, and selection.
->
-> - For **editing, grouping, summaries, toolbar, export**, and other grid features — see [`igniteui-angular-grids-features`](../igniteui-angular-grids-features/SKILL.md).
-> - For **Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid specifics** — see [`igniteui-angular-grids-types`](../igniteui-angular-grids-types/SKILL.md).
-> - For **data manipulation patterns** — programmatic sorting/filtering/grouping — see [`igniteui-angular-grid-data-operations`](../igniteui-angular-grid-data-operations/SKILL.md). For paging and remote data, see [`igniteui-angular-grid-paging-remote`](../igniteui-angular-grid-paging-remote/SKILL.md). For editing, validation, and summaries, see [`igniteui-angular-grid-editing`](../igniteui-angular-grid-editing/SKILL.md). For state persistence and grid-type-specific operations, see [`igniteui-angular-grid-state`](../igniteui-angular-grid-state/SKILL.md).
->
-> If the user's question is about *what* to render, use this skill. If it's about *how data flows*, use the Data Operations skill.
+> **DO NOT write any code, component selectors, import paths, method names, or property names from memory.**
+> Grid APIs change between versions. Anything generated without reading the reference files will be wrong.
+
+You are **required** to complete ALL of the following steps before producing any grid-related code or answer:
+
+**STEP 1 — Identify the grid type.**
+Use the Grid Selection Decision Guide below. If the grid type is not explicitly stated, infer it from context or ask.
+
+**STEP 2 — Identify every task category involved.**
+Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., remote paging AND editing requires reading both `paging-remote.md` AND `editing.md`).
+
+**STEP 3 — Read every identified reference file in full.**
+Call `read_file` (or equivalent) on each reference file identified in Step 2. You must do this even if you believe you already know the answer. Do not skip, skim, or partially read a reference file.
+
+**STEP 4 — Only then produce output.**
+Base your code and explanation exclusively on what you read in Step 3. If the reference files do not cover something, say so explicitly rather than guessing.
+
+### Task → Reference File
+ 
+| Task | Reference file to read |
+|---|---|
+| Grid type selection, column config, column templates, column groups, MRL, pinning, sorting UI, filtering UI, selection | [`references/structure.md`](./references/structure.md) |
+| Grouping, summaries, cell merging, toolbar, export, row drag, action strip, master-detail, clipboard | [`references/features.md`](./references/features.md) |
+| Tree Grid specifics, Hierarchical Grid specifics, Grid Lite setup, Pivot Grid setup | [`references/types.md`](./references/types.md) |
+| Programmatic sorting / filtering / grouping, canonical import patterns, `viewChild` access | [`references/data-operations.md`](./references/data-operations.md) |
+| Cell editing, row editing, batch editing, transactions, validation, summaries | [`references/editing.md`](./references/editing.md) |
+| Paging, remote data, server-side ops, noop strategies, virtual scroll, multi-grid coordination | [`references/paging-remote.md`](./references/paging-remote.md) |
+| State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations | [`references/state.md`](./references/state.md) |
+
+> **When in doubt, read more rather than fewer reference files.** The cost of an unnecessary file read is negligible; the cost of hallucinated API usage is a broken application.
+
+---
 
 ## Prerequisites
 
 - Angular 20+ project
 - `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
-- A theme applied (see the Theming skill)
+- A theme applied (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md))
+
+---
 
 ## Choosing the Right Grid
 
@@ -40,25 +65,27 @@ Ask these questions in order:
 4. **Does the data have parent-child relationships within a SINGLE schema** (e.g., Employees with a `managerId` field, or nested children arrays)? → **Tree Grid**
 5. **Is the data a flat list/table with enterprise features needed** (editing, batch editing, grouping, paging, export, etc.)? → **Flat Grid**
 
-### Grid Types Overview
+After choosing the grid type, **you must still complete Steps 2–4 from the mandatory protocol above** — return to the routing table and read every applicable `references/` file before writing any code. The decision guide and the tables on this page are discovery aids only; they do not replace the reference files.
 
-Entry points below use the `igniteui-angular` prefix. Replace with `@infragistics/igniteui-angular` for the licensed package.
+### Grid Types & Imports
 
-| Grid | Selector | Component | Directives | Entry Point | Docs |
-|---|---|---|---|---|---|
-| **Grid Lite** | `igx-grid-lite` | `IgxGridLiteComponent` | Individual imports | `igniteui-angular/grids/lite` | — |
-| **Flat Grid** | `igx-grid` | `IgxGridComponent` | `IGX_GRID_DIRECTIVES` | `igniteui-angular/grids/grid` | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) |
-| **Tree Grid** | `igx-tree-grid` | `IgxTreeGridComponent` | `IGX_TREE_GRID_DIRECTIVES` | `igniteui-angular/grids/tree-grid` | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid) |
-| **Hierarchical Grid** | `igx-hierarchical-grid` | `IgxHierarchicalGridComponent` | `IGX_HIERARCHICAL_GRID_DIRECTIVES` | `igniteui-angular/grids/hierarchical-grid` | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid) |
-| **Pivot Grid** | `igx-pivot-grid` | `IgxPivotGridComponent` | `IGX_PIVOT_GRID_DIRECTIVES` | `igniteui-angular/grids/pivot-grid` | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid) |
+> **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Always import from the specific entry point. Never import from the root barrel of either package.
+
+| Grid | Selector | Component | Directives | Entry Point |
+|---|---|---|---|---|
+| **Grid Lite** | `igx-grid-lite` | `IgxGridLiteComponent` | Individual imports | `igniteui-angular/grids/lite` |
+| **Flat Grid** | `igx-grid` | `IgxGridComponent` | `IGX_GRID_DIRECTIVES` | `igniteui-angular/grids/grid` |
+| **Tree Grid** | `igx-tree-grid` | `IgxTreeGridComponent` | `IGX_TREE_GRID_DIRECTIVES` | `igniteui-angular/grids/tree-grid` |
+| **Hierarchical Grid** | `igx-hierarchical-grid` | `IgxHierarchicalGridComponent` | `IGX_HIERARCHICAL_GRID_DIRECTIVES` | `igniteui-angular/grids/hierarchical-grid` |
+| **Pivot Grid** | `igx-pivot-grid` | `IgxPivotGridComponent` | `IGX_PIVOT_GRID_DIRECTIVES` | `igniteui-angular/grids/pivot-grid` |
+
+Replace `igniteui-angular` with `@infragistics/igniteui-angular` for the licensed package — entry-point paths are identical.
 
 > **AGENT INSTRUCTION — Documentation URL Pattern**: For grid-specific topics (sorting, filtering, editing, paging, etc.), docs URLs follow this naming pattern per grid type:
 > - Flat Grid: `.../components/grid/{topic}`
 > - Tree Grid: `.../components/treegrid/{topic}`
 > - Hierarchical Grid: `.../components/hierarchicalgrid/{topic}`
 > - Pivot Grid: `.../components/pivotGrid/{topic}`
->
-> Example: the sorting topic is `/grid/sorting`, `/treegrid/sorting`, `/hierarchicalgrid/sorting`, `/pivotGrid/sorting`. Docs links in the sections below use the Flat Grid URL; substitute the prefix above for the other grid types.
 
 ### Feature Availability per Grid Type
 
@@ -81,285 +108,3 @@ Entry points below use the `igniteui-angular` prefix. Replace with `@infragistic
 | State persistence | No | Yes | Yes | Yes + row island state | Pivot config serialization |
 | Remote data ops | `dataPipelineConfiguration` | Events + noop strategies | Events + noop strategies | Events + noop strategies | N/A |
 | Row virtualization | Yes | Yes (rows + columns) | Yes (rows + columns) | Yes (rows + columns) | Yes |
-
-## Quick Start
-
-> **Docs:** [Flat Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) · [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid) · [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid) · [Pivot Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid)
-
-### Imports
-
-> **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Always import from the specific entry point of whichever package is installed. Never import from the root barrel of either package.
-
-```typescript
-// Open-source package — import from specific entry points
-import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
-
-// Licensed package — same entry-point structure, different prefix
-// import { IgxGridComponent, IGX_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/grid';
-
-// AVOID — never import from the root barrel (wrong for BOTH variants)
-// import { IgxGridComponent } from 'igniteui-angular';
-// import { IgxGridComponent } from '@infragistics/igniteui-angular';
-
-import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
-
-@Component({
-  selector: 'app-users-grid',
-  imports: [IGX_GRID_DIRECTIVES],
-  templateUrl: './users-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class UsersGridComponent {
-  // Signal-based view child — use #grid on the template element
-  gridRef = viewChild.required<IgxGridComponent>('grid');
-
-  protected users = signal<User[]>([]);
-}
-```
-
-### Basic Grid
-
-```html
-<igx-grid #grid
-  [data]="users()"
-  [primaryKey]="'id'"
-  [autoGenerate]="false"
-  height="600px"
-  width="100%">
-
-  <igx-column field="id" header="ID" [hidden]="true"></igx-column>
-  <igx-column field="name" header="Name" [sortable]="true" [filterable]="true" [resizable]="true"></igx-column>
-  <igx-column field="email" header="Email" [sortable]="true" [filterable]="true"></igx-column>
-  <igx-column field="role" header="Role" [groupable]="true" [filterable]="true"></igx-column>
-  <igx-column field="salary" header="Salary" dataType="number" [hasSummary]="true"></igx-column>
-  <igx-column field="hireDate" header="Hire Date" dataType="date" [sortable]="true"></igx-column>
-  <igx-column field="active" header="Active" dataType="boolean"></igx-column>
-
-</igx-grid>
-```
-
-## Column Configuration
-
-> **Docs:** [Column Types](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-types)
-
-### Data Types
-
-Set `dataType` to enable proper formatting, filtering, sorting, and editing:
-
-| dataType | Behavior |
-|---|---|
-| `string` | Text input, string filtering |
-| `number` | Numeric input, number filtering, number summaries |
-| `boolean` | Checkbox editor, boolean filtering |
-| `date` | Date picker editor, date filtering |
-| `dateTime` | Date+time editor |
-| `time` | Time picker editor |
-| `currency` | Currency formatting, number filtering |
-| `percent` | Percentage formatting |
-| `image` | Image rendering (read-only) |
-
-### Column Templates
-
-> **Docs:** [Column Configuration](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#angular-grid-column-configuration)
-
-Override default rendering with template directives:
-
-```html
-<igx-column field="status" header="Status">
-  <!-- Custom cell template -->
-  <ng-template igxCell let-cell="cell">
-    <igx-badge [type]="cell.value === 'Active' ? 'success' : 'error'">
-      {{ cell.value }}
-    </igx-badge>
-  </ng-template>
-
-  <!-- Custom header template -->
-  <ng-template igxHeader let-column>
-    <igx-icon>verified</igx-icon> {{ column.header }}
-  </ng-template>
-
-  <!-- Custom editor template -->
-  <ng-template igxCellEditor let-cell="cell">
-    <igx-select [(ngModel)]="cell.editValue">
-      <igx-select-item value="Active">Active</igx-select-item>
-      <igx-select-item value="Inactive">Inactive</igx-select-item>
-    </igx-select>
-  </ng-template>
-
-  <!-- Custom filter cell template -->
-  <ng-template igxFilterCellTemplate let-column="column">
-    <input (input)="onCustomFilter($event, column)" />
-  </ng-template>
-
-  <!-- Custom summary template -->
-  <ng-template igxSummary let-summaryResults>
-    Active: {{ getActiveCount(summaryResults) }}
-  </ng-template>
-</igx-column>
-```
-
-### Column Groups
-
-> **Docs:** [Collapsible Column Groups](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/collapsible-column-groups)
-
-Group columns under a shared header:
-
-```html
-<igx-column-group header="Personal Info">
-  <igx-column field="firstName" header="First Name"></igx-column>
-  <igx-column field="lastName" header="Last Name"></igx-column>
-</igx-column-group>
-
-<igx-column-group header="Contact">
-  <igx-column field="email" header="Email"></igx-column>
-  <igx-column field="phone" header="Phone"></igx-column>
-</igx-column-group>
-```
-
-### Multi-Row Layout (MRL)
-
-> **Docs:** [Multi-Row Layout](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/multi-row-layout)
-
-Create complex cell layouts spanning multiple rows/columns:
-
-```html
-<igx-column-layout>
-  <igx-column field="name" [rowStart]="1" [colStart]="1" [colEnd]="3"></igx-column>
-  <igx-column field="email" [rowStart]="2" [colStart]="1"></igx-column>
-  <igx-column field="phone" [rowStart]="2" [colStart]="2"></igx-column>
-</igx-column-layout>
-```
-
-### Column Pinning
-
-> **Docs:** [Column Pinning](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-pinning)
-
-```html
-<igx-column field="name" [pinned]="true"></igx-column>
-```
-
-Or programmatically: `this.gridRef().pinColumn('name')`.
-
-## Sorting
-
-> **Docs:** [Sorting](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sorting) (substitute URL prefix per grid type — see instruction above)
-
-```html
-<igx-grid
-  [data]="data()"
-  [(sortingExpressions)]="sortExprs"
-  [sortingOptions]="{ mode: 'multiple' }">
-  <igx-column field="name" [sortable]="true"></igx-column>
-</igx-grid>
-```
-
-Programmatic sorting:
-
-```typescript
-this.gridRef().sort({ fieldName: 'name', dir: SortingDirection.Asc, ignoreCase: true });
-this.gridRef().clearSort();
-```
-
-Events: `(sorting)` (cancelable), `(sortingDone)`.
-
-## Filtering
-
-### Quick Filter (Row Filter)
-
-> **Docs:** [Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/filtering)
-
-```html
-<igx-grid [allowFiltering]="true" [filterMode]="'quickFilter'">
-  <igx-column field="name" [filterable]="true"></igx-column>
-</igx-grid>
-```
-
-### Excel-Style Filter
-
-> **Docs:** [Excel-Style Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/excel-style-filtering)
-
-```html
-<igx-grid [allowFiltering]="true" [filterMode]="'excelStyleFilter']">
-  <igx-column field="name" [filterable]="true"></igx-column>
-</igx-grid>
-```
-
-### Advanced Filtering Dialog
-
-> **Docs:** [Advanced Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/advanced-filtering)
-
-```html
-<igx-grid [allowAdvancedFiltering]="true">
-  <!-- Advanced filtering UI is shown via toolbar or API -->
-</igx-grid>
-```
-
-### Programmatic Filtering
-
-```typescript
-this.gridRef().filter('name', 'John', IgxStringFilteringOperand.instance().condition('contains'), true);
-this.gridRef().clearFilter('name');
-this.gridRef().clearFilter(); // clear all
-```
-
-Events: `(filtering)` (cancelable), `(filteringDone)`.
-
-## Selection
-
-### Row Selection
-
-> **Docs:** [Row Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-selection)
-
-```html
-<igx-grid [rowSelection]="'multiple'" [primaryKey]="'id'" [(selectedRows)]="selectedIds">
-  <!-- Optional: Custom row selector checkbox -->
-  <ng-template igxRowSelector let-rowContext>
-    <igx-checkbox [checked]="rowContext.selected" (change)="rowContext.select(!rowContext.selected)">
-    </igx-checkbox>
-  </ng-template>
-</igx-grid>
-```
-
-Modes: `'none'`, `'single'`, `'multiple'`, `'multipleCascade'` (tree grids).
-
-### Cell Selection
-
-> **Docs:** [Cell Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/cell-selection)
-
-```html
-<igx-grid [cellSelection]="'multiple'"></igx-grid>
-```
-
-### Column Selection
-
-> **Docs:** [Column Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-selection)
-
-```html
-<igx-grid [columnSelection]="'multiple'">
-  <igx-column field="name" [selectable]="true"></igx-column>
-</igx-grid>
-```
-
-Events: `(rowSelectionChanging)`, `(columnSelectionChanging)`, `(selected)` (cell).
-
-## Key Rules
-
-1. **Pick the right grid type first** — Grid Lite for lightweight read-only display, Flat Grid for enterprise tabular data, Tree Grid for single-schema parent-child, Hierarchical Grid for multi-schema levels, Pivot Grid for analytics reshaping
-2. **Always set `[primaryKey]`** — required for editing, selection, row operations (Flat, Tree, Hierarchical, Pivot grids; NOT Grid Lite)
-3. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports
-4. **Use the right component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
-5. **Set `[autoGenerate]="false"`** and define columns explicitly for production grids (except Pivot Grid where columns are auto-generated)
-6. **Set `dataType` on every column** for correct filtering, sorting, editing, and summaries
-7. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
-8. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
-
-## Related Skills
-
-- **[Grid Features](../igniteui-angular-grids-features/SKILL.md)** — Editing, grouping, summaries, cell merging, toolbar, export, virtualization, row drag, action strip, master-detail, clipboard
-- **[Grid Types](../igniteui-angular-grids-types/SKILL.md)** — Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid specifics
-- **[Grid Data Operations](../igniteui-angular-grid-data-operations/SKILL.md)** — Sorting, filtering, grouping, and canonical grid import patterns
-- **[Grid Paging & Remote](../igniteui-angular-grid-paging-remote/SKILL.md)** — Paging, remote data operations, virtualization, multi-grid coordination
-- **[Grid Editing](../igniteui-angular-grid-editing/SKILL.md)** — Cell editing, row editing, batch editing, validation, summaries
-- **[Grid State](../igniteui-angular-grid-state/SKILL.md)** — State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations
-- **[Theming](../igniteui-angular-theming/SKILL.md)** — Grid styling and theming
-- **[Components](../igniteui-angular-components/SKILL.md)** — Non-grid Ignite UI components
