@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-grid-state
-description: State persistence and grid-type-specific data operations (Tree Grid, Hierarchical Grid, Pivot Grid, Grid Lite) for Ignite UI Angular grids
+description: "State persistence and grid-type-specific data operations (Tree Grid, Hierarchical Grid, Pivot Grid, Grid Lite) for Ignite UI Angular grids. Use when users ask to save or restore grid state, persist sorting or filtering across sessions, or work with data operations specific to Tree Grid (recursive filtering, hierarchical transactions), Hierarchical Grid (independent levels), Pivot Grid (dimensions), or Grid Lite (lightweight sorting and filtering)."
 user-invokable: true
 ---
 

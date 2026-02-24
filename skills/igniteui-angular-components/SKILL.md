@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-components
-description: Build Angular apps with Ignite UI form controls — Input Group, Combo, Select, Date/Time Pickers, Calendar, and forms integration
+description: "Build Angular apps with Ignite UI form controls — Input Group, Combo, Select, Date/Time Pickers, Calendar, and forms integration. Use when users ask to add a form control (input, combo, select, date picker, calendar, checkbox, radio, switch, or slider), set up an Ignite UI Angular app, configure app providers like provideAnimations, or integrate form controls with Angular reactive forms."
 user-invokable: true
 ---
 

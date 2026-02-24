@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-grid-paging-remote
-description: Paging, remote data operations, virtualization, and multi-grid coordination patterns for Ignite UI Angular grids
+description: "Paging, remote data operations, virtualization, and multi-grid coordination patterns for Ignite UI Angular grids. Use when users ask to add paging to a grid, load data from a server with server-side sorting, filtering, or paging, implement virtual scrolling with remote data, or coordinate a master-detail grid layout."
 user-invokable: true
 ---
 

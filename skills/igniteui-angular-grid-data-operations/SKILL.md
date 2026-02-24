@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-grid-data-operations
-description: Sorting, filtering, grouping, and canonical grid import patterns for Ignite UI Angular grids
+description: "Sorting, filtering, grouping, and canonical grid import patterns for Ignite UI Angular grids. Use when users ask to sort, filter, or group grid data programmatically or via the template, work with sorting/filtering expressions, import a grid component, or access a grid instance with viewChild."
 user-invokable: true
 ---
 

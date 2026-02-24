@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-grid-editing
-description: Cell editing, row editing, batch editing, validation, and summaries patterns for Ignite UI Angular grids
+description: "Cell editing, row editing, batch editing, validation, and summaries patterns for Ignite UI Angular grids. Use when users ask to make a grid editable, implement cell or row editing, enable batch editing with undo/redo, add CRUD operations to a grid, validate grid input, or display column summaries."
 user-invokable: true
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-grids-features
-description: Editing, grouping, summaries, toolbar, export, and other advanced features for Ignite UI Angular grids
+description: "Editing, grouping, summaries, toolbar, export, and other advanced features for Ignite UI Angular grids. Use when users ask to add a toolbar, export grid data to Excel or CSV, group rows by a column, add row drag-and-drop, show an action strip, merge cells, or move and pin columns."
 user-invokable: true
 ---
 

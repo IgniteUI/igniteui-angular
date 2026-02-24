@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-components-layout
-description: Ignite UI for Angular layout, data display, feedback/overlay components, and directives
+description: "Ignite UI for Angular layout, data display, feedback/overlay components, and directives. Use when users ask to add a layout component (tabs, stepper, accordion, splitter, navigation drawer), a data display component (list, tree, card), a feedback or overlay component (dialog, snackbar, toast, banner), or a directive (button, ripple, tooltip, drag and drop)."
 user-invokable: true
 ---
 

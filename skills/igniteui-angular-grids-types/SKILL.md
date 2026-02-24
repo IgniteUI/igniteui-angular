@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-grids-types
-description: Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid specifics for Ignite UI Angular
+description: "Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid specifics for Ignite UI Angular. Use when users ask to implement a tree grid for parent-child data (org charts, file systems), a hierarchical grid for multi-schema master-detail data, a lightweight read-only grid (Grid Lite), or a pivot table with drag-and-drop dimensions and aggregations."
 user-invokable: true
 ---
 

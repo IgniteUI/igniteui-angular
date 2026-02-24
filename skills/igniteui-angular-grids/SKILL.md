@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-grids
-description: Grid structure, column configuration, sorting, filtering, and selection for Ignite UI Angular grids
+description: "Grid structure, column configuration, sorting, filtering, and selection for Ignite UI Angular grids. Use when users ask to create a grid, display tabular data, choose the right grid type, configure columns (templates, pinning, resizing, data types), or enable sorting, filtering, or row/cell selection."
 user-invokable: true
 ---
 
