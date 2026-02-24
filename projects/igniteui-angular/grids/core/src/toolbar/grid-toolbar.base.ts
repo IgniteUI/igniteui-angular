@@ -1,13 +1,13 @@
-import { Directive, Input, EventEmitter, OnDestroy, Output, booleanAttribute, inject } from '@angular/core';
+import { ChangeDetectorRef, Directive, EventEmitter, Input, OnDestroy, Output, booleanAttribute, inject } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
-import { ColumnDisplayOrder } from '../common/enums';
-import { IColumnToggledEventArgs } from '../common/events';
-import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-import { IgxToolbarToken } from './token';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from 'igniteui-angular/directives';
+import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
+import { ColumnDisplayOrder } from '../common/enums';
+import { IColumnToggledEventArgs } from '../common/events';
+import { IgxToolbarToken } from './token';
 
 /* blazorInclude */
 /* blazorElement */
