@@ -961,6 +961,61 @@ describe('IgxGrid - Cell merging #grid', () => {
                 expect(sizes).toEqual(expectedSizes);
             });
 
+            it('should not use a merged cell for default row height calculation', async () => {
+                // Set up a grid with a merged column and a non-merged column.
+                // In the test data rows 0 and 1 share the same ProductName value,
+                // so the ProductName cell in the first row is merged (isMerged=true, rowSpan=2).
+                fix.componentInstance.cols = [
+                    { field: 'ProductName', dataType: GridColumnDataType.String, merge: true },
+                    { field: 'Downloads', dataType: GridColumnDataType.Number, merge: false }
+                ];
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                const firstRow = grid.dataRowList.first;
+                const mergedCell = firstRow.cells.find(c => c.isMerged);
+                const nonMergedCell = firstRow.cells.find(c => !c.isMerged);
+
+                expect(mergedCell).toBeTruthy();
+                expect(nonMergedCell).toBeTruthy();
+
+                // The merged cell spans 2 rows so its rendered height is double the single-row height.
+                const mergedCellHeight = parseFloat(getComputedStyle(mergedCell.nativeElement).height);
+                const nonMergedCellHeight = parseFloat(getComputedStyle(nonMergedCell.nativeElement).height);
+                expect(mergedCellHeight).toBeGreaterThan(nonMergedCellHeight);
+
+                // Trigger recalculation after the grid is fully rendered so CSS heights are available.
+                (grid as any).updateDefaultRowHeight();
+
+                // defaultRowHeight must be derived from the non-merged cell, not the taller merged cell.
+                expect(grid.defaultRowHeight).toBe(nonMergedCellHeight);
+                expect(grid.defaultRowHeight).not.toBe(mergedCellHeight);
+            });
+
+            it('should not update default row height when all first-row cells are merged', async () => {
+                // With a single merged column and identical values in rows 0-1,
+                // every cell in the first row is merged – no non-merged target is available.
+                fix.componentInstance.cols = [{ field: 'ProductName', dataType: GridColumnDataType.String, merge: true }];
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                const firstRow = grid.dataRowList.first;
+                // Confirm all cells in the first row are merged.
+                expect(firstRow.cells.toArray().every(c => c.isMerged)).toBeTrue();
+
+                // Record defaultRowHeight before triggering a recalculation.
+                const heightBeforeRecalc = grid.defaultRowHeight;
+
+                // Trigger the height recalculation as the resize observer would.
+                (grid as any).updateDefaultRowHeight();
+
+                // With all cells merged the method must not overwrite defaultRowHeight
+                // with the merged cell's larger (multi-row) height.
+                expect(grid.defaultRowHeight).toBe(heightBeforeRecalc);
+            });
+
         });
 
         describe('HierarchicalGrid', () => {
