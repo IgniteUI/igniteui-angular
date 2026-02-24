@@ -17,90 +17,15 @@ This skill covers advanced grid features for Ignite UI for Angular: cell editing
 
 ## Editing
 
-### Cell Editing
+> **Full editing coverage is in the [`igniteui-angular-grid-editing`](../igniteui-angular-grid-editing/SKILL.md) skill**, which includes cell editing, row editing, batch editing with transactions, row adding/deleting, validation, and summaries. Use that skill for any editing task.
 
-> **Docs:** [Cell Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/cell-editing)
+Quick reference:
 
-```html
-<igx-column field="name" [editable]="true"></igx-column>
-```
-
-Double-click or press Enter to enter edit mode. Events: `(cellEditEnter)`, `(cellEdit)` (cancelable), `(cellEditDone)`, `(cellEditExit)`.
-
-### Row Editing
-
-> **Docs:** [Row Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-editing)
-
-```html
-<igx-grid [rowEditable]="true" [primaryKey]="'id'">
-  <!-- Custom row edit overlay text -->
-  <ng-template igxRowEditText let-rowChanges>
-    {{ rowChanges.size }} fields changed
-  </ng-template>
-  <ng-template igxRowEditActions>
-    <button igxButton="flat" igxRowEditTabStop (click)="rowEditCtx.endRowEdit(false)">Cancel</button>
-    <button igxButton="flat" igxRowEditTabStop (click)="rowEditCtx.endRowEdit(true)">Save</button>
-  </ng-template>
-</igx-grid>
-```
-
-Events: `(rowEditEnter)`, `(rowEdit)` (cancelable), `(rowEditDone)`, `(rowEditExit)`.
-
-### Batch Editing (Transactions)
-
-> **Docs:** [Batch Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/batch-editing)
-
-```html
-<igx-grid [batchEditing]="true" [primaryKey]="'id'" [rowEditable]="true"></igx-grid>
-```
-
-```typescript
-// Commit all changes
-this.gridRef().transactions.commit(this.gridRef().data);
-
-// Undo last change
-this.gridRef().transactions.undo();
-
-// Redo
-this.gridRef().transactions.redo();
-
-// Discard all changes
-this.gridRef().transactions.clear();
-```
-
-### Adding and Deleting Rows
-
-> **Docs:** [Row Adding](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-adding)
-
-```typescript
-// Add row
-this.gridRef().addRow({ id: 999, name: 'New User', email: 'new@example.com' });
-
-// Delete row by primary key
-this.gridRef().deleteRow(42);
-
-// Open add-row UI at top or bottom
-this.gridRef().beginAddRowByIndex(0); // at top
-```
-
-Events: `(rowAdded)`, `(rowDeleted)`, `(rowAdd)` (cancelable), `(rowDelete)` (cancelable).
-
-### Validation
-
-> **Docs:** [Validation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/validation)
-
-Built-in validators on columns:
-
-```html
-<igx-column field="email" [editable]="true" required [validators]="emailValidators">
-</igx-column>
-```
-
-```typescript
-emailValidators = [Validators.required, Validators.email];
-```
-
-Events: `(formGroupCreated)`, `(validationStatusChange)`.
+| Mode | Key properties |
+|---|---|
+| **Cell editing** | `[editable]="true"` on columns + `(cellEditDone)` |
+| **Row editing** (recommended default) | `[rowEditable]="true"` + `[editable]="true"` on columns + `(rowEditDone)` |
+| **Batch editing** | `[batchEditing]="true"` + `[rowEditable]="true"` + `transactions.commit(data)` |
 
 ## Grouping (Grid only)
 
@@ -126,43 +51,15 @@ this.gridRef().clearGrouping('category');
 
 ## Summaries
 
-> **Docs:** [Summaries](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/summaries) (substitute URL prefix per grid type — see instruction above)
+> **Full summaries coverage (built-in and custom summary operands) is in the [`igniteui-angular-grid-editing`](../igniteui-angular-grid-editing/SKILL.md) skill.**
 
-Enable per-column summaries:
+Quick reference — enable per-column summaries:
 
 ```html
 <igx-column field="salary" dataType="number" [hasSummary]="true"></igx-column>
 ```
 
-Default summaries by type:
-- **number**: Count, Min, Max, Sum, Average
-- **date**: Count, Earliest, Latest
-- **string/boolean**: Count
-
-Custom summary class:
-
-```typescript
-class SalarySummary extends IgxNumberSummaryOperand {
-  operate(data: number[]): IgxSummaryResult[] {
-    return [{
-      key: 'median',
-      label: 'Median',
-      summaryResult: this.median(data)
-    }];
-  }
-
-  private median(data: number[]): number {
-    const sorted = [...data].sort((a, b) => a - b);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-  }
-}
-```
-
-```html
-<igx-column field="salary" [hasSummary]="true" [summaries]="salarySummary">
-</igx-column>
-```
+Default summaries by type: **number** → Count/Min/Max/Sum/Average; **date** → Count/Earliest/Latest; **string/boolean** → Count.
 
 ## Cell Merging
 
