@@ -46,16 +46,9 @@ This repository ships with **Copilot Skills** — structured knowledge files tha
 
 | Skill | Path | Description |
 |:------|:-----|:------------|
-| Components — Form Controls | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | Input Group, Combo, Select, Date/Time Pickers, Calendar, forms integration |
-| Components — Layout & Display | [`skills/igniteui-angular-components-layout/SKILL.md`](skills/igniteui-angular-components-layout/SKILL.md) | Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, directives |
-| Data Grids — Structure | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Grid type selection, column configuration, sorting, filtering, selection |
-| Data Grids — Features | [`skills/igniteui-angular-grids-features/SKILL.md`](skills/igniteui-angular-grids-features/SKILL.md) | Editing, grouping, summaries, toolbar, export, row drag, master-detail |
-| Data Grids — Grid Types | [`skills/igniteui-angular-grids-types/SKILL.md`](skills/igniteui-angular-grids-types/SKILL.md) | Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid specifics |
-| Grid Data Operations | [`skills/igniteui-angular-grid-data-operations/SKILL.md`](skills/igniteui-angular-grid-data-operations/SKILL.md) | Sorting, filtering, grouping, canonical grid import patterns |
-| Grid Paging & Remote | [`skills/igniteui-angular-grid-paging-remote/SKILL.md`](skills/igniteui-angular-grid-paging-remote/SKILL.md) | Paging, remote data operations, virtualization, multi-grid coordination |
-| Grid Editing | [`skills/igniteui-angular-grid-editing/SKILL.md`](skills/igniteui-angular-grid-editing/SKILL.md) | Cell editing, row editing, batch editing, validation, summaries |
-| Grid State | [`skills/igniteui-angular-grid-state/SKILL.md`](skills/igniteui-angular-grid-state/SKILL.md) | State persistence, Tree / Hierarchical / Pivot Grid / Grid Lite operations |
-| Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Palettes, typography, elevations, component themes, MCP server |
+| Components | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | UI Components (form controls, layout, data display, feedback/overlays, directives — Input Group, Combo, Select, Date/Time Pickers, Calendar, Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, Button, Ripple, Tooltip, Drag and Drop, Layout Manager, Dock Manager) |
+| Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) |
+| Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Theming & Styling (includes MCP server setup) |
 
 #### How It Works
 

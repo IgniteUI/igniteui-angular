@@ -39,6 +39,7 @@ Base your code and explanation exclusively on what you read. If the reference fi
 | Dialog, Snackbar, Toast, Banner | [`references/feedback.md`](./references/feedback.md) |
 | Button, Icon Button, Ripple, Tooltip, Drag and Drop | [`references/directives.md`](./references/directives.md) |
 | Layout Manager (`igxLayout`, `igxFlex` directives), Dock Manager (`igc-dockmanager` web component) | [`references/layout-manager.md`](./references/layout-manager.md) |
+| Charts (Area, Bar, Column, Stock/Financial, Pie), chart configuration, chart features (animation, tooltips, markers, highlighting, zooming), data binding | [`references/charts.md`](./references/charts.md) |
 
 > **When in doubt, read more rather than fewer reference files.** The cost of an unnecessary file read is negligible; the cost of hallucinated API usage is a broken application.
 
