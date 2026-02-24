@@ -378,6 +378,6 @@ constructor() {
 
 ## Related Skills
 
-- **igniteui-angular-components** — Form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider), application setup, architecture, and multi-entry-point import patterns
-- **igniteui-angular-grids** — Data Grid, Tree Grid, Hierarchical Grid, and Pivot Grid components
-- **igniteui-angular-theming** — Theming and styling with Ignite UI design tokens and component themes
+- [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) — Form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider), application setup, architecture, and multi-entry-point import patterns
+- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — Data Grid, Tree Grid, Hierarchical Grid, and Pivot Grid components
+- [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) — Theming and styling with Ignite UI design tokens and component themes

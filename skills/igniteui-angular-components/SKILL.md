@@ -303,6 +303,6 @@ export class MyFormComponent {
 
 ## Related Skills
 
-- **igniteui-angular-components-layout** — Layout components (Tabs, Stepper, Accordion, Splitter, Navigation Drawer), data display (List, Tree, Card), feedback/overlays (Dialog, Snackbar, Toast, Banner), and directives (Buttons, Ripple, Tooltip, Drag and Drop)
-- **igniteui-angular-grids** — Data Grid, Tree Grid, Hierarchical Grid, and Pivot Grid components
-- **igniteui-angular-theming** — Theming and styling with Ignite UI design tokens and component themes
+- [`igniteui-angular-components-layout`](../igniteui-angular-components-layout/SKILL.md) — Layout components (Tabs, Stepper, Accordion, Splitter, Navigation Drawer), data display (List, Tree, Card), feedback/overlays (Dialog, Snackbar, Toast, Banner), and directives (Buttons, Ripple, Tooltip, Drag and Drop)
+- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — Data Grid, Tree Grid, Hierarchical Grid, and Pivot Grid components
+- [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) — Theming and styling with Ignite UI design tokens and component themes

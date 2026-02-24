@@ -118,8 +118,11 @@ Here is a link to the most recent Angular style guide https://angular.dev/style-
 
 Domain-specific skills for AI-assisted development are located in the [`skills/`](../skills/) directory. Each sub-folder contains a `SKILL.md` file that teaches agents how to work with a particular area of the library:
 
-- [`skills/igniteui-angular-components`](../skills/igniteui-angular-components/SKILL.md) — Components & Layout
-- [`skills/igniteui-angular-grids`](../skills/igniteui-angular-grids/SKILL.md) — Data Grids (structure, columns, templates, layout)
+- [`skills/igniteui-angular-components`](../skills/igniteui-angular-components/SKILL.md) — Components — Form Controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, forms integration)
+- [`skills/igniteui-angular-components-layout`](../skills/igniteui-angular-components-layout/SKILL.md) — Components — Layout & Display (Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, directives)
+- [`skills/igniteui-angular-grids`](../skills/igniteui-angular-grids/SKILL.md) — Data Grids — Structure (grid type selection, column configuration, sorting, filtering, selection)
+- [`skills/igniteui-angular-grids-features`](../skills/igniteui-angular-grids-features/SKILL.md) — Data Grids — Features (editing, grouping, summaries, toolbar, export, row drag, master-detail)
+- [`skills/igniteui-angular-grids-types`](../skills/igniteui-angular-grids-types/SKILL.md) — Data Grids — Grid Types (Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid specifics)
 - [`skills/igniteui-angular-grid-data-operations`](../skills/igniteui-angular-grid-data-operations/SKILL.md) — Grid Data Operations (sorting, filtering, grouping, canonical grid import patterns)
 - [`skills/igniteui-angular-grid-paging-remote`](../skills/igniteui-angular-grid-paging-remote/SKILL.md) — Grid Paging & Remote (paging, remote data operations, virtualization, multi-grid coordination)
 - [`skills/igniteui-angular-grid-editing`](../skills/igniteui-angular-grid-editing/SKILL.md) — Grid Editing (cell editing, row editing, batch editing, validation, summaries)
