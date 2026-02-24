@@ -1,4 +1,4 @@
-import { Directive, Input, EventEmitter, OnDestroy, Output, Inject, booleanAttribute } from '@angular/core';
+import { Directive, Input, EventEmitter, OnDestroy, Output, Inject, booleanAttribute, ChangeDetectorRef } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
@@ -22,6 +22,7 @@ import { AutoPositionStrategy } from '../../services/overlay/position/auto-posit
  */
 @Directive()
 export abstract class BaseToolbarDirective implements OnDestroy {
+
     /**
      * Sets the height of the column list in the dropdown.
      */
@@ -108,7 +109,10 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         return this.toolbar.grid;
     }
 
-    constructor(@Inject(IgxToolbarToken) protected toolbar: IgxToolbarToken) { }
+    constructor(
+        @Inject(IgxToolbarToken) protected toolbar: IgxToolbarToken,
+        private cdr: ChangeDetectorRef
+    ) { }
 
     /** @hidden @internal **/
     public ngOnDestroy() {
@@ -120,11 +124,18 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent): void {
         if (actions) {
             this._setupListeners(toggleRef, actions);
-            const setHeight = () =>
+            const setHeight = () => {
                 actions.columnsAreaMaxHeight = actions.columnsAreaMaxHeight !== '100%'
                     ? actions.columnsAreaMaxHeight :
                     this.columnListHeight ??
                     `${Math.max(this.grid.calcHeight * 0.5, 200)}px`;
+                    // TODO: this is a workaround for the issue introduced by Angular's Ivy renderer.
+                    // This was fixed in ToggleDirective by PR16429. However, the fix there introduced the
+                    // issue here. To fix this in IgxColumnActionsComponent we need to set the height after
+                    // the toggle is opened and the classes are applied to ensure the height is calculated
+                    // correctly.
+                    this.cdr.detectChanges();
+            }
             toggleRef.opening.pipe(first()).subscribe(setHeight);
         }
         toggleRef.toggle({
