@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "igniteui-angular-components": {
+      "source": "/home/runner/work/igniteui-angular/igniteui-angular",
+      "sourceType": "local",
+      "computedHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "igniteui-angular-grid-data-operations": {
+      "source": "/home/runner/work/igniteui-angular/igniteui-angular",
+      "sourceType": "local",
+      "computedHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "igniteui-angular-grids": {
+      "source": "/home/runner/work/igniteui-angular/igniteui-angular",
+      "sourceType": "local",
+      "computedHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "igniteui-angular-theming": {
+      "source": "/home/runner/work/igniteui-angular/igniteui-angular",
+      "sourceType": "local",
+      "computedHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}
