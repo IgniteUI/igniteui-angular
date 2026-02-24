@@ -1,15 +1,15 @@
-import { Directive, Input, EventEmitter, OnDestroy, Output, Inject, booleanAttribute, ChangeDetectorRef } from '@angular/core';
+import { booleanAttribute, ChangeDetectorRef, Directive, EventEmitter, Inject, Input, OnDestroy, Output } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
+import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
+import { AutoPositionStrategy } from '../../services/overlay/position/auto-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
+import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
+import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { ColumnDisplayOrder } from '../common/enums';
 import { IColumnToggledEventArgs } from '../common/events';
-import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
-import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxToolbarToken } from './token';
-import { AutoPositionStrategy } from '../../services/overlay/position/auto-position-strategy';
 
 /* blazorInclude */
 /* blazorElement */
