@@ -65,10 +65,13 @@ this.gridRef().paginator.perPage = 25;
 ### Remote Paging
 
 ```typescript
+import { GridPagingMode } from 'igniteui-angular/grids/grid';
+
 export class RemotePagingComponent {
   data = signal<Product[]>([]);
   totalCount = signal(0);
   perPage = signal(15);
+  pagingMode = GridPagingMode.Remote;
 
   gridRef = viewChild.required<IgxGridComponent>('grid');
   private dataService = inject(ProductService);
@@ -100,6 +103,7 @@ export class RemotePagingComponent {
 <igx-grid #grid
   [data]="data()"
   [primaryKey]="'id'"
+  [pagingMode]="pagingMode"
   height="600px">
   <igx-column field="name"></igx-column>
   <igx-column field="price" dataType="number"></igx-column>
@@ -185,7 +189,7 @@ export class RemoteGridComponent {
     this.loadData(0, 15);
   }
 
-  onFilteringDone() {
+  onFilteringExpressionsTreeChange() {
     this.currentFilter = this.gridRef().filteringExpressionsTree;
     this.loadData(0, 15);
   }
@@ -219,7 +223,7 @@ export class RemoteGridComponent {
   [filterStrategy]="noopFilter"
   (dataPreLoad)="onDataPreLoad($event)"
   (sortingDone)="onSortingDone($event)"
-  (filteringDone)="onFilteringDone()"
+  (filteringExpressionsTreeChange)="onFilteringExpressionsTreeChange()"
   height="600px">
 
   <igx-column field="orderId" header="Order ID" [sortable]="true"></igx-column>
@@ -299,7 +303,7 @@ export class OrderService {
 2. **Use `[isLoading]`** — shows a loading indicator while data is being fetched
 3. **Apply `NoopSortingStrategy` and `NoopFilteringStrategy`** — prevents the grid from performing client-side sorting/filtering, so the server results are displayed as-is
 4. **Listen to `(dataPreLoad)`** — fires when the user scrolls and the grid needs more rows; provides `startIndex` and `chunkSize` (first `chunkSize` will be 0 — use a fallback)
-5. **Listen to `(sortingDone)` and `(filteringDone)`** — reset to the beginning and re-fetch with new parameters
+5. **Listen to `(sortingDone)` and `(filteringExpressionsTreeChange)`** — reset to the beginning and re-fetch with new parameters; `filteringExpressionsTreeChange` is the grid-level output that reflects the complete filter state (unlike the column-level `filteringDone`)
 6. **Track current sort/filter state** — store them so every `loadData` call includes the active criteria
 7. **Debounce `(dataPreLoad)`** — use `debounceTime` to avoid flooding the server during fast scrolling
 8. **Use `[uniqueColumnValuesStrategy]`** — when using Excel-style filtering, supply a callback to load unique column values from the server

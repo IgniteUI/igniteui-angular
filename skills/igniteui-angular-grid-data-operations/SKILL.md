@@ -343,7 +343,8 @@ filteringLogic = FilteringLogic.And;
 | Event | Cancelable | Payload |
 |---|---|---|
 | `(filtering)` | Yes | `IFilteringEventArgs` — set `event.cancel = true` to prevent |
-| `(filteringDone)` | No | `IFilteringEventArgs` — fires after filter is applied |
+| `(filteringDone)` | No | `IFilteringEventArgs` — fires after a **column-level** filter is applied |
+| `(filteringExpressionsTreeChange)` | No | `IFilteringExpressionsTree` — fires after the **grid-level** filter tree changes (use this for remote data) |
 
 ```typescript
 onFilteringDone(event: IFilteringEventArgs) {
@@ -351,6 +352,8 @@ onFilteringDone(event: IFilteringEventArgs) {
   this.loadFilteredData();
 }
 ```
+
+> **Remote data note:** For remote filtering, subscribe to `(filteringExpressionsTreeChange)` instead of `(filteringDone)`. The former reflects the complete grid-level filter tree, including "clear all filters" — `filteringDone` is column-scoped and can miss global state changes.
 
 ### Available Filtering Operands by Data Type
 
