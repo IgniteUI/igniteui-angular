@@ -14,7 +14,7 @@ import { IgxTreeGridSelectionComponent } from '../../../test-utils/tree-grid-com
 import { IgxGridComponent } from './grid.component';
 import { IgxHierarchicalRowComponent } from '../../hierarchical-grid/src/hierarchical-row.component';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
-import { GridCellMergeMode, IgxColumnComponent, IgxGridMRLNavigationService, IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { GridCellMergeMode, IgxColumnComponent, IgxGridCellComponent, IgxGridMRLNavigationService, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;
@@ -974,8 +974,8 @@ describe('IgxGrid - Cell merging #grid', () => {
                 fix.detectChanges();
 
                 const firstRow = grid.dataRowList.first;
-                const mergedCell = firstRow.cells.find(c => c.isMerged);
-                const nonMergedCell = firstRow.cells.find(c => !c.isMerged);
+                const mergedCell = firstRow.cells.toArray().find((c: IgxGridCellComponent) => c.isMerged) as IgxGridCellComponent;
+                const nonMergedCell = firstRow.cells.toArray().find((c: IgxGridCellComponent) => !c.isMerged) as IgxGridCellComponent;
 
                 expect(mergedCell).toBeTruthy();
                 expect(nonMergedCell).toBeTruthy();
@@ -1003,7 +1003,7 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 const firstRow = grid.dataRowList.first;
                 // Confirm all cells in the first row are merged.
-                expect(firstRow.cells.toArray().every(c => c.isMerged)).toBeTrue();
+                expect(firstRow.cells.toArray().every((c: IgxGridCellComponent) => c.isMerged)).toBeTrue();
 
                 // Record defaultRowHeight before triggering a recalculation.
                 const heightBeforeRecalc = grid.defaultRowHeight;
