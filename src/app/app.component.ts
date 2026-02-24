@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
 
     public drawerState = {
         enableGestures: true,
-        open: true,
+        open: signal(true),
         pin: false,
         pinThreshold: 768,
         position: 'left',
@@ -211,6 +211,11 @@ export class AppComponent implements OnInit {
             link: '/inputs',
             icon: 'web',
             name: 'Forms'
+        },
+        {
+            link: '/gridLite',
+            icon: 'view_column',
+            name: 'Grid Lite'
         },
         {
             link: '/grid',

@@ -30,13 +30,13 @@ igx-input-group.igx-input-group--fluent {
 
 igx-input-group.igx-input-group--fluent.igx-input-group--textarea-group.igx-input-group--invalid,
 igx-input-group.igx-input-group--fluent.igx-input-group--invalid {
-    --igx-input-group-input-prefix-color: #{color($color: 'error')};
-    --igx-input-group-input-prefix-color--focused: #{color($color: 'error')};
-    --igx-input-group-input-prefix-color-filled: #{color($color: 'error')};
+    --ig-input-group-input-prefix-color: #{color($color: 'error')};
+    --ig-input-group-input-prefix-color--focused: #{color($color: 'error')};
+    --ig-input-group-input-prefix-color-filled: #{color($color: 'error')};
 
-    --igx-input-group-input-suffix-color: #{color($color: 'error')};
-    --igx-input-group-input-suffix-color--focused: #{color($color: 'error')};
-    --igx-input-group-input-suffix-color-filled: #{color($color: 'error')};
+    --ig-input-group-input-suffix-color: #{color($color: 'error')};
+    --ig-input-group-input-suffix-color--focused: #{color($color: 'error')};
+    --ig-input-group-input-suffix-color-filled: #{color($color: 'error')};
 
     .igx-input-group__bundle {
         &:focus-within,
@@ -48,13 +48,13 @@ igx-input-group.igx-input-group--fluent.igx-input-group--invalid {
 
 igx-input-group.igx-input-group--fluent.igx-input-group--textarea-group.igx-input-group--valid,
 igx-input-group.igx-input-group--fluent.igx-input-group--valid {
-    --igx-input-group-input-prefix-color: #{color($color: 'success')};
-    --igx-input-group-input-prefix-color--focused: #{color($color: 'success')};
-    --igx-input-group-input-prefix-color-filled: #{color($color: 'success')};
+    --ig-input-group-input-prefix-color: #{color($color: 'success')};
+    --ig-input-group-input-prefix-color--focused: #{color($color: 'success')};
+    --ig-input-group-input-prefix-color-filled: #{color($color: 'success')};
 
-    --igx-input-group-input-suffix-color: #{color($color: 'success')};
-    --igx-input-group-input-suffix-color--focused: #{color($color: 'success')};
-    --igx-input-group-input-suffix-color-filled: #{color($color: 'success')};
+    --ig-input-group-input-suffix-color: #{color($color: 'success')};
+    --ig-input-group-input-suffix-color--focused: #{color($color: 'success')};
+    --ig-input-group-input-suffix-color-filled: #{color($color: 'success')};
 
     .igx-input-group__bundle {
         &:focus-within,

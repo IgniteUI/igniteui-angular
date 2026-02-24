@@ -34,7 +34,9 @@ import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMCHCollapsibleComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
-         IgxHierarchicalGridSummariesExportComponent
+         IgxHierarchicalGridSummariesExportComponent,
+         IgxHierarchicalGridEmptyDataExportComponent,
+         IgxHierarchicalGridMissingChildDataExportComponent
 } from '../../../../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions } from '../../../../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../../../test-utils/pivot-grid-samples.spec';
@@ -75,6 +77,8 @@ describe('Excel Exporter', () => {
                 IgxPivotGridTestComplexHierarchyComponent,
                 IgxTreeGridSummariesKeyComponent,
                 IgxHierarchicalGridSummariesExportComponent,
+                IgxHierarchicalGridEmptyDataExportComponent,
+                IgxHierarchicalGridMissingChildDataExportComponent,
                 GroupedGridWithSummariesComponent,
                 GridCurrencySummariesComponent,
                 GridUserMeetingDataComponent,
@@ -894,6 +898,49 @@ describe('Excel Exporter', () => {
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithExpandedRows);
         });
 
+        it('should export hierarchical grid with expanded rows when using primaryKey', async () => {
+            hGrid.primaryKey = 'Artist';
+            fix.detectChanges();
+
+            const firstRow = hGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            const secondRow = hGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+            fix.detectChanges();
+            expect(firstRow.expanded).toBe(true);
+
+            let childGrids = hGrid.gridAPI.getChildGrids(false);
+
+            const firstChildGrid = childGrids[0];
+            const firstChildRow = firstChildGrid.gridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(firstChildRow.expander);
+            fix.detectChanges();
+            expect(firstChildRow.expanded).toBe(true);
+
+            const secondChildGrid = childGrids[1];
+            const secondChildRow = secondChildGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(secondChildRow.expander);
+            fix.detectChanges();
+            expect(secondChildRow.expanded).toBe(true);
+
+            UIInteractions.simulateClickAndSelectEvent(secondRow.expander);
+            fix.detectChanges();
+            expect(secondRow.expanded).toBe(true);
+
+            childGrids = hGrid.gridAPI.getChildGrids(false);
+
+            const thirdChildGrid = childGrids[3];
+            const thirdChildRow = thirdChildGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(thirdChildRow.expander);
+            fix.detectChanges();
+            expect(thirdChildRow.expanded).toBe(true);
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithExpandedRows);
+        });
+
         it('should export hierarchical grid data with frozen headers', async () => {
             options.freezeHeaders = true;
             fix.detectChanges();
@@ -930,6 +977,41 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithSkippedRows);
+        });
+
+        it('should export hierarchical grid with empty data without throwing error', async () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridEmptyDataExportComponent);
+            fix.detectChanges();
+
+            hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridEmptyDataExcelExport');
+
+            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+        });
+
+        it('should export hierarchical grid with empty data and summaries without throwing error', async () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridEmptyDataExportComponent);
+            fix.detectChanges();
+
+            hGrid = fix.componentInstance.hGrid;
+            const artistColumn = hGrid.columns.find(col => col.field === 'Artist');
+            artistColumn.hasSummary = true;
+            fix.detectChanges();
+
+            options = createExportOptions('HierarchicalGridEmptyDataWithSummariesExcelExport');
+            options.exportSummaries = true;
+
+            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+        });
+
+        it('should export hierarchical grid with missing child data key without throwing error', async () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridMissingChildDataExportComponent);
+            fix.detectChanges();
+
+            hGrid = fix.componentInstance.hGrid;
+            options = createExportOptions('HierarchicalGridMissingChildDataExcelExport');
+
+            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
         });
     });
 

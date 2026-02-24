@@ -39,6 +39,7 @@ import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, Filte
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxChipComponent, IgxBadgeComponent, IgxDatePickerComponent, IgxCalendarComponent, IgxIconComponent } from 'igniteui-angular';
+import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
 
 const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -131,6 +132,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
+
+            let operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'startsWith', 'Net');
             verifyFilterUIPosition(filterUIRow, grid);
             verifyFilterRowUI(input, close, reset, false);
             expect(grid.rowList.length).toEqual(1);
@@ -142,6 +148,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
+            operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'endsWith', 'script');
             expect(grid.rowList.length).toEqual(2);
             verifyFilterRowUI(input, close, reset, false);
 
@@ -3823,6 +3833,33 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(filterIcon).toBeDefined();
         }));
 
+        it('Should keep conditionName in sync when changing condition in ESF custom dialog.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            // Open custom dialog with 'contains' condition (index 0 in cascade menu for string column)
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(100);
+
+            // set first expression's value
+            GridFunctions.setInputValueESF(fix, 0, 'Net');
+            tick(100);
+
+            // change first expression's operator from 'contains' to 'startsWith' (index 2 for string column)
+            GridFunctions.setOperatorESF(fix, 0, 2);
+            tick(100);
+
+            GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+
+            const operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'startsWith', 'Net');
+        }));
+
         it('Should filter grid via custom dialog.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
@@ -5074,6 +5111,62 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
+        it('Should properly scroll to prev/next period in custom date filter dialog.', fakeAsync(() => {
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            const datePicker = expr.querySelector('igx-date-picker');
+            const input = datePicker.querySelector('input');
+            UIInteractions.simulateClickEvent(input);
+            fix.detectChanges();
+
+            // Click today item.
+            const calendar = document.querySelector('igx-calendar');
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
+            tick(100);
+            fix.detectChanges();
+            flush();
+
+            // Reopen calender and click previous month button.
+            UIInteractions.simulateClickEvent(input);
+            fix.detectChanges();
+
+            const prevMonthButton = fix.debugElement.queryAll(
+                                By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS),
+                            )[0].nativeElement;
+            prevMonthButton.focus();
+            UIInteractions.simulateMouseEvent(
+                "mousedown",
+                prevMonthButton,
+                0,
+                0,
+            );
+            tick();
+            UIInteractions.simulateMouseEvent(
+                "mouseup",
+                prevMonthButton,
+                0,
+                0,
+            );
+            fix.detectChanges();
+
+            // Verify the calendar is scrolled to previous month.
+            const headerLabel = document.querySelector('igx-calendar').querySelector('.igx-calendar-picker__date') as HTMLElement;
+            const today = new Date();
+            const prevMonth = new Date(today.setMonth(today.getMonth() - 1));
+            const monthName = prevMonth.toLocaleString('default', { month: 'short' });
+            expect(headerLabel.innerText.trim()).toMatch(`${monthName}`);
+        }));
+
         it('Should take pipeArgs weekStart property as calendar\'s default.', fakeAsync(() => {
             const column = grid.getColumnByName('ReleaseDate');
 
@@ -6031,6 +6124,39 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
             expect(checkboxes[0].indeterminate).toBeTrue();
+        }));
+
+        it('Should enable the `Apply` button & filter properly when "Add to current filter selection" is the only selected option.', fakeAsync(() => {
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '5', fix);
+            fix.detectChanges();
+            tick();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+            expect(checkboxes.length).toBe(3);
+            checkboxes[0].click(); // Uncheck 'Select All'
+            checkboxes[1].click(); // Check 'Add to current filter selection'
+            fix.detectChanges();
+            tick();
+
+            // Click 'apply' button to apply filter.
+            const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix, excelMenu);
+            expect(applyButton.disabled).toBeFalse();
+            applyButton.click();
+            fix.detectChanges();
+            tick();
+
+            // Get the results and verify that they match the list items.
+            const gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads');
+
+            // Record with '254' downloads is filtered out.
+            expect(gridCellValues.length).toEqual(7);
         }));
 
         it('Should commit and close ESF on pressing \'Enter\'', fakeAsync(() => {
@@ -7448,6 +7574,7 @@ const verifyGridSubmenuSize = (gridNativeElement: HTMLElement, expectedSize: ɵS
 const verifyFilteringExpression = (operand: IFilteringExpression, fieldName: string, conditionName: string, searchVal: any) => {
     expect(operand.fieldName).toBe(fieldName);
     expect(operand.condition.name).toBe(conditionName);
+    expect(operand.conditionName).toBe(conditionName);
     expect(operand.searchVal).toEqual(searchVal);
 };
 

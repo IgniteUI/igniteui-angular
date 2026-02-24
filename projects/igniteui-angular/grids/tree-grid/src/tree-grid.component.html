@@ -37,7 +37,7 @@
             [IgxScrollInertiaDirection]="this.verticalScrollContainer.dc.instance.scrollDirection">
                 @for (rowData of mergedDataInView; track rowData.record;) {
                     <igx-tree-grid-row class="igx-grid__tr--merged-top" [gridID]="id" [index]="rowData.index" [treeRow]="rowData.record.recordRef" [metaData]="rowData.record" [style.top.px]="getMergeCellOffset(rowData)"
-                    [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowData.index:hasColumnLayouts:isRecordMerged(rowData):row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
+                    [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowData.index:hasColumnLayouts:hasCellsToMerge:row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
                     [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowData.index:pipeTrigger" #row>
                 </igx-tree-grid-row>
                 }
@@ -88,22 +88,24 @@
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
             (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
+            <div [attr.data-index]="rowIndex">
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)'
                 (beforeViewDetach)="viewDetachHandler($event)"
                 (cachedViewLoaded)='cachedViewLoaded($event)'>
             </ng-template>
+            </div>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
         <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-metaData="metaData">
             <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" [metaData]="metaData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(metaData):row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:hasCellsToMerge:row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #pinned_record_template let-rowIndex="index" let-rowData let-metaData="metaData">
             <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [metaData]="metaData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(metaData):row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:hasCellsToMerge:row.treeRow.isFilteredOutParent:rowData:pipeTrigger"
                 [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger"#row #pinnedRow>
             </igx-tree-grid-row>
         </ng-template>

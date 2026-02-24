@@ -39,6 +39,36 @@ There are many ways in which you can [participate](https://github.com/IgniteUI/i
  - Upvote [popular feature requests](https://github.com/IgniteUI/igniteui-angular/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Atoolbox%3A+feature-request%22)
  - [File an issue](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github)
  - Reach out to us [through Discord](https://discord.gg/sBwHs5cJ)
+
+### AI-Assisted Development
+
+This repository ships with **Copilot Skills** — structured knowledge files that teach AI coding assistants (GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to work with Ignite UI for Angular. The skill files live in the [`skills/`](skills/) directory:
+
+| Skill | Path | Description |
+|:------|:-----|:------------|
+| Components & Layout | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | Standalone components, form controls, overlays, layout |
+| Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Grid, Tree Grid, Hierarchical Grid, Pivot Grid |
+| Grid Data Operations | [`skills/igniteui-angular-grid-data-operations/SKILL.md`](skills/igniteui-angular-grid-data-operations/SKILL.md) | Sorting, filtering, grouping, paging, remote data, state management |
+| Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Palettes, typography, elevations, component themes, MCP server |
+
+#### How It Works
+
+- **GitHub Copilot (VS Code / github.com)** — Skills should be discovered automatically via [`.github/copilot-instructions.md`](.github/copilot-instructions.md). No extra setup needed.
+- **Cursor** — Skills are picked up from the `skills/` directory. You can also reference them explicitly in `.cursorrules`.
+
+#### Manual Setup for Other IDEs
+
+If your editor doesn't auto-discover skill files, you can feed them to your AI assistant manually:
+
+1. **Copy the skill content** — Open the relevant `SKILL.md` file from the `skills/` folder and paste its contents into your AI assistant's system prompt or context window.
+2. **JetBrains IDEs (WebStorm, IntelliJ)** — Go to **Settings → Tools → AI Assistant → Project-level prompt** and paste the skill content there, or attach the files as context when chatting.
+3. **Claude Desktop / Claude Code** — Add the files to your project knowledge or include them as part of your CLAUDE.md project instructions.
+4. **Windsurf** — Reference the skill files in your `.windsurfrules` configuration or attach them as context in the chat.
+5. **Other editors** — Attach or paste the `SKILL.md` file contents into your AI assistant's context before asking questions about Ignite UI for Angular.
+
+#### Theming MCP Server
+
+The **Theming skill** includes setup instructions for the `igniteui-theming` MCP server, which gives AI assistants access to live theming tools (palette generation, component theme scaffolding, etc.). See [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) for configuration steps for VS Code, Cursor, Claude Desktop, and JetBrains IDEs.
  
 ## Browser Support
 
@@ -87,7 +117,7 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |dock manager|:white_check_mark:||[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dock-manager)|9.1.0|[Commercial](/LICENSE)|suffix|:white_check_mark:|[Readme](projects/igniteui-angular/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|5.3.0|[MIT](/LICENSE)
 |drop down|:white_check_mark:|[Readme](projects/igniteui-angular/drop-down/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down)|6.1.0|[MIT](/LICENSE)|text-highlight|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/text-highlight/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/texthighlight)|6.0.0|[MIT](/LICENSE)
 |expansion panel|:white_check_mark:|[Readme](projects/igniteui-angular/expansion-panel/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion-panel)|6.2.0|[MIT](/LICENSE)|toggle|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/toggle/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle)|6.2.0|[MIT](/LICENSE)
-|grid|:white_check_mark:|[Readme](projects/igniteui-angular/grids/grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)|5.1.0|[MIT](/LICENSE)|tooltip|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/tooltip/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)|6.2.0|[MIT](/LICENSE)
+|grid|:white_check_mark:|[Readme](projects/igniteui-angular/grids/grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)|5.1.0|[Commercial](/LICENSE)|tooltip|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/tooltip/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)|6.2.0|[MIT](/LICENSE)
 |hierarchical grid|:white_check_mark:|[Readme](projects/igniteui-angular/grids/hierarchical-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid)|7.2.0|[Commercial](/LICENSE)|**Others**|**Status**||**License**|
 |icon|:white_check_mark:|[Readme](projects/igniteui-angular/icon/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon)|2.0.0|[MIT](/LICENSE)
 |icon button|:white_check_mark:|[Readme](projects/igniteui-angular/icon/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon-button)|17.1.0|[MIT](/LICENSE)|Animations|:white_check_mark:|[Readme](projects/igniteui-angular/animations/README.md)||2.0.0|[MIT](/LICENSE)|

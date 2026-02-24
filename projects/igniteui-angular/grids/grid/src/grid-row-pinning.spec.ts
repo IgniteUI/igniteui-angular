@@ -397,6 +397,18 @@ describe('Row Pinning #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).key).toBe(fix.componentInstance.data[1]);
         });
 
+        it('should mark ghost placeholder rows as disabled in RowType API.', () => {
+            grid.pinRow(fix.componentInstance.data[0]);
+            fix.detectChanges();
+
+            const renderedRow = grid.rowList.toArray().find(r => r.index === 1);
+            const rowType = grid.getRowByIndex(1);
+
+            expect(renderedRow).toBeDefined();
+            expect(renderedRow.disabled).toBeTrue();
+            expect(rowType.disabled).toBeTrue();
+        });
+
         it('should search in both pinned and unpinned rows.', () => {
             // pin 1st row
             let row = grid.gridAPI.get_row_by_index(0);
