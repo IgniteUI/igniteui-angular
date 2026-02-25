@@ -857,7 +857,7 @@ describe('IgxGridState - input properties #grid', () => {
     // checks the full component tree top-down. Only ApplicationRef.tick() respects the OnPush
     // strategy of the grid's internal components (header row, header group, filter cell),
     // reproducing the real browser behavior where the filter row fails to render without
-    // an explicit notifyChanges() call in onChipClicked.
+    // an explicit markForCheck() call in onChipClicked.
     it('should open filter row when clicking a filter chip after restoring state with filtering', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         const appRef = TestBed.inject(ApplicationRef);
