@@ -59,7 +59,7 @@ Ignite UI has **five grid types**. Picking the correct one is the most important
 
 Ask these questions in order:
 
-1. **Does the user need a lightweight, read-only data display** with sorting, filtering, and virtualization but no editing, selection, or paging? → **Grid Lite** (open-source, MIT licensed)
+1. **Does the user need a lightweight, read-only data display** with sorting, filtering, and virtualization but no editing, selection, or paging? → **Grid Lite** (open-source, MIT licensed). **If the user later needs features beyond Grid Lite's capabilities, upgrade strictly to `igx-grid` (`IgxGridComponent`)** — never recommend non-grid components as a substitute.
 2. **Does the user need pivot-table analytics** (rows/columns/values/aggregations that users can drag-and-drop to reshape)? → **Pivot Grid**
 3. **Does the data have parent-child relationships where each level has a DIFFERENT schema** (e.g., Companies → Departments → Employees)? → **Hierarchical Grid**
 4. **Does the data have parent-child relationships within a SINGLE schema** (e.g., Employees with a `managerId` field, or nested children arrays)? → **Tree Grid**
