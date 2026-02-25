@@ -59,6 +59,35 @@ All notable changes for each version of this project will be documented in this 
         - **Theming & Styling** - Theming & Styling (includes MCP server setup for live theming tools)
     - These skills are automatically discovered when placed in the agent's skills path ( e.g. `.claude/skills`) and this release ships with an optional migration to add those to your project. For more information, see the [README](README.md#ai-assisted-development).
 
+- Added `IgxGridLiteComponent` wrapper around the `igc-grid-lite` Web Component _(in Developer Preview)_ 
+
+  Available from the `igniteui-angular/grids/lite` entry point. The wrapper component adds Angular-friendly API with similar inputs, including two-way bindable `sortingExpressions` and `filteringExpressions`, Angular template-based cell and header rendering with declarative templates via the `igxGridLiteCell` and `igxGridLiteHeader` directives.
+
+    ```
+    npm i igniteui-grid-lite
+    ```
+    ```ts
+    import { IgxGridLiteColumnComponent, IgxGridLiteComponent } from "igniteui-angular/grids/lite";
+
+    @Component({
+        selector: 'app-grid-lite-sample',
+        templateUrl: 'grid-lite.sample.html',
+        styleUrls: ['grid-lite.sample.scss'],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        imports: [IgxCheckboxComponent, IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective]
+    })
+    export class GridLiteSampleComponent { }
+    ```
+    ```html
+    <igx-grid-lite [data]="data">
+        <igx-grid-lite-column field="name" header="Name" [sortable]="true">
+            <ng-template igxGridLiteCell let-value>
+                <strong>{{ value }}</strong>
+            </ng-template>
+        </igx-grid-lite-column>
+    </igx-grid-lite>
+    ```
+
 ### General
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
