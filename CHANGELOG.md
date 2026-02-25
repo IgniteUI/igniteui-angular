@@ -67,14 +67,12 @@ All notable changes for each version of this project will be documented in this 
     npm i igniteui-grid-lite
     ```
     ```ts
-    import { IgxGridLiteColumnComponent, IgxGridLiteComponent } from "igniteui-angular/grids/lite";
+    import { IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective } from "igniteui-angular/grids/lite";
 
     @Component({
         selector: 'app-grid-lite-sample',
         templateUrl: 'grid-lite.sample.html',
-        styleUrls: ['grid-lite.sample.scss'],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA],
-        imports: [IgxCheckboxComponent, IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective]
+        imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective]
     })
     export class GridLiteSampleComponent { }
     ```
