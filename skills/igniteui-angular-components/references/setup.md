@@ -50,7 +50,7 @@ All Ignite UI components are **standalone** — no NgModules needed. Import them
 
 ```typescript
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IgxButtonDirective } from 'igniteui-angular/button';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxDialogComponent } from 'igniteui-angular/dialog';
 
 @Component({
@@ -94,7 +94,7 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Stepper | `igniteui-angular/stepper` |
 | Accordion / Expansion Panel | `igniteui-angular/expansion-panel` |
 | Splitter | `igniteui-angular/splitter` |
-| Navigation Drawer | `igniteui-angular/nav-drawer` |
+| Navigation Drawer | `igniteui-angular/navigation-drawer` |
 | Bottom Navigation | `igniteui-angular/bottom-nav` |
 | List | `igniteui-angular/list` |
 | Tree | `igniteui-angular/tree` |
@@ -109,17 +109,28 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Icon | `igniteui-angular/icon` |
 | Carousel | `igniteui-angular/carousel` |
 | Paginator | `igniteui-angular/paginator` |
-| Linear Progress | `igniteui-angular/linear-progress-bar` |
-| Circular Progress | `igniteui-angular/circular-progress-bar` |
+| Linear Progress | `igniteui-angular/progressbar` |
+| Circular Progress | `igniteui-angular/progressbar` |
 | Chat | `igniteui-angular/chat` |
-| Button / Icon Button | `igniteui-angular/button` |
-| Ripple | `igniteui-angular/ripple` |
-| Tooltip | `igniteui-angular/tooltip` |
-| Drag & Drop | `igniteui-angular/drag-drop` |
+| Button / Icon Button | `igniteui-angular/directives` |
+| Ripple | `igniteui-angular/directives` |
+| IgxTooltipDirective, IgxTooltipTargetDirective | `igniteui-angular/directives` |
+| Drag & Drop | `igniteui-angular/directives` |
 | Layout Manager (`igxLayout`, `igxFlex`) | `igniteui-angular/directives` |
+| Core utilities, services, base types | `igniteui-angular/core` |
 | Icon Service | `igniteui-angular/icon` |
 | Overlay Service | `igniteui-angular/core` |
 | **Dock Manager** | `igniteui-dockmanager` *(separate package — `npm install igniteui-dockmanager`)* |
+
+**Grid-specific entry points** (tree-shakable imports):
+
+| Component / Feature | Entry Point |
+|---|---|
+| Shared grid infrastructure (columns, toolbar, filtering, sorting, etc.) | `igniteui-angular/grids/core` |
+| Standard grid (`IgxGridComponent`) | `igniteui-angular/grids/grid` |
+| Tree grid (`IgxTreeGridComponent`) | `igniteui-angular/grids/tree-grid` |
+| Hierarchical grid (`IgxHierarchicalGridComponent`, `IgxRowIslandComponent`) | `igniteui-angular/grids/hierarchical-grid` |
+| Pivot grid (`IgxPivotGridComponent`, `IgxPivotDataSelectorComponent`) | `igniteui-angular/grids/pivot-grid` |
 
 ### Convenience Directive Collections
 

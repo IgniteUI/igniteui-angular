@@ -8,7 +8,7 @@
 > **Docs:** [Button Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)
 
 ```typescript
-import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/button';
+import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 ```
 
@@ -38,7 +38,7 @@ Button variants for `igxIconButton`: `'flat'`, `'outlined'`, `'contained'`.
 > **Docs:** [Ripple Directive](https://www.infragistics.com/products/ignite-ui-angular/angular/components/ripple)
 
 ```typescript
-import { IgxRippleDirective } from 'igniteui-angular/ripple';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 ```
 
 ```html
@@ -58,7 +58,7 @@ Inputs: `[igxRipple]` (ripple color), `[igxRippleCentered]` (always start from c
 > **Docs:** [Tooltip Directive](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)
 
 ```typescript
-import { IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/tooltip';
+import { IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
 ```
 
 ```html
@@ -84,7 +84,7 @@ hideTooltip() { this.tooltip().close(); }
 > **Docs:** [Drag and Drop](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drag-drop)
 
 ```typescript
-import { IgxDragDirective, IgxDropDirective, IDragMoveEventArgs, IDropDroppedEventArgs } from 'igniteui-angular/drag-drop';
+import { IgxDragDirective, IgxDropDirective, IDragMoveEventArgs, IDropDroppedEventArgs } from 'igniteui-angular/directives';
 ```
 
 ### Basic drag and drop

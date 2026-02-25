@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-components
-description: "All Ignite UI Angular UI components: application setup and architecture, form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider, reactive forms), layout (Tabs, Bottom Navigation, Stepper, Accordion, Splitter, Navigation Drawer, Layout Manager directives), data display (List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress, Chat), feedback/overlays (Dialog, Snackbar, Toast, Banner), directives (Button, Ripple, Tooltip, Drag and Drop), Dock Manager, and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart, IgxCategoryChart, IgxFinancialChart, IgxDataChart, IgxPieChart). Use for any non-grid Ignite UI Angular UI question."
+description: "All Ignite UI Angular UI components: application setup and architecture, form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider, reactive forms), layout (Tabs, Bottom Navigation, Stepper, Accordion, Splitter, Navigation Drawer, Layout Manager), data display (List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress bar, Linear Progress Bar, Circular Progress Bar, Chat), feedback/overlays (Dialog, Snackbar, Toast, Banner), directives (Button, Ripple, Tooltip, Drag and Drop), Dock Manager, and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart, IgxCategoryChart, IgxFinancialChart, IgxDataChart, IgxPieChart). Use for any non-grid Ignite UI Angular UI question."
 user-invokable: true
 ---
 
@@ -47,11 +47,11 @@ Base your code and explanation exclusively on what you read. If the reference fi
 ## Prerequisites
 
 - Angular 20+ project
-- `igniteui-angular` installed via `npm install igniteui-angular`, **or** `@infragistics/igniteui-angular` for licensed users
-- A theme applied (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md))
+- `@angular/cli` installed
+- `igniteui-angular` or `@infragistics/igniteui-angular` added to the project via `ng add igniteui-angular` (or the `@infragistics` variant) or `npm install` — see [Package Variants](#package-variants) below.
+- A theme applied to the application (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)).
 - `provideAnimations()` in `app.config.ts` — **required before using any overlay or animated component**
 
----
 
 ## Package Variants
 
@@ -61,6 +61,7 @@ Base your code and explanation exclusively on what you read. If the reference fi
 | `@infragistics/igniteui-angular` | Requires private `@infragistics` registry | Licensed / enterprise users |
 
 Both packages share **identical entry-point paths**. Check `package.json` and use that package name as the prefix for every import. Never import from the root barrel of either package.
+Both packages can be added to the project using `@angular/cli` with the following commands: `ng add igniteui-angular` or `ng add @infragistics/igniteui-angular`.
 
 ---
 
