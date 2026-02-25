@@ -37,6 +37,7 @@ import {
     OverlayCancelableEventArgs,
     OverlayEventArgs,
     OverlaySettings,
+    OverlaySizeRegistry,
     Point,
     PositionSettings,
     VerticalAlignment
@@ -223,6 +224,7 @@ describe('igxOverlay', () => {
         let mockPlatformUtil: any;
         let overlay: IgxOverlayService;
         let mockAnimationService: AnimationService;
+        let mockOverlaySizeRegistry: OverlaySizeRegistry;
         beforeEach(() => {
             mockElement = {
                 style: { visibility: '', cursor: '', transitionDuration: '' },
@@ -291,9 +293,10 @@ describe('igxOverlay', () => {
             mockNgZone = {};
             mockPlatformUtil = { isIOS: false };
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
+            mockOverlaySizeRegistry = new OverlaySizeRegistry();
 
             overlay = new IgxOverlayService(
-                mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
+                mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService, mockOverlaySizeRegistry);
         });
         afterEach(() => {
             overlay.ngOnDestroy();
