@@ -62,7 +62,7 @@ Base your code and explanation exclusively on what you read. If the reference fi
 | `@infragistics/igniteui-angular` | Requires private `@infragistics` registry | Licensed / enterprise users |
 
 Both packages share **identical entry-point paths**. Check `package.json` and use that package name as the prefix for every import. Never import from the root barrel of either package.
-Both packages can be added to the project using @angular/cli with the following commands: `ng add igniteui-angular` or `ng add @infragistics/igniteui-angular`.
+Both packages can be added to the project using `@angular/cli` with the following commands: `ng add igniteui-angular` or `ng add @infragistics/igniteui-angular`.
 
 ---
 
