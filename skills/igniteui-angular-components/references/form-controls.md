@@ -109,9 +109,11 @@ Implements `ControlValueAccessor` and `Validator`. Works with both reactive and 
 > **Docs:** [Date Range Picker](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-range-picker)
 
 ```typescript
-import { IgxDateRangePickerComponent } from 'igniteui-angular/date-range-picker';
-import { IgxDateTimeEditorDirective } from 'igniteui-angular/date-time-editor';
+import { IgxDateRangePickerComponent } from 'igniteui-angular/date-picker';
+import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
+
+// import { IgxDateTimeEditorDirective, IGX_INPUT_GROUP_DIRECTIVES } from '@infragistics/igniteui-angular'; for licensed package
 ```
 
 ```html
@@ -186,7 +188,13 @@ import { IgxSwitchComponent } from 'igniteui-angular/switch';
 > **Docs:** [Slider Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider/slider)
 
 ```typescript
-import { IgxSliderComponent, SliderType } from 'igniteui-angular/slider';
+import { IgxSliderComponent, IgxSliderType } from 'igniteui-angular/slider';
+
+public sliderType = IgxSliderType;
+  public priceRange = {
+      lower: 200,
+      upper: 800
+  };
 ```
 
 ```html
@@ -195,7 +203,7 @@ import { IgxSliderComponent, SliderType } from 'igniteui-angular/slider';
 
 <!-- Range slider -->
 <igx-slider
-  [type]="SliderType.RANGE"
+  [type]="sliderType.RANGE"
   [minValue]="0"
   [maxValue]="100"
   [lowerBound]="20"

@@ -11,7 +11,7 @@
 
 ```typescript
 import { IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective } from 'igniteui-angular/dialog';
-import { IgxButtonDirective } from 'igniteui-angular/button';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 ```
 
 ```html
@@ -50,7 +50,7 @@ Events: `(opening)`, `(opened)`, `(closing)`, `(closed)`, `(leftButtonSelect)`, 
 
 ```typescript
 import { IgxSnackbarComponent, IgxSnackbarActionDirective } from 'igniteui-angular/snackbar';
-import { IgxButtonDirective } from 'igniteui-angular/button';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 ```
 
 ```html
@@ -98,7 +98,7 @@ Toast vs Snackbar: Toast is non-interactive (no action button), always auto-hide
 ```typescript
 import { IgxBannerComponent, IgxBannerActionsDirective } from 'igniteui-angular/banner';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxButtonDirective } from 'igniteui-angular/button';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 ```
 
 ```html

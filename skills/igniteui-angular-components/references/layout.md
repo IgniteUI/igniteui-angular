@@ -171,9 +171,9 @@ import { IgxSplitterComponent, IgxSplitterPaneComponent, SplitterType } from 'ig
 > **Docs:** [Navigation Drawer](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)
 
 ```typescript
-import { IgxNavDrawerComponent, IgxNavDrawerItemDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective } from 'igniteui-angular/nav-drawer';
+import { IgxNavigationDrawerComponent, IgxNavDrawerItemDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective } from 'igniteui-angular/navigation-drawer';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxRippleDirective } from 'igniteui-angular/ripple';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 ```
 
 ```html
