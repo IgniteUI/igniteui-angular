@@ -20,7 +20,7 @@ Use `IgxGridStateDirective` to persist sorting, filtering, grouping, paging, sel
 ```
 
 ```typescript
-import { IgxGridStateDirective } from 'igniteui-angular/grids/grid';
+import { IgxGridStateDirective } from 'igniteui-angular/grids/core';
 
 export class StatefulGridComponent {
   gridState = viewChild.required(IgxGridStateDirective);
@@ -234,7 +234,7 @@ Setting `[batchEditing]="true"` on the root hierarchical grid automatically prop
 ### Dimension-Based Filtering
 
 ```typescript
-import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/grids/core';
+import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/core';
 
 // Create a filter for a dimension
 const regionFilter = new FilteringExpressionsTree(FilteringLogic.Or);

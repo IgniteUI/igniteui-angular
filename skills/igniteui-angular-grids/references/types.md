@@ -358,7 +358,7 @@ For **pivot table analytics** where users reshape data by dragging dimensions be
 ```typescript
 import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
 import { IgxPivotGridComponent, IGX_PIVOT_GRID_DIRECTIVES } from 'igniteui-angular/grids/pivot-grid';
-import { IPivotConfiguration, IgxPivotNumericAggregate } from 'igniteui-angular/grids/pivot-grid';
+import { IPivotConfiguration, IgxPivotNumericAggregate } from 'igniteui-angular/grids/core';
 
 @Component({
   selector: 'app-sales-pivot',
