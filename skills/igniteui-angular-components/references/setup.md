@@ -114,7 +114,7 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Chat | `igniteui-angular/chat` |
 | Button / Icon Button | `igniteui-angular/directives` |
 | Ripple | `igniteui-angular/directives` |
-| Tooltip | `igniteui-angular/directives` |
+| IgxTooltipDirective, IgxTooltipTargetDirective | `igniteui-angular/directives` |
 | Drag & Drop | `igniteui-angular/directives` |
 | Layout Manager (`igxLayout`, `igxFlex`) | `igniteui-angular/directives` |
 | Core utilities, services, base types | `igniteui-angular/core` |
