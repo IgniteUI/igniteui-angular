@@ -1,0 +1,30 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-slider, bootstrap) {
+    --thumb-size: #{rem(16px)};
+    --thumb-border-width: #{rem(1px)};
+    --thumb-label-width: #{rem(40px)};
+    --thumb-label-height: #{rem(30px)};
+    --track-height: #{rem(8px)};
+    --outline-width: #{rem(3px)};
+    --steps-top-position: #{rem(3px)};
+
+    @include e(track-fill) {
+        display: none;
+    }
+}
+
+$_igx-slider-thumbs: 'from' 'to';
+
+@each $t in $_igx-slider-thumbs {
+    @include themed-block(igx-slider-thumb-#{$t}, bootstrap) {
+        &:focus div::before {
+            border-color: var-get($_theme, 'thumb-border-focus-color');
+        }
+    }
+}

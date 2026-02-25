@@ -1,0 +1,49 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-navbar, indigo) {
+    %icon-size {
+        [igxIconButton],
+        igc-icon-button {
+            padding: rem(6px);
+        }
+
+        igx-icon,
+        igc-icon {
+            --component-size: var(--ig-size-medium);
+            --size: auto;
+
+            width: auto !important;
+            height: auto !important;
+        }
+    }
+
+    igx-avatar {
+        --ig-size: 2;
+    }
+
+    igx-navbar-title,
+    [igxNavbarTitle] {
+        @include type-style(h5);
+    }
+
+    @include e(title) {
+        @extend %icon-size;
+        @include type-style(h5);
+    }
+
+    @include e(right) {
+        @extend %icon-size;
+
+        gap: rem(8px);
+    }
+
+    @include e(left) {
+        @extend %icon-size;
+
+        &:not(:empty) {
+            margin-inline-end: unset;
+        }
+    }
+}

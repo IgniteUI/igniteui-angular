@@ -1,31 +1,34 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use '../../base' as *;
+@use '../../../styles/themes/standalone' as *;
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin label($theme) {
-    // The --variant CSS produced by css-vars is needed also
-    // when dynamically switching between the input `type` attribute.
-    @include css-vars($theme, '[igxLabel]');
+    @include layer(base) {
+        // The --variant CSS produced by css-vars is needed also
+        // when dynamically switching between the input `type` attribute.
+        @include css-vars($theme, '[igxLabel]');
 
-    $variant: map.get($theme, '_meta', 'theme');
+        $variant: map.get($theme, '_meta', 'theme');
 
-    %label-base {
-        @include ellipsis();
+        %label-base {
+            @include ellipsis();
 
-        position: relative;
-        color: var-get($theme, 'color');
-        max-width: 100%;
-        line-height: normal;
+            position: relative;
+            color: var-get($theme, 'color');
+            max-width: 100%;
+            line-height: normal;
 
-        [dir='rtl'] & {
-            transform-origin: top right;
-        }
+            [dir='rtl'] & {
+                transform-origin: top right;
+            }
 
-        @if $variant != 'material' {
-            height: auto;
+            @if $variant != 'material' {
+                height: auto;
+            }
         }
     }
 }
@@ -48,4 +51,3 @@
         }
     }
 }
-

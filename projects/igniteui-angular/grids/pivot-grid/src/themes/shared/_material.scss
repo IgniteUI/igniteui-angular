@@ -1,0 +1,16 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-pivot-data-selector, material) {
+    .igx-checkbox__composite-wrapper {
+        padding: 0;
+    }
+
+    igx-input-group [igxPrefix] {
+        padding-inline-end: rem(16px) !important;
+    }
+}

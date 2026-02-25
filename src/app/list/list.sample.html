@@ -14,6 +14,7 @@
                     </div>
                 </ng-template>
                 <igx-list-item [isHeader]="true" selected>Employees List</igx-list-item>
+
                 @for (employee of employeeItems; track employee) {
                     <igx-list-item [selected]="employee.selected">
                         @if(properties.addAvatarThumbnail) {

@@ -1,15 +1,15 @@
+import { IgxTabContentComponent } from './content/tab-content.component';
+import { IgxTabHeaderComponent } from './header/tab-header.component';
+import { IgxTabItemComponent } from './item/tab-item.component';
 import { IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
-import { IgxTabContentComponent } from './tab-content.component';
-import { IgxTabHeaderComponent } from './tab-header.component';
-import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsComponent } from './tabs.component';
 import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from './tabs.directives';
 
 export * from './tabs.component';
-export * from './tab-item.component';
-export * from './tab-header.component';
+export * from './item/tab-item.component';
+export * from './header/tab-header.component';
 export * from './tabs.directives';
-export * from './tab-content.component';
+export * from './content/tab-content.component';
 export {
     ITabsSelectedIndexChangingEventArgs,
     ITabsSelectedItemChangeEventArgs

@@ -187,7 +187,7 @@ export class IgxListItemComponent implements IListChild {
      * @memberof IgxListItemComponent
      */
     public get contentElement() {
-        const candidates = this.element.getElementsByClassName('igx-list__item-content');
+        const candidates = this.element.getElementsByClassName('igx-list-item__content');
         return (candidates && candidates.length > 0) ? candidates[0] : null;
     }
 
@@ -270,6 +270,10 @@ export class IgxListItemComponent implements IListChild {
         this._role = val;
     }
 
+    /** @hidden @internal */
+    @HostBinding('class.igx-list-item')
+    protected cssClass = 'igx-list-item';
+
     /**
      * Sets/gets whether the `list item` is selected.
      * Selection is only applied to non-header items.
@@ -284,6 +288,7 @@ export class IgxListItemComponent implements IListChild {
      *
      * @memberof IgxListItemComponent
      */
+    @HostBinding('class.igx-list-item--selected')
     @HostBinding('class.igx-list__item-base--selected')
     @Input({ transform: booleanAttribute })
     public get selected() {
@@ -302,6 +307,7 @@ export class IgxListItemComponent implements IListChild {
      *
      * @memberof IgxListItemComponent
      */
+    @HostBinding('class.igx-list-item--header')
     @HostBinding('class.igx-list__header')
     public get headerStyle(): boolean {
         return this.isHeader;
@@ -315,9 +321,15 @@ export class IgxListItemComponent implements IListChild {
      *
      * @memberof IgxListItemComponent
      */
+    @HostBinding('class.igx-list-item--base')
     @HostBinding('class.igx-list__item-base')
     public get innerStyle(): boolean {
         return !this.isHeader;
+    }
+
+    @HostBinding('class.igx-list-item--active')
+    public get active(): boolean {
+        return false;
     }
 
     /**

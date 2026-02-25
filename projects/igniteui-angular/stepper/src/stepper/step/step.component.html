@@ -23,22 +23,23 @@
     <ng-content select="[igxStepIndicator]"></ng-content>
 </ng-template>
 
-<div class="igx-stepper__step-header" igxRipple [ngClass]="stepHeaderClasses" (keydown)="handleKeydown($event)"
-    (click)="onPointerDown($event)">
+<div class="igx-step__header igx-step-header" igxRipple (keydown)="handleKeydown($event)"
+     [ngClass]="stepHeaderClasses"
+     (click)="onPointerDown($event)">
 
     @if (isIndicatorVisible) {
-        <div class="igx-stepper__step-indicator">
+        <div class="igx-step__indicator igx-step-header__indicator">
             <ng-container *ngTemplateOutlet="indicatorTemplate ? indicatorTemplate : defaultIndicator"></ng-container>
         </div>
     }
 
-    <div class="igx-stepper__step-title-wrapper">
+    <div class="igx-step__title-wrapper">
         <ng-container *ngTemplateOutlet="defaultTitle"></ng-container>
     </div>
 </div>
 
 @if (!isHorizontal) {
-    <div class="igx-stepper__step-content-wrapper">
+    <div class="igx-step__content-wrapper">
         <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
     </div>
 }

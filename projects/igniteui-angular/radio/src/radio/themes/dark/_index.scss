@@ -1,0 +1,8 @@
+@use 'sass:meta';
+@use 'tokens';
+@use 'styles/themes/standalone' as *;
+@use 'fluent';
+@use 'bootstrap';
+
+$tokens: meta.module-variables(tokens);
+@include themes(igx-radio, $tokens, dark);

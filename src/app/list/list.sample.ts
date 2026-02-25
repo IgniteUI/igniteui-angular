@@ -5,6 +5,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HAMMER_GESTURE_CONFIG, HammerModule } from '@angular/platform-browser';
 import {
     IGX_LIST_DIRECTIVES,
     IgxAvatarComponent,
@@ -30,7 +31,6 @@ import {
     PropertyChangeService,
     PropertyPanelConfig,
 } from '../properties-panel/property-change.service';
-import { HAMMER_GESTURE_CONFIG, HammerModule } from '@angular/platform-browser';
 import Hammer from 'hammerjs';
 
 defineComponents(
@@ -79,6 +79,7 @@ interface Employee {
         IgxIconComponent,
         IgxCheckboxComponent,
         IgxAvatarComponent,
+        IgxButtonModule,
         IgxButtonModule,
         IgxButtonDirective,
         IgSizeDirective,

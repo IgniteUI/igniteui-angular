@@ -8,7 +8,8 @@ import {
     inject,
     Input,
     Output,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -52,6 +53,8 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
 @Component({
     selector: 'igx-banner',
     templateUrl: 'banner.component.html',
+    styleUrl: 'banner.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxBannerComponent implements IToggleView {

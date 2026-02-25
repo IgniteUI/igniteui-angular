@@ -119,40 +119,37 @@
         @include ripple($ripple-theme-map);
     }
 
-    @if is-used('igx-avatar', $exclude) {
-        $avatar-theme-map: avatar-theme(
-            $schema: $schema,
-        );
-        $avatar-theme-map: meta.call($theme-handler, $avatar-theme-map);
-        @include avatar($avatar-theme-map);
-    }
+    // @if is-used('igx-avatar', $exclude) {
+    //     $avatar-theme-map: avatar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $avatar-theme-map: meta.call($theme-handler, $avatar-theme-map);
+    //     @include avatar($avatar-theme-map);
+    // }
 
-    @if is-used('igx-action-strip', $exclude) {
-        $action-strip-theme-map: action-strip-theme(
-            $schema: $schema,
-        );
-        $action-strip-theme-map: meta.call(
-            $theme-handler,
-            $action-strip-theme-map
-        );
-        @include action-strip($action-strip-theme-map);
-    }
+    // @if is-used('igx-action-strip', $exclude) {
+    //     $action-strip-theme-map: action-strip-theme(
+    //         $schema: $schema,
+    //     );
+    //     $action-strip-theme-map: meta.call($theme-handler, $action-strip-theme-map);
+    //     @include action-strip($action-strip-theme-map);
+    // }
 
-    @if is-used('igx-badge', $exclude) {
-        $badge-theme-map: badge-theme(
-            $schema: $schema,
-        );
-        $badge-theme-map: meta.call($theme-handler, $badge-theme-map);
-        @include badge($badge-theme-map);
-    }
+    // @if is-used('igx-badge', $exclude) {
+    //     $badge-theme-map: badge-theme(
+    //         $schema: $schema,
+    //     );
+    //     $badge-theme-map: meta.call($theme-handler, $badge-theme-map);
+    //     @include badge($badge-theme-map);
+    // }
 
-    @if is-used('igx-bottom-nav', $exclude) {
-        $bottom-nav-theme-map: bottom-nav-theme(
-            $schema: $schema,
-        );
-        $bottom-nav-theme-map: meta.call($theme-handler, $bottom-nav-theme-map);
-        @include bottom-nav($bottom-nav-theme-map);
-    }
+    // @if is-used('igx-bottom-nav', $exclude) {
+    //     $bottom-nav-theme-map: bottom-nav-theme(
+    //         $schema: $schema,
+    //     );
+    //     $bottom-nav-theme-map: meta.call($theme-handler, $bottom-nav-theme-map);
+    //     @include bottom-nav($bottom-nav-theme-map);
+    // }
 
     @if is-used('igx-button', $exclude) {
         $flat-theme-map: flat-button-theme(
@@ -179,56 +176,53 @@
         );
     }
 
-    @if is-used('igx-button-group', $exclude) {
-        $button-group-theme-map: button-group-theme(
-            $schema: $schema,
-        );
-        $button-group-theme-map: meta.call(
-            $theme-handler,
-            $button-group-theme-map
-        );
-        @include button-group($button-group-theme-map);
-    }
+    // @if is-used('igx-button-group', $exclude) {
+    //     $button-group-theme-map: button-group-theme(
+    //         $schema: $schema,
+    //     );
+    //     $button-group-theme-map: meta.call($theme-handler, $button-group-theme-map);
+    //     @include button-group($button-group-theme-map);
+    // }
 
-    @if is-used('igx-banner', $exclude) {
-        $banner-theme-map: banner-theme(
-            $schema: $schema,
-        );
-        $banner-theme-map: meta.call($theme-handler, $banner-theme-map);
-        @include banner($banner-theme-map);
-    }
+    // @if is-used('igx-banner', $exclude) {
+    //     $banner-theme-map: banner-theme(
+    //         $schema: $schema,
+    //     );
+    //     $banner-theme-map: meta.call($theme-handler, $banner-theme-map);
+    //     @include banner($banner-theme-map);
+    // }
 
-    @if is-used('igx-calendar', $exclude) {
-        $calendar-theme-map: calendar-theme(
-            $schema: $schema,
-        );
-        $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
-        @include calendar($calendar-theme-map);
-    }
+    //@if is-used('igx-calendar', $exclude) {
+    //    $calendar-theme-map: calendar-theme(
+    //        $schema: $schema,
+    //    );
+    //    $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
+    //    @include calendar($calendar-theme-map);
+    //}
 
-    @if is-used('igx-card', $exclude) {
-        $card-theme-map: card-theme(
-            $schema: $schema,
-        );
-        $card-theme-map: meta.call($theme-handler, $card-theme-map);
-        @include card($card-theme-map);
-    }
+    // @if is-used('igx-card', $exclude) {
+    //     $card-theme-map: card-theme(
+    //         $schema: $schema,
+    //     );
+    //     $card-theme-map: meta.call($theme-handler, $card-theme-map);
+    //     @include card($card-theme-map);
+    // }
 
-    @if is-used('igx-carousel', $exclude) {
-        $carousel-theme-map: carousel-theme(
-            $schema: $schema,
-        );
-        $carousel-theme-map: meta.call($theme-handler, $carousel-theme-map);
-        @include carousel($carousel-theme-map);
-    }
+    // @if is-used('igx-carousel', $exclude) {
+    //     $carousel-theme-map: carousel-theme(
+    //         $schema: $schema,
+    //     );
+    //     $carousel-theme-map: meta.call($theme-handler, $carousel-theme-map);
+    //     @include carousel($carousel-theme-map);
+    // }
 
-    @if is-used('igx-splitter', $exclude) {
-        $splitter-theme-map: splitter-theme(
-            $schema: $schema,
-        );
-        $splitter-theme-map: meta.call($theme-handler, $splitter-theme-map);
-        @include splitter($splitter-theme-map);
-    }
+    // @if is-used('igx-splitter', $exclude) {
+    //     $splitter-theme-map: splitter-theme(
+    //         $schema: $schema,
+    //     );
+    //     $splitter-theme-map: meta.call($theme-handler, $splitter-theme-map);
+    //     @include splitter($splitter-theme-map);
+    // }
 
     @if is-used('data-chart', $exclude) {
         $data-chart-theme-map: data-chart-theme(
@@ -350,83 +344,77 @@
         @include css-vars($shape-chart-theme-map);
     }
 
-    @if is-used('igx-checkbox', $exclude) {
-        $checkbox-theme-map: checkbox-theme(
-            $schema: $schema,
-        );
-        $checkbox-theme-map: meta.call($theme-handler, $checkbox-theme-map);
-        @include checkbox($checkbox-theme-map);
-    }
+    // @if is-used('igx-checkbox', $exclude) {
+    //     $checkbox-theme-map: checkbox-theme(
+    //         $schema: $schema,
+    //     );
+    //     $checkbox-theme-map: meta.call($theme-handler, $checkbox-theme-map);
+    //     @include checkbox($checkbox-theme-map);
+    // }
 
-    @if is-used('igx-chip', $exclude) {
-        $chip-theme-map: chip-theme(
-            $schema: $schema,
-        );
-        $chip-theme-map: meta.call($theme-handler, $chip-theme-map);
-        @include chip($chip-theme-map);
-    }
+    // @if is-used('igx-chip', $exclude) {
+    //     $chip-theme-map: chip-theme(
+    //         $schema: $schema,
+    //     );
+    //     $chip-theme-map: meta.call($theme-handler, $chip-theme-map);
+    //     @include chip($chip-theme-map);
+    // }
 
-    @if is-used('igx-column-actions', $exclude) {
-        $column-actions-theme-map: column-actions-theme(
-            $schema: $schema,
-        );
-        $column-actions-theme-map: meta.call(
-            $theme-handler,
-            $column-actions-theme-map
-        );
-        @include column-actions($column-actions-theme-map);
-    }
+    // @if is-used('igx-column-actions', $exclude) {
+    //     $column-actions-theme-map: column-actions-theme(
+    //         $schema: $schema,
+    //     );
+    //     $column-actions-theme-map: meta.call($theme-handler, $column-actions-theme-map);
+    //     @include column-actions($column-actions-theme-map);
+    // }
 
-    @if is-used('igx-combo', $exclude) {
-        $combo-theme-map: combo-theme(
-            $schema: $schema,
-        );
-        $combo-theme-map: meta.call($theme-handler, $combo-theme-map);
-        @include combo($combo-theme-map);
-    }
+    //@if is-used('igx-combo', $exclude) {
+    //    $combo-theme-map: combo-theme(
+    //        $schema: $schema,
+    //    );
+    //    $combo-theme-map: meta.call($theme-handler, $combo-theme-map);
+    //    @include combo($combo-theme-map);
+    //}
 
-    @if is-used('igx-select', $exclude) {
-        $select-theme-map: select-theme(
-            $schema: $schema,
-        );
-        $select-theme-map: meta.call($theme-handler, $select-theme-map);
-        @include select($select-theme-map);
-    }
+    //@if is-used('igx-select', $exclude) {
+    //    $select-theme-map: select-theme(
+    //        $schema: $schema,
+    //    );
+    //    $select-theme-map: meta.call($theme-handler, $select-theme-map);
+    //    @include select($select-theme-map);
+    //}
 
-    @if is-used('igx-date-picker', $exclude) {
-        $calendar-theme-map: calendar-theme(
-            $schema: $schema,
-        );
-        $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
-        @include date-picker($calendar-theme-map);
-    }
+    //@if is-used('igx-date-picker', $exclude) {
+    //    $calendar-theme-map: calendar-theme(
+    //        $schema: $schema,
+    //    );
+    //    $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
+    //    @include date-picker($calendar-theme-map);
+    //}
 
-    @if is-used('igx-date-range-picker', $exclude) {
-        $date-range-picker-theme-map: date-range-picker-theme(
-            $schema: $schema,
-        );
-        $date-range-picker-theme-map: meta.call(
-            $theme-handler,
-            $date-range-picker-theme-map
-        );
-        @include date-range-picker($date-range-picker-theme-map);
-    }
+    //@if is-used('igx-date-range-picker', $exclude) {
+    //    $date-range-picker-theme-map: date-range-picker-theme(
+    //        $schema: $schema,
+    //    );
+    //    $date-range-picker-theme-map: meta.call($theme-handler, $date-range-picker-theme-map);
+    //    @include date-range-picker($date-range-picker-theme-map);
+    //}
 
-    @if is-used('igx-dialog', $exclude) {
-        $dialog-theme-map: dialog-theme(
-            $schema: $schema,
-        );
-        $dialog-theme-map: meta.call($theme-handler, $dialog-theme-map);
-        @include dialog($dialog-theme-map);
-    }
+    // @if is-used('igx-dialog', $exclude) {
+    //     $dialog-theme-map: dialog-theme(
+    //         $schema: $schema,
+    //     );
+    //     $dialog-theme-map: meta.call($theme-handler, $dialog-theme-map);
+    //     @include dialog($dialog-theme-map);
+    // }
 
-    @if is-used('igx-divider', $exclude) {
-        $divider-theme-map: divider-theme(
-            $schema: $schema,
-        );
-        $divider-theme-map: meta.call($theme-handler, $divider-theme-map);
-        @include divider($divider-theme-map);
-    }
+    // @if is-used('igx-divider', $exclude) {
+    //     $divider-theme-map: divider-theme(
+    //         $schema: $schema,
+    //     );
+    //     $divider-theme-map: meta.call($theme-handler, $divider-theme-map);
+    //     @include divider($divider-theme-map);
+    // }
 
     @if is-used('igc-dockmanager', $exclude) {
         $dock-manager-theme-map: dock-manager-theme(
@@ -447,24 +435,21 @@
         @include rating($rating-theme-map);
     }
 
-    @if is-used('igx-drop-down', $exclude) {
-        $drop-down-theme-map: drop-down-theme(
-            $schema: $schema,
-        );
-        $drop-down-theme-map: meta.call($theme-handler, $drop-down-theme-map);
-        @include drop-down($drop-down-theme-map);
-    }
+    // @if is-used('igx-drop-down', $exclude) {
+    //     $drop-down-theme-map: drop-down-theme(
+    //         $schema: $schema,
+    //     );
+    //     $drop-down-theme-map: meta.call($theme-handler, $drop-down-theme-map);
+    //     @include drop-down($drop-down-theme-map);
+    // }
 
-    @if is-used('igx-expansion-panel', $exclude) {
-        $expansion-panel-theme-map: expansion-panel-theme(
-            $schema: $schema,
-        );
-        $expansion-panel-theme-map: meta.call(
-            $theme-handler,
-            $expansion-panel-theme-map
-        );
-        @include expansion-panel($expansion-panel-theme-map);
-    }
+    // @if is-used('igx-expansion-panel', $exclude) {
+    //     $expansion-panel-theme-map: expansion-panel-theme(
+    //         $schema: $schema,
+    //     );
+    //     $expansion-panel-theme-map: meta.call($theme-handler, $expansion-panel-theme-map);
+    //     @include expansion-panel($expansion-panel-theme-map);
+    // }
 
     @if is-used('igx-grid', $exclude) {
         $grid-theme-map: grid-theme(
@@ -474,38 +459,29 @@
         @include grid($grid-theme-map);
     }
 
-    @if is-used('igx-grid-summary', $exclude) {
-        $grid-summary-theme-map: grid-summary-theme(
-            $schema: $schema,
-        );
-        $grid-summary-theme-map: meta.call(
-            $theme-handler,
-            $grid-summary-theme-map
-        );
-        @include grid-summary($grid-summary-theme-map);
-    }
+    // @if is-used('igx-grid-summary', $exclude) {
+    //     $grid-summary-theme-map: grid-summary-theme(
+    //         $schema: $schema,
+    //     );
+    //     $grid-summary-theme-map: meta.call($theme-handler, $grid-summary-theme-map);
+    //     @include grid-summary($grid-summary-theme-map);
+    // }
 
-    @if is-used('igx-grid-toolbar', $exclude) {
-        $grid-toolbar-theme-map: grid-toolbar-theme(
-            $schema: $schema,
-        );
-        $grid-toolbar-theme-map: meta.call(
-            $theme-handler,
-            $grid-toolbar-theme-map
-        );
-        @include grid-toolbar($grid-toolbar-theme-map);
-    }
+    // @if is-used('igx-grid-toolbar', $exclude) {
+    //     $grid-toolbar-theme-map: grid-toolbar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $grid-toolbar-theme-map: meta.call($theme-handler, $grid-toolbar-theme-map);
+    //     @include grid-toolbar($grid-toolbar-theme-map);
+    // }
 
-    @if is-used('igx-pivot-data-selector', $exclude) {
-        $pivot-data-selector-theme-map: pivot-data-selector-theme(
-            $schema: $schema,
-        );
-        $pivot-data-selector-theme-map: meta.call(
-            $theme-handler,
-            $pivot-data-selector-theme-map
-        );
-        @include pivot-data-selector($pivot-data-selector-theme-map);
-    }
+    // @if is-used('igx-pivot-data-selector', $exclude) {
+    //     $pivot-data-selector-theme-map: pivot-data-selector-theme(
+    //         $schema: $schema,
+    //     );
+    //     $pivot-data-selector-theme-map: meta.call($theme-handler, $pivot-data-selector-theme-map);
+    //     @include pivot-data-selector($pivot-data-selector-theme-map);
+    // }
 
     @if is-used('igx-highlight', $exclude) {
         $highlight-theme-map: highlight-theme(
@@ -515,13 +491,13 @@
         @include highlight($highlight-theme-map);
     }
 
-    @if is-used('igx-icon', $exclude) {
-        $icon-theme-map: icon-theme(
-            $schema: $schema,
-        );
-        $icon-theme-map: meta.call($theme-handler, $icon-theme-map);
-        @include icon($icon-theme-map);
-    }
+    // @if is-used('igx-icon', $exclude) {
+    //     $icon-theme-map: icon-theme(
+    //         $schema: $schema,
+    //     );
+    //     $icon-theme-map: meta.call($theme-handler, $icon-theme-map);
+    //     @include icon($icon-theme-map);
+    // }
 
     @if is-used('igx-icon-button', $exclude) {
         $flat-theme-map: flat-icon-button-theme(
@@ -543,35 +519,32 @@
         );
     }
 
-    @if is-used('igx-input-group', $exclude) {
-        $input-group-theme-map: input-group-theme(
-            $schema: $schema,
-        );
-        $input-group-theme-map: meta.call(
-            $theme-handler,
-            $input-group-theme-map
-        );
-        @include input-group($input-group-theme-map);
-    }
+    //@if is-used('igx-input-group', $exclude) {
+    //    $input-group-theme-map: input-group-theme(
+    //        $schema: $schema,
+    //    );
+    //    $input-group-theme-map: meta.call($theme-handler, $input-group-theme-map);
+    //    @include input-group($input-group-theme-map);
+    //}
 
-    @if is-used('igx-file-input', $exclude) {
-        $file-input-theme-map: file-input-theme(
-            $schema: $schema,
-        );
-        $file-input-theme-map: meta.call(
-            $theme-handler,
-            $file-input-theme-map
-        );
-        @include file-input($file-input-theme-map);
-    }
+    // @if is-used('igx-file-input', $exclude) {
+    //     $file-input-theme-map: file-input-theme(
+    //         $schema: $schema,
+    //     );
+    //     $file-input-theme-map: meta.call(
+    //         $theme-handler,
+    //         $file-input-theme-map
+    //     );
+    //     @include file-input($file-input-theme-map);
+    // }
 
-    @if is-used('igx-list', $exclude) {
-        $list-theme-map: list-theme(
-            $schema: $schema,
-        );
-        $list-theme-map: meta.call($theme-handler, $list-theme-map);
-        @include list($list-theme-map);
-    }
+    // @if is-used('igx-list', $exclude) {
+    //     $list-theme-map: list-theme(
+    //         $schema: $schema,
+    //     );
+    //     $list-theme-map: meta.call($theme-handler, $list-theme-map);
+    //     @include list($list-theme-map);
+    // }
 
     @if is-used('igx-label', $exclude) {
         $label-theme-map: label-theme(
@@ -581,21 +554,21 @@
         @include label($label-theme-map);
     }
 
-    @if is-used('igx-navbar', $exclude) {
-        $navbar-theme-map: navbar-theme(
-            $schema: $schema,
-        );
-        $navbar-theme-map: meta.call($theme-handler, $navbar-theme-map);
-        @include navbar($navbar-theme-map);
-    }
+    // @if is-used('igx-navbar', $exclude) {
+    //     $navbar-theme-map: navbar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $navbar-theme-map: meta.call($theme-handler, $navbar-theme-map);
+    //     @include navbar($navbar-theme-map);
+    // }
 
-    @if is-used('igx-nav-drawer', $exclude) {
-        $navdrawer-theme-map: navdrawer-theme(
-            $schema: $schema,
-        );
-        $navdrawer-theme-map: meta.call($theme-handler, $navdrawer-theme-map);
-        @include navdrawer($navdrawer-theme-map);
-    }
+    // @if is-used('igx-nav-drawer', $exclude) {
+    //     $navdrawer-theme-map: navdrawer-theme(
+    //         $schema: $schema,
+    //     );
+    //     $navdrawer-theme-map: meta.call($theme-handler, $navdrawer-theme-map);
+    //     @include navdrawer($navdrawer-theme-map);
+    // }
 
     @if is-used('igx-overlay', $exclude) {
         $overlay-theme-map: overlay-theme(
@@ -605,43 +578,37 @@
         @include overlay($overlay-theme-map);
     }
 
-    @if is-used('igx-paginator', $exclude) {
-        $paginator-theme-map: paginator-theme(
-            $schema: $schema,
-        );
-        $paginator-theme-map: meta.call($theme-handler, $paginator-theme-map);
-        @include paginator($paginator-theme-map);
-    }
+    // @if is-used('igx-paginator', $exclude) {
+    //     $paginator-theme-map: paginator-theme(
+    //         $schema: $schema,
+    //     );
+    //     $paginator-theme-map: meta.call($theme-handler, $paginator-theme-map);
+    //     @include paginator($paginator-theme-map);
+    // }
 
-    @if is-used('igx-circular-bar', $exclude) {
-        $progress-circular-theme-map: progress-circular-theme(
-            $schema: $schema,
-        );
-        $progress-circular-theme-map: meta.call(
-            $theme-handler,
-            $progress-circular-theme-map
-        );
-        @include progress-circular($progress-circular-theme-map);
-    }
+    //@if is-used('igx-circular-bar', $exclude) {
+    //    $progress-circular-theme-map: progress-circular-theme(
+    //        $schema: $schema,
+    //    );
+    //    $progress-circular-theme-map: meta.call($theme-handler, $progress-circular-theme-map);
+    //    @include progress-circular($progress-circular-theme-map);
+    //}
 
-    @if is-used('igx-linear-bar', $exclude) {
-        $progress-linear-theme-map: progress-linear-theme(
-            $schema: $schema,
-        );
-        $progress-linear-theme-map: meta.call(
-            $theme-handler,
-            $progress-linear-theme-map
-        );
-        @include progress-linear($progress-linear-theme-map);
-    }
+    //@if is-used('igx-linear-bar', $exclude) {
+    //    $progress-linear-theme-map: progress-linear-theme(
+    //        $schema: $schema,
+    //    );
+    //    $progress-linear-theme-map: meta.call($theme-handler, $progress-linear-theme-map);
+    //    @include progress-linear($progress-linear-theme-map);
+    //}
 
-    @if is-used('igx-radio', $exclude) {
-        $radio-theme-map: radio-theme(
-            $schema: $schema,
-        );
-        $radio-theme-map: meta.call($theme-handler, $radio-theme-map);
-        @include radio($radio-theme-map);
-    }
+    // @if is-used('igx-radio', $exclude) {
+    //     $radio-theme-map: radio-theme(
+    //         $schema: $schema,
+    //     );
+    //     $radio-theme-map: meta.call($theme-handler, $radio-theme-map);
+    //     @include radio($radio-theme-map);
+    // }
 
     @if is-used('igx-query-builder', $exclude) {
         $query-builder-theme-map: query-builder-theme(
@@ -662,53 +629,53 @@
         @include scrollbar($scrollbar-theme-map);
     }
 
-    @if is-used('igx-slider', $exclude) {
-        $slider-theme-map: slider-theme(
-            $schema: $schema,
-        );
-        $slider-theme-map: meta.call($theme-handler, $slider-theme-map);
-        @include slider($slider-theme-map);
-    }
+    // @if is-used('igx-slider', $exclude) {
+    //     $slider-theme-map: slider-theme(
+    //         $schema: $schema,
+    //     );
+    //     $slider-theme-map: meta.call($theme-handler, $slider-theme-map);
+    //     @include slider($slider-theme-map);
+    // }
 
-    @if is-used('igx-snackbar', $exclude) {
-        $snackbar-theme-map: snackbar-theme(
-            $schema: $schema,
-        );
-        $snackbar-theme-map: meta.call($theme-handler, $snackbar-theme-map);
-        @include snackbar($snackbar-theme-map);
-    }
+    // @if is-used('igx-snackbar', $exclude) {
+    //     $snackbar-theme-map: snackbar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $snackbar-theme-map: meta.call($theme-handler, $snackbar-theme-map);
+    //     @include snackbar($snackbar-theme-map);
+    // }
 
-    @if is-used('igx-switch', $exclude) {
-        $switch-theme-map: switch-theme(
-            $schema: $schema,
-        );
-        $switch-theme-map: meta.call($theme-handler, $switch-theme-map);
-        @include switch($switch-theme-map);
-    }
+    // @if is-used('igx-switch', $exclude) {
+    //     $switch-theme-map: switch-theme(
+    //         $schema: $schema,
+    //     );
+    //     $switch-theme-map: meta.call($theme-handler, $switch-theme-map);
+    //     @include switch($switch-theme-map);
+    // }
 
-    @if is-used('igx-tabs', $exclude) {
-        $tabs-theme-map: tabs-theme(
-            $schema: $schema,
-        );
-        $tabs-theme-map: meta.call($theme-handler, $tabs-theme-map);
-        @include tabs($tabs-theme-map);
-    }
+    //@if is-used('igx-tabs', $exclude) {
+    //    $tabs-theme-map: tabs-theme(
+    //        $schema: $schema,
+    //    );
+    //    $tabs-theme-map: meta.call($theme-handler, $tabs-theme-map);
+    //    @include tabs($tabs-theme-map);
+    //}
 
-    @if is-used('igx-stepper', $exclude) {
-        $stepper-theme-map: stepper-theme(
-            $schema: $schema,
-        );
-        $stepper-theme-map: meta.call($theme-handler, $stepper-theme-map);
-        @include stepper($stepper-theme-map);
-    }
+    //@if is-used('igx-stepper', $exclude) {
+    //    $stepper-theme-map: stepper-theme(
+    //        $schema: $schema,
+    //    );
+    //    $stepper-theme-map: meta.call($theme-handler, $stepper-theme-map);
+    //    @include stepper($stepper-theme-map);
+    //}
 
-    @if is-used('igx-toast', $exclude) {
-        $toast-theme-map: toast-theme(
-            $schema: $schema,
-        );
-        $toast-theme-map: meta.call($theme-handler, $toast-theme-map);
-        @include toast($toast-theme-map);
-    }
+    // @if is-used('igx-toast', $exclude) {
+    //     $toast-theme-map: toast-theme(
+    //         $schema: $schema,
+    //     );
+    //     $toast-theme-map: meta.call($theme-handler, $toast-theme-map);
+    //     @include toast($toast-theme-map);
+    // }
 
     @if is-used('igx-tooltip', $exclude) {
         $tooltip-theme-map: tooltip-theme(
@@ -718,24 +685,24 @@
         @include tooltip($tooltip-theme-map);
     }
 
-    @if is-used('igx-time-picker', $exclude) {
-        $time-picker-theme-map: time-picker-theme(
-            $schema: $schema,
-        );
-        $time-picker-theme-map: meta.call(
-            $theme-handler,
-            $time-picker-theme-map
-        );
-        @include time-picker($time-picker-theme-map);
-    }
+    // @if is-used('igx-time-picker', $exclude) {
+    //     $time-picker-theme-map: time-picker-theme(
+    //         $schema: $schema,
+    //     );
+    //     $time-picker-theme-map: meta.call(
+    //         $theme-handler,
+    //         $time-picker-theme-map
+    //     );
+    //     @include time-picker($time-picker-theme-map);
+    // }
 
-    @if is-used('igx-tree', $exclude) {
-        $tree-theme-map: tree-theme(
-            $schema: $schema,
-        );
-        $tree-theme-map: meta.call($theme-handler, $tree-theme-map);
-        @include tree($tree-theme-map);
-    }
+    //@if is-used('igx-tree', $exclude) {
+    //    $tree-theme-map: tree-theme(
+    //        $schema: $schema,
+    //    );
+    //    $tree-theme-map: meta.call($theme-handler, $tree-theme-map);
+    //    @include tree($tree-theme-map);
+    //}
 
     @if is-used('igc-trial-watermark', $exclude) {
         $watermark-theme-map: watermark-theme(

@@ -13,6 +13,7 @@ import {
     OnDestroy,
     booleanAttribute,
     OnInit,
+    ViewEncapsulation,
     inject,
     DOCUMENT
 } from '@angular/core';
@@ -84,6 +85,8 @@ let CHIP_ID = 0;
 @Component({
     selector: 'igx-chip',
     templateUrl: 'chip.component.html',
+    styleUrl: 'chip.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {
@@ -601,13 +604,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public destroy$ = new Subject<void>();
 
     protected get chipSize(): ɵSize {
-        return this.computedStyles?.getPropertyValue('--ig-size') || ɵSize.Medium;
+        return this.computedStyles?.getPropertyValue('--ig-size') as ɵSize || ɵSize.Medium;
     }
     protected _tabIndex = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
-    protected computedStyles;
+    protected computedStyles: CSSStyleDeclaration;
     private _resourceStrings: IChipResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
@@ -639,7 +642,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
         };
     }
 
-    public onSelectTransitionDone(event) {
+    public onSelectTransitionDone(event: any) {
         if (event.target.tagName) {
             // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
             this.selectedChanged.emit({

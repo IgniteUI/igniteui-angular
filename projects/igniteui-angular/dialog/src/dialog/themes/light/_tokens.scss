@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/dialog' as *;
+
+$base: digest-schema($light-dialog);
+$material: digest-schema($material-dialog);
+$bootstrap: digest-schema($bootstrap-dialog);
+$fluent: digest-schema($fluent-dialog);
+$indigo: digest-schema($indigo-dialog);

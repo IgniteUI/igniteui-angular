@@ -18,6 +18,7 @@ import {
     Renderer2,
     ViewChild,
     ViewContainerRef,
+    ViewEncapsulation,
     booleanAttribute,
     inject
 } from '@angular/core';
@@ -64,7 +65,6 @@ import {
     DatePart,
     isDateInRanges,
     IgxOverlayOutletDirective,
-    I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -93,6 +93,8 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
+    styleUrls: ['date-picker.component.css'],
+    encapsulation: ViewEncapsulation.None,
     styles: [':host { display: block; }'],
     imports: [
         IgxInputGroupComponent,
@@ -112,8 +114,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _renderer = inject(Renderer2);
     private platform = inject(PlatformUtil);
     private cdr = inject(ChangeDetectorRef);
-    private _i18nFormatter = inject(I18N_FORMATTER);
-
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.

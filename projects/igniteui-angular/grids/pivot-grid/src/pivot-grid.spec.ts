@@ -23,7 +23,7 @@ import { IgxGridCell } from 'igniteui-angular/grids/core';
 import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
 import { getI18nManager } from 'igniteui-i18n-core';
 
-const CSS_CLASS_LIST = 'igx-drop-down__list';
+const CSS_CLASS_LIST = 'igx-drop-down';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 

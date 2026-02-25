@@ -1,0 +1,28 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-carousel, bootstrap) {
+    @include e(arrow) {
+        &[igxButton].igx-button--focused {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'button-focus-border-color');
+            border-color: var-get($_theme, 'button-border-color');
+    
+            igx-icon {
+                color: var-get($_theme, 'button-arrow-color');
+            }
+        }
+    }
+}
+
+@include themed-block(igx-carousel-indicators, bootstrap) {
+    @include m(focused) {
+        &::after {
+            border: none;
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'button-focus-border-color');
+        }
+    }
+}

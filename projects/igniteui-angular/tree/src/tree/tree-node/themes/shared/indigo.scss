@@ -1,0 +1,115 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-tree-node, indigo) {
+    $icon-size: rem(16px);
+
+    $drop-indicator-width: (
+        comfortable: calc(100% - ((#{rem(16px)} * 2) + (#{$icon-size} + #{rem(4px)}))),
+        cosy: calc(100% - ((#{rem(12px)} * 2) + (#{$icon-size} + #{rem(4px)}))),
+        compact: calc(100% - ((#{rem(8px)} * 2) + (#{$icon-size} + #{rem(4px)})))
+    );
+
+    $circular-bar-size: (
+        comfortable: #{$icon-size},
+        cosy: calc(#{$icon-size} - 4px),
+        compact: calc(#{$icon-size} - 6px)
+    );
+
+    border-radius: rem(4px);
+
+    @include e(wrapper) {
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+
+        border-radius: rem(4px);
+        margin-block-end: rem(4px);
+
+        &::after {
+            border-radius: rem(4px);
+        }
+
+        igx-icon {
+            --component-size: 2;
+
+            color: var-get($_theme, 'icon-color');
+        }
+
+        &:hover {
+            color: var-get($_theme, 'foreground-active');
+        }
+
+        igx-circular-bar {
+            --circular-bar: #{sizable(#{map.get($circular-bar-size, 'compact')}, #{map.get($circular-bar-size, 'cosy')}, #{map.get($circular-bar-size, 'comfortable')})} !important;
+        }
+    }
+
+    @include e(wrapper, $m: selected) {
+        &:hover {
+            &::after {
+                background: var-get($_theme, 'hover-color');
+            }
+        }
+    }
+
+    @include e(wrapper, $m: active) {
+        &:hover {
+            background: var-get($_theme, 'hover-selected-color');
+
+            &::after {
+                background: transparent;
+            }
+        }
+    }
+
+    @include e(wrapper, $mods: (active, selected)) {
+        &:hover {
+            background: var-get($_theme, 'hover-selected-color');
+        }
+
+        &::after {
+            background: transparent;
+        }
+    }
+
+    @include e(wrapper, $m: focused) {
+        box-shadow: inset 0 0 0 rem(2px) var-get($_theme, 'border-color');
+    }
+
+    @include e(wrapper, $m: disabled) {
+        igx-icon {
+            color: var-get($_theme, 'foreground-disabled') !important;
+        }
+    }
+
+    @include e(spacer) {
+        --spacer: #{$icon-size};
+    }
+
+    @include e(drop-indicator) {
+        inset-inline-end: pad(rem(8px), rem(12px), rem(16px));
+        width: pad(
+            map.get($drop-indicator-width, 'compact'),
+            map.get($drop-indicator-width, 'cosy'),
+            map.get($drop-indicator-width, 'comfortable')
+        );
+    }
+
+    @include e(select) {
+        margin-inline-end: rem(8px);
+    }
+
+    @include e(toggle-button) {
+        igx-icon {
+            --component-size: 1;
+        }
+
+        min-width: rem(14px);
+        margin-inline-end: rem(4px);
+    }
+}

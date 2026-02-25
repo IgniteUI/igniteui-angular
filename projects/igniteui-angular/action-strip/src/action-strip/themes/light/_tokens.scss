@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/action-strip' as *;
+
+$base: digest-schema($light-action-strip);
+$material: digest-schema($material-action-strip);
+$bootstrap: digest-schema($bootstrap-action-strip);
+$fluent: digest-schema($fluent-action-strip);
+$indigo: digest-schema($indigo-action-strip);

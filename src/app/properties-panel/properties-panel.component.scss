@@ -1,7 +1,10 @@
 @use 'igniteui-theming/sass/bem' as *;
 
 @include b(properties-panel) {
+    isolation: isolate;
+    contain: layout paint content;
     padding: 0.5rem;
+    min-width: fit-content;
 
     igx-input-group {
         --ig-size: var(--ig-size-small);

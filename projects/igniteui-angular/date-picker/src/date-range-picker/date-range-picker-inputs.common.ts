@@ -1,6 +1,12 @@
 import { Component, ContentChild, Pipe, PipeTransform, Directive, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { IgxInputDirective, IgxInputGroupBase, IgxInputGroupComponent, IgxInputState, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import {
+    IgxInputDirective,
+    IgxInputGroupBase,
+    IgxInputGroupComponent,
+    IgxInputState,
+    IgxSuffixDirective
+} from 'igniteui-angular/input-group';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { isDate, DateRange, DateTimeUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -31,9 +37,12 @@ export class DateRangePickerFormatPipe implements PipeTransform {
         }
         const startDate = this.i18nFormatter.formatDate(start, appliedFormat, locale);
         const endDate = this.i18nFormatter.formatDate(end, appliedFormat, locale);
-        let formatted;
+
+        let formatted: string;
+
         if (start) {
             formatted = `${startDate} - `;
+
             if (end) {
                 formatted += endDate;
             }
@@ -116,7 +125,7 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
         { provide: IgxInputGroupBase, useExisting: IgxDateRangeStartComponent },
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeStartComponent }
     ],
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent { }
 
@@ -151,7 +160,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
         { provide: IgxInputGroupBase, useExisting: IgxDateRangeEndComponent },
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeEndComponent }
     ],
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
 

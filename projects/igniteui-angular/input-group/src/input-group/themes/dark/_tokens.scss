@@ -1,0 +1,18 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/input-group' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/file-input' as *;
+
+$input-material: digest-schema($dark-material-input-group);
+$input-bootstrap: digest-schema($dark-bootstrap-input-group);
+$input-fluent: digest-schema($dark-fluent-input-group);
+$input-indigo: digest-schema($dark-indigo-input-group);
+$file-material: digest-schema($dark-material-file-input);
+$file-bootstrap: digest-schema($dark-bootstrap-file-input);
+$file-fluent: digest-schema($dark-fluent-file-input);
+$file-indigo: digest-schema($dark-indigo-file-input);
+
+$material: map.merge($input-material, $file-material);
+$bootstrap: map.merge($input-bootstrap, $file-bootstrap);
+$fluent: map.merge($input-fluent, $file-fluent);
+$indigo: map.merge($input-indigo, $file-indigo);
