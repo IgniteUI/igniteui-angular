@@ -1,0 +1,30 @@
+name: Trigger Private Repo Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  dispatch-to-private-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get app token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.IGNITEUI_GITHUB_APP_ID }}
+          private-key: ${{ secrets.IGNITEUI_GITHUB_APP_PRIVATE_KEY }}
+          owner: IgniteUI
+
+      - name: Send repository dispatch to private repo
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: IgniteUI/igniteui-actions
+          event-type: igniteui-angular-public-release-created
+          client-payload: |
+            {
+              "release_tag": "${{ github.event.release.tag_name }}",
+              "public_repo": "${{ github.repository }}"
+            }
