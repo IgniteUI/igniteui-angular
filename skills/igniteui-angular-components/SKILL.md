@@ -49,10 +49,9 @@ Base your code and explanation exclusively on what you read. If the reference fi
 - Angular 20+ project
 - `@angular/cli` installed
 - `igniteui-angular` or `@infragistics/igniteui-angular` added to the project via `ng add igniteui-angular` (or the `@infragistics` variant) or `npm install` — see [Package Variants](#package-variants) below.
-- A theme created for the application. See `igniteui-angular-theming` skill for instructions.
+- A theme applied to the application (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)).
 - `provideAnimations()` in `app.config.ts` — **required before using any overlay or animated component**
 
----
 
 ## Package Variants
 
