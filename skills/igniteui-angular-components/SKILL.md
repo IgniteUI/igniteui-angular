@@ -47,11 +47,11 @@ Base your code and explanation exclusively on what you read. If the reference fi
 ## Prerequisites
 
 - Angular 20+ project
-- `igniteui-angular` installed via `npm install igniteui-angular`, **or** `@infragistics/igniteui-angular` for licensed users
-- A theme applied (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md))
+- `@angular/cli` installed
+- `igniteui-angular` or `@infragistics/igniteui-angular` added to the project via `ng add igniteui-angular` (or the `@infragistics` variant) or `npm install` — see [Package Variants](#package-variants) below.
+- A theme applied to the application (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)).
 - `provideAnimations()` in `app.config.ts` — **required before using any overlay or animated component**
 
----
 
 ## Package Variants
 
@@ -61,6 +61,7 @@ Base your code and explanation exclusively on what you read. If the reference fi
 | `@infragistics/igniteui-angular` | Requires private `@infragistics` registry | Licensed / enterprise users |
 
 Both packages share **identical entry-point paths**. Check `package.json` and use that package name as the prefix for every import. Never import from the root barrel of either package.
+Both packages can be added to the project using `@angular/cli` with the following commands: `ng add igniteui-angular` or `ng add @infragistics/igniteui-angular`.
 
 ---
 
