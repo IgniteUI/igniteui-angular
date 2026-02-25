@@ -109,7 +109,7 @@ Implements `ControlValueAccessor` and `Validator`. Works with both reactive and 
 > **Docs:** [Date Range Picker](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-range-picker)
 
 ```typescript
-import { IgxDateRangePickerComponent } from 'igniteui-angular/directives';
+import { IgxDateRangePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
 
