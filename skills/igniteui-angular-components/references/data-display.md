@@ -64,9 +64,8 @@ Selection modes: `'None'`, `'BiCascade'`, `'Cascade'`.
 ```typescript
 import { IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxCardMediaDirective, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective, IgxCardHeaderThumbnailDirective } from 'igniteui-angular/card';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
-import { IgxButtonDirective } from 'igniteui-angular/button';
-import { IgxRippleDirective } from 'igniteui-angular/ripple';
-import { IgxIconButtonDirective } from 'igniteui-angular/button';
+import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 ```
 
@@ -215,8 +214,8 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 > **Docs:** [Linear Progress](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear-progress) · [Circular Progress](https://www.infragistics.com/products/ignite-ui-angular/angular/components/circular-progress)
 
 ```typescript
-import { IgxLinearProgressBarComponent } from 'igniteui-angular/linear-progress-bar';
-import { IgxCircularProgressBarComponent } from 'igniteui-angular/circular-progress-bar';
+import { IgxLinearProgressBarComponent } from 'igniteui-angular/progressbar';
+import { IgxCircularProgressBarComponent } from 'igniteui-igniteui-angular/progressbar';
 ```
 
 ```html
@@ -248,26 +247,94 @@ import { IgxChatComponent } from 'igniteui-angular/chat';
 ```
 
 ```html
-<igx-chat
-  [messages]="messages()"
-  [isSendDisabled]="isLoading()"
-  (sendMessage)="onSend($event)">
-</igx-chat>
+ <igx-chat
+        [options]="options()"
+        [messages]="messages()"
+        [draftMessage]="draftMessage"
+        [templates]="templates()"
+        (messageCreated)="onMessageCreated($event)">
+    </igx-chat>
+
+    <ng-template #messageHeader let-message>
+        @if (message.sender !== 'user') {
+            <div>
+                <span style="font-weight: bold; color: #c00000;"
+                >Developer Support</span
+                >
+            </div>
+        }
+    </ng-template>
+
+    <ng-template #suggestionPrefix>
+        <span style="font-weight: bold">💡</span>
+    </ng-template>
+
+    <ng-template #messageContent let-message igxChatMessageContext>
+        <div [innerHTML]="message.text | fromMarkdown | async"></div>
+    </ng-template>
 ```
 
 ```typescript
-import { IgxChatComponent, IgxMessage } from 'igniteui-angular/chat';
+import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatOptions } from 'igniteui-angular/chat';
+import { MarkdownPipe } from 'igniteui-angular/chat-extras';
 
-messages = signal<IgxMessage[]>([]);
-isLoading = signal(false);
+@Component({
+    selector: 'app-chat-features-sample',
+    styleUrls: ['./features-sample.component.scss'],
+    templateUrl: './features-sample.component.html',
+    imports: [IgxChatComponent, IgxChatMessageContextDirective, AsyncPipe, MarkdownPipe]
+})
+export class ChatFeaturesSampleComponent {
+    private _messageHeader = viewChild.required('messageHeader');
+    private _suggestionPrefix = viewChild.required('suggestionPrefix');
+    private _messageContent = viewChild.required('messageContent');
 
-async onSend(text: string) {
-  this.messages.update(m => [...m, { author: 'user', content: text }]);
-  this.isLoading.set(true);
-  const reply = await this.aiService.ask(text);
-  this.messages.update(m => [...m, { author: 'assistant', content: reply }]);
-  this.isLoading.set(false);
-}
+...
+
+
+public options = signal<IgxChatOptions>({
+        disableAutoScroll: false,
+        disableInputAttachments: false,
+        inputPlaceholder: 'Type your message here...',
+        headerText: 'Developer Support',
+        suggestionsPosition: "below-input",
+        suggestions: [ 'Send me an e-mail when support is available.' ]
+    });
+
+    public templates = signal({});
+
+    constructor() {
+        effect(() => {
+            const messageHeader = this._messageHeader();
+            const suggestionPrefix = this._suggestionPrefix();
+            const messageContent = this._messageContent();
+
+            if (messageHeader && suggestionPrefix && messageContent) {
+                this.templates.set({
+                    messageHeader: messageHeader,
+                    suggestionPrefix: suggestionPrefix,
+                    messageContent: messageContent
+                });
+            }
+        });
+    }
+
+    public onMessageCreated(e: any): void {
+        const newMessage = e;
+        this.messages.update(messages => [...messages, newMessage]);
+        this.options.update(options => ({ ...options, isTyping: true, suggestions: [] }));
+
+        const responseMessage = {
+            id: Date.now().toString(),
+            text: 'Our support team is currently unavailable. We\'ll get back to you as soon as possible.',
+            sender: 'support',
+            timestamp: Date.now().toString()
+        };
+
+        this.draftMessage = { text: '', attachments: [] };
+        this.messages.update(messages => [...messages, responseMessage]);
+        this.options.update(options => ({ ...options, isTyping: false }));
+    }
 ```
 
 ## See Also
