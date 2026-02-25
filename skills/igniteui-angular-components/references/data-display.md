@@ -215,7 +215,7 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 ```typescript
 import { IgxLinearProgressBarComponent } from 'igniteui-angular/progressbar';
-import { IgxCircularProgressBarComponent } from 'igniteui-igniteui-angular/progressbar';
+import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 ```
 
 ```html
