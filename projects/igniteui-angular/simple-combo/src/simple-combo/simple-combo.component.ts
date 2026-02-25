@@ -27,6 +27,20 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
     displayText: string;
 }
 
+/** Emitted when an igx-simple-combo's selection has been changed. */
+export interface ISimpleComboSelectionChangedEventArgs extends IBaseEventArgs {
+    /** An object which represents the value that was previously selected */
+    oldValue: any;
+    /** An object which represents the value that is currently selected */
+    newValue: any;
+    /** An object which represents the item that was previously selected */
+    oldSelection: any;
+    /** An object which represents the item that is currently selected */
+    newSelection: any;
+    /** The text that is displayed in the combo text box */
+    displayText: string;
+}
+
 /**
  * Represents a drop-down list that provides filtering functionality, allowing users to choose a single option from a predefined list.
  *
@@ -77,6 +91,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      */
     @Output()
     public selectionChanging = new EventEmitter<ISimpleComboSelectionChangingEventArgs>();
+
+    /**
+     * Emitted when item selection is changed, after the selection completes
+     *
+     * ```html
+     * <igx-simple-combo (selectionChanged)='handleSelection()'></igx-simple-combo>
+     * ```
+     */
+    @Output()
+    public selectionChanged = new EventEmitter<ISimpleComboSelectionChangedEventArgs>();
 
     @ViewChild(IgxTextSelectionDirective, { static: true })
     private textSelection: IgxTextSelectionDirective;
@@ -515,6 +539,17 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                     : this.createDisplayText(super.selection, [args.oldValue]);
             }
             this._onChangeCallback(args.newValue);
+            if (args.newSelection !== args.oldSelection) {
+                const changedArgs: ISimpleComboSelectionChangedEventArgs = {
+                    newValue: args.newValue,
+                    oldValue: args.oldValue,
+                    newSelection: args.newSelection,
+                    oldSelection: args.oldSelection,
+                    displayText: this._displayValue,
+                    owner: this
+                };
+                this.selectionChanged.emit(changedArgs);
+            }
             this._updateInput = true;
         } else if (this.isRemote) {
             this.registerRemoteEntries(newValueAsArray, false);
