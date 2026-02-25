@@ -53,11 +53,11 @@ All notable changes for each version of this project will be documented in this 
     - Improved positioning accuracy for container-based overlays with fixed container bounds.
 
 - **AI-Assisted Development - Copilot Skills**
-    - Three consolidated Copilot Skills are now included in the repository to teach AI coding assistants (GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to work with Ignite UI for Angular:
+    - Three consolidated Copilot Skills are now included in the repository to teach AI coding assistants/agents (e.g., GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to work with Ignite UI for Angular:
         - **Components** - UI Components (form controls, layout, data display, feedback/overlays, directives — Input Group, Combo, Select, Date/Time Pickers, Calendar, Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, Button, Ripple, Tooltip, Drag and Drop, Layout Manager, Dock Manager and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart))
         - **Data Grids** - Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid)
         - **Theming & Styling** - Theming & Styling (includes MCP server setup for live theming tools)
-    - These skills are automatically discovered by GitHub Copilot via `.github/copilot-instructions.md` and can be manually configured in other IDEs. For more information, see the [README](README.md#ai-assisted-development).
+    - These skills are automatically discovered when placed in the agent's skills path ( e.g. `.claude/skills`) and this release ships with an optional migration to add those to your project. For more information, see the [README](README.md#ai-assisted-development).
 
 ### General
 
