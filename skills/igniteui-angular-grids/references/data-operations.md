@@ -145,7 +145,8 @@ Sorting modes:
 ### Programmatic Sorting
 
 ```typescript
-import { SortingDirection } from 'igniteui-angular/grids/core';
+import { SortingDirection } from 'igniteui-angular/core';
+// import { SortingDirection } from '@infragistics/igniteui-angular/core'; for licensed package
 
 // Sort a single column
 this.gridRef().sort({ fieldName: 'name', dir: SortingDirection.Asc, ignoreCase: true });

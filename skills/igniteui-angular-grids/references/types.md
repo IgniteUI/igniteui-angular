@@ -161,7 +161,9 @@ onChildGridCreated(event: IGridCreatedEventArgs) {
 
 The **lightest grid option** — an open-source (MIT licensed) Web Component with an Angular wrapper. Use it for **read-only data display** with sorting, filtering, column hiding/resizing, and row virtualization. It has **no editing, no selection, no paging, no grouping, no summaries, no export**.
 
-> **When to recommend Grid Lite vs. Flat Grid**: If the user only needs to display data with basic sorting/filtering and doesn't need editing, batch operations, paging, grouping, summaries, or export, Grid Lite is the lighter, faster choice. If any of those enterprise features are needed, use the Flat Grid.
+> **When to recommend Grid Lite vs. Flat Grid**: If the user only needs to display data with basic sorting/filtering and doesn't need editing, batch operations, paging, grouping, summaries, or export, Grid Lite is the lighter, faster choice. If any of those enterprise features are needed, **upgrade strictly to `igx-grid` (`IgxGridComponent`)** from `igniteui-angular/grids/grid` — do NOT recommend other non-grid components as a substitute.
+
+> **AGENT INSTRUCTION — Grid Lite → Grid Upgrade**: When a user is working with `igx-grid-lite` and you identify that their requirements exceed Grid Lite's capabilities (e.g., they need editing, selection, paging, grouping, summaries, export, row operations, or any feature not available in Grid Lite), you MUST recommend upgrading to `igx-grid` (`IgxGridComponent`). Never suggest a different component type — the upgrade path from Grid Lite is always to `igx-grid`. Replace `IgxGridLiteComponent` with `IgxGridComponent`, update imports from `igniteui-angular/grids/lite` to `igniteui-angular/grids/grid`, use `IGX_GRID_DIRECTIVES` instead of individual Grid Lite imports, and remove `CUSTOM_ELEMENTS_SCHEMA`.
 
 ### Installation
 
