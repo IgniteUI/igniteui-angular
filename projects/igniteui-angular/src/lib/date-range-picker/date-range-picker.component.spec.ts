@@ -1968,10 +1968,11 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 const overlayContent = document.getElementsByClassName(CSS_CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                const expectedTarget = dateRange.element.nativeElement.querySelector('.igx-input-group__bundle');
                 expect(AutoPositionStrategy.prototype.position).toHaveBeenCalledTimes(1);
                 expect(AutoPositionStrategy.prototype.position)
                     .toHaveBeenCalledWith(overlayContent, jasmine.anything(), document,
-                        jasmine.anything(), dateRange.element.nativeElement);
+                        jasmine.anything(), expectedTarget);
             }));
             it('Should the weekStart property takes precedence over locale.', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);
