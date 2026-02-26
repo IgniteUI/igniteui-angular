@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-components
-description: "All Ignite UI Angular UI components: application setup and architecture, form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider, reactive forms), layout (Tabs, Bottom Navigation, Stepper, Accordion, Splitter, Navigation Drawer, Layout Manager), data display (List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress bar, Linear Progress Bar, Circular Progress Bar, Chat), feedback/overlays (Dialog, Snackbar, Toast, Banner), directives (Button, Ripple, Tooltip, Drag and Drop), Dock Manager, and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart, IgxCategoryChart, IgxFinancialChart, IgxDataChart, IgxPieChart). Use for any non-grid Ignite UI Angular UI question."
+description: "Provides guidance on all non-grid Ignite UI for Angular UI components including app setup, form controls (Input, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider), layout (Tabs, Stepper, Accordion, Splitter, Navigation Drawer), data display (List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress Bars, Chat), feedback overlays (Dialog, Snackbar, Toast, Banner), directives (Button, Ripple, Tooltip, Drag and Drop), Dock Manager, and Charts. Use when users ask about any Ignite UI Angular component that is not a data grid, such as forms, inputs, dropdowns, date pickers, dialogs, navigation, lists, trees, cards, charts, or application scaffolding and setup."
 user-invokable: true
 ---
 
