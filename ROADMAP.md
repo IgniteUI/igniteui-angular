@@ -15,6 +15,12 @@
 
 # Previous Milestone
 
+## Milestone 41, version 21 (Due by Feb, 2026)
+1. **[DONE]**  Agent Skills - structured knowledge files for AI coding assistants for igniteui-angular-components, igniteui-angular-grids and igniteui-angular-theming
+2. **[DONE]** Virtualization performance improvements for all grids [#16709](https://github.com/IgniteUI/igniteui-angular/issues/16709)
+3. **[DONE]** Overly service  now use the browser’s native HTML Popover API to place overlay element [#16824](https://github.com/IgniteUI/igniteui-angular/issues/16824)
+4. **[DONE]**  Angular wrapper for Ignite UI Grid Lite compoennt
+
 ## Milestone 40, version 21 (Released Dec 3rd, 2025), [Release Blog 21.0](https://www.infragistics.com/blogs/ignite-ui-for-angular-21-0/)
 1. **[DONE]** Support for Angular 21
 2. **[DONE]** AI Chat UI component [#16094](https://github.com/IgniteUI/igniteui-angular/issues/16094)
