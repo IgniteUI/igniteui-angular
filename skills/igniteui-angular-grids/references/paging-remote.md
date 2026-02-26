@@ -52,6 +52,7 @@ this.gridRef().paginator.perPage = 25;
 
 ```typescript
 import { GridPagingMode } from 'igniteui-angular/grids/core';
+import { IPageEventArgs } from 'igniteui-angular/paginator';
 
 export class RemotePagingComponent {
   data = signal<Product[]>([]);
