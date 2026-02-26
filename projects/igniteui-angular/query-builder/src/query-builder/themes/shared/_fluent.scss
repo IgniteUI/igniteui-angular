@@ -1,0 +1,56 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-query-builder, fluent) {
+    &:has(.igx-query-builder-header) {
+        .igx-query-builder-tree--level-0 {
+            padding-block: 0;
+        }
+    }
+}
+
+@include themed-block(igx-filter-tree, fluent) {
+    @include e(button, $m: 'and') {
+        &[igxButton='flat'] {
+            --background: transparent;
+            --focus-hover-background: #{color($color: 'gray', $variant: 50)};
+            --focus-visible-background: transparent;
+            --focus-background: transparent;
+            --active-background: #{color($color: 'gray', $variant: 50)};
+            --hover-background: #{color($color: 'gray', $variant: 50)};
+        }
+    }
+
+    @include e(button, $m: 'or') {
+        &[igxButton='flat'] {
+            --background: transparent;
+            --focus-hover-background: #{color($color: 'gray', $variant: 50)};
+            --focus-visible-background: transparent;
+            --focus-background: transparent;
+            --active-background: #{color($color: 'gray', $variant: 50)};
+            --hover-background: #{color($color: 'gray', $variant: 50)};
+
+        }
+    }
+
+    @include e(expression-actions) {
+        gap: rem(16px);
+
+        .igx-icon-button {
+            --ig-size: 2;
+        };
+    }
+
+    @include e(expression-condition) {
+        opacity: .6;
+    }
+
+    @include e(inputs) {
+        --ig-size: 1;
+    }
+}

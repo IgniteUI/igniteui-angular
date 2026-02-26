@@ -1,0 +1,83 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/typography/mixins' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/elevations/index' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-query-builder, indigo) {
+    &:has(.igx-query-builder-header) {
+        .igx-query-builder-tree--level-0 {
+            padding-block: 0;
+        }
+    }
+}
+
+@include themed-block(igx-filter-tree, indigo) {
+    $alpha-focus: .16;
+    $alpha-hover: .08;
+    $alpha-focus-hover: .24;
+
+    @include e(button, $m: 'and') {
+        &[igxButton='flat'] {
+            --focus-hover-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-focus-hover});
+            --focus-visible-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --focus-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --active-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --hover-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
+            --background: transparent;
+        }
+    }
+
+    @include e(button, $m: 'or') {
+        &[igxButton='flat'] {
+            --focus-hover-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-focus-hover});
+            --focus-visible-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+            --focus-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+            --active-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+            --hover-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
+            --background: transparent;
+        }
+    }
+
+    @include e(expression-item) {
+        igx-chip {
+            --component-size: 1;
+        }
+    }
+
+    @include e(expression-actions) {
+        gap: rem(8px);
+
+        .igx-icon-button {
+            --ig-size: 2;
+        };
+    }
+
+    @include e(expression-item-keyboard-ghost) {
+        .igx-chip:hover {
+            .igx-chip__item {
+                border-color: var(--border-color);
+            }
+        }
+    }
+
+    @include e(expression-condition) {
+        opacity: .8;
+    }
+
+    @include e(inputs) {
+        --ig-size: 2;
+    }
+
+    @include e(expression-item-keyboard-ghost) {
+        igx-chip:hover {
+            .igx-chip__item {
+                border-color: var(--border-color);
+            }
+        }
+    }
+}

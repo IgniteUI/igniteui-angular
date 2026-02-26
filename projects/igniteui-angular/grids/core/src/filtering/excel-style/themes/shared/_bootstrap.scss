@@ -1,0 +1,31 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/typography/mixins' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-excel-filter, bootstrap) {
+    @include e(secondary-header) {
+        border-block-end: rem(1px) solid color($color: 'gray', $variant: 100);
+    }
+
+    @include e(secondary-footer) {
+        padding-inline: pad-inline(rem(16px));
+        padding-block: pad-block(rem(16px));
+        border-top: rem(1px) solid color($color: 'gray', $variant: 300);
+    }
+
+    @include e(menu-main) {
+        igx-list {
+            border-top: rem(1px) dashed var(--ig-gray-100);
+            border-bottom: rem(1px) dashed var(--ig-gray-100);
+        }
+    }
+
+    @include e(menu-header) {
+        > h4 {
+            @include type-style('subtitle-1');
+        }
+    }
+}
+

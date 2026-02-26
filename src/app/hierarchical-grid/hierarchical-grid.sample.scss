@@ -1,13 +1,24 @@
-:host::ng-deep {
-    .activeRow {
-        background-color: rgb(201, 241, 201);
-      }
+:host {
+    display: grid;
+
+    > .igx-grid {
+        --igx-grid-row-odd-background: var(--ig-primary-50);
+        --igx-grid-body-column-border-color-odd: var(--ig-primary-50);
+
+        igx-grid {
+            --igx-grid-row-odd-background: '';
+            --igx-grid-body-column-border-color-odd: '';
+        }
+    }
+
+    gap: 32px
 }
 
-[igxButton="contained"] {
-    margin: 0.5rem;
-}
-
-h4 {
-    padding-top: 2rem;
+.sample-header {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 2rem;
+    padding: 1rem;
+    border-bottom: 1px dashed var(--ig-gray-300);
 }

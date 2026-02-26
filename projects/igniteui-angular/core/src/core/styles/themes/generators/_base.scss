@@ -610,16 +610,16 @@
     //     @include radio($radio-theme-map);
     // }
 
-    @if is-used('igx-query-builder', $exclude) {
-        $query-builder-theme-map: query-builder-theme(
-            $schema: $schema,
-        );
-        $query-builder-theme-map: meta.call(
-            $theme-handler,
-            $query-builder-theme-map
-        );
-        @include query-builder($query-builder-theme-map);
-    }
+    //@if is-used('igx-query-builder', $exclude) {
+    //    $query-builder-theme-map: query-builder-theme(
+    //        $schema: $schema,
+    //    );
+    //    $query-builder-theme-map: meta.call(
+    //        $theme-handler,
+    //        $query-builder-theme-map
+    //    );
+    //    @include query-builder($query-builder-theme-map);
+    //}
 
     @if is-used('ig-scrollbar', $exclude) {
         $scrollbar-theme-map: scrollbar-theme(

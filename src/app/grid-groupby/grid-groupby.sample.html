@@ -30,7 +30,7 @@
     </igx-drop-down>
     <div class="density-chooser" style="margin-bottom: 16px">
         <igx-buttongroup [values]="summaryModes" (selected)="selectSummaryMode($event)"
-            style="display: block; width: 500px"></igx-buttongroup>
+            style="width: 500px"></igx-buttongroup>
     </div>
     <igx-grid #grid1 [data]="data" [allowFiltering]="true" [moving]="true" [cellSelection]="'single'" [width]="'1200px'"
         [hideGroupedColumns]="hideGroupedColumns" [height]="'700px'" [(groupingExpansionState)]='expState' [sortingOptions]="sortingOp"

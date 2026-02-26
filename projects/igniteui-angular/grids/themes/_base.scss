@@ -1,0 +1,2969 @@
+/* stylelint-disable max-nesting-depth */
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/elevations' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$theme: $material;
+$cell-font-size: rem(13px);
+$cell-line-height: rem(16px);
+$cell-editing-outline-width: rem(1px);
+$grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+$grid-body-column-border-odd: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-odd');
+$grid-body-column-border-even: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-even');
+$grid-active-state-border: var-get($theme, 'header-border-width')  var-get($theme, 'active-state-border-style') var-get($theme, 'cell-active-border-color');
+$cell-padding-sm: rem(12px);
+$cell-padding-md: rem(16px);
+$cell-padding-lg: rem(24px);
+
+// The shadow size that simulates border glueth to the pinned border to make it thicker
+$pinned-shadow-size: #{rem(1px)};
+
+// Z-Indices
+$z-grid-base: 1;
+$z-grid-decoration: 2;
+$z-grid-interaction: 3;
+$z-grid-selection: 4;
+$z-grid-edit-indicator: 5;
+$z-grid-drag-ghost: 20;
+$z-grid-scroll-drag: 25;
+$z-grid-pinned-cell: 9999;
+$z-grid-pinned-row: 10000;
+$z-grid-scroll: 10001;
+$z-grid-overlay: 10002;
+$z-grid-loading: 10003;
+
+@include layer(base) {
+    // Base cell display - used for both data cells and header cells
+    %cell-display {
+        position: relative;
+        display: flex;
+        flex: 1 1 0%;
+        align-items: center;
+        outline-style: none;
+        color: inherit;
+        text-align: start;
+        min-height: var(--cell-height);
+        overflow: hidden;
+        padding-block: 0;
+
+        // (!) the background-clip: padding-box; makes sure the background never go under the border,
+        // this is very important especially if the borders have a slide alpha
+        background-clip: padding-box !important;
+
+        font-size: $cell-font-size;
+        line-height: $cell-line-height;
+
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+    }
+
+    %cell-header {
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: flex-end;
+        min-width: 0;
+        min-height: var(--header-size);
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+        padding-block: 0;
+        font-size: var(--_grid-head-font-size);
+        font-weight: 600;
+        border-inline-end: $grid-header-border;
+        overflow: hidden;
+        transition: color 250ms ease-in-out;
+        outline-style: none;
+    }
+
+    %cell-input-overrides {
+        // Have a more stable visual editing experience
+        > igx-input-group,
+        igx-combo,
+        igx-simple-combo,
+        igx-select,
+        igx-date-picker,
+        igx-time-picker {
+            position: relative;
+            height: auto;
+            width: 100% !important;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        igx-input-group {
+            background: var-get($theme, 'cell-editing-background');
+
+            input {
+                height: 100%;
+                color: var-get($theme, 'cell-editing-foreground');
+            }
+
+            input:focus {
+                color: var-get($theme, 'cell-editing-focus-foreground');
+            }
+        }
+
+        igx-select,
+        igx-combo,
+        igx-simple-combo,
+        igx-time-picker,
+        igx-date-picker {
+            igx-input-group {
+                height: 100%;
+            }
+        }
+
+        .igx-input-group__bundle {
+            background: var-get($theme, 'cell-editing-background') !important;
+            height: 100% !important;
+            min-height: 100% !important;
+            border: none !important;
+
+            .igx-input-group__filler,
+            .igx-input-group__notch {
+                border: none !important;
+            }
+
+            &::before {
+                content: none !important;
+            }
+
+            &::after {
+                display: none;
+            }
+        }
+
+        .igx-input-group--indigo .igx-input-group__bundle:hover,
+        .igx-input-group--indigo .igx-input-group__bundle:focus {
+            background: transparent;
+        }
+
+        .igx-input-group__bundle-main,
+        .igx-input-group__bundle-start,
+        .igx-input-group__bundle-end {
+            height: auto;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+
+        .igx-input-group__bundle-main {
+            padding: 0;
+        }
+
+        .igx-input-group__line {
+            display: none;
+        }
+
+        igx-prefix,
+        igx-suffix {
+            background: inherit !important;
+            border-radius: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border: none !important;
+            padding-inline: sizable(rem(4px), rem(6px), rem(8px)) !important;
+        }
+
+        .igx-input-group--indigo {
+            padding-inline: sizable(rem(6px), rem(8px), rem(12px)) !important;
+
+            igx-prefix {
+                padding-inline-start: 0 !important;
+            }
+
+            igx-suffix {
+                padding-inline-end: 0 !important;
+            }
+        }
+
+        .igx-input-group__input {
+            padding-inline: sizable(rem(4px), rem(6px), rem(8px)) !important;
+        }
+
+        igx-date-range-picker {
+            height: 100%;
+        }
+
+        igx-time-picker [igxLabel] {
+            display: none;
+        }
+
+        input {
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        %form-group-input {
+            // ignore global typography
+            font-size: rem(13px) !important;
+            line-height: rem(16px) !important;
+        }
+
+        .igx-input-group__input,
+        .igx-input-group__file-input,
+        .igx-input-group__textarea {
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        .igx-input-group--disabled,
+        .igx-input-group--disabled igx-prefix,
+        .igx-input-group--disabled igx-suffix {
+            color: var-get($theme, 'cell-disabled-color');
+        }
+    }
+
+    @include b(igx-grid) {
+        @include sizable();
+
+        --component-size: var(--ig-size, var(--ig-size-large));
+
+        // TODO: This should be declared in the theme tokens
+        --grid-size: var(--component-size);
+
+        --_expander-icon-width: #{rem(24px)};
+        --_hierarchical-action-icon: #{rem(24px)};
+
+        --_hierarchical-indent-small: #{rem(12px)};
+        --_hierarchical-indent-medium: #{rem(16px)};
+        --_hierarchical-indent-large: #{rem(24px)};
+
+        --cell-height: #{sizable(rem(32px), rem(40px), rem(50px))};
+
+        // Derived size variables for header, group area, and tree indentation
+        --header-size: #{sizable(rem(32px), rem(40px), rem(50px))};
+        --grouparea-size: #{sizable(rem(41px), rem(49px), rem(57px))};
+        --igx-tree-indent-size: #{sizable(rem(12px), rem(16px), rem(24px))};
+
+        --_grid-head-font-size: #{rem(12px)};
+
+        // Core grid structure
+        position: relative;
+        display: grid;
+        grid-template-rows: auto auto auto 1fr auto auto;
+        grid-template-columns: 100%;
+        overflow: hidden;
+        box-shadow: var-get($theme, 'grid-elevation');
+        outline-style: none;
+        z-index: $z-grid-base;
+
+        // Grid caption
+        @include e(caption) {
+            display: flex;
+            align-items: center;
+            font-size: rem(20px);
+            line-height: rem(32px);
+            padding: rem(16px) rem(24px);
+            grid-row: 1;
+        }
+
+        // Table body container
+        @include e(tbody) {
+            position: relative;
+            display: flex;
+            grid-row: 4;
+            overflow: hidden;
+        }
+
+        // Table body content area
+        @include e(tbody-content) {
+            position: relative;
+            background: var-get($theme, 'content-background');
+            color: var-get($theme, 'content-text-color');
+            overflow: hidden;
+            z-index: $z-grid-base;
+            outline-style: none;
+
+            &:focus {
+                outline: 0;
+            }
+        }
+
+        // Table body message (empty state)
+        @include e(tbody-message) {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: var-get($theme, 'content-text-color');
+            flex-direction: column;
+            padding: rem(24px);
+        }
+
+        // Loading indicator
+        @include e(loading) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: rem(100px);
+        }
+
+        // Table body scrollbar
+        @include e(tbody-scrollbar) {
+            background: var-get($theme, 'content-background');
+            border-inline-start: rem(1px) solid var-get($theme, 'row-border-color') ;
+            position: relative;
+        }
+
+        // Table body scrollbar main section
+        @include e(tbody-scrollbar-main) {
+            position: relative;
+        }
+
+        // Table body scrollbar start section
+        @include e(tbody-scrollbar-start) {
+            background: var-get($theme, 'header-background');
+        }
+
+        // Table body scrollbar end section
+        @include e(tbody-scrollbar-end) {
+            background: var-get($theme, 'header-background');
+        }
+
+        // Horizontal scroll container
+        @include e(scroll) {
+            grid-row: 6;
+            display: flex;
+            flex-flow: row nowrap;
+            width: 100%;
+            background: var-get($theme, 'header-background');
+            z-index: $z-grid-scroll;
+        }
+
+        // Scroll start section
+        @include e(scroll-start) {
+            background: var-get($theme, 'header-background');
+            border-inline-end: $grid-header-border;
+        }
+
+        @include e(scroll-end) {
+            background: var-get($theme, 'header-background');
+            border-inline-start: $grid-header-border;
+        }
+
+        // Scroll main section
+        @include e(scroll-main) {
+            igx-display-container {
+                height: 0;
+            }
+        }
+
+        // Table footer
+        @include e(tfoot) {
+            position: relative;
+            display: flex;
+            background: var-get($theme, 'header-background');
+            color: var-get($theme, 'header-text-color');
+            overflow: hidden;
+            outline-style: none;
+            grid-row: 5;
+            border-top: $grid-header-border;
+            z-index: $z-grid-scroll;
+
+            .igx-grid__tr {
+                position: relative;
+                background: inherit;
+                color: inherit;
+                z-index: $z-grid-decoration;
+
+                &:hover {
+                    background: inherit;
+                    color: inherit;
+                }
+            }
+
+            > [aria-activedescendant] {
+                outline-style: none;
+            }
+
+            &:focus {
+                outline: 0;
+            }
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        // Table footer thumb (scrollbar)
+        @include e(tfoot-thumb) {
+            position: absolute;
+            top: 0;
+            inset-inline-end: 0;
+            background: var-get($theme, 'header-background');
+        }
+
+        // Grid footer
+        @include e(footer) {
+            grid-row: 7;
+        }
+
+        // Base row element
+        @include e(tr) {
+            position: relative;
+            display: flex;
+            outline-style: none;
+            border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+
+            // (!) the background-clip: padding-box; makes sure the background never go under the border,
+            // this is very important especially of the borders have slide alpha
+            background-clip: padding-box !important;
+
+            .igx-display-container {
+                overflow: visible !important;
+                flex: 1;
+                min-width: 0;
+            }
+
+            &:hover {
+                .igx-grid__td--column-selected {
+                    color: var-get($theme, 'row-selected-hover-text-color');
+                    background: var-get($theme, 'row-selected-hover-background');
+                }
+
+                .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                    border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
+                }
+            }
+        }
+
+        @include e(tr, $not: (header, selected)) {
+            &:hover {
+                background: var-get($theme, 'row-hover-background');
+                color: var-get($theme, 'row-hover-text-color');
+            }
+        }
+
+        // Row striping - odd rows
+        @include e(tr, $m: odd) {
+            background: var-get($theme, 'row-odd-background');
+            color: var-get($theme, 'row-odd-text-color');
+
+            .igx-grid__tr-action {
+                border-inline-end-color: var-get($theme, 'header-border-color') !important;
+                border-block-end: 0 !important;
+            }
+
+            .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                // The border is part of the body cells but the color of the border
+                // depends on the row background since we want it to be invisible unless a user change it
+                border-inline-end: $grid-body-column-border-odd;
+            }
+        }
+
+        // Row striping - even rows
+        @include e(tr, $m: even) {
+            background: var-get($theme, 'row-even-background');
+            color: var-get($theme, 'row-even-text-color');
+
+            .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                // The border is part of the body cells but the color of the border
+                // depends on the row background since we want it to be invisible unless a user change it
+                border-inline-end: $grid-body-column-border-even;
+            }
+
+            .igx-grid__tr-action {
+                border-inline-end-color: var-get($theme, 'header-border-color') !important;
+                border-block-end: 0 !important;
+            }
+        }
+
+
+        // Selected row state
+        @include e(tr, $m: selected) {
+            color: var-get($theme, 'row-selected-text-color');
+            background: var-get($theme, 'row-selected-background');
+
+            // WARN: This doesn't follow the BEM structure, needs work
+            .igx-grid__td--selected,
+            .igx-grid__td--pinned.igx-grid__td--selected {
+                color: var-get($theme, 'cell-selected-within-text-color');
+                background: var-get($theme, 'cell-selected-within-background');
+            }
+
+            .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
+            }
+
+
+            &:hover {
+                color: var-get($theme, 'row-selected-hover-text-color');
+                background: var-get($theme, 'row-selected-hover-background');
+
+                .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                    border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
+                }
+            }
+        }
+
+        // Deleted row state - shows strikethrough text
+        @include e(tr, $m: deleted) {
+            // WARN: This doesn't follow the BEM structure, needs work
+            .igx-grid__td-text {
+                font-style: italic;
+                color: color($color: 'error');
+                text-decoration: line-through;
+            }
+        }
+
+        // Highlighted row - shows left indicator bar
+        @include e(tr, $m: highlighted) {
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                inset-inline-start: 0;
+                width: rem(4px);
+                height: 100%;
+                background: var-get($theme, 'row-highlight');
+                z-index: $z-grid-interaction;
+            }
+
+            // When highlighted row is also edited, offset the edited indicator
+            &::before {
+                inset-inline-start: rem(4px);
+            }
+        }
+
+        // Filtered row (tree grid) - subdued text color
+        @include e(tr, $m: filtered) {
+            // WARN: This doesn't follow the BEM structure, needs work
+            .igx-grid__td-text {
+                color: var-get($theme, 'tree-filtered-text-color');
+            }
+        }
+
+        // Selected and filtered row combination (tree grid)
+        @include e(tr, $mods: (selected, filtered)) {
+            // WARN: This doesn't follow the BEM structure, needs work
+            .igx-grid__td-text {
+                color: var-get($theme, 'tree-selected-filtered-row-text-color');
+            }
+        }
+
+        // Expanded row (hierarchical/tree grid)
+        @include e(tr, $m: expanded) {
+            border-bottom: none;
+        }
+
+        // Pinned row
+        @include e(tr, $m: pinned) {
+            position: relative;
+            background: inherit;
+            z-index: $z-grid-pinned-row;
+
+            .igx-grid__hierarchical-expander--empty {
+                border-inline-end: $grid-header-border;
+            }
+        }
+
+        // Pinned row at top
+        @include e(tr, $m: pinned-top) {
+            border-bottom: rem(2px) solid var-get($theme, 'pinned-border-color') !important;
+
+            .igx-grid__tr:last-of-type {
+                border-bottom: none;
+            }
+        }
+
+        // Pinned row at bottom
+        @include e(tr, $m: pinned-bottom) {
+            border-top: rem(2px) solid var-get($theme, 'pinned-border-color') !important;
+            position: absolute;
+            bottom: 0;
+        }
+
+        // Merged row (no bottom border)
+        @include e(tr, $m: merged) {
+            border-block-end: 0;
+        }
+
+        // Merged row top
+        @include e(tr, $m: merged-top) {
+            position: absolute;
+            width: 100%;
+        }
+
+        // Disabled row
+        @include e(tr, $m: disabled) {
+            .igx-grid__td-text {
+                color: var-get($theme, 'cell-disabled-color');
+            }
+        }
+
+        // Disabled row
+        @include e(tr-header-row) {
+            igx-pivot-row-header-group {
+                padding-inline-start: pad-inline($cell-padding-sm, $cell-padding-md, $cell-padding-sm);
+
+                .igx-grid-th {
+                    border-block-end: 0;
+                }
+            }
+        }
+
+        // Cell (idle)
+        @include e(td) {
+            @extend %cell-display;
+            @extend %cell-input-overrides;
+
+            // Used for the active cell indicator
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+            }
+        }
+        @include e(td, $m: centered) {
+            justify-content: center;
+        }
+
+        @include e(td, $m: image) {
+            justify-content: center;
+        }
+
+        @include e(td, $m: bool) {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+
+            .igx-icon {
+                --component-size: 1;
+            }
+
+            .igx-icon--error {
+                color: color($color: 'gray', $variant: 600);
+            }
+        }
+
+        @include e(td, $m: bool-true) {
+            .igx-icon--success {
+             color: color($color: 'gray', $variant: 700);
+            }
+        }
+
+        // Cell for fixed width columns (non-resizable)
+        @include e(td, $m: fw) {
+            flex-grow: 0;
+            outline-style: none;
+
+            > .igx-icon {
+                --component-size: 3;
+            }
+        }
+
+        // Cell (text wrapper)
+        @include e(td-text) {
+            @include ellipsis();
+            pointer-events: none;
+        }
+
+        // New cell (newly added)
+        @include e(td, $m: new) {
+            color: var-get($theme, 'cell-new-color');
+        }
+
+        // Edited cell (value has been modified)
+        @include e(td, $m: edited) {
+            .igx-grid__td-text {
+                font-style: italic;
+                color: var-get($theme, 'cell-edited-value-color');
+                padding: 0 rem(1px);
+            }
+        }
+
+        // Merged cell
+        @include e(td, $m: merged) {
+            z-index: $z-grid-base;
+            grid-row: 1 / -1;
+        }
+
+        // Merged cell when selected
+        @include e(td, $m: merged-selected) {
+            color: var-get($theme, 'row-selected-text-color');
+            background: var-get($theme, 'row-selected-background') !important;
+        }
+
+        // Merged cell when hovered
+        @include e(td, $m: merged-hovered) {
+            color: var-get($theme, 'row-hover-text-color');
+            background: var-get($theme, 'row-hover-background') !important;
+        }
+
+        // Merged cell when both selected and hovered
+        @include e(td, $mods: (merged-selected, merged-hovered)) {
+            color: var-get($theme, 'row-selected-hover-text-color');
+            background: var-get(
+                $theme,
+                'row-selected-hover-background'
+            ) !important;
+        }
+
+        // Number cell (right-aligned)
+        @include e(td, $m: number) {
+            text-align: end;
+            justify-content: flex-end;
+            flex-grow: 1;
+        }
+
+        // Pinned cell
+        @include e(td, $m: pinned) {
+            position: relative;
+            background: inherit;
+            z-index: $z-grid-pinned-cell;
+        }
+
+        // First pinned column (left border)
+        @include e(td, $m: pinned-first) {
+            border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+
+            &::after {
+                width: calc(100% - $pinned-shadow-size);
+                inset-inline-end: 0;
+                inset-inline-start: unset;
+            }
+        }
+
+        // Last pinned column (right border)
+        @include e(td, $m: pinned-last) {
+            border-inline-end: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+        }
+
+        // Pinned cell when selected
+        @include e(td, $mods: (pinned, selected)) {
+            color: var-get($theme, 'cell-selected-text-color');
+            background: var-get($theme, 'cell-selected-background');
+        }
+
+        // Pinned cell when column is selected
+        @include e(td, $mods: (pinned, column-selected)) {
+            color: var-get($theme, 'row-selected-text-color');
+            background: var-get($theme, 'row-selected-background');
+
+            &:hover {
+                background: var-get($theme, 'row-selected-hover-background');
+                color: var-get($theme, 'row-selected-text-color');
+            }
+        }
+
+        // First cell in row-pinned layout
+        @include e(td, $m: row-pinned-first) {
+            overflow: hidden;
+        }
+
+        // Pinned chip spacing
+        @include e(td, $m: pinned-chip) {
+            margin-inline-end: pad-inline(rem(4px), rem(8px), rem(12px));
+        }
+
+        @include e(td, $m: active) {
+            &::after {
+                border: $grid-active-state-border;
+            }
+        }
+
+        // Selected cell
+        @include e(td, $m: selected) {
+            color: var-get($theme, 'cell-selected-text-color');
+            background: var-get($theme, 'cell-selected-background');
+
+            .igx-grid__tree-grouping-indicator {
+                &:hover {
+                    color: var-get($theme, 'cell-selected-text-color');
+                }
+            }
+        }
+
+        // Column selected (entire column is selected)
+        @include e(td, $m: column-selected) {
+            color: var-get($theme, 'row-selected-text-color');
+            background: var-get($theme, 'row-selected-background');
+
+            &:hover {
+                color: var-get($theme, 'row-selected-hover-text-color');
+                background: var-get($theme, 'row-selected-hover-background');
+            }
+        }
+
+        // Cross-selected (cell + column selected)
+        @include e(td, $mods: (selected, column-selected)) {
+            color: var-get($theme, 'cell-selected-within-text-color');
+            background: var-get($theme, 'cell-selected-within-background');
+
+            &:hover {
+                color: var-get($theme, 'cell-selected-within-text-color');
+                background: var-get($theme, 'cell-selected-within-background');
+            }
+        }
+
+        @include e(td, $m: editing) {
+            background: var-get($theme, 'cell-editing-background') !important;
+            padding-inline: rem(4px);
+
+            &::after {
+                box-shadow: inset 0 0 0 #{$cell-editing-outline-width}
+                    var-get($theme, 'edit-mode-color');
+            }
+
+            .igx-input-group {
+                --size: 100% !important;
+                --igx-input-group-border-color: transparent;
+                --igx-input-group-hover-border-color: transparent;
+                --igx-input-group-focused-border-color: transparent;
+                --igx-input-group-focused-secondary-color: transparent;
+                --igx-input-group-disabled-border-color: transparent;
+
+                width: 100%;
+                overflow: hidden;
+
+                .igx-input-group__bundle {
+                    &::before,
+                    &::after {
+                        display: none;
+                    }
+                }
+
+                .igx-input-group__input {
+                    --input-font-size: #{$cell-font-size};
+                    --input-line-height: #{$cell-line-height};
+
+                    font-size: var(--input-font-size) !important;
+                    line-height: var(--input-line-height) !important;
+
+                }
+            }
+
+            [aria-readonly='true'] {
+                color: var-get($theme, 'cell-disabled-color');
+
+                igx-icon {
+                    color: var-get($theme, 'cell-disabled-color');
+                }
+            }
+        }
+
+        @include e(td, $mods: (editing, invalid)) {
+            .igx-input-group__bundle {
+                &:focus-within {
+                    &::after {
+                        border: none !important;
+                    }
+                }
+            }
+
+            &::after {
+                box-shadow: inset 0 0 0 #{$cell-editing-outline-width}
+                color($color: 'error') !important;
+
+                top: calc($cell-editing-outline-width / 2);
+                height: calc(100% - $cell-editing-outline-width)
+            }
+        }
+
+        @include e(td, $m: invalid) {
+            padding-inline-end: rem(4px) !important;
+
+            > igx-icon {
+                --component-size: 1 !important;
+
+                color: color($color: 'error');
+            }
+        }
+
+        @include e(td, $mods: (editing, valid)) {
+            &::after {
+                box-shadow: inset 0 0 0 $cell-editing-outline-width color($color: 'success');
+                top: calc($cell-editing-outline-width / 2);
+                height: calc(100% - $cell-editing-outline-width)
+            }
+        }
+
+        @include e(td, $m: valid) {
+            > igx-icon {
+                --component-size: 1 !important;
+            }
+        }
+
+        // Row editing state - active edit mode on a row
+        @include e(tr, $m: edit) {
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                inset: 0;
+                pointer-events: none;
+                user-select: none;
+
+                // This is do to the pinned border 9999 z-index
+                z-index: $z-grid-pinned-row;
+                box-shadow:
+                    inset 0 rem(1px) 0 0 var-get($theme, 'edit-mode-color'),
+                    inset 0 rem(-1px) 0 0 var-get($theme, 'edit-mode-color');
+            }
+        }
+
+        // MRL (Multi-row layout) specific edit row adjustments
+        @include e(tr, $mods: (mrl, edit)) {
+            &:first-of-type::after {
+                top: 0;
+                z-index: $z-grid-edit-indicator;
+            }
+        }
+
+
+        // Dragging row state
+        @include e(tr, $m: drag) {
+            opacity: 0.5;
+        }
+
+        // Ghost row during drag operation
+        @include e(tr, $m: ghost) {
+            background: var-get($theme, 'row-ghost-background');
+            color: var-get($theme, 'row-drag-color');
+            z-index: $z-grid-overlay;
+        }
+
+        // Group row
+        @include e(tr, $m: group) {
+            position: relative;
+            background: var-get($theme, 'header-background') !important;
+        }
+
+        // Inner row wrapper
+        @include e(tr, $m: inner) {
+            display: flex;
+            background: inherit;
+        }
+
+        // Header row
+        @include e(tr, $m: header) {
+            display: flex;
+            align-items: center;
+
+            igx-icon {
+                --component-size: 3;
+            }
+        }
+
+        // Row add animation
+        @include e(tr, $m: add-animate) {
+            animation: scale-in-ver-center 0.2s
+                cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        // Edited row indicator - shows row has been modified
+        @include e(tr, $m: edited) {
+            &::before {
+                content: '';
+                position: absolute;
+                width: rem(2px);
+                height: 100%;
+                z-index: $z-grid-pinned-row;
+                background: var-get($theme, 'edited-row-indicator');
+            }
+        }
+
+        // Row editing overlay outlet container
+        @include e(row-editing-outlet) {
+            z-index: $z-grid-pinned-row;
+            position: absolute;
+        }
+
+        // Row container
+        @include e(tr-container) {
+            overflow: auto;
+            width: 100%;
+            border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+        }
+
+        // Active row container
+        @include e(tr-container, $m: active) {
+            border: $grid-active-state-border;
+        }
+
+        // Action row (for row actions like edit, delete buttons)
+        @include e(tr-action) {
+            &:last-of-type {
+                border-inline-end: $grid-header-border;
+                min-height: var(--cell-height);
+            }
+        }
+
+        // Tree grid grouping indicator (expand/collapse icon)
+        @include e(tree-grouping-indicator) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            outline-style: none;
+            margin-inline-end: rem(8px);
+            cursor: pointer;
+            color: var-get($theme, 'expand-icon-color');
+
+            &:hover {
+                color: var-get($theme, 'expand-icon-hover-color');
+            }
+
+            [dir='rtl'] & {
+                transform: scaleX(-1);
+            }
+
+            igx-icon {
+                --component-size: 3;
+            }
+        }
+
+        // Tree grid loading indicator
+        @include e(tree-loading-indicator) {
+            width: rem(24px);
+            height: rem(24px);
+            margin-inline-end: rem(8px);
+        }
+
+        // Row indentation for tree/grouping
+        @include e(row-indentation) {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+            border-inline-end: $grid-header-border;
+            background: inherit;
+            z-index: $z-grid-base;
+
+            // (!) the background-clip: padding-box; makes sure the background never go under the border,
+            // this is very important especially of the borders have slide alpha
+            background-clip: padding-box !important;
+        }
+
+        // Hierarchical grid expander (expand/collapse child grids)
+        @include e(hierarchical-expander) {
+            user-select: none;
+            background: inherit;
+            padding-inline: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: $z-grid-interaction;
+            color: var-get($theme, 'expand-icon-color');
+
+            &:focus {
+                outline: none;
+
+                igx-icon {
+                    color: var-get($theme, 'expand-icon-hover-color');
+                }
+            }
+
+            &:hover {
+                igx-icon {
+                    color: var-get($theme, 'expand-icon-hover-color');
+                }
+            }
+
+            igx-icon {
+                --component-size: 3;
+                color: var-get($theme, 'expand-icon-color');
+            }
+
+            [dir='rtl'] & {
+                transform: scaleX(-1);
+            }
+        }
+
+        // Empty hierarchical expander (no children)
+        @include e(hierarchical-expander, $m: empty) {
+            cursor: default;
+            pointer-events: none;
+            padding-inline: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
+
+        }
+
+        // Hierarchical expander in header
+        @include e(hierarchical-expander, $m: header) {
+            background: inherit;
+            border-inline-end: $grid-header-border;
+            z-index: $z-grid-interaction;
+
+            igx-icon {
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        // Hierarchical expander pushed to top
+        @include e(hierarchical-expander, $m: push) {
+            align-items: flex-start;
+
+            igx-icon {
+                min-height: var(--header-size);
+                max-height: var(--header-size);
+            }
+        }
+
+        // Hierarchical indent spacing
+        @include e(hierarchical-indent) {
+            $indent-sm: calc(2 * var(--_hierarchical-indent-small) + var(--_hierarchical-action-icon));
+            $indent-md: calc(2 * var(--_hierarchical-indent-medium) + var(--_hierarchical-action-icon));
+            $indent-lg: calc(2 * var(--_hierarchical-indent-large) + var(--_hierarchical-action-icon));
+
+            display: flex;
+            margin-inline-start: pad-inline($indent-sm, $indent-md, $indent-lg);
+            margin-inline-end: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
+            margin-block: pad-block(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
+        }
+
+        // Hierarchical indent when scrolling
+        @include e(hierarchical-indent, $m: scroll) {
+            $indent-scroll-sm: calc(var(--_hierarchical-indent-small) + 18px);
+            $indent-scroll-md: calc(var(--_hierarchical-indent-medium) + 18px);
+            $indent-scroll-lg: calc(var(--_hierarchical-indent-large) + 18px);
+
+
+            margin-inline-end: pad-inline($indent-scroll-sm, $indent-scroll-md, $indent-scroll-lg);
+        }
+
+        // Row indentation levels for tree/grouping (1-10)
+        @for $i from 1 through 10 {
+            @include e(row-indentation, $m: level-#{$i}) {
+                $level-sm: $i * rem(24px);
+                $level-md: $i * rem(32px);
+                $level-lg: $i * rem(36px);
+
+                padding-inline-start: pad-inline(
+                    #{$level-sm},
+                    #{$level-md},
+                    #{$level-lg}
+                );
+            }
+        }
+
+        // Header indentation for tree/grouping
+        @include e(header-indentation) {
+            position: relative;
+            padding-inline-end: sizable($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
+            border-inline-end: $grid-header-border;
+            background: var-get($theme, 'header-background');
+            z-index: $z-grid-selection;
+            height: 100%;
+
+            igx-icon {
+                --component-size: 3;
+            }
+        }
+
+        // Header indentation without border
+        @include e(header-indentation, $m: no-border) {
+            border-inline-end: rem(1px) solid transparent;
+        }
+
+        // Checkbox padding
+        @include e(cbx-padding) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+        }
+
+        // Checkbox selection cell
+        @include e(cbx-selection) {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: inherit;
+            z-index: $z-grid-selection;
+
+            // (!) the background-clip: padding-box; makes sure the background never go under the border,
+            // this is very important especially of the borders have slide alpha
+            background-clip: border-box !important;
+        }
+
+        // Checkbox selection pushed to top (for header alignment)
+        @include e(cbx-selection, $m: push) {
+            align-items: flex-start;
+            padding-block-start: pad-block(
+                calc((rem(32px) - rem(20px)) / 2),
+                calc((rem(40px) - rem(20px)) / 2),
+                calc((rem(50px) - rem(20px)) / 2)
+            );
+        }
+
+        // Group row
+        @include e(group-row) {
+            background: var-get($theme, 'group-row-background');
+            display: flex;
+            outline-style: none;
+            border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+            min-height: var(--header-size);
+
+            &::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                inset: 0;
+                pointer-events: none;
+                user-select: none;
+            }
+        }
+
+        // Active group row
+        @include e(group-row, $m: active) {
+            position: relative;
+            background: var-get($theme, 'group-row-selected-background');
+
+            &:hover {
+                background: var-get($theme, 'group-row-selected-background');
+            }
+
+            &::after {
+                border: $grid-active-state-border;
+                z-index: $z-grid-selection;
+            }
+        }
+
+        // Group content area
+        @include e(group-content) {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 1 1 auto;
+            padding-inline-start: sizable(rem(12px), rem(16px), rem(24px));
+            border-inline-end: $grid-body-column-border-odd;
+            min-height: var(--cell-height);
+
+            &:focus {
+                outline: transparent;
+            }
+        }
+
+        // Grouping indicator (expand/collapse for groups)
+        @include e(grouping-indicator) {
+            position: relative;
+            display: flex;
+            user-select: none;
+            justify-content: center;
+            align-items: center;
+            z-index: $z-grid-base;
+            cursor: pointer;
+            padding-inline-end: rem(12px);
+            margin-inline-start: sizable(rem(12px), rem(16px), rem(24px));
+            min-height: var(--header-size);
+
+            igx-icon {
+                --component-size: 3;
+                color: var-get($theme, 'expand-icon-color');
+            }
+
+            &:hover,
+            &:focus {
+                outline-style: none;
+
+                igx-icon {
+                    color: var-get($theme, 'expand-icon-hover-color');
+                }
+            }
+
+            [dir='rtl'] & {
+                transform: scaleX(-1);
+            }
+        }
+
+        // Group expand button (on row indentation)
+        @include e(group-expand-btn) {
+            position: absolute;
+            cursor: pointer;
+            user-select: none;
+            inset-block-start: calc(50% - var(--_expander-icon-width) / 2);
+            inset-inline-start: var(--_indicator-inline-inset);
+
+            &:hover {
+                color: var-get($theme, 'expand-icon-hover-color');
+            }
+        }
+
+        // Group expand button pushed to top
+        @include e(group-expand-btn, $m: push) {
+            inset-block-start: sizable(
+                calc((rem(40px) - rem(12px)) / 2),
+                calc((rem(48px) - rem(12px)) / 2),
+                calc((rem(56px) - rem(12px)) / 2)
+            );
+        }
+
+        // Group row padding levels (1-10) - for nested groups
+        @for $i from 1 through 10 {
+            @include e(group-row, $m: padding-level-#{$i}) {
+                $indicator-padding-sm: $i * rem(12px);
+                $indicator-padding-md: $i * rem(16px);
+                $indicator-padding-lg: $i * rem(18px);
+
+                .igx-grid__grouping-indicator {
+                    padding-inline-start: sizable(
+                        #{$indicator-padding-sm},
+                        #{$indicator-padding-md},
+                        #{$indicator-padding-lg}
+                    );
+                }
+            }
+        }
+
+        // Multi-row layout block (MRL)
+        @include e(mrl-block) {
+            display: grid !important;
+            background: inherit;
+            position: relative;
+        }
+
+        // Pivot grid super-compact mode
+        @include e(pivot, $m: super-compact) {
+            --ig-size: 1 !important;
+
+            .igx-grid-th,
+            .igx-grid-thead__title,
+            .igx-grid-td {
+                padding: 0 rem(4px) !important;
+                min-height: rem(24px) !important;
+                height: rem(24px);
+            }
+
+            .igx-grid-th,
+            .igx-grid-thead__title {
+                > * {
+                    line-height: normal;
+                    align-self: initial;
+                    max-height: 100%;
+                }
+            }
+
+            .igx-grid__tr-pivot--row-area {
+                padding-bottom: rem(4px);
+            }
+        }
+
+        // Pivot row
+        @include e(tr-pivot) {
+            display: flex;
+            align-items: center;
+            background: inherit;
+            overflow: hidden;
+            z-index: $z-grid-interaction;
+            height: var(--header-size);
+            padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+            padding-block: 0;
+            border-inline-start: $grid-header-border;
+            border-bottom: $grid-header-border;
+
+            igx-chips-area {
+                flex-wrap: nowrap;
+                width: auto;
+
+                > * {
+                    margin-inline-end: rem(4px);
+                }
+
+                &:last-child {
+                    margin-inline-end: 0;
+                }
+            }
+        }
+
+        // Pivot filter toggle button
+        @include e(pivot-filter-toggle) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+
+            > igx-badge {
+                position: absolute;
+                top: rem(-4px);
+                inset-inline-start: 60%;
+                width: rem(18px);
+                min-width: rem(18px);
+                height: rem(18px);
+                font-size: rem(10px);
+                pointer-events: none;
+                user-select: none;
+            }
+        }
+
+        // Pivot empty chip area placeholder
+        @include e(pivot-empty-chip-area) {
+            line-height: normal;
+            font-size: rem(14px);
+            margin-inline-end: 0 !important;
+        }
+
+        // Pivot row area
+        @include e(tr-pivot, $m: small-row-area) {
+            border-inline-start: 0;
+        }
+
+        // Pivot row area
+        @include e(tr-pivot, $m: row-area) {
+            height: auto !important;
+            align-items: flex-end;
+            padding-bottom: pad-block(rem(8px), rem(12px), rem(16px));
+            border-inline-start: 0;
+            border-bottom: 0;
+        }
+
+        // Pivot filter container
+        @include e(tr-pivot, $m: filter-container) {
+            display: flex;
+            flex-direction: column;
+        }
+
+        // Pivot chip drop indicator
+        @include e(tr-pivot, $m: chip_drop_indicator) {
+            width: rem(2px);
+            background: var-get($theme, 'resize-line-color');
+            visibility: hidden;
+        }
+
+        // Pivot drop row area
+        @include e(tr-pivot, $m: drop-row-area) {
+            flex-grow: 1;
+        }
+
+        // Pivot filter row
+        @include e(tr-pivot, $m: filter) {
+            height: var(--header-size);
+            border-inline-start: 0;
+        }
+
+        // Pivot group
+        @include e(tr-pivot-group) {
+            flex: 1;
+        }
+
+        // Pivot column dimension leaf
+        @include e(tr-pivot, $m: columnDimensionLeaf) {
+            box-shadow: none;
+
+            igx-grid-header {
+                border: none;
+            }
+        }
+
+        // Pivot column multi-row span
+        @include e(tr-pivot, $m: columnMultiRowSpan) {
+            igx-grid-header {
+                > * {
+                    visibility: hidden;
+                }
+            }
+        }
+
+        // Pivot toggle icons
+        @include e(tr-pivot-toggle-icons) {
+            display: inline-flex !important;
+        }
+
+        // ============================================================================
+        // Drag & Drop Elements
+        // ============================================================================
+
+        // Drag indicator for reordering columns/rows
+        @include e(drag-indicator) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-inline: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
+            min-height: var(--cell-height);
+            padding-block: 0;
+            flex: 0 0 auto;
+            background: inherit;
+            z-index: $z-grid-selection;
+            cursor: move;
+            border-inline-end: rem(1px) solid transparent;
+
+            igx-icon {
+                --component-size: 3;
+            }
+        }
+
+        // Drag indicator in header
+        @include e(drag-indicator, $m: header) {
+            border-inline-end: $grid-header-border;
+        }
+
+        // Drag indicator off/disabled state
+        @include e(drag-indicator, $m: off) {
+            color: var-get($theme, 'row-drag-color');
+        }
+
+        // Ghost image shown while dragging
+        @include e(drag-ghost-image) {
+            position: absolute !important;
+            align-items: center !important;
+            background: var-get($theme, 'ghost-header-background') !important;
+            color: var-get($theme, 'ghost-header-text-color') !important;
+            border-inline-end: transparent !important;
+            min-width: rem(168px);
+            max-width: rem(320px);
+            height: var(--header-size);
+            min-height: var(--header-size);
+            padding-inline: pad-inline(rem(24px), rem(16px), rem(12px));
+            top: rem(-10000px);
+            inset-inline-start: rem(-10000px);
+            border: none;
+            box-shadow: var(--drag-shadow);
+            overflow: hidden;
+            z-index: $z-grid-drag-ghost;
+
+            .igx-grid-th__title {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                flex: 1 0 0;
+                text-align: end;
+                color: var-get($theme, 'ghost-header-text-color') !important;
+            }
+
+            .igx-grid-th__icons {
+                display: none;
+            }
+
+            .igx-grid-thead__title {
+                border: none;
+                color: var-get($theme, 'ghost-header-text-color') !important;
+                background: transparent !important;
+            }
+        }
+
+        // Ghost image icon
+        @include e(drag-ghost-image-icon) {
+            color: var-get($theme, 'ghost-header-icon-color');
+            margin-inline-end: rem(12px);
+        }
+
+        // Ghost image icon group (multiple columns)
+        @include e(drag-ghost-image-icon-group) {
+            color: var-get($theme, 'ghost-header-icon-color');
+            padding: rem(24px);
+            padding-inline-end: 0;
+            margin-inline-end: rem(8px);
+        }
+
+        // Drag column header (being dragged)
+        @include e(drag-col-header) {
+            background: var-get($theme, 'header-background');
+
+            .igx-grid-thead__title > *,
+            .igx-grid-th > * {
+                opacity: 0.4;
+            }
+        }
+
+        // Scroll on drag indicators
+        @include e(scroll-on-drag-left) {
+            position: absolute;
+            width: rem(15px);
+            top: 0;
+            height: 100%;
+            z-index: $z-grid-scroll-drag;
+            inset-inline-start: 0;
+        }
+
+        @include e(scroll-on-drag-right) {
+            position: absolute;
+            width: rem(15px);
+            top: 0;
+            height: 100%;
+            z-index: $z-grid-scroll-drag;
+            inset-inline-end: 0;
+        }
+
+        @include e(scroll-on-drag-pinned) {
+            position: absolute;
+            width: rem(15px);
+            height: 100%;
+            top: 0;
+            z-index: $z-grid-scroll-drag;
+        }
+
+        // ============================================================================
+        // Filtering Elements
+        // ============================================================================
+
+        // Filtering row
+        @include e(filtering-row) {
+            // Container styles
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            justify-content: space-between;
+
+            // Position styles
+            position: absolute;
+            inset-inline-start: 0;
+            bottom: 0;
+            z-index: $z-grid-interaction;
+            grid-row: 2;
+
+            // size & spacing styles
+            width: 100%;
+            height: var(--cell-height);
+            padding-inline: pad-inline($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
+
+            // Color styles
+            color: var-get($theme, 'filtering-row-text-color');
+            background: var-get($theme, 'filtering-row-background');
+            box-shadow: 0 rem(4px) rem(10px) rgba(0, 0, 0, 0.12);
+
+            // Compound components overrides
+            igx-input-group {
+                --size: calc(var(--cell-height) - #{rem(8px)}) !important;
+
+                width: 100% !important;
+                max-width: rem(200px) !important;
+                min-width: rem(140px) !important;
+                border: rem(1px) solid color($color: 'gray', $variant: 300) !important;
+
+                .igx-input-group__bundle,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end,
+                igx-prefix,
+                igx-suffix {
+                    align-items: center;
+                    background: transparent !important;
+                    border-radius: 0 !important;
+
+                    /* stylelint-disable-next-line */
+                    &:hover {
+                        background: transparent !important;
+                    }
+                }
+
+                igx-prefix,
+                igx-suffix {
+                    height: 100% !important;
+                    padding: 0 sizable(rem(4px), rem(6px), rem(8px)) !important;
+                }
+
+                .igx-input-group__input {
+                    font-size: sizable(rem(12px), rem(14px), rem(16px)) !important;
+                    padding-inline-start: 0 !important;
+                    padding-block: 0 !important;
+                    height: 100% !important;
+                }
+
+                .igx-input-group__bundle,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end,
+                .igx-input-group__input {
+                    border: 0 !important;
+
+                    /* stylelint-disable-next-line */
+                    &:hover {
+                        border: 0 !important;
+                        box-shadow: none !important;
+                    }
+                }
+
+                .igx-input-group__bundle::after,
+                .igx-input-group__bundle::before {
+                    display: none !important;
+                }
+
+                .igx-input-group__bundle-main {
+                    padding-inline-start: 0 !important;
+                    margin: 0 !important;
+                    border: 0 !important;
+                    outline: none !important;
+                    box-shadow: none !important;
+                    background: transparent !important;
+                }
+
+                color: var-get($theme, 'filtering-row-text-color') !important;
+
+                &:hover{
+                    color: var-get($theme, 'filtering-row-text-color') !important;
+                    border-color: color($color: 'primary', $variant: 500) !important;
+                }
+            }
+
+            .igx-input-group--focused {
+                border-color: color($color: 'primary', $variant: 500) !important;
+                border-width: rem(1px) !important;
+
+                color: var-get($theme, 'filtering-row-text-color');
+
+                .igx-input-group__bundle,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end,
+                .igx-input-group__input {
+                    border: 0 !important;
+                    box-shadow: none !important;
+                }
+
+                .igx-input-group__bundle-main,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end {
+                    margin: 0 !important;
+                    border: 0 !important;
+                    outline: none !important;
+                    box-shadow: none !important;
+                    background: transparent !important;
+                }
+
+                .igx-input-group__bundle,
+                .igx-input-group__bundle-start,
+                .igx-input-group__bundle-end,
+                igx-prefix,
+                igx-suffix {
+                    background: transparent !important;
+                    border-radius: 0 !important;
+                }
+            }
+
+            .igx-input-group__line {
+                display: none !important;
+            }
+
+            igx-prefix:focus {
+                color: color($color: 'secondary', $variant: 500) !important;
+            }
+
+            igx-suffix {
+                igx-icon {
+                    outline-style: none !important;
+
+                    &:focus {
+                        color: color($color: 'secondary') !important;
+                    }
+
+                    + igx-icon {
+                        margin-inline-start: rem(4px) !important;
+                    }
+                }
+            }
+
+            [igxIconButton] {
+                --ig-size: 1;
+
+                aspect-ratio: 1;
+                color: var-get($theme, 'filtering-row-text-color');
+            }
+        }
+
+        // Filtering row main section
+        @include e(filtering-row-main) {
+            display: flex;
+            flex: 1 1 auto;
+            align-items: center;
+            overflow: hidden;
+            max-width: calc(100% - rem(176px));
+            min-width: rem(56px);
+
+            igx-chips-area {
+                flex-wrap: nowrap;
+
+                // Can't uae gap on the parent because dropdown container is present in the dom
+                margin-inline: rem(8px);
+                gap: rem(4px);
+            }
+        }
+
+        // Filtering row editing buttons
+        @include e(filtering-row-editing-buttons) {
+            display: flex;
+            align-items: center;
+            padding: rem(8px);
+            gap: rem(4px);
+
+            button {
+                transition: none;
+
+                &:not([disabled]) igx-icon {
+                    color: var-get($theme, 'sorted-header-icon-color');
+                }
+            }
+        }
+
+        // Filtering row editing buttons (small)
+        @include e(filtering-row-editing-buttons, $m: small) {
+            padding: rem(4px);
+
+            button {
+                transition: none;
+
+                &:not([disabled]) igx-icon {
+                    color: var-get($theme, 'sorted-header-icon-color');
+                }
+            }
+        }
+
+        // Filtering row scroll start
+        @include e(filtering-row-scroll-start) {
+            position: relative;
+            margin-inline: rem(8px);
+            overflow: visible;
+
+            &::after {
+                display: block;
+                position: absolute;
+                width: rem(10px);
+                content: '';
+                inset-block: rem(-2px);
+                background: linear-gradient(
+                    to right,
+                    var-get($theme, 'filtering-row-background'),
+                    transparent
+                );
+                inset-inline-end: rem(-10px);
+            }
+        }
+
+        // Filtering row scroll end
+        @include e(filtering-row-scroll-end) {
+            position: relative;
+            margin-inline: rem(8px);
+            overflow: visible;
+
+            &::before {
+                display: block;
+                position: absolute;
+                width: rem(10px);
+                content: '';
+                inset-block: rem(-2px);
+                background: linear-gradient(
+                    to left,
+                    var-get($theme, 'filtering-row-background'),
+                    transparent
+                );
+                inset-inline-start: rem(-10px);
+            }
+        }
+
+        %filtering-cell {
+            display: flex;
+            align-items: center;
+            padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+            padding-block: 0;
+            overflow: hidden;
+            border-inline-end: $grid-header-border;
+            border-top: $grid-header-border;
+            height: var(--header-size);
+
+            // (!) the background-clip: padding-box; makes sure the background never go under the border,
+            // this is very important especially of the borders have slide alpha
+            background-clip: padding-box !important;
+
+
+            igx-chips-area {
+                width: 100%;
+                flex-wrap: nowrap;
+
+                .igx-filtering-chips__connector {
+                    font-size: rem(12px);
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    margin: 0 rem(8px);
+                    overflow: hidden;
+                }
+            }
+        }
+
+        // Filtering cell (advanced filtering)
+        @include e(filtering-cell) {
+            @extend %filtering-cell;
+        }
+
+        // Filtering cell selected state
+        @include e(filtering-cell, $m: selected) {
+            @extend %filtering-cell;
+
+            color: var-get($theme, 'header-selected-text-color');
+            background: var-get($theme, 'header-selected-background');
+
+            igx-chips-area {
+                background: inherit;
+            }
+        }
+
+        // Filtering cell indicator (badge/icon)
+        @include e(filtering-cell-indicator) {
+            display: flex;
+            align-items: center;
+            position: relative;
+
+            igx-icon,
+            .igx-badge {
+                cursor: pointer;
+            }
+
+            .igx-badge {
+                position: absolute;
+                top: rem(-4px);
+                inset-inline-start: 60%;
+            }
+        }
+
+        // Filtering cell indicator hidden state
+        @include e(filtering-cell-indicator, $m: hidden) {
+            .igx-badge,
+            igx-icon {
+                display: none;
+            }
+        }
+
+        // Filtering dropdown items
+        @include e(filtering-dropdown-items) {
+            display: flex;
+            align-items: center;
+        }
+
+        // Filtering dropdown text
+        @include e(filtering-dropdown-text) {
+            margin-inline-start: rem(16px);
+        }
+
+        // ============================================================================
+        // Summaries Elements
+        // ============================================================================
+
+        // Summaries row
+        @include e(summaries) {
+            display: flex;
+            overflow: hidden;
+            outline-style: none;
+            background-color: var-get($theme, 'summaries-patch-background');
+
+            igx-display-container {
+                overflow: visible !important;
+                flex: 1;
+                min-width: 0;
+            }
+        }
+
+        // Summaries body (in grid body)
+        @include e(summaries, $m: body) {
+            --summaries-patch-background: #{var-get($theme, 'group-row-background')};
+
+            display: flex;
+            overflow: hidden;
+            outline-style: none;
+            border-bottom: rem(1px) dashed var-get($theme, 'row-border-color');
+            background-color: var-get($theme, 'summaries-patch-background');
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+
+            // Override summary component colors when in body context
+            .igx-grid-summary {
+                --background-color: inherit !important;
+                --result-color: hsla(
+                    from color(from var(--background-color) var(--y-contrast)) h
+                        0 l / 1
+                ) !important;
+            }
+
+            .igx-display-container {
+                overflow: visible !important;
+                flex: 1;
+                min-width: 0;
+            }
+        }
+
+        // Summaries patch (fixed area)
+        @include e(summaries-patch) {
+            position: relative;
+            background: inherit;
+            border-inline-end: $grid-header-border;
+            z-index: $z-grid-base;
+        }
+
+        // ============================================================================
+        // Outlet Elements
+        // ============================================================================
+
+        // Generic outlet for overlays
+        @include e(outlet) {
+            --ig-size: var(--grid-size);
+            z-index: $z-grid-overlay;
+            position: fixed;
+        }
+
+        // Loading outlet
+        @include e(loading-outlet) {
+            z-index: $z-grid-loading;
+        }
+
+        // Row editing outlet
+        @include e(row-editing-outlet) {
+            z-index: $z-grid-pinned-row;
+            position: absolute;
+        }
+
+        // Add row snackbar
+        @include e(addrow-snackbar) {
+            position: absolute;
+            bottom: rem(16px);
+            inset-inline-start: 50%;
+            transform: translateX(-50%);
+            z-index: $z-grid-loading;
+        }
+
+        // ============================================================================
+        // Misc Elements
+        // ============================================================================
+
+        // Icon wrapper
+        @include e(icon) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        // Column name display
+        @include e(column-name) {
+            @include ellipsis();
+        }
+
+        // Count badge
+        @include e(count-badge) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: rem(20px);
+            height: rem(20px);
+            padding: rem(2px) rem(6px);
+            border-radius: rem(10px);
+            font-size: rem(12px);
+            background: var-get($theme, 'group-count-background');
+            color: var-get($theme, 'group-count-text-color');
+        }
+
+        // Text wrapper
+        @include e(text) {
+            @include ellipsis();
+        }
+
+        .igx-banner {
+            @include sizable();
+            --component-size: var(--ig-size, var(--ig-size-large));
+
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: rem(8px);
+            padding: rem(16px) rem(8px);
+            min-width: rem(320px);
+            color: contrast-color($color: 'surface', $variant: 500);
+            background: color($color: 'surface', $variant: 500);
+            border-radius: 0;
+
+            igc-icon,
+            igx-icon,
+            igc-button,
+            [igxButton] {
+                --component-size: var(--ig-size, var(--ig-size-large));
+            }
+        }
+
+        .igx-banner__message {
+            display: flex;
+            align-items: center;
+            min-width: rem(150px);
+            flex: 1 0 0%;
+            gap: rem(16px);
+            padding: 0 rem(8px);
+        }
+
+        .igx-banner__text {
+            @include type-style('body-2');
+
+            flex: 1 0 0%;
+        }
+
+        .igx-banner__border-top {
+            box-shadow: inset 0 rem(1px) 0 0 var-get($theme, 'header-border-color');
+        }
+
+        .igx-banner__border-bottom {
+            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'header-border-color');
+        }
+
+        .igx-banner__actions {
+            flex-wrap: wrap;
+            align-self: flex-end;
+            gap: 0.5rem;
+        }
+    }
+
+    @include b(igx-grid-grouparea) {
+        grid-row: 2;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        border-bottom: $grid-header-border;
+        background: var-get($theme, 'grouparea-background');
+        color: var-get($theme, 'grouparea-color');
+        min-height: var(--grouparea-size);
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+        padding-block: 0;
+        z-index: $z-grid-decoration;
+        height: 100%;
+        overflow: hidden;
+
+
+        &:focus {
+            outline-style: none;
+        }
+
+        //%igx-chip {
+        //    margin-block: pad-block(rem(4px), rem(8px), rem(8px));
+        //}
+
+        @include e(connector) {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 rem(4px);
+
+            igx-icon {
+                width: var(--igx-icon-size, #{rem(16px)}) !important;
+                height: var(--igx-icon-size, #{rem(16px)}) !important;
+                font-size: var(--igx-icon-size, #{rem(16px)}) !important;
+            }
+
+            [dir='rtl'] & {
+                transform: scaleX(-1);
+            }
+        }
+
+        .igx-chip-area {
+            flex-grow: 1;
+        }
+    }
+
+    @include b(igx-grid-th) {
+        position: relative;
+        display: flex;
+        flex: 1 1 0%;
+        color: inherit;
+        text-align: start;
+
+        // (!) the background-clip: padding-box; makes sure the background never go under the border,
+        // this is very important especially of the borders have slide alpha
+        background-clip: padding-box !important;
+        line-height: $cell-line-height;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: flex-end;
+        min-width: 0;
+        min-height: var(--header-size);
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+        padding-block: 0;
+        font-size: rem(12px);
+        font-weight: 600;
+        border-inline-end: $grid-header-border;
+        overflow: hidden;
+        transition: color 250ms ease-in-out;
+        outline-style: none;
+
+        @include e(expander) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-inline-end: rem(8px);
+            cursor: pointer;
+
+            igx-icon {
+                color: var-get($theme, 'expand-icon-color');
+            }
+
+            &:hover {
+                igx-icon {
+                    color: var-get($theme, 'expand-icon-hover-color');
+                }
+            }
+        }
+
+        @include e(group-title) {
+            @include ellipsis();
+        }
+
+        @include e(title) {
+            @include ellipsis();
+
+            min-width: 3ch;
+            user-select: none;
+            cursor: initial;
+            flex-grow: 1;
+            line-height: var(--header-size);
+            transition: color 250ms ease-in-out;
+        }
+
+        @include e(icons) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            user-select: none;
+
+            /* sort-icon + filter icon width */
+            min-width: rem(30px);
+            height: var(--header-size);
+            align-self: flex-end;
+
+            &:empty {
+                min-width: 0;
+            }
+
+            .igx-excel-filter__icon {
+                position: relative;
+                display: flex;
+
+                --igx-icon-size: #{rem(15px)};
+
+                &::after {
+                    content: attr(data-sortIndex);
+                    position: absolute;
+                    top: rem(-5px);
+                    inset-inline-end: rem(-1px);
+                    font-size: rem(10px);
+                    text-align: end;
+                    font-family: sans-serif;
+                    line-height: rem(10px);
+                }
+            }
+        }
+
+        @include e(resize-handle) {
+            position: absolute;
+            width: rem(4px);
+            top: 0;
+            inset-inline-end: rem(-2px);
+            height: 100%;
+            z-index: $z-grid-decoration;
+        }
+
+        @include e(resize-line) {
+            position: absolute;
+            cursor: col-resize;
+            width: rem(4px);
+            background: var-get($theme, 'resize-line-color');
+            z-index: $z-grid-decoration;
+
+            &::before,
+            &::after {
+                position: absolute;
+                content: '';
+                height: 100%;
+                width: rem(96px);
+            }
+
+            &::before {
+                inset-inline-end: 100%;
+            }
+
+            &::after {
+                inset-inline-start: 100%;
+            }
+        }
+
+        // Drop indicators for column reordering
+        @include e(drop-indicator-left) {
+            position: absolute;
+            width: rem(1px);
+            height: 100%;
+            top: 0;
+            z-index: $z-grid-base;
+            inset-inline-start: rem(-1px);
+        }
+
+        @include e(drop-indicator-right) {
+            position: absolute;
+            width: rem(1px);
+            height: 100%;
+            top: 0;
+            z-index: $z-grid-base;
+            inset-inline-end: rem(-1px);
+        }
+
+        // Active header (selected/focused header cell)
+        @include m(active) {
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                border: $grid-active-state-border;
+                pointer-events: none;
+            }
+        }
+
+        @include mx(active, pinned) {
+            &::after {
+                inset-block-start: 0;
+                inset-inline-start: 0;
+                width: calc(100% - var-get($theme, 'pinned-border-width')) !important;
+            }
+        }
+
+        @include m(number) {
+            text-align: end;
+            // TODO: This was enabled in the old styles but it overrides the flex behavior of the title and icons. Check agains designs.
+            // justify-content: flex-end;
+            flex-grow: 1;
+
+            @include e(icons) {
+                justify-content: flex-start;
+                order: -1;
+
+                .sort-icon {
+                    order: 1;
+                }
+            }
+        }
+
+        @include m(collapsible) {
+            justify-content: normal;
+        }
+
+        @include m(sortable) {
+            :where(.sort-icon) {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                position: relative;
+
+                opacity: 0.7;
+
+                &:is(:hover) {
+                    opacity: 1;
+                }
+
+                &::after {
+                    content: attr(data-sortIndex);
+                    position: absolute;
+                    top: rem(-5px);
+                    inset-inline-end: rem(-1px);
+                    font-size: rem(10px);
+                    text-align: end;
+                    font-family: sans-serif;
+                    line-height: rem(10px);
+                }
+            }
+        }
+
+        // Sorted header (column is currently sorted)
+        @include m(sorted) {
+            :where(.sort-icon) {
+                opacity: 1;
+                color: var-get($theme, 'sorted-header-icon-color');
+
+                &:is(:hover, :focus) {
+                    color: var-get($theme, 'sortable-header-icon-hover-color');
+                }
+            }
+
+            // When hovering over the header cell itself, change icon color
+            // TODO: Questionable why this is here
+            &:hover :where(.sort-icon) {
+                color: var-get($theme, 'sortable-header-icon-hover-color');
+            }
+        }
+
+        // Selected header (column selection)
+        @include m(selectable) {
+            color: var-get($theme, 'header-selected-text-color');
+            background: var-get($theme, 'header-selected-background');
+        }
+
+        // TODO: Verify the class is really named 'filtrable' and not 'filterable'
+        @include m(filtrable) {
+            :where(.igx-grid-th__title) {
+                opacity: .7;
+            }
+        }
+
+        @include m(pinned) {
+            position: relative;
+            background: inherit;
+
+            &::after {
+                width: calc(100% - $pinned-shadow-size) !important;
+            }
+        }
+
+        // Pinned header (first pinned column)
+        @include m(pinned-first) {
+            border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+
+            &:dir(ltr) {
+                border-inline-start-color: var-get($theme, 'pinned-border-color');
+            }
+
+            &:dir(rtl) {
+                border-inline-end-color: var-get($theme, 'pinned-border-color');
+            }
+        }
+
+        // Pinned header (last pinned column)
+        @include m(pinned-last) {
+            border-inline-end: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+
+            &:dir(ltr) {
+                border-inline-end-color: var-get($theme, 'pinned-border-color');
+                border-inline-end-width: var-get($theme, 'pinned-border-width');
+            }
+
+            &:dir(rtl) {
+                border-inline-start-color: var-get($theme, 'pinned-border-color');
+                border-inline-start-width: var-get($theme, 'pinned-border-width');
+            }
+        }
+
+        @include m(selected) {
+            color: var-get($theme, 'header-selected-text-color');
+            background: var-get($theme, 'header-selected-background');
+
+            :where(.sort-icon::after) {
+                background: var-get($theme, 'header-selected-background');
+            }
+        }
+
+        @include m(fw) {
+            flex-grow: 0;
+            outline-style: none;
+        }
+
+        @include m(filtering) {
+            background: var-get($theme, 'filtering-header-background');
+            color: var-get($theme, 'filtering-header-text-color');
+            z-index: $z-grid-interaction;
+        }
+
+        @include mx(filtrable, sortable) {
+            :where(.sort-icon) {
+                cursor: pointer;
+                opacity: 0.7;
+
+                :is(:hover) {
+                    opacity: 1;
+                }
+            }
+            @extend %igx-grid-th--filtrable-sortable !optional;
+        }
+
+        @include mx(selectable, sorted) {
+            :where(.sort-icon) {
+                color: var-get($theme, 'header-selected-text-color');
+
+                :is(:hover, :focus) {
+                    color: var-get($theme, 'header-selected-text-color');
+                }
+            }
+        }
+
+        @include mx(selected, sorted) {
+            :where(.sort-icon) {
+                color: var-get($theme, 'header-selected-text-color');
+
+                :is(:hover, :focus) {
+                    color: var-get($theme, 'header-selected-text-color');
+                }
+            }
+        }
+
+        // Active state with compound selectors - use @at-root to prevent nesting
+        @at-root {
+            .igx-grid-th__drop-indicator--active {
+                &.igx-grid-th__drop-indicator-left,
+                &.igx-grid-th__drop-indicator-right {
+                    border-inline-end: rem(1px) solid
+                        var-get($theme, 'drop-indicator-color');
+                }
+
+                &::after,
+                &::before {
+                    position: absolute;
+                    content: '';
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    inset-inline-start: rem(-3px);
+                }
+
+                &::before {
+                    bottom: 0;
+                    border-width: 0 rem(4px) rem(4px);
+                    border-color: transparent transparent
+                        var-get($theme, 'drop-indicator-color');
+                }
+
+                &::after {
+                    top: 0;
+                    border-width: rem(4px) rem(4px) 0;
+                    border-color: var-get($theme, 'drop-indicator-color')
+                        transparent transparent;
+                }
+            }
+        }
+    }
+
+    // NOTE: Consider this done for now
+    // ============================================================================
+    // Grid header (thead) container and structure
+    @include b(igx-grid-thead) {
+        // Main thead container
+        grid-row: 3;
+        display: flex;
+        overflow: hidden;
+        background: var-get($theme, 'header-background');
+        color: var-get($theme, 'header-text-color');
+        //border-block-end: $grid-header-border;
+
+        // TODO: This is completely upside down - doesn't follow BEM at all
+        // Rows inside thead should not have hover effects
+        .igx-grid__tr {
+            position: relative;
+            background: inherit;
+            color: inherit;
+            z-index: $z-grid-decoration;
+
+            &:hover {
+                background: inherit;
+                color: inherit;
+            }
+        }
+
+        // Header wrapper element
+        @include e(wrapper) {
+            position: relative;
+            display: flex;
+            background: var-get($theme, 'header-background');
+            color: var-get($theme, 'header-text-color');
+            overflow: hidden;
+            outline-style: none;
+            z-index: $z-grid-decoration;
+            border-bottom: $grid-header-border;
+
+            // WARN: BEM not followed here
+            .igx-grid__tr {
+                border-bottom: none;
+
+                &:hover {
+                    background: inherit;
+                    color: inherit;
+                }
+            }
+
+            .igx-grid__cbx-selection--push {
+                align-items: flex-start;
+                padding-block-start: pad-block(
+                    calc((rem(32px) - rem(20px)) / 2),
+                    calc((rem(40px) - rem(20px)) / 2),
+                    calc((rem(50px) - rem(20px)) / 2)
+                );
+            }
+
+            > [aria-activedescendant] {
+                outline-style: none;
+            }
+
+            &:focus {
+                outline: 0;
+            }
+        }
+
+        // Pivot wrapper specific styling
+        @include e(wrapper, $m: pivot) {
+            border-block-end: none !important;
+        }
+
+        // Header title cell
+        @include e(title) {
+            @extend %cell-display;
+            @extend %cell-header;
+
+            flex-basis: auto !important;
+            align-items: center !important;
+            border-block-end: $grid-header-border;
+            border-inline-end: $grid-header-border;
+            height: var(--header-size);
+        }
+
+        // Header group (contains multiple columns)
+        @include e(group) {
+            display: flex;
+            flex-flow: row nowrap;
+        }
+
+        // Header subgroup (nested column headers)
+        @include e(subgroup) {
+            position: relative;
+
+            &.igx-grid-thead__item.igx-grid-th--active {
+                &::after {
+                    height: 100%;
+                }
+            }
+        }
+
+        // Header item (column header wrapper)
+        @include e(item) {
+            display: flex;
+            flex-flow: column nowrap;
+            position: relative;
+
+            :where(.igx-grid-th, .igx-grid-thead__group) {
+                flex: 1 1 auto;
+            }
+
+            :where(.igx-grid-thead__title) {
+                flex: 0 0 auto;
+            }
+
+            //&:last-child {
+            //    igx-pivot-row-dimension-header {
+            //        border-inline-end: 0;
+            //    }
+            //}
+        }
+
+        // Scrollbar thumb for header
+        @include e(thumb) {
+            background: var-get($theme, 'header-background');
+            border-block-end: $grid-header-border;
+        }
+
+        // Pivot grid modifier
+        @include m(pivot) {
+            display: flex;
+
+            .igx-grid-thead--virtualizationWrapper {
+                border-inline-start: $grid-header-border;
+            }
+
+            @include e(wrapper) {
+                border-block-end: $grid-header-border;
+            }
+        }
+
+        // Virtualization wrapper
+        @include m(virtualizationWrapper) {
+            height: 100%;
+        }
+
+        // Virtualization container
+        @include m(virtualizationContainer) {
+            height: 100%;
+            overflow: visible;
+            //border-inline-start: $grid-header-border;
+
+            .igx-grid__tr-pivot--columnDimensionLeaf {
+                &::after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    @include b(igx-drop-area) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        min-width: rem(80px);
+        width: 100%;
+        height: sizable(rem(24px), rem(24px), rem(32px));
+        padding-block: 0;
+        padding-inline: pad-inline($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
+        flex: 1 0 0%;
+        background: var-get($theme, 'drop-area-background');
+        border-radius: var-get($theme, 'drop-area-border-radius');
+
+        &:hover {
+            background: var-get($theme, 'drop-area-on-drop-background');
+        }
+
+        @include e(icon) {
+            --igx-icon-size: rem(16px);
+
+            color: var-get($theme, 'drop-area-icon-color');
+            margin-inline-end: rem(8px);
+        }
+
+        @include e(text) {
+            @include ellipsis();
+            color: var-get($theme, 'drop-area-text-color');
+            font-size: rem(13px);
+        }
+    }
+
+    @include b(igx-group-label) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        line-height: rem(16px);
+        gap: rem(4px);
+
+        @include e(text) {
+            color: var-get($theme, 'group-label-text');
+            font-size: calc(var(--_grid-head-font-size) + #{rem(1px)})
+        }
+
+        @include e(icon) {
+            --component-size: 1;
+
+            color: var-get($theme, 'group-label-icon');
+            user-select: none;
+
+        }
+
+        @include e(column-name) {
+            font-weight: 600;
+            font-size: var(--_grid-head-font-size);
+            color: var-get($theme, 'group-label-column-name-text');
+        }
+
+        @include e(count-badge) {
+            --igx-badge-background-color: #{var-get($theme, 'group-count-background')};
+            --igx-badge-text-color: #{var-get($theme, 'group-count-text-color')};
+
+            > span {
+                font-size: var(--_grid-head-font-size);
+            }
+        }
+    }
+
+    @include b(igx-advanced-filter) {
+        background: color($color: 'surface', $variant: 500);
+        box-shadow: elevation(24);
+
+        igx-query-builder {
+            box-shadow: none !important;
+            border: none !important;
+            border-radius: inherit !important;
+        }
+
+        igx-query-builder-header {
+            cursor: grab;
+        }
+
+        .igx-excel-filter__secondary-footer {
+            --ig-size: 2;
+
+            display: flex;
+            justify-content: space-between;
+            padding-inline: pad-inline(rem(24px));
+            padding-block-end: pad-block(rem(24px));
+
+            .igx-excel-filter__clear {
+                flex-grow: 1;
+            }
+
+            .igx-excel-filter__apply,
+            .igx-excel-filter__cancel {
+                flex-grow: 0;
+            }
+        }
+
+        .igx-excel-filter__cancel + .igx-excel-filter__apply {
+            margin-inline-start: rem(16px);
+        }
+    }
+
+    // ============================================================================
+    // NOTE: Context-Specific Nested Rules
+    // These rules handle nested contexts that don't fit cleanly into the BEM model
+    // ============================================================================
+    // Thead context - elements styled differently when inside thead
+
+    igx-pivot-row-dimension-header.igx-grid-th {
+        align-items: center;
+    }
+
+    igx-pivot-row-dimension-header-group {
+        &::after {
+            height: 100% !important;
+        }
+    }
+
+    igx-pivot-row-header-group {
+        &::after {
+            inset-inline-start: calc(var-get($theme, 'header-border-width') * -1) !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        igx-pivot-row-dimension-header.igx-grid-th {
+            .igx-grid-th__icons {
+                align-self: center;
+            }
+        }
+
+        igx-pivot-row-dimension-header {
+            .igx-grid-th__icons {
+                padding-inline-end: pad-inline($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
+            }
+        }
+
+        &:only-child,
+        &:last-child {
+            igx-pivot-row-dimension-header.igx-grid-th {
+                border-inline-end: 0 !important;
+            }
+        }
+    }
+
+    .igx-pivot-grid-row-filler__wrapper {
+        .igx-grid-thead__wrapper {
+            height: 100%;
+
+            .igx-grid-th {
+                height: 100%;
+            }
+        }
+    }
+
+    .igx-grid-thead {
+        .igx-grid__header-indentation {
+            igx-icon {
+                --component-size: 3;
+            }
+        }
+
+        .igx-grid__drag-indicator {
+            cursor: default;
+        }
+
+        // MRL (Multi-Row Layout) specific thead styles
+        .igx-grid__tr--mrl {
+            .igx-grid__hierarchical-expander--header,
+            .igx-grid__hierarchical-expander,
+            .igx-grid__hierarchical-expander--empty,
+            .igx-grid__row-indentation,
+            .igx-grid__cbx-selection {
+                border-bottom: $grid-header-border;
+            }
+        }
+
+        &:focus-visible {
+            outline-color: transparent;
+        }
+    }
+
+     //MRL block context - multi-row layout grid structure
+    .igx-grid__mrl-block {
+        .igx-grid-thead__item {
+            display: flex;
+        }
+
+        .igx-grid-thead__title,
+        .igx-grid__td,
+        .igx-grid-th {
+            border-inline-end: $grid-header-border !important;
+            border-block-end: $grid-header-border !important;
+        }
+    }
+
+    //.igx-grid-thead__wrapper.igx-grid__tr--mrl {
+    //    border-block-end: 0 !important;
+    //}
+
+    //// MRL row context - rows in multi-row layout
+    .igx-grid__tr--mrl {
+        .igx-grid__cbx-selection,
+        .igx-grid__hierarchical-expander,
+        .igx-grid__hierarchical-expander--empty,
+        .igx-grid__row-indentation,
+        .igx-grid__drag-indicator {
+            border-bottom: $grid-header-border;
+        }
+
+        .igx-grid__td:only-child,
+        .igx-grid__td:last-child {
+            border-block-end: 0;
+        }
+
+        background-clip: padding-box !important;
+    }
+
+    // Grid checkbox styles
+    .igx-grid {
+        .igx-checkbox {
+            min-width: rem(20px);
+
+            .igx-checkbox__composite-wrapper {
+                width: var(--cbx-size, #{rem(20px)});
+                height: var(--cbx-size, #{rem(20px)});
+                padding: 0 !important;
+            }
+
+            .igx-checkbox__label {
+                margin-inline-start: rem(12px);
+            }
+
+            .igx-checkbox__label--before {
+                margin-inline-end: rem(12px);
+            }
+
+            .igx-checkbox__label:empty,
+            .igx-checkbox__label--before:empty {
+                padding: 0;
+                margin: 0;
+            }
+        }
+    }
+
+    .igx-grid-thead__item.igx-grid-th--active {
+        &::after {
+            width: calc(100% - var-get($theme, 'header-border-width'));
+        }
+
+        //&.igx-grid-thead__subgroup {
+        //    &::after {
+        //        height: calc(100% - var-get($theme, 'header-border-width'));
+        //    }
+        //}
+    }
+
+    .igx-grid-thead__wrapper:not(.igx-grid-thead__wrapper--pivot) {
+        border-block-end: $grid-header-border;
+    }
+
+    @for $i from 1 through 10 {
+        $level-sm: calc(#{$i * $cell-padding-sm} + var(--_expander-icon-width));
+        $level-md: calc(#{$i * $cell-padding-md} + var(--_expander-icon-width));
+        $level-lg: calc(#{$i * $cell-padding-lg} + var(--_expander-icon-width));
+
+        .igx-grid__row-indentation--level-#{$i} {
+            --_indicator-inline-inset: #{sizable(
+                $cell-padding-sm,
+                $cell-padding-md,
+                $cell-padding-lg
+            )};
+            padding-inline-start: pad-inline($level-sm, $level-md, $level-lg);
+        }
+
+        $indicator-padding-sm: #{$i * $cell-padding-sm};
+        $indicator-padding-md: #{$i * $cell-padding-md};
+        $indicator-padding-lg: #{$i * $cell-padding-lg};
+
+        .igx-grid__group-row--padding-level-#{$i} {
+            %igx-grid__grouping-indicator {
+                padding-inline-start: pad-inline($indicator-padding-sm, $indicator-padding-md, $indicator-padding-lg);
+            }
+        }
+    }
+
+}
