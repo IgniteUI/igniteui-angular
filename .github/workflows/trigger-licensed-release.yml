@@ -1,4 +1,4 @@
-name: Trigger Private Repo Release
+name: Trigger Licensed Release
 
 on:
   release:
