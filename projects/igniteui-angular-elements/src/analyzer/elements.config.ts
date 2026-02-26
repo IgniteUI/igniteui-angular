@@ -48,7 +48,13 @@ export var registerConfig = [
       IgxHierarchicalGridComponent,
       IgxRowIslandComponent,
     ],
-    contentQueries: [],
+    contentQueries: [
+      {
+        property: "actionButtons",
+        childType: IgxActionStripActionsToken,
+        isQueryList: true,
+      },
+    ],
     additionalProperties: [{ name: "cdr", writable: true }],
     methods: ["show", "hide"],
     boolProps: ["hidden"],
@@ -840,7 +846,13 @@ export var registerConfig = [
     component: IgxQueryBuilderComponent,
     selector: "igc-query-builder",
     parents: [],
-    contentQueries: [],
+    contentQueries: [
+      {
+        property: "queryBuilderHeaderCollection",
+        childType: IgxQueryBuilderHeaderComponent,
+        isQueryList: true,
+      },
+    ],
     additionalProperties: [],
     methods: ["canCommit", "commit", "discard"],
     templateProps: ["searchValueTemplate"],

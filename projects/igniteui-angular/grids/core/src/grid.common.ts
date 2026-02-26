@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
 import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
-import { VerticalAlignment, PositionSettings, Point } from 'igniteui-angular/core';
+import { VerticalAlignment, PositionSettings, Point, Util } from 'igniteui-angular/core';
 import { IgxForOfSyncService } from 'igniteui-angular/directives';
 import { scaleInVerBottom, scaleInVerTop } from 'igniteui-angular/animations';
 
@@ -10,7 +10,7 @@ import { scaleInVerBottom, scaleInVerTop } from 'igniteui-angular/animations';
     providers: [IgxForOfSyncService],
     standalone: true
 })
-export class IgxGridBodyDirective {}
+export class IgxGridBodyDirective { }
 
 
 /**
@@ -27,8 +27,23 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     public isTop = false;
     public isTopInitialPosition = null;
     public override settings: RowEditPositionSettings;
-    public override position(contentElement: HTMLElement, size: { width: number; height: number }, document?: Document, initialCall?: boolean,
-            target?: Point | HTMLElement): void {
+    private io: IntersectionObserver | null = null;
+
+    public override position(contentElement: HTMLElement, _size: { width: number; height: number }, document?: Document, initialCall?: boolean,
+        target?: Point | HTMLElement): void {
+        this.internalPosition(contentElement, _size, document, initialCall, target);
+        // Use the IntersectionObserverHelper to manage position updates when the target moves
+        this.io?.disconnect();
+        const targetElement: HTMLElement = target as HTMLElement; // current grid.row
+        this.io = Util.setupIntersectionObserver(
+            targetElement,
+            document,
+            () => this.internalPosition(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight }, document, false, targetElement)
+        );
+    }
+
+    private internalPosition(contentElement: HTMLElement, _size: { width: number; height: number }, document?: Document, initialCall?: boolean,
+        target?: Point | HTMLElement): void {
         const container = this.settings.container; // grid.tbody
         const targetElement: HTMLElement = target as HTMLElement; // current grid.row
 
@@ -39,7 +54,7 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         this.isTop = this.isTopInitialPosition !== null ?
             this.isTopInitialPosition :
             container.getBoundingClientRect().bottom <
-                targetElement.getBoundingClientRect().bottom + contentElement.getBoundingClientRect().height;
+            targetElement.getBoundingClientRect().bottom + contentElement.getBoundingClientRect().height;
 
         // Set width of the row editing overlay to equal row width, otherwise it fits 100% of the grid.
         contentElement.style.width = targetElement.clientWidth + 'px';
@@ -47,6 +62,14 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         this.settings.openAnimation = this.isTop ? scaleInVerBottom : scaleInVerTop;
 
         super.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight },
-                    document, initialCall, targetElement);
+            document, initialCall, targetElement);
+    }
+
+    /**
+     * Cleans up the IntersectionObserver and stored references
+     */
+    public dispose(): void {
+        this.io?.disconnect();
+        this.io = null;
     }
 }

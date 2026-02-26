@@ -203,6 +203,7 @@
         font-size: rem(12px);
         height: $indicator-size;
         width: $indicator-size;
+        min-width: $indicator-size;
         white-space: nowrap;
         border-radius: var-get($theme, 'border-radius-indicator');
         color: var-get($theme, 'indicator-color');
@@ -211,21 +212,21 @@
 
         @if $variant == 'bootstrap' {
             > igx-icon {
-                width: var(--igx-icon-size, #{rem(18px)});
-                height: var(--igx-icon-size, #{rem(18px)});
-                font-size: var(--igx-icon-size, #{rem(18px)});
+                width: var(--ig-icon-size, #{rem(18px)});
+                height: var(--ig-icon-size, #{rem(18px)});
+                font-size: var(--ig-icon-size, #{rem(18px)});
             }
         } @else if $variant == 'indigo' {
             > igx-icon {
-                width: var(--igx-icon-size, #{rem(14px)});
-                height: var(--igx-icon-size, #{rem(14px)});
-                font-size: var(--igx-icon-size, #{rem(14px)});
+                width: var(--ig-icon-size, #{rem(14px)});
+                height: var(--ig-icon-size, #{rem(14px)});
+                font-size: var(--ig-icon-size, #{rem(14px)});
             }
         } @else {
             > igx-icon {
-                width: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
-                height: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
-                font-size: var(--igx-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                width: var(--ig-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                height: var(--ig-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
+                font-size: var(--ig-icon-size, #{calc(#{$indicator-size} - #{rem(6px)})});
                 color: inherit;
             }
         }
@@ -349,6 +350,7 @@
 
     %igx-stepper__step-content-wrapper {
         margin-inline-start: $v-line-indent;
+        padding-inline-start: $v-line-indent;
         position: relative;
         min-height: if($variant == 'indigo', rem(24px), rem(32px));
 
@@ -360,12 +362,6 @@
             bottom: calc(-#{$step-header-padding} + #{$title-gap});
             width: $separator-size;
             border-inline-start: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
-        }
-    }
-
-    [aria-selected='true'] {
-        %igx-stepper__step-content-wrapper {
-            padding-inline-start: $v-line-indent;
         }
     }
 
@@ -633,10 +629,6 @@
 
         %igx-stepper__step--start,
         %igx-stepper__step--end {
-            %igx-stepper__step-indicator {
-                flex: 1 0 auto;
-            }
-
             %igx-stepper__step-header {
                 @if $variant != 'fluent' {
                     padding: calc(#{$step-header-padding} / 2);

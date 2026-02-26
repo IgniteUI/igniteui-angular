@@ -2,7 +2,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
-import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 import type { IgxTheme } from '../services/theme/theme.token';
 
@@ -429,8 +428,6 @@ export interface IBaseCancelableBrowserEventArgs extends CancelableBrowserEventA
 
 export interface IBaseCancelableEventArgs extends CancelableEventArgs, IBaseEventArgs { }
 
-export const HORIZONTAL_NAV_KEYS = new Set(['arrowleft', 'left', 'arrowright', 'right', 'home', 'end']);
-
 export const NAVIGATION_KEYS = new Set([
     'down',
     'up',
@@ -446,15 +443,6 @@ export const NAVIGATION_KEYS = new Set([
     'spacebar',
     ' '
 ]);
-export const ACCORDION_NAVIGATION_KEYS = new Set('up down arrowup arrowdown home end'.split(' '));
-export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
-export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
-export const ROW_ADD_KEYS = new Set(['+', 'add', '≠', '±', '=']);
-export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS),
-...Array.from(ROW_ADD_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
-export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'esc', 'l',
-    /** This symbol corresponds to the Alt + L combination under MAC. */
-    '¬']);
 
 /**
  * @hidden
@@ -579,22 +567,6 @@ export const reverseMapper = (path: string, value: any) => {
     });
 
     return obj;
-};
-
-export const yieldingLoop = (count: number, chunkSize: number, callback: (index: number) => void, done: () => void) => {
-    let i = 0;
-    const chunk = () => {
-        const end = Math.min(i + chunkSize, count);
-        for (; i < end; ++i) {
-            callback(i);
-        }
-        if (i < count) {
-            setImmediate(chunk);
-        } else {
-            done();
-        }
-    };
-    chunk();
 };
 
 export const isConstructor = (ref: any) => typeof ref === 'function' && Boolean(ref.prototype) && Boolean(ref.prototype.constructor);
