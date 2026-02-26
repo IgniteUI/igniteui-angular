@@ -68,6 +68,6 @@
     @include tooltip-typography();
     // @include tree-typography();
     @include label-typography();
-	@include query-builder-typography();
+	//@include query-builder-typography();
 	@include file-input-typography();
 }

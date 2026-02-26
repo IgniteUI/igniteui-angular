@@ -4,4 +4,4 @@
 @use 'indigo';
 
 $tokens: meta.module-variables(tokens);
-@include themes(igx-excel-filter, $tokens, dark);
+@include themes(igx-query-builder, $tokens, light);

@@ -1,5 +1,6 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/typography/mixins' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
 @use 'styles/themes/standalone' as *;
 
@@ -13,4 +14,18 @@
         padding-block: pad-block(rem(16px));
         border-top: rem(1px) solid color($color: 'gray', $variant: 300);
     }
+
+    @include e(menu-main) {
+        igx-list {
+            border-top: rem(1px) dashed var(--ig-gray-100);
+            border-bottom: rem(1px) dashed var(--ig-gray-100);
+        }
+    }
+
+    @include e(menu-header) {
+        > h4 {
+            @include type-style('subtitle-1');
+        }
+    }
 }
+

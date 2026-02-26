@@ -1,581 +1,581 @@
-@use 'sass:map';
-@use '../../base' as *;
-
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
-/// @param {Map} $theme - The grid theme used to style the component.
-@mixin query-builder($theme) {
-    @include css-vars($theme);
-
-    $variant: map.get($theme, '_meta', 'theme');
-    $theme-variant: map.get($theme, '_meta', 'variant');
-    $bootstrap-theme: $variant == 'bootstrap';
-    $not-bootstrap-theme: not($bootstrap-theme);
-
-    // Custom colors alpha
-    $alpha-hover: .08;
-    $alpha-focus: .16;
-    $alpha-focus-hover: .24;
-
-    $border-radius: var-get($theme, 'border-radius');
-    $icon-size: rem(18px);
-
-    %advanced-filter {
-        @include sizable();
-
-        --_tree-scrollbar-gutter: #{rem(16px)};
-
-        @if $variant == 'bootstrap' {
-            --query-builder-outer-padding: #{rem(16px)};
-        } @else {
-            --query-builder-outer-padding: #{rem(24px)};
-        }
-
-        width: auto;
-        min-width: rem(660px);
-        background-color: var-get($theme, 'background');
-        border-radius: $border-radius;
-        box-shadow: var-get($theme, 'elevation');
-        overflow: hidden;
-
-        &:has(:not(igx-query-builder-header)) {
-            padding-block-start: var(--query-builder-outer-padding);
-
-            %query-level-0 {
-                padding-block: 0 var(--query-builder-outer-padding);
-            }
-        }
-
-        &:has(igx-query-builder-header) {
-            padding-block-start: 0;
-
-            %query-level-0 {
-                padding-block: if($variant != 'bootstrap', 0, rem(16px)) var(--query-builder-outer-padding);
-            }
-        }
-
-	    .igx-chip__ghost {
-		    position: relative;
-	    }
-    }
-
-    %query-builder-tree {
-        background: var-get($theme, 'background');
-
-        %query-builder-tree {
-            border-radius: var-get($theme, 'subquery-border-radius');
-        }
-    }
-
-    %query-level-0 {
-        display: block;
-        width: 100%;
-
-        padding-inline: var(--query-builder-outer-padding);
-
-        > %advanced-filter__main {
-            gap: rem(16px);
-
-             > %filter-tree__section {
-                 --sb-size: #{rem(10px)};
-
-                max-height: rem(570px);
-                overflow-y: auto;
-                overflow-x: hidden;
-                padding-inline-end: var(--_tree-scrollbar-gutter);
-            }
-        }
-    }
-
-    %filter-tree__subquery {
-        max-width: rem(960px);
-
-        // Add styles to the subquery itself only if there is a direct .igx-filter-tree__inputs inside it
-        &:has( > %filter-tree__inputs) {
-            background: var-get($theme, 'subquery-header-background');
-            border: rem(1px) solid var-get($theme, 'subquery-border-color');
-            border-radius: var-get($theme, 'subquery-border-radius');
-        }
-
-        // Hide the subquery itself if there is a tree with display none inside
-        &:has( > %query-builder-tree[style='display: none;']) {
-            display: none;
-        }
-
-        > %filter-tree__inputs {
-            padding: rem(12px);
-            border-radius: inherit;
-
-            > igx-input-group,
-            > igx-date-picker,
-            > igx-time-picker {
-                flex-grow: 1;
-            }
-        }
-
-        %filter-tree__buttons {
-            margin-block-start: rem(8px);
-        }
-
-        %query-builder-tree {
-            border-block-start: rem(1px) dashed var-get($theme, 'separator-color');
-            padding: rem(12px);
-        }
-
-        &:empty {
-            display: none;
-        }
-
-    }
-
-    %filter-tree-details-button {
-        margin-inline-start: auto;
-    }
-
-    %query-builder-dialog {
-        display: flex;
-        flex-direction: column;
-        gap: rem(16px);
-        max-width: rem(310px);
-
-        > * {
-            margin: 0 !important;
-        }
-    }
-
-    %advanced-filter__header {
-        display: flex;
-        align-items: center;
-        background-color: var-get($theme, 'header-background');
-        color: var-get($theme, 'header-foreground');
-        user-select: none;
-        border-radius: $border-radius $border-radius 0 0;
-        margin-bottom: 0;
-        border-block-end: rem(1px) solid var-get($theme, 'header-border');
-
-        padding-inline: var(--query-builder-outer-padding);
-        padding-block: var(--query-builder-outer-padding) rem(16px);
-    }
-
-    %advanced-filter__title {
-        &:empty {
-            display: none;
-        }
-    }
-
-    %advanced-filter__main {
-        display: grid;
-        gap: rem(16px);
-    }
-
-    %advanced-filter__root {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-
-        > * {
-            flex-grow: 1;
-        }
-    }
-
-    %advanced-filter__root-actions {
-        display: flex;
-        gap: rem(8px);
-        padding-bottom: rem(16px);
-    }
-
-    %advanced-filter__outlet {
-        igx-select-item > igx-icon {
-            width: var(--ig-icon-size, #{$icon-size});
-            height: var(--ig-icon-size, #{$icon-size});
-            font-size: var(--ig-icon-size, #{$icon-size});
-            margin-inline-end: rem(8px);
-        }
-    }
-
-    %filter-tree {
-        display: flex;
-        width: 100%;
-
-        %filter-tree {
-            margin-block: rem(8px);
-        }
-    }
-
-    %filter-tree__section {
-        display: flex;
-        flex-direction: column;
-        gap: rem(8px);
-
-        > %filter-tree {
-            margin-block: 0;
-        }
-    }
-
-    %filter-tree__expression-context-menu {
-        display: flex;
-        width: 100%;
-
-        [igxbutton='flat'] {
-            --ig-size: 1;
-
-            @if $variant == 'bootstrap' {
-                --ig-button-text-transform: capitalize;
-            }
-
-            border: none;
-            min-width: auto;
-        }
-    }
-
-    %filter-tree__line {
-        $size: rem(2px);
-        width: $size;
-        background-color: white;
-        margin-inline-end: calc(rem(8px) - $size);
-        outline-style: none;
-    }
-
-    %filter-tree__line--and {
-        background: var-get($theme, 'color-expression-group-and');
-    }
-
-    %filter-tree__line--or {
-        background: var-get($theme, 'color-expression-group-or');
-    }
-
-	%filter-tree__button--and {
-		&[igxButton='flat'] {
-			@if $variant == 'material' or $variant == 'indigo' {
-				--focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus-hover});
-				--focus-visible-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
-				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
-				--active-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
-				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
-				--background: transparent;
-			}
-
-			@if $variant == 'fluent' {
-				--background: transparent;
-				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-				--focus-visible-background: transparent;
-				--focus-background: transparent;
-				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-			}
-
-			--foreground: #{var-get($theme, 'color-expression-group-and')};
-			--focus-visible-foreground: #{var-get($theme, 'color-expression-group-and')};
-			--icon-color: #{var-get($theme, 'color-expression-group-and')};
-
-			@if $variant != 'bootstrap' {
-				--focus-foreground: #{var-get($theme, 'color-expression-group-and')};
-				--hover-foreground: #{var-get($theme, 'color-expression-group-and')};
-				--icon-color-hover: #{var-get($theme, 'color-expression-group-and')};
-				--focus-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
-				--active-foreground: #{var-get($theme, 'color-expression-group-and')};
-			} @else {
-				$bootstrap-foreground-lightness: if($theme-variant == 'light', 34%, 78% );
-
-				--focus-hover-background: transparent;
-				--focus-visible-background: transparent;
-				--focus-background: transparent;
-				--active-background: transparent;
-				--hover-background: transparent;
-				--background: transparent;
-				--shadow-color: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / .5);
-
-				--icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
-				--focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
-				--hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
-				--focus-hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
-				--active-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
-			}
-		}
-    }
-
-	%filter-tree__button--or {
-		&[igxButton='flat'] {
-			@if $variant == 'material' or $variant == 'indigo' {
-				--focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus-hover});
-				--focus-visible-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
-				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
-				--active-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
-				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
-				--background: transparent;
-			}
-
-			@if $variant == 'fluent' {
-				--background: transparent;
-				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-				--focus-visible-background: transparent;
-				--focus-background: transparent;
-				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-			}
-
-			--foreground: #{var-get($theme, 'color-expression-group-or')};
-			--focus-visible-foreground: #{var-get($theme, 'color-expression-group-or')};
-			--icon-color: #{var-get($theme, 'color-expression-group-or')};
-
-			@if $variant != 'bootstrap' {
-				--focus-foreground: #{var-get($theme, 'color-expression-group-or')};
-				--hover-foreground: #{var-get($theme, 'color-expression-group-or')};
-				--icon-color-hover: #{var-get($theme, 'color-expression-group-or')};
-				--focus-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
-				--active-foreground: #{var-get($theme, 'color-expression-group-or')};
-			} @else {
-				$bootstrap-foreground-lightness: if($theme-variant == 'light', 14%, 47%);
-
-				--focus-hover-background: transparent;
-				--focus-visible-background: transparent;
-				--focus-background: transparent;
-				--active-background: transparent;
-				--hover-background: transparent;
-				--background: transparent;
-				--shadow-color: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / .5);
-
-				--icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
-				--focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
-				--hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
-				--focus-hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
-				--active-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
-			}
-		}
-    }
-
-    %filter-tree__expressions {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        flex-grow: 1;
-        gap: rem(8px);
-    }
-
-    %filter-tree__expression-section {
-        $spacing: rem(16px);
-        display: flex;
-        flex-direction: column;
-        width: calc(100% - #{$spacing});
-        gap: rem(8px);
-        margin-inline-start: $spacing;
-
-        &:empty {
-            display: none;
-        }
-    }
-
-    %filter-tree__expression-item {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        gap: rem(8px);
-        position: relative;
-
-        igx-chip {
-            --ig-size: 3;
-
-            @if $variant != 'indigo' {
-                igx-icon {
-                    --component-size: 1;
-                }
-            }
-        }
-
-        > igx-chip {
-            %filter-tree__expression-column {
-                padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
-            }
-
-            %filter-tree__expression-condition {
-                padding-inline-start: pad-inline(rem(3px), rem(6px), rem(8px));
-            }
-
-            igx-prefix {
-                display: flex;
-            }
-
-            .igx-chip__end {
-                gap: sizable(rem(3px), rem(6px), rem(8px));
-            }
-        }
-    }
-
-
-    %filter-tree__expression-item-ghost {
-        .igx-chip__item {
-            @include type-style('body-2');
-
-            --ig-body-2-text-transform: unset;
-
-            padding-inline: rem(32px);
-
-	        color: color($color: 'gray', $variant: if($theme-variant == 'light', 600, 900));
-	        border: rem(1px) dashed color($color: 'gray', $variant: if($theme-variant == 'light', 600, 300));
-	        background:  transparent;
-        }
-    }
-
-	%filter-tree__expression-item-keyboard-ghost {
-		.igx-chip__item {
-			box-shadow: var(--ghost-shadow);
-            background: var(--ghost-background);
-            color: var(--focus-text-color);
-		}
-
-        .igx-chip:hover {
-            .igx-chip__item {
-                box-shadow: var(--ghost-shadow);
-                background: var(--ghost-background);
-                color: var(--focus-text-color);
-
-                @if $variant == 'indigo' {
-                    border-color: var(--border-color);
-                }
-            }
-        }
-	}
-
-    %filter-tree__expression-column {
-        padding: 0 rem(8px);
-    }
-
-    %filter-tree__expression-actions {
-        display: inline-flex;
-        gap: if($variant != 'indigo', rem(16px), rem(8px));
-
-        span {
-            display: inline-flex;
-        }
-
-        %igx-icon-button-display {
-            --ig-size: #{if($variant != 'bootstrap', 2, 1)};
-        };
-    }
-
-    %filter-tree__expression-condition {
-        opacity: if($variant != 'indigo', .6, .8);
-    }
-
-    %filter-tree__buttons {
-        --ig-size: 1;
-
-        display: flex;
-        align-items: center;
-        gap: rem(8px);
-
-        [igxbutton='flat'] {
-            padding-block: 0;
-            border: none
-        }
-    }
-
-    %filter-tree__inputs {
-        --ig-size: #{if($variant == 'indigo' or $variant == 'bootstrap', 2, 1)};
-
-        display: flex;
-        align-items: flex-end;
-        gap: rem(16px);
-        width: 100%;
-        border-radius: inherit;
-
-        &:empty {
-            display: none;
-        }
-    }
-
-    %filter-tree__inputs-field {
-        display: flex;
-        flex-direction: column;
-        gap: rem(4px);
-        max-width: rem(250px);
-        width: 100%;
-    }
-
-    %advanced-filter__label {
-        @include type-style('body-2');
-
-        color: var-get($theme, 'label-foreground');
-    }
-
-    %filter-tree__inputs-actions {
-        --ig-size: 2;
-
-        display: flex;
-        gap: rem(8px);
-        align-items: center;
-        width: auto;
-        align-self: center;
-
-        [igxIconButton] {
-            transition: none;
-        }
-    }
-
-    %filter-con-menu__delete-btn {
-        color: color(null, 'error');
-        @if $bootstrap-theme {
-            border-color: color(null, 'error');
-        }
-
-        &:hover,
-        &:focus {
-            @if $bootstrap-theme {
-                background: color(null, 'error');
-                border-color: color(null, 'error');
-                color: color(null, 'gray', 100);
-            } @else {
-                color: color(null, 'error');
-            }
-        }
-    }
-
-    %filter-con-menu__close-btn {
-        position: absolute;
-        top: 0;
-        inset-inline-start: 100%;
-        transform: translate(-50%, -50%);
-        background-color: var-get($theme, 'background');
-        border: rem(1px) solid color(null, 'gray', 200);
-
-        &:hover,
-        &:focus {
-            @if $not-bootstrap-theme {
-                background-color: var-get($theme, 'background');
-            }
-        }
-    }
-
-    %advanced-filter--inline {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        max-width: 100%;
-        height: inherit;
-        max-height: inherit;
-        min-width: rem(480px);
-        box-shadow: none;
-
-        %advanced-filter__main {
-            min-height: initial;
-            max-height: initial;
-            flex-grow: 1;
-        }
-    }
-}
-
-/// Adds typography styles for the igx-query-builder component.
-/// Uses the 'h6' category from the typographic scale.
-/// @group typography
-/// @param {Map} $categories [(title: 'h6')] - The categories from the typographic scale used for type styles.
-@mixin query-builder-typography(
-	$categories: (title: 'h6')
-) {
-	$title: map.get($categories, 'title');
-
-	%advanced-filter__title {
-		@include type-style($title) {
-			margin: 0;
-		}
-	}
-}
+//@use 'sass:map';
+//@use '../../base' as *;
+//
+///// @deprecated Use the `css-vars` mixin instead.
+///// @see {mixin} css-vars
+///// @param {Map} $theme - The grid theme used to style the component.
+//@mixin query-builder($theme) {
+//    @include css-vars($theme);
+//
+//    $variant: map.get($theme, '_meta', 'theme');
+//    $theme-variant: map.get($theme, '_meta', 'variant');
+//    $bootstrap-theme: $variant == 'bootstrap';
+//    $not-bootstrap-theme: not($bootstrap-theme);
+//
+//    // Custom colors alpha
+//    $alpha-hover: .08;
+//    $alpha-focus: .16;
+//    $alpha-focus-hover: .24;
+//
+//    $border-radius: var-get($theme, 'border-radius');
+//    $icon-size: rem(18px);
+//
+//    %advanced-filter {
+//        @include sizable();
+//
+//        --_tree-scrollbar-gutter: #{rem(16px)};
+//
+//        @if $variant == 'bootstrap' {
+//            --query-builder-outer-padding: #{rem(16px)};
+//        } @else {
+//            --query-builder-outer-padding: #{rem(24px)};
+//        }
+//
+//        width: auto;
+//        min-width: rem(660px);
+//        background-color: var-get($theme, 'background');
+//        border-radius: $border-radius;
+//        box-shadow: var-get($theme, 'elevation');
+//        overflow: hidden;
+//
+//        &:has(:not(igx-query-builder-header)) {
+//            padding-block-start: var(--query-builder-outer-padding);
+//
+//            %query-level-0 {
+//                padding-block: 0 var(--query-builder-outer-padding);
+//            }
+//        }
+//
+//        &:has(igx-query-builder-header) {
+//            padding-block-start: 0;
+//
+//            %query-level-0 {
+//                padding-block: if($variant != 'bootstrap', 0, rem(16px)) var(--query-builder-outer-padding);
+//            }
+//        }
+//
+//	    .igx-chip__ghost {
+//		    position: relative;
+//	    }
+//    }
+//
+//    %query-builder-tree {
+//        background: var-get($theme, 'background');
+//
+//        %query-builder-tree {
+//            border-radius: var-get($theme, 'subquery-border-radius');
+//        }
+//    }
+//
+//    %query-level-0 {
+//        display: block;
+//        width: 100%;
+//
+//        padding-inline: var(--query-builder-outer-padding);
+//
+//        > %advanced-filter__main {
+//            gap: rem(16px);
+//
+//             > %filter-tree__section {
+//                 --sb-size: #{rem(10px)};
+//
+//                max-height: rem(570px);
+//                overflow-y: auto;
+//                overflow-x: hidden;
+//                padding-inline-end: var(--_tree-scrollbar-gutter);
+//            }
+//        }
+//    }
+//
+//    %filter-tree__subquery {
+//        max-width: rem(960px);
+//
+//        // Add styles to the subquery itself only if there is a direct .igx-filter-tree__inputs inside it
+//        &:has( > %filter-tree__inputs) {
+//            background: var-get($theme, 'subquery-header-background');
+//            border: rem(1px) solid var-get($theme, 'subquery-border-color');
+//            border-radius: var-get($theme, 'subquery-border-radius');
+//        }
+//
+//        // Hide the subquery itself if there is a tree with display none inside
+//        &:has( > %query-builder-tree[style='display: none;']) {
+//            display: none;
+//        }
+//
+//        > %filter-tree__inputs {
+//            padding: rem(12px);
+//            border-radius: inherit;
+//
+//            > igx-input-group,
+//            > igx-date-picker,
+//            > igx-time-picker {
+//                flex-grow: 1;
+//            }
+//        }
+//
+//        %filter-tree__buttons {
+//            margin-block-start: rem(8px);
+//        }
+//
+//        %query-builder-tree {
+//            border-block-start: rem(1px) dashed var-get($theme, 'separator-color');
+//            padding: rem(12px);
+//        }
+//
+//        &:empty {
+//            display: none;
+//        }
+//
+//    }
+//
+//    %filter-tree-details-button {
+//        margin-inline-start: auto;
+//    }
+//
+//    %query-builder-dialog {
+//        display: flex;
+//        flex-direction: column;
+//        gap: rem(16px);
+//        max-width: rem(310px);
+//
+//        > * {
+//            margin: 0 !important;
+//        }
+//    }
+//
+//    %advanced-filter__header {
+//        display: flex;
+//        align-items: center;
+//        background-color: var-get($theme, 'header-background');
+//        color: var-get($theme, 'header-foreground');
+//        user-select: none;
+//        border-radius: $border-radius $border-radius 0 0;
+//        margin-bottom: 0;
+//        border-block-end: rem(1px) solid var-get($theme, 'header-border');
+//
+//        padding-inline: var(--query-builder-outer-padding);
+//        padding-block: var(--query-builder-outer-padding) rem(16px);
+//    }
+//
+//    %advanced-filter__title {
+//        &:empty {
+//            display: none;
+//        }
+//    }
+//
+//    %advanced-filter__main {
+//        display: grid;
+//        gap: rem(16px);
+//    }
+//
+//    %advanced-filter__root {
+//        display: flex;
+//        flex-direction: column;
+//        flex-grow: 1;
+//
+//        > * {
+//            flex-grow: 1;
+//        }
+//    }
+//
+//    %advanced-filter__root-actions {
+//        display: flex;
+//        gap: rem(8px);
+//        padding-bottom: rem(16px);
+//    }
+//
+//    %advanced-filter__outlet {
+//        igx-select-item > igx-icon {
+//            width: var(--ig-icon-size, #{$icon-size});
+//            height: var(--ig-icon-size, #{$icon-size});
+//            font-size: var(--ig-icon-size, #{$icon-size});
+//            margin-inline-end: rem(8px);
+//        }
+//    }
+//
+//    %filter-tree {
+//        display: flex;
+//        width: 100%;
+//
+//        %filter-tree {
+//            margin-block: rem(8px);
+//        }
+//    }
+//
+//    %filter-tree__section {
+//        display: flex;
+//        flex-direction: column;
+//        gap: rem(8px);
+//
+//        > %filter-tree {
+//            margin-block: 0;
+//        }
+//    }
+//
+//    %filter-tree__expression-context-menu {
+//        display: flex;
+//        width: 100%;
+//
+//        [igxbutton='flat'] {
+//            --ig-size: 1;
+//
+//            @if $variant == 'bootstrap' {
+//                --ig-button-text-transform: capitalize;
+//            }
+//
+//            border: none;
+//            min-width: auto;
+//        }
+//    }
+//
+//    %filter-tree__line {
+//        $size: rem(2px);
+//        width: $size;
+//        background-color: white;
+//        margin-inline-end: calc(rem(8px) - $size);
+//        outline-style: none;
+//    }
+//
+//    %filter-tree__line--and {
+//        background: var-get($theme, 'color-expression-group-and');
+//    }
+//
+//    %filter-tree__line--or {
+//        background: var-get($theme, 'color-expression-group-or');
+//    }
+//
+//	%filter-tree__button--and {
+//		&[igxButton='flat'] {
+//			@if $variant == 'material' or $variant == 'indigo' {
+//				--focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus-hover});
+//				--focus-visible-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+//				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+//				--active-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+//				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
+//				--background: transparent;
+//			}
+//
+//			@if $variant == 'fluent' {
+//				--background: transparent;
+//				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+//				--focus-visible-background: transparent;
+//				--focus-background: transparent;
+//				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+//				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+//			}
+//
+//			--foreground: #{var-get($theme, 'color-expression-group-and')};
+//			--focus-visible-foreground: #{var-get($theme, 'color-expression-group-and')};
+//			--icon-color: #{var-get($theme, 'color-expression-group-and')};
+//
+//			@if $variant != 'bootstrap' {
+//				--focus-foreground: #{var-get($theme, 'color-expression-group-and')};
+//				--hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+//				--icon-color-hover: #{var-get($theme, 'color-expression-group-and')};
+//				--focus-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+//				--active-foreground: #{var-get($theme, 'color-expression-group-and')};
+//			} @else {
+//				$bootstrap-foreground-lightness: if($theme-variant == 'light', 34%, 78% );
+//
+//				--focus-hover-background: transparent;
+//				--focus-visible-background: transparent;
+//				--focus-background: transparent;
+//				--active-background: transparent;
+//				--hover-background: transparent;
+//				--background: transparent;
+//				--shadow-color: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / .5);
+//
+//				--icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+//				--focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+//				--hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+//				--focus-hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+//				--active-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+//			}
+//		}
+//    }
+//
+//	%filter-tree__button--or {
+//		&[igxButton='flat'] {
+//			@if $variant == 'material' or $variant == 'indigo' {
+//				--focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus-hover});
+//				--focus-visible-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+//				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+//				--active-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+//				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
+//				--background: transparent;
+//			}
+//
+//			@if $variant == 'fluent' {
+//				--background: transparent;
+//				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+//				--focus-visible-background: transparent;
+//				--focus-background: transparent;
+//				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+//				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+//			}
+//
+//			--foreground: #{var-get($theme, 'color-expression-group-or')};
+//			--focus-visible-foreground: #{var-get($theme, 'color-expression-group-or')};
+//			--icon-color: #{var-get($theme, 'color-expression-group-or')};
+//
+//			@if $variant != 'bootstrap' {
+//				--focus-foreground: #{var-get($theme, 'color-expression-group-or')};
+//				--hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+//				--icon-color-hover: #{var-get($theme, 'color-expression-group-or')};
+//				--focus-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+//				--active-foreground: #{var-get($theme, 'color-expression-group-or')};
+//			} @else {
+//				$bootstrap-foreground-lightness: if($theme-variant == 'light', 14%, 47%);
+//
+//				--focus-hover-background: transparent;
+//				--focus-visible-background: transparent;
+//				--focus-background: transparent;
+//				--active-background: transparent;
+//				--hover-background: transparent;
+//				--background: transparent;
+//				--shadow-color: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / .5);
+//
+//				--icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+//				--focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+//				--hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+//				--focus-hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+//				--active-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+//			}
+//		}
+//    }
+//
+//    %filter-tree__expressions {
+//        display: flex;
+//        flex-direction: column;
+//        align-items: flex-start;
+//        flex-grow: 1;
+//        gap: rem(8px);
+//    }
+//
+//    %filter-tree__expression-section {
+//        $spacing: rem(16px);
+//        display: flex;
+//        flex-direction: column;
+//        width: calc(100% - #{$spacing});
+//        gap: rem(8px);
+//        margin-inline-start: $spacing;
+//
+//        &:empty {
+//            display: none;
+//        }
+//    }
+//
+//    %filter-tree__expression-item {
+//        display: flex;
+//        align-items: center;
+//        width: 100%;
+//        gap: rem(8px);
+//        position: relative;
+//
+//        igx-chip {
+//            --ig-size: 3;
+//
+//            @if $variant != 'indigo' {
+//                igx-icon {
+//                    --component-size: 1;
+//                }
+//            }
+//        }
+//
+//        > igx-chip {
+//            %filter-tree__expression-column {
+//                padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
+//            }
+//
+//            %filter-tree__expression-condition {
+//                padding-inline-start: pad-inline(rem(3px), rem(6px), rem(8px));
+//            }
+//
+//            igx-prefix {
+//                display: flex;
+//            }
+//
+//            .igx-chip__end {
+//                gap: sizable(rem(3px), rem(6px), rem(8px));
+//            }
+//        }
+//    }
+//
+//
+//    %filter-tree__expression-item-ghost {
+//        .igx-chip__item {
+//            @include type-style('body-2');
+//
+//            --ig-body-2-text-transform: unset;
+//
+//            padding-inline: rem(32px);
+//
+//	        color: color($color: 'gray', $variant: if($theme-variant == 'light', 600, 900));
+//	        border: rem(1px) dashed color($color: 'gray', $variant: if($theme-variant == 'light', 600, 300));
+//	        background:  transparent;
+//        }
+//    }
+//
+//	%filter-tree__expression-item-keyboard-ghost {
+//		.igx-chip__item {
+//			box-shadow: var(--ghost-shadow);
+//            background: var(--ghost-background);
+//            color: var(--focus-text-color);
+//		}
+//
+//        .igx-chip:hover {
+//            .igx-chip__item {
+//                box-shadow: var(--ghost-shadow);
+//                background: var(--ghost-background);
+//                color: var(--focus-text-color);
+//
+//                @if $variant == 'indigo' {
+//                    border-color: var(--border-color);
+//                }
+//            }
+//        }
+//	}
+//
+//    %filter-tree__expression-column {
+//        padding: 0 rem(8px);
+//    }
+//
+//    %filter-tree__expression-actions {
+//        display: inline-flex;
+//        gap: if($variant != 'indigo', rem(16px), rem(8px));
+//
+//        span {
+//            display: inline-flex;
+//        }
+//
+//        %igx-icon-button-display {
+//            --ig-size: #{if($variant != 'bootstrap', 2, 1)};
+//        };
+//    }
+//
+//    %filter-tree__expression-condition {
+//        opacity: if($variant != 'indigo', .6, .8);
+//    }
+//
+//    %filter-tree__buttons {
+//        --ig-size: 1;
+//
+//        display: flex;
+//        align-items: center;
+//        gap: rem(8px);
+//
+//        [igxbutton='flat'] {
+//            padding-block: 0;
+//            border: none
+//        }
+//    }
+//
+//    %filter-tree__inputs {
+//        --ig-size: #{if($variant == 'indigo' or $variant == 'bootstrap', 2, 1)};
+//
+//        display: flex;
+//        align-items: flex-end;
+//        gap: rem(16px);
+//        width: 100%;
+//        border-radius: inherit;
+//
+//        &:empty {
+//            display: none;
+//        }
+//    }
+//
+//    %filter-tree__inputs-field {
+//        display: flex;
+//        flex-direction: column;
+//        gap: rem(4px);
+//        max-width: rem(250px);
+//        width: 100%;
+//    }
+//
+//    %advanced-filter__label {
+//        @include type-style('body-2');
+//
+//        color: var-get($theme, 'label-foreground');
+//    }
+//
+//    %filter-tree__inputs-actions {
+//        --ig-size: 2;
+//
+//        display: flex;
+//        gap: rem(8px);
+//        align-items: center;
+//        width: auto;
+//        align-self: center;
+//
+//        [igxIconButton] {
+//            transition: none;
+//        }
+//    }
+//
+//    %filter-con-menu__delete-btn {
+//        color: color(null, 'error');
+//        @if $bootstrap-theme {
+//            border-color: color(null, 'error');
+//        }
+//
+//        &:hover,
+//        &:focus {
+//            @if $bootstrap-theme {
+//                background: color(null, 'error');
+//                border-color: color(null, 'error');
+//                color: color(null, 'gray', 100);
+//            } @else {
+//                color: color(null, 'error');
+//            }
+//        }
+//    }
+//
+//    %filter-con-menu__close-btn {
+//        position: absolute;
+//        top: 0;
+//        inset-inline-start: 100%;
+//        transform: translate(-50%, -50%);
+//        background-color: var-get($theme, 'background');
+//        border: rem(1px) solid color(null, 'gray', 200);
+//
+//        &:hover,
+//        &:focus {
+//            @if $not-bootstrap-theme {
+//                background-color: var-get($theme, 'background');
+//            }
+//        }
+//    }
+//
+//    %advanced-filter--inline {
+//        display: flex;
+//        flex-direction: column;
+//        width: 100%;
+//        max-width: 100%;
+//        height: inherit;
+//        max-height: inherit;
+//        min-width: rem(480px);
+//        box-shadow: none;
+//
+//        %advanced-filter__main {
+//            min-height: initial;
+//            max-height: initial;
+//            flex-grow: 1;
+//        }
+//    }
+//}
+//
+///// Adds typography styles for the igx-query-builder component.
+///// Uses the 'h6' category from the typographic scale.
+///// @group typography
+///// @param {Map} $categories [(title: 'h6')] - The categories from the typographic scale used for type styles.
+//@mixin query-builder-typography(
+//	$categories: (title: 'h6')
+//) {
+//	$title: map.get($categories, 'title');
+//
+//	%advanced-filter__title {
+//		@include type-style($title) {
+//			margin: 0;
+//		}
+//	}
+//}

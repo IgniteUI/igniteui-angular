@@ -1,4 +1,7 @@
-import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject, ContentChildren, QueryList } from '@angular/core';
+import {
+    booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject, ContentChildren, QueryList,
+    ViewEncapsulation
+} from '@angular/core';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -37,6 +40,8 @@ import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
+    styleUrls: ['./query-builder.component.css'],
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxQueryBuilderTreeComponent]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {

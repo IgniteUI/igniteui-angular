@@ -1,0 +1,70 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-query-builder, bootstrap) {
+    --query-builder-outer-padding: #{rem(16px)};
+
+    &:has(igx-query-builder-header) {
+        .igx-query-builder-tree--level-0 {
+            padding-block: rem(16px) var(--query-builder-outer-padding);
+        }
+    }
+}
+
+@include themed-block(igx-filter-tree, bootstrap) {
+    @include e(button, $m: 'and') {
+        &[igxButton='flat'] {
+            $bootstrap-foreground-lightness: 34%;
+
+            --focus-hover-background: transparent;
+            --focus-visible-background: transparent;
+            --focus-background: transparent;
+            --active-background: transparent;
+            --hover-background: transparent;
+            --background: transparent;
+            --shadow-color: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / .5);
+
+            --icon-color-hover: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+            --focus-foreground: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+            --hover-foreground: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+            --focus-hover-foreground: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+            --active-foreground: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+
+        }
+    }
+
+    @include e(button, $m: 'or') {
+        &[igxButton='flat'] {
+            $bootstrap-foreground-lightness: 14%,;
+
+            --focus-hover-background: transparent;
+            --focus-visible-background: transparent;
+            --focus-background: transparent;
+            --active-background: transparent;
+            --hover-background: transparent;
+            --background: transparent;
+            --shadow-color: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / .5);
+
+            --icon-color-hover: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+            --focus-foreground: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+            --hover-foreground: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+            --focus-hover-foreground: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+            --active-foreground: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+        }
+    }
+
+    @include e(expression-actions) {
+        .igx-icon-button {
+            --ig-size: 1;
+        };
+    }
+
+    @include e(expression-context-menu) {
+        --ig-button-text-transform: capitalize;
+    }
+}

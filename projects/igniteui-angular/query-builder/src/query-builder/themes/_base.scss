@@ -1,0 +1,422 @@
+/* stylelint-disable max-nesting-depth */
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/themes/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/elevations/index' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+// Custom colors alpha
+$alpha-focus: .16;
+
+$border-radius: var-get($theme, 'border-radius');
+$icon-size: rem(18px);
+
+@include layer(base) {
+    @include b(igx-query-builder) {
+        @include sizable();
+
+        --query-builder-outer-padding: #{rem(24px)};
+        --_tree-scrollbar-gutter: #{rem(16px)};
+
+        width: auto;
+        min-width: rem(660px);
+        background-color: var-get($theme, 'background');
+        border-radius: $border-radius;
+        box-shadow: var-get($theme, 'elevation');
+        overflow: hidden;
+
+        &:has(:not(igx-query-builder-header)) {
+            padding-block-start: var(--query-builder-outer-padding);
+
+            .igx-query-builder-tree--level-0 {
+                padding-block: 0 var(--query-builder-outer-padding);
+            }
+        }
+
+        &:has(igx-query-builder-header) {
+            padding-block-start: 0;
+
+            .igx-query-builder-tree--level-0 {
+                padding-block: 0;
+            }
+        }
+
+        .igx-chip__ghost {
+            position: relative;
+        }
+
+        @include e(header) {
+            display: flex;
+            align-items: center;
+            background-color: var-get($theme, 'header-background');
+            color: var-get($theme, 'header-foreground');
+            user-select: none;
+            border-radius: $border-radius $border-radius 0 0;
+            margin-bottom: 0;
+            border-block-end: rem(1px) solid var-get($theme, 'header-border');
+
+            padding-inline: var(--query-builder-outer-padding);
+            padding-block: var(--query-builder-outer-padding) rem(16px);
+        }
+
+        @include e(title) {
+            @include type-style('h6');
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(label) {
+            @include type-style('body-2');
+
+            color: var-get($theme, 'label-foreground');
+        }
+
+        @include e(main) {
+            display: grid;
+            gap: rem(16px);
+        }
+
+        @include e(root) {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+
+            > * {
+                flex-grow: 1;
+            }
+        }
+
+        @include e(root-actions) {
+            display: flex;
+            gap: rem(8px);
+            padding-bottom: rem(16px);
+        }
+
+        @include e(outlet) {
+            igx-select-item > igx-icon {
+                width: var(--ig-icon-size, #{$icon-size});
+                height: var(--ig-icon-size, #{$icon-size});
+                font-size: var(--ig-icon-size, #{$icon-size});
+                margin-inline-end: rem(8px);
+            }
+        }
+
+        @include m('inline') {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 100%;
+            height: inherit;
+            max-height: inherit;
+            min-width: rem(480px);
+            box-shadow: none;
+
+            @include e(main) {
+                min-height: initial;
+                max-height: initial;
+                flex-grow: 1;
+            }
+        }
+    }
+
+    @include b(igx-filter-tree) {
+        display: flex;
+        width: 100%;
+
+        .igx-filter-tree {
+            margin-block: rem(8px);
+        }
+
+        @include e(subquery) {
+            max-width: rem(960px);
+
+            // Add styles to the subquery itself only if there is a direct .igx-filter-tree__inputs inside it
+            &:has( > .igx-filter-tree__inputs) {
+                background: var-get($theme, 'subquery-header-background');
+                border: rem(1px) solid var-get($theme, 'subquery-border-color');
+                border-radius: var-get($theme, 'subquery-border-radius');
+            }
+
+            // Hide the subquery itself if there is a tree with display none inside
+            &:has( > .igx-query-builder-tree[style='display: none;']) {
+                display: none;
+            }
+
+            > .igx-filter-tree__inputs {
+                padding: rem(12px);
+                border-radius: inherit;
+
+                > igx-input-group,
+                > igx-date-picker,
+                > igx-time-picker {
+                    flex-grow: 1;
+                }
+            }
+
+            .igx-filter-tree__buttons {
+                margin-block-start: rem(8px);
+            }
+
+            .igx-query-builder-tree {
+                border-block-start: rem(1px) dashed var-get($theme, 'separator-color');
+                padding: rem(12px);
+            }
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(section) {
+            display: flex;
+            flex-direction: column;
+            gap: rem(8px);
+
+            > .igx-filter-tree {
+                margin-block: 0;
+            }
+        }
+
+        @include e(line) {
+            $size: rem(2px);
+            width: $size;
+            background-color: white;
+            margin-inline-end: calc(rem(8px) - $size);
+            outline-style: none;
+        }
+
+        @include e(line, $m: 'and') {
+            background: var-get($theme, 'color-expression-group-and');
+        }
+
+        @include e(line, $m: 'or') {
+            background: var-get($theme, 'color-expression-group-or');
+        }
+
+        @include e(button, $m: 'and') {
+            &[igxButton='flat'] {
+                --foreground: #{var-get($theme, 'color-expression-group-and')};
+                --focus-visible-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --icon-color: #{var-get($theme, 'color-expression-group-and')};
+                --focus-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --icon-color-hover: #{var-get($theme, 'color-expression-group-and')};
+                --focus-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --active-foreground: #{var-get($theme, 'color-expression-group-and')};
+            }
+        }
+
+        @include e(button, $m: 'or') {
+            &[igxButton='flat'] {
+                --foreground: #{var-get($theme, 'color-expression-group-or')};
+                --focus-visible-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --icon-color: #{var-get($theme, 'color-expression-group-or')};
+
+                --focus-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --icon-color-hover: #{var-get($theme, 'color-expression-group-or')};
+                --focus-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --active-foreground: #{var-get($theme, 'color-expression-group-or')};
+            }
+        }
+
+        @include e(expressions) {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-grow: 1;
+            gap: rem(8px);
+        }
+
+        @include e(expression-context-menu) {
+            display: flex;
+            width: 100%;
+
+            [igxbutton='flat'] {
+                --ig-size: 1;
+
+                border: none;
+                min-width: auto;
+            }
+        }
+
+        @include e(expression-section) {
+            $spacing: rem(16px);
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - #{$spacing});
+            gap: rem(8px);
+            margin-inline-start: $spacing;
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(expression-item) {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: rem(8px);
+            position: relative;
+
+            igx-chip {
+                --ig-size: 3;
+            }
+
+            > igx-chip {
+                .igx-filter-tree__expression-column {
+                    padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
+                }
+
+                .igx-filter-tree__expression-condition {
+                    padding-inline-start: pad-inline(rem(3px), rem(6px), rem(8px));
+                }
+
+                igx-prefix {
+                    display: flex;
+                }
+
+                .igx-chip__end {
+                    gap: sizable(rem(3px), rem(6px), rem(8px));
+                }
+            }
+        }
+
+        @include e(expression-item-drop-ghost) {
+            .igx-chip__item {
+                @include type-style('body-2');
+
+                --ig-body-2-text-transform: unset;
+
+                padding-inline: rem(32px);
+                background:  transparent;
+
+                border-width: rem(1px);
+                border-style: dashed;
+            }
+        }
+
+        @include e(expression-item-keyboard-ghost) {
+            .igx-chip__item {
+                box-shadow: var(--ghost-shadow);
+                background: var(--ghost-background);
+                color: var(--focus-text-color);
+            }
+
+            .igx-chip:hover {
+                .igx-chip__item {
+                    box-shadow: var(--ghost-shadow);
+                    background: var(--ghost-background);
+                    color: var(--focus-text-color);
+                }
+            }
+        }
+
+        @include e(expression-column) {
+            padding: 0 rem(8px);
+        }
+
+        @include e(expression-actions) {
+            display: inline-flex;
+
+            span {
+                display: inline-flex;
+            }
+        }
+
+        @include e(buttons) {
+            --ig-size: 1;
+
+            display: flex;
+            align-items: center;
+            gap: rem(8px);
+
+            [igxbutton='flat'] {
+                padding-block: 0;
+                border: none
+            }
+        }
+
+        @include e(inputs) {
+            display: flex;
+            align-items: flex-end;
+            gap: rem(16px);
+            width: 100%;
+            border-radius: inherit;
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(inputs-field) {
+            display: flex;
+            flex-direction: column;
+            gap: rem(4px);
+            max-width: rem(250px);
+            width: 100%;
+        }
+
+        @include e(inputs-actions) {
+            --ig-size: 2;
+
+            display: flex;
+            gap: rem(8px);
+            align-items: center;
+            width: auto;
+            align-self: center;
+
+            [igxIconButton] {
+                transition: none;
+            }
+        }
+
+        @include e(details-button) {
+            margin-inline-start: auto;
+        }
+    }
+
+    @include b(igx-query-builder-tree) {
+        background: var-get($theme, 'background');
+
+        .igx-query-builder-tree {
+            border-radius: var-get($theme, 'subquery-border-radius');
+        }
+
+        @include m(level-0) {
+            display: block;
+            width: 100%;
+            padding-inline: var(--query-builder-outer-padding);
+
+            > .igx-query-builder__main {
+                gap: rem(16px);
+
+                > .igx-filter-tree__section {
+                    --sb-size: #{rem(10px)};
+                    max-height: rem(570px);
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                    padding-inline-end: var(--_tree-scrollbar-gutter);
+                }
+            }
+        }
+    }
+
+    @include b(igx-query-builder-dialog) {
+        display: flex;
+        flex-direction: column;
+        gap: rem(16px);
+        max-width: rem(310px);
+
+        > * {
+            margin: 0 !important;
+        }
+    }
+}

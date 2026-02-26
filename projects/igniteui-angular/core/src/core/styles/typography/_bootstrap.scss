@@ -120,7 +120,7 @@
     @include label-typography($categories: (
         label: 'body-1'
     ));
-	@include query-builder-typography($categories: (
-		title: 'h5'
-	));
+	//@include query-builder-typography($categories: (
+	//	title: 'h5'
+	//));
 }

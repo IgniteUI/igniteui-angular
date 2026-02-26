@@ -124,5 +124,5 @@
     @include label-typography($categories: (
         label: 'subtitle-2'
     ));
-	@include query-builder-typography();
+	//@include query-builder-typography();
 }
