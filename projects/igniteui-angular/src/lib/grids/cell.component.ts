@@ -1173,6 +1173,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if (this.grid.isCellSelectable && shouldEmitSelection) {
             this.zone.run(() => this.grid.selected.emit({ cell: this.getCellType(), event }));
         }
+
+        const isKeyboardActivation = event?.type === 'keydown';
+        if (isKeyboardActivation) {
+            this.grid.notifyChanges();
+        }
     }
 
     /**
