@@ -10,7 +10,7 @@
 $theme: $material;
 $cell-font-size: rem(13px);
 $cell-line-height: rem(16px);
-$cell-editing-outline-width: rem(2px);
+$cell-editing-outline-width: rem(1px);
 $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 $grid-body-column-border-odd: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-odd');
 $grid-body-column-border-even: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-even');
@@ -74,6 +74,145 @@ $z-grid-loading: 10003;
         overflow: hidden;
         transition: color 250ms ease-in-out;
         outline-style: none;
+    }
+
+    %cell-input-overrides {
+        // Have a more stable visual editing experience
+        > igx-input-group,
+        igx-combo,
+        igx-simple-combo,
+        igx-select,
+        igx-date-picker,
+        igx-time-picker {
+            position: relative;
+            height: auto;
+            width: 100% !important;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        igx-input-group {
+            background: var-get($theme, 'cell-editing-background');
+
+            input {
+                height: 100%;
+                color: var-get($theme, 'cell-editing-foreground');
+            }
+
+            input:focus {
+                color: var-get($theme, 'cell-editing-focus-foreground');
+            }
+        }
+
+        igx-select,
+        igx-combo,
+        igx-simple-combo,
+        igx-time-picker,
+        igx-date-picker {
+            igx-input-group {
+                height: 100%;
+            }
+        }
+
+        .igx-input-group__bundle {
+            background: var-get($theme, 'cell-editing-background') !important;
+            height: 100% !important;
+            min-height: 100% !important;
+            border: none !important;
+
+            .igx-input-group__filler,
+            .igx-input-group__notch {
+                border: none !important;
+            }
+
+            &::before {
+                content: none !important;
+            }
+
+            &::after {
+                display: none;
+            }
+        }
+
+        .igx-input-group--indigo .igx-input-group__bundle:hover,
+        .igx-input-group--indigo .igx-input-group__bundle:focus {
+            background: transparent;
+        }
+
+        .igx-input-group__bundle-main,
+        .igx-input-group__bundle-start,
+        .igx-input-group__bundle-end {
+            height: auto;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+
+        .igx-input-group__bundle-main {
+            padding: 0;
+        }
+
+        .igx-input-group__line {
+            display: none;
+        }
+
+        igx-prefix,
+        igx-suffix {
+            background: inherit !important;
+            border-radius: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border: none !important;
+            padding-inline: sizable(rem(4px), rem(6px), rem(8px)) !important;
+        }
+
+        .igx-input-group--indigo {
+            padding-inline: sizable(rem(6px), rem(8px), rem(12px)) !important;
+
+            igx-prefix {
+                padding-inline-start: 0 !important;
+            }
+
+            igx-suffix {
+                padding-inline-end: 0 !important;
+            }
+        }
+
+        .igx-input-group__input {
+            padding-inline: sizable(rem(4px), rem(6px), rem(8px)) !important;
+        }
+
+        igx-date-range-picker {
+            height: 100%;
+        }
+
+        igx-time-picker [igxLabel] {
+            display: none;
+        }
+
+        input {
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        %form-group-input {
+            // ignore global typography
+            font-size: rem(13px) !important;
+            line-height: rem(16px) !important;
+        }
+
+        .igx-input-group__input,
+        .igx-input-group__file-input,
+        .igx-input-group__textarea {
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        .igx-input-group--disabled,
+        .igx-input-group--disabled igx-prefix,
+        .igx-input-group--disabled igx-suffix {
+            color: var-get($theme, 'cell-disabled-color');
+        }
     }
 
     @include b(igx-grid) {
@@ -471,6 +610,7 @@ $z-grid-loading: 10003;
         // Cell (idle)
         @include e(td) {
             @extend %cell-display;
+            @extend %cell-input-overrides;
 
             // Used for the active cell indicator
             &::after {
@@ -1482,6 +1622,7 @@ $z-grid-loading: 10003;
             // Color styles
             color: var-get($theme, 'filtering-row-text-color');
             background: var-get($theme, 'filtering-row-background');
+            box-shadow: 0 rem(4px) rem(10px) rgba(0, 0, 0, 0.12);
 
             // Compound components overrides
             igx-input-group {
@@ -2789,11 +2930,11 @@ $z-grid-loading: 10003;
             width: calc(100% - var-get($theme, 'header-border-width'));
         }
 
-        &.igx-grid-thead__subgroup {
-            &::after {
-                height: calc(100% - var-get($theme, 'header-border-width'));
-            }
-        }
+        //&.igx-grid-thead__subgroup {
+        //    &::after {
+        //        height: calc(100% - var-get($theme, 'header-border-width'));
+        //    }
+        //}
     }
 
     .igx-grid-thead__wrapper:not(.igx-grid-thead__wrapper--pivot) {
