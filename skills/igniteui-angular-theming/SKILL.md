@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-theming
-description: Customize Ignite UI components styling using the igniteui-theming MCP server for AI-assisted theming
+description: "Generates and customizes Ignite UI for Angular themes including color palettes, typography, elevations, and component-level styles using the Sass theming system and the igniteui-theming MCP server. Use when users ask to theme, restyle, or style Ignite UI components, change colors or the color palette, switch between light and dark themes, create or apply a global theme, customize typography or elevation shadows, adjust spacing, sizing, or roundness, or configure per-component design tokens."
 user-invokable: true
 ---
 
@@ -521,3 +521,10 @@ If using the licensed `@infragistics/igniteui-angular` package, set `licensed: t
 7. **Component themes use `@include tokens($theme)`** inside a selector to emit CSS custom properties
 8. **For compound components**, follow the full checklist returned by `get_component_design_tokens` — theme each child component with its scoped selector
 9. **Never hardcode colors after palette generation** — once a palette is created, every color in component themes, custom CSS, and Sass variables must use `var(--ig-<family>-<shade>)` palette tokens (e.g., `var(--ig-primary-500)`, `var(--ig-gray-200)`). Raw hex/RGB/HSL values are only acceptable in the initial `palette()` seed call. This ensures themes remain consistent, switchable (light/dark), and maintainable
+
+## Related Skills
+
+- [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) — Form controls, application setup, architecture, and import patterns
+- [`igniteui-angular-components-layout`](../igniteui-angular-components-layout/SKILL.md) — Layout, data display, feedback/overlay components, and directives
+- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — Data Grid structure, column configuration, sorting, filtering, selection
+- [`igniteui-angular-grids-types`](../igniteui-angular-grids-types/SKILL.md) — Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid specifics
