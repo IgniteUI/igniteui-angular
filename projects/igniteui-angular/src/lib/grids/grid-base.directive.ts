@@ -31,7 +31,9 @@ import {
     ViewChild,
     ViewChildren,
     ViewContainerRef,
-    DOCUMENT
+    DOCUMENT,
+    SimpleChanges,
+    OnChanges
 } from '@angular/core';
 import { areEqualArrays, columnFieldPath, formatDate, resizeObservable } from '../core/utils';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
@@ -210,7 +212,7 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
-    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit, OnChanges {
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
@@ -231,6 +233,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @WatchChanges()
     @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
@@ -4331,6 +4334,16 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (!changes.autoGenerate?.firstChange && changes.autoGenerate?.currentValue && this.data?.length > 0 && this.columnList?.length === 0) {
+            // Make sure to setup columns only after the grid is initialized and autoGenerate is changed
+            this.setupColumns();
+        }
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -6842,7 +6855,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
-                this._columnWidth =  this.minColumnWidth + 'px';
+                this._columnWidth = this.minColumnWidth + 'px';
             }
         }
         this._updateColumnDefaultWidths();
