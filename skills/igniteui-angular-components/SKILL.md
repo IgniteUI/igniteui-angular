@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-components
-description: "All Ignite UI Angular UI components: application setup and architecture, form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider, reactive forms), layout (Tabs, Bottom Navigation, Stepper, Accordion, Splitter, Navigation Drawer, Layout Manager), data display (List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress bar, Linear Progress Bar, Circular Progress Bar, Chat), feedback/overlays (Dialog, Snackbar, Toast, Banner), directives (Button, Ripple, Tooltip, Drag and Drop), Dock Manager, and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart, IgxCategoryChart, IgxFinancialChart, IgxDataChart, IgxPieChart). Use for any non-grid Ignite UI Angular UI question."
+description: "Provides guidance on all non-grid Ignite UI for Angular UI components including application setup and architecture, form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider, reactive forms), layout (Tabs, Bottom Navigation, Stepper, Accordion, Splitter, Navigation Drawer, Layout Manager), data display (List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress Bar, Linear Progress Bar, Circular Progress Bar, Chat), feedback/overlays (Dialog, Snackbar, Toast, Banner), directives (Button, Ripple, Tooltip, Drag and Drop), Dock Manager, and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart, IgxCategoryChart, IgxFinancialChart, IgxDataChart, IgxPieChart). Use when users ask about any Ignite UI Angular component that is not a data grid, such as forms, inputs, dropdowns, date pickers, dialogs, navigation, lists, trees, cards, charts, or application scaffolding and setup."
 user-invokable: true
 ---
 
@@ -18,13 +18,10 @@ You are **required** to complete ALL of the following steps before producing any
 **STEP 1 — Identify every component or feature involved.**
 Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., a form inside a Dialog requires reading both `form-controls.md` AND `feedback.md`).
 
-**STEP 2 — Read every identified reference file in full.**
-Call `read_file` (or equivalent) on each reference file identified in Step 1. You must do this even if you believe you already know the answer. Do not skip, skim, or partially read a reference file.
+**STEP 2 — Read every identified reference file in full (PARALLEL).**
+Call `read_file` (or equivalent) on **all** reference files identified in Step 1 **in a single parallel batch** — do NOT read them one at a time sequentially. You must do this even if you believe you already know the answer. Do not skip, skim, or partially read a reference file.
 
-**STEP 3 — Check app setup.**
-If the component is new to the project (or you're scaffolding a new feature), also read [`references/setup.md`](./references/setup.md) to verify the correct providers and entry-point import patterns. Missing `provideAnimations()` is the most common source of runtime failures.
-
-**STEP 4 — Only then produce output.**
+**STEP 3 — Only then produce output.**
 Base your code and explanation exclusively on what you read. If the reference files do not cover something, say so explicitly rather than guessing.
 
 ### Task → Reference File
