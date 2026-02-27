@@ -249,7 +249,7 @@ import {
   IgxBooleanFilteringOperand,
   FilteringExpressionsTree,
   FilteringLogic
-} from 'igniteui-angular/core';
+} from 'igniteui-angular';
 
 // Simple single-column filter
 this.gridRef().filter('name', 'John', IgxStringFilteringOperand.instance().condition('contains'), true);
@@ -309,7 +309,7 @@ Control the AND/OR logic between **different column** filters:
 ```
 
 ```typescript
-import { FilteringLogic } from 'igniteui-angular/core';
+import { FilteringLogic } from 'igniteui-angular';
 
 // FilteringLogic.And (default) — row must match ALL column filters
 // FilteringLogic.Or — row must match ANY column filter
