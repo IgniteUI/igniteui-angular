@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, Inject, booleanAttribute } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, Output, EventEmitter, Inject, booleanAttribute } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
@@ -94,8 +94,9 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
         @Inject(IgxToolbarToken) toolbar: IgxToolbarToken,
         private excelExporter: IgxExcelExporterService,
         private csvExporter: IgxCsvExporterService,
+        cdr: ChangeDetectorRef,
     ) {
-        super(toolbar);
+        super(toolbar, cdr);
     }
 
     protected exportClicked(type: 'excel' | 'csv', toggleRef?: IgxToggleDirective) {
