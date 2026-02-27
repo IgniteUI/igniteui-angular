@@ -72,7 +72,9 @@ jobs:
         run: npm run build
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
+      # TODO: Remove fail-on-error once Coveralls resolves their ongoing issue (https://status.coveralls.io)
       - name: Publish to coveralls.io
         uses: coverallsapp/github-action@v2
         with:
             github-token: ${{ github.token }}
+            fail-on-error: false
