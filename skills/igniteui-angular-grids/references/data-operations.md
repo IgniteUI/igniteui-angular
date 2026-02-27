@@ -190,7 +190,7 @@ onSortingDone(event: ISortingEventArgs) {
 Implement `ISortingStrategy` to control how values are compared:
 
 ```typescript
-import { ISortingStrategy, SortingDirection } from 'igniteui-angular/grids/core';
+import { ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
 class PrioritySortStrategy implements ISortingStrategy {
   private priorityOrder = ['Critical', 'High', 'Medium', 'Low'];
@@ -249,7 +249,7 @@ import {
   IgxBooleanFilteringOperand,
   FilteringExpressionsTree,
   FilteringLogic
-} from 'igniteui-angular/grids/core';
+} from 'igniteui-angular/core';
 
 // Simple single-column filter
 this.gridRef().filter('name', 'John', IgxStringFilteringOperand.instance().condition('contains'), true);
@@ -309,7 +309,7 @@ Control the AND/OR logic between **different column** filters:
 ```
 
 ```typescript
-import { FilteringLogic } from 'igniteui-angular/grids/core';
+import { FilteringLogic } from 'igniteui-angular/core';
 
 // FilteringLogic.And (default) — row must match ALL column filters
 // FilteringLogic.Or — row must match ANY column filter
@@ -369,7 +369,7 @@ onFilteringDone(event: IFilteringEventArgs) {
 ### Programmatic Grouping
 
 ```typescript
-import { SortingDirection } from 'igniteui-angular/grids/core';
+import { SortingDirection } from 'igniteui-angular/core';
 
 // Group by a column
 this.gridRef().groupBy({ fieldName: 'category', dir: SortingDirection.Asc, ignoreCase: true });

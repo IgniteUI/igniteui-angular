@@ -303,7 +303,6 @@ highlightingMode: HighlightingMode;
 import {
   IgxCategoryChartModule,    // provides IgxCategoryChartComponent
   IgxFinancialChartModule,   // provides IgxFinancialChartComponent
-  IgxDataChartModule,        // provides IgxDataChartComponent + all series/axes
   IgxPieChartModule,         // provides IgxPieChartComponent
   IgxDataPieChartModule,     // provides IgxDataPieChartComponent
   IgxLegendModule,           // provides IgxLegendComponent
@@ -311,21 +310,20 @@ import {
 
 // Enums and types — these ARE plain TS exports and can be imported directly
 import {
-  ChartType,
   FinancialChartType,
   MarkerType,
   ToolTipType,
-  TrendLineType,
+  TrendLineTypeCollection,
   HighlightingMode,
-  TransitionInMode,
-  AxisLabelLocation,
+  TransitionInSpeedType,
+  AxisLabelSettings,
   CrosshairsDisplayMode,
   LegendOrientation,
-  OthersCategoryType,
-  SelectionMode,
-  IndicatorType,
-  VolumeType,
-  AxisMode
+  OthersCategoryContext,
+  SeriesSelectionMode,
+  IndicatorDisplayType,
+  FinancialChartVolumeType,
+  AxisOrientation
 } from 'igniteui-angular-charts';
 ```
 
