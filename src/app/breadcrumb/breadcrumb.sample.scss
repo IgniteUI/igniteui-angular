@@ -1,0 +1,53 @@
+.breadcrumb-sample {
+    padding: 16px 24px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.sample-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.sample-column.full-width {
+    min-width: 100%;
+}
+
+// Custom styled breadcrumb
+.styled-breadcrumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    
+    igx-breadcrumb {
+        --igx-breadcrumb-item-color: rgba(255, 255, 255, 0.9);
+        --igx-breadcrumb-link-color: #fff;
+        --igx-breadcrumb-link-hover-color: #e0e0ff;
+        --igx-breadcrumb-separator-color: rgba(255, 255, 255, 0.6);
+        --igx-breadcrumb-current-color: #fff;
+        --igx-breadcrumb-disabled-color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .igx-breadcrumb-item__link {
+        color: #fff;
+        font-weight: 500;
+        
+        &:hover {
+            color: #e0e0ff;
+        }
+    }
+    
+    .igx-breadcrumb-item__text {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .igx-breadcrumb__separator-text {
+        color: rgba(255, 255, 255, 0.6);
+    }
+}
+
+#igniteui-demo-app .sample-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #333;
+}
