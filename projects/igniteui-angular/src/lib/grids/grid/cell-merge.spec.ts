@@ -5,7 +5,7 @@ import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrat
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
 import { hasClass, setElementSize } from '../../test-utils/helper-utils.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { IgxHierarchicalGridTestBaseComponent } from '../hierarchical-grid/hierarchical-grid.spec';
@@ -1102,6 +1102,68 @@ describe('IgxGrid - Cell merging #grid', () => {
                     { value: 'Product B', span: 2 },
                     { value: 'Product C', span: 1 },
                     { value: 'Product B', span: 1 }
+                ]);
+            });
+
+            it('should remerge child grid cells when focus moves to parent grid.', async () => {
+                const ri = fix.componentInstance.rowIsland;
+                ri.cellMergeMode = 'always';
+                ri.getColumnByName('ProductName').merge = true;
+                fix.detectChanges();
+
+                const firstRow = grid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+                firstRow.toggle();
+                fix.detectChanges();
+
+                const childGrid = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+                expect(childGrid).toBeDefined();
+
+                const childCol = childGrid.getColumnByName('ProductName');
+                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
+                ]);
+
+                await wait(1);
+                fix.detectChanges();
+
+                const allGrids = fix.debugElement.queryAll(By.directive(IgxHierarchicalGridComponent));
+                const childGridDE = allGrids.find(x => x.componentInstance === childGrid);
+                expect(childGridDE).toBeDefined();
+                const childRows = childGridDE.queryAll(By.css(CSS_CLASS_GRID_ROW));
+                childRows.shift();
+                const childRowDE = childRows[0];
+                const childCells = childRowDE.queryAll(By.css('.igx-grid__td'));
+                const childCellDE = childCells[1];
+                UIInteractions.simulateClickAndSelectEvent(childCellDE.nativeElement);
+                await wait(1);
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                    { value: 'Product A', span: 1 },
+                    { value: 'Product A', span: 1 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
+                ]);
+
+                const rootGridDE = allGrids.find(x => x.componentInstance === grid);
+                expect(rootGridDE).toBeDefined();
+                const parentRows = rootGridDE.queryAll(By.css(CSS_CLASS_GRID_ROW));
+                parentRows.shift();
+                const parentRowDE = parentRows[0];
+                const parentCells = parentRowDE.queryAll(By.css('.igx-grid__td'));
+                const parentCellDE = parentCells[1];
+                const activeChange = waitForActiveNodeChange(childGrid);
+                UIInteractions.simulateClickAndSelectEvent(parentCellDE.nativeElement);
+                await activeChange;
+                await wait(20);
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
                 ]);
             });
 
