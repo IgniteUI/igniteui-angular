@@ -1,12 +1,13 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { TestBed, waitForAsync, fakeAsync } from '@angular/core/testing';
+import { ApplicationRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGroupingExpression } from '../../../core/src/data-operations/grouping-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
 import { IPagingState } from '../../../core/src/data-operations/paging-state.interface';
-import { IgxBooleanFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
+import { IgxBooleanFilteringOperand, IgxStringFilteringOperand } from '../../../core/src/data-operations/filtering-condition';
 import { IGroupingState } from '../../../core/src/data-operations/groupby-state.interface';
 import { IGroupByExpandState } from '../../../core/src/data-operations/groupby-expand-state.interface';
 import { GridSelectionMode } from './common/enums';
@@ -851,6 +852,53 @@ describe('IgxGridState - input properties #grid', () => {
         const allSameWidth = calcWidths.every(w => w === calcWidths[0]);
         expect(allSameWidth).toBe(false, 'Columns should not all have the same width');
     });
+
+    // Uses ApplicationRef.tick() instead of fix.detectChanges() because the latter always
+    // checks the full component tree top-down. Only ApplicationRef.tick() respects the OnPush
+    // strategy of the grid's internal components (header row, header group, filter cell),
+    // reproducing the real browser behavior where the filter row fails to render without
+    // an explicit markForCheck() call in onChipClicked.
+    it('should open filter row when clicking a filter chip after restoring state with filtering', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        const appRef = TestBed.inject(ApplicationRef);
+        appRef.attachView(fix.componentRef.hostView);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        grid.allowFiltering = true;
+        fix.detectChanges();
+
+        const filterTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const productNameTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        productNameTree.filteringOperands.push({
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            fieldName: 'ProductName',
+            searchVal: 'a',
+            ignoreCase: true
+        });
+        filterTree.filteringOperands.push(productNameTree);
+        grid.filteringExpressionsTree = filterTree;
+        appRef.tick();
+
+        const savedState = state.getState(false) as IGridState;
+        state.setState(savedState);
+        appRef.tick();
+
+        const productNameCol = grid.getColumnByName('ProductName');
+        expect(productNameCol).toBeTruthy();
+        expect(productNameCol.filterCell).toBeTruthy();
+
+        productNameCol.filterCell.onChipClicked();
+        appRef.tick();
+
+        expect(grid.filteringService.isFilterRowVisible).toBe(true);
+        expect(grid.filteringService.filteredColumn?.field).toBe('ProductName');
+
+        const filterRow = fix.debugElement.query(By.css('igx-grid-filtering-row'));
+        expect(filterRow).toBeTruthy('Filter row should be rendered in the DOM after clicking a filter chip');
+    }));
 });
 
 class HelperFunctions {
