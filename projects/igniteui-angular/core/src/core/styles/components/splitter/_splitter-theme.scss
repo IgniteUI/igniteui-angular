@@ -94,6 +94,10 @@
             transform: scaleY($slim-splitter);
         }
 
+        &:hover {
+                @extend %expand-bars;
+        }
+
         &.igx-splitter-bar--collapsible {
             &::before,
             &::after {
@@ -101,8 +105,6 @@
             }
 
             &:hover {
-                @extend %expand-bars;
-
                 %igx-splitter-handle,
                 %igx-splitter-expander {
                     opacity: 1;
