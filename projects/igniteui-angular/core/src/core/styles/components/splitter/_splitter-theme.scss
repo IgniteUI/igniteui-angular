@@ -66,7 +66,7 @@
     %show-controls {
         %igx-splitter-handle,
         %igx-splitter-expander {
-            opacity: 1;
+            opacity: .68;
             transition: opacity .25s ease;
             pointer-events: auto;
         }
@@ -103,8 +103,14 @@
             }
 
             &:hover {
-                @extend %show-controls;
                 @extend %expand-bars;
+
+                %igx-splitter-handle,
+                %igx-splitter-expander {
+                    opacity: 1;
+                    transition: opacity .25s ease;
+                    pointer-events: auto;
+                }
 
                 &::before,
                 &::after {
@@ -159,6 +165,11 @@
         &:hover {
             transition: all .25s ease-out;
             background: $splitter-color;
+
+            %igx-splitter-handle,
+            %igx-splitter-expander {
+                opacity: 1;
+            }
         }
     }
 
@@ -173,12 +184,14 @@
             %indigo-splitter-bar.igx-splitter-bar--collapsible {
                 @extend %show-controls;
                 @extend %expand-bars;
-            }
-        }
 
-        &:hover {
-            box-shadow: none;
-            transition: box-shadow .25s ease-out;
+                &:hover {
+                    %igx-splitter-handle,
+                    %igx-splitter-expander {
+                        opacity: 1;
+                    }
+                }
+            }
         }
     }
 
