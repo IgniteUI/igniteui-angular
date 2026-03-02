@@ -44,6 +44,37 @@ export const appConfig: ApplicationConfig = {
 > import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 > ```
 
+## Material Icons (Required for `IgxIconComponent`)
+
+> **AGENT INSTRUCTION — CRITICAL:** `IgxIconComponent` renders blank / shows squares without the Material Icons font. This is the most common invisible failure when scaffolding a new project or rewriting `styles.scss` / `index.html`.
+>
+> `ng add igniteui-angular` adds a `<link>` for Material Icons to `index.html`. This link is **silently lost** whenever `index.html` is rewritten (e.g., when adding custom Google Fonts). Always verify or restore it.
+
+**Recommended: import in `styles.scss`**
+
+Add this immediately after `@use 'igniteui-angular/theming' as *;` — placing it in the stylesheet ensures it survives any `index.html` changes:
+
+```scss
+@use 'igniteui-angular/theming' as *;
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+```
+
+**Alternative: `<link>` in `index.html`**
+
+```html
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+```
+
+> When updating `index.html` (e.g., to add custom fonts), always check whether the Material Icons `<link>` is already present and preserve it — or move the import to `styles.scss` so it cannot be accidentally removed.
+
+**`igx-icon` font-family** (global styles):
+
+```scss
+// In styles.scss global section
+igx-icon {
+  font-family: 'Material Icons'; // or 'Material Icons Outlined' for the outlined variant
+}
+```
 ## Architecture — Standalone Components
 
 All Ignite UI components are **standalone** — no NgModules needed. Import them directly into your component's `imports` array:
