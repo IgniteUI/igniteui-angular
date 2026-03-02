@@ -1,15 +1,18 @@
 import { useAnimation } from '@angular/animations';
 import {
     Component,
+    DOCUMENT,
     EventEmitter,
     HostBinding,
+    inject,
     Input,
+    OnDestroy,
     OnInit,
     Output
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
-    PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+    OverlayInfo, OverlaySizeRegistry, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 import { ToggleViewEventArgs, IgxButtonDirective, IgxNotificationsDirective } from 'igniteui-angular/directives';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
@@ -36,8 +39,10 @@ let NEXT_ID = 0;
     templateUrl: 'snackbar.component.html',
     imports: [IgxButtonDirective]
 })
-export class IgxSnackbarComponent extends IgxNotificationsDirective
-    implements OnInit {
+export class IgxSnackbarComponent extends IgxNotificationsDirective implements OnInit, OnDestroy {
+    private _document = inject(DOCUMENT);
+    private _sizeRegistry = inject(OverlaySizeRegistry);
+
     /**
      * Sets/gets the `id` of the snackbar.
      * If not set, the `id` of the first snackbar component  will be `"igx-snackbar-0"`;
@@ -196,5 +201,29 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
             const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.animationDone.emit(closedEventArgs);
         });
+
+        this._sizeRegistry.register(this.element, this.setInitialSize);
+    }
+
+    /**
+     * @hidden
+     */
+    public override ngOnDestroy() {
+        super.ngOnDestroy();
+        this._sizeRegistry.clear(this.element);
+    }
+
+    /**
+    * Measures **after** moving the element into the overlay outlet so that parent
+    * style constraints do not affect the initial size.
+    */
+    private setInitialSize = (info: OverlayInfo, moveToOverlay: () => void) => {
+        moveToOverlay();
+        const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+        // Needs full element width (margins included) to set proper width for the overlay container.
+        // Otherwise, the snackbar appears smaller and the text inside it might be misaligned.
+        const styles = this._document.defaultView.getComputedStyle(info.elementRef.nativeElement);
+        const horizontalMargins = parseFloat(styles.marginLeft) + parseFloat(styles.marginRight);
+        info.initialSize = { width: elementRect.width + horizontalMargins, height: elementRect.height };
     }
 }
