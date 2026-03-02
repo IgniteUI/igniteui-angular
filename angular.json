@@ -256,6 +256,57 @@
         }
       }
     },
+    "igniteui-angular-extras": {
+      "root": "projects/igniteui-angular-extras",
+      "sourceRoot": "projects/igniteui-angular-extras/src",
+      "projectType": "library",
+      "prefix": "igx",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/igniteui-angular-extras/tsconfig.lib.json",
+            "project": "projects/igniteui-angular-extras/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/igniteui-angular-extras/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "hammerjs"
+            ],
+            "styles": [
+              "src/styles/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules",
+                "node_modules/@infragistics"
+              ]
+            },
+            "tsConfig": "projects/igniteui-angular-extras/tsconfig.spec.json",
+            "karmaConfig": "projects/igniteui-angular-extras/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/igniteui-angular-extras/**/*.ts",
+              "projects/igniteui-angular-extras/**/*.html"
+            ],
+            "eslintConfig": "projects/igniteui-angular/eslint.config.mjs"
+          }
+        }
+      }
+    },
     "igniteui-angular-elements": {
       "projectType": "application",
       "schematics": {

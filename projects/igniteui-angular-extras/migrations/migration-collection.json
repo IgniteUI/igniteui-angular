@@ -1,0 +1,11 @@
+{
+    "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+    "encapsulation": true,
+    "schematics": {
+        "migration-01": {
+            "version": "1.0.0",
+            "description": "Renames enum members to PascalCase and output properties to follow Angular naming conventions",
+            "factory": "./update-1_0_0"
+        }
+    }
+}

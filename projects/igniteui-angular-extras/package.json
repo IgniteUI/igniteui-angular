@@ -1,0 +1,41 @@
+{
+  "name": "igniteui-angular-extras",
+  "version": "0.0.1",
+  "description": "Ignite UI for Angular Extras - Grid enhancements and data analysis features",
+  "author": "Infragistics",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://www.infragistics.com/products/ignite-ui-angular",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IgniteUI/igniteui-angular.git",
+    "directory": "projects/igniteui-angular-extras"
+  },
+  "bugs": {
+    "url": "https://github.com/IgniteUI/igniteui-angular/issues"
+  },
+  "keywords": [
+    "angular",
+    "igniteui",
+    "grid",
+    "chart integration",
+    "conditional formatting",
+    "context menu",
+    "data visualization"
+  ],
+  "dependencies": {
+    "tslib": "^2.8.1",
+    "igniteui-trial-watermark": "^3.1.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "21",
+    "@angular/core": "21",
+    "igniteui-angular": "^21.0.0",
+    "igniteui-angular-charts": "^21.0.0",
+    "igniteui-angular-core": "^21.0.0"
+  },
+  "schematics": "./migrations/migration-collection.json",
+  "ng-update": {
+    "migrations": "./migrations/migration-collection.json"
+  },
+  "sideEffects": false
+}

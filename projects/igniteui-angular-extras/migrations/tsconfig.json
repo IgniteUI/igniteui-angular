@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "sourceMap": false,
+        "declaration": true,
+        "outDir": "../../../dist/igniteui-angular-extras/migrations",
+        "typeRoots": [
+            "../../../node_modules/@types"
+        ],
+        "skipLibCheck": true,
+        "rootDir": "."
+    },
+    "exclude": [
+        "../../../node_modules",
+        "**/*.spec.ts"
+    ]
+}
