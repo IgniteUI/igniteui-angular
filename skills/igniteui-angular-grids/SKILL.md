@@ -21,8 +21,8 @@ Use the Grid Selection Decision Guide below. If the grid type is not explicitly 
 **STEP 2 — Identify every task category involved.**
 Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., remote paging AND editing requires reading both `paging-remote.md` AND `editing.md`).
 
-**STEP 3 — Read every identified reference file in full.**
-Call `read_file` (or equivalent) on each reference file identified in Step 2. You must do this even if you believe you already know the answer. Do not skip, skim, or partially read a reference file.
+**STEP 3 — Read every identified reference file in full (PARALLEL).**
+Call `read_file` (or equivalent) on **all** reference files identified in Step 2 **in a single parallel batch** — do NOT read them one at a time sequentially. You must do this even if you believe you already know the answer. Do not skip, skim, or partially read a reference file.
 
 **STEP 4 — Only then produce output.**
 Base your code and explanation exclusively on what you read in Step 3. If the reference files do not cover something, say so explicitly rather than guessing.
