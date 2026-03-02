@@ -466,6 +466,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                     grid.paginatorOutlet.createEmbeddedView(this.paginatorTemplate, { $implicit: grid });
                 });
         });
+        this.cdr.reattach();
     }
 
     /**
