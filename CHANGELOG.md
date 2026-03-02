@@ -52,6 +52,9 @@ All notable changes for each version of this project will be documented in this 
     - The overlay service now uses the Popover API to place overlay elements in the top layer, eliminating z-index stacking issues.
     - Improved positioning accuracy for container-based overlays with fixed container bounds.
 
+- `IgxSimpleCombo`
+    - Introduced `selectionChanged` event. This event is non-cancelable and fires only after the selection is successful.
+
 - **AI-Assisted Development - Copilot Skills**
     - Three consolidated Copilot Skills are now included in the repository to teach AI coding assistants/agents (e.g., GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to work with Ignite UI for Angular:
         - **Components** - UI Components (form controls, layout, data display, feedback/overlays, directives — Input Group, Combo, Select, Date/Time Pickers, Calendar, Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, Button, Ripple, Tooltip, Drag and Drop, Layout Manager, Dock Manager and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart))
