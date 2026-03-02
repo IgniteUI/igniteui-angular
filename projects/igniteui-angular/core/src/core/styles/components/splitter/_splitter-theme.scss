@@ -84,6 +84,7 @@
 
     %indigo-splitter-bar {
         @extend %hide-controls;
+        transition: all .25s .3s $in-out-quad !important;
 
         [aria-orientation='horizontal'] & {
             transform: scaleX($slim-splitter);
@@ -94,8 +95,6 @@
         }
 
         &.igx-splitter-bar--collapsible {
-            transition: all .25s .5s $in-out-quad !important;
-
             &::before,
             &::after {
                 transition-delay: 2s;
@@ -137,10 +136,10 @@
         align-items: center;
         background: hsla(from $splitter-color h s l / 0.68);
         z-index: 99;
-        transition: all .15s $out-quad !important;
         padding-block: rem(1px);
 
         @if $variant != 'indigo' {
+            transition: background .15s $out-quad !important;
             @extend %hide-controls;
 
             &.igx-splitter-bar--collapsible {
@@ -179,7 +178,7 @@
         // Remove the default browser outline styles
         outline: none;
         box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-color');
-        transition: box-shadow .25s ease-in;
+        transition: box-shadow .15s ease-in if($variant == 'indigo', .1s, 0s);
         z-index: 100;
 
         @if $variant == 'indigo' {
