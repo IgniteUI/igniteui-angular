@@ -614,7 +614,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public get pivotKeys() {
         return this.pivotConfiguration.pivotKeys || DEFAULT_PIVOT_KEYS;
     }
-    /** @hidden @internal */
+    /** @hidden @internal @exportElements */
     public override get type(): GridType["type"] {
         return 'pivot';
     }
@@ -1248,7 +1248,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.pivotConfiguration.rows?.filter(x => x.enabled) || [];
     }
 
-    /** @hidden @internal */
+    /** @hidden @internal @exportElements */
     public set visibleRowDimensions(value: IPivotDimension[]) {
         this._visibleRowDimensions = value;
     }
