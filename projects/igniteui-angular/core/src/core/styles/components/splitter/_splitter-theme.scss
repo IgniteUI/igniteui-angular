@@ -25,8 +25,6 @@
 
     %igx-splitter-base {
         &[aria-orientation='horizontal'] {
-            padding-block: rem(1px);
-
             [dir='rtl'] & {
                 flex-direction: row-reverse !important;
             }
@@ -80,6 +78,7 @@
         [aria-orientation='vertical'] & {
             transform: scaleY(1);
         }
+
         transition-delay: 0s !important;
     }
 
@@ -138,13 +137,21 @@
         align-items: center;
         background: hsla(from $splitter-color h s l / 0.68);
         z-index: 99;
-        transition: background .15s $out-quad !important;
+        transition: all .15s $out-quad !important;
+        padding-block: rem(1px);
 
         @if $variant != 'indigo' {
             @extend %hide-controls;
 
             &.igx-splitter-bar--collapsible {
                 @extend %show-controls;
+
+                &:hover {
+                    %igx-splitter-handle,
+                    %igx-splitter-expander {
+                        opacity: 1;
+                    }
+                }
             }
         }
 
@@ -165,11 +172,6 @@
         &:hover {
             transition: all .25s ease-out;
             background: $splitter-color;
-
-            %igx-splitter-handle,
-            %igx-splitter-expander {
-                opacity: 1;
-            }
         }
     }
 
@@ -177,18 +179,21 @@
         // Remove the default browser outline styles
         outline: none;
         box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-color');
-        transition: box-shadow .15s ease-in;
+        transition: box-shadow .25s ease-in;
         z-index: 100;
 
         @if $variant == 'indigo' {
-            %indigo-splitter-bar.igx-splitter-bar--collapsible {
-                @extend %show-controls;
+            %indigo-splitter-bar {
                 @extend %expand-bars;
 
-                &:hover {
-                    %igx-splitter-handle,
-                    %igx-splitter-expander {
-                        opacity: 1;
+                &.igx-splitter-bar--collapsible {
+                     @extend %show-controls;
+
+                     &:hover {
+                        %igx-splitter-handle,
+                        %igx-splitter-expander {
+                            opacity: 1;
+                        }
                     }
                 }
             }
@@ -200,7 +205,7 @@
     }
 
     %igx-splitter-bar--vertical {
-        padding-inline: rem(1px);
+        padding: 0 rem(1px);
         flex-direction: column;
         height: 100%;
 
