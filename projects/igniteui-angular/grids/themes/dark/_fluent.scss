@@ -4,9 +4,9 @@
 
 
 @include themed-block(igx-grid, fluent, dark) {
-    --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
-    --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-    --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+    --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
+    --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+    --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
 
     @include e(td, $m: bool) {
         .igx-icon--error {

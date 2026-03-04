@@ -9,7 +9,7 @@
 
     @include e(icons) {
         .sort-icon igx-icon {
-            --size: var(--igx-icon-size, #{rem(15px)});
+            --size: var(--ig-icon-size, #{rem(15px)});
         }
     }
 }

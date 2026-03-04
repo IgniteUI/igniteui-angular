@@ -9,7 +9,7 @@ $_theme: $fluent;
 @include themed-block(igx-query-builder, fluent) {
     &:has(.igx-query-builder-header) {
         .igx-query-builder-tree--level-0 {
-            padding-block: 0;
+            padding-block: 0 var(--query-builder-outer-padding);
         }
     }
 }

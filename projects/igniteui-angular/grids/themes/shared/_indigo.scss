@@ -13,14 +13,11 @@
     --grouparea-size: #{sizable(rem(40px), rem(48px), rem(55px))};
     --_expander-icon-width: #{rem(16px)};
     --_hierarchical-action-icon: #{rem(16px)};
-    --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
-    --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-    --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+    --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
+    --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
+    --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
 
     %cell-display {
-        // TODO THIS RETURNS NOT VALID TYPE STYLES
-        //@include type-style('detail-1');
-
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px))
     }
 
@@ -39,8 +36,15 @@
         }
     }
 
+    @include e(filtering-cell) {
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px)) !important;
+    }
+
+
     @include e(td) {
         @extend %cell-display;
+
+        @include type-style('detail-1', false);
     }
 
     @include e(td, $m: bool) {
@@ -109,13 +113,15 @@
 @include themed-block(igx-grid-th, indigo) {
     @extend %cell-display;
 
+    @include type-style('detail-2', false);
+
     @include e(expander) {
         --component-size: 2;
     }
 
     @include e(icons) {
         .igx-excel-filter__icon {
-            --igx-icon-size: #{rem(12px)};
+            --ig-icon-size: #{rem(12px)};
         }
     }
 

@@ -451,13 +451,13 @@
     //     @include expansion-panel($expansion-panel-theme-map);
     // }
 
-    @if is-used('igx-grid', $exclude) {
-        $grid-theme-map: grid-theme(
-            $schema: $schema,
-        );
-        $grid-theme-map: meta.call($theme-handler, $grid-theme-map);
-        @include grid($grid-theme-map);
-    }
+    //@if is-used('igx-grid', $exclude) {
+    //    $grid-theme-map: grid-theme(
+    //        $schema: $schema,
+    //    );
+    //    $grid-theme-map: meta.call($theme-handler, $grid-theme-map);
+    //    @include grid($grid-theme-map);
+    //}
 
     // @if is-used('igx-grid-summary', $exclude) {
     //     $grid-summary-theme-map: grid-summary-theme(

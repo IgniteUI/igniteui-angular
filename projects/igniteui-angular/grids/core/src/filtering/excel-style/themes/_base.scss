@@ -215,9 +215,9 @@ $checkbox-indent: (
             border-bottom: rem(1px) dashed color($color: 'gray', $variant: 300);
 
             igx-icon {
-                width: var(--igx-icon-size, #{$tree-node-expander-size});
-                height: var(--igx-icon-size, #{$tree-node-expander-size});
-                font-size: var(--igx-icon-size, #{$tree-node-expander-size});
+                width: var(--ig-icon-size, #{$tree-node-expander-size});
+                height: var(--ig-icon-size, #{$tree-node-expander-size});
+                font-size: var(--ig-icon-size, #{$tree-node-expander-size});
             }
 
             > igx-checkbox,

@@ -39,10 +39,6 @@ $icon-size: rem(18px);
 
         &:has(igx-query-builder-header) {
             padding-block-start: 0;
-
-            .igx-query-builder-tree--level-0 {
-                padding-block: 0;
-            }
         }
 
         .igx-chip__ghost {

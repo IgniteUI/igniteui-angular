@@ -235,7 +235,7 @@ $z-grid-loading: 10003;
         // Derived size variables for header, group area, and tree indentation
         --header-size: #{sizable(rem(32px), rem(40px), rem(50px))};
         --grouparea-size: #{sizable(rem(41px), rem(49px), rem(57px))};
-        --igx-tree-indent-size: #{sizable(rem(12px), rem(16px), rem(24px))};
+        --ig-tree-indent-size: #{sizable(rem(12px), rem(16px), rem(24px))};
 
         --_grid-head-font-size: #{rem(12px)};
 
@@ -813,11 +813,11 @@ $z-grid-loading: 10003;
 
             .igx-input-group {
                 --size: 100% !important;
-                --igx-input-group-border-color: transparent;
-                --igx-input-group-hover-border-color: transparent;
-                --igx-input-group-focused-border-color: transparent;
-                --igx-input-group-focused-secondary-color: transparent;
-                --igx-input-group-disabled-border-color: transparent;
+                --ig-input-group-border-color: transparent;
+                --ig-input-group-hover-border-color: transparent;
+                --ig-input-group-focused-border-color: transparent;
+                --ig-input-group-focused-secondary-color: transparent;
+                --ig-input-group-disabled-border-color: transparent;
 
                 width: 100%;
                 overflow: hidden;
@@ -1625,28 +1625,15 @@ $z-grid-loading: 10003;
             box-shadow: 0 rem(4px) rem(10px) rgba(0, 0, 0, 0.12);
 
             // Compound components overrides
-            igx-input-group {
+            .igx-input-group {
                 --size: calc(var(--cell-height) - #{rem(8px)}) !important;
+
+                min-height: var(--size);
 
                 width: 100% !important;
                 max-width: rem(200px) !important;
                 min-width: rem(140px) !important;
-                border: rem(1px) solid color($color: 'gray', $variant: 300) !important;
 
-                .igx-input-group__bundle,
-                .igx-input-group__bundle-start,
-                .igx-input-group__bundle-end,
-                igx-prefix,
-                igx-suffix {
-                    align-items: center;
-                    background: transparent !important;
-                    border-radius: 0 !important;
-
-                    /* stylelint-disable-next-line */
-                    &:hover {
-                        background: transparent !important;
-                    }
-                }
 
                 igx-prefix,
                 igx-suffix {
@@ -1659,96 +1646,6 @@ $z-grid-loading: 10003;
                     padding-inline-start: 0 !important;
                     padding-block: 0 !important;
                     height: 100% !important;
-                }
-
-                .igx-input-group__bundle,
-                .igx-input-group__bundle-start,
-                .igx-input-group__bundle-end,
-                .igx-input-group__input {
-                    border: 0 !important;
-
-                    /* stylelint-disable-next-line */
-                    &:hover {
-                        border: 0 !important;
-                        box-shadow: none !important;
-                    }
-                }
-
-                .igx-input-group__bundle::after,
-                .igx-input-group__bundle::before {
-                    display: none !important;
-                }
-
-                .igx-input-group__bundle-main {
-                    padding-inline-start: 0 !important;
-                    margin: 0 !important;
-                    border: 0 !important;
-                    outline: none !important;
-                    box-shadow: none !important;
-                    background: transparent !important;
-                }
-
-                color: var-get($theme, 'filtering-row-text-color') !important;
-
-                &:hover{
-                    color: var-get($theme, 'filtering-row-text-color') !important;
-                    border-color: color($color: 'primary', $variant: 500) !important;
-                }
-            }
-
-            .igx-input-group--focused {
-                border-color: color($color: 'primary', $variant: 500) !important;
-                border-width: rem(1px) !important;
-
-                color: var-get($theme, 'filtering-row-text-color');
-
-                .igx-input-group__bundle,
-                .igx-input-group__bundle-start,
-                .igx-input-group__bundle-end,
-                .igx-input-group__input {
-                    border: 0 !important;
-                    box-shadow: none !important;
-                }
-
-                .igx-input-group__bundle-main,
-                .igx-input-group__bundle-start,
-                .igx-input-group__bundle-end {
-                    margin: 0 !important;
-                    border: 0 !important;
-                    outline: none !important;
-                    box-shadow: none !important;
-                    background: transparent !important;
-                }
-
-                .igx-input-group__bundle,
-                .igx-input-group__bundle-start,
-                .igx-input-group__bundle-end,
-                igx-prefix,
-                igx-suffix {
-                    background: transparent !important;
-                    border-radius: 0 !important;
-                }
-            }
-
-            .igx-input-group__line {
-                display: none !important;
-            }
-
-            igx-prefix:focus {
-                color: color($color: 'secondary', $variant: 500) !important;
-            }
-
-            igx-suffix {
-                igx-icon {
-                    outline-style: none !important;
-
-                    &:focus {
-                        color: color($color: 'secondary') !important;
-                    }
-
-                    + igx-icon {
-                        margin-inline-start: rem(4px) !important;
-                    }
                 }
             }
 
@@ -2138,9 +2035,9 @@ $z-grid-loading: 10003;
             margin: 0 rem(4px);
 
             igx-icon {
-                width: var(--igx-icon-size, #{rem(16px)}) !important;
-                height: var(--igx-icon-size, #{rem(16px)}) !important;
-                font-size: var(--igx-icon-size, #{rem(16px)}) !important;
+                width: var(--ig-icon-size, #{rem(16px)}) !important;
+                height: var(--ig-icon-size, #{rem(16px)}) !important;
+                font-size: var(--ig-icon-size, #{rem(16px)}) !important;
             }
 
             [dir='rtl'] & {
@@ -2230,7 +2127,7 @@ $z-grid-loading: 10003;
                 position: relative;
                 display: flex;
 
-                --igx-icon-size: #{rem(15px)};
+                --ig-icon-size: #{rem(15px)};
 
                 &::after {
                     content: attr(data-sortIndex);
@@ -2696,7 +2593,7 @@ $z-grid-loading: 10003;
         }
 
         @include e(icon) {
-            --igx-icon-size: rem(16px);
+            --ig-icon-size: rem(16px);
 
             color: var-get($theme, 'drop-area-icon-color');
             margin-inline-end: rem(8px);
@@ -2736,8 +2633,8 @@ $z-grid-loading: 10003;
         }
 
         @include e(count-badge) {
-            --igx-badge-background-color: #{var-get($theme, 'group-count-background')};
-            --igx-badge-text-color: #{var-get($theme, 'group-count-text-color')};
+            --ig-badge-background-color: #{var-get($theme, 'group-count-background')};
+            --ig-badge-text-color: #{var-get($theme, 'group-count-text-color')};
 
             > span {
                 font-size: var(--_grid-head-font-size);
@@ -2869,8 +2766,7 @@ $z-grid-loading: 10003;
         }
 
         .igx-grid-thead__title,
-        .igx-grid__td,
-        .igx-grid-th {
+        .igx-grid__td {
             border-inline-end: $grid-header-border !important;
             border-block-end: $grid-header-border !important;
         }
@@ -2929,16 +2825,6 @@ $z-grid-loading: 10003;
         &::after {
             width: calc(100% - var-get($theme, 'header-border-width'));
         }
-
-        //&.igx-grid-thead__subgroup {
-        //    &::after {
-        //        height: calc(100% - var-get($theme, 'header-border-width'));
-        //    }
-        //}
-    }
-
-    .igx-grid-thead__wrapper:not(.igx-grid-thead__wrapper--pivot) {
-        border-block-end: $grid-header-border;
     }
 
     @for $i from 1 through 10 {
