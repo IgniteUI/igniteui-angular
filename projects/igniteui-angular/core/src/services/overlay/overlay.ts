@@ -433,6 +433,8 @@ export class IgxOverlayService implements OnDestroy {
                 // Popover API call failed, element may already be showing
             }
         }
+        // Set up CSS anchor positioning for connected strategies with HTMLElement targets
+        this.setupCSSAnchor(info);
         info.settings.positionStrategy.position(
             info.elementRef.nativeElement.parentElement,
             { width: info.initialSize.width, height: info.initialSize.height },
@@ -733,6 +735,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private cleanUp(info: OverlayInfo) {
+        this.cleanupCSSAnchor(info);
         const child: HTMLElement = info.elementRef.nativeElement;
         const outlet = this.getOverlayElement(info);
         // if same element is shown in other overlay outlet will not contain
@@ -775,6 +778,8 @@ export class IgxOverlayService implements OnDestroy {
         delete info.closeAnimationPlayer;
         delete info.ngZone;
         delete info.wrapperElement;
+        delete info.anchorName;
+        delete info.anchorTarget;
         info = null;
     }
 
@@ -1024,5 +1029,91 @@ export class IgxOverlayService implements OnDestroy {
             const size = componentSize || globalSize;
             info.size = size;
         }
+    }
+
+    /**
+     * Sets up CSS anchor positioning for connected strategies with HTMLElement targets.
+     * Sets `anchor-name` on the target element and `position-anchor` on the content element.
+     */
+    private setupCSSAnchor(info: OverlayInfo) {
+        const shouldUseAnchor =
+            info.settings.positionStrategy instanceof ConnectedPositioningStrategy &&
+            info.settings.target instanceof HTMLElement &&
+            typeof CSS !== 'undefined' && typeof CSS.supports === 'function' &&
+            CSS.supports('anchor-name', '--a');
+
+        if (!shouldUseAnchor) {
+            this.cleanupCSSAnchor(info);
+            return;
+        }
+
+        const anchorName = `--igx-anchor-${info.id}`;
+        const target = info.settings.target as HTMLElement;
+        const contentElement = info.elementRef.nativeElement.parentElement;
+
+        // If already set up with same name and target, nothing to do
+        if (info.anchorName === anchorName && info.anchorTarget === target) {
+            return;
+        }
+
+        // Clean up previous anchor if target changed
+        if (info.anchorName) {
+            this.cleanupCSSAnchor(info);
+        }
+
+        // Set anchor-name on target (support multiple overlays targeting same element)
+        const currentNames = target.style.getPropertyValue('anchor-name');
+        if (currentNames && currentNames !== 'none') {
+            target.style.setProperty('anchor-name', `${currentNames}, ${anchorName}`);
+        } else {
+            target.style.setProperty('anchor-name', anchorName);
+        }
+
+        // Set position-anchor on content element
+        contentElement.style.setProperty('position-anchor', anchorName);
+
+        // Content element needs position: fixed so its containing block is the ICB (viewport).
+        // This allows the anchor() function to resolve anchor elements outside the popover wrapper.
+        contentElement.style.position = 'fixed';
+
+        // Store for cleanup
+        info.anchorName = anchorName;
+        info.anchorTarget = target;
+    }
+
+    /**
+     * Cleans up CSS anchor positioning properties from target and content elements.
+     */
+    private cleanupCSSAnchor(info: OverlayInfo) {
+        if (!info.anchorName) {
+            return;
+        }
+
+        // Remove this overlay's anchor name from the target element
+        if (info.anchorTarget?.isConnected) {
+            const currentNames = info.anchorTarget.style.getPropertyValue('anchor-name');
+            if (currentNames) {
+                const names = currentNames.split(',')
+                    .map(n => n.trim())
+                    .filter(n => n !== info.anchorName);
+                if (names.length > 0) {
+                    info.anchorTarget.style.setProperty('anchor-name', names.join(', '));
+                } else {
+                    info.anchorTarget.style.removeProperty('anchor-name');
+                }
+            }
+        }
+
+        // Clean up position-anchor and translate from content element
+        const contentElement = info.elementRef?.nativeElement?.parentElement;
+        if (contentElement) {
+            contentElement.style.removeProperty('position-anchor');
+            contentElement.style.removeProperty('translate');
+            // Restore absolute positioning (was changed to fixed for anchor resolution)
+            contentElement.style.position = '';
+        }
+
+        delete info.anchorName;
+        delete info.anchorTarget;
     }
 }

@@ -97,17 +97,26 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   protected setStyle(element: HTMLElement, targetRect: Partial<DOMRect>, elementRect: Partial<DOMRect>, connectedFit: ConnectedFit) {
     const { horizontalOffset, verticalOffset } = this.getElementOffsets(connectedFit);
 
-    const startPoint: Point = {
-      x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint + horizontalOffset,
-      y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint + verticalOffset
-    };
-    const wrapperRect: ClientRect = element.parentElement.getBoundingClientRect();
-
     //  clean up styles - if auto position strategy is chosen we may pass here several times
     element.style.right = '';
     element.style.left = '';
     element.style.bottom = '';
     element.style.top = '';
+
+    // Use CSS anchor positioning if configured by overlay service
+    if (element.style.getPropertyValue('position-anchor')) {
+      this.setAnchorStyle(element, horizontalOffset, verticalOffset);
+      return;
+    }
+
+    // Clear any anchor-related styles when falling back to JS positioning
+    element.style.translate = '';
+
+    const startPoint: Point = {
+      x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint + horizontalOffset,
+      y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint + verticalOffset
+    };
+    const wrapperRect: ClientRect = element.parentElement.getBoundingClientRect();
 
     switch (this.settings.horizontalDirection) {
       case HorizontalAlignment.Left:
@@ -131,6 +140,100 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
       case VerticalAlignment.Bottom:
         element.style.top = `${Math.round(startPoint.y - wrapperRect.top)}px`;
         break;
+    }
+  }
+
+  /**
+   * Positions the element using CSS anchor positioning.
+   * Uses the anchor() function to position relative to the anchor element
+   * referenced by the position-anchor CSS property set by the overlay service.
+   *
+   * @param element Element to position
+   * @param horizontalOffset Horizontal offset in pixels
+   * @param verticalOffset Vertical offset in pixels
+   */
+  protected setAnchorStyle(element: HTMLElement, horizontalOffset: number, verticalOffset: number) {
+    const hSide = this.getHorizontalAnchorSide(this.settings.horizontalStartPoint);
+    const vSide = this.getVerticalAnchorSide(this.settings.verticalStartPoint);
+
+    let translateX = '';
+    let translateY = '';
+
+    // Horizontal positioning using anchor() function
+    switch (this.settings.horizontalDirection) {
+      case HorizontalAlignment.Left:
+        // Element opens to the left: right edge at anchor's start point
+        element.style.right = horizontalOffset
+          ? `calc(anchor(${hSide}) + ${-horizontalOffset}px)`
+          : `anchor(${hSide})`;
+        break;
+      case HorizontalAlignment.Center:
+        // Element centered at anchor's start point
+        element.style.left = horizontalOffset
+          ? `calc(anchor(${hSide}) + ${horizontalOffset}px)`
+          : `anchor(${hSide})`;
+        translateX = '-50%';
+        break;
+      case HorizontalAlignment.Right:
+        // Element opens to the right: left edge at anchor's start point
+        element.style.left = horizontalOffset
+          ? `calc(anchor(${hSide}) + ${horizontalOffset}px)`
+          : `anchor(${hSide})`;
+        break;
+    }
+
+    // Vertical positioning using anchor() function
+    switch (this.settings.verticalDirection) {
+      case VerticalAlignment.Top:
+        // Element opens upward: bottom edge at anchor's start point
+        element.style.bottom = verticalOffset
+          ? `calc(anchor(${vSide}) + ${-verticalOffset}px)`
+          : `anchor(${vSide})`;
+        break;
+      case VerticalAlignment.Middle:
+        // Element centered vertically at anchor's start point
+        element.style.top = verticalOffset
+          ? `calc(anchor(${vSide}) + ${verticalOffset}px)`
+          : `anchor(${vSide})`;
+        translateY = '-50%';
+        break;
+      case VerticalAlignment.Bottom:
+        // Element opens downward: top edge at anchor's start point
+        element.style.top = verticalOffset
+          ? `calc(anchor(${vSide}) + ${verticalOffset}px)`
+          : `anchor(${vSide})`;
+        break;
+    }
+
+    // Use CSS translate property for centering (independent of transform used by Auto/Elastic push/shrink)
+    if (translateX || translateY) {
+      element.style.translate = `${translateX || '0'} ${translateY || '0'}`;
+    } else {
+      element.style.translate = '';
+    }
+  }
+
+  /**
+   * Maps a HorizontalAlignment start point to its CSS anchor side name.
+   */
+  private getHorizontalAnchorSide(startPoint: HorizontalAlignment): string {
+    switch (startPoint) {
+      case HorizontalAlignment.Left: return 'left';
+      case HorizontalAlignment.Center: return 'center';
+      case HorizontalAlignment.Right: return 'right';
+      default: return 'left';
+    }
+  }
+
+  /**
+   * Maps a VerticalAlignment start point to its CSS anchor side name.
+   */
+  private getVerticalAnchorSide(startPoint: VerticalAlignment): string {
+    switch (startPoint) {
+      case VerticalAlignment.Top: return 'top';
+      case VerticalAlignment.Middle: return 'center';
+      case VerticalAlignment.Bottom: return 'bottom';
+      default: return 'top';
     }
   }
 }
