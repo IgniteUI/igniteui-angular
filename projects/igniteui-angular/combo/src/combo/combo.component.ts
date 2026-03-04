@@ -7,7 +7,8 @@ import {
     IBaseEventArgs,
     IBaseCancelableEventArgs,
     CancelableEventArgs,
-    EditorProvider
+    EditorProvider,
+    areEqualArrays
 } from 'igniteui-angular/core';
 import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -437,8 +438,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             } else {
                 this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
-            this._onChangeCallback(args.newValue);
-            if (this.value !== previousValue || this.selection !== previousSelection) {
+            if (!areEqualArrays(this.value, previousValue) || !areEqualArrays(this.selection, previousSelection)) {
                 const changedArgs: IComboSelectionChangedEventArgs = {
                     newValue: this.value,
                     oldValue: previousValue,
@@ -455,8 +455,10 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
                 if (changedArgs.cancel) {
                     this.selectionService.select_items(this.id, previousValue, true);
                     this._value = previousValue;
-                    this._displayValue = this._displayText = this.createDisplayText(previousSelection, []);
+                    this._displayValue = this._displayText = this.createDisplayText(previousSelection, changedArgs.newSelection);
                     this._onChangeCallback(previousValue);
+                } else {
+                    this._onChangeCallback(args.newValue);
                 }
             }
         } else if (this.isRemote) {
