@@ -427,8 +427,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             displayText,
             cancel: false
         };
-        const previousValue = [...this.value];
-        const previousSelection = [...this.selection];
+        const previousValue = [...oldValue];
+        const previousSelection = [...oldSelection];
+        const previousDisplayValue = this._displayValue;
+        const previousDisplayText = this._displayText;
+        const previousRemoteSelection = this.isRemote ? { ...this._remoteSelection } : null;
         this.selectionChanging.emit(args);
         if (!args.cancel) {
             this.selectionService.select_items(this.id, args.newValue, true);
@@ -455,12 +458,16 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
                 if (changedArgs.cancel) {
                     this.selectionService.select_items(this.id, previousValue, true);
                     this._value = previousValue;
-                    this._displayValue = this._displayText = this.createDisplayText(previousSelection, changedArgs.newSelection);
+                    if (this.isRemote && previousRemoteSelection) {
+                        this._remoteSelection = previousRemoteSelection;
+                    }
+                    this._displayValue = previousDisplayValue;
+                    this._displayText = previousDisplayText;
                     this._onChangeCallback(previousValue);
-                } else {
-                    this._onChangeCallback(args.newValue);
+                    return;
                 }
             }
+            this._onChangeCallback(args.newValue);
         } else if (this.isRemote) {
             this.registerRemoteEntries(diffInSets(selection, currentSelection), false);
         }
