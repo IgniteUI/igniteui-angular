@@ -7,15 +7,28 @@
         <ng-template igxDrawer>
             <div class="nav-header"></div>
 
+            <!-- Filter Input -->
+            <igx-input-group type="search" style="margin: 8px;">
+                <igx-prefix>
+                    <igx-icon>filter_alt</igx-icon>
+                </igx-prefix>
+                <input igxInput placeholder="Filter..." [(ngModel)]="filterText" />
+                @if (filterText()) {
+                    <igx-suffix>
+                        <igx-icon (click)="filterText.set('')">clear</igx-icon>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+
             <!-- Components -->
             <span igxDrawerItem [isHeader]="true">Components</span>
 
-                @for (item of componentLinks; track item) {
-                    <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
-                        <igx-icon>{{item.icon}}</igx-icon>
-                        <span class="navdrawer-ellipsis">{{item.name}}</span>
-                    </span>
-                }
+            @for (item of filteredComponentLinks(); track item) {
+                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                    <igx-icon>{{item.icon}}</igx-icon>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
+                </span>
+            }
 
             <span igxDrawerItem [disabled]="true">
                 <igx-icon>web</igx-icon>
@@ -25,17 +38,17 @@
             <!--Directives-->
             <span igxDrawerItem [isHeader]="true">Directives</span>
 
-                @for (item of directiveLinks; track item) {
-                    <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
-                        <igx-icon>{{item.icon}}</igx-icon>
-                        <span class="navdrawer-ellipsis">{{item.name}}</span>
-                    </span>
-                }
+            @for (item of filteredDirectiveLinks(); track item) {
+                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                    <igx-icon>{{item.icon}}</igx-icon>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
+                </span>
+            }
 
             <!--Style guide-->
             <span igxDrawerItem [isHeader]="true">Style</span>
 
-            @for (item of styleLinks; track item) {
+            @for (item of filteredStyleLinks(); track item) {
                 <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
                     <igx-icon>{{item.icon}}</igx-icon>
                     <span class="navdrawer-ellipsis">{{item.name}}</span>

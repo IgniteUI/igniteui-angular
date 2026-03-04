@@ -4,17 +4,20 @@ import {
     ViewChild,
     HostBinding,
     inject,
-    signal
+    signal,
+    computed,
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { CommonModule, registerLocaleData } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
 import { IGX_NAVIGATION_DRAWER_DIRECTIVES, IgxNavigationDrawerComponent } from 'igniteui-angular/navigation-drawer';
 import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 
 // I18n
 import { registerI18n } from 'igniteui-angular';
@@ -38,12 +41,17 @@ import localeHant from '@angular/common/locales/zh-Hant';
         IgxNavigationDrawerComponent,
         IGX_NAVIGATION_DRAWER_DIRECTIVES,
         CommonModule,
+        FormsModule,
         RouterLinkActive,
         RouterLink,
         IgxIconComponent,
         PageHeaderComponent,
         RouterOutlet,
         IgxRippleDirective,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxPrefixDirective,
+        IgxSuffixDirective,
         PropertiesPanelComponent,
     ]
 })
@@ -55,6 +63,9 @@ export class AppComponent implements OnInit {
     public navdrawer: IgxNavigationDrawerComponent;
 
     public dirMode = signal<'ltr' | 'rtl'>('ltr');
+
+    // Filter for navigation items
+    public filterText = signal('');
 
     // This method will be triggered by PageHeaderComponent's toggleDirection event
     public onDirectionToggle(dir: DocumentDirection): void {
@@ -776,6 +787,31 @@ export class AppComponent implements OnInit {
             name: 'Typography'
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
+
+    // Computed filtered arrays
+    public filteredComponentLinks = computed(() => {
+        const filterValue = this.filterText().toLowerCase();
+        if (!filterValue) {
+            return this.componentLinks;
+        }
+        return this.componentLinks.filter(item => item.name.toLowerCase().includes(filterValue));
+    });
+
+    public filteredDirectiveLinks = computed(() => {
+        const filterValue = this.filterText().toLowerCase();
+        if (!filterValue) {
+            return this.directiveLinks;
+        }
+        return this.directiveLinks.filter(item => item.name.toLowerCase().includes(filterValue));
+    });
+
+    public filteredStyleLinks = computed(() => {
+        const filterValue = this.filterText().toLowerCase();
+        if (!filterValue) {
+            return this.styleLinks;
+        }
+        return this.styleLinks.filter(item => item.name.toLowerCase().includes(filterValue));
+    });
 
     constructor(private router: Router, private iconService: IgxIconService) {
         iconService.setFamily('fa-solid', { className: 'fa', type: 'font', prefix: 'fa-'});

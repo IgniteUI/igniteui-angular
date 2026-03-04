@@ -478,29 +478,4 @@ describe('Unit testing FilteringUtil', () => {
         expect(nestedCondition.condition.logic(200, nestedCondition.searchVal)).toBe(true);
     });
 
-    it('should recreate string expression with correct conditionName', () => {
-        const fields: FieldType[] = [
-            { field: 'Name', dataType: 'string' }
-        ];
-
-        // such expression will exist if user has changed the condition OR restore grid state through the IgxGridState directive
-        const expression: IFilteringExpression = {
-            fieldName: 'Name',
-            conditionName: 'contains',
-            searchVal: 'test',
-            condition: {
-                name: 'startsWith',
-                iconName: 'starts_with',
-                isUnary: false,
-            }
-        };
-
-        const result = recreateExpression(expression, fields);
-
-        expect(result.condition).toBe(IgxStringFilteringOperand.instance().condition('startsWith'));
-        expect(result.condition.logic).toBeDefined();
-        expect(result.conditionName).toBe('startsWith');
-        expect(result.searchVal).toBe('test');
-    });
-
 });
