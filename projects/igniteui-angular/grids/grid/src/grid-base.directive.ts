@@ -4385,6 +4385,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
+        this.clearCellSelection();
         this.notifyChanges(true);
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
