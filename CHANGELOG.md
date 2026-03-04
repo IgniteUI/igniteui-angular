@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.2.0
+
+### New Features
+
+- `IgxCombo`, `IgxSimpleCombo`
+    - Introduced `selectionChanged` event for both components. This event is cancelable and fires only after the selection is successful.
+
 ## 21.1.0
 
 ### New Features
@@ -51,9 +58,6 @@ All notable changes for each version of this project will be documented in this 
     - Integrated HTML Popover API into the overlay service for improved z-index management and layering control.
     - The overlay service now uses the Popover API to place overlay elements in the top layer, eliminating z-index stacking issues.
     - Improved positioning accuracy for container-based overlays with fixed container bounds.
-
-- `IgxSimpleCombo`
-    - Introduced `selectionChanged` event. This event is non-cancelable and fires only after the selection is successful.
 
 - **AI-Assisted Development - Copilot Skills**
     - Three consolidated Copilot Skills are now included in the repository to teach AI coding assistants/agents (e.g., GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to work with Ignite UI for Angular:
