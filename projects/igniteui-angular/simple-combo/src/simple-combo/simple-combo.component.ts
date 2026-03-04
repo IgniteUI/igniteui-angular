@@ -28,18 +28,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
 }
 
 /** Emitted when an igx-simple-combo's selection has been changed. */
-export interface ISimpleComboSelectionChangedEventArgs extends IBaseEventArgs {
-    /** An object which represents the value that was previously selected */
-    oldValue: any;
-    /** An object which represents the value that is currently selected */
-    newValue: any;
-    /** An object which represents the item that was previously selected */
-    oldSelection: any;
-    /** An object which represents the item that is currently selected */
-    newSelection: any;
-    /** The text that is displayed in the combo text box */
-    displayText: string;
-}
+export interface ISimpleComboSelectionChangedEventArgs extends ISimpleComboSelectionChangingEventArgs, CancelableEventArgs {}
 
 /**
  * Represents a drop-down list that provides filtering functionality, allowing users to choose a single option from a predefined list.
@@ -522,6 +511,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
+        const previousValue = this.value;
+        const previousSelection = this.selection;
         if (args.newSelection !== args.oldSelection) {
             this.selectionChanging.emit(args);
         }
@@ -538,18 +529,31 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                     ? args.displayText
                     : this.createDisplayText(super.selection, [args.oldValue]);
             }
-            this._onChangeCallback(args.newValue);
-            if (args.newSelection !== args.oldSelection) {
+            if (this.value !== previousValue || this.selection !== previousSelection) {
                 const changedArgs: ISimpleComboSelectionChangedEventArgs = {
-                    newValue: args.newValue,
-                    oldValue: args.oldValue,
-                    newSelection: args.newSelection,
-                    oldSelection: args.oldSelection,
+                    newValue: this.value,
+                    oldValue: previousValue,
+                    newSelection: this.selection,
+                    oldSelection: previousSelection,
                     displayText: this._displayValue,
-                    owner: this
+                    owner: this,
+                    cancel: false
                 };
                 this.selectionChanged.emit(changedArgs);
+                if (changedArgs.cancel) {
+                    const rollbackSelection = this.isValid(previousValue) ? [previousValue] : [];
+                    this.selectionService.select_items(this.id, rollbackSelection, true);
+                    this._value = rollbackSelection;
+                    const rollbackDisplayText =
+                        rollbackSelection.length ? this.createDisplayText(super.selection, []) : '';
+                    this.comboInput.value = this._displayValue = this.searchValue = rollbackDisplayText;
+                    this.filterValue = rollbackDisplayText;
+                    this._onChangeCallback(previousValue);
+                    this._updateInput = true;
+                    return;
+                }
             }
+            this._onChangeCallback(args.newValue);
             this._updateInput = true;
         } else if (this.isRemote) {
             this.registerRemoteEntries(newValueAsArray, false);

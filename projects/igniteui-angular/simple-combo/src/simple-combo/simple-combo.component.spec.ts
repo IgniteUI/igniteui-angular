@@ -10,7 +10,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputState, IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
+import { IgxSimpleComboComponent, ISimpleComboSelectionChangedEventArgs, ISimpleComboSelectionChangingEventArgs } from './public_api';
 import { IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IComboSelectionChangingEventArgs, IgxComboAPIService, IgxComboDropDownComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from 'igniteui-angular/combo';
 import { RemoteDataService } from 'igniteui-angular/combo/src/combo/combo.component.spec';
@@ -278,7 +278,8 @@ describe('IgxSimpleCombo', () => {
                 oldSelection: undefined,
                 newSelection: newSelection,
                 owner: combo,
-                displayText: newSelection.trim()
+                displayText: newSelection.trim(),
+                cancel: false
             });
 
             oldSelection = newSelection;
@@ -291,8 +292,44 @@ describe('IgxSimpleCombo', () => {
                 oldSelection: oldSelection,
                 newSelection: newSelection,
                 owner: combo,
-                displayText: newSelection.trim()
+                displayText: newSelection.trim(),
+                cancel: false
             });
+        });
+        it('should rollback selection to previous value when selectionChanged event is cancelled', () => {
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown;
+            const comboInput = jasmine.createSpyObj('IgxInputDirective', ['value']);
+            comboInput.value = 'test';
+            combo.comboInput = comboInput;
+            spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+            combo.select(combo.data[0]);
+            expect(combo.selection).toEqual(combo.data[0]);
+            expect(combo.value).toEqual(combo.data[0]);
+
+            let capturedArgs: ISimpleComboSelectionChangedEventArgs;
+            spyOn(combo.selectionChanged, 'emit').and.callFake((event: ISimpleComboSelectionChangedEventArgs) => {
+                capturedArgs = { ...event };
+                event.cancel = true;
+            });
+            spyOn(combo.selectionChanging, 'emit').and.callThrough();
+
+            combo.select(combo.data[1]);
+
+            expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
+            expect(combo.selectionChanged.emit).toHaveBeenCalledTimes(1);
+
+            expect(capturedArgs.oldValue).toEqual(combo.data[0]);
+            expect(capturedArgs.newValue).toEqual(combo.data[1]);
+            expect(capturedArgs.oldSelection).toEqual(combo.data[0]);
+            expect(capturedArgs.newSelection).toEqual(combo.data[1]);
+            expect(capturedArgs.cancel).toBeFalse();
+
+            expect(combo.selection).toEqual(combo.data[0]);
+            expect(combo.value).toEqual(combo.data[0]);
         });
         it('should not fire selectionChanged event when selectionChanging is cancelled', () => {
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
