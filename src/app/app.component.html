@@ -10,56 +10,53 @@
     <ng-template igxDrawer>
       <div class="nav-header"></div>
 
-      <!-- Components -->
-      <span igxDrawerItem [isHeader]="true">Components</span>
+            <!-- Filter Input -->
+            <igx-input-group type="search" style="margin: 8px;">
+                <igx-prefix>
+                    <igx-icon>filter_alt</igx-icon>
+                </igx-prefix>
+                <input igxInput placeholder="Filter..." [(ngModel)]="filterText" />
+                @if (filterText()) {
+                    <igx-suffix>
+                        <igx-icon (click)="filterText.set('')">clear</igx-icon>
+                    </igx-suffix>
+                }
+            </igx-input-group>
 
-      @for (item of componentLinks; track item) {
-        <span
-          #csmp="routerLinkActive"
-          igxDrawerItem
-          igxRipple
-          routerLinkActive
-          [active]="csmp.isActive"
-          routerLink="{{ item.link }}"
-        >
-          <igx-icon>{{ item.icon }}</igx-icon>
-          <span class="navdrawer-ellipsis">{{ item.name }}</span>
-        </span>
-      }
+            <!-- Components -->
+            <span igxDrawerItem [isHeader]="true">Components</span>
+
+            @for (item of filteredComponentLinks(); track item) {
+                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                    <igx-icon>{{item.icon}}</igx-icon>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
+                </span>
+            }
+
+            <span igxDrawerItem [disabled]="true">
+                <igx-icon>web</igx-icon>
+                <span class="navdrawer-ellipsis">Disabled Item</span>
+            </span>
 
       <!--Directives-->
       <span igxDrawerItem [isHeader]="true">Directives</span>
 
-      @for (item of directiveLinks; track item) {
-        <span
-          #dsmp="routerLinkActive"
-          igxDrawerItem
-          igxRipple
-          routerLinkActive
-          [active]="dsmp.isActive"
-          routerLink="{{ item.link }}"
-        >
-          <igx-icon>{{ item.icon }}</igx-icon>
-          <span class="navdrawer-ellipsis">{{ item.name }}</span>
-        </span>
-      }
+            @for (item of filteredDirectiveLinks(); track item) {
+                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                    <igx-icon>{{item.icon}}</igx-icon>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
+                </span>
+            }
 
       <span igxDrawerItem [isHeader]="true">Style</span>
 
-      @for (item of styleLinks; track item) {
-        <span
-          #ssmp="routerLinkActive"
-          igxDrawerItem
-          igxRipple
-          [active]="ssmp.isActive"
-          routerLinkActive
-          routerLink="{{ item.link }}"
-        >
-          <igx-icon>{{ item.icon }}</igx-icon>
-          <span class="navdrawer-ellipsis">{{ item.name }}</span>
-        </span>
-      }
-    </ng-template>
+            @for (item of filteredStyleLinks(); track item) {
+                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                    <igx-icon>{{item.icon}}</igx-icon>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
+                </span>
+            }
+        </ng-template>
 
     @if (drawerState.miniVariant) {
       <ng-template igxDrawerMini>
