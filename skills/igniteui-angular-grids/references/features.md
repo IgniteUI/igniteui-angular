@@ -79,6 +79,10 @@ priceRangeMerge: IgxCellMergeStrategy = {
 
 > **Docs:** [Toolbar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/toolbar)
 
+```typescript
+import { IgxGridToolbarComponent } from 'igniteui-angular/grids/core';
+```
+
 ```html
 <igx-grid [data]="data()">
   <igx-grid-toolbar>

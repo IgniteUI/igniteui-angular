@@ -423,7 +423,8 @@ Default summaries by type:
 ### Custom Summary Operand
 
 ```typescript
-import { IgxNumberSummaryOperand, IgxSummaryResult } from 'igniteui-angular/grids/core';
+import { IgxNumberSummaryOperand } from 'igniteui-angular/grids/core';
+import { IgxSummaryResult } from 'igniteui-angular/core';
 
 class RevenueSummary extends IgxNumberSummaryOperand {
   operate(data: number[]): IgxSummaryResult[] {
