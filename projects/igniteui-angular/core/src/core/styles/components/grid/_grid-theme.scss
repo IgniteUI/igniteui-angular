@@ -2341,7 +2341,10 @@
     }
 
     %igx-grid__loading-outlet {
-        z-index: 10003;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        position: absolute;
 
         > %overlay-wrapper--modal {
             background: none;
