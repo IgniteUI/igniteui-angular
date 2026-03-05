@@ -289,7 +289,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     }
 
     public should_apply_number_style(column: ColumnType): boolean {
-        return column.dataType === GridColumnDataType.Number;
+        return column.dataType === GridColumnDataType.Number
+            || column.dataType === GridColumnDataType.Currency
+            || column.dataType === GridColumnDataType.Percent;
     }
 
     public get_data(): any[] {
@@ -319,6 +321,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             grid.transactions.add(transaction);
         } else {
             grid.data.push(rowData);
+            grid.data = cloneArray(grid.data);
         }
         grid.validation.markAsTouched(rowId);
         grid.validation.update(rowId, rowData);
@@ -334,6 +337,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                 grid.transactions.add(transaction, grid.data[index]);
             } else {
                 grid.data.splice(index, 1);
+                grid.data = cloneArray(grid.data);
             }
         } else {
             const state: State = grid.transactions.getState(rowID);

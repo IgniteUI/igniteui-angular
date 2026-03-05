@@ -432,6 +432,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return Object.assign({}, this._defaultDropDownOverlaySettings, this.overlaySettings);
     }
 
+    private get inputGroupElement(): HTMLElement {
+        return this.inputGroup?.element.nativeElement.querySelector('.igx-input-group__bundle');
+    }
+
     /** @hidden @internal */
     public displayValue: PipeTransform = { transform: (date: Date) => this.formatter(date) };
     /** @hidden @internal */
@@ -472,7 +476,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         outlet: this.outlet
     };
     private _defaultDropDownOverlaySettings: OverlaySettings = {
-        target: this.element.nativeElement,
         modal: false,
         closeOnOutsideClick: true,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -770,6 +773,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             ? this.dropDownOverlaySettings
             : this.dialogOverlaySettings
             , settings);
+
+        if (this.isDropdown && this.inputGroupElement) {
+            overlaySettings.target = this.inputGroupElement;
+        }
 
         this.toggleRef.open(overlaySettings);
     }

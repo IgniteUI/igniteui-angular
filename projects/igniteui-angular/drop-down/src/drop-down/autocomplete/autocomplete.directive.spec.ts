@@ -74,6 +74,23 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
         }));
+        it('Should close dropdown on Tab without calling super.handleKeyDown', fakeAsync(() => {
+            spyOn(autocomplete, 'handleKeyDown').and.callThrough();
+            spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown').and.callThrough();
+
+            input.nativeElement.focus();
+            UIInteractions.setInputElementValue(input, 's', fixture);
+            tick();
+            expect(dropDown.collapsed).toBeFalsy();
+
+            // IgxDropDownItemNavigationDirective handleKeyDown is not called when dropdown is closed on Tab
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', input.nativeElement, true);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(1);
+            expect(IgxDropDownItemNavigationDirective.prototype.handleKeyDown).toHaveBeenCalledTimes(0);
+        }));
         it('Should open drop down on (Alt+)ArrowUp/ArrowDown', fakeAsync(() => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             tick();

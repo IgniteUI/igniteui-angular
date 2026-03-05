@@ -435,8 +435,12 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(summaryRowIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
 
             const gridHeight = childGrid.nativeElement.offsetHeight;
-            const childElements: HTMLElement[] = Array.from(childGrid.nativeElement.children) as HTMLElement[];
-            const elementsHeight = childElements.map(elem => elem.offsetHeight).reduce((total, height) => total + height, 0);
+            const childElements: HTMLElement[] = Array.from(childGrid.nativeElement.children) as HTMLElement [];
+            const elementsHeight = childElements
+                // skip the loading outlet element as it is positioned absolute and doesn't take part in the height calculation of the grid
+                .filter(elem => !elem.className.includes('igx-grid__loading-outlet'))
+                .map(elem => elem.offsetHeight)
+                .reduce((total, height) => total + height, 0);
 
             // Expect the combined height of all elements (header, body, footer etc) to equal the calculated height of the grid.
             expect(elementsHeight).toEqual(gridHeight);

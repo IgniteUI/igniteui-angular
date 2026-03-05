@@ -105,6 +105,7 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy
         // Fix style flickering https://github.com/IgniteUI/igniteui-angular/issues/14759
         if (this._platformUtil.isBrowser) {
             this.element.nativeElement.style.setProperty('--_init-transition', '0s');
+            this.element.nativeElement.style.setProperty('transition', 'none');
         }
     }
 
@@ -114,6 +115,7 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy
 
             this._animationScheduler = animationFrameScheduler.schedule(() => {
                 this.element.nativeElement.style.removeProperty('--_init-transition');
+                this.element.nativeElement.style.setProperty('transition', 'var(--_button-transition)');
             });
         }
     }

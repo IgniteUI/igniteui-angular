@@ -374,6 +374,48 @@ describe('PDF Grid Exporter', () => {
         exporter.export(hGrid, options);
     });
 
+    it('should export hierarchical grid with expanded rows when using primaryKey', async () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
+        fix.detectChanges();
+
+        const hGrid = fix.componentInstance.hGrid;
+
+        // Set primary key on the grid
+        hGrid.primaryKey = 'Artist';
+        fix.detectChanges();
+
+        // Limit data for test performance
+        hGrid.data = hGrid.data.slice(0, 1);
+        fix.detectChanges();
+
+        const firstRowData = hGrid.data[0];
+
+        hGrid.toggleRow(firstRowData['Artist']);
+        fix.detectChanges();
+
+        expect(hGrid.expansionStates.get(firstRowData['Artist'])).toBe(true);
+
+        const childGrids = hGrid.gridAPI.getChildGrids(false) as any[];
+        expect(childGrids.length).toBeGreaterThan(0);
+
+        const firstChildGrid = childGrids[0];
+        expect(firstChildGrid.data.length).toBeGreaterThan(0);
+
+        // Spy on drawDataRow to count exported rows
+        const drawDataRowSpy = vi.spyOn(exporter as any, 'drawDataRow');
+
+        const exportDone = new Promise<void>(resolve => {
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                const minExpectedRows = 1 + firstChildGrid.data.length;
+                expect(drawDataRowSpy.mock.calls.length).toBeGreaterThanOrEqual(minExpectedRows);
+                resolve();
+            });
+        });
+
+        exporter.export(hGrid, options);
+        await exportDone;
+    });
+
     it('should export tree grid with hierarchical data', async () => {
         TestBed.configureTestingModule({
             imports: [

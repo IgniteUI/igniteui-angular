@@ -187,7 +187,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.cdr.markForCheck();
         this._displayValue = this.createDisplayText(super.selection, oldSelection);
         this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
-        this.filterValue = this._displayValue?.toString() || '';
+        this.searchValue = this.filterValue = this._displayValue?.toString() || '';
     }
 
     /** @hidden @internal */
@@ -231,11 +231,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
             if (this.getEditElement() && !args.event) {
                 this._collapsing = true;
+                // Only focus back when programmatically closing (no user event)
+                // to avoid focus loops when user clicks on another combo
+                this.comboInput.focus();
             } else {
                 this.clearOnBlur();
                 this._onTouchedCallback();
             }
-            this.comboInput.focus();
         });
 
         // in reactive form the control is not present initially
@@ -347,6 +349,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.close();
             }
         }
+        if (event.key === this.platformUtil.KEYMAP.ESCAPE) {
+            if (this.collapsed) {
+                const oldSelection = this.selection;
+                this.clearSelection(true);
+                if (this.selection !== oldSelection) {
+                    this.comboInput.value = this.filterValue = this.searchValue = '';
+                }
+                this.dropdown.focusedItem = null;
+                this.comboInput.focus();
+            } else {
+                this.close();
+            }
+        }
         this.composing = false;
         super.handleKeyDown(event);
     }
@@ -395,7 +410,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public clearInput(event: Event): void {
+    public handleClear(event: Event): void {
+        if (this.disabled) {
+            return;
+        }
+
         const oldSelection = this.selection;
         this.clearSelection(true);
 
@@ -411,23 +430,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.dropdown.focusedItem = null;
         this.composing = false;
         this.comboInput.focus();
-    }
-
-    /** @hidden @internal */
-    public handleClear(event: Event): void {
-        if (this.disabled) {
-            return;
-        }
-
-        this.clearInput(event);
-    }
-
-    /** @hidden @internal */
-    public handleClearKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            this.clearInput(event);
-        }
     }
 
     /** @hidden @internal */
@@ -450,7 +452,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         this.composing = false;
         // explicitly update selection so that we don't have to force CD
-        this.textSelection.selected = true;
+        const isTab = (e.event as KeyboardEvent)?.key === this.platformUtil.KEYMAP.TAB;
+        this.textSelection.selected = !isTab;
     }
 
     /** @hidden @internal */

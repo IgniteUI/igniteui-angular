@@ -19,6 +19,7 @@ import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { query } from '@angular/animations';
 
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
@@ -960,7 +961,8 @@ describe('IgxDatePicker', () => {
                         blur: vi.fn().mockName("mockElement.blur"),
                         click: vi.fn().mockName("mockElement.click"),
                         addEventListener: vi.fn().mockName("mockElement.addEventListener"),
-                        removeEventListener: vi.fn().mockName("mockElement.removeEventListener")
+                        removeEventListener: vi.fn().mockName("mockElement.removeEventListener"),
+                        querySelector: vi.fn().mockName("mockElement.querySelector")
                     }
                 }
             } as any;
@@ -1022,6 +1024,7 @@ describe('IgxDatePicker', () => {
 
             datePicker = TestBed.inject(IgxDatePickerComponent);
             (datePicker as any).inputGroup = mockInputGroup;
+            (mockInputGroup.element.nativeElement.querySelector as jasmine.Spy).and.returnValue(mockInputGroup.element.nativeElement);
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
             (datePicker as any).viewContainerRef = viewsContainerRef;

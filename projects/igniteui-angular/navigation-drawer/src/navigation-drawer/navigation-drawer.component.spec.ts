@@ -86,6 +86,9 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.navDrawer.styleDummy.classList).toContain('igx-nav-drawer__style-dummy');
             expect(fixture.componentInstance.navDrawer.hasAnimateWidth).toBeFalsy();
 
+            expect(fixture.componentInstance.navDrawer.drawer.getAttribute('popover')).toBe('manual');
+            expect(fixture.componentInstance.navDrawer.overlay.getAttribute('popover')).toBe('manual');
+
             fixture.componentInstance.navDrawer.id = 'customNavDrawer';
             fixture.detectChanges();
 
@@ -165,18 +168,18 @@ describe('Navigation Drawer', () => {
             fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
         })
             .then(() => {
-            expect(drawer.opening.emit).toHaveBeenCalled();
-            expect(drawer.opened.emit).toHaveBeenCalled();
+                expect(drawer.opening.emit).toHaveBeenCalled();
+                expect(drawer.opened.emit).toHaveBeenCalled();
 
-            const _re = drawer.toggle(true);
-            fixture.detectChanges();
-            fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
-        })
+                const _re = drawer.toggle(true);
+                fixture.detectChanges();
+                fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
+            })
             .then(() => {
-            expect(drawer.closing.emit).toHaveBeenCalled();
-            expect(drawer.closed.emit).toHaveBeenCalled();
-            // resolver();
-        });
+                expect(drawer.closing.emit).toHaveBeenCalled();
+                expect(drawer.closed.emit).toHaveBeenCalled();
+                // resolver();
+            });
     }));
 
     it('should properly initialize with min template', waitForAsync(() => {
@@ -199,6 +202,7 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.navDrawer.hasAnimateWidth).toBeTruthy();
             expect(fixture.debugElement.query(By.css('.igx-nav-drawer__aside')).nativeElement.classList)
                 .toContain('igx-nav-drawer__aside--mini');
+            expect(fixture.componentInstance.navDrawer.drawer.getAttribute('popover')).toBe('manual');
         }).catch((reason) => Promise.reject(reason));
     }));
 
@@ -228,7 +232,7 @@ describe('Navigation Drawer', () => {
             fixture = TestBed.createComponent(TestComponentMiniComponent);
             fixture.detectChanges();
             asideElem = fixture.debugElement.query(By.css('.igx-nav-drawer__aside--mini'));
-            cssProp = getComputedStyle(asideElem.nativeElement).getPropertyValue('--igx-nav-drawer-size--mini');
+            cssProp = getComputedStyle(asideElem.nativeElement).getPropertyValue('--ig-nav-drawer-size--mini');
 
             expect(cssProp).toEqual('56px');
 
@@ -261,6 +265,8 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.navDrawer.pin).toBeTruthy();
             expect(fixture.debugElement.query(By.css('.igx-nav-drawer__aside')).nativeElement.classList)
                 .toContain('igx-nav-drawer__aside--pinned');
+            expect(fixture.componentInstance.navDrawer.drawer.getAttribute('popover')).toBeNull();
+            expect(fixture.componentInstance.navDrawer.overlay.getAttribute('popover')).toBeNull();
 
             expect(fixture.componentInstance.navDrawer.enableGestures).toBe(false);
 
@@ -274,6 +280,7 @@ describe('Navigation Drawer', () => {
     it('should stay at 100% parent height when pinned', waitForAsync(() => {
         const template = `<div style="height: 100%; position: relative;">
                             <igx-nav-drawer
+                                [isOpen]="true"
                                 [pin]="pin"
                                 pinThreshold="false"
                                 [enableGestures]="enableGestures">
@@ -283,30 +290,33 @@ describe('Navigation Drawer', () => {
         TestBed.overrideComponent(TestComponentPinComponent, { set: { template } });
         TestBed.compileComponents()
             .then(() => {
-            document.body.style.overflow = 'hidden';
-            const fixture = TestBed.createComponent(TestComponentPinComponent);
-            fixture.detectChanges();
-            const windowHeight = window.innerHeight;
-            const container = fixture.debugElement.query(By.css('div')).nativeElement;
-            const navdrawer = fixture.debugElement.query(By.css('igx-nav-drawer > .igx-nav-drawer__aside')).nativeElement;
+                document.body.style.overflow = 'hidden';
+                const fixture = TestBed.createComponent(TestComponentPinComponent);
+                fixture.detectChanges();
+                const windowHeight = window.innerHeight;
+                const container = fixture.debugElement.query(By.css('div')).nativeElement;
+                const navdrawer = fixture.debugElement.query(By.css('igx-nav-drawer > .igx-nav-drawer__aside')).nativeElement;
 
-            fixture.componentInstance.pin = false;
-            fixture.detectChanges();
-            expect(navdrawer.clientHeight).toEqual(windowHeight);
+                fixture.componentInstance.pin = false;
+                fixture.detectChanges();
+                expect(navdrawer.clientHeight).toEqual(windowHeight);
+                expect(navdrawer.getAttribute('popover')).toBe('manual');
 
-            fixture.componentInstance.pin = true;
-            fixture.detectChanges();
-            expect(navdrawer.clientHeight).toEqual(container.clientHeight);
+                fixture.componentInstance.pin = true;
+                fixture.detectChanges();
+                expect(navdrawer.clientHeight).toEqual(container.clientHeight);
+                expect(navdrawer.getAttribute('popover')).toBeNull();
 
-            container.style.height = `${windowHeight - 50}px`;
-            fixture.detectChanges();
-            expect(navdrawer.clientHeight).toEqual(windowHeight - 50);
+                container.style.height = `${windowHeight - 50}px`;
+                fixture.detectChanges();
+                expect(navdrawer.clientHeight).toEqual(windowHeight - 50);
 
-            // unpin :
-            fixture.componentInstance.pin = false;
-            fixture.detectChanges();
-            expect(navdrawer.clientHeight).toEqual(windowHeight);
-        });
+                // unpin :
+                fixture.componentInstance.pin = false;
+                fixture.detectChanges();
+                expect(navdrawer.clientHeight).toEqual(windowHeight);
+                expect(navdrawer.getAttribute('popover')).toBe('manual');
+            });
     }));
 
     it('should set flex-basis and order when pinned', waitForAsync(() => {
@@ -315,45 +325,45 @@ describe('Navigation Drawer', () => {
         let fixture: ComponentFixture<TestComponentPinComponent>;
         TestBed.compileComponents()
             .then(() => {
-            fixture = TestBed.createComponent(TestComponentPinComponent);
-            const drawer = fixture.componentInstance.navDrawer;
-            drawer.isOpen = true;
-            fixture.detectChanges();
-            const drawerElem = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'IGX-NAV-DRAWER').nativeElement;
-            const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
+                fixture = TestBed.createComponent(TestComponentPinComponent);
+                const drawer = fixture.componentInstance.navDrawer;
+                drawer.isOpen = true;
+                fixture.detectChanges();
+                const drawerElem = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'IGX-NAV-DRAWER').nativeElement;
+                const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
 
-            expect(drawer.pin).toBeTruthy();
-            expect(flexBasis).toEqual('240px');
-            expect(drawerElem.style.order).toEqual('0');
+                expect(drawer.pin).toBeTruthy();
+                expect(flexBasis).toEqual('240px');
+                expect(drawerElem.style.order).toEqual('0');
 
-            drawer.width = '345px';
-            drawer.position = 'right';
-            fixture.detectChanges();
+                drawer.width = '345px';
+                drawer.position = 'right';
+                fixture.detectChanges();
 
-            // Adjusting for transition duration
-            return new Promise(resolve => setTimeout(resolve, 350));
-        }).then(() => {
-            const drawer = fixture.componentInstance.navDrawer;
+                // Adjusting for transition duration
+                return new Promise(resolve => setTimeout(resolve, 350));
+            }).then(() => {
+                const drawer = fixture.componentInstance.navDrawer;
 
-            const drawerElem = fixture.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
-            const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
+                const drawerElem = fixture.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
+                const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
 
-            expect(flexBasis).toEqual('345px');
-            expect(drawerElem.style.order).toEqual('1');
+                expect(flexBasis).toEqual('345px');
+                expect(drawerElem.style.order).toEqual('1');
 
-            fixture.componentInstance.pin = false;
-            fixture.detectChanges();
-            expect(drawer.pin).toBeFalsy();
+                fixture.componentInstance.pin = false;
+                fixture.detectChanges();
+                expect(drawer.pin).toBeFalsy();
 
-            // Adjusting for transition duration
-            return new Promise(resolve => setTimeout(resolve, 350));
-        }).then(() => {
-            const drawerElem = fixture.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
-            const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
+                // Adjusting for transition duration
+                return new Promise(resolve => setTimeout(resolve, 350));
+            }).then(() => {
+                const drawerElem = fixture.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
+                const flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
 
-            expect(flexBasis).toEqual('0px');
-            expect(drawerElem.style.order).toEqual('0');
-        });
+                expect(flexBasis).toEqual('0px');
+                expect(drawerElem.style.order).toEqual('0');
+            });
     }));
 
     // TODO: vitest-migration: The 'done' callback was used in an unhandled way. Please migrate manually.
@@ -369,20 +379,20 @@ describe('Navigation Drawer', () => {
             return swipe(document.body, 80, 10, 100, 250, 0);
         })
             .then(() => {
-            expect(fixture.componentInstance.navDrawer.isOpen, 'should ignore swipes too far away from the edge').toEqual(false);
-            return swipe(document.body, 10, 10, 150, 250, 0);
-        })
+                expect(fixture.componentInstance.navDrawer.isOpen, 'should ignore swipes too far away from the edge').toEqual(false);
+                return swipe(document.body, 10, 10, 150, 250, 0);
+            })
             .then(() => {
-            expect(fixture.componentInstance.navDrawer.isOpen, 'Should accept edge swipe').toEqual(true);
-            return swipe(document.body, 180, 10, 150, -180, 0);
-        })
+                expect(fixture.componentInstance.navDrawer.isOpen, 'Should accept edge swipe').toEqual(true);
+                return swipe(document.body, 180, 10, 150, -180, 0);
+            })
             .then(() => {
-            expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
-            done();
-        })
+                expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
+                done();
+            })
             .catch(() => {
-            done();
-        });
+                done();
+            });
     }, 10000);
 
     // TODO: vitest-migration: The 'done' callback was used in an unhandled way. Please migrate manually.
@@ -412,26 +422,26 @@ describe('Navigation Drawer', () => {
             return pan(document.body, 10, 10, 150, 20, 0);
         })
             .then(() => {
-            expect(navDrawer.isOpen, 'should ignore too short pan').toEqual(false);
+                expect(navDrawer.isOpen, 'should ignore too short pan').toEqual(false);
 
-            // valid pan
-            return pan(document.body, 10, 10, 100, 200, 0);
-        }).then(() => {
-            expect(navDrawer.isOpen, 'should open on valid pan').toEqual(true);
+                // valid pan
+                return pan(document.body, 10, 10, 100, 200, 0);
+            }).then(() => {
+                expect(navDrawer.isOpen, 'should open on valid pan').toEqual(true);
 
-            // not enough distance, closing
-            return pan(document.body, 200, 10, 100, -20, 0);
-        }).then(() => {
-            expect(navDrawer.isOpen, 'should remain open on too short pan').toEqual(true);
+                // not enough distance, closing
+                return pan(document.body, 200, 10, 100, -20, 0);
+            }).then(() => {
+                expect(navDrawer.isOpen, 'should remain open on too short pan').toEqual(true);
 
-            // close
-            return pan(document.body, 250, 10, 100, -200, 0);
-        }).then(() => {
-            expect(navDrawer.isOpen, 'should close on valid pan').toEqual(false);
-            done();
-        }).catch(() => {
-            done();
-        });
+                // close
+                return pan(document.body, 250, 10, 100, -200, 0);
+            }).then(() => {
+                expect(navDrawer.isOpen, 'should close on valid pan').toEqual(false);
+                done();
+            }).catch(() => {
+                done();
+            });
     }, 10000);
 
     it('should update edge zone with mini width', waitForAsync(() => {
@@ -500,6 +510,9 @@ describe('Navigation Drawer', () => {
 
         // Standard default:
         expect(asideWidth).toBe('240px');
+
+        // Not pinned and open: popover should be shown
+        expect(asideElem.matches(':popover-open')).toBeTruthy();
 
         // Change sizes:
         fixture.componentInstance.drawerMiniWidth = '80px';
@@ -640,6 +653,37 @@ describe('Navigation Drawer', () => {
         expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
     });
 
+    it('should not hide popover during closing animation', async () => {
+        const template = `<igx-nav-drawer pinThreshold="false"></igx-nav-drawer>`;
+        TestBed.overrideComponent(TestComponentDIComponent, {
+            set: { template }
+        });
+        await TestBed.compileComponents();
+        const fixture = TestBed.createComponent(TestComponentDIComponent);
+        fixture.detectChanges();
+        const drawer = fixture.componentInstance.navDrawer;
+
+        drawer.open();
+        fixture.detectChanges();
+        await wait(50);
+
+        // Begin close - _closingAnimation should prevent immediate popover hide
+        drawer.close();
+        fixture.detectChanges();
+        await wait(50);
+
+        // The drawer popover should still be showing during the closing animation
+        expect(drawer.isOpen).toBeFalsy();
+        expect(drawer.drawer.matches(':popover-open')).toBeTruthy();
+
+        // Complete the transition
+        fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
+        fixture.detectChanges();
+        await wait(50);
+
+        expect(drawer.drawer.matches(':popover-open')).toBeFalsy();
+    });
+
     const swipe = (element, posX, posY, duration, deltaX, deltaY) => {
         const swipeOptions = {
             deltaX,
@@ -723,7 +767,7 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
 }
 
 @Component({
-    selector: 'igx--test-fixed-mini',
+    selector: 'igx-test-fixed-mini',
     providers: [IgxNavigationService],
     imports: [
         IgxNavigationDrawerComponent,

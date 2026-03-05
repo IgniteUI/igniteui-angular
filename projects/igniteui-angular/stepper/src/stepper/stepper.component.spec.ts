@@ -73,7 +73,8 @@ describe('Rendering Tests', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxStepperSampleTestComponent,
-                IgxStepperLinearComponent
+                IgxStepperLinearComponent,
+                IgxStepperIndicatorNoShrinkComponent
             ]
         }).compileComponents();
     }));
@@ -717,6 +718,49 @@ describe('Rendering Tests', () => {
             stepper.horizontalAnimationType = 'fade';
             testAnimationBehavior('fade', fix, false);
         }));
+
+        it('should not shrink the step indicator in vertical orientation when titlePosition="end" and the title is very long', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
+            fixture.detectChanges();
+            tick();
+
+            const stepperInstance = fixture.componentInstance.stepper;
+            const indicator = stepperInstance.steps[0].nativeElement.querySelector(`.${STEP_INDICATOR_CLASS}`) as HTMLElement;
+
+            const { minWidth } = getComputedStyle(indicator);
+            const { width, height } = indicator.getBoundingClientRect();
+
+            expect(minWidth).not.toBe('0px');
+            expect(minWidth).not.toBe('auto');
+            expect(Math.abs(width - height)).toBeLessThan(1.5);
+            expect(Math.abs(width - parseFloat(minWidth))).toBeLessThan(1.5);
+        }));
+
+        it('should not shift step content horizontally when navigating between steps in vertical mode', fakeAsync(() => {
+            const indicatorFix = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
+            indicatorFix.detectChanges();
+            const indicatorStepper = indicatorFix.componentInstance.stepper;
+
+            const getContentWrapperStyles = (stepIndex: number) => {
+                const contentWrapper = indicatorStepper.steps[stepIndex].nativeElement.querySelector('.igx-stepper__step-content-wrapper') as HTMLElement;
+                const styles = window.getComputedStyle(contentWrapper);
+                return {
+                    paddingInlineStart: styles.paddingInlineStart || styles.paddingLeft,
+                    marginInlineStart: styles.marginInlineStart || styles.marginLeft
+                };
+            };
+
+            const step0ActiveStyles = getContentWrapperStyles(0);
+
+            indicatorStepper.navigateTo(1);
+            indicatorFix.detectChanges();
+            tick(500);
+
+            const step0InactiveStyles = getContentWrapperStyles(0);
+
+            expect(step0InactiveStyles.paddingInlineStart).toBe(step0ActiveStyles.paddingInlineStart);
+            expect(step0InactiveStyles.marginInlineStart).toBe(step0ActiveStyles.marginInlineStart);
+        }));
     });
 
     describe('Keyboard navigation', () => {
@@ -1173,14 +1217,14 @@ describe('Stepper service unit tests', () => {
 
     it('should determine the steps that should be disabled in linear mode based on the validity of the active step', () => {
         vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Horizontal);
-        vi.spyOn(stepper, 'steps').mockReturnValue(steps);
+        vi.spyOn(stepper as any, 'steps', 'get').mockReturnValue(steps);
 
         for (const step of steps) {
-            vi.spyOn(step, 'isValid').mockReturnValue(false);
+            vi.spyOn(step as any, 'isValid').mockReturnValue(false);
         }
-        vi.spyOn(stepper, 'linear').mockReturnValue(true);
+        vi.spyOn(stepper as any, 'linear', 'get').mockReturnValue(true);
         stepperService.activeStep = steps[0];
-        vi.spyOn(steps[0], 'active').mockReturnValue(true);
+        vi.spyOn(steps[0] as any, 'active').mockReturnValue(true);
 
         expect(stepperService.linearDisabledSteps.size).toBe(0);
         stepperService.calculateLinearDisabledSteps();
@@ -1188,19 +1232,19 @@ describe('Stepper service unit tests', () => {
         let sampleSet = new Set<IgxStepComponent>([steps[1], steps[2], steps[3]]);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        vi.spyOn(steps[0], 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[0] as any, 'isValid').mockReturnValue(true);
         stepperService.calculateLinearDisabledSteps();
         sampleSet = new Set<IgxStepComponent>([steps[2], steps[3]]);
         expect(stepperService.linearDisabledSteps.size).toBe(2);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        vi.spyOn(steps[1], 'active').mockReturnValue(true);
-        vi.spyOn(steps[1], 'isValid').mockReturnValue(false);
+        vi.spyOn(steps[1] as any, 'active').mockReturnValue(true);
+        vi.spyOn(steps[1] as any, 'isValid').mockReturnValue(false);
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(2);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        vi.spyOn(steps[1], 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[1] as any, 'isValid').mockReturnValue(true);
         stepperService.activeStep = steps[1];
         sampleSet = new Set<IgxStepComponent>([steps[3]]);
         stepperService.calculateLinearDisabledSteps();
@@ -1208,8 +1252,8 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
         expect(stepperService.linearDisabledSteps).toContain(steps[3]);
 
-        vi.spyOn(steps[2], 'isValid').mockReturnValue(true);
-        vi.spyOn(steps[3], 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[2] as any, 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[3] as any, 'isValid').mockReturnValue(true);
         stepperService.activeStep = steps[3];
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(0);
@@ -1218,7 +1262,7 @@ describe('Stepper service unit tests', () => {
 
     it('should emit activating event', () => {
         vi.spyOn(stepper, 'orientation', 'get').mockReturnValue(IgxStepperOrientation.Horizontal);
-        vi.spyOn(stepper, 'steps').mockReturnValue(steps);
+        vi.spyOn(stepper as any, 'steps', 'get').mockReturnValue(steps);
         const activeChangingSpy = vi.spyOn(stepper.activeStepChanging, 'emit');
         stepperService.activeStep = steps[0];
 
@@ -1373,4 +1417,35 @@ export class IgxStepperSampleTestComponent {
 export class IgxStepperLinearComponent {
     @ViewChild(IgxStepperComponent)
     public stepper: IgxStepperComponent;
+}
+
+@Component({
+    template: `
+        <div>
+            <igx-stepper #stepper [orientation]="'vertical'" [titlePosition]="'end'">
+
+                <igx-step [active]="true">
+                    <span igxStepTitle>{{ longTitle }}</span>
+                    <div igxStepContent>Content</div>
+                </igx-step>
+
+                <igx-step>
+                    <span igxStepTitle>Short</span>
+                    <div igxStepContent>Content</div>
+                </igx-step>
+            </igx-stepper>
+        </div>
+    `,
+    imports: [
+        IgxStepperComponent,
+        IgxStepComponent,
+        IgxStepTitleDirective,
+        IgxStepContentDirective
+    ]
+})
+export class IgxStepperIndicatorNoShrinkComponent {
+    @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+
+    public longTitle =
+        'This is a very very very very very very very very very very very very very very very very very very very very very long step title that should not shrink the indicator';
 }

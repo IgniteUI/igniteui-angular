@@ -396,4 +396,24 @@ export class OverlaySampleComponent implements OnInit {
             element.classList.remove('selected');
         }
     }
+
+    protected moveContainer(target: HTMLElement, direction: string, distance: number): void{
+        const currentTop = parseInt(target.style.top, 10) || 0;
+        const currentLeft = parseInt(target.style.left, 10) || 0;
+
+        switch (direction) {
+            case 'up':
+                target.style.top = `${currentTop - distance}px`;
+                break;
+            case 'down':
+                target.style.top = `${currentTop + distance}px`;
+                break;
+            case 'left':
+                target.style.left = `${currentLeft - distance}px`;
+                break;
+            case 'right':
+                target.style.left = `${currentLeft + distance}px`;
+                break;
+        }
+    }
 }

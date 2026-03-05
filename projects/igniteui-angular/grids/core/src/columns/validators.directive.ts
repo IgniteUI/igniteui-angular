@@ -1,8 +1,8 @@
+/* eslint-disable @angular-eslint/directive-selector */
 import { Directive } from '@angular/core';
 import { RequiredValidator, NG_VALIDATORS, MinValidator, MaxValidator, EmailValidator, MinLengthValidator, MaxLengthValidator, PatternValidator } from '@angular/forms';
 
 @Directive({
-
     selector: 'igx-column[required]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -15,7 +15,6 @@ export class IgxColumnRequiredValidatorDirective extends RequiredValidator {
 }
 
 @Directive({
-
     selector: 'igx-column[min]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -28,7 +27,6 @@ export class IgxColumnMinValidatorDirective extends MinValidator { }
 
 
 @Directive({
-
     selector: 'igx-column[max]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -41,7 +39,6 @@ export class IgxColumnMaxValidatorDirective extends MaxValidator { }
 
 
 @Directive({
-
     selector: 'igx-column[email]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -54,7 +51,6 @@ export class IgxColumnEmailValidatorDirective extends EmailValidator { }
 
 
 @Directive({
-
     selector: 'igx-column[minlength]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -66,7 +62,6 @@ export class IgxColumnEmailValidatorDirective extends EmailValidator { }
 export class IgxColumnMinLengthValidatorDirective extends MinLengthValidator { }
 
 @Directive({
-
     selector: 'igx-column[maxlength]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -79,7 +74,6 @@ export class IgxColumnMaxLengthValidatorDirective extends MaxLengthValidator {
 }
 
 @Directive({
-
     selector: 'igx-column[pattern]',
     providers: [{
             provide: NG_VALIDATORS,

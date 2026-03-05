@@ -12,8 +12,9 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
-const DEBOUNCETIME = 30;
+const DEBOUNCETIME = 100;
 
 describe('IgxGrid - Keyboard navigation #grid', () => {
 
@@ -219,6 +220,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         }));
 
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
+            });
             fix = TestBed.createComponent(VirtualGridComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -284,7 +288,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
         it('should allow navigating up', async () => {
             grid.verticalScrollContainer.scrollTo(104);
-            await wait();
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(100, 'value');
@@ -423,7 +427,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             selectedCell = fix.componentInstance.selectedCell;
-            expect(parseInt(displayContainer.style.top, 10)).toBeLessThanOrEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
+            expect(grid.navigation.containerTopOffset).toBeLessThanOrEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
             expect(displayContainer.parentElement.scrollTop).toEqual(0);
             expect(selectedCell.value).toEqual(40);
             expect(selectedCell.column.field).toMatch('1');
@@ -436,12 +440,11 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
-            const displayContainer = GridFunctions.getGridDisplayContainer(fix).nativeElement;
             fix.componentInstance.scrollTop(25);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(displayContainer.style.top).toEqual('-25px');
+            expect(grid.navigation.containerTopOffset).toEqual(-25);
             const cell = grid.gridAPI.get_cell_by_index(1, '1');
             UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
@@ -455,7 +458,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             fix.detectChanges();
-            expect(displayContainer.style.top).toEqual('0px');
+            expect(grid.navigation.containerTopOffset).toEqual(0);
             expect(fix.componentInstance.selectedCell.value).toEqual(0);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
         });
@@ -546,6 +549,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(fix.componentInstance.selectedCell.value).toEqual(10);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', grid.tbody.nativeElement, true);
+            fix.detectChanges();
             await wait(DEBOUNCETIME);
 
             fix.detectChanges();
@@ -587,8 +591,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            let scrollContainer = grid.verticalScrollContainer.dc.instance._viewContainer;
-            let scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
+            let scrollContainerOffset = grid.navigation.containerTopOffset;
             expect(scrollContainerOffset).toEqual(-25);
 
             const cell = grid.gridAPI.get_cell_by_index(1, 'value');
@@ -602,8 +605,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            scrollContainer = grid.verticalScrollContainer.dc.instance._viewContainer;
-            scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
+            scrollContainerOffset = grid.navigation.containerTopOffset;
 
             expect(scrollContainerOffset).toEqual(0);
             expect(fix.componentInstance.selectedCell.value).toEqual(0);

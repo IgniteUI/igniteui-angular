@@ -55,7 +55,7 @@ let nextId = 0;
  */
 @Directive({
     exportAs: 'igxRadioGroup',
-    selector: 'igx-radio-group, [igxRadioGroup]',
+    selector: '[igxRadioGroup],igx-radio-group',
     standalone: true
 })
 export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {

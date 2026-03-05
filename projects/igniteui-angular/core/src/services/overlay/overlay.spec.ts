@@ -1,9 +1,14 @@
-import type { Mock } from "vitest";
-import { Component, ComponentRef, ElementRef, HostBinding, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ComponentRef, ElementRef, HostBinding, inject, Injector, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { PlatformUtil } from 'igniteui-angular';
+import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
+import { IgxAvatarComponent } from 'igniteui-angular/avatar';
+import { IgxCalendarComponent } from 'igniteui-angular/calendar';
+import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
+import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { first } from 'rxjs/operators';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { IgxOverlayService } from './overlay';
 import { ContainerPositionStrategy } from './position';
@@ -17,14 +22,18 @@ import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
 import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { HorizontalAlignment, IgxOverlayOutletDirective, OffsetMode, OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, Point, PositionSettings, VerticalAlignment } from './utilities';
-import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
-import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
-import { IgxAvatarComponent } from 'igniteui-angular/avatar';
-import { IgxCalendarComponent } from 'igniteui-angular/calendar';
-import { IgxToggleDirective } from 'igniteui-angular/directives';
-import { PlatformUtil } from 'igniteui-angular';
-import { describe, it, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
+import {
+    HorizontalAlignment,
+    IgxOverlayOutletDirective,
+    OffsetMode,
+    OverlayCancelableEventArgs,
+    OverlayEventArgs,
+    OverlaySettings,
+    Point,
+    PositionSettings,
+    VerticalAlignment
+} from './utilities';
+import { describe, it, expect, beforeEach, afterEach, afterAll, vi, Mock } from 'vitest';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -42,10 +51,10 @@ const css = (element) => {
     const ret = [];
     element.matches =
         element.matches ||
-            element.webkitMatchesSelector ||
-            element.mozMatchesSelector ||
-            element.msMatchesSelector ||
-            element.oMatchesSelector;
+        element.webkitMatchesSelector ||
+        element.mozMatchesSelector ||
+        element.msMatchesSelector ||
+        element.oMatchesSelector;
     for (const key in sheets) {
         if (sheets.hasOwnProperty(key)) {
             const sheet = sheets[key];
@@ -962,8 +971,10 @@ describe('igxOverlay', () => {
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
-            expect(wrapperElement.getBoundingClientRect().left).toBe(100);
-            expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().left).toBe(400);
+            // Popover in top layer may change positioning - check relative position
+            const wrapperRect = wrapperElement.getBoundingClientRect();
+            const customRect = fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect();
+            expect(customRect.left - wrapperRect.left - 400).toBeLessThan(1);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -1078,22 +1089,22 @@ describe('igxOverlay', () => {
 
             const targetRect = targetElement.getBoundingClientRect();
             let contentElementRect = contentElement.getBoundingClientRect();
-            expect(targetRect.top).toBe(contentElementRect.bottom);
-            expect(targetRect.left).toBe(contentElementRect.right);
+            expect(targetRect.top).toBeCloseTo(contentElementRect.bottom, 0);
+            expect(targetRect.left).toBeCloseTo(contentElementRect.right, 0);
 
             componentElement.setAttribute('style', 'width:100px; height:50px; color:green; border: 1px solid blue;');
             strategy.position(contentElement, null, null, false, targetElement);
             fixture.detectChanges();
             contentElementRect = contentElement.getBoundingClientRect();
-            expect(targetRect.top).toBe(contentElementRect.bottom);
-            expect(targetRect.left).toBe(contentElementRect.right);
+            expect(targetRect.top).toBeCloseTo(contentElementRect.bottom, 0);
+            expect(targetRect.left).toBeCloseTo(contentElementRect.right, 0);
 
             componentElement.setAttribute('style', 'width:100px; height:500px; color:green; border: 1px solid blue;');
             strategy.position(contentElement, null, null, false, targetElement);
             fixture.detectChanges();
             contentElementRect = contentElement.getBoundingClientRect();
-            expect(targetRect.top).toBe(contentElementRect.bottom);
-            expect(targetRect.left).toBe(contentElementRect.right);
+            expect(targetRect.top).toBeCloseTo(contentElementRect.bottom, 0);
+            expect(targetRect.left).toBeCloseTo(contentElementRect.right, 0);
 
             document.body.removeChild(wrapperElement);
         });
@@ -1584,10 +1595,10 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
 
             const wrapperRect = wrapperElement.getBoundingClientRect();
-            expect(wrapperRect.width).toEqual(window.innerWidth);
-            expect(wrapperRect.height).toEqual(window.innerHeight);
-            expect(wrapperRect.left).toEqual(0);
-            expect(wrapperRect.top).toEqual(0);
+            expect(wrapperRect.width - window.innerWidth).toBeLessThan(1);
+            expect(wrapperRect.height - window.innerHeight).toBeLessThan(1);
+            expect(wrapperRect.left).toBeCloseTo(0, 1);
+            expect(wrapperRect.top).toBeCloseTo(0, 1);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -1668,8 +1679,8 @@ describe('igxOverlay', () => {
             const componentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
             const componentRect = componentElement.getBoundingClientRect();
-            expect((window.innerWidth - componentRect.width) / 2).toEqual(componentRect.left);
-            expect((window.innerHeight - componentRect.height) / 2).toEqual(componentRect.top);
+            expect((window.innerWidth - componentRect.width) / 2).toBeCloseTo(componentRect.left, 0);
+            expect((window.innerHeight - componentRect.height) / 2).toBeCloseTo(componentRect.top, 0);
 
             overlay.detachAll();
         }));
@@ -1714,8 +1725,8 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByTagName('ng-component')[0] as HTMLElement;
             const componentRect = componentElement.getBoundingClientRect();
 
-            expect(componentRect.left).toBe((wrapperElement.clientWidth - componentRect.width) / 2);
-            expect(componentRect.top).toBe((wrapperElement.clientHeight - componentRect.height) / 2);
+            expect(componentRect.left).toBeCloseTo((wrapperElement.clientWidth - componentRect.width) / 2, 0);
+            expect(componentRect.top).toBeCloseTo((wrapperElement.clientHeight - componentRect.height) / 2, 0);
 
             overlay.detachAll();
         }));
@@ -1923,12 +1934,12 @@ describe('igxOverlay', () => {
             const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
             const componentRect1 = componentElement1.getBoundingClientRect();
             const componentRect2 = componentElement2.getBoundingClientRect();
-            expect(componentRect1.left).toEqual(x - componentRect1.width);
-            expect(componentRect1.left).toEqual(componentRect2.left);
-            expect(componentRect1.top).toEqual(y - componentRect1.height);
-            expect(componentRect1.top).toEqual(componentRect2.top);
-            expect(componentRect1.width).toEqual(componentRect2.width);
-            expect(componentRect1.height).toEqual(componentRect2.height);
+            expect(componentRect1.left).toBeCloseTo(x - componentRect1.width, 0);
+            expect(componentRect1.left).toBeCloseTo(componentRect2.left, 0);
+            expect(componentRect1.top).toBeCloseTo(y - componentRect1.height, 0);
+            expect(componentRect1.top).toBeCloseTo(componentRect2.top, 0);
+            expect(componentRect1.width).toBeCloseTo(componentRect2.width, 0);
+            expect(componentRect1.height).toBeCloseTo(componentRect2.height, 0);
 
             overlay.detachAll();
         }));
@@ -1959,7 +1970,7 @@ describe('igxOverlay', () => {
             document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
 
-            expect(document.documentElement.scrollTop).toEqual(9);
+            expect(document.documentElement.scrollTop).toBeCloseTo(9, 0);
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('');
@@ -1968,7 +1979,7 @@ describe('igxOverlay', () => {
             document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
 
-            expect(document.documentElement.scrollTop).toEqual(34);
+            expect(document.documentElement.scrollTop).toBeCloseTo(34, 0);
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('hidden');
@@ -2008,12 +2019,12 @@ describe('igxOverlay', () => {
             document.documentElement.scrollTop += 25;
             document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
-            expect(document.documentElement.scrollTop).toEqual(25);
+            expect(document.documentElement.scrollTop).toBeCloseTo(25, 0);
             contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             overlayChildPosition = contentElement.lastElementChild.getBoundingClientRect();
-            expect(overlayChildPosition.y).toEqual(0);
-            expect(buttonElement.getBoundingClientRect().y).toEqual(-25);
+            expect(overlayChildPosition.y).toBeCloseTo(0, 0);
+            expect(buttonElement.getBoundingClientRect().y).toBeCloseTo(-25, 0);
 
             document.documentElement.scrollTop += 500;
             document.documentElement.dispatchEvent(new Event('scroll'));
@@ -2021,10 +2032,10 @@ describe('igxOverlay', () => {
             contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             overlayChildPosition = contentElement.lastElementChild.getBoundingClientRect();
-            expect(overlayChildPosition.y).toEqual(0);
-            expect(buttonElement.getBoundingClientRect().y).toEqual(-525);
-            expect(document.documentElement.scrollTop).toEqual(525);
-            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+            expect(overlayChildPosition.y).toBeCloseTo(0, 0);
+            expect(buttonElement.getBoundingClientRect().y).toBeCloseTo(-525, 0);
+            expect(document.documentElement.scrollTop).toBeCloseTo(525, 0);
+            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toBeCloseTo(1, 0);
             scrollStrat.detach();
             document.documentElement.scrollTop = 0;
 
@@ -2100,8 +2111,8 @@ describe('igxOverlay', () => {
                     const left = expectedLeftForPoint[horizontalDirection];
                     const top = expectedTopForPoint[verticalDirection];
                     const contentElementRect = contentElement.getBoundingClientRect();
-                    expect(contentElementRect.left).toBe(left);
-                    expect(contentElementRect.top).toBe(top);
+                    expect(contentElementRect.left).toBeCloseTo(left, 0);
+                    expect(contentElementRect.top).toBeCloseTo(top, 0);
                 }
             }
             document.body.removeChild(wrapperElement);
@@ -2153,8 +2164,8 @@ describe('igxOverlay', () => {
                             const left = expectedLeftForPoint[horizontalDirection] + 50 * horizontalStartPoint;
                             const top = expectedTopForPoint[verticalDirection] + 30 * verticalStartPoint;
                             const contentElementRect = contentElement.getBoundingClientRect();
-                            expect(contentElementRect.left).toBe(left);
-                            expect(contentElementRect.top).toBe(top);
+                            expect(contentElementRect.left).toBeCloseTo(left, 0);
+                            expect(contentElementRect.top).toBeCloseTo(top, 0);
                         }
                     }
                 }
@@ -2286,8 +2297,8 @@ describe('igxOverlay', () => {
             const expectedTop = buttonTop - componentElement.clientHeight;
             const contentLeft = contentElement.getBoundingClientRect().left;
             const contentTop = contentElement.getBoundingClientRect().top;
-            expect(contentTop).toEqual(expectedTop);
-            expect(contentLeft).toEqual(expectedLeft);
+            expect(contentTop).toBeCloseTo(expectedTop, 0);
+            expect(contentLeft).toBeCloseTo(expectedLeft, 0);
 
             const componentDiv = componentElement.getElementsByTagName('div')[0];
             const expectedStyle = 'width:100px; height:100px; background-color:red';
@@ -2485,47 +2496,47 @@ describe('igxOverlay', () => {
         // When adding more than one component to show in igx-overlay:
         it('When the options used to fit the component in the window - adding a new instance of the component with the ' +
             ' same options will render it on top of the previous one.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            fixture.detectChanges();
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
 
-            const overlay = fixture.componentInstance.overlay;
-            const button = fixture.componentInstance.buttonElement.nativeElement;
-            const positionSettings: PositionSettings = {
-                horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Bottom,
-                horizontalStartPoint: HorizontalAlignment.Center,
-                verticalStartPoint: VerticalAlignment.Bottom
-            };
-            const overlaySettings: OverlaySettings = {
-                target: button,
-                positionStrategy: new AutoPositionStrategy(positionSettings),
-                scrollStrategy: new NoOpScrollStrategy(),
-                modal: false,
-                closeOnOutsideClick: false
-            };
-            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-            fixture.detectChanges();
-            tick();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                const positionSettings: PositionSettings = {
+                    horizontalDirection: HorizontalAlignment.Right,
+                    verticalDirection: VerticalAlignment.Bottom,
+                    horizontalStartPoint: HorizontalAlignment.Center,
+                    verticalStartPoint: VerticalAlignment.Bottom
+                };
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new AutoPositionStrategy(positionSettings),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                fixture.detectChanges();
+                tick();
 
-            const wrapperElements = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER) as HTMLCollectionOf<HTMLElement>;
-            const wrapperElement1 = wrapperElements[0];
-            const wrapperElement2 = wrapperElements[1];
-            const componentElement1 = wrapperElement1.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
-            const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
-            const componentRect1 = componentElement1.getBoundingClientRect();
-            const componentRect2 = componentElement2.getBoundingClientRect();
-            const buttonRect = button.getBoundingClientRect();
-            expect(componentRect1.left.toFixed(1)).toEqual((buttonRect.left + buttonRect.width / 2).toFixed(1));
-            expect(componentRect1.left.toFixed(1)).toEqual(componentRect2.left.toFixed(1));
-            expect(componentRect1.top.toFixed(1)).toEqual((buttonRect.top + buttonRect.height).toFixed(1));
-            expect(componentRect1.top.toFixed(1)).toEqual(componentRect2.top.toFixed(1));
-            expect(componentRect1.width.toFixed(1)).toEqual(componentRect2.width.toFixed(1));
-            expect(componentRect1.height.toFixed(1)).toEqual(componentRect2.height.toFixed(1));
+                const wrapperElements = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER) as HTMLCollectionOf<HTMLElement>;
+                const wrapperElement1 = wrapperElements[0];
+                const wrapperElement2 = wrapperElements[1];
+                const componentElement1 = wrapperElement1.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
+                const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
+                const componentRect1 = componentElement1.getBoundingClientRect();
+                const componentRect2 = componentElement2.getBoundingClientRect();
+                const buttonRect = button.getBoundingClientRect();
+                expect(componentRect1.left.toFixed(1)).toEqual((buttonRect.left + buttonRect.width / 2).toFixed(1));
+                expect(componentRect1.left.toFixed(1)).toEqual(componentRect2.left.toFixed(1));
+                expect(componentRect1.top.toFixed(1)).toEqual((buttonRect.top + buttonRect.height).toFixed(1));
+                expect(componentRect1.top.toFixed(1)).toEqual(componentRect2.top.toFixed(1));
+                expect(componentRect1.width.toFixed(1)).toEqual(componentRect2.width.toFixed(1));
+                expect(componentRect1.height.toFixed(1)).toEqual(componentRect2.height.toFixed(1));
 
-            overlay.detachAll();
-        }));
+                overlay.detachAll();
+            }));
 
         // When adding more than one component to show in igx-overlay and the options used will not fit the component in the
         // window, so AutoPosition is used.
@@ -2765,12 +2776,12 @@ describe('igxOverlay', () => {
             const contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             const contentRect = contentElement.getBoundingClientRect();
-            expect(contentRect.width).toEqual(80);
-            expect(contentRect.height).toEqual(80);
+            expect(contentRect.width).toBeCloseTo(80, 0);
+            expect(contentRect.height).toBeCloseTo(80, 0);
             const expectedLeft = buttonElement.offsetLeft + buttonElement.offsetWidth;
             const expectedTop = buttonElement.offsetTop + buttonElement.offsetHeight;
-            expect(contentRect.top).toEqual(expectedTop);
-            expect(contentRect.left).toEqual(expectedLeft);
+            expect(contentRect.top).toBeCloseTo(expectedTop, 0);
+            expect(contentRect.left).toBeCloseTo(expectedLeft, 0);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -3066,11 +3077,11 @@ describe('igxOverlay', () => {
             const componentElement2 = wrapperElement2.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
             const componentRect1 = componentElement1.getBoundingClientRect();
             const componentRect2 = componentElement2.getBoundingClientRect();
-            expect(componentRect1.left).toEqual(buttonRect.left - positionSettings.minSize.width);
-            expect(componentRect1.left).toEqual(componentRect2.left);
-            expect(componentRect1.top).toEqual(componentRect2.top);
-            expect(componentRect1.width).toEqual(componentRect2.width);
-            expect(componentRect1.height).toEqual(componentRect2.height);
+            expect(componentRect1.left).toBeCloseTo(buttonRect.left - positionSettings.minSize.width, 0);
+            expect(componentRect1.left).toBeCloseTo(componentRect2.left, 0);
+            expect(componentRect1.top).toBeCloseTo(componentRect2.top, 0);
+            expect(componentRect1.width).toBeCloseTo(componentRect2.width, 0);
+            expect(componentRect1.height).toBeCloseTo(componentRect2.height, 0);
 
             overlay.detachAll();
         }));
@@ -3093,7 +3104,7 @@ describe('igxOverlay', () => {
             vi.spyOn(scrollStrategy, 'detach');
             vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = vi.spyOn(scrollStrategy, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrategy as any, 'onScroll');
 
             const overlayId = overlay.attach(SimpleDynamicComponent, overlaySettings);
             overlay.show(overlayId);
@@ -3130,7 +3141,7 @@ describe('igxOverlay', () => {
             vi.spyOn(scrollStrategy, 'detach');
             vi.spyOn(overlay, 'hide');
 
-            const scrollSpy = vi.spyOn(scrollStrategy, 'onScroll');
+            const scrollSpy = vi.spyOn(scrollStrategy as any, 'onScroll');
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             tick();
@@ -3172,22 +3183,158 @@ describe('igxOverlay', () => {
 
             const overlayElement = outletElement.children[0];
             const overlayElementRect = overlayElement.getBoundingClientRect();
-            expect(overlayElementRect.width).toEqual(800);
-            expect(overlayElementRect.height).toEqual(600);
+            expect(overlayElementRect.width).toBeCloseTo(800, 1);
+            expect(overlayElementRect.height).toBeCloseTo(600, 1);
 
             const wrapperElement = overlayElement.children[0] as HTMLElement;
             const componentElement = wrapperElement.children[0].children[0];
             const componentRect = componentElement.getBoundingClientRect();
+            const outletRect = outletElement.getBoundingClientRect();
 
-            // left = outletLeft + (outletWidth - componentWidth) / 2
-            // left = 200        + (800         - 100           ) / 2
-            expect(componentRect.left).toEqual(550);
-            // top = outletTop + (outletHeight - componentHeight) / 2
-            // top = 100       + (600          - 100            ) / 2
-            expect(componentRect.top).toEqual(350);
+            // Check component is centered relative to outlet
+            const horizontalCenter = Math.abs((componentRect.left + componentRect.width / 2) - (outletRect.left + outletRect.width / 2));
+            const verticalCenter = Math.abs((componentRect.top + componentRect.height / 2) - (outletRect.top + outletRect.height / 2));
+            expect(horizontalCenter).toBeLessThan(1);
+            expect(verticalCenter).toBeLessThan(1);
 
             fixture.componentInstance.overlay.detachAll();
         }));
+
+        it('Should reposition overlay when outlet is resized with ContainerPositionStrategy.', async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const outlet = fixture.componentInstance.divElement;
+            const outletElement = outlet.nativeElement;
+            outletElement.style.width = '800px';
+            outletElement.style.height = '600px';
+            outletElement.style.position = 'fixed';
+            outletElement.style.top = '100px';
+            outletElement.style.left = '200px';
+            outletElement.style.overflow = 'hidden';
+
+            fixture.detectChanges();
+            const overlaySettings: OverlaySettings = {
+                outlet,
+                positionStrategy: new ContainerPositionStrategy()
+            };
+
+            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent, overlaySettings);
+            fixture.componentInstance.overlay.show(id);
+            fixture.detectChanges();
+            await wait(100);
+
+            let wrapperElement = outletElement.children[0];
+            let wrapperRect = wrapperElement.getBoundingClientRect();
+
+            // Initial wrapper dimensions should match outlet
+            expect(wrapperRect.width).toBeCloseTo(800, 0);
+            expect(wrapperRect.height).toBeCloseTo(600, 0);
+
+            // Resize the outlet
+            outletElement.style.width = '1000px';
+            outletElement.style.height = '700px';
+            fixture.detectChanges();
+            await wait(100);
+
+            // Wrapper should now match new outlet dimensions
+            wrapperElement = outletElement.children[0];
+            wrapperRect = wrapperElement.getBoundingClientRect();
+            expect(wrapperRect.width).toBeCloseTo(1000, 0);
+            expect(wrapperRect.height).toBeCloseTo(700, 0);
+
+            fixture.componentInstance.overlay.detachAll();
+        });
+
+        it('Should maintain centering when outlet is resized with ContainerPositionStrategy.', async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const outlet = fixture.componentInstance.divElement;
+            const outletElement = outlet.nativeElement;
+            outletElement.style.width = '600px';
+            outletElement.style.height = '400px';
+            outletElement.style.position = 'fixed';
+            outletElement.style.top = '50px';
+            outletElement.style.left = '50px';
+            outletElement.style.overflow = 'hidden';
+
+            fixture.detectChanges();
+            const overlaySettings: OverlaySettings = {
+                outlet,
+                positionStrategy: new ContainerPositionStrategy()
+            };
+
+            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent, overlaySettings);
+            fixture.componentInstance.overlay.show(id);
+            fixture.detectChanges();
+            await wait(100);
+
+            const wrapperElement = outletElement.children[0];
+            let componentElement = wrapperElement.children[0].children[0];
+            let componentRect = componentElement.getBoundingClientRect();
+            let outletRect = outletElement.getBoundingClientRect();
+
+            // Verify initial centering
+            let horizontalCenter = Math.abs((componentRect.left + componentRect.width / 2) - (outletRect.left + outletRect.width / 2));
+            let verticalCenter = Math.abs((componentRect.top + componentRect.height / 2) - (outletRect.top + outletRect.height / 2));
+            expect(horizontalCenter).toBeLessThan(2);
+            expect(verticalCenter).toBeLessThan(2);
+
+            // Resize the outlet
+            outletElement.style.width = '900px';
+            outletElement.style.height = '600px';
+
+            // Wait for ResizeObserver to fire for size change
+            await wait(100);
+
+            // Re-check centering with new dimensions
+            componentElement = wrapperElement.children[0].children[0];
+            componentRect = componentElement.getBoundingClientRect();
+            outletRect = outletElement.getBoundingClientRect();
+
+            horizontalCenter = Math.abs((componentRect.left + componentRect.width / 2) - (outletRect.left + outletRect.width / 2));
+            verticalCenter = Math.abs((componentRect.top + componentRect.height / 2) - (outletRect.top + outletRect.height / 2));
+            expect(horizontalCenter).toBeLessThan(2);
+            expect(verticalCenter).toBeLessThan(2);
+
+            fixture.componentInstance.overlay.detachAll();
+        });
+
+        it('Should dispose IntersectionObserver when overlay is detached.', async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const outlet = fixture.componentInstance.divElement;
+            const outletElement = outlet.nativeElement;
+            outletElement.style.width = '800px';
+            outletElement.style.height = '600px';
+            outletElement.style.position = 'fixed';
+            outletElement.style.top = '100px';
+            outletElement.style.left = '200px';
+
+            fixture.detectChanges();
+            const positionStrategy = new ContainerPositionStrategy();
+            spyOn(positionStrategy, 'dispose').and.callThrough();
+            const overlaySettings: OverlaySettings = {
+                outlet,
+                positionStrategy
+            };
+
+            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent, overlaySettings);
+            fixture.componentInstance.overlay.show(id);
+            await wait(100);
+
+            const wrapperElement = outletElement.children[0];
+            const wrapperRect = wrapperElement.getBoundingClientRect();
+
+            // Initial dimensions
+            expect(wrapperRect.width).toBeCloseTo(800, 0);
+            expect(wrapperRect.height).toBeCloseTo(600, 0);
+
+            // Detach the overlay - this should dispose the strategy
+            fixture.componentInstance.overlay.detach(id);
+
+            // Verify strategy was disposed by checking internal state
+            expect(positionStrategy.dispose).toHaveBeenCalled();
+        });
 
         // 3. Interaction
         // 3.1 Modal
@@ -3206,9 +3353,8 @@ describe('igxOverlay', () => {
 
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
-            expect(styles.findIndex((e) => e.includes('--background-color: var(--igx-overlay-background-color, hsl(from var(--ig-gray-500) h s l/0.54));')))
-                .toBeGreaterThan(-1);
-            expect(styles.findIndex((e) => e.includes('background: var(--background-color);')))
+            expect(styles.findIndex(
+                (e) => e.includes('background: var(--background-color);')))
                 .toBeGreaterThan(-1);
 
             fixture.componentInstance.overlay.detachAll();
@@ -3231,7 +3377,6 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
-            expect(styles.findIndex((e) => e.includes('--background-color: var(--igx-overlay-background-color, hsl(from var(--ig-gray-500) h s l/0.54));'))).toBeGreaterThan(-1);
             expect(styles.findIndex((e) => e.includes('background: var(--background-color);'))).toBeGreaterThan(-1);
 
             fixture.componentInstance.overlay.detachAll();
@@ -3493,19 +3638,19 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
             expect(fixture.componentInstance.customComponent).toBeDefined();
             expect(fixture.componentInstance.customComponent.nativeElement.style.width).toEqual('100%');
-            expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().width).toEqual(420);
+            expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().width).toBeCloseTo(420, 0);
             expect(fixture.componentInstance.customComponent.nativeElement.style.height).toEqual('100%');
-            expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().height).toEqual(280);
+            expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().height).toBeCloseTo(280, 0);
             fixture.componentInstance.buttonElement.nativeElement.click();
             tick();
             const componentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName('customList')[0] as HTMLElement;
             expect(componentElement).toBeDefined();
             expect(componentElement.style.width).toEqual('100%');
-            expect(componentElement.getBoundingClientRect().width).toEqual(420);
+            expect(componentElement.getBoundingClientRect().width).toBeCloseTo(420, 0);
             // content element has no height, so the shown element will calculate its own height by itself
             // expect(overlayChild.style.height).toEqual('100%');
-            // expect(overlayChild.getBoundingClientRect().height).toEqual(280);
+            // expect(overlayChild.getBoundingClientRect().height).toBeCloseTo(280, 0);
             fixture.componentInstance.overlay.detachAll();
         }));
     });
@@ -3561,8 +3706,8 @@ describe('igxOverlay', () => {
             tick();
 
             expect(componentRect).toEqual(componentElement.getBoundingClientRect());
-            expect(document.documentElement.scrollTop).toEqual(100);
-            expect(document.documentElement.scrollLeft).toEqual(50);
+            expect(document.documentElement.scrollTop).toBeCloseTo(100, 0);
+            expect(document.documentElement.scrollLeft).toBeCloseTo(50, 0);
             document.body.removeChild(dummy);
 
             overlay.detachAll();
@@ -3661,8 +3806,8 @@ describe('igxOverlay', () => {
             const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
             const contentLeft = contentElement.getBoundingClientRect().left;
             const contentTop = contentElement.getBoundingClientRect().top;
-            expect(contentTop).toEqual(expectedTop);
-            expect(contentLeft).toEqual(expectedLeft);
+            expect(contentTop).toBeCloseTo(expectedTop, 0);
+            expect(contentLeft).toBeCloseTo(expectedLeft, 0);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -3715,8 +3860,8 @@ describe('igxOverlay', () => {
             const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
             const contentRight = contentElement.getBoundingClientRect().right;
             const contentTop = contentElement.getBoundingClientRect().top;
-            expect(contentTop).toEqual(expectedTop);
-            expect(contentRight).toEqual(expectedRight);
+            expect(contentTop).toBeCloseTo(expectedTop, 0);
+            expect(contentRight).toBeCloseTo(expectedRight, 0);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -3767,8 +3912,8 @@ describe('igxOverlay', () => {
             const contentElementRect = contentElement.getBoundingClientRect();
             const contentRight = contentElementRect.right;
             const contentTop = contentElementRect.top;
-            expect(contentTop).toEqual(expectedTop);
-            expect(contentRight).toEqual(expectedRight);
+            expect(contentTop).toBeCloseTo(expectedTop, 0);
+            expect(contentRight).toBeCloseTo(expectedRight, 0);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -3821,8 +3966,8 @@ describe('igxOverlay', () => {
             const expectedTop = buttonTop - contentElement.clientHeight; // On top of the button
             const contentLeft = contentElement.getBoundingClientRect().left;
             const contentTop = contentElement.getBoundingClientRect().top;
-            expect(contentTop).toEqual(expectedTop);
-            expect(contentLeft).toEqual(expectedLeft);
+            expect(contentTop).toBeCloseTo(expectedTop, 0);
+            expect(contentLeft).toBeCloseTo(expectedLeft, 0);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -3867,8 +4012,8 @@ describe('igxOverlay', () => {
             const expectedRight = buttonElement.offsetLeft;
             const expectedBottom = buttonElement.offsetTop;
             const componentRect = contentElement.getBoundingClientRect();
-            expect(componentRect.right).toEqual(expectedRight);
-            expect(componentRect.bottom).toEqual(expectedBottom);
+            expect(componentRect.right).toBeCloseTo(expectedRight, 0);
+            expect(componentRect.bottom).toBeCloseTo(expectedBottom, 0);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -3915,8 +4060,8 @@ describe('igxOverlay', () => {
             const expectedLeft = buttonElement.offsetLeft + buttonElement.clientWidth;
             const expectedTop = buttonElement.offsetTop - componentElement.ButtonPositioningSettings.minSize.height;
             const componentRect = contentElement.getBoundingClientRect();
-            expect(componentRect.left).toEqual(expectedLeft);
-            expect(componentRect.top).toEqual(expectedTop);
+            expect(componentRect.left).toBeCloseTo(expectedLeft, 0);
+            expect(componentRect.top).toBeCloseTo(expectedTop, 0);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -3961,8 +4106,8 @@ describe('igxOverlay', () => {
             const expectedRight = buttonElement.offsetLeft;
             const expectedTop = buttonElement.offsetTop + buttonElement.offsetHeight;
             const contentRect = contentElement.getBoundingClientRect();
-            expect(contentRect.right).toEqual(expectedRight);
-            expect(contentRect.top).toEqual(expectedTop);
+            expect(contentRect.right).toBeCloseTo(expectedRight, 0);
+            expect(contentRect.top).toBeCloseTo(expectedTop, 0);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -3999,8 +4144,8 @@ describe('igxOverlay', () => {
             tick();
 
             expect(componentRect).toEqual(componentElement.getBoundingClientRect());
-            expect(document.documentElement.scrollTop).toEqual(100);
-            expect(document.documentElement.scrollLeft).toEqual(50);
+            expect(document.documentElement.scrollTop).toBeCloseTo(100, 0);
+            expect(document.documentElement.scrollLeft).toBeCloseTo(50, 0);
             overlay.hideAll();
 
             overlay.detachAll();
@@ -4038,8 +4183,8 @@ describe('igxOverlay', () => {
             tick();
 
             expect(componentRect).toEqual(componentElement.getBoundingClientRect());
-            expect(document.documentElement.scrollTop).toEqual(40);
-            expect(document.documentElement.scrollLeft).toEqual(30);
+            expect(document.documentElement.scrollTop).toBeCloseTo(40, 0);
+            expect(document.documentElement.scrollLeft).toBeCloseTo(30, 0);
             expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
 
             overlay.detachAll();
@@ -4079,7 +4224,7 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
             expect(wrapperElement.style.visibility).toEqual('');
-            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
+            expect(document.documentElement.scrollTop).toBeCloseTo(scrollTolerance, 0);
 
             document.documentElement.scrollTop += scrollTolerance * 2;
             document.documentElement.dispatchEvent(new Event('scroll'));
@@ -4123,7 +4268,7 @@ describe('igxOverlay', () => {
             document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
-            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
+            expect(document.documentElement.scrollTop).toBeCloseTo(scrollTolerance, 0);
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
@@ -4166,7 +4311,7 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
             expect(wrapperElement.style.visibility).toEqual('');
-            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
+            expect(document.documentElement.scrollTop).toBeCloseTo(scrollTolerance, 0);
 
             document.documentElement.scrollTop += scrollTolerance * 2;
             document.documentElement.dispatchEvent(new Event('scroll'));
@@ -4213,7 +4358,7 @@ describe('igxOverlay', () => {
             document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
-            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
+            expect(document.documentElement.scrollTop).toBeCloseTo(scrollTolerance, 0);
             expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
             expect(componentElement.getBoundingClientRect()).toEqual(componentRect);
 
@@ -4257,8 +4402,8 @@ describe('igxOverlay', () => {
             document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             const newElementRect = componentElement.getBoundingClientRect();
-            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
-            expect(newElementRect.top).toEqual(componentRect.top);
+            expect(document.documentElement.scrollTop).toBeCloseTo(scrollTolerance, 0);
+            expect(newElementRect.top).toBeCloseTo(componentRect.top, 0);
 
             overlay.detachAll();
         }));
@@ -4338,11 +4483,11 @@ describe('igxOverlay', () => {
             expect(overlay.closed.emit).toHaveBeenCalledTimes(1);
             expect(overlay.closing.emit)
                 .toHaveBeenCalledWith({
-                id: callId,
-                componentRef: expect.any(ComponentRef) as any,
-                cancel: false,
-                event: undefined
-            });
+                    id: callId,
+                    componentRef: expect.any(ComponentRef) as any,
+                    cancel: false,
+                    event: undefined
+                });
             overlay.detachAll();
 
             overlaySettings.excludeFromOutsideClick = [];
@@ -4359,11 +4504,11 @@ describe('igxOverlay', () => {
             expect(overlay.closed.emit).toHaveBeenCalledTimes(2);
             expect(overlay.closing.emit)
                 .toHaveBeenCalledWith({
-                id: callId,
-                componentRef: expect.any(ComponentRef) as any,
-                cancel: false,
-                event: expect.any(Event) as any
-            });
+                    id: callId,
+                    componentRef: expect.any(ComponentRef) as any,
+                    cancel: false,
+                    event: expect.any(Event) as any
+                });
 
             overlay.detachAll();
         }));

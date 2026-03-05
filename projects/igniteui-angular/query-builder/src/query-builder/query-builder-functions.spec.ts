@@ -605,44 +605,41 @@ export class QueryBuilderFunctions {
                     expect(element.classList.contains('igx-input-group__input')).toBe(true);
                     break;
                 case 2:
-                    expect(element.classList.contains('igx-combo__toggle-button')).toBe(true);
-                    break;
-                case 3:
                     expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('and');
                     break;
-                case 4:
+                case 3:
                     expect(element.classList.contains('igx-chip')).toBe(true);
+                    break;
+                case 4:
+                    expect(element.classList.contains('igx-icon')).toBe(true);
                     break;
                 case 5:
-                    expect(element.classList.contains('igx-icon')).toBe(true);
+                    expect(element.classList.contains('igx-chip__remove')).toBe(true);
                     break;
                 case 6:
-                    expect(element.classList.contains('igx-chip__remove')).toBe(true);
+                    expect(element.classList.contains('igx-chip')).toBe(true);
                     break;
                 case 7:
-                    expect(element.classList.contains('igx-chip')).toBe(true);
+                    expect(element.classList.contains('igx-icon')).toBe(true);
                     break;
                 case 8:
-                    expect(element.classList.contains('igx-icon')).toBe(true);
+                    expect(element.classList.contains('igx-chip__remove')).toBe(true);
                     break;
                 case 9:
-                    expect(element.classList.contains('igx-chip__remove')).toBe(true);
-                    break;
-                case 10:
                     expect(element.classList.contains('igx-chip')).toBe(true);
                     break;
-                case 11:
+                case 10:
                     expect(element.classList.contains('igx-icon')).toBe(true);
                     break;
-                case 12:
+                case 11:
                     expect(element.classList.contains('igx-chip__remove')).toBe(true);
                     break;
-                case 13:
+                case 12:
                     expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Condition');
                     break;
-                case 14:
+                case 13:
                     expect(element.classList.contains('igx-button')).toBe(true);
                     expect(element.innerText).toContain('Group');
                     break;
@@ -773,7 +770,7 @@ export class QueryBuilderFunctions {
 
     public static verifyRootAndSubGroupExpressionsCount(fix: ComponentFixture<any>, rootDirect: number, rootTotal: number = null, subGroupPath: number[] = null, subGroupDirect: number = null, subGroupTotal: number = null) {
         const rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-        expect(rootGroup).not.toBeNull('There is no root group.');
+        expect(rootGroup, 'There is no root group.').not.toBeNull();
         expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length, 'Root direct condition count not correct').toBe(rootDirect);
         expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length, 'Root direct + child condition count not correct').toBe(rootTotal);
         if (subGroupPath) {
@@ -1055,6 +1052,6 @@ export class QueryBuilderFunctions {
         }
 
         //When dragged to the end, check results
-        expect(ghostPositionVisits).not.toContain(false, `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()}`);
+        expect(ghostPositionVisits, `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()}`).not.toContain(false);
     }
 }

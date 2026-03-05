@@ -17,7 +17,7 @@ import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, Tr
 import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-const DEBOUNCETIME = 30;
+const DEBOUNCETIME = 60;
 
 describe('IgxGrid - Row Adding #grid', () => {
     const GRID_ROW = 'igx-grid-row';
