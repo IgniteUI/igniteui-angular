@@ -7,7 +7,7 @@ Position strategies determine where to display the component in the provided Igx
 |:---------------------------|:-------------------------|
 | HorizontalAlignment.Center | VerticalAlignment.Middle |
 
-2) **Container** - Positions the element inside the containing outlet based on the directions passed in trough PositionSettings. These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection. Defaults to:
+2) **Container** - Positions the element inside the containing outlet based on the directions passed in trough PositionSettings. These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection. **Note:** The `outlet` property in `OverlaySettings` is deprecated; use `keepInPlace` to keep overlays in their original DOM position instead. Defaults to:
 
 | horizontalDirection        | verticalDirection        |
 |:---------------------------|:-------------------------|

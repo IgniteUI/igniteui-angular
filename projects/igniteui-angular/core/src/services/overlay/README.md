@@ -78,7 +78,8 @@ this.overlay.show(component, overlaySettings);
 | scrollStrategy      | IScrollStrategy                         | Scroll strategy to use with this settings           |
 | modal               | boolean                                 | Set if the overlay should be in modal mode          |
 | closeOnOutsideClick | boolean                                 | Set if the overlay should closed on outside click   |
-| outlet              | IgxOverlayOutletDirective or ElementRef | Set the outlet container to attach the overlay to   |
+| outlet              | IgxOverlayOutletDirective or ElementRef | **Deprecated.** Use `keepInPlace` property to keep the overlay in its original DOM position. Sets the outlet container to attach the overlay to.   |
+| keepInPlace          | boolean                                 | When set to `true`, the overlay element stays in its original DOM position instead of being moved to the overlay container. Uses the HTML Popover API to promote the element to the top layer in-place. Defaults to `false`. |
 
 ###### PositionSettings
 
@@ -135,7 +136,7 @@ this.overlay.show(component, overlaySettings);
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
 |getPointFromPositionsSettings| Calculates the point from which the overlay should start showing    |settings    |
-|createAbsoluteOverlaySettings| Creates overlay settings with global or container position strategy based on a preset position settings    |position?, outlet?|
+|createAbsoluteOverlaySettings| Creates overlay settings with global or container position strategy based on a preset position settings. **Note:** The `outlet` parameter is deprecated; prefer using `keepInPlace` in the returned `OverlaySettings`.    |position?, outlet?|
 |createRelativeOverlaySettings| Creates overlay settings with auto, connected or elastic position strategy based on a preset position settings    |target, strategy?, position?|
 
 

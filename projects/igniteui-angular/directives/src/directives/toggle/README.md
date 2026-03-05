@@ -103,9 +103,11 @@ Providing reference from custom component which has already been registered into
 |:----------:|:-------------|:------|
 | `igxToggleAction`| `IToggleView` \| `string` | Determines the target that have to be controled. |
 | `overlaySettings` | `OverlaySettings`| Passes `igxOverlay` settings for applicable targets (`igxToggle`) that control positioning, interaction and scroll behavior.
-| `igxToggleOutlet` | `IgxOverlayOutletDirective` \| `ElementRef`| Determines where the target overlay element should be attached. Shortcut for `overlaySettings.outlet`.
+| `igxToggleOutlet` | `IgxOverlayOutletDirective` \| `ElementRef`| **Deprecated.** Use `keepInPlace` in `overlaySettings` to keep the overlay in its original DOM position. Previously determined where the target overlay element should be attached (shortcut for `overlaySettings.outlet`).
 
 # IgxOverlayOutlet Directive
+
+> **Deprecated.** The `outlet` property on `OverlaySettings` is deprecated. Use the `keepInPlace` property in `OverlaySettings` to keep the overlay element in its original DOM position using the HTML Popover API.
 
 The **IgxOverlayOutlet** provides a way to mark an element as an `igxOverlay` outlet container through the component template only.
 Directive instance is exported as `overlay-outlet`, so it can be assigned within the template:
@@ -117,4 +119,11 @@ This allows to provide the `outlet` templates variable as a setting to the toggl
 ```html
 <button type="button" igxButton [igxToggleAction]="reference" [igxToggleOutlet]="outlet">Toggle</button>
 <custom-component #reference></custom-component>
+```
+
+As an alternative to using an outlet, you can set `keepInPlace` to `true` in your `OverlaySettings` so the overlay stays in its original DOM position:
+```typescript
+const overlaySettings: OverlaySettings = {
+    keepInPlace: true
+};
 ```
