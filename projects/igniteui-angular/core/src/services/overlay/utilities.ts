@@ -132,8 +132,11 @@ export interface OverlaySettings {
     closeOnEscape?: boolean;
     /* blazorSuppress */
     /**
-     * @deprecated The `outlet` property is deprecated. Use `keepInPlace` property to keep the overlay in its original DOM position.
-     * Set the outlet container to attach the overlay to */
+     * @deprecated The `outlet` property is deprecated. There is no direct 1:1 replacement for attaching overlays to an arbitrary outlet
+     * container. If you only used `outlet` to keep the overlay in its current DOM position (i.e. not moved to the overlay container),
+     * use the `keepInPlace` property instead.
+     * Set the outlet container to attach the overlay to.
+     */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
      * @hidden @internal

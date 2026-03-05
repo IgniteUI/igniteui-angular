@@ -962,7 +962,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private handleClosing(e: IBaseCancelableBrowserEventArgs): void {
         const args = { owner: this, cancel: e?.cancel, event: e?.event };
         this.closing.emit(args);
-        console.log('closing', args);
         e.cancel = args.cancel;
         if (args.cancel) {
             return;
