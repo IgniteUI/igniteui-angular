@@ -506,12 +506,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         positionStrategy: new AutoPositionStrategy({
             openAnimation: fadeIn,
             closeAnimation: fadeOut
-        })
+        }),
+        keepInPlace: true
     };
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true,
-        closeOnEscape: true
+        closeOnEscape: true,
+        keepInPlace: true
     };
     private _calendarFormat: IFormattingOptions = {
         day: 'numeric',
