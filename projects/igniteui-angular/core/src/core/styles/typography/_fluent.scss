@@ -78,7 +78,7 @@
     //     description: 'body-2',
     //     body: 'caption'
     // ));
-    @include excel-filtering-typography();
+    //@include excel-filtering-typography();
     @include icon-button-typography();
     // @include input-group-typography($categories: (
     //    helper-text: 'caption',
@@ -124,5 +124,5 @@
     @include label-typography($categories: (
         label: 'subtitle-2'
     ));
-	@include query-builder-typography();
+	//@include query-builder-typography();
 }
