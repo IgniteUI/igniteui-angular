@@ -1,0 +1,590 @@
+﻿[
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\avatar\\src\\avatar\\avatar.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\badge\\src\\badge\\badge.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\bottom-nav\\src\\bottom-nav\\bottom-nav.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\button-group\\src\\button-group\\button-group.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\calendar\\src\\calendar\\days-view\\days-view.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\calendar\\src\\calendar\\month-picker\\month-picker.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\calendar\\src\\calendar\\calendar.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\card\\src\\card\\card.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\chat\\src\\chat.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\chat-extras\\src\\markdown-service.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\checkbox\\src\\checkbox\\checkbox.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\chips\\src\\chips\\chip.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\chips\\src\\chips\\chips-area.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\core\\i18n\\formatters\\formatter-base.spec.ts",
+        "UsedFunctions":  "describe, it, expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\core\\i18n\\formatters\\formatter-intl.spec.ts",
+        "UsedFunctions":  "describe, it, expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\core\\i18n\\resources.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\core\\selection.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\core\\utils.spec.ts",
+        "UsedFunctions":  "describe, it, expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\data-operations\\data-util.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\data-operations\\expressions-tree-util.spec.ts",
+        "UsedFunctions":  "describe, it, expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\data-operations\\filtering-condition.spec.ts",
+        "UsedFunctions":  "describe, it, expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\data-operations\\filtering-strategy.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\data-operations\\groupby-strategy.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\data-operations\\sorting-strategy.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\date-common\\util\\date-time.util.spec.ts",
+        "UsedFunctions":  "describe, it, expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\date-common\\util\\helpers.spec.ts",
+        "UsedFunctions":  "describe, it, expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\date-common\\util\\model.spec.ts",
+        "UsedFunctions":  "describe, it, expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\services\\direction\\directionality.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\core\\src\\services\\transaction\\igx-transaction.spec.ts",
+        "UsedFunctions":  "describe, it, expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\date-picker\\src\\date-picker\\calendar-container\\calendar-container.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\date-picker\\src\\date-picker\\date-picker.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\date-picker\\src\\date-range-picker\\predefined-ranges\\predefined-ranges-area-component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\date-picker\\src\\date-range-picker\\date-range-picker.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\dialog\\src\\dialog\\dialog.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\button\\button.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\button\\icon-button.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\divider\\divider.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\drag-drop\\drag-drop.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\filter\\filter.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\focus\\focus.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\focus-trap\\focus-trap.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\for-of\\for_of.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach, beforeAll"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\form-control\\form-control.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\layout\\layout.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\mask\\mask.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\scroll-inertia\\scroll_inertia.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach, test"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\size\\ig-size.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\text-highlight\\text-highlight.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\text-selection\\text-selection.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\directives\\src\\directives\\toggle\\toggle.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\drop-down\\src\\drop-down\\autocomplete\\autocomplete.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\expansion-panel\\src\\expansion-panel\\expansion-panel.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\expansion-panel\\src\\expansion-panel\\toggle-animation-component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\common\\random.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeAll, afterAll"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\grid-actions\\grid-editing-actions.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\grid-actions\\grid-pinning-actions.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\services\\csv\\csv-exporter-grid.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\services\\csv\\csv-exporter.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\services\\csv\\csv-verification-wrapper.spec.ts",
+        "UsedFunctions":  "expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\services\\excel\\excel-exporter-grid.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\services\\excel\\excel-exporter.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\services\\excel\\zip-verification-wrapper.spec.ts",
+        "UsedFunctions":  "expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\services\\exporter-common\\test-methods.spec.ts",
+        "UsedFunctions":  "expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\state.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\state.hierarchicalgrid.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, test"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\state.pivotgrid.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\core\\src\\state.treegrid.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\cell-merge.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\cell.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\column-group.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\column-hiding.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\column-pinning.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\column-resizing.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\column-selection.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\column.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-add-row.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-cell-editing.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-clipboard.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-collapsible-columns.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, test"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-filtering-ui.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-filtering.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-keyBoardNav-headers.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-keyBoardNav.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-mrl-keyboard-nav.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-row-editing.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-row-pinning.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-row-selection.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-toolbar.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid-validation.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.crud.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.groupby.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.master-detail.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, test"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.multi-row-layout.integration.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.multi-row-layout.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.nested.props.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.pagination.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.pinning.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.search.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\grid.sorting.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\grid\\src\\row-drag.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\hierarchical-grid\\src\\hierarchical-grid-add-row.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\hierarchical-grid\\src\\hierarchical-grid.integration.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\hierarchical-grid\\src\\hierarchical-grid.navigation.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach, afterAll"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\hierarchical-grid\\src\\hierarchical-grid.selection.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\hierarchical-grid\\src\\hierarchical-grid.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\hierarchical-grid\\src\\hierarchical-grid.virtualization.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\pivot-grid\\src\\pivot-data-selector.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\pivot-grid\\src\\pivot-grid-keyboard-nav.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\pivot-grid\\src\\pivot-grid.pipes.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\pivot-grid\\src\\pivot-grid.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-add-row-ui.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-crud.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-expanding.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-filtering.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-grouping.pipe.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-grouping.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-indentation.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-integration.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-keyBoardNav.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-multi-cell-selection.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-search.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-selection.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid-summaries.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\grids\\tree-grid\\src\\tree-grid.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, afterEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\icon\\src\\icon\\icon.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\icon\\src\\icon\\icon.service.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\input-group\\src\\input-group\\directives-hint\\hint.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\input-group\\src\\input-group\\directives-input\\input.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\input-group\\src\\input-group\\directives-input\\read-only-input.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\input-group\\src\\input-group\\input-group.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\list\\src\\list\\list.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\paginator\\src\\paginator\\paginator.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\progressbar\\src\\progressbar\\circularbar.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\progressbar\\src\\progressbar\\linearbar.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\progressbar\\src\\progressbar\\progressbar.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\query-builder\\src\\query-builder\\query-builder-functions.spec.ts",
+        "UsedFunctions":  "expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\radio\\src\\radio\\radio-group\\radio-group.directive.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\radio\\src\\radio\\radio.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\snackbar\\src\\snackbar\\snackbar.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\splitter\\src\\splitter\\splitter.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\stepper\\src\\stepper\\stepper.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach, beforeAll, afterAll"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\switch\\src\\switch\\switch.component.spec.ts",
+        "UsedFunctions":  "describe, it, expect, beforeEach"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\test-utils\\controls-functions.spec.ts",
+        "UsedFunctions":  "expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\test-utils\\grid-validation-samples.spec.ts",
+        "UsedFunctions":  "test"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\test-utils\\pivot-grid-functions.spec.ts",
+        "UsedFunctions":  "expect"
+    },
+    {
+        "File":  "C:\\Users\\SStoychev\\Documents\\Git\\igniteui-angular\\projects\\igniteui-angular\\test-utils\\tree-grid-functions.spec.ts",
+        "UsedFunctions":  "expect"
+    }
+]

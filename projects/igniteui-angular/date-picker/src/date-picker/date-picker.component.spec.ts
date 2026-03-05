@@ -2,20 +2,11 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from 
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import {
-    IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
-} from '../../../input-group/src/public_api';
+import { IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective } from '../../../calendar/src/public_api';
 import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
-import {
-    IgxOverlayOutletDirective,
-    IgxOverlayService,
-    OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
-    WEEKDAYS,
-    BaseFormatter,
-    I18N_FORMATTER
-} from 'igniteui-angular/core';
+import { IgxOverlayOutletDirective, IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings, WEEKDAYS, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
@@ -27,6 +18,8 @@ import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { query } from '@angular/animations';
 
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
@@ -65,10 +58,10 @@ describe('IgxDatePicker', () => {
             it('Should render default toggle and clear icons', () => {
                 const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
-                expect(prefix).toHaveSize(1);
+                expect(prefix).toHaveLength(1);
                 expect(prefix[0].nativeElement.innerText).toEqual(DATE_PICKER_TOGGLE_ICON);
                 const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
-                expect(suffix).toHaveSize(1);
+                expect(suffix).toHaveLength(1);
                 expect(suffix[0].nativeElement.innerText).toEqual(DATE_PICKER_CLEAR_ICON);
             });
 
@@ -80,9 +73,9 @@ describe('IgxDatePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(datePicker['_calendar'].hasHeader).toBeFalse();
+                expect(datePicker['_calendar'].hasHeader).toBe(false);
                 const calendarHeader = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_HEADER));
-                expect(calendarHeader).toBeFalsy('Calendar header should not be present');
+                expect(calendarHeader, 'Calendar header should not be present').toBeFalsy();
             }));
 
             it('should set calendar orientation property', fakeAsync(() => {
@@ -93,7 +86,7 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 expect(datePicker['_calendar'].orientation).toEqual(PickerCalendarOrientation.Horizontal.toString());
-                expect(datePicker['_calendar'].wrapper.nativeElement).not.toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                expect(datePicker['_calendar'].wrapper.nativeElement.classList.contains(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL)).toBe(false);
                 datePicker.close();
                 tick();
                 fixture.detectChanges();
@@ -104,7 +97,7 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 expect(datePicker['_calendar'].orientation).toEqual(PickerCalendarOrientation.Vertical.toString());
-                expect(datePicker['_calendar'].wrapper.nativeElement).toHaveClass(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL);
+                expect(datePicker['_calendar'].wrapper.nativeElement.classList.contains(CSS_CLASS_CALENDAR_WRAPPER_VERTICAL)).toBe(true);
             }));
 
             it('should initialize activeDate with current date, when not set', fakeAsync(() => {
@@ -195,10 +188,10 @@ describe('IgxDatePicker', () => {
             }));
 
             it('should be able to cancel opening/closing', fakeAsync(() => {
-                spyOn(datePicker.opening, 'emit').and.callThrough();
-                spyOn(datePicker.opened, 'emit').and.callThrough();
-                spyOn(datePicker.closing, 'emit').and.callThrough();
-                spyOn(datePicker.closed, 'emit').and.callThrough();
+                vi.spyOn(datePicker.opening, 'emit');
+                vi.spyOn(datePicker.opened, 'emit');
+                vi.spyOn(datePicker.closing, 'emit');
+                vi.spyOn(datePicker.closed, 'emit');
 
                 const openingSub = datePicker.opening.subscribe((event) => event.cancel = true);
 
@@ -244,12 +237,12 @@ describe('IgxDatePicker', () => {
             }));
 
             it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
-                spyOn(datePicker.opening, 'emit').and.callThrough();
-                spyOn(datePicker.opened, 'emit').and.callThrough();
-                spyOn(datePicker.closing, 'emit').and.callThrough();
-                spyOn(datePicker.closed, 'emit').and.callThrough();
+                vi.spyOn(datePicker.opening, 'emit');
+                vi.spyOn(datePicker.opened, 'emit');
+                vi.spyOn(datePicker.closing, 'emit');
+                vi.spyOn(datePicker.closed, 'emit');
                 expect(datePicker.collapsed).toBeTruthy();
-                expect(datePicker.isFocused).toBeFalse();
+                expect(datePicker.isFocused).toBe(false);
 
                 const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', picker, true);
@@ -262,10 +255,8 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
 
                 const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                expect(calendarWrapper.contains(document.activeElement))
-                    .withContext('focus should move to calendar for KB nav')
-                    .toBeTrue();
-                expect(datePicker.isFocused).toBeTrue();
+                expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
+                expect(datePicker.isFocused).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                 tick(350);
@@ -273,15 +264,13 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
-                expect(inputGroup.nativeElement.contains(document.activeElement))
-                    .withContext('focus should return to the picker input')
-                    .toBeTrue();
-                expect(datePicker.isFocused).toBeTrue();
+                expect(inputGroup.nativeElement.contains(document.activeElement), 'focus should return to the picker input').toBe(true);
+                expect(datePicker.isFocused).toBe(true);
             }));
 
             it('should open the calendar with SPACE key', fakeAsync(() => {
-                spyOn(datePicker.opening, 'emit').and.callThrough();
-                spyOn(datePicker.opened, 'emit').and.callThrough();
+                vi.spyOn(datePicker.opening, 'emit');
+                vi.spyOn(datePicker.opened, 'emit');
                 expect(datePicker.collapsed).toBeTruthy();
 
                 const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
@@ -300,8 +289,8 @@ describe('IgxDatePicker', () => {
 
             it('should close the calendar with ESC', fakeAsync(() => {
                 datePicker.mode = 'dropdown';
-                spyOn(datePicker.closing, 'emit').and.callThrough();
-                spyOn(datePicker.closed, 'emit').and.callThrough();
+                vi.spyOn(datePicker.closing, 'emit');
+                vi.spyOn(datePicker.closed, 'emit');
 
                 expect(datePicker.collapsed).toBeTruthy();
                 datePicker.open();
@@ -310,10 +299,8 @@ describe('IgxDatePicker', () => {
 
                 expect(datePicker.collapsed).toBeFalsy();
                 const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                expect(calendarWrapper.contains(document.activeElement))
-                    .withContext('focus should move to calendar for KB nav')
-                    .toBeTrue();
-                expect(datePicker.isFocused).toBeTrue();
+                expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
+                expect(datePicker.isFocused).toBe(true);
 
 
                 UIInteractions.triggerKeyDownEvtUponElem('Escape', calendarWrapper, true);
@@ -323,10 +310,8 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
-                expect(inputGroup.nativeElement.contains(document.activeElement))
-                    .withContext('focus should return to the picker input')
-                    .toBeTrue();
-                expect(datePicker.isFocused).toBeTrue();
+                expect(inputGroup.nativeElement.contains(document.activeElement), 'focus should return to the picker input').toBe(true);
+                expect(datePicker.isFocused).toBe(true);
             }));
 
             it('should update the calendar selection on typing', fakeAsync(() => {
@@ -383,9 +368,7 @@ describe('IgxDatePicker', () => {
         });
 
         describe('NgControl integration', () => {
-            let fixture: ComponentFixture<IgxDatePickerNgModelComponent |
-                IgxDatePickerInFormComponent |
-                IgxDatePickerReactiveFormComponent>;
+            let fixture: ComponentFixture<IgxDatePickerNgModelComponent | IgxDatePickerInFormComponent | IgxDatePickerReactiveFormComponent>;
             let datePicker: IgxDatePickerComponent;
 
             beforeEach(fakeAsync(() => {
@@ -509,7 +492,7 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 expect(datePicker.locale).toEqual(locale);
-                expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY)
+                expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY);
 
 
                 datePicker.locale = 'frrr';
@@ -578,18 +561,18 @@ describe('IgxDatePicker', () => {
                 const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
 
                 const label = inputGroup.queryAll(By.directive(IgxLabelDirective));
-                expect(label).toHaveSize(1);
+                expect(label).toHaveLength(1);
                 expect(label[0].nativeElement.innerText).toEqual('Label');
                 const hint = inputGroup.queryAll(By.directive(IgxHintDirective));
-                expect(hint).toHaveSize(1);
+                expect(hint).toHaveLength(1);
                 expect(hint[0].nativeElement.innerText).toEqual('Hint');
 
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
-                expect(prefix).toHaveSize(2);
+                expect(prefix).toHaveLength(2);
                 expect(prefix[0].nativeElement.innerText).toEqual(DATE_PICKER_TOGGLE_ICON);
                 expect(prefix[1].nativeElement.innerText).toEqual('Prefix');
                 const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
-                expect(suffix).toHaveSize(2);
+                expect(suffix).toHaveLength(2);
                 expect(suffix[0].nativeElement.innerText).toEqual(DATE_PICKER_CLEAR_ICON);
                 expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
             });
@@ -602,11 +585,11 @@ describe('IgxDatePicker', () => {
                 const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
 
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
-                expect(prefix).toHaveSize(2);
+                expect(prefix).toHaveLength(2);
                 expect(prefix[0].nativeElement.innerText).toEqual('CustomToggle');
                 expect(prefix[1].nativeElement.innerText).toEqual('Prefix');
                 const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
-                expect(suffix).toHaveSize(2);
+                expect(suffix).toHaveLength(2);
                 expect(suffix[0].nativeElement.innerText).toEqual('CustomClear');
                 expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
             });
@@ -617,8 +600,8 @@ describe('IgxDatePicker', () => {
                 fixture.componentInstance.showCustomClear = true;
                 fixture.componentInstance.showCustomToggle = true;
                 fixture.detectChanges();
-                spyOn(datePicker, 'open');
-                spyOn(datePicker, 'clear');
+                vi.spyOn(datePicker, 'open');
+                vi.spyOn(datePicker, 'clear');
 
                 const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
                 const toggleElem = inputGroup.query(By.directive(IgxPickerToggleComponent));
@@ -626,9 +609,11 @@ describe('IgxDatePicker', () => {
                 let toggle = fixture.componentInstance.customToggle;
                 let clear = fixture.componentInstance.customClear;
 
-                expect(toggle.clicked.observers).toHaveSize(1);
-                expect(clear.clicked.observers).toHaveSize(1);
-                const event = jasmine.createSpyObj('event', ['stopPropagation']);
+                expect(toggle.clicked.observers).toHaveLength(1);
+                expect(clear.clicked.observers).toHaveLength(1);
+                const event = {
+                    stopPropagation: vi.fn().mockName("event.stopPropagation")
+                };
                 toggleElem.triggerEventHandler('click', event);
                 expect(datePicker.open).toHaveBeenCalledTimes(1);
                 clearElem.triggerEventHandler('click', event);
@@ -637,12 +622,12 @@ describe('IgxDatePicker', () => {
                 // hide
                 fixture.componentInstance.showCustomToggle = false;
                 fixture.detectChanges();
-                expect(toggle.clicked.observers).toHaveSize(0);
-                expect(clear.clicked.observers).toHaveSize(1);
+                expect(toggle.clicked.observers).toHaveLength(0);
+                expect(clear.clicked.observers).toHaveLength(1);
                 fixture.componentInstance.showCustomClear = false;
                 fixture.detectChanges();
-                expect(toggle.clicked.observers).toHaveSize(0);
-                expect(clear.clicked.observers).toHaveSize(0);
+                expect(toggle.clicked.observers).toHaveLength(0);
+                expect(clear.clicked.observers).toHaveLength(0);
 
                 // show again
                 fixture.componentInstance.showCustomClear = true;
@@ -650,12 +635,12 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
                 toggle = fixture.componentInstance.customToggle;
                 clear = fixture.componentInstance.customClear;
-                expect(toggle.clicked.observers).toHaveSize(1);
-                expect(clear.clicked.observers).toHaveSize(1);
+                expect(toggle.clicked.observers).toHaveLength(1);
+                expect(clear.clicked.observers).toHaveLength(1);
 
                 datePicker.ngOnDestroy();
-                expect(toggle.clicked.observers).toHaveSize(0);
-                expect(clear.clicked.observers).toHaveSize(0);
+                expect(toggle.clicked.observers).toHaveLength(0);
+                expect(clear.clicked.observers).toHaveLength(0);
             });
         });
 
@@ -663,40 +648,40 @@ describe('IgxDatePicker', () => {
             let fixture: ComponentFixture<IgxDatePickerWithTemplatesComponent>;
 
             beforeEach(fakeAsync(() => {
-              TestBed.configureTestingModule({
-                imports: [IgxDatePickerWithTemplatesComponent]
-              }).compileComponents();
+                TestBed.configureTestingModule({
+                    imports: [IgxDatePickerWithTemplatesComponent]
+                }).compileComponents();
 
-              fixture = TestBed.createComponent(IgxDatePickerWithTemplatesComponent);
-              fixture.detectChanges();
+                fixture = TestBed.createComponent(IgxDatePickerWithTemplatesComponent);
+                fixture.detectChanges();
             }));
 
             it('Should use the custom template for header title', fakeAsync(() => {
-              const testDate = new Date(2024, 10, 11);
-              fixture.componentInstance.datePicker.value = testDate;
-              fixture.componentInstance.datePicker.open();
-              tick();
-              fixture.detectChanges();
+                const testDate = new Date(2024, 10, 11);
+                fixture.componentInstance.datePicker.value = testDate;
+                fixture.componentInstance.datePicker.open();
+                tick();
+                fixture.detectChanges();
 
-              const headerTitleElement = fixture.debugElement.query(By.css('.igx-calendar__header-year'));
-              expect(headerTitleElement).toBeTruthy('Header title element should be present');
-              if (headerTitleElement) {
-                expect(headerTitleElement.nativeElement.textContent.trim()).toBe('2024');
-              }
+                const headerTitleElement = fixture.debugElement.query(By.css('.igx-calendar__header-year'));
+                expect(headerTitleElement, 'Header title element should be present').toBeTruthy();
+                if (headerTitleElement) {
+                    expect(headerTitleElement.nativeElement.textContent.trim()).toBe('2024');
+                }
             }));
 
             it('Should use the custom template for header', fakeAsync(() => {
-              const testDate = new Date(2024, 10, 11);
-              fixture.componentInstance.datePicker.value = testDate;
-              fixture.componentInstance.datePicker.open();
-              tick();
-              fixture.detectChanges();
+                const testDate = new Date(2024, 10, 11);
+                fixture.componentInstance.datePicker.value = testDate;
+                fixture.componentInstance.datePicker.open();
+                tick();
+                fixture.detectChanges();
 
-              const headerElement = fixture.debugElement.query(By.css('.igx-calendar__header-date'));
-              expect(headerElement).toBeTruthy('Header element should be present');
-              if (headerElement) {
-                expect(headerElement.nativeElement.textContent.trim()).toBe('Nov');
-              }
+                const headerElement = fixture.debugElement.query(By.css('.igx-calendar__header-date'));
+                expect(headerElement, 'Header element should be present').toBeTruthy();
+                if (headerElement) {
+                    expect(headerElement.nativeElement.textContent.trim()).toBe('Nov');
+                }
             }));
         });
 
@@ -729,9 +714,7 @@ describe('IgxDatePicker', () => {
                 const today = new Date(new Date().setHours(0, 0, 0, 0)).getTime().toString();
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
-                expect(wrapper.contains(document.activeElement))
-                    .withContext('focus should move to calendar for KB nav')
-                    .toBeTrue();
+                expect(wrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
             }));
 
             it('should focus today\'s date when an invalid date is selected', fakeAsync(() => {
@@ -748,9 +731,7 @@ describe('IgxDatePicker', () => {
                 const today = new Date(new Date().setHours(0, 0, 0, 0)).getTime().toString();
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
-                expect(wrapper.contains(document.activeElement))
-                    .withContext('focus should move to calendar for KB nav')
-                    .toBeTrue();
+                expect(wrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
             }));
 
             it('should return focus to date picker input after calendar click select', fakeAsync(() => {
@@ -769,9 +750,7 @@ describe('IgxDatePicker', () => {
                 tick();
                 fixture.detectChanges();
                 expect(datePicker.value).toEqual(today);
-                expect(inputGroup.contains(document.activeElement))
-                    .withContext('focus should return to the picker input')
-                    .toBeTrue();
+                expect(inputGroup.contains(document.activeElement), 'focus should return to the picker input').toBe(true);
             }));
         });
 
@@ -850,14 +829,21 @@ describe('IgxDatePicker', () => {
         const mockOverlayId = '1';
         const today = new Date();
         const elementRef = {
-            nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['blur', 'click', 'focus'])
+            nativeElement: {
+                blur: vi.fn().mockName("mockElement.blur"),
+                click: vi.fn().mockName("mockElement.click"),
+                focus: vi.fn().mockName("mockElement.focus")
+            }
         };
         let mockNgControl: any;
         let mockControlInstance: any;
         let renderer2: Renderer2;
 
         beforeEach(() => {
-            renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
+            // TODO: vitest-migration: Cannot transform jasmine.createSpyObj with a dynamic property map. Please migrate this manually. See: https://vitest.dev/api/vi.html#vi-fn
+            renderer2 = {
+                setAttribute: vi.fn().mockName("Renderer2.setAttribute")
+            };
             mockControlInstance = {
                 _touched: false,
                 get touched() {
@@ -902,12 +888,14 @@ describe('IgxDatePicker', () => {
                 },
                 valid: true
             };
-            mockInjector = jasmine.createSpyObj('Injector', {
-                get: mockNgControl
-            });
+            mockInjector = {
+                get: vi.fn().mockName("Injector.get").mockReturnValue(mockNgControl)
+            };
 
-            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
+            mockCdr = {
+                detectChanges: vi.fn().mockName("ChangeDetectorRef.detectChanges")
+            };
+            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => { } };
             const mockComponentInstance = {
                 calendar: mockCalendar,
                 todaySelection: new EventEmitter<any>(),
@@ -968,8 +956,14 @@ describe('IgxDatePicker', () => {
                     this._isRequired = val;
                 },
                 element: {
-                    nativeElement: jasmine.createSpyObj('mockElement',
-                        ['focus', 'blur', 'click', 'addEventListener', 'removeEventListener', 'querySelector'])
+                    nativeElement: {
+                        focus: vi.fn().mockName("mockElement.focus"),
+                        blur: vi.fn().mockName("mockElement.blur"),
+                        click: vi.fn().mockName("mockElement.click"),
+                        addEventListener: vi.fn().mockName("mockElement.addEventListener"),
+                        removeEventListener: vi.fn().mockName("mockElement.removeEventListener"),
+                        querySelector: vi.fn().mockName("mockElement.querySelector")
+                    }
                 }
             } as any;
             mockInputDirective = {
@@ -1087,7 +1081,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.disabled).toBeTruthy();
                 datePicker.disabled = false;
                 const mockDisabledDates: DateRangeDescriptor[] = [{ type: DateRangeType.Weekdays },
-                { type: DateRangeType.Before, dateRange: [today] }];
+                    { type: DateRangeType.Before, dateRange: [today] }];
                 datePicker.disabledDates = mockDisabledDates;
                 expect(datePicker.disabledDates).toEqual(mockDisabledDates);
                 datePicker.displayFormat = 'MM/yy/DD';
@@ -1154,15 +1148,18 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.maxValue).toEqual('12/12/1998');
                 datePicker.outlet = null;
                 expect(datePicker.outlet).toEqual(null);
-                const mockEl: ElementRef = jasmine.createSpyObj<ElementRef>('mockEl', ['nativeElement']);
+                const mockEl: ElementRef = {
+                    nativeElement: vi.fn().mockName("mockEl.nativeElement")
+                };
                 datePicker.outlet = mockEl;
                 expect(datePicker.outlet).toEqual(mockEl);
-                const mockOverlayDirective: IgxOverlayOutletDirective =
-                    jasmine.createSpyObj<IgxOverlayOutletDirective>('mockEl', ['nativeElement']);
+                const mockOverlayDirective: IgxOverlayOutletDirective = {
+                    nativeElement: vi.fn().mockName("mockEl.nativeElement")
+                };
                 datePicker.outlet = mockOverlayDirective;
                 expect(datePicker.outlet).toEqual(mockOverlayDirective);
                 const specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Weekdays },
-                { type: DateRangeType.Before, dateRange: [today] }];
+                    { type: DateRangeType.Before, dateRange: [today] }];
                 datePicker.specialDates = specialDates;
                 expect(datePicker.specialDates).toEqual(specialDates);
                 const spinDeltaSettings = { date: Infinity, month: Infinity };
@@ -1186,7 +1183,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.placeholder).toEqual('Buenos dias, muchachos');
                 datePicker.readOnly = true;
                 expect(datePicker.readOnly).toEqual(true);
-                spyOn(datePicker.valueChange, 'emit').and.callThrough();
+                vi.spyOn(datePicker.valueChange, 'emit');
                 datePicker.value = today;
                 expect(datePicker.value).toEqual(today);
                 expect(mockDateEditor.value).toEqual(today);
@@ -1211,8 +1208,8 @@ describe('IgxDatePicker', () => {
             });
 
             it('Should properly set date w/ `selectToday` methods', () => {
-                spyOn(datePicker, 'select');
-                spyOn(datePicker, 'close');
+                vi.spyOn(datePicker, 'select');
+                vi.spyOn(datePicker, 'close');
                 const now = new Date();
                 now.setHours(0);
                 now.setMinutes(0);
@@ -1224,8 +1221,8 @@ describe('IgxDatePicker', () => {
             });
 
             it('Should call underlying dateEditor decrement and increment methods', () => {
-                mockDateEditor.decrement = jasmine.createSpy();
-                mockDateEditor.increment = jasmine.createSpy();
+                mockDateEditor.decrement = vi.fn();
+                mockDateEditor.increment = vi.fn();
                 datePicker.decrement();
                 expect(mockDateEditor.decrement).toHaveBeenCalledWith(undefined, undefined);
                 const mockDatePart = {} as DatePart;
@@ -1246,54 +1243,43 @@ describe('IgxDatePicker', () => {
             });
 
             it('Should call underlying overlay `open` and `attach` methods with proper settings', () => {
-                spyOn(overlay, 'attach').and.returnValue(mockOverlayId);
-                spyOn(overlay, 'detach');
-                spyOn(overlay, 'show');
-                spyOn(overlay, 'hide');
+                vi.spyOn(overlay, 'attach').mockReturnValue(mockOverlayId);
+                vi.spyOn(overlay, 'detach');
+                vi.spyOn(overlay, 'show');
+                vi.spyOn(overlay, 'hide');
 
-                const baseDialogSettings: OverlaySettings = Object.assign(
-                    {},
-                    (datePicker as any)._dialogOverlaySettings
-                );
-                const baseDropdownSettings: OverlaySettings = Object.assign(
-                    {},
-                    (datePicker as any)._dropDownOverlaySettings,
-                    {
-                        target: mockInputGroup.element.nativeElement
-                    }
-                );
+                const baseDialogSettings: OverlaySettings = Object.assign({}, (datePicker as any)._dialogOverlaySettings);
+                const baseDropdownSettings: OverlaySettings = Object.assign({}, (datePicker as any)._dropDownOverlaySettings, {
+                    target: mockInputGroup.element.nativeElement
+                });
 
-                const collapsedSpy = spyOnProperty(datePicker, 'collapsed', 'get');
-                collapsedSpy.and.returnValue(false);
+                const collapsedSpy = vi.spyOn(datePicker, 'collapsed', 'get');
+                collapsedSpy.mockReturnValue(false);
                 datePicker.disabled = false;
                 datePicker.open();
                 expect(overlay.attach).not.toHaveBeenCalled();
-                collapsedSpy.and.returnValue(true);
+                collapsedSpy.mockReturnValue(true);
                 datePicker.disabled = true;
                 datePicker.open();
                 expect(overlay.attach).not.toHaveBeenCalled();
-                collapsedSpy.and.returnValue(false);
+                collapsedSpy.mockReturnValue(false);
                 datePicker.open();
                 expect(overlay.attach).not.toHaveBeenCalled();
-                collapsedSpy.and.returnValue(true);
+                collapsedSpy.mockReturnValue(true);
                 datePicker.disabled = false;
-                const isDropdownSpy = spyOnProperty(datePicker, 'isDropdown', 'get');
-                isDropdownSpy.and.returnValue(false);
+                const isDropdownSpy = vi.spyOn(datePicker, 'isDropdown', 'get');
+                isDropdownSpy.mockReturnValue(false);
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDialogSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
-                isDropdownSpy.and.returnValue(true);
+                isDropdownSpy.mockReturnValue(true);
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDropdownSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 const mockOutlet = {} as any;
                 datePicker.outlet = mockOutlet;
                 datePicker.open();
-                expect(overlay.attach).toHaveBeenCalledWith(
-                    IgxCalendarContainerComponent,
-                    viewsContainerRef,
-                    Object.assign({}, baseDropdownSettings, { outlet: mockOutlet }),
-                );
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, Object.assign({}, baseDropdownSettings, { outlet: mockOutlet }));
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 let mockSettings: OverlaySettings = {
                     closeOnEscape: true,
@@ -1302,26 +1288,18 @@ describe('IgxDatePicker', () => {
                 };
                 datePicker.outlet = null;
                 datePicker.open(mockSettings);
-                expect(overlay.attach).toHaveBeenCalledWith(
-                    IgxCalendarContainerComponent,
-                    viewsContainerRef,
-                    Object.assign({}, baseDropdownSettings, mockSettings),
-                );
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, Object.assign({}, baseDropdownSettings, mockSettings));
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
-                isDropdownSpy.and.returnValue(false);
+                isDropdownSpy.mockReturnValue(false);
                 mockSettings = {
                     closeOnEscape: false,
                     closeOnOutsideClick: false,
                     modal: false
                 };
                 datePicker.open(mockSettings);
-                expect(overlay.attach).toHaveBeenCalledWith(
-                    IgxCalendarContainerComponent,
-                    viewsContainerRef,
-                    Object.assign({}, baseDialogSettings, mockSettings),
-                );
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, Object.assign({}, baseDialogSettings, mockSettings));
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
-                isDropdownSpy.and.returnValue(true);
+                isDropdownSpy.mockReturnValue(true);
                 datePicker.overlaySettings = {
                     modal: false
                 };
@@ -1329,30 +1307,26 @@ describe('IgxDatePicker', () => {
                     modal: true
                 };
                 datePicker.open(mockSettings);
-                expect(overlay.attach).toHaveBeenCalledWith(
-                    IgxCalendarContainerComponent,
-                    viewsContainerRef,
-                    Object.assign({}, baseDropdownSettings, { modal: true }),
-                );
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, Object.assign({}, baseDropdownSettings, { modal: true }));
             });
 
             it('Should call underlying overlay `close` and `detach` methods with proper settings', () => {
-                spyOn(overlay, 'attach').and.returnValue(mockOverlayId);
-                spyOn(overlay, 'detach');
-                spyOn(overlay, 'show');
-                spyOn(overlay, 'hide');
+                vi.spyOn(overlay, 'attach').mockReturnValue(mockOverlayId);
+                vi.spyOn(overlay, 'detach');
+                vi.spyOn(overlay, 'show');
+                vi.spyOn(overlay, 'hide');
 
                 // init subscriptions
                 datePicker.ngAfterViewInit();
 
                 // assign overlayId
-                const collapsedSpy = spyOnProperty(datePicker, 'collapsed', 'get');
-                collapsedSpy.and.returnValue(true);
+                const collapsedSpy = vi.spyOn(datePicker, 'collapsed', 'get');
+                collapsedSpy.mockReturnValue(true);
                 datePicker.open();
                 datePicker.close();
                 expect(overlay.hide).not.toHaveBeenCalled();
                 expect(overlay.detach).not.toHaveBeenCalled();
-                collapsedSpy.and.returnValue(false);
+                collapsedSpy.mockReturnValue(false);
                 datePicker.close();
                 expect(overlay.hide).toHaveBeenCalled();
                 expect(overlay.hide).toHaveBeenCalledWith(mockOverlayId);
@@ -1365,23 +1339,24 @@ describe('IgxDatePicker', () => {
                 expect(renderer2.setAttribute).not.toHaveBeenCalled();
                 datePicker.ngAfterViewChecked();
                 expect(renderer2.setAttribute).not.toHaveBeenCalled();
-                (datePicker as any).labelDirective = jasmine.createSpyObj('mockLabel', ['any'], {
+                (datePicker as any).labelDirective = {
+                    any: vi.fn().mockName("mockLabel.any"),
                     id: 'mock-id'
-                });
+                };
                 datePicker.ngAfterViewChecked();
                 expect(renderer2.setAttribute).toHaveBeenCalledWith(mockInputDirective.nativeElement, 'aria-labelledby', 'mock-id');
             });
 
             it('Should properly handle click on editor provider', () => {
                 datePicker.ngAfterViewInit();
-                spyOn(datePicker, 'open');
+                vi.spyOn(datePicker, 'open');
                 expect(datePicker.open).not.toHaveBeenCalled();
                 expect(datePicker.getEditElement()).toEqual(mockInputDirective.nativeElement);
                 expect(datePicker.isDropdown).toBeTruthy();
                 datePicker.getEditElement().dispatchEvent('click' as any);
                 // does not call open when in DD mode
                 expect(datePicker.open).toHaveBeenCalledTimes(0);
-                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(false);
+                vi.spyOn(datePicker, 'isDropdown', 'get').mockReturnValue(false);
                 datePicker.getEditElement().dispatchEvent('click' as any);
                 expect(datePicker.open).toHaveBeenCalledTimes(1);
             });
@@ -1391,20 +1366,20 @@ describe('IgxDatePicker', () => {
                 datePicker.ngAfterViewInit();
 
                 datePicker.open();
-                expect(datePicker.collapsed).toBeFalse();
+                expect(datePicker.collapsed).toBe(false);
 
                 datePicker.close();
-                expect(datePicker.collapsed).toBeTrue();
+                expect(datePicker.collapsed).toBe(true);
 
                 datePicker.toggle();
-                expect(datePicker.collapsed).toBeFalse();
+                expect(datePicker.collapsed).toBe(false);
 
                 datePicker.toggle();
-                expect(datePicker.collapsed).toBeTrue();
+                expect(datePicker.collapsed).toBe(true);
             });
 
             it('should update the picker\'s value with the select method', () => {
-                spyOn(datePicker.valueChange, 'emit');
+                vi.spyOn(datePicker.valueChange, 'emit');
 
                 (datePicker as any).dateTimeEditor = { value: null, clear: () => { } };
                 datePicker.value = new Date();
@@ -1416,7 +1391,7 @@ describe('IgxDatePicker', () => {
             });
 
             it('should clear the picker\'s value with the clear method', () => {
-                spyOn(datePicker.valueChange, 'emit');
+                vi.spyOn(datePicker.valueChange, 'emit');
 
                 datePicker.value = today;
 
@@ -1431,8 +1406,8 @@ describe('IgxDatePicker', () => {
 
             //#region Events
             it('should properly emit open/close events', () => {
-                spyOn(datePicker.opened, 'emit');
-                spyOn(datePicker.closed, 'emit');
+                vi.spyOn(datePicker.opened, 'emit');
+                vi.spyOn(datePicker.closed, 'emit');
 
                 datePicker.ngAfterViewInit();
 
@@ -1444,8 +1419,8 @@ describe('IgxDatePicker', () => {
             });
 
             it('should properly emit opening/closing events', () => {
-                spyOn(datePicker.opening, 'emit');
-                spyOn(datePicker.closing, 'emit');
+                vi.spyOn(datePicker.opening, 'emit');
+                vi.spyOn(datePicker.closing, 'emit');
 
                 datePicker.ngAfterViewInit();
 
@@ -1457,7 +1432,7 @@ describe('IgxDatePicker', () => {
             });
 
             it('should emit valueChange when the value changes', () => {
-                spyOn(datePicker.valueChange, 'emit');
+                vi.spyOn(datePicker.valueChange, 'emit');
 
                 datePicker.ngAfterViewInit();
 
@@ -1468,10 +1443,10 @@ describe('IgxDatePicker', () => {
             });
 
             it('should emit validationFailed if a value outside of a given range was provided', () => {
-                spyOn(datePicker.validationFailed, 'emit');
+                vi.spyOn(datePicker.validationFailed, 'emit');
                 const validDate = new Date(2012, 5, 7);
                 const invalidDate = new Date(2012, 6, 1);
-                spyOnProperty(mockDateEditor, 'value', 'set').and.callFake((val: Date) => {
+                vi.spyOn(mockDateEditor, 'value', 'set').mockImplementation((val: Date) => {
                     if (val === invalidDate) {
                         mockDateEditor.validationFailed.emit({ oldValue: validDate });
                         return;
@@ -1487,13 +1462,12 @@ describe('IgxDatePicker', () => {
                 datePicker.value = validDate;
                 expect(datePicker.validationFailed.emit).not.toHaveBeenCalled();
                 datePicker.value = invalidDate;
-                expect(datePicker.validationFailed.emit).toHaveBeenCalledWith(
-                    { owner: datePicker, prevValue: validDate, currentValue: invalidDate });
+                expect(datePicker.validationFailed.emit).toHaveBeenCalledWith({ owner: datePicker, prevValue: validDate, currentValue: invalidDate });
             });
 
             it('Should change own value if value of underlying dateEditor changes', () => {
                 const validDate = new Date(2012, 5, 7);
-                spyOn(datePicker.valueChange, 'emit');
+                vi.spyOn(datePicker.valueChange, 'emit');
 
                 datePicker.ngAfterViewInit();
                 expect(datePicker.value).not.toEqual(validDate);
@@ -1509,12 +1483,12 @@ describe('IgxDatePicker', () => {
 
             it(`Should initialize and subscribe to underlying calendar's selected event and call proper methods`, () => {
                 datePicker.mode = PickerInteractionMode.Dialog;
-                spyOn(overlay, 'show');
+                vi.spyOn(overlay, 'show');
                 // assign overlay id
                 datePicker.open();
                 datePicker.ngAfterViewInit();
                 overlay.opening.emit(mockOverlayEventArgs);
-                spyOn(datePicker, 'close');
+                vi.spyOn(datePicker, 'close');
                 expect(datePicker.close).not.toHaveBeenCalled();
                 // calendar instance is initialized properly
                 expect(mockCalendar.hasHeader).toEqual(!datePicker.isDropdown);
@@ -1531,21 +1505,26 @@ describe('IgxDatePicker', () => {
 
                 // check how calendar.selected is handler
                 const init = DateTimeUtil.parseIsoDate;
-                const mockDate1 = jasmine.createSpyObj<Date>(
-                    'date',
-                    ['setHours', 'setMinutes', 'setSeconds', 'setMilliseconds']
-                );
-                const mockDate2 = jasmine.createSpyObj<Date>(
-                    'date',
-                    ['getHours', 'getMinutes', 'getSeconds', 'getMilliseconds', 'getTime']
-                );
-                mockDate2.getHours.and.returnValue(999);
-                mockDate2.getMinutes.and.returnValue(999);
-                mockDate2.getSeconds.and.returnValue(999);
-                mockDate2.getMilliseconds.and.returnValue(999);
-                mockDate2.getTime.and.returnValue(999);
-                const parseIsoDate = spyOn(DateTimeUtil, 'parseIsoDate');
-                parseIsoDate.and.callFake((val: string) => {
+                const mockDate1 = {
+                    setHours: vi.fn().mockName("date.setHours"),
+                    setMinutes: vi.fn().mockName("date.setMinutes"),
+                    setSeconds: vi.fn().mockName("date.setSeconds"),
+                    setMilliseconds: vi.fn().mockName("date.setMilliseconds")
+                };
+                const mockDate2 = {
+                    getHours: vi.fn().mockName("date.getHours"),
+                    getMinutes: vi.fn().mockName("date.getMinutes"),
+                    getSeconds: vi.fn().mockName("date.getSeconds"),
+                    getMilliseconds: vi.fn().mockName("date.getMilliseconds"),
+                    getTime: vi.fn().mockName("date.getTime")
+                };
+                mockDate2.getHours.mockReturnValue(999);
+                mockDate2.getMinutes.mockReturnValue(999);
+                mockDate2.getSeconds.mockReturnValue(999);
+                mockDate2.getMilliseconds.mockReturnValue(999);
+                mockDate2.getTime.mockReturnValue(999);
+                const parseIsoDate = vi.spyOn(DateTimeUtil, 'parseIsoDate');
+                parseIsoDate.mockImplementation((val: string) => {
                     if (val === undefined || mockDate1) {
                         return mockDate2;
                     } else {
@@ -1575,7 +1554,7 @@ describe('IgxDatePicker', () => {
                 expect(mockDate1.setMilliseconds).not.toHaveBeenCalledWith(999);
                 expect(datePicker.close).toHaveBeenCalled();
 
-                parseIsoDate.and.callFake(init);
+                parseIsoDate.mockImplementation(init);
 
                 const mockMinValue = new Date('02/02/2002');
                 const mockMaxValue = new Date('03/03/2003');
@@ -1587,7 +1566,7 @@ describe('IgxDatePicker', () => {
                         return defaultCheck(value);
                     }
                 };
-                spyOn(DateTimeUtil, 'isValidDate').and.callFake(mockCheck);
+                vi.spyOn(DateTimeUtil, 'isValidDate').mockImplementation(mockCheck);
                 expect(datePicker.disabledDates).toEqual(null);
                 expect(datePicker.minValue).toBeUndefined();
                 expect(datePicker.maxValue).toBeUndefined();
@@ -1634,7 +1613,7 @@ describe('IgxDatePicker', () => {
                     { type: DateRangeType.Before, dateRange: [mockMinValue] },
                     { type: DateRangeType.After, dateRange: [mockMaxValue] }
                 ]);
-                mockDate2.getTime.and.returnValue(Infinity);
+                mockDate2.getTime.mockReturnValue(Infinity);
                 mockCalendar.disabledDates = [];
                 datePicker.minValue = mockMinValue;
                 datePicker.maxValue = mockMaxValue;
@@ -1689,7 +1668,8 @@ describe('IgxDatePicker', () => {
     imports: [IgxDatePickerComponent]
 })
 export class IgxDatePickerTestComponent {
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent)
+    public datePicker: IgxDatePickerComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public date = new Date(2021, 24, 2, 11, 45, 0);
     public minValue;
@@ -1703,7 +1683,8 @@ export class IgxDatePickerTestComponent {
     imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerNgModelComponent {
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent)
+    public datePicker: IgxDatePickerComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public date = new Date(2021, 24, 2, 11, 45, 0);
     public minValue;
@@ -1720,7 +1701,8 @@ export class IgxDatePickerNgModelComponent {
     imports: [IgxDatePickerComponent, IgxLabelDirective]
 })
 export class IgxDatePickerTestKbrdComponent {
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent)
+    public datePicker: IgxDatePickerComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public date = new Date(2021, 24, 2, 11, 45, 0);
 }
@@ -1742,9 +1724,12 @@ export class IgxDatePickerTestKbrdComponent {
     imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxDatePickerWithProjectionsComponent {
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
-    @ViewChild(IgxPickerToggleComponent) public customToggle: IgxPickerToggleComponent;
-    @ViewChild(IgxPickerClearComponent) public customClear: IgxPickerClearComponent;
+    @ViewChild(IgxDatePickerComponent)
+    public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxPickerToggleComponent)
+    public customToggle: IgxPickerToggleComponent;
+    @ViewChild(IgxPickerClearComponent)
+    public customClear: IgxPickerClearComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public showCustomToggle = false;
     public showCustomClear = false;
@@ -1759,7 +1744,8 @@ export class IgxDatePickerWithProjectionsComponent {
     imports: [IgxDatePickerComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective]
 })
 export class IgxDatePickerWithTemplatesComponent {
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent)
+    public datePicker: IgxDatePickerComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.Dialog;
 }
 

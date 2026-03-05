@@ -1,5 +1,5 @@
-﻿import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
-import { formatNumber } from '@angular/common'
+import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
+import { formatNumber } from '@angular/common';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +20,7 @@ import { DefaultSortingStrategy, IGroupingExpression, IgxGrouping, IgxStringFilt
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -178,9 +179,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(actualValue2).toEqual(expectedValue2);
         expect(actualValue3).toEqual(expectedValue3);
 
-        checkGroups(
-            groupRows,
-            [null, fix.componentInstance.prevDay, fix.componentInstance.today, fix.componentInstance.nextDay]);
+        checkGroups(groupRows, [null, fix.componentInstance.prevDay, fix.componentInstance.today, fix.componentInstance.nextDay]);
     }));
 
     it('should only account for year, month and day when grouping by \'date\' dataType column', fakeAsync(() => {
@@ -344,10 +343,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(13);
         expect(dataRows.length).toEqual(8);
         // verify groups
-        checkGroups(groupRows,
-            ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
-                false, 'Ignite UI for Angular', false, null, '', true, null, true],
-            grid.groupingExpressions);
+        checkGroups(groupRows, ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
+            false, 'Ignite UI for Angular', false, null, '', true, null, true], grid.groupingExpressions);
 
         // group by 3rd column
 
@@ -363,10 +360,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(21);
         expect(dataRows.length).toEqual(8);
         // verify groups
-        checkGroups(groupRows,
-            ['NetAdvantage', true, 1000, false, 1000, 'Ignite UI for JavaScript', true, null, false, 254, 'Ignite UI for Angular',
-                false, 20, null, 1000, '', true, 100, null, true, 0],
-            grid.groupingExpressions);
+        checkGroups(groupRows, ['NetAdvantage', true, 1000, false, 1000, 'Ignite UI for JavaScript', true, null, false, 254, 'Ignite UI for Angular',
+            false, 20, null, 1000, '', true, 100, null, true, 0], grid.groupingExpressions);
     }));
 
     it('should allow grouping with a custom comparer', fakeAsync(() => {
@@ -499,10 +494,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(13);
         expect(dataRows.length).toEqual(8);
         // verify groups
-        checkGroups(groupRows,
-            ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
-                false, 'Ignite UI for Angular', false, null, '', true, null, true],
-            grid.groupingExpressions);
+        checkGroups(groupRows, ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
+            false, 'Ignite UI for Angular', false, null, '', true, null, true], grid.groupingExpressions);
 
         // change order
         grid.groupingExpressions = [
@@ -522,10 +515,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(11);
         expect(dataRows.length).toEqual(8);
         // verify groups
-        checkGroups(groupRows,
-            [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
-                'NetAdvantage', true, null, '', 'Ignite UI for JavaScript', 'NetAdvantage'],
-            grid.groupingExpressions);
+        checkGroups(groupRows, [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+            'NetAdvantage', true, null, '', 'Ignite UI for JavaScript', 'NetAdvantage'], grid.groupingExpressions);
     }));
 
     it('should group records correctly when ignoreCase is set to true.', fakeAsync(() => {
@@ -547,9 +538,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(2);
         expect(dataRows.length).toEqual(5);
         // verify groups
-        checkGroups(groupRows,
-            ['Order Administrator', 'Owner'],
-            grid.groupingExpressions);
+        checkGroups(groupRows, ['Order Administrator', 'Owner'], grid.groupingExpressions);
     }));
 
     it('should allow setting expand/collapse state', fakeAsync(() => {
@@ -716,7 +705,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         let groupsRecordsLength;
 
-        spyOn(grid.groupingDone, 'emit').and.callThrough();
+        vi.spyOn(grid.groupingDone, 'emit');
         grid.groupingDone.subscribe(() => {
             groupsRecordsLength = grid.groupsRecords.length;
         });
@@ -806,7 +795,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        spyOn(grid.groupingExpressionsChange, 'emit');
+        vi.spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
         const firstCellElem = grid.gridAPI.get_cell_by_index(2, 'Downloads');
         UIInteractions.simulateClickAndSelectEvent(firstCellElem);
@@ -825,7 +814,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        spyOn(grid.groupingExpressionsChange, 'emit');
+        vi.spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
         const chips = grid.groupArea.chips;
         grid.groupArea.handleClick(chips.first.id);
@@ -862,7 +851,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // no such column initially, so chip is disabled.
         const chips = grid.groupArea.chips;
-        expect(chips.first.disabled).toBeTrue();
+        expect(chips.first.disabled).toBe(true);
         const newCols = [...fix.componentInstance.columns];
         newCols.push({
             field: "NewColumn",
@@ -872,7 +861,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // column now exists and has groupable=true, so chip should be enabled.
-        expect(chips.first.disabled).toBeFalse();
+        expect(chips.first.disabled).toBe(false);
     });
 
     it('should update chip state on column groupable prop change', () => {
@@ -888,12 +877,12 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // initially should not be disabled.
         const chips = grid.groupArea.chips;
-        expect(chips.first.disabled).toBeFalse();
+        expect(chips.first.disabled).toBe(false);
 
         // should get disabled on groupable=false
         column.groupable = false;
         fix.detectChanges();
-        expect(chips.first.disabled).toBeTrue();
+        expect(chips.first.disabled).toBe(true);
     });
 
     // GroupBy + Sorting integration
@@ -927,40 +916,39 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     }));
 
-    it('should apply the specified sort order on the group rows when already grouped column is sorted in asc/desc order.',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.enableSorting = true;
-            fix.detectChanges();
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            fix.detectChanges();
+    it('should apply the specified sort order on the group rows when already grouped column is sorted in asc/desc order.', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
 
-            let groupRows = grid.groupsRowList.toArray();
-            let dataRows = grid.dataRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
-            // verify groups and data rows count
-            expect(groupRows.length).toEqual(5);
-            expect(dataRows.length).toEqual(8);
+        // verify groups and data rows count
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
 
-            // verify group order
-            checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
-            grid.sort({
-                fieldName: 'ProductName',
-                dir: SortingDirection.Asc,
-                ignoreCase: false
-            });
-            fix.detectChanges();
+        // verify group order
+        checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
+        grid.sort({
+            fieldName: 'ProductName',
+            dir: SortingDirection.Asc,
+            ignoreCase: false
+        });
+        fix.detectChanges();
 
-            groupRows = grid.groupsRowList.toArray();
-            dataRows = grid.dataRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
-            // verify group order
-            checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
+        // verify group order
+        checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
 
-        }));
+    }));
 
     it('should remove grouping when already grouped column is sorted with order "None" via the API.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -1005,7 +993,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         //header sort icon should not be displayed
         const sortIcon = headers[0].query(By.css('.sort-icon'));
-        expect(sortIcon).toBeNull()
+        expect(sortIcon).toBeNull();
     }));
 
     it('should group by the specified field when grouping by an already sorted field.', fakeAsync(() => {
@@ -1360,784 +1348,764 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
-    it('group row checkboxes should be checked when selectAll API is called or when header checkbox is clicked.',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
+    it('group row checkboxes should be checked when selectAll API is called or when header checkbox is clicked.', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
 
-            grid.selectAllRows();
-            fix.detectChanges();
+        grid.selectAllRows();
+        fix.detectChanges();
 
-            expect(grid.selectedRows.length).toEqual(8);
-            const grRows = grid.groupsRowList.toArray();
-            for (const grRow of grRows) {
-                expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
-            }
-            let rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
-            for (const r of rows) {
-                expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
-            }
+        expect(grid.selectedRows.length).toEqual(8);
+        const grRows = grid.groupsRowList.toArray();
+        for (const grRow of grRows) {
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+        }
+        let rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
+        for (const r of rows) {
+            expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
+        }
 
-            grid.deselectAllRows();
-            fix.detectChanges();
-            expect(grid.selectedRows.length).toEqual(0);
-            for (const grRow of grRows) {
-                expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
-            }
+        grid.deselectAllRows();
+        fix.detectChanges();
+        expect(grid.selectedRows.length).toEqual(0);
+        for (const grRow of grRows) {
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
+        }
 
-            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
-            fix.detectChanges();
+        GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+        fix.detectChanges();
 
-            expect(grid.selectedRows.length).toEqual(8);
+        expect(grid.selectedRows.length).toEqual(8);
 
-            rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
-            for (const grRow of grRows) {
-                expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
-            }
-            for (const r of rows) {
-                expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
-            }
-        }));
+        rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
+        for (const grRow of grRows) {
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+        }
+        for (const r of rows) {
+            expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
+        }
+    }));
 
     it(`should select all records for group by pressing space when selectionMode is multiple
-        and not all records within a group are selected and the groupRow is focused`,
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
+        and not all records within a group are selected and the groupRow is focused`, fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
 
-            const grRow = grid.groupsRowList.toArray()[0];
+        const grRow = grid.groupsRowList.toArray()[0];
 
-            grRow.activate();
-            tick();
-            fix.detectChanges();
+        grRow.activate();
+        tick();
+        fix.detectChanges();
 
-            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
-            GridFunctions.simulateGridContentKeydown(fix, 'Space');
-            fix.detectChanges();
+        const selectionSpy = vi.spyOn(grid.rowSelectionChanging, 'emit');
+        GridFunctions.simulateGridContentKeydown(fix, 'Space');
+        fix.detectChanges();
 
-            expect(selectionSpy).toHaveBeenCalledTimes(1);
-            const args = selectionSpy.calls.mostRecent().args[0];
-            expect(args.added.length).toBe(2);
-            expect(grid.selectedRows.length).toEqual(2);
+        expect(selectionSpy).toHaveBeenCalledTimes(1);
+        const args = vi.mocked(selectionSpy).mock.lastCall[0];
+        expect(args.added.length).toBe(2);
+        expect(grid.selectedRows.length).toEqual(2);
 
-            for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
-            }
+        for (const key of grRow.groupRow.records) {
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
+        }
 
-            grid.deselectAllRows();
-            fix.detectChanges();
+        grid.deselectAllRows();
+        fix.detectChanges();
 
-            grid.selectRows([grRow.groupRow.records[0]]);
-            fix.detectChanges();
+        grid.selectRows([grRow.groupRow.records[0]]);
+        fix.detectChanges();
 
-            GridFunctions.simulateGridContentKeydown(fix, 'Space');
-            fix.detectChanges();
+        GridFunctions.simulateGridContentKeydown(fix, 'Space');
+        fix.detectChanges();
 
-            for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
-            }
-        }));
+        for (const key of grRow.groupRow.records) {
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
+        }
+    }));
 
-    it('should not affect current row selection by pressing space when selectionMode is single and the groupRow is focused',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.single;
-            tick();
-            fix.detectChanges();
+    it('should not affect current row selection by pressing space when selectionMode is single and the groupRow is focused', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.single;
+        tick();
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
 
-            const selectionCount = grid.selectedRows.length;
+        const selectionCount = grid.selectedRows.length;
 
-            const grRow = grid.groupsRowList.toArray()[0];
+        const grRow = grid.groupsRowList.toArray()[0];
 
-            grRow.activate();
-            tick();
-            fix.detectChanges();
+        grRow.activate();
+        tick();
+        fix.detectChanges();
 
-            GridFunctions.simulateGridContentKeydown(fix, 'Space');
-            fix.detectChanges();
+        GridFunctions.simulateGridContentKeydown(fix, 'Space');
+        fix.detectChanges();
 
-            const newSelectionCount = grid.selectedRows.length;
+        const newSelectionCount = grid.selectedRows.length;
 
-            expect(selectionCount).toEqual(newSelectionCount);
+        expect(selectionCount).toEqual(newSelectionCount);
 
-        }));
+    }));
 
     it(`should deselect all records for group by pressing space when selectionMode is multiple
-        and all records within a group are selected and the groupRow is focused`,
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-            grid.selectRows(grRow.groupRow.records);
-            tick();
-            fix.detectChanges();
-
-            grRow.activate();
-            tick();
-            fix.detectChanges();
-
-            const selectionSpy = spyOn(grid.rowSelectionChanging, 'emit');
-            GridFunctions.simulateGridContentKeydown(fix, 'Space');
-            fix.detectChanges();
-
-            expect(selectionSpy).toHaveBeenCalledTimes(1);
-            const args = selectionSpy.calls.mostRecent().args[0];
-            expect(args.removed.length).toBe(2);
-            expect(grid.selectedRows.length).toEqual(0);
-
-            for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false));
-            }
-        }));
-
-    it('row selectors for all rows in certain group should be checked/unchecked if the checkbox for this group row is checked/unchecked',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-
-            for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false, false));
-            }
-
-            GridSelectionFunctions.clickRowCheckbox(grRow);
-            fix.detectChanges();
-
-            for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), true, true));
-            }
-        }));
-
-    it('the group row selector state should be checked if all records in the group are selected',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-
-            grid.selectRows(grRow.groupRow.records);
-            fix.detectChanges();
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
-        }));
-
-    it('the group row selector state should be undetermined if some of the records in the group but not all are selected',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-
-            grid.selectRows([grRow.groupRow.records[0]]);
-            fix.detectChanges();
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
-        }));
-
-    it('the group row selectors should be disabled if the grid selection mode is single',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.single;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false, true));
-        }));
-
-    it('group row checkbox should remain the right state after filter is applied, all rows are selected and filter is removed',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            grid.filter('ID', '2', IgxStringFilteringOperand.instance().condition('doesNotEqual'), true);
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-
-            GridSelectionFunctions.clickRowCheckbox(grRow);
-            fix.detectChanges();
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
-
-            grid.clearFilter();
-            tick();
-            fix.detectChanges();
-
-            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(grRow.groupRow.records[0]), false));
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
-        }));
-
-    it('group row checkbox should remain the right state after selecting all rows in group and adding a new row to that group',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-
-            GridSelectionFunctions.clickRowCheckbox(grRow);
-            fix.detectChanges();
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
-
-            const newRow = { ID: '9', ProductName: 'NetAdvantage', Downloads: '350' };
-            grid.addRow(newRow);
-            fix.detectChanges();
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
-        }));
-
-    it('should select/deselect all rows in group from API',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-            const grRecord = grid.groupsRecords[0];
-
-            grid.selectRowsInGroup(grRecord);
-            tick();
-            fix.detectChanges();
-
-            for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
-            }
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
-
-            grid.deselectRowsInGroup(grRecord);
-            tick();
-            fix.detectChanges();
-
-            for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false));
-            }
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
-        }));
-
-    it('should select/deselect all rows in group from API with PrimaryKey',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            grid.primaryKey = 'ID';
-            fix.detectChanges();
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-            const grRecord = grid.groupsRecords[0];
-
-            grid.selectRowsInGroup(grRecord);
-            tick();
-            fix.detectChanges();
-
-            for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key.ID)));
-            }
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
-
-            grid.deselectRowsInGroup(grRecord);
-            tick();
-            fix.detectChanges();
-
-            for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key.ID), false));
-            }
-
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
-        }));
-
-    it('ARIA support for groupby row selectors',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
-
-            const grRow = grid.groupsRowList.toArray()[0];
-            const groupByRowCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(grRow.element.nativeElement);
-
-            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('false');
-            expect(groupByRowCheckboxElement.getAttribute('aria-label'))
-                .toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
-
-            grid.selectRows([grRow.groupRow.records[0]]);
-            fix.detectChanges();
-
-            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('mixed');
-            expect(groupByRowCheckboxElement.getAttribute('aria-label'))
-                .toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
-
-            grid.selectRows([grRow.groupRow.records[1]]);
-            fix.detectChanges();
-
-            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('true');
-            expect(groupByRowCheckboxElement.getAttribute('aria-label'))
-                .toMatch('Deselect all rows in the group with field name ProductName and value NetAdvantage');
-
-        }));
+        and all records within a group are selected and the groupRow is focused`, fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+        grid.selectRows(grRow.groupRow.records);
+        tick();
+        fix.detectChanges();
+
+        grRow.activate();
+        tick();
+        fix.detectChanges();
+
+        const selectionSpy = vi.spyOn(grid.rowSelectionChanging, 'emit');
+        GridFunctions.simulateGridContentKeydown(fix, 'Space');
+        fix.detectChanges();
+
+        expect(selectionSpy).toHaveBeenCalledTimes(1);
+        const args = vi.mocked(selectionSpy).mock.lastCall[0];
+        expect(args.removed.length).toBe(2);
+        expect(grid.selectedRows.length).toEqual(0);
+
+        for (const key of grRow.groupRow.records) {
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false));
+        }
+    }));
+
+    it('row selectors for all rows in certain group should be checked/unchecked if the checkbox for this group row is checked/unchecked', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+
+        for (const key of grRow.groupRow.records) {
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false, false));
+        }
+
+        GridSelectionFunctions.clickRowCheckbox(grRow);
+        fix.detectChanges();
+
+        for (const key of grRow.groupRow.records) {
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), true, true));
+        }
+    }));
+
+    it('the group row selector state should be checked if all records in the group are selected', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+
+        grid.selectRows(grRow.groupRow.records);
+        fix.detectChanges();
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+    }));
+
+    it('the group row selector state should be undetermined if some of the records in the group but not all are selected', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+
+        grid.selectRows([grRow.groupRow.records[0]]);
+        fix.detectChanges();
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+    }));
+
+    it('the group row selectors should be disabled if the grid selection mode is single', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.single;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false, true));
+    }));
+
+    it('group row checkbox should remain the right state after filter is applied, all rows are selected and filter is removed', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        grid.filter('ID', '2', IgxStringFilteringOperand.instance().condition('doesNotEqual'), true);
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+
+        GridSelectionFunctions.clickRowCheckbox(grRow);
+        fix.detectChanges();
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+        grid.clearFilter();
+        tick();
+        fix.detectChanges();
+
+        expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(grRow.groupRow.records[0]), false));
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+    }));
+
+    it('group row checkbox should remain the right state after selecting all rows in group and adding a new row to that group', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+
+        GridSelectionFunctions.clickRowCheckbox(grRow);
+        fix.detectChanges();
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+        const newRow = { ID: '9', ProductName: 'NetAdvantage', Downloads: '350' };
+        grid.addRow(newRow);
+        fix.detectChanges();
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+    }));
+
+    it('should select/deselect all rows in group from API', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+        const grRecord = grid.groupsRecords[0];
+
+        grid.selectRowsInGroup(grRecord);
+        tick();
+        fix.detectChanges();
+
+        for (const key of grRow.groupRow.records) {
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
+        }
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+        grid.deselectRowsInGroup(grRecord);
+        tick();
+        fix.detectChanges();
+
+        for (const key of grRow.groupRow.records) {
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false));
+        }
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
+    }));
+
+    it('should select/deselect all rows in group from API with PrimaryKey', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+        const grRecord = grid.groupsRecords[0];
+
+        grid.selectRowsInGroup(grRecord);
+        tick();
+        fix.detectChanges();
+
+        for (const key of grRow.groupRow.records) {
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key.ID)));
+        }
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+        grid.deselectRowsInGroup(grRecord);
+        tick();
+        fix.detectChanges();
+
+        for (const key of grRow.groupRow.records) {
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key.ID), false));
+        }
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
+    }));
+
+    it('ARIA support for groupby row selectors', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+        const groupByRowCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(grRow.element.nativeElement);
+
+        expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('false');
+        expect(groupByRowCheckboxElement.getAttribute('aria-label'))
+            .toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
+
+        grid.selectRows([grRow.groupRow.records[0]]);
+        fix.detectChanges();
+
+        expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('mixed');
+        expect(groupByRowCheckboxElement.getAttribute('aria-label'))
+            .toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
+
+        grid.selectRows([grRow.groupRow.records[1]]);
+        fix.detectChanges();
+
+        expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('true');
+        expect(groupByRowCheckboxElement.getAttribute('aria-label'))
+            .toMatch('Deselect all rows in the group with field name ProductName and value NetAdvantage');
+
+    }));
 
     it(`edit selected row so it goes to another group where all rows are selected as well.
-        The group row checkbox of the new group that the record becomes part of should be checked.`,
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.enableEditing = true;
-            fix.componentInstance.width = '1200px';
-            grid.primaryKey = 'ID';
-            grid.columnWidth = '200px';
-            grid.rowSelection = GridSelectionMode.multiple;
-            fix.detectChanges();
+        The group row checkbox of the new group that the record becomes part of should be checked.`, fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableEditing = true;
+        fix.componentInstance.width = '1200px';
+        grid.primaryKey = 'ID';
+        grid.columnWidth = '200px';
+        grid.rowSelection = GridSelectionMode.multiple;
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
 
-            const grRow = grid.groupsRowList.toArray()[0];
+        const grRow = grid.groupsRowList.toArray()[0];
 
-            grid.selectRowsInGroup(grRow.groupRow);
-            grid.selectRows([5]);
-            fix.detectChanges();
+        grid.selectRowsInGroup(grRow.groupRow);
+        grid.selectRows([5]);
+        fix.detectChanges();
 
-            const cell = grid.getCellByKey(5, 'ProductName');
-            cell.column.editable = true;
-            fix.detectChanges();
+        const cell = grid.getCellByKey(5, 'ProductName');
+        cell.column.editable = true;
+        fix.detectChanges();
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
-            fix.detectChanges();
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
+        fix.detectChanges();
 
-            expect(cell.editMode).toBe(true);
-            expect(grid.selectedRows.length).toEqual(3);
+        expect(cell.editMode).toBe(true);
+        expect(grid.selectedRows.length).toEqual(3);
 
-            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
-            const input = editCellDom.query(By.css('input'));
+        const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+        const input = editCellDom.query(By.css('input'));
 
-            clickAndSendInputElementValue(input, 'NetAdvantage', fix);
-            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
-            fix.detectChanges();
+        clickAndSendInputElementValue(input, 'NetAdvantage', fix);
+        GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+        fix.detectChanges();
 
-            expect(grRow.groupRow.records.length).toEqual(3);
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
-        }));
+        expect(grRow.groupRow.records.length).toEqual(3);
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+    }));
 
     it(`edit selected row so it goes to another group where all rows are not selected.
-        The group row checkbox of the new group that the record becomes part of should be in indeterminate state.`,
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.enableEditing = true;
-            fix.componentInstance.width = '1200px';
-            grid.primaryKey = 'ID';
-            grid.columnWidth = '200px';
-            grid.rowSelection = GridSelectionMode.multiple;
-            fix.detectChanges();
+        The group row checkbox of the new group that the record becomes part of should be in indeterminate state.`, fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableEditing = true;
+        fix.componentInstance.width = '1200px';
+        grid.primaryKey = 'ID';
+        grid.columnWidth = '200px';
+        grid.rowSelection = GridSelectionMode.multiple;
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
 
-            const grRow = grid.groupsRowList.toArray()[0];
+        const grRow = grid.groupsRowList.toArray()[0];
 
-            grid.selectRows([5]);
-            fix.detectChanges();
+        grid.selectRows([5]);
+        fix.detectChanges();
 
-            const cell = grid.getCellByKey(5, 'ProductName');
-            cell.column.editable = true;
-            fix.detectChanges();
+        const cell = grid.getCellByKey(5, 'ProductName');
+        cell.column.editable = true;
+        fix.detectChanges();
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
-            fix.detectChanges();
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
+        fix.detectChanges();
 
-            expect(cell.editMode).toBe(true);
-            expect(grid.selectedRows.length).toEqual(1);
+        expect(cell.editMode).toBe(true);
+        expect(grid.selectedRows.length).toEqual(1);
 
-            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
-            const input = editCellDom.query(By.css('input'));
+        const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+        const input = editCellDom.query(By.css('input'));
 
-            clickAndSendInputElementValue(input, 'NetAdvantage', fix);
-            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
-            fix.detectChanges();
+        clickAndSendInputElementValue(input, 'NetAdvantage', fix);
+        GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+        fix.detectChanges();
 
-            expect(grRow.groupRow.records.length).toEqual(3);
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
-        }));
+        expect(grRow.groupRow.records.length).toEqual(3);
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+    }));
 
     it(`edit non-selected row so it goes to another group where all rows are selected.
-        The group row checkbox of the new group that the record becomes part of should become in indeterminate state.`,
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.enableEditing = true;
-            fix.componentInstance.width = '1200px';
-            grid.primaryKey = 'ID';
-            grid.columnWidth = '200px';
-            grid.rowSelection = GridSelectionMode.multiple;
-            fix.detectChanges();
+        The group row checkbox of the new group that the record becomes part of should become in indeterminate state.`, fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableEditing = true;
+        fix.componentInstance.width = '1200px';
+        grid.primaryKey = 'ID';
+        grid.columnWidth = '200px';
+        grid.rowSelection = GridSelectionMode.multiple;
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
 
-            const grRow = grid.groupsRowList.toArray()[0];
+        const grRow = grid.groupsRowList.toArray()[0];
 
-            grid.selectRowsInGroup(grRow.groupRow);
-            fix.detectChanges();
+        grid.selectRowsInGroup(grRow.groupRow);
+        fix.detectChanges();
 
-            const cell = grid.getCellByKey(5, 'ProductName');
-            cell.column.editable = true;
-            fix.detectChanges();
+        const cell = grid.getCellByKey(5, 'ProductName');
+        cell.column.editable = true;
+        fix.detectChanges();
 
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
-            fix.detectChanges();
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
+        fix.detectChanges();
 
-            expect(cell.editMode).toBe(true);
+        expect(cell.editMode).toBe(true);
 
-            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
-            const input = editCellDom.query(By.css('input'));
+        const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+        const input = editCellDom.query(By.css('input'));
 
-            clickAndSendInputElementValue(input, 'NetAdvantage', fix);
-            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
-            fix.detectChanges();
+        clickAndSendInputElementValue(input, 'NetAdvantage', fix);
+        GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+        fix.detectChanges();
 
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
-        }));
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+    }));
 
     it(`edit the only non-selected row in a group so that it moves to another group
-        and check whether the current group row checkbox becomes checked.`,
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.enableEditing = true;
-            fix.componentInstance.width = '1200px';
-            grid.primaryKey = 'ID';
-            grid.columnWidth = '200px';
-            grid.rowSelection = GridSelectionMode.multiple;
-            fix.detectChanges();
+        and check whether the current group row checkbox becomes checked.`, fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableEditing = true;
+        fix.componentInstance.width = '1200px';
+        grid.primaryKey = 'ID';
+        grid.columnWidth = '200px';
+        grid.rowSelection = GridSelectionMode.multiple;
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
 
-            const grRow = grid.groupsRowList.toArray()[0];
+        const grRow = grid.groupsRowList.toArray()[0];
 
-            grid.selectRows([2]);
-            fix.detectChanges();
+        grid.selectRows([2]);
+        fix.detectChanges();
 
-            const cell = grid.getCellByKey(8, 'ProductName');
-            cell.column.editable = true;
-            fix.detectChanges();
+        const cell = grid.getCellByKey(8, 'ProductName');
+        cell.column.editable = true;
+        fix.detectChanges();
 
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(8, 'ProductName'));
-            fix.detectChanges();
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(8, 'ProductName'));
+        fix.detectChanges();
 
-            expect(cell.editMode).toBe(true);
+        expect(cell.editMode).toBe(true);
 
-            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
-            const input = editCellDom.query(By.css('input'));
+        const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+        const input = editCellDom.query(By.css('input'));
 
-            clickAndSendInputElementValue(input, 'Ignite UI for Angular', fix);
-            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
-            fix.detectChanges();
+        clickAndSendInputElementValue(input, 'Ignite UI for Angular', fix);
+        GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+        fix.detectChanges();
 
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
-        }));
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+    }));
 
     it(`edit the only selected row in a group so that it moves to another group
-        and check whether the current group row checkbox becomes unchecked.`,
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.enableEditing = true;
-            fix.componentInstance.width = '1200px';
-            grid.primaryKey = 'ID';
-            grid.columnWidth = '200px';
-            grid.rowSelection = GridSelectionMode.multiple;
-            fix.detectChanges();
+        and check whether the current group row checkbox becomes unchecked.`, fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableEditing = true;
+        fix.componentInstance.width = '1200px';
+        grid.primaryKey = 'ID';
+        grid.columnWidth = '200px';
+        grid.rowSelection = GridSelectionMode.multiple;
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
 
-            const grRow = grid.groupsRowList.toArray()[0];
+        const grRow = grid.groupsRowList.toArray()[0];
 
-            grid.selectRows([2]);
-            fix.detectChanges();
+        grid.selectRows([2]);
+        fix.detectChanges();
 
-            const cell = grid.getCellByKey(2, 'ProductName');
-            cell.column.editable = true;
-            fix.detectChanges();
+        const cell = grid.getCellByKey(2, 'ProductName');
+        cell.column.editable = true;
+        fix.detectChanges();
 
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(2, 'ProductName'));
-            fix.detectChanges();
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(2, 'ProductName'));
+        fix.detectChanges();
 
-            expect(cell.editMode).toBe(true);
+        expect(cell.editMode).toBe(true);
 
-            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
-            const input = editCellDom.query(By.css('input'));
+        const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+        const input = editCellDom.query(By.css('input'));
 
-            clickAndSendInputElementValue(input, 'Ignite UI for Angular', fix);
-            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
-            fix.detectChanges();
+        clickAndSendInputElementValue(input, 'Ignite UI for Angular', fix);
+        GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+        fix.detectChanges();
 
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
-        }));
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
+    }));
 
-    it('groupRowCheckbox should be in the right state by deleting rows from that group',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
+    it('groupRowCheckbox should be in the right state by deleting rows from that group', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
 
-            const grRow1 = grid.groupsRowList.toArray()[0];
+        const grRow1 = grid.groupsRowList.toArray()[0];
 
-            grid.selectRows([grRow1.groupRow.records[0]]);
-            fix.detectChanges();
-            grid.deleteRowById(grRow1.groupRow.records[0]);
-            fix.detectChanges();
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow1, false, false));
+        grid.selectRows([grRow1.groupRow.records[0]]);
+        fix.detectChanges();
+        grid.deleteRowById(grRow1.groupRow.records[0]);
+        fix.detectChanges();
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow1, false, false));
 
-            const grRow2 = grid.groupsRowList.toArray()[1];
+        const grRow2 = grid.groupsRowList.toArray()[1];
 
-            grid.selectRows(grRow2.groupRow.records);
-            fix.detectChanges();
-            grid.deleteRowById(grRow2.groupRow.records[0]);
-            fix.detectChanges();
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow2, true, false));
+        grid.selectRows(grRow2.groupRow.records);
+        fix.detectChanges();
+        grid.deleteRowById(grRow2.groupRow.records[0]);
+        fix.detectChanges();
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow2, true, false));
 
-            const grRow3 = grid.groupsRowList.toArray()[2];
+        const grRow3 = grid.groupsRowList.toArray()[2];
 
-            grid.selectRows([grRow3.groupRow.records[1]]);
-            fix.detectChanges();
-            grid.deleteRowById(grRow3.groupRow.records[0]);
-            fix.detectChanges();
-            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow3, true, false));
-        }));
+        grid.selectRows([grRow3.groupRow.records[1]]);
+        fix.detectChanges();
+        grid.deleteRowById(grRow3.groupRow.records[0]);
+        fix.detectChanges();
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow3, true, false));
+    }));
 
-    it('should hide/show checkboxes when change hideRowSelectors',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
+    it('should hide/show checkboxes when change hideRowSelectors', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            tick();
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
 
-            grid.hideRowSelectors = true;
-            fix.detectChanges();
+        grid.hideRowSelectors = true;
+        fix.detectChanges();
 
-            const grRows = grid.groupsRowList.toArray();
+        const grRows = grid.groupsRowList.toArray();
 
-            for (const grRow of grRows) {
-                expect(GridSelectionFunctions.verifyRowHasCheckbox(grRow.element.nativeElement, false, false));
-            }
+        for (const grRow of grRows) {
+            expect(GridSelectionFunctions.verifyRowHasCheckbox(grRow.element.nativeElement, false, false));
+        }
 
-            grid.hideRowSelectors = false;
-            fix.detectChanges();
+        grid.hideRowSelectors = false;
+        fix.detectChanges();
 
-            for (const grRow of grRows) {
-                expect(GridSelectionFunctions.verifyRowHasCheckbox(grRow.element.nativeElement));
-            }
+        for (const grRow of grRows) {
+            expect(GridSelectionFunctions.verifyRowHasCheckbox(grRow.element.nativeElement));
+        }
 
-        }));
+    }));
 
     it('Should have the correct properties in the custom row selector template', fakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByRowCustomSelectorsComponent);
@@ -2160,7 +2128,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
         const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
 
-        spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
+        vi.spyOn(fix.componentInstance, 'onGroupByRowClick');
 
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
         fix.detectChanges();
@@ -2646,10 +2614,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
         let groupRows = grid.groupsRowList.toArray();
-        checkGroups(groupRows,
-            ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
-                false, 'Ignite UI for Angular', false, null, '', true, null, true],
-            grid.groupingExpressions);
+        checkGroups(groupRows, ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
+            false, 'Ignite UI for Angular', false, null, '', true, null, true], grid.groupingExpressions);
         const chips = grid.groupArea.chips;
         checkChips(chips, grid.groupingExpressions);
 
@@ -2668,10 +2634,8 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         groupRows = grid.groupsRowList.toArray();
         // verify groups
-        checkGroups(groupRows,
-            [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
-                'NetAdvantage', true, null, '', 'Ignite UI for JavaScript', 'NetAdvantage'],
-            grid.groupingExpressions);
+        checkGroups(groupRows, [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+            'NetAdvantage', true, null, '', 'Ignite UI for JavaScript', 'NetAdvantage'], grid.groupingExpressions);
         checkChips(chips, grid.groupingExpressions);
     }));
 
@@ -2778,53 +2742,51 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     });
 
-    it('should persist state for the correct group record when there are group records with the same fieldName and value.',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(GroupableGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.data = [
-                {
-                    Downloads: 0,
-                    ID: 1,
-                    ProductName: 'JavaScript',
-                    ReleaseDate: new Date(),
-                    Released: false
-                },
-                {
-                    Downloads: 0,
-                    ID: 2,
-                    ProductName: 'JavaScript',
-                    ReleaseDate: new Date(),
-                    Released: true
-                }
-            ];
-            tick();
-            fix.detectChanges();
+    it('should persist state for the correct group record when there are group records with the same fieldName and value.', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.data = [
+            {
+                Downloads: 0,
+                ID: 1,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: false
+            },
+            {
+                Downloads: 0,
+                ID: 2,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: true
+            }
+        ];
+        tick();
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'Released',
-                dir: SortingDirection.Asc,
-            });
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
-            });
+        grid.groupBy({
+            fieldName: 'Released',
+            dir: SortingDirection.Asc,
+        });
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
+        });
 
-            fix.detectChanges();
+        fix.detectChanges();
 
-            const groupRows = grid.groupsRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
 
-            // group rows that have the same fieldName and value but belong to different parent groups
-            const similarGroupRows = groupRows.filter((gRows) =>
-                gRows.groupRow.value === 'JavaScript' && gRows.groupRow.expression.fieldName);
-            expect(similarGroupRows.length).toEqual(2);
+        // group rows that have the same fieldName and value but belong to different parent groups
+        const similarGroupRows = groupRows.filter((gRows) => gRows.groupRow.value === 'JavaScript' && gRows.groupRow.expression.fieldName);
+        expect(similarGroupRows.length).toEqual(2);
 
-            // verify that if one is collapse the other remains expanded
-            similarGroupRows[0].toggle();
-            tick();
+        // verify that if one is collapse the other remains expanded
+        similarGroupRows[0].toggle();
+        tick();
 
-            expect(similarGroupRows[0].expanded).toEqual(false);
-            expect(similarGroupRows[1].expanded).toEqual(true);
-        }));
+        expect(similarGroupRows[0].expanded).toEqual(false);
+        expect(similarGroupRows[1].expanded).toEqual(true);
+    }));
 
     it('should render disabled non-interactable chip for column that does not allow grouping.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -2915,8 +2877,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         grid.groupBy([{
-            fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
-        }]);
+                fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
+            }]);
         fix.detectChanges();
 
         expect(groupRows[0].expanded).toEqual(true);
@@ -3022,8 +2984,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the ghostElement should receive events.
         UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 75, 30);
         await wait();
-        UIInteractions.simulatePointerEvent('pointermove',
-            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
         await wait();
         fix.detectChanges();
 
@@ -3039,10 +3000,8 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // verify groups
         const groupRows = grid.groupsRowList.toArray();
-        checkGroups(groupRows,
-            ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
-                false, 'Ignite UI for Angular', false, null, '', true, null, true],
-            grid.groupingExpressions);
+        checkGroups(groupRows, ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
+            false, 'Ignite UI for Angular', false, null, '', true, null, true], grid.groupingExpressions);
 
     });
 
@@ -3089,11 +3048,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the ghostElement should receive events.
-        UIInteractions.simulatePointerEvent('pointerdown',
-            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
+        UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
         await wait();
-        UIInteractions.simulatePointerEvent('pointermove',
-            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
         await wait();
         fix.detectChanges();
 
@@ -3116,11 +3073,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the ghostElement should receive events.
-        UIInteractions.simulatePointerEvent('pointerdown',
-            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
+        UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
         await wait();
-        UIInteractions.simulatePointerEvent('pointermove',
-            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
         await wait();
         fix.detectChanges();
 
@@ -3366,56 +3321,54 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
-    it('should allow setting groupingExpressions and sortingExpressions initially.',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            fix.componentInstance.enableSorting = true;
-            const grid = fix.componentInstance.instance;
-            grid.sortingExpressions =
-                [{ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false }];
-            grid.groupingExpressions =
-                [{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false }];
-            fix.detectChanges();
+    it('should allow setting groupingExpressions and sortingExpressions initially.', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.componentInstance.enableSorting = true;
+        const grid = fix.componentInstance.instance;
+        grid.sortingExpressions =
+            [{ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false }];
+        grid.groupingExpressions =
+            [{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false }];
+        fix.detectChanges();
 
-            //grouping expressions should not affect grouping expressions
-            expect(grid.sortingExpressions.length).toEqual(1);
-            expect(grid.groupingExpressions.length).toEqual(1);
+        //grouping expressions should not affect grouping expressions
+        expect(grid.sortingExpressions.length).toEqual(1);
+        expect(grid.groupingExpressions.length).toEqual(1);
 
-            const groupRows = grid.groupsRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
 
-            expect(groupRows.length).toEqual(3);
+        expect(groupRows.length).toEqual(3);
 
-            const chips = grid.groupArea.chips;
-            checkChips(chips, grid.groupingExpressions);
+        const chips = grid.groupArea.chips;
+        checkChips(chips, grid.groupingExpressions);
 
-            const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
-            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
-        }));
+        const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+    }));
 
-    it('should show horizontal scrollbar if column widths are equal to the grid width and a column is grouped.',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
+    it('should show horizontal scrollbar if column widths are equal to the grid width and a column is grouped.', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
 
-            const grid = fix.componentInstance.instance;
+        const grid = fix.componentInstance.instance;
 
-            grid.columnWidth = '200px';
-            tick();
-            fix.componentInstance.width = '1000px';
-            tick();
+        grid.columnWidth = '200px';
+        tick();
+        fix.componentInstance.width = '1000px';
+        tick();
 
-            fix.detectChanges();
+        fix.detectChanges();
 
-            const hScrBar = grid.scr.nativeElement;
-            expect(hScrBar.hidden).toBe(true);
+        const hScrBar = grid.scr.nativeElement;
+        expect(hScrBar.hidden).toBe(true);
 
-            grid.groupBy({
-                fieldName: 'Downloads',
-                dir: SortingDirection.Asc,
-                ignoreCase: false
-            });
-            fix.detectChanges();
-            expect(hScrBar.hidden).toBe(false);
-        }));
+        grid.groupBy({
+            fieldName: 'Downloads',
+            dir: SortingDirection.Asc,
+            ignoreCase: false
+        });
+        fix.detectChanges();
+        expect(hScrBar.hidden).toBe(false);
+    }));
 
     it('should allow changing the text of the drop area', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -3441,119 +3394,114 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupDropArea.nativeElement.textContent.trim()).toEqual('Custom template');
     });
 
-    it('should hide all the grouped columns when hideGroupedColumns option is initially set to "true"',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            grid.hideGroupedColumns = true;
-            tick();
-            fix.detectChanges();
-            grid.groupBy([
-                { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
-                { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
-            ]);
-            tick();
-            fix.detectChanges();
-            // the two grouped columns should be hidden
-            expect(grid.getColumnByName('Downloads').hidden).toBe(true);
-            expect(grid.getColumnByName('ProductName').hidden).toBe(true);
-            // these should be visible
-            expect(grid.getColumnByName('ID').hidden).toBe(false);
-            expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
-            expect(grid.getColumnByName('Released').hidden).toBe(false);
-        }));
+    it('should hide all the grouped columns when hideGroupedColumns option is initially set to "true"', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.hideGroupedColumns = true;
+        tick();
+        fix.detectChanges();
+        grid.groupBy([
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        tick();
+        fix.detectChanges();
+        // the two grouped columns should be hidden
+        expect(grid.getColumnByName('Downloads').hidden).toBe(true);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(true);
+        // these should be visible
+        expect(grid.getColumnByName('ID').hidden).toBe(false);
+        expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
+        expect(grid.getColumnByName('Released').hidden).toBe(false);
+    }));
 
-    it('should show all the grid columns when hideGroupedColumns option is set to "false" at runtime, after being "true" initially',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            grid.hideGroupedColumns = true;
-            fix.detectChanges();
-            grid.groupBy([
-                { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
-                { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
-            ]);
-            tick();
-            fix.detectChanges();
-            // the two grouped columns should be hidden initially
-            expect(grid.getColumnByName('Downloads').hidden).toBe(true);
-            expect(grid.getColumnByName('ProductName').hidden).toBe(true);
-            grid.hideGroupedColumns = false;
-            tick();
-            fix.detectChanges();
-            // all columns, whether grouped or ungrouped, should be visible
-            expect(grid.getColumnByName('Downloads').hidden).toBe(false);
-            expect(grid.getColumnByName('ProductName').hidden).toBe(false);
-            expect(grid.getColumnByName('ID').hidden).toBe(false);
-            expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
-            expect(grid.getColumnByName('Released').hidden).toBe(false);
-        }));
+    it('should show all the grid columns when hideGroupedColumns option is set to "false" at runtime, after being "true" initially', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.hideGroupedColumns = true;
+        fix.detectChanges();
+        grid.groupBy([
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        tick();
+        fix.detectChanges();
+        // the two grouped columns should be hidden initially
+        expect(grid.getColumnByName('Downloads').hidden).toBe(true);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(true);
+        grid.hideGroupedColumns = false;
+        tick();
+        fix.detectChanges();
+        // all columns, whether grouped or ungrouped, should be visible
+        expect(grid.getColumnByName('Downloads').hidden).toBe(false);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(false);
+        expect(grid.getColumnByName('ID').hidden).toBe(false);
+        expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
+        expect(grid.getColumnByName('Released').hidden).toBe(false);
+    }));
 
-    it('should hide the grouped columns when hideGroupedColumns option is set to "true" at runtime, after being "false" initially',
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            fix.detectChanges();
-            grid.groupBy([
-                { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
-                { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
-            ]);
-            tick();
-            fix.detectChanges();
-            // all columns, whether grouped or ungrouped, should be visible
-            expect(grid.getColumnByName('Downloads').hidden).toBe(false);
-            expect(grid.getColumnByName('ProductName').hidden).toBe(false);
-            expect(grid.getColumnByName('ID').hidden).toBe(false);
-            expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
-            expect(grid.getColumnByName('Released').hidden).toBe(false);
-            grid.hideGroupedColumns = true;
-            tick();
-            fix.detectChanges();
-            // the two grouped columns should now be hidden
-            expect(grid.getColumnByName('Downloads').hidden).toBe(true);
-            expect(grid.getColumnByName('ProductName').hidden).toBe(true);
-        }));
+    it('should hide the grouped columns when hideGroupedColumns option is set to "true" at runtime, after being "false" initially', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy([
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        tick();
+        fix.detectChanges();
+        // all columns, whether grouped or ungrouped, should be visible
+        expect(grid.getColumnByName('Downloads').hidden).toBe(false);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(false);
+        expect(grid.getColumnByName('ID').hidden).toBe(false);
+        expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
+        expect(grid.getColumnByName('Released').hidden).toBe(false);
+        grid.hideGroupedColumns = true;
+        tick();
+        fix.detectChanges();
+        // the two grouped columns should now be hidden
+        expect(grid.getColumnByName('Downloads').hidden).toBe(true);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(true);
+    }));
 
     it(`should hide the grouped columns when hideGroupedColumns option is enabled,
-    there are initially set groupingExpressions and columns are autogenerated`,
-        fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            fix.detectChanges();
-            const grid = fix.componentInstance.instance;
-            grid.hideGroupedColumns = true;
-            grid.groupingExpressions = [
-                { fieldName: 'Released', dir: SortingDirection.Asc }
-            ];
-            fix.detectChanges();
-            expect(grid.getColumnByName('Released').hidden).toBe(true);
-            const groupRows = grid.groupsRowList.toArray();
+    there are initially set groupingExpressions and columns are autogenerated`, fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.hideGroupedColumns = true;
+        grid.groupingExpressions = [
+            { fieldName: 'Released', dir: SortingDirection.Asc }
+        ];
+        fix.detectChanges();
+        expect(grid.getColumnByName('Released').hidden).toBe(true);
+        const groupRows = grid.groupsRowList.toArray();
 
-            expect(groupRows.length).toEqual(3);
-        }));
+        expect(groupRows.length).toEqual(3);
+    }));
 
-        it('should hide all the grouped columns when hideGroupedColumns option is "true" and columns are set runtime',
-            fakeAsync(() => {
-                const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
-                fix.detectChanges();
-                const grid = fix.componentInstance.instance;
-                fix.componentInstance.columns = [];
-                grid.hideGroupedColumns = true;
-                fix.detectChanges();
-                tick();
-                fix.detectChanges();
-                fix.componentInstance.columns = [
-                    { field: 'A', width: 100 },
-                    { field: 'B', width: 100 },
-                    { field: 'C', width: 100 }
-                ];
-                grid.groupingExpressions = [
-                    { fieldName: 'A', dir: SortingDirection.Asc }
-                ];
-                fix.detectChanges();
-                tick();
+    it('should hide all the grouped columns when hideGroupedColumns option is "true" and columns are set runtime', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.columns = [];
+        grid.hideGroupedColumns = true;
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        fix.componentInstance.columns = [
+            { field: 'A', width: 100 },
+            { field: 'B', width: 100 },
+            { field: 'C', width: 100 }
+        ];
+        grid.groupingExpressions = [
+            { fieldName: 'A', dir: SortingDirection.Asc }
+        ];
+        fix.detectChanges();
+        tick();
 
-                expect(grid.getColumnByName('A').hidden).toBe(true);
-        }));
+        expect(grid.getColumnByName('A').hidden).toBe(true);
+    }));
 
     it('should respect current sorting direction when grouping', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -3629,8 +3577,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         expect(grid.groupingExpressions).toEqual([{
-            fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
-        }]);
+                fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            }]);
     });
 
     it('should not be able to group by ColumnGroup', async () => {
@@ -3825,7 +3773,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         const data = [];
         for (let i = 0; i < 1000000; i++) {
-          data.push({
+            data.push({
                 Downloads: i,
                 ID: 1,
                 ProductName: 'Test'
@@ -3900,10 +3848,10 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         it('should restore date/time columns groupBy expansion state in nested hierarchies correctly - issue #14619', fakeAsync(() => {
             grid.groupBy([{
-                fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
-            }, {
-                fieldName: 'DateField', dir: SortingDirection.Asc, ignoreCase: false
-            }]);
+                    fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
+                }, {
+                    fieldName: 'DateField', dir: SortingDirection.Asc, ignoreCase: false
+                }]);
             fix.detectChanges();
 
             let groupRows = grid.groupsRowList.toArray();
@@ -4038,12 +3986,7 @@ const formatUnboundValueFunction = (rowData: any | undefined): string | undefine
 
 
 class MySortingStrategy extends IgxGrouping {
-    protected override getFieldValue(
-        obj: any,
-        key: string,
-        isDate = false,
-        isTime = false
-    ): unknown {
+    protected override getFieldValue(obj: any, key: string, isDate = false, isTime = false): unknown {
         if (key !== 'UnboundField') {
             return super.getFieldValue(obj, key, isDate, isTime);
         }

@@ -55,8 +55,10 @@ import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from 'igniteui-
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class TabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true }) public bottomNav: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
+    @ViewChild(IgxBottomNavComponent, { static: true })
+    public bottomNav: IgxBottomNavComponent;
+    @ViewChild('wrapperDiv', { static: true })
+    public wrapperDiv: any;
 }
 
 @Component({
@@ -110,8 +112,10 @@ export class TabBarTestComponent {
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class BottomTabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true }) public bottomNav: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
+    @ViewChild(IgxBottomNavComponent, { static: true })
+    public bottomNav: IgxBottomNavComponent;
+    @ViewChild('wrapperDiv', { static: true })
+    public wrapperDiv: any;
 }
 
 @Component({
@@ -287,5 +291,6 @@ export class BottomNavRoutingGuardTestComponent {
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class BottomNavTestHtmlAttributesComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true }) public bottomNav: IgxBottomNavComponent;
+    @ViewChild(IgxBottomNavComponent, { static: true })
+    public bottomNav: IgxBottomNavComponent;
 }

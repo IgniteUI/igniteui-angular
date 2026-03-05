@@ -1,23 +1,18 @@
-﻿import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, ComponentFixture, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import {
-    ProductsComponent,
-    SummaryColumnComponent,
-    FilteringComponent,
-    SummariesGroupByComponent,
-    SummariesGroupByTransactionsComponent
-} from '../../../test-utils/grid-samples.spec';
+import { ProductsComponent, SummaryColumnComponent, FilteringComponent, SummariesGroupByComponent, SummariesGroupByTransactionsComponent } from '../../../test-utils/grid-samples.spec';
 import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { DropPosition, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryRow } from 'igniteui-angular/grids/core';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridSummaryCalculationMode, IColumnPipeArgs, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 describe('IgxGrid - Summaries #grid', () => {
@@ -114,8 +109,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 fixture.detectChanges();
 
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'],
-                    ['11', '0', '99,000', '138,004', '12,545.818']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['11', '0', '99,000', '138,004', '12,545.818']);
             }));
 
             it('When we have data which is undefined and enable summary per defined column, error should not be thrown', () => {
@@ -143,11 +137,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 fixture.detectChanges();
                 tick();
 
-                GridSummaryFunctions.verifyColumnSummaries(
-                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
-                    ['Sum', 'Avg'],
-                    ['39,004', '3,900.4']
-                );
+                GridSummaryFunctions.verifyColumnSummaries(GridSummaryFunctions.getRootSummaryRow(fixture), 3, ['Sum', 'Avg'], ['39,004', '3,900.4']);
             }));
 
             it('should apply disabled summaries dynamically at runtime', fakeAsync(() => {
@@ -157,47 +147,27 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 const column = grid.getColumnByName('UnitsInStock');
 
-                GridSummaryFunctions.verifyColumnSummaries(
-                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'],
-                    ['10', '0', '20,000', '39,004', '3,900.4']
-                );
+                GridSummaryFunctions.verifyColumnSummaries(GridSummaryFunctions.getRootSummaryRow(fixture), 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
 
                 column.disabledSummaries = ['count'];
                 fixture.detectChanges();
                 tick();
-                GridSummaryFunctions.verifyColumnSummaries(
-                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
-                    ['Min', 'Max', 'Sum', 'Avg'],
-                    ['0', '20,000', '39,004', '3,900.4']
-                );
+                GridSummaryFunctions.verifyColumnSummaries(GridSummaryFunctions.getRootSummaryRow(fixture), 3, ['Min', 'Max', 'Sum', 'Avg'], ['0', '20,000', '39,004', '3,900.4']);
 
                 column.disabledSummaries = ['count', 'sum'];
                 fixture.detectChanges();
                 tick();
-                GridSummaryFunctions.verifyColumnSummaries(
-                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
-                    ['Min', 'Max', 'Avg'],
-                    ['0', '20,000', '3,900.4']
-                );
+                GridSummaryFunctions.verifyColumnSummaries(GridSummaryFunctions.getRootSummaryRow(fixture), 3, ['Min', 'Max', 'Avg'], ['0', '20,000', '3,900.4']);
 
                 column.disabledSummaries = ['count', 'sum', 'average'];
                 fixture.detectChanges();
                 tick();
-                GridSummaryFunctions.verifyColumnSummaries(
-                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
-                    ['Min', 'Max'],
-                    ['0', '20,000']
-                );
+                GridSummaryFunctions.verifyColumnSummaries(GridSummaryFunctions.getRootSummaryRow(fixture), 3, ['Min', 'Max'], ['0', '20,000']);
 
                 column.disabledSummaries = ['min', 'max'];
                 fixture.detectChanges();
                 tick();
-                GridSummaryFunctions.verifyColumnSummaries(
-                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
-                    ['Count', 'Sum', 'Avg'],
-                    ['10', '39,004', '3,900.4']
-                );
+                GridSummaryFunctions.verifyColumnSummaries(GridSummaryFunctions.getRootSummaryRow(fixture), 3, ['Count', 'Sum', 'Avg'], ['10', '39,004', '3,900.4']);
             }));
         });
 
@@ -263,21 +233,18 @@ describe('IgxGrid - Summaries #grid', () => {
                 grid.getColumnByName('UnitsInStock').summaries = fixture.componentInstance.inStockSummary;
                 fixture.detectChanges();
 
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
-                    ['10', '0', '20,000', '39,004', '3,900.4', '6']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'], ['10', '0', '20,000', '39,004', '3,900.4', '6']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest', 'Items InStock'], ['May 17, 1990', '1337']);
 
                 grid.getCellByColumn(4, 'InStock').update(true);
                 fixture.detectChanges();
 
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
-                    ['10', '0', '20,000', '39,004', '3,900.4', '7']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'], ['10', '0', '20,000', '39,004', '3,900.4', '7']);
 
                 grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'));
                 fixture.detectChanges();
 
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
-                    ['3', '0', '0', '0', '0', '1']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'], ['3', '0', '0', '0', '0', '1']);
             });
 
             it('Last column summary cell should be aligned according to its data cells', () => {
@@ -298,10 +265,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 const lastColumnSummaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 4);
                 const lastColumnSummaryCellRect = lastColumnSummaryCell.nativeElement.getBoundingClientRect();
 
-                expect(lastColumnSummaryCellRect.left).toBe(lastColumnNormalCellRect.left,
-                    'summary cell and data cell are not left aligned');
-                expect(lastColumnSummaryCellRect.right).toBe(lastColumnNormalCellRect.right,
-                    'summary cell and data cell are not right aligned');
+                expect(lastColumnSummaryCellRect.left, 'summary cell and data cell are not left aligned').toBe(lastColumnNormalCellRect.left);
+                expect(lastColumnSummaryCellRect.right, 'summary cell and data cell are not right aligned').toBe(lastColumnNormalCellRect.right);
             });
 
             it('should apply disabledSummaries with custom summary', fakeAsync(() => {
@@ -314,21 +279,13 @@ describe('IgxGrid - Summaries #grid', () => {
                 fixture.detectChanges();
                 tick();
 
-                GridSummaryFunctions.verifyColumnSummaries(
-                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
-                    ['10', '0', '20,000', '39,004', '3,900.4', '6']
-                );
+                GridSummaryFunctions.verifyColumnSummaries(GridSummaryFunctions.getRootSummaryRow(fixture), 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'], ['10', '0', '20,000', '39,004', '3,900.4', '6']);
 
                 column.disabledSummaries = ['test'];
                 fixture.detectChanges();
                 tick();
 
-                GridSummaryFunctions.verifyColumnSummaries(
-                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'],
-                    ['10', '0', '20,000', '39,004', '3,900.4']
-                );
+                GridSummaryFunctions.verifyColumnSummaries(GridSummaryFunctions.getRootSummaryRow(fixture), 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
             }));
         });
 
@@ -351,8 +308,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 const summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['8']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '1', '1,000', '2,204', '275.5']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '1', '1,000', '2,204', '275.5']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count'], ['8']);
                 const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
                 const earliest = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1).toLocaleString('us', options);
@@ -495,8 +451,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
                 const pipe = new DatePipe('fr-FR');
 
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
 
                 grid.getColumnByName('OrderDate').summaryFormatter
                     = ((summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => {
@@ -509,8 +464,7 @@ describe('IgxGrid - Summaries #grid', () => {
                     });
                 fix.detectChanges();
 
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['10', '17 mai 1990', '25 déc. 2025']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['10', '17 mai 1990', '25 déc. 2025']);
             });
 
             it('should calc tfoot height according number of summary functions', () => {
@@ -538,8 +492,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 expect(grid.getColumnByName('UnitsInStock').hasSummary).toBe(false);
 
-                const summaries = fix.debugElement.queryAll(By.css(SUMMARY_CELL)).filter((el) =>
-                    el.nativeElement.classList.contains(EMPTY_SUMMARY_CLASS) === false);
+                const summaries = fix.debugElement.queryAll(By.css(SUMMARY_CELL)).filter((el) => el.nativeElement.classList.contains(EMPTY_SUMMARY_CLASS) === false);
                 const tfootSize = GridSummaryFunctions.getRootSummaryRow(fix).nativeElement.getBoundingClientRect().height;
                 const expectedHeight = GridSummaryFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
                 expect(tfootSize).toBe(expectedHeight);
@@ -699,8 +652,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['3']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '0', '0', '0', '0']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['3', 'Jul 27, 2001', 'Oct 11, 2007']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['3', 'Jul 27, 2001', 'Oct 11, 2007']);
 
                 grid.filter('ProductID', 0, IgxNumberFilteringOperand.instance().condition('equals'), true);
                 fix.detectChanges();
@@ -725,10 +677,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['10']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['10']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
             }));
 
             it('Moving: should move summaries when move column', fakeAsync(() => {
@@ -742,13 +692,11 @@ describe('IgxGrid - Summaries #grid', () => {
                 fix.detectChanges();
 
                 const summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['10']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count'], ['10']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
             }));
 
             it('Hiding: should hide summary row when a column which has summary is hidded', fakeAsync(() => {
@@ -763,8 +711,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, [], []);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, [], []);
 
                 grid.getColumnByName('UnitsInStock').hidden = true;
@@ -785,8 +732,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, [], []);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, [], []);
             }));
 
@@ -807,8 +753,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['10']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['10']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
 
                 grid.getColumnByName('UnitsInStock').hidden = false;
                 grid.summaryRowHeight = 0;
@@ -822,10 +767,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['10']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['10']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
             }));
 
             it('CRUD: should recalculate summary functions rowAdded', () => {
@@ -838,10 +781,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['11']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['11']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['11', '0', '99,000', '138,004', '12,545.818']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['11', 'May 17, 1990', 'Dec 25, 2025']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['11', '0', '99,000', '138,004', '12,545.818']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['11', 'May 17, 1990', 'Dec 25, 2025']);
             });
 
             it('CRUD: should recalculate summary functions rowDeleted', () => {
@@ -852,10 +793,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['9']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '0', '20,000', '32,006', '3,556.222']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['9', 'May 17, 1990', 'Mar 1, 2018']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '0', '20,000', '32,006', '3,556.222']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['9', 'May 17, 1990', 'Mar 1, 2018']);
             });
 
             it('CRUD: should recalculate summary functions on updateRow', () => {
@@ -877,10 +816,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['10']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['10']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '510,000', '546,244', '54,624.4']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['10', 'Mar 21, 1984', 'Dec 25, 2025']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '510,000', '546,244', '54,624.4']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['10', 'Mar 21, 1984', 'Dec 25, 2025']);
             });
 
             it('CRUD: should recalculate summary functions on cell update', () => {
@@ -889,14 +826,12 @@ describe('IgxGrid - Summaries #grid', () => {
                 fix.detectChanges();
 
                 let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '99,000', '135,244', '13,524.4']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '99,000', '135,244', '13,524.4']);
 
                 unitsInStockCell.update(-12);
                 fix.detectChanges();
                 summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '-12', '20,000', '36,232', '3,623.2']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '-12', '20,000', '36,232', '3,623.2']);
             });
 
             it('Pinning: should display all active summaries after column pinning', () => {
@@ -905,13 +840,11 @@ describe('IgxGrid - Summaries #grid', () => {
                 fix.detectChanges();
 
                 const summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['10']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count'], ['10']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                    ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
             });
 
             it('CRUD: Apply filter and update cell', () => {
@@ -920,8 +853,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '52', '20,000', '29,810', '7,452.5']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '52', '20,000', '29,810', '7,452.5']);
 
                 const cell = grid.getCellByColumn(2, 'ProductName');
                 cell.update('Teatime Cocoa Biscuits');
@@ -929,8 +861,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
-                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '52', '20,000', '22,812', '7,604']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '52', '20,000', '22,812', '7,604']);
             });
         });
     });
@@ -964,8 +895,7 @@ describe('IgxGrid - Summaries #grid', () => {
             }
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
             for (let i = 5; i > 0; i--) {
@@ -977,8 +907,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '17', '847', '2,188', '273.5']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '17', '847', '2,188', '273.5']);
         });
 
         it('should be able to navigate with Arrow keys and Ctrl', async () => {
@@ -991,8 +920,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 5);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridFooter, false, false, true);
@@ -1002,8 +930,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 0);
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '17', '847', '2,188', '273.5']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '17', '847', '2,188', '273.5']);
         });
 
         it('should not change active summary cell when press Arrow Down and Up', () => {
@@ -1036,8 +963,7 @@ describe('IgxGrid - Summaries #grid', () => {
             }
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
 
             for (let i = 5; i > 0; i--) {
@@ -1049,8 +975,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
         });
 
         it('Grouping: should not change active summary cell when press Ctrl+ArrowUp/Down', () => {
@@ -1086,8 +1011,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 5);
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, false, false, true);
@@ -1176,8 +1100,10 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(cell.selected).toBe(false);
         });
 
-        it('should navigate with tab to filter row if the grid is empty', () => {
-            pending('this test need to be written again when the header are ready');
+        it.skip('should navigate with tab to filter row if the grid is empty', () => {
+            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
+            // pending('this test need to be written again when the header are ready');
+            ;
             grid.allowFiltering = true;
             grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
@@ -1330,8 +1256,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
 
             // Undo transactions
@@ -1339,8 +1264,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['8', 'Dec 18, 2007', 'Dec 9, 2017']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Dec 18, 2007', 'Dec 9, 2017']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['25', '50']);
 
             // redo transactions
@@ -1348,8 +1272,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
 
             // Commit
@@ -1357,8 +1280,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
 
             newRow = {
@@ -1380,8 +1302,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
         });
 
@@ -1518,8 +1439,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['9', 'Dec 18, 2007', 'Dec 9, 2017']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['9', 'Dec 18, 2007', 'Dec 9, 2017']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
@@ -1888,8 +1808,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 8);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Jul 3, 2011', 'Sep 18, 2014']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Jul 3, 2011', 'Sep 18, 2014']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '31', '43', '74', '37']);
 
             grid.clearGrouping('OnPTO');
@@ -1982,8 +1901,7 @@ describe('IgxGrid - Summaries #grid', () => {
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
 
             groupRows[0].toggle();
             fix.detectChanges();
@@ -1993,8 +1911,7 @@ describe('IgxGrid - Summaries #grid', () => {
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
         });
 
         it('should be able to change showSummaryOnCollapse run time', () => {
@@ -2017,8 +1934,7 @@ describe('IgxGrid - Summaries #grid', () => {
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
         });
 
 
@@ -2031,14 +1947,12 @@ describe('IgxGrid - Summaries #grid', () => {
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
 
             const groupRows = grid.groupsRowList.toArray();
             groupRows[1].toggle();
@@ -2047,14 +1961,12 @@ describe('IgxGrid - Summaries #grid', () => {
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 2);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
 
             grid.summaryPosition = 'top';
             fix.detectChanges();
@@ -2062,14 +1974,12 @@ describe('IgxGrid - Summaries #grid', () => {
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
 
         });
 
@@ -2239,14 +2149,12 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 2);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['1']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['1', 'Dec 18, 2007', 'Dec 18, 2007']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['1', 'Dec 18, 2007', 'Dec 18, 2007']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '50', '50', '50', '50']);
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['1']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['1', 'Dec 18, 2007', 'Dec 18, 2007']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['1', 'Dec 18, 2007', 'Dec 18, 2007']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '50', '50', '50', '50']);
 
             grid.clearFilter();
@@ -2352,21 +2260,17 @@ describe('IgxGrid - Summaries #grid', () => {
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '17', '847', '2,205', '245']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '17', '847', '2,205', '245']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['9', 'Dec 18, 2007', 'Apr 3, 2019']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '19', '50', '312', '34.667']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['9', 'Dec 18, 2007', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '19', '50', '312', '34.667']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['9']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '17', '17', '51', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['3']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['3', 'Dec 18, 2007', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['3', 'Dec 18, 2007', 'Apr 3, 2019']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
         });
 
@@ -2391,7 +2295,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             let addRow = grid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBe(true);
 
             let cell = grid.getCellByColumn(2, 'ParentID');
             cell.update(newRow.ParentID);
@@ -2410,14 +2314,13 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             addRow = grid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeFalse();
+            expect(addRow.addRowUI).toBe(false);
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '17', '17', '51', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['3']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['3', 'Dec 18, 2007', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['3', 'Dec 18, 2007', 'Apr 3, 2019']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
         });
 
@@ -2435,13 +2338,10 @@ describe('IgxGrid - Summaries #grid', () => {
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '1', '847', '2,189', '243.222']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '1', '847', '2,189', '243.222']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['9', 'Dec 18, 2007', 'Apr 3, 2019']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '19', '50', '312', '34.667']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['9', 'Dec 18, 2007', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['9', '19', '50', '312', '34.667']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['9']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 2);
@@ -2516,17 +2416,14 @@ describe('IgxGrid - Summaries #grid', () => {
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['8']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '19', '44', '262', '32.75']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '19', '44', '262', '32.75']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['2', 'Mar 19, 2016', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Mar 19, 2016', 'Apr 3, 2019']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '19', '27', '46', '23']);
         });
 
@@ -2547,15 +2444,13 @@ describe('IgxGrid - Summaries #grid', () => {
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['8']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 2);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['1']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Earliest', 'Latest'], ['1', 'Mar 19, 2016', 'Mar 19, 2016']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['1', 'Mar 19, 2016', 'Mar 19, 2016']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
@@ -2575,25 +2470,19 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getAllVisibleSummariesSorted(fix)[0];
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '12', '101', '113', '56.5']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '12', '101', '113', '56.5']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
 
             grid.updateCell(19, 101, 'ParentID');
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getAllVisibleSummariesSorted(fix)[0];
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '12', '12', '12', '12']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '17', '17', '17', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '12', '12', '12', '12']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '17', '17', '17', '17']);
 
             const secondSummaryRow = GridSummaryFunctions.getAllVisibleSummariesSorted(fix)[1];
-            GridSummaryFunctions.verifyColumnSummaries(secondSummaryRow, 0,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '15', '101', '116', '58']);
-            GridSummaryFunctions.verifyColumnSummaries(secondSummaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '19', '19', '38', '19']);
+            GridSummaryFunctions.verifyColumnSummaries(secondSummaryRow, 0, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '15', '101', '116', '58']);
+            GridSummaryFunctions.verifyColumnSummaries(secondSummaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '19', '19', '38', '19']);
         });
     });
 
@@ -2607,12 +2496,10 @@ describe('IgxGrid - Summaries #grid', () => {
     const verifyBaseSummaries = (fixture) => {
         const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
-        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-            ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '17', '847', '2,188', '273.5']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '17', '847', '2,188', '273.5']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['8']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Dec 18, 2007', 'Dec 9, 2017']);
-        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-            ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
     };
 
@@ -2632,8 +2519,7 @@ describe('IgxGrid - Summaries #grid', () => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '147', '147', '441', '147']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['3']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
-        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-            ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
     };
 

@@ -8,6 +8,7 @@ import { IGridEditEventArgs, IgxCellEditorTemplateDirective, IgxCellTemplateDire
 import { FormsModule } from '@angular/forms';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { cloneArray, columnFieldPath, IgxStringFilteringOperand, resolveNestedPath, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const first = <T>(array: T[]): T => array[0];
 
@@ -170,7 +171,10 @@ class NestedPropertyGridComponent {
     public combo: IgxComboComponent;
 
     public locations = LOCATIONS;
-    public parseArray(arr: { id: number; shop: string }[]): string {
+    public parseArray(arr: {
+        id: number;
+        shop: string;
+    }[]): string {
         return (arr || []).map((e) => e.shop).join(', ');
     }
 }
@@ -183,12 +187,8 @@ describe('Grid - nested data source properties #grid', () => {
     describe('API', () => {
 
         it('should correctly resolve key paths in nested data', () => {
-            expect(
-                DATA.map(record => resolveNestedPath(record, columnFieldPath("user.name.first")))
-            ).toEqual(NAMES);
-            expect(
-                DATA.map(record => resolveNestedPath(record, columnFieldPath("user.age")))
-            ).toEqual(AGES);
+            expect(DATA.map(record => resolveNestedPath(record, columnFieldPath("user.name.first")))).toEqual(NAMES);
+            expect(DATA.map(record => resolveNestedPath(record, columnFieldPath("user.age")))).toEqual(AGES);
         });
     });
 
@@ -539,8 +539,8 @@ describe('Edit cell with data of type Array #grid', () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData);
 
-        spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-        spyOn(grid.cellEditExit, 'emit').and.callThrough();
+        vi.spyOn(grid.cellEditEnter, 'emit');
+        vi.spyOn(grid.cellEditExit, 'emit');
 
         const cell = grid.getCellByColumn(2, 'locations');
         let initialRowData = { ...cell.row.data };
@@ -561,7 +561,7 @@ describe('Edit cell with data of type Array #grid', () => {
             cancel: false,
             column: cell.column,
             owner: grid,
-            event: jasmine.anything() as any,
+            event: expect.anything() as any,
             valid: true
         };
 
@@ -602,10 +602,10 @@ describe('Edit cell with data of type Array #grid', () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData);
 
-        spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-        spyOn(grid.cellEdit, 'emit').and.callThrough();
-        spyOn(grid.cellEditDone, 'emit').and.callThrough();
-        spyOn(grid.cellEditExit, 'emit').and.callThrough();
+        vi.spyOn(grid.cellEditEnter, 'emit');
+        vi.spyOn(grid.cellEdit, 'emit');
+        vi.spyOn(grid.cellEditDone, 'emit');
+        vi.spyOn(grid.cellEditExit, 'emit');
 
         const cell = grid.getCellByColumn(2, 'locations');
         let initialRowData = { ...cell.row.data };
@@ -626,7 +626,7 @@ describe('Edit cell with data of type Array #grid', () => {
             cancel: false,
             column: cell.column,
             owner: grid,
-            event: jasmine.anything() as any,
+            event: expect.anything() as any,
             valid: true
         };
 
@@ -673,8 +673,8 @@ describe('Edit cell with data of type Array #grid', () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData, true);
 
-        spyOn(grid.rowEditEnter, 'emit').and.callThrough();
-        spyOn(grid.rowEditExit, 'emit').and.callThrough();
+        vi.spyOn(grid.rowEditEnter, 'emit');
+        vi.spyOn(grid.rowEditExit, 'emit');
 
         const cell = grid.getCellByColumn(2, 'locations');
         const row = grid.gridAPI.get_row_by_index(2);
@@ -696,7 +696,7 @@ describe('Edit cell with data of type Array #grid', () => {
             owner: grid,
             isAddRow: row.addRowUI,
             cancel: false,
-            event: jasmine.anything() as any,
+            event: expect.anything() as any,
             valid: true
         };
 
@@ -737,10 +737,10 @@ describe('Edit cell with data of type Array #grid', () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData, true);
 
-        spyOn(grid.rowEditEnter, 'emit').and.callThrough();
-        spyOn(grid.rowEdit, 'emit').and.callThrough();
-        spyOn(grid.rowEditDone, 'emit').and.callThrough();
-        spyOn(grid.rowEditExit, 'emit').and.callThrough();
+        vi.spyOn(grid.rowEditEnter, 'emit');
+        vi.spyOn(grid.rowEdit, 'emit');
+        vi.spyOn(grid.rowEditDone, 'emit');
+        vi.spyOn(grid.rowEditExit, 'emit');
 
         const cell = grid.getCellByColumn(2, 'locations');
         const row = grid.gridAPI.get_row_by_index(2);
@@ -762,7 +762,7 @@ describe('Edit cell with data of type Array #grid', () => {
             owner: grid,
             isAddRow: row.addRowUI,
             cancel: false,
-            event: jasmine.anything() as any,
+            event: expect.anything() as any,
             valid: true
         };
 

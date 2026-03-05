@@ -8,6 +8,7 @@ import { KeyboardNavigationService } from '../calendar.services';
 import { CalendarDay } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { DayDigitPipe } from "igniteui-angular/calendar/src/calendar/day-digit.pipe";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const TODAY = new Date(2024, 6, 12);
 
@@ -27,9 +28,7 @@ describe("Days View Component", () => {
         const fixture = TestBed.createComponent(InitDaysViewComponent);
         fixture.detectChanges();
         const { instance } = fixture.componentInstance;
-        const { nativeElement: hostEl } = fixture.debugElement.query(
-            By.css(baseClass),
-        );
+        const { nativeElement: hostEl } = fixture.debugElement.query(By.css(baseClass));
 
         expect(instance.id).toContain(`${baseClass}-`);
         expect(hostEl.id).toContain(`${baseClass}-`);
@@ -76,11 +75,7 @@ describe("Days View Component", () => {
     });
 
     it("should set activeDate to the first day of the current month when no value is provided", () => {
-        const firstMonthDay = new Date(
-            TODAY.getFullYear(),
-            TODAY.getMonth(),
-            1,
-        );
+        const firstMonthDay = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
         const fixture = TestBed.createComponent(InitDaysViewComponent);
         const { instance } = fixture.componentInstance;
         fixture.detectChanges();
@@ -93,8 +88,7 @@ describe("Days View Component", () => {
         const { instance } = fixture.componentInstance;
         fixture.detectChanges();
 
-        const { leading: initialLeading, trailing: initialTrailing } =
-            getInactiveDays(fixture);
+        const { leading: initialLeading, trailing: initialTrailing } = getInactiveDays(fixture);
 
         instance.hideLeadingDays = true;
         fixture.detectChanges();
@@ -131,19 +125,19 @@ describe("Days View Component", () => {
             get() {
                 return {
                     format: () => '25日',
-                } as Intl.DateTimeFormat
+                } as Intl.DateTimeFormat;
             }
         });
 
         // 1. Verify Programmatic Access (formattedDate method)
         // Should return the raw formatted string from the formatter (with suffix)
         const programmaticResult = daysView.formattedDate(date);
-        expect(programmaticResult).toBe('25日', 'Programmatic API should return the full locale string (including suffix, in this case 日)');
+        expect(programmaticResult, 'Programmatic API should return the full locale string (including suffix, in this case 日)').toBe('25日');
 
         // 2. Verify Pipe Logic
         // The pipe takes the formatted string "25日" and strips non-digits to return "25"
         const pipeResult = pipe.transform(programmaticResult, daysView.formatViews);
-        expect(pipeResult).toBe('25', 'Pipe should strip non-numeric characters from the input string');
+        expect(pipeResult, 'Pipe should strip non-numeric characters from the input string').toBe('25');
 
         // 3. Confirm the difference implies the pipe did its job
         expect(programmaticResult).not.toEqual(pipeResult);
@@ -153,18 +147,12 @@ describe("Days View Component", () => {
         let fixture: ComponentFixture<InitDaysViewComponent>;
         let el: HTMLElement;
         let instance: IgxDaysViewComponent;
-        const firstDay = CalendarDay.from(
-            new Date(TODAY.getFullYear(), TODAY.getMonth(), 1),
-        );
-        const lastDay = CalendarDay.from(
-            new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 0),
-        );
+        const firstDay = CalendarDay.from(new Date(TODAY.getFullYear(), TODAY.getMonth(), 1));
+        const lastDay = CalendarDay.from(new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 0));
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(InitDaysViewComponent);
-            el = fixture.debugElement.query(
-                By.css("igx-days-view"),
-            ).nativeElement;
+            el = fixture.debugElement.query(By.css("igx-days-view")).nativeElement;
             instance = fixture.componentInstance.instance;
             fixture.detectChanges();
 
@@ -173,40 +161,28 @@ describe("Days View Component", () => {
         }));
 
         it("should navigate to the next day when pressing the right arrow key", () => {
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowRight",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowRight", document.activeElement);
 
             fixture.detectChanges();
             expect(instance.activeDate).toEqual(firstDay.add("day", 1).native);
         });
 
         it("should navigate to the previous day when pressing the left arrow key", () => {
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowLeft",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowLeft", document.activeElement);
 
             fixture.detectChanges();
             expect(instance.activeDate).toEqual(firstDay.add("day", -1).native);
         });
 
         it("should navigate to same day next week when pressing the down arrow key", () => {
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowDown",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowDown", document.activeElement);
 
             fixture.detectChanges();
             expect(instance.activeDate).toEqual(firstDay.add("day", 7).native);
         });
 
         it("should navigate to same day prev week when pressing the up arrow key", () => {
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowUp",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowUp", document.activeElement);
 
             fixture.detectChanges();
             expect(instance.activeDate).toEqual(firstDay.add("day", -7).native);
@@ -216,41 +192,30 @@ describe("Days View Component", () => {
             instance.activeDate = firstDay.add("day", 10).native;
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "Home",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("Home", document.activeElement);
 
             fixture.detectChanges();
             expect(instance.activeDate).toEqual(firstDay.native);
         });
 
         it("should navigate to the last active date in the month when pressing the End key", () => {
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "End",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("End", document.activeElement);
 
             fixture.detectChanges();
             expect(instance.activeDate).toEqual(lastDay.native);
         });
 
         it("should select the activeDate when pressing the enter key", () => {
-            spyOn(instance.dateSelected, "emit");
-            spyOn(instance.selected, "emit");
+            vi.spyOn(instance.dateSelected, "emit");
+            vi.spyOn(instance.selected, "emit");
 
             instance.activeDate = firstDay.add("day", 4).native;
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "Enter",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("Enter", document.activeElement);
             fixture.detectChanges();
 
-            expect(instance.dateSelected.emit).toHaveBeenCalledWith(
-                instance.activeDate,
-            );
+            expect(instance.dateSelected.emit).toHaveBeenCalledWith(instance.activeDate);
             expect(instance.selected.emit).toHaveBeenCalledWith([
                 instance.activeDate,
             ]);
@@ -261,44 +226,29 @@ describe("Days View Component", () => {
             instance.activeDate = firstDay.add("day", 10).native;
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowRight",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowRight", document.activeElement);
 
             fixture.detectChanges();
             expect(instance.activeDate).toEqual(firstDay.add("day", 12).native);
 
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowLeft",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowLeft", document.activeElement);
             expect(instance.activeDate).toEqual(firstDay.add("day", 10).native);
 
             instance.activeDate = firstDay.add("day", 4).native;
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowDown",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowDown", document.activeElement);
             expect(instance.activeDate).toEqual(firstDay.add("day", 18).native);
 
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowUp",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowUp", document.activeElement);
             expect(instance.activeDate).toEqual(firstDay.add("day", 4).native);
         });
 
         it("should emit pageChaged event when the active date is in the previous/next months", () => {
-            spyOn(instance.pageChanged, "emit");
+            vi.spyOn(instance.pageChanged, "emit");
             instance.activeDate = firstDay.native;
             fixture.detectChanges();
 
             // Movo to previous month
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowLeft",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowLeft", document.activeElement);
 
             expect(instance.pageChanged.emit).toHaveBeenCalledWith({
                 monthAction: ScrollDirection.PREV,
@@ -307,10 +257,7 @@ describe("Days View Component", () => {
             });
 
             // Movo to next month
-            UIInteractions.triggerKeyDownEvtUponElem(
-                "ArrowRight",
-                document.activeElement,
-            );
+            UIInteractions.triggerKeyDownEvtUponElem("ArrowRight", document.activeElement);
 
             expect(instance.pageChanged.emit).toHaveBeenCalledWith({
                 monthAction: ScrollDirection.NEXT,
@@ -327,9 +274,7 @@ describe("Days View Component", () => {
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(InitDaysViewComponent);
-            el = fixture.debugElement.query(
-                By.css("igx-days-view"),
-            ).nativeElement;
+            el = fixture.debugElement.query(By.css("igx-days-view")).nativeElement;
             instance = fixture.componentInstance.instance;
             fixture.detectChanges();
 
@@ -338,21 +283,15 @@ describe("Days View Component", () => {
         }));
 
         it("should select the clicked date", () => {
-            spyOn(instance.dateSelected, "emit");
-            spyOn(instance.selected, "emit");
+            vi.spyOn(instance.dateSelected, "emit");
+            vi.spyOn(instance.selected, "emit");
 
-            const day = fixture.debugElement.query(
-                By.css(
-                    ".igx-days-view__date:not(.igx-days-view__date--inactive)",
-                ),
-            );
+            const day = fixture.debugElement.query(By.css(".igx-days-view__date:not(.igx-days-view__date--inactive)"));
 
             UIInteractions.simulateClickAndSelectEvent(day.nativeElement.firstChild);
             fixture.detectChanges();
 
-            expect(instance.dateSelected.emit).toHaveBeenCalledWith(
-                instance.activeDate,
-            );
+            expect(instance.dateSelected.emit).toHaveBeenCalledWith(instance.activeDate);
 
             expect(instance.selected.emit).toHaveBeenCalledWith([
                 instance.activeDate,
@@ -362,15 +301,11 @@ describe("Days View Component", () => {
         });
 
         it("should emit pageChanged when clicking on a date outside the previous/next months", () => {
-            spyOn(instance.pageChanged, "emit");
+            vi.spyOn(instance.pageChanged, "emit");
 
-            let days = fixture.debugElement.queryAll(
-                By.css(".igx-days-view__date--inactive"),
-            );
+            let days = fixture.debugElement.queryAll(By.css(".igx-days-view__date--inactive"));
 
-            UIInteractions.simulateClickAndSelectEvent(
-                days.at(0).nativeElement.firstChild,
-            );
+            UIInteractions.simulateClickAndSelectEvent(days.at(0).nativeElement.firstChild);
             fixture.detectChanges();
 
             expect(instance.pageChanged.emit).toHaveBeenCalledWith({
@@ -379,13 +314,9 @@ describe("Days View Component", () => {
                 nextDate: instance.activeDate,
             });
 
-            days = fixture.debugElement.queryAll(
-                By.css(".igx-days-view__date--inactive"),
-            );
+            days = fixture.debugElement.queryAll(By.css(".igx-days-view__date--inactive"));
 
-            UIInteractions.simulateClickAndSelectEvent(
-                days.at(-1).nativeElement.firstChild,
-            );
+            UIInteractions.simulateClickAndSelectEvent(days.at(-1).nativeElement.firstChild);
             fixture.detectChanges();
 
             expect(instance.pageChanged.emit).toHaveBeenCalledWith({
@@ -399,21 +330,11 @@ describe("Days View Component", () => {
 
 function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
     const days = fixture.debugElement.queryAll(By.css(".igx-days-view__date"));
-    const inactiveDays = fixture.debugElement.queryAll(
-        By.css(
-            ".igx-days-view__date--inactive:not(igx-dasy-view__date--hidden)",
-        ),
-    );
+    const inactiveDays = fixture.debugElement.queryAll(By.css(".igx-days-view__date--inactive:not(igx-dasy-view__date--hidden)"));
 
-    const firstActiveIndex = days.findIndex(
-        (d: DebugElement) =>
-            !d.nativeElement.classList.contains(
-                "igx-days-view__date--inactive",
-            ),
-    );
+    const firstActiveIndex = days.findIndex((d: DebugElement) => !d.nativeElement.classList.contains("igx-days-view__date--inactive"));
 
-    const notHidden = (d: DebugElement) =>
-        !d.nativeElement.classList.contains("igx-days-view__date--hidden");
+    const notHidden = (d: DebugElement) => !d.nativeElement.classList.contains("igx-days-view__date--hidden");
 
     const leading = inactiveDays.slice(0, firstActiveIndex).filter(notHidden);
     const trailing = inactiveDays

@@ -6,6 +6,7 @@ import { IgxButtonDirective } from '../../../directives/src/directives/button/bu
 import { IgxRadioComponent } from '../../../radio/src/radio/radio.component';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 import { IgxRadioGroupDirective } from 'igniteui-angular/radio';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 interface IButton {
     type?: string;
@@ -59,7 +60,7 @@ describe('IgxButtonGroup', () => {
         }).compileComponents();
     }));
 
-   it('should initialize buttonGroup with default values', () => {
+    it('should initialize buttonGroup with default values', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
 
@@ -77,7 +78,7 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.selectedButtons.length).toEqual(1);
     });
 
-   it('should initialize buttonGroup with passed values', () => {
+    it('should initialize buttonGroup with passed values', () => {
         const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
         fixture.detectChanges();
 
@@ -99,7 +100,7 @@ describe('IgxButtonGroup', () => {
         fixture.detectChanges();
 
         const btnGroupInstance = fixture.componentInstance.buttonGroup;
-        spyOn(btnGroupInstance.selected, 'emit');
+        vi.spyOn(btnGroupInstance.selected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
         fixture.detectChanges();
@@ -128,7 +129,7 @@ describe('IgxButtonGroup', () => {
         const btnGroupInstance = fixture.componentInstance.buttonGroup;
         btnGroupInstance.buttons[0].select();
         btnGroupInstance.buttons[1].select();
-        spyOn(btnGroupInstance.deselected, 'emit');
+        vi.spyOn(btnGroupInstance.deselected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
         fixture.detectChanges();
@@ -177,7 +178,7 @@ describe('IgxButtonGroup', () => {
         expect(buttonGroup.selectedButtons.length).toBe(0);
     });
 
-   it('Button Group single selection', async () => {
+    it('Button Group single selection', async () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
 
         await wait();
@@ -204,7 +205,7 @@ describe('IgxButtonGroup', () => {
         const buttongroup = fixture.componentInstance.buttonGroup;
         buttongroup.selectionMode = 'singleRequired';
         await wait();
-        spyOn(buttongroup.deselected, 'emit');
+        vi.spyOn(buttongroup.deselected, 'emit');
 
         buttongroup.selectButton(0);
         await wait();
@@ -220,7 +221,7 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.deselected.emit).not.toHaveBeenCalled();
     });
 
-   it('Button Group multiple selection', async () => {
+    it('Button Group multiple selection', async () => {
         const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
         await wait();
         fixture.detectChanges();
@@ -431,14 +432,14 @@ describe('IgxButtonGroup', () => {
         expect(buttonGroup.buttons[0].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(false);
     });
 
-    it('should emit selected event only once per selection', async() => {
+    it('should emit selected event only once per selection', async () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
         await wait();
 
         const buttonGroup = fixture.componentInstance.buttonGroup;
 
-        spyOn(buttonGroup.selected, 'emit').and.callThrough();
+        vi.spyOn(buttonGroup.selected, 'emit');
 
         buttonGroup.selectButton(0);
         await wait();
@@ -464,11 +465,12 @@ describe('IgxButtonGroup', () => {
     imports: [IgxButtonGroupComponent]
 })
 class InitButtonGroupComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true })
+    public buttonGroup: IgxButtonGroupComponent;
 
     public buttons: Button[];
 
-    constructor() {}
+    constructor() { }
 
     public ngOnInit(): void {
         this.buttons = [
@@ -498,13 +500,14 @@ class InitButtonGroupComponent implements OnInit {
     imports: [IgxButtonGroupComponent]
 })
 class InitButtonGroupWithValuesComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true })
+    public buttonGroup: IgxButtonGroupComponent;
 
     public cities: Button[];
 
     public alignment = ButtonGroupAlignment.vertical;
 
-    constructor() {}
+    constructor() { }
 
     public ngOnInit(): void {
 
@@ -547,7 +550,8 @@ class InitButtonGroupWithValuesComponent implements OnInit {
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class TemplatedButtonGroupComponent {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true })
+    public buttonGroup: IgxButtonGroupComponent;
 
     public alignment = ButtonGroupAlignment.vertical;
 }
@@ -562,7 +566,8 @@ class TemplatedButtonGroupComponent {
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class TemplatedButtonGroupDesplayDensityComponent {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true })
+    public buttonGroup: IgxButtonGroupComponent;
 }
 
 @Component({
@@ -576,7 +581,8 @@ class TemplatedButtonGroupDesplayDensityComponent {
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class ButtonGroupWithSelectedButtonComponent {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true })
+    public buttonGroup: IgxButtonGroupComponent;
 }
 
 @Component({
@@ -590,7 +596,8 @@ class ButtonGroupWithSelectedButtonComponent {
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class ButtonGroupButtonWithBoundSelectedOutputComponent {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true })
+    public buttonGroup: IgxButtonGroupComponent;
 
     public items = [
         { key: 0, value: 'Button 1' },
@@ -627,12 +634,16 @@ class ButtonGroupButtonWithBoundSelectedOutputComponent {
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxRadioGroupDirective, IgxRadioComponent]
 })
 class ButtonGroupSelectionBoundToAnotherComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
-    @ViewChild('buttonGroup', { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('buttonGroup', { static: true })
+    public buttonGroup: IgxButtonGroupComponent;
 
     public selectedValue = 'Bar';
 
-    public onRadioChange(event: { value: string; }) {
+    public onRadioChange(event: {
+        value: string;
+    }) {
         this.selectedValue = event.value;
     }
 

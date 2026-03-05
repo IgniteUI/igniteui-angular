@@ -3,6 +3,7 @@ import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxDividerDirective, IgxDividerType } from './divider.directive';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Divider', () => {
     const baseClass = 'igx-divider';
@@ -31,7 +32,7 @@ describe('Divider', () => {
         fixture.detectChanges();
 
         expect(divider.nativeElement).toBeDefined();
-        expect(divider.nativeElement).toHaveClass(baseClass);
+        expect(divider.nativeElement.classList.contains(baseClass)).toBe(true);
     });
 
     it('should initialize dashed divider', () => {
@@ -39,8 +40,8 @@ describe('Divider', () => {
         fixture.componentInstance.type = IgxDividerType.DASHED;
         fixture.detectChanges();
 
-        expect(divider.nativeElement).toHaveClass(baseClass);
-        expect(divider.nativeElement).toHaveClass(classes.dashed);
+        expect(divider.nativeElement.classList.contains(baseClass)).toBe(true);
+        expect(divider.nativeElement.classList.contains(classes.dashed)).toBe(true);
     });
 
     it('should initialize vertical divider', () => {
@@ -48,7 +49,7 @@ describe('Divider', () => {
         fixture.componentInstance.vertical = true;
         fixture.detectChanges();
 
-        expect(divider.nativeElement).toHaveClass(classes.vertical);
+        expect(divider.nativeElement.classList.contains(classes.vertical)).toBe(true);
     });
 
     it('should initialize middle divider', () => {
@@ -56,8 +57,8 @@ describe('Divider', () => {
         fixture.componentInstance.middle = true;
         fixture.detectChanges();
 
-        expect(divider.nativeElement).not.toHaveClass(classes.vertical);
-        expect(divider.nativeElement).toHaveClass(classes.inset);
+        expect(divider.nativeElement.classList.contains(classes.vertical)).toBe(false);
+        expect(divider.nativeElement.classList.contains(classes.inset)).toBe(true);
     });
 
     it('should initialize middle, vertical divider', () => {
@@ -66,8 +67,8 @@ describe('Divider', () => {
         fixture.componentInstance.middle = true;
         fixture.detectChanges();
 
-        expect(divider.nativeElement).toHaveClass(classes.vertical);
-        expect(divider.nativeElement).toHaveClass(classes.inset);
+        expect(divider.nativeElement.classList.contains(classes.vertical)).toBe(true);
+        expect(divider.nativeElement.classList.contains(classes.inset)).toBe(true);
     });
 
     it('should inset the divider by the specified amount', () => {

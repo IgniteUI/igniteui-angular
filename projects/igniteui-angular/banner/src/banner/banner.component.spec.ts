@@ -7,6 +7,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from 'igniteui-angular/card';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_EXPANSION_PANEL_BODY = 'igx-expansion-panel__body';
@@ -231,12 +232,12 @@ describe('igxBanner', () => {
             const banner = fixture.componentInstance.banner;
             expect(banner.collapsed).toBeTruthy();
 
-            spyOn(banner.opened, 'emit');
-            spyOn(banner.closed, 'emit');
-            spyOn(banner, 'onExpansionPanelClose').and.callThrough();
-            spyOn(banner, 'onExpansionPanelOpen').and.callThrough();
-            spyOn(banner, 'open').and.callThrough();
-            spyOn(banner, 'close').and.callThrough();
+            vi.spyOn(banner.opened, 'emit');
+            vi.spyOn(banner.closed, 'emit');
+            vi.spyOn(banner, 'onExpansionPanelClose');
+            vi.spyOn(banner, 'onExpansionPanelOpen');
+            vi.spyOn(banner, 'open');
+            vi.spyOn(banner, 'close');
 
             banner.open();
             tick();
@@ -337,10 +338,10 @@ describe('igxBanner', () => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
-            spyOn(banner.closed, 'emit');
-            spyOn(banner.closing, 'emit');
-            spyOn(banner.opened, 'emit');
-            spyOn(banner.opening, 'emit');
+            vi.spyOn(banner.closed, 'emit');
+            vi.spyOn(banner.closing, 'emit');
+            vi.spyOn(banner.opened, 'emit');
+            vi.spyOn(banner.opening, 'emit');
             expect(banner.collapsed).toEqual(true);
             expect(banner.opening.emit).toHaveBeenCalledTimes(0);
             expect(banner.opened.emit).toHaveBeenCalledTimes(0);
@@ -364,10 +365,10 @@ describe('igxBanner', () => {
             const fixture = TestBed.createComponent(SimpleBannerEventsComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
-            spyOn(banner.closing, 'emit').and.callThrough();
-            spyOn(banner.opening, 'emit').and.callThrough();
-            spyOn(banner.closed, 'emit').and.callThrough();
-            spyOn(banner.opened, 'emit').and.callThrough();
+            vi.spyOn(banner.closing, 'emit');
+            vi.spyOn(banner.opening, 'emit');
+            vi.spyOn(banner.closed, 'emit');
+            vi.spyOn(banner.opened, 'emit');
             expect(banner.collapsed).toEqual(true);
             fixture.componentInstance.cancelFlag = true;
             banner.toggle();
@@ -404,24 +405,24 @@ describe('igxBanner', () => {
             tick();
             fixture.detectChanges();
 
-            expect(banner.expanded).toBeFalse();
+            expect(banner.expanded).toBe(false);
 
             banner.expanded = true;
             tick();
             fixture.detectChanges();
-            expect(banner.expanded).toBeTrue();
+            expect(banner.expanded).toBe(true);
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
 
             banner.expanded = false;
             tick();
             fixture.detectChanges();
-            expect(banner.expanded).toBeFalse();
+            expect(banner.expanded).toBe(false);
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
 
             banner.expanded = true;
             tick();
             fixture.detectChanges();
-            expect(banner.expanded).toBeTrue();
+            expect(banner.expanded).toBe(true);
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
         }));
     });
@@ -519,7 +520,7 @@ describe('igxBanner', () => {
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
 
-            expect(banner.expanded).toBeTrue();
+            expect(banner.expanded).toBe(true);
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
             expect(banner.elementRef.nativeElement.querySelector('.' + CSS_CLASS_BANNER)).not.toBeNull();
         }));
@@ -543,7 +544,7 @@ describe('igxBanner', () => {
     imports: [IgxBannerComponent]
 })
 export class IgxBannerEmptyComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
     public banner: IgxBannerComponent;
 }
 
@@ -562,7 +563,7 @@ export class IgxBannerEmptyComponent {
     imports: [IgxBannerComponent, IgxBannerActionsDirective]
 })
 export class IgxBannerOneButtonComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
     public banner: IgxBannerComponent;
 }
 
@@ -583,7 +584,7 @@ export class IgxBannerOneButtonComponent {
     imports: [IgxBannerComponent, IgxBannerActionsDirective, IgxIconComponent]
 })
 export class IgxBannerSampleComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
     public banner: IgxBannerComponent;
 }
 
@@ -613,7 +614,7 @@ export class IgxBannerSampleComponent {
     imports: [IgxBannerComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxBannerActionsDirective, IgxAvatarComponent]
 })
 export class IgxBannerCustomTemplateComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
     public banner: IgxBannerComponent;
 }
 
@@ -626,7 +627,7 @@ export class IgxBannerCustomTemplateComponent {
     imports: [IgxBannerComponent]
 })
 export class SimpleBannerEventsComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
     public banner: IgxBannerComponent;
 
     public cancelFlag = false;

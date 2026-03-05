@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const version = '20.0.2';
 
@@ -18,20 +19,15 @@ describe(`Update to ${version}`, () => {
     it('should remove the $interim-bottom-line-color property from the input-group theme', async () => {
         const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
 
-        appTree.create(
-            testFilePath,
-            `$my-input-group-theme: input-group-theme(
+        appTree.create(testFilePath, `$my-input-group-theme: input-group-theme(
                 $box-background: #ccc,
                 $interim-bottom-line-color: orange,
-            );`
-        );
+            );`);
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.readContent(testFilePath)).toEqual(
-            `$my-input-group-theme: input-group-theme(
+        expect(tree.readContent(testFilePath)).toEqual(`$my-input-group-theme: input-group-theme(
                 $box-background: #ccc,
-            );`
-        );
+            );`);
     });
 });

@@ -1,6 +1,7 @@
 import * as path from 'path';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Update 8.2.6', () => {
     let appTree: UnitTestTree;
@@ -11,9 +12,7 @@ describe('Update 8.2.6', () => {
     });
 
     it('should update igx-carousel-theme prop', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.scss',
-            `$my-toolbar-theme: igx-grid-toolbar-theme(
+        appTree.create('/testSrc/appPrefix/component/test.component.scss', `$my-toolbar-theme: igx-grid-toolbar-theme(
                 $background-color: null,
                 $button-background: null,
                 $title-text-color: null,
@@ -28,12 +27,10 @@ describe('Update 8.2.6', () => {
                 $item-hover-text-color: null,
                 $item-focus-background: null,
                 $item-focus-text-color: null
-              );`
-        );
+              );`);
         const tree = await schematicRunner.runSchematic('migration-12', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
-            .toEqual(
-                `$my-toolbar-theme: igx-grid-toolbar-theme(
+            .toEqual(`$my-toolbar-theme: igx-grid-toolbar-theme(
                 $background-color: null,
                 $title-text-color: null,
                 $dropdown-background: null,
@@ -42,33 +39,27 @@ describe('Update 8.2.6', () => {
                 $item-hover-text-color: null,
                 $item-focus-background: null,
                 $item-focus-text-color: null
-              );`
-            );
+              );`);
     });
 
     it('should update igx-grid-paginator-theme', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.scss',
-            `@import '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-component';
+        appTree.create('/testSrc/appPrefix/component/test.component.scss', `@import '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-component';
             @import '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-theme';
             $dark-grid-paginator: igx-grid-paginator-theme($color: black);
             @include igx-grid-paginator($dark-grid-paginator);
             .igx-grid-paginator__pager {
                 @include igx-button($dark-button);
             }
-            $dark-grid-paginator-schema: extend($_dark-grid-pagination,());`
-        );
+            $dark-grid-paginator-schema: extend($_dark-grid-pagination,());`);
         const tree = await schematicRunner.runSchematic('migration-12', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
-        .toEqual(
-            `@import '~igniteui-angular/lib/core/styles/components/paginator/paginator-component';
+            .toEqual(`@import '~igniteui-angular/lib/core/styles/components/paginator/paginator-component';
             @import '~igniteui-angular/lib/core/styles/components/paginator/paginator-theme';
             $dark-grid-paginator: igx-paginator-theme($color: black);
             @include igx-paginator($dark-grid-paginator);
             .igx-grid-paginator__pager {
                 @include igx-button($dark-button);
             }
-            $dark-grid-paginator-schema: extend($_dark-pagination,());`
-        );
+            $dark-grid-paginator-schema: extend($_dark-pagination,());`);
     });
 });

@@ -1,6 +1,7 @@
 import { strFromU8 } from 'fflate';
 import { ExcelFileTypes } from './excel-enums';
 import { ZipFiles } from './zip-helper.spec';
+import { expect } from 'vitest';
 
 export class ZipWrapper {
     private _zip: Object;
@@ -111,14 +112,12 @@ export class ZipWrapper {
     }
 
     private async readTemplateFiles() {
-        const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
-            f !== ZipFiles.templatesNames[11]) : this.templateFilesOnly;
+        const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) => f !== ZipFiles.templatesNames[11]) : this.templateFilesOnly;
         await this.readFiles(actualTemplates);
     }
 
     public get templateFilesContent(): IFileContent[] {
-        const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
-            f !== ZipFiles.templatesNames[11]) : this.templateFilesOnly;
+        const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) => f !== ZipFiles.templatesNames[11]) : this.templateFilesOnly;
         return this._filesContent.filter((c) => actualTemplates.indexOf(c.fileName) > -1);
     }
 

@@ -1,8 +1,9 @@
 import { IPivotGridRecord } from 'igniteui-angular/grids/core';
+import { expect } from 'vitest';
 
 export class PivotGridFunctions {
 
-    public static checkUniqueValuesCount(data: any[], value: string, count:number) {
+    public static checkUniqueValuesCount(data: any[], value: string, count: number) {
         expect(data.filter(x => x === data).length).toBe(count);
     }
 

@@ -6,6 +6,7 @@ import { wait } from '../../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     let fixture;
@@ -41,26 +42,26 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             const row = hierarchicalGrid.rowList.first;
             hierarchicalGrid.expandRow(row.key);
             fixture.detectChanges();
-            expect(row.expanded).toBeTrue();
+            expect(row.expanded).toBe(true);
 
             row.beginAddRow();
             fixture.detectChanges();
-            expect(row.expanded).toBeFalse();
-            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
+            expect(row.expanded).toBe(false);
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBe(true);
         });
 
         it('Should allow the expansion of a newly added (commited) record', async () => {
             const row = hierarchicalGrid.rowList.first;
             hierarchicalGrid.expandRow(row.key);
             fixture.detectChanges();
-            expect(row.expanded).toBeTrue();
+            expect(row.expanded).toBe(true);
 
             row.beginAddRow();
             fixture.detectChanges();
             endTransition();
-            expect(row.expanded).toBeFalse();
+            expect(row.expanded).toBe(false);
 
-            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBe(true);
             hierarchicalGrid.gridAPI.crudService.endEdit(true);
             fixture.detectChanges();
             hierarchicalGrid.addRowSnackbar.triggerAction();
@@ -71,10 +72,10 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
 
             const newRowData = hierarchicalGrid.data[hierarchicalGrid.data.length - 1];
             const newRow = hierarchicalGrid.rowList.find(r => r.key === newRowData[hierarchicalGrid.primaryKey]);
-            expect(newRow.expanded).toBeFalse();
+            expect(newRow.expanded).toBe(false);
             hierarchicalGrid.expandRow(newRow.key);
             fixture.detectChanges();
-            expect(newRow.expanded).toBeTrue();
+            expect(newRow.expanded).toBe(true);
         });
 
         it('Should allow adding to child grid for parent row that has null/undefined child collection.', async () => {

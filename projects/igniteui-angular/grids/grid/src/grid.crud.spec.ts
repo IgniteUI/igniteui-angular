@@ -5,6 +5,7 @@ import { IgxGridComponent } from './grid.component';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridEditEventArgs } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 
@@ -34,7 +35,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.length).toEqual(expectedLength);
 
         for (let i = 0; i < 10; i++) {
-            grid.addRow({ index: i, value: i});
+            grid.addRow({ index: i, value: i });
         }
         fix.detectChanges();
 
@@ -48,7 +49,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         // Add to the data array without changing the reference
         // with manual detection
         for (let i = 0; i < 10; i++) {
-            fix.componentInstance.data.push({ index: i, value: i});
+            fix.componentInstance.data.push({ index: i, value: i });
         }
 
         grid.cdr.markForCheck();
@@ -61,7 +62,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         // without manual detection
 
         for (let i = 0; i < 10; i++) {
-            fix.componentInstance.data.push({ index: i, value: i});
+            fix.componentInstance.data.push({ index: i, value: i });
         }
         fix.componentInstance.data = fix.componentInstance.data.slice();
         fix.detectChanges();
@@ -80,7 +81,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.length).toEqual(expectedLength);
 
         for (let i = 0; i < 10; i++) {
-            grid.addRow({ index: i, value: i});
+            grid.addRow({ index: i, value: i });
         }
         fix.detectChanges();
 
@@ -116,7 +117,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.length).toEqual(0);
 
         for (let i = 0; i < 10; i++) {
-            fix.componentInstance.data.push({ index: i, value: i});
+            fix.componentInstance.data.push({ index: i, value: i });
         }
         fix.componentInstance.data = fix.componentInstance.data.slice();
         fix.detectChanges();
@@ -188,7 +189,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
     it('should update row through row object when PK is defined', () => {
         let firstRow = grid.getRowByKey(1);
-        firstRow.update({ index: 31, value: 51});
+        firstRow.update({ index: 31, value: 51 });
 
         fix.detectChanges();
         firstRow = grid.getRowByKey(31);
@@ -204,7 +205,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
         expect(grid.primaryKey).toBeNull();
         let firstRow = grid.getRowByIndex(0);
-        firstRow.update({ index: 100, value: 99});
+        firstRow.update({ index: 100, value: 99 });
 
         fix.detectChanges();
         firstRow = grid.getRowByIndex(0);
@@ -279,15 +280,15 @@ describe('IgxGrid - CRUD operations #grid', () => {
         await wait(50);
         fix.detectChanges();
         const rowID = 9;
-        const sampleData = [{ index: 2, value: 2},
-        { index: 3, value: 3}, { index: 4, value: 4}, { index: 5, value: 5},
-        { index: 6, value: 6}, { index: 7, value: 7}, { index: 8, value: 8},
-        { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
+        const sampleData = [{ index: 2, value: 2 },
+            { index: 3, value: 3 }, { index: 4, value: 4 }, { index: 5, value: 5 },
+            { index: 6, value: 6 }, { index: 7, value: 7 }, { index: 8, value: 8 },
+            { index: 9, value: 9 }, { index: 10, value: 10 }, { index: 11, value: 11 }];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
         expect(grid.data.length).toBe(11);
 
-        grid.updateRow({ index: 97, value: 87}, rowID);
+        grid.updateRow({ index: 97, value: 87 }, rowID);
         fix.detectChanges();
         expect(grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID)).toBe(-1);
         expect(grid.data[grid.data.map((record) => record[grid.primaryKey]).indexOf(97)]).toBeDefined();
@@ -298,10 +299,10 @@ describe('IgxGrid - CRUD operations #grid', () => {
         await wait(50);
         fix.detectChanges();
         const rowID = 9;
-        const sampleData = [{ index: 2, value: 2},
-        { index: 3, value: 3}, { index: 4, value: 4}, { index: 5, value: 5},
-        { index: 6, value: 6}, { index: 7, value: 7}, { index: 8, value: 8},
-        { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
+        const sampleData = [{ index: 2, value: 2 },
+            { index: 3, value: 3 }, { index: 4, value: 4 }, { index: 5, value: 5 },
+            { index: 6, value: 6 }, { index: 7, value: 7 }, { index: 8, value: 8 },
+            { index: 9, value: 9 }, { index: 10, value: 10 }, { index: 11, value: 11 }];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
         expect(grid.data.length).toBe(11);
@@ -318,10 +319,10 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
         const rowID = 9;
         const columnName = 'value';
-        const sampleData = [{ index: 2, value: 2},
-        { index: 3, value: 3}, { index: 4, value: 4}, { index: 5, value: 5},
-        { index: 6, value: 6}, { index: 7, value: 7}, { index: 8, value: 8},
-        { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
+        const sampleData = [{ index: 2, value: 2 },
+            { index: 3, value: 3 }, { index: 4, value: 4 }, { index: 5, value: 5 },
+            { index: 6, value: 6 }, { index: 7, value: 7 }, { index: 8, value: 8 },
+            { index: 9, value: 9 }, { index: 10, value: 10 }, { index: 11, value: 11 }];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
 
@@ -331,7 +332,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(cell.row.key).toBe(rowID);
         expect(cell.column.field).toBe(columnName);
 
-        grid.updateCell( 97, rowID, columnName);
+        grid.updateCell(97, rowID, columnName);
         fix.detectChanges();
         const row = grid.data[grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID)];
         expect(row).toBeDefined();
@@ -358,7 +359,7 @@ export class DefaultCRUDGridComponent {
     public instance: IgxGridComponent;
 
     public data = [
-        { index: 1, value: 1}
+        { index: 1, value: 1 }
     ];
 
     public editDone(event: IGridEditEventArgs) {

@@ -1,3 +1,5 @@
+import type { Mock } from "vitest";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -5,9 +7,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import {
-    IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
-} from '../../../input-group/src/public_api';
+import { IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { PickerInteractionMode } from '../../../core/src/date-common/types';
 import { PlatformUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { DatePart } from '../../../core/src/date-common/public_api';
@@ -72,8 +72,8 @@ describe('IgxTimePicker', () => {
                 valueChange: new EventEmitter<any>(),
                 validationFailed: new EventEmitter<any>()
             };
-            spyOn(mockDateTimeEditorDirective, 'increment');
-            spyOn(mockDateTimeEditorDirective, 'decrement');
+            vi.spyOn(mockDateTimeEditorDirective, 'increment');
+            vi.spyOn(mockDateTimeEditorDirective, 'decrement');
 
             mockInputGroup = {
                 _isFocused: false,
@@ -91,13 +91,22 @@ describe('IgxTimePicker', () => {
                     this._isRequired = val;
                 },
                 element: {
-                    nativeElement: jasmine.createSpyObj('mockElement',
-                        ['focus', 'blur', 'click', 'addEventListener', 'removeEventListener'])
+                    nativeElement: {
+                        focus: vi.fn().mockName("mockElement.focus"),
+                        blur: vi.fn().mockName("mockElement.blur"),
+                        click: vi.fn().mockName("mockElement.click"),
+                        addEventListener: vi.fn().mockName("mockElement.addEventListener"),
+                        removeEventListener: vi.fn().mockName("mockElement.removeEventListener")
+                    }
                 }
             } as any;
 
             elementRef = {
-                nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['blur', 'click', 'focus'])
+                nativeElement: {
+                    blur: vi.fn().mockName("mockElement.blur"),
+                    click: vi.fn().mockName("mockElement.click"),
+                    focus: vi.fn().mockName("mockElement.focus")
+                }
             };
             mockControlInstance = {
                 _touched: false,
@@ -188,18 +197,20 @@ describe('IgxTimePicker', () => {
                 },
                 focus: () => { }
             };
-            mockInjector = jasmine.createSpyObj('Injector', {
-                get: mockNgControl
-            });
+            mockInjector = {
+                get: vi.fn().mockName("Injector.get").mockReturnValue(mockNgControl)
+            };
 
-            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+            mockCdr = {
+                detectChanges: vi.fn().mockName("ChangeDetectorRef.detectChanges")
+            };
             //const platformUtil = TestBed.inject(PlatformUtil);
 
             TestBed.configureTestingModule({
                 providers: [
-                    {provide: ElementRef, useValue: elementRef},
-                    {provide: Injector, useValue: mockInjector},
-                    {provide: ChangeDetectorRef, useValue: mockCdr},
+                    { provide: ElementRef, useValue: elementRef },
+                    { provide: Injector, useValue: mockInjector },
+                    { provide: ChangeDetectorRef, useValue: mockCdr },
                     { provide: IGX_TIME_PICKER_COMPONENT, useExisting: IgxTimePickerComponent },
                     IgxTimePickerComponent,
                     PlatformUtil,
@@ -216,8 +227,10 @@ describe('IgxTimePicker', () => {
         });
 
         it('should properly initialize w/ ngControl', () => {
-            const mockSub = jasmine.createSpyObj<Subscription>('mockSub', ['unsubscribe']);
-            spyOn(mockNgControl.statusChanges, 'subscribe').and.returnValue(mockSub);
+            const mockSub = {
+                unsubscribe: vi.fn().mockName("mockSub.unsubscribe")
+            };
+            vi.spyOn(mockNgControl.statusChanges, 'subscribe').mockReturnValue(mockSub);
             timePicker.ngOnInit();
             timePicker.ngAfterViewInit();
             expect(mockNgControl.statusChanges.subscribe).toHaveBeenCalledTimes(1);
@@ -228,52 +241,52 @@ describe('IgxTimePicker', () => {
         it('should properly subscribe to ngControl status changes', () => {
             timePicker.ngOnInit();
             timePicker.ngAfterViewInit();
-            const touchedSpy = spyOnProperty(mockControlInstance, 'touched', 'get');
-            const dirtySpy = spyOnProperty(mockControlInstance, 'dirty', 'get');
-            const validatorSpy = spyOnProperty(mockControlInstance, 'validator');
-            const asyncValidatorSpy = spyOnProperty(mockControlInstance, 'asyncValidator');
-            const inputGroupFocusedSpy = spyOnProperty(mockInputGroup, 'isFocused', 'get');
-            const inputGroupRequiredGet = spyOnProperty(mockInputGroup, 'isRequired', 'get');
-            const inputGroupRequiredSet = spyOnProperty(mockInputGroup, 'isRequired', 'set');
-            inputGroupRequiredGet.and.returnValue(false);
-            inputGroupFocusedSpy.and.returnValue(false);
+            const touchedSpy = vi.spyOn(mockControlInstance, 'touched', 'get');
+            const dirtySpy = vi.spyOn(mockControlInstance, 'dirty', 'get');
+            const validatorSpy = vi.spyOn(mockControlInstance, 'validator');
+            const asyncValidatorSpy = vi.spyOn(mockControlInstance, 'asyncValidator');
+            const inputGroupFocusedSpy = vi.spyOn(mockInputGroup, 'isFocused', 'get');
+            const inputGroupRequiredGet = vi.spyOn(mockInputGroup, 'isRequired', 'get');
+            const inputGroupRequiredSet = vi.spyOn(mockInputGroup, 'isRequired', 'set');
+            inputGroupRequiredGet.mockReturnValue(false);
+            inputGroupFocusedSpy.mockReturnValue(false);
             expect(touchedSpy).not.toHaveBeenCalled();
             expect(dirtySpy).not.toHaveBeenCalled();
             expect(validatorSpy).not.toHaveBeenCalled();
             expect(asyncValidatorSpy).not.toHaveBeenCalled();
 
-            touchedSpy.and.returnValue(false);
-            dirtySpy.and.returnValue(false);
+            touchedSpy.mockReturnValue(false);
+            dirtySpy.mockReturnValue(false);
             mockNgControl.statusChanges.emit();
             expect(touchedSpy).toHaveBeenCalledTimes(1);
             expect(dirtySpy).toHaveBeenCalledTimes(1);
             // required getter
             expect(validatorSpy).toHaveBeenCalledTimes(1);
 
-            touchedSpy.and.returnValue(true);
-            dirtySpy.and.returnValue(true);
-            validatorSpy.and.returnValue(false);
-            asyncValidatorSpy.and.returnValue(false);
+            touchedSpy.mockReturnValue(true);
+            dirtySpy.mockReturnValue(true);
+            validatorSpy.mockReturnValue(false);
+            asyncValidatorSpy.mockReturnValue(false);
             mockNgControl.statusChanges.emit();
             expect(validatorSpy).toHaveBeenCalledTimes(3);
             expect(asyncValidatorSpy).toHaveBeenCalledTimes(1);
             expect(inputGroupFocusedSpy).not.toHaveBeenCalled();
 
-            validatorSpy.and.returnValue(() => { });
-            asyncValidatorSpy.and.returnValue(() => { });
+            validatorSpy.mockReturnValue(() => { });
+            asyncValidatorSpy.mockReturnValue(() => { });
 
             mockNgControl.statusChanges.emit();
             expect(inputGroupFocusedSpy).toHaveBeenCalledTimes(1);
             expect(inputGroupRequiredSet).not.toHaveBeenCalled();
 
-            inputGroupRequiredGet.and.returnValue(false);
-            validatorSpy.and.returnValue(() => ({ required: true }));
+            inputGroupRequiredGet.mockReturnValue(false);
+            validatorSpy.mockReturnValue(() => ({ required: true }));
             mockNgControl.statusChanges.emit();
             expect(inputGroupFocusedSpy).toHaveBeenCalledTimes(2);
             expect(inputGroupRequiredSet).toHaveBeenCalledTimes(1);
             expect(inputGroupRequiredSet).toHaveBeenCalledWith(true);
 
-            inputGroupRequiredGet.and.returnValue(true);
+            inputGroupRequiredGet.mockReturnValue(true);
 
             mockNgControl.statusChanges.emit();
             expect(inputGroupFocusedSpy).toHaveBeenCalledTimes(3);
@@ -284,7 +297,7 @@ describe('IgxTimePicker', () => {
             mockNgControl.statusChanges.emit();
             expect(mockInputDirective.valid).toBe(IgxInputState.INVALID);
 
-            inputGroupFocusedSpy.and.returnValue(true);
+            inputGroupFocusedSpy.mockReturnValue(true);
             mockNgControl.statusChanges.emit();
             expect(mockInputDirective.valid).toBe(IgxInputState.INVALID);
 
@@ -295,35 +308,45 @@ describe('IgxTimePicker', () => {
         });
 
         it('should open/close the dropdown with open()/close() method', () => {
-            const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['open', 'close'], { collapsed: true });
+            const mockToggleDirective = {
+                open: vi.fn().mockName("IgxToggleDirective.open"),
+                close: vi.fn().mockName("IgxToggleDirective.close"),
+                collapsed: true
+            };
             (timePicker as any).toggleRef = mockToggleDirective;
             timePicker.ngOnInit();
 
             timePicker.open();
             expect(mockToggleDirective.open).toHaveBeenCalledTimes(1);
 
-            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as jasmine.Spy<() => boolean>).and.returnValue(false);
+            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as Mock).mockReturnValue(false);
             timePicker.close();
             expect(mockToggleDirective.close).toHaveBeenCalledTimes(1);
         });
 
         it('should open/close the dropdown with toggle() method', () => {
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
-            const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['open', 'close'], { collapsed: true });
+            const mockToggleDirective = {
+                open: vi.fn().mockName("IgxToggleDirective.open"),
+                close: vi.fn().mockName("IgxToggleDirective.close"),
+                collapsed: true
+            };
             (timePicker as any).toggleRef = mockToggleDirective;
             timePicker.ngOnInit();
 
             timePicker.toggle();
             expect(mockToggleDirective.open).toHaveBeenCalledTimes(1);
 
-            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as jasmine.Spy<() => boolean>).and.returnValue(false);
+            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as Mock).mockReturnValue(false);
             timePicker.toggle();
             expect(mockToggleDirective.close).toHaveBeenCalledTimes(1);
         });
 
         it('should reset value and emit valueChange with clear() method', () => {
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
-            const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
+            const mockToggleDirective = {
+                collapsed: vi.fn().mockName("IgxToggleDirective.collapsed").mockReturnValue(true)
+            };
             (timePicker as any).toggleRef = mockToggleDirective;
             timePicker.minDropdownValue = timePicker.minDateValue;
             timePicker.maxDropdownValue = timePicker.maxDateValue;
@@ -331,7 +354,7 @@ describe('IgxTimePicker', () => {
             const date = new Date(2020, 12, 12, 10, 30, 30);
             timePicker.value = new Date(date);
             date.setHours(0, 0, 0);
-            spyOn(timePicker.valueChange, 'emit').and.callThrough();
+            vi.spyOn(timePicker.valueChange, 'emit');
 
             timePicker.clear();
             expect(timePicker.value).toEqual(date);
@@ -349,12 +372,14 @@ describe('IgxTimePicker', () => {
 
         it('should not emit valueChange when value is \'00:00:00\' and is cleared', () => {
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
-            const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
+            const mockToggleDirective = {
+                collapsed: vi.fn().mockName("IgxToggleDirective.collapsed").mockReturnValue(true)
+            };
             (timePicker as any).toggleRef = mockToggleDirective;
 
             const date = new Date(2020, 12, 12, 0, 0, 0);
             timePicker.value = date;
-            spyOn(timePicker.valueChange, 'emit').and.callThrough();
+            vi.spyOn(timePicker.valueChange, 'emit');
 
             timePicker.ngOnInit();
 
@@ -364,11 +389,13 @@ describe('IgxTimePicker', () => {
 
         it('should not emit valueChange when value is null and is cleared', () => {
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
-            const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
+            const mockToggleDirective = {
+                collapsed: vi.fn().mockName("IgxToggleDirective.collapsed").mockReturnValue(true)
+            };
             (timePicker as any).toggleRef = mockToggleDirective;
             timePicker.value = null;
             timePicker.ngOnInit();
-            spyOn(timePicker.valueChange, 'emit').and.callThrough();
+            vi.spyOn(timePicker.valueChange, 'emit');
 
             timePicker.clear();
             expect(timePicker.valueChange.emit).not.toHaveBeenCalled();
@@ -383,7 +410,7 @@ describe('IgxTimePicker', () => {
             timePicker.maxDropdownValue = timePicker.maxDateValue;
 
             const selectedDate = new Date(2020, 12, 12, 6, 45, 0);
-            spyOn(timePicker.valueChange, 'emit').and.callThrough();
+            vi.spyOn(timePicker.valueChange, 'emit');
 
             timePicker.select(selectedDate);
             expect(timePicker.value).toEqual(selectedDate);
@@ -395,15 +422,18 @@ describe('IgxTimePicker', () => {
             const date = new Date(2020, 12, 12, 10, 30, 30);
             const updatedDate = new Date(2020, 12, 12, 11, 30, 30);
 
-            const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['close'], { collapsed: true });
+            const mockToggleDirective = {
+                close: vi.fn().mockName("IgxToggleDirective.close"),
+                collapsed: true
+            };
             timePicker['dateTimeEditor'] = mockDateTimeEditorDirective;
             timePicker['inputDirective'] = mockInputDirective;
             timePicker['toggleRef'] = mockToggleDirective;
             timePicker.minDropdownValue = timePicker.minDateValue;
             timePicker.maxDropdownValue = timePicker.maxDateValue;
             timePicker.ngOnInit();
-            spyOn(mockNgControl, 'registerOnChangeCb');
-            spyOn(mockNgControl, 'registerOnTouchedCb');
+            vi.spyOn(mockNgControl, 'registerOnChangeCb');
+            vi.spyOn(mockNgControl, 'registerOnTouchedCb');
             timePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             timePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
@@ -430,8 +460,8 @@ describe('IgxTimePicker', () => {
             timePicker['inputDirective'] = mockInputDirective;
             timePicker.ngOnInit();
 
-            spyOn(mockNgControl, 'registerOnChangeCb');
-            spyOn(mockNgControl, 'registerOnValidatorChangeCb');
+            vi.spyOn(mockNgControl, 'registerOnChangeCb');
+            vi.spyOn(mockNgControl, 'registerOnValidatorChangeCb');
 
             timePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             timePicker.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
@@ -456,18 +486,14 @@ describe('IgxTimePicker', () => {
         it('should handle panmove event correctly', () => {
             const touchManager = TestBed.inject(HammerGesturesManager);
             const itemListDirective = TestBed.inject(IgxItemListDirective);
-            spyOn(touchManager, 'addEventListener');
+            vi.spyOn(touchManager, 'addEventListener');
 
             itemListDirective.ngOnInit();
             expect(touchManager.addEventListener).toHaveBeenCalledTimes(1);
             const hammerOptions: HammerOptions = { recognizers: [[HammerGesturesManager.Hammer.Pan, { direction: HammerGesturesManager.Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
-            expect(touchManager.addEventListener).toHaveBeenCalledWith(
-                elementRef.nativeElement,
-                'pan',
-                (itemListDirective as any).onPanMove,
-                hammerOptions);
+            expect(touchManager.addEventListener).toHaveBeenCalledWith(elementRef.nativeElement, 'pan', (itemListDirective as any).onPanMove, hammerOptions);
 
-            spyOn<any>(itemListDirective, 'onPanMove').and.callThrough();
+            vi.spyOn(itemListDirective, 'onPanMove');
             const event = { type: 'pan' };
             (itemListDirective as any).onPanMove(event);
             expect(itemListDirective['onPanMove']).toHaveBeenCalled();
@@ -508,7 +534,7 @@ describe('IgxTimePicker', () => {
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
                 ampmColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_AMPMLIST}`));
                 dateTimeEditor = fixture.debugElement.query(By.directive(IgxDateTimeEditorDirective)).
-                                    injector.get(IgxDateTimeEditorDirective);
+                    injector.get(IgxDateTimeEditorDirective);
             }));
             it('should open/close the dropdown and keep the current selection on toggle icon click', fakeAsync(() => {
                 const toggleIcon = fixture.debugElement.query(By.css('igx-prefix'));
@@ -643,7 +669,8 @@ describe('IgxTimePicker', () => {
                 hourColumn.triggerEventHandler('wheel', event);
                 fixture.detectChanges();
                 hourColumn.triggerEventHandler('wheel', event);
-                fixture.detectChanges(); hourColumn.triggerEventHandler('wheel', event);
+                fixture.detectChanges();
+                hourColumn.triggerEventHandler('wheel', event);
                 fixture.detectChanges();
                 let selectedHour = fixture.componentInstance.date.getHours() + 2;
                 const selectedAmpm = selectedHour < 12 ? 'AM' : 'PM';
@@ -697,10 +724,10 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should fire opening/closing event on open/close', fakeAsync(() => {
-                spyOn(timePicker.opening, 'emit').and.callThrough();
-                spyOn(timePicker.opened, 'emit').and.callThrough();
-                spyOn(timePicker.closing, 'emit').and.callThrough();
-                spyOn(timePicker.closed, 'emit').and.callThrough();
+                vi.spyOn(timePicker.opening, 'emit');
+                vi.spyOn(timePicker.opened, 'emit');
+                vi.spyOn(timePicker.closing, 'emit');
+                vi.spyOn(timePicker.closed, 'emit');
 
                 timePicker.open();
                 tick();
@@ -718,10 +745,10 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should be able to cancel opening/closing events', fakeAsync(() => {
-                spyOn(timePicker.opening, 'emit').and.callThrough();
-                spyOn(timePicker.opened, 'emit').and.callThrough();
-                spyOn(timePicker.closing, 'emit').and.callThrough();
-                spyOn(timePicker.closed, 'emit').and.callThrough();
+                vi.spyOn(timePicker.opening, 'emit');
+                vi.spyOn(timePicker.opened, 'emit');
+                vi.spyOn(timePicker.closing, 'emit');
+                vi.spyOn(timePicker.closed, 'emit');
 
                 const openingSub = timePicker.opening.subscribe((event) => event.cancel = true);
 
@@ -758,7 +785,7 @@ describe('IgxTimePicker', () => {
                 timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0, 0);
                 timePicker.itemsDelta = { hours: 2, minutes: 20, seconds: 15 };
                 fixture.detectChanges();
-                spyOn(timePicker.valueChange, 'emit').and.callThrough();
+                vi.spyOn(timePicker.valueChange, 'emit');
 
                 timePicker.increment(DatePart.Hours);
                 date.setHours(date.getHours() + timePicker.itemsDelta.hours);
@@ -794,7 +821,7 @@ describe('IgxTimePicker', () => {
                 timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0);
                 timePicker.itemsDelta = { hours: 2, minutes: 20, seconds: 15 };
                 fixture.detectChanges();
-                spyOn(timePicker.validationFailed, 'emit').and.callThrough();
+                vi.spyOn(timePicker.validationFailed, 'emit');
 
                 timePicker.increment(DatePart.Hours);
                 fixture.detectChanges();
@@ -851,7 +878,7 @@ describe('IgxTimePicker', () => {
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
-                expect(timePicker.collapsed).toBeTrue();
+                expect(timePicker.collapsed).toBe(true);
 
                 expect((timePicker.value as Date).getHours()).toEqual(expectedValuedHour);
                 expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
@@ -902,7 +929,7 @@ describe('IgxTimePicker', () => {
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
-                expect(timePicker.collapsed).toBeTrue();
+                expect(timePicker.collapsed).toBe(true);
 
                 expect((timePicker.value as Date).getHours()).toEqual(expectedValuedHour);
                 expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
@@ -1132,7 +1159,7 @@ describe('IgxTimePicker', () => {
 
                 // ensure there is content in each element of the spinners
                 // '08', '09', '10', '11', '12', '01', '02'
-                expect(hourColumn.queryAll(By.css('span')).every(e => !!e.nativeElement.innerText)).toBeTrue();
+                expect(hourColumn.queryAll(By.css('span')).every(e => !!e.nativeElement.innerText)).toBe(true);
 
                 // '00', '15', '30', '45', '', '', '' - three empty elements to align the minutes spinner length with the hours spinner length
                 expect(minutesColumn.queryAll(By.css('span')).filter(e => !!e.nativeElement.innerText).length).toEqual(4);
@@ -1157,7 +1184,7 @@ describe('IgxTimePicker', () => {
                 minutesColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_MINUTELIST}`));
                 ampmColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_AMPMLIST}`));
                 dateTimeEditor = fixture.debugElement.query(By.directive(IgxDateTimeEditorDirective)).
-                                injector.get(IgxDateTimeEditorDirective);
+                    injector.get(IgxDateTimeEditorDirective);
             }));
 
             it('Should render default toggle and clear icons', () => {
@@ -1165,10 +1192,10 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
-                expect(prefix).toHaveSize(1);
+                expect(prefix).toHaveLength(1);
                 expect(prefix[0].nativeElement.innerText).toEqual(TIME_PICKER_TOGGLE_ICON);
                 const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
-                expect(suffix).toHaveSize(1);
+                expect(suffix).toHaveLength(1);
                 expect(suffix[0].nativeElement.innerText).toEqual(TIME_PICKER_CLEAR_ICON);
             });
 
@@ -1334,7 +1361,7 @@ describe('IgxTimePicker', () => {
                 expect(dateTimeEditor.inputFormat).toEqual('HH:mm');
             }));
 
-           it('should display selected time in dialog header', fakeAsync(() => {
+            it('should display selected time in dialog header', fakeAsync(() => {
                 fixture.componentInstance.timePicker.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
 
@@ -1514,7 +1541,8 @@ describe('IgxTimePicker', () => {
                 const expectedSecond = '01';
                 const expectedAmPm = 'PM';
 
-                let item; let selectedItems;
+                let item;
+                let selectedItems;
                 item = ampmColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
                 item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
@@ -1566,7 +1594,7 @@ describe('IgxTimePicker', () => {
 
                 // no placeholder - set to inputFormat, if it is set
                 // test with the different a,aa,.. ampm formats
-                for(let i = 1; i <= 5; i++) {
+                for (let i = 1; i <= 5; i++) {
                     const format = `hh:mm ${'a'.repeat(i)}`;
                     timePicker.inputFormat = format;
                     fixture.detectChanges();
@@ -1641,12 +1669,12 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should toggle the dropdown with ALT + DOWN/UP ARROW key', fakeAsync(() => {
-                spyOn(timePicker.opening, 'emit').and.callThrough();
-                spyOn(timePicker.opened, 'emit').and.callThrough();
-                spyOn(timePicker.closing, 'emit').and.callThrough();
-                spyOn(timePicker.closed, 'emit').and.callThrough();
+                vi.spyOn(timePicker.opening, 'emit');
+                vi.spyOn(timePicker.opened, 'emit');
+                vi.spyOn(timePicker.closing, 'emit');
+                vi.spyOn(timePicker.closed, 'emit');
                 expect(timePicker.collapsed).toBeTruthy();
-                expect(timePicker.isFocused).toBeFalse();
+                expect(timePicker.isFocused).toBe(false);
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', timePickerDebElement, true);
 
@@ -1656,10 +1684,8 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.collapsed).toBeFalsy();
                 expect(timePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.opened.emit).toHaveBeenCalledTimes(1);
-                expect(hourColumn.nativeElement.contains(document.activeElement))
-                    .withContext('focus should move to hour column for KB nav')
-                    .toBeTrue();
-                expect(timePicker.isFocused).toBeTrue();
+                expect(hourColumn.nativeElement.contains(document.activeElement), 'focus should move to hour column for KB nav').toBe(true);
+                expect(timePicker.isFocused).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', timePickerElement, true, true);
                 tick();
@@ -1667,15 +1693,13 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.closed.emit).toHaveBeenCalledTimes(1);
-                expect(inputGroup.nativeElement.contains(document.activeElement))
-                    .withContext('focus should return to the picker input')
-                    .toBeTrue();
-                expect(timePicker.isFocused).toBeTrue();
+                expect(inputGroup.nativeElement.contains(document.activeElement), 'focus should return to the picker input').toBe(true);
+                expect(timePicker.isFocused).toBe(true);
             }));
 
             it('should open the dropdown with SPACE key', fakeAsync(() => {
-                spyOn(timePicker.opening, 'emit').and.callThrough();
-                spyOn(timePicker.opened, 'emit').and.callThrough();
+                vi.spyOn(timePicker.opening, 'emit');
+                vi.spyOn(timePicker.opened, 'emit');
                 expect(timePicker.collapsed).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown(' ', timePickerDebElement);
@@ -1688,8 +1712,8 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should close the dropdown with ESC', fakeAsync(() => {
-                spyOn(timePicker.closing, 'emit').and.callThrough();
-                spyOn(timePicker.closed, 'emit').and.callThrough();
+                vi.spyOn(timePicker.closing, 'emit');
+                vi.spyOn(timePicker.closed, 'emit');
 
                 expect(timePicker.collapsed).toBeTruthy();
                 timePicker.open();
@@ -1724,18 +1748,18 @@ describe('IgxTimePicker', () => {
                 inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
 
                 const label = inputGroup.queryAll(By.directive(IgxLabelDirective));
-                expect(label).toHaveSize(1);
+                expect(label).toHaveLength(1);
                 expect(label[0].nativeElement.innerText).toEqual('Label');
                 const hint = inputGroup.queryAll(By.directive(IgxHintDirective));
-                expect(hint).toHaveSize(1);
+                expect(hint).toHaveLength(1);
                 expect(hint[0].nativeElement.innerText).toEqual('Hint');
 
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
-                expect(prefix).toHaveSize(2);
+                expect(prefix).toHaveLength(2);
                 expect(prefix[0].nativeElement.innerText).toEqual(TIME_PICKER_TOGGLE_ICON);
                 expect(prefix[1].nativeElement.innerText).toEqual('Prefix');
                 const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
-                expect(suffix).toHaveSize(2);
+                expect(suffix).toHaveLength(2);
                 expect(suffix[0].nativeElement.innerText).toEqual(TIME_PICKER_CLEAR_ICON);
                 expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
             });
@@ -1748,11 +1772,11 @@ describe('IgxTimePicker', () => {
                 inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
 
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
-                expect(prefix).toHaveSize(2);
+                expect(prefix).toHaveLength(2);
                 expect(prefix[0].nativeElement.innerText).toEqual('CustomToggle');
                 expect(prefix[1].nativeElement.innerText).toEqual('Prefix');
                 const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
-                expect(suffix).toHaveSize(2);
+                expect(suffix).toHaveLength(2);
                 expect(suffix[0].nativeElement.innerText).toEqual('CustomClear');
                 expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
             });
@@ -1763,8 +1787,8 @@ describe('IgxTimePicker', () => {
                 fixture.componentInstance.showCustomClear = true;
                 fixture.componentInstance.showCustomToggle = true;
                 fixture.detectChanges();
-                spyOn(timePicker, 'open');
-                spyOn(timePicker, 'clear');
+                vi.spyOn(timePicker, 'open');
+                vi.spyOn(timePicker, 'clear');
 
                 inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
                 const toggleElem = inputGroup.query(By.directive(IgxPickerToggleComponent));
@@ -1772,9 +1796,11 @@ describe('IgxTimePicker', () => {
                 let toggle = fixture.componentInstance.customToggle;
                 let clear = fixture.componentInstance.customClear;
 
-                expect(toggle.clicked.observers).toHaveSize(1);
-                expect(clear.clicked.observers).toHaveSize(1);
-                const event = jasmine.createSpyObj('event', ['stopPropagation']);
+                expect(toggle.clicked.observers).toHaveLength(1);
+                expect(clear.clicked.observers).toHaveLength(1);
+                const event = {
+                    stopPropagation: vi.fn().mockName("event.stopPropagation")
+                };
                 toggleElem.triggerEventHandler('click', event);
                 expect(timePicker.open).toHaveBeenCalledTimes(1);
                 clearElem.triggerEventHandler('click', event);
@@ -1783,12 +1809,12 @@ describe('IgxTimePicker', () => {
                 // hide
                 fixture.componentInstance.showCustomToggle = false;
                 fixture.detectChanges();
-                expect(toggle.clicked.observers).toHaveSize(0);
-                expect(clear.clicked.observers).toHaveSize(1);
+                expect(toggle.clicked.observers).toHaveLength(0);
+                expect(clear.clicked.observers).toHaveLength(1);
                 fixture.componentInstance.showCustomClear = false;
                 fixture.detectChanges();
-                expect(toggle.clicked.observers).toHaveSize(0);
-                expect(clear.clicked.observers).toHaveSize(0);
+                expect(toggle.clicked.observers).toHaveLength(0);
+                expect(clear.clicked.observers).toHaveLength(0);
 
                 // show again
                 fixture.componentInstance.showCustomClear = true;
@@ -1796,12 +1822,12 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 toggle = fixture.componentInstance.customToggle;
                 clear = fixture.componentInstance.customClear;
-                expect(toggle.clicked.observers).toHaveSize(1);
-                expect(clear.clicked.observers).toHaveSize(1);
+                expect(toggle.clicked.observers).toHaveLength(1);
+                expect(clear.clicked.observers).toHaveLength(1);
 
                 timePicker.ngOnDestroy();
-                expect(toggle.clicked.observers).toHaveSize(0);
-                expect(clear.clicked.observers).toHaveSize(0);
+                expect(toggle.clicked.observers).toHaveLength(0);
+                expect(clear.clicked.observers).toHaveLength(0);
             });
         });
 
@@ -1926,7 +1952,7 @@ describe('IgxTimePicker', () => {
 
                 // no validator, but there is a set error
                 expect((timePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
-                expect((timePicker as any).inputGroup.element.nativeElement).toHaveClass(CSS_CLASS_INPUT_GROUP_INVALID);
+                expect((timePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
                 expect((timePicker as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
             });
         });
@@ -1967,9 +1993,12 @@ export class IgxTimePickerTestComponent {
     imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxTimePickerWithProjectionsComponent {
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
-    @ViewChild(IgxPickerToggleComponent) public customToggle: IgxPickerToggleComponent;
-    @ViewChild(IgxPickerClearComponent) public customClear: IgxPickerClearComponent;
+    @ViewChild(IgxTimePickerComponent)
+    public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxPickerToggleComponent)
+    public customToggle: IgxPickerToggleComponent;
+    @ViewChild(IgxPickerClearComponent)
+    public customClear: IgxPickerClearComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public showCustomToggle = false;
     public showCustomClear = false;

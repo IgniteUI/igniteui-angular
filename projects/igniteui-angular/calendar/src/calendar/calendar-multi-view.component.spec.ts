@@ -9,9 +9,10 @@ import { ymd } from '../../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent } from './calendar.component';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Multi-View Calendar - ', () => {
-    let fixture: ComponentFixture<any>
+    let fixture: ComponentFixture<any>;
     let calendar: any;
 
     beforeEach(waitForAsync(() => {
@@ -146,7 +147,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('selected event should be fired when selecting a date', () => {
-            spyOn(calendar.selected, 'emit');
+            vi.spyOn(calendar.selected, 'emit');
             const viewDate = ymd('2019-09-06');
             calendar.viewDate = viewDate;
             fixture.detectChanges();
@@ -198,7 +199,8 @@ describe('Multi-View Calendar - ', () => {
             { type: DateRangeType.Between, dateRange: [new Date(2019, 11, 15), new Date(2020, 0, 11)] },
             { type: DateRangeType.Between, dateRange: [new Date(2020, 0, 19), new Date(2020, 0, 25)] },
             { type: DateRangeType.Between, dateRange: [new Date(2020, 1, 1), new Date(2020, 1, 15)] },
-            { type: DateRangeType.Between, dateRange: [new Date(2020, 1, 25), new Date(2020, 2, 11)] }];
+            { type: DateRangeType.Between, dateRange: [new Date(2020, 1, 25), new Date(2020, 2, 11)] }
+        ];
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
@@ -598,7 +600,7 @@ describe('Multi-View Calendar - ', () => {
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
             }
 
-             for (let index = dates.length - 2; index > 0; index--) {
+            for (let index = dates.length - 2; index > 0; index--) {
                 const arrowLeft = HelperTestFunctions.getPreviousArrowElement(fixture);
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', arrowLeft);
                 fixture.detectChanges();
@@ -725,7 +727,7 @@ describe('Multi-View Calendar - ', () => {
 
 
         it('should select the days in only in of the months in single/multi selection mode', () => {
-            spyOn(calendar.selected, 'emit');
+            vi.spyOn(calendar.selected, 'emit');
 
             const fistMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
@@ -759,7 +761,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('Multi Selection - select/deselect date in the view', () => {
-            spyOn(calendar.selected, 'emit');
+            vi.spyOn(calendar.selected, 'emit');
             calendar.selection = 'multi';
             fixture.detectChanges();
 
@@ -968,7 +970,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('outside days should NOT be selected in all month views, when hideOutsideDays is false and selection is range', () => {
-            spyOn(calendar.selected, 'emit');
+            vi.spyOn(calendar.selected, 'emit');
             calendar.selection = 'range';
             fixture.detectChanges();
 
@@ -1116,7 +1118,8 @@ describe('Multi-View Calendar - ', () => {
     imports: [IgxCalendarComponent]
 })
 export class MultiViewCalendarSampleComponent {
-    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+    @ViewChild(IgxCalendarComponent, { static: true })
+    public calendar: IgxCalendarComponent;
     public monthViews = 3;
 }
 
@@ -1127,7 +1130,8 @@ export class MultiViewCalendarSampleComponent {
     imports: [IgxDatePickerComponent]
 })
 export class MultiViewDatePickerSampleComponent {
-    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true })
+    public datePicker: IgxDatePickerComponent;
     public date = ymd('2019-09-15');
     public monthViews = 3;
 }
@@ -1139,7 +1143,8 @@ export class MultiViewDatePickerSampleComponent {
     imports: [IgxCalendarComponent, FormsModule]
 })
 export class MultiViewNgModelSampleComponent {
-    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+    @ViewChild(IgxCalendarComponent, { static: true })
+    public calendar: IgxCalendarComponent;
     public monthViews = 3;
     public model = new Date(2019, 9, 10);
 }
