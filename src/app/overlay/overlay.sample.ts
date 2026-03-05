@@ -60,6 +60,7 @@ export class OverlaySampleComponent implements OnInit {
     public modal = true;
     public useOutlet = false;
     public hasAnimation = true;
+    public keepInPlace = false;
     public animationLength = 300; // in ms
 
     private xAddition = 0;
@@ -90,7 +91,8 @@ export class OverlaySampleComponent implements OnInit {
                             positionStrategy: new AutoPositionStrategy(),
                             scrollStrategy: new NoOpScrollStrategy(),
                             modal: false,
-                            closeOnOutsideClick: true
+                            closeOnOutsideClick: true,
+                            keepInPlace: this.keepInPlace
                         };
                         this.horizontalDirection = 'Right';
                         this.verticalDirection = 'Bottom';
@@ -106,7 +108,8 @@ export class OverlaySampleComponent implements OnInit {
                             positionStrategy: new ConnectedPositioningStrategy(),
                             scrollStrategy: new NoOpScrollStrategy(),
                             modal: false,
-                            closeOnOutsideClick: true
+                            closeOnOutsideClick: true,
+                            keepInPlace: this.keepInPlace
                         };
                         this.horizontalDirection = 'Right';
                         this.verticalDirection = 'Bottom';
@@ -147,7 +150,8 @@ export class OverlaySampleComponent implements OnInit {
                             }),
                             scrollStrategy: new NoOpScrollStrategy(),
                             modal: false,
-                            closeOnOutsideClick: true
+                            closeOnOutsideClick: true,
+                            keepInPlace: this.keepInPlace
                         };
                         this.horizontalDirection = 'Right';
                         this.verticalDirection = 'Bottom';
@@ -225,7 +229,7 @@ export class OverlaySampleComponent implements OnInit {
             positionStrategy: stringMapping['PositionStrategy'][this.positionStrategy],
             scrollStrategy: stringMapping['ScrollStrategy'][this.scrollStrategy],
             modal: this.modal,
-            closeOnOutsideClick: this.closeOnOutsideClick
+            closeOnOutsideClick: this.closeOnOutsideClick,
         };
         this._overlaySettings.positionStrategy.settings.verticalDirection =
             stringMapping['VerticalDirection'][this.verticalDirection];
@@ -236,6 +240,7 @@ export class OverlaySampleComponent implements OnInit {
         this._overlaySettings.positionStrategy.settings.horizontalStartPoint =
             stringMapping['HorizontalStartPoint'][this.horizontalStartPoint];
         this._overlaySettings.outlet = this.useOutlet ? this.outletElement : null;
+        this._overlaySettings.keepInPlace = this.keepInPlace;
     }
 
     public onSwitchChange(ev: IChangeCheckboxEventArgs) {
@@ -248,6 +253,9 @@ export class OverlaySampleComponent implements OnInit {
                 break;
             case 'outlet':
                 this._overlaySettings.outlet = ev.checked ? this.outletElement : null;
+                break;
+            case 'keepInPlace':
+                this._overlaySettings.keepInPlace = ev.checked;
                 break;
         }
     }

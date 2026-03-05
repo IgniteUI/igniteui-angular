@@ -87,6 +87,10 @@
                     (change)="onSwitchChange($event)">Has animation</igx-switch>
             </div>
             <div>
+                <igx-switch class="settings" [(ngModel)]="keepInPlace" name="outlet" [value]="keepInPlace"
+                    (change)="onSwitchChange($event)">Keep In Place</igx-switch>
+            </div>
+            <div>
                 <igx-input-group>
                     <input igxInput name="dropDownItems" type="number" [(ngModel)]="itemsCount">
                     <label igxLabel for="dropDownItems">Drop down items</label>
