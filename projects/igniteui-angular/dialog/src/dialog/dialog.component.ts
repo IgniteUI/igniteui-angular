@@ -441,7 +441,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
             scrollStrategy: new NoOpScrollStrategy(),
             modal: this.isModal,
             closeOnEscape: this._closeOnEscape,
-            closeOnOutsideClick: this.closeOnOutsideSelect
+            closeOnOutsideClick: this.closeOnOutsideSelect,
+            keepInPlace: true
         };
     }
 

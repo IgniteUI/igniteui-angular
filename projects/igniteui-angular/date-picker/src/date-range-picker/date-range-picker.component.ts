@@ -644,12 +644,14 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true,
-        closeOnEscape: true
+        closeOnEscape: true,
+        keepInPlace: true
     };
     private _dropDownOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
-        closeOnEscape: true
+        closeOnEscape: true,
+        keepInPlace: true
     };
     private onChangeCallback: (dateRange: DateRange) => void = noop;
     private onTouchCallback: () => void = noop;

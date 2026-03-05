@@ -2,6 +2,23 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.1.1
+
+### New Features
+
+- `IgxOverlayService`
+    - Added `keepInPlace` property to `OverlaySettings`. When set to `true`, the overlay element stays in its original DOM position instead of being moved to the overlay container, using the HTML Popover API to promote it to the top layer in-place. Defaults to `false`.
+
+        ```typescript
+        const overlaySettings: OverlaySettings = {
+            keepInPlace: true,
+            positionStrategy: new ConnectedPositioningStrategy(),
+            scrollStrategy: new AbsoluteScrollStrategy()
+        };
+        ```
+
+    - **Deprecation** - The `outlet` property in `OverlaySettings` has been deprecated and will be removed in a future version. Use the `keepInPlace` property instead to keep the overlay in its original DOM position. The `IgxOverlayOutletDirective` and `igxToggleOutlet` input on `IgxToggleActionDirective` are also deprecated in favor of `keepInPlace`.
+
 ## 21.1.0
 
 ### New Features

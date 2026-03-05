@@ -131,7 +131,12 @@ export interface OverlaySettings {
     /** Set if the overlay should close when `Esc` key is pressed */
     closeOnEscape?: boolean;
     /* blazorSuppress */
-    /** Set the outlet container to attach the overlay to */
+    /**
+     * @deprecated The `outlet` property is deprecated. There is no direct 1:1 replacement for attaching overlays to an arbitrary outlet
+     * container. If you only used `outlet` to keep the overlay in its current DOM position (i.e. not moved to the overlay container),
+     * use the `keepInPlace` property instead.
+     * Set the outlet container to attach the overlay to.
+     */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
      * @hidden @internal
@@ -139,6 +144,12 @@ export interface OverlaySettings {
      * Clicking on the elements in this collection will not close the overlay when closeOnOutsideClick = true.
      */
     excludeFromOutsideClick?: HTMLElement[];
+    /**
+     * When set to true, the overlay element stays in its original DOM position instead of being moved
+     * to the overlay container. Uses the HTML Popover API to promote the element to the top layer in-place.
+     * Defaults to false (legacy behavior: element is moved to the overlay container).
+     */
+    keepInPlace?: boolean;
 }
 
 export interface OverlayEventArgs extends IBaseEventArgs {
@@ -200,6 +211,7 @@ export interface OverlayInfo {
     transformY?: number;
     event?: Event;
     wrapperElement?: HTMLElement;
+    wrappedInPlace?: boolean;
     size?: string
 }
 

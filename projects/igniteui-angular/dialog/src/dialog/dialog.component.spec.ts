@@ -390,8 +390,7 @@ describe('Dialog', () => {
         tick();
         fix.detectChanges();
 
-        let overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
-        let overlayWrapper = overlaydiv.children[0];
+        let overlayWrapper = (dialog as any).elementRef.nativeElement.children[0];
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(false);
 
@@ -406,8 +405,7 @@ describe('Dialog', () => {
         tick(16);
         fix.detectChanges();
 
-        overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
-        overlayWrapper = overlaydiv.children[0];
+        overlayWrapper = (dialog as any).elementRef.nativeElement.children[0];
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(true);
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
     }));
@@ -418,7 +416,6 @@ describe('Dialog', () => {
 
         const dialog: IgxDialogComponent = fix.componentInstance.dialog as IgxDialogComponent;
         dialog.open();
-        tick(100);
         fix.detectChanges();
         tick(100);
 

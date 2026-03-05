@@ -330,13 +330,20 @@ export class IgxOverlayService implements OnDestroy {
         // Append the content to the overlay
         info.settings = eventArgs.settings;
         this._overlayInfos.push(info);
-        info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
         info.initialSize = { width: elementRect.width, height: elementRect.height };
         // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
         this.getComponentSize(info);
-        this.moveElementToOverlay(info);
-        // Update the container size after moving if there is size.
+        if (info.settings.keepInPlace &&
+            info.elementRef.nativeElement.parentElement &&
+            !info.settings.outlet) {
+            this.wrapElementInPlace(info);
+            info.wrappedInPlace = true;
+        } else {
+            info.hook = this.placeElementHook(info.elementRef.nativeElement);
+            this.moveElementToOverlay(info);
+        }
+        // Update the container size after wrapping/moving if there is size.
         if (info.size) {
             info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
         }
@@ -656,6 +663,15 @@ export class IgxOverlayService implements OnDestroy {
         contentElement.appendChild(info.elementRef.nativeElement);
     }
 
+    private wrapElementInPlace(info: OverlayInfo) {
+        info.wrapperElement = this.getWrapperElement();
+        const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
+        const element = info.elementRef.nativeElement;
+        // Insert wrapper where element currently is, then move element inside the content div
+        element.parentElement.insertBefore(info.wrapperElement, element);
+        contentElement.appendChild(element);
+    }
+
     private getWrapperElement(): HTMLElement {
         const wrapper: HTMLElement = this._document.createElement('div');
         wrapper.classList.add('igx-overlay__wrapper');
@@ -734,11 +750,19 @@ export class IgxOverlayService implements OnDestroy {
 
     private cleanUp(info: OverlayInfo) {
         const child: HTMLElement = info.elementRef.nativeElement;
-        const outlet = this.getOverlayElement(info);
-        // if same element is shown in other overlay outlet will not contain
-        // the element and we should not remove it form outlet
-        if (outlet.contains(child)) {
-            outlet.removeChild(child.parentNode.parentNode);
+        if (info.wrappedInPlace) {
+            // Unwrap: move element back to wrapper's parent position, then remove wrapper
+            if (info.wrapperElement?.parentElement) {
+                info.wrapperElement.parentElement.insertBefore(child, info.wrapperElement);
+                info.wrapperElement.parentElement.removeChild(info.wrapperElement);
+            }
+        } else {
+            const outlet = this.getOverlayElement(info);
+            // if same element is shown in other overlay outlet will not contain
+            // the element and we should not remove it form outlet
+            if (outlet.contains(child)) {
+                outlet.removeChild(child.parentNode.parentNode);
+            }
         }
         if (info.componentRef) {
             this._appRef.detachView(info.componentRef.hostView);

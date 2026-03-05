@@ -312,6 +312,220 @@ describe('igxOverlay', () => {
             listener!(new KeyboardEvent('keydown', { key: 'Escape' }));
             expect(hideSpy).toHaveBeenCalledTimes(1);
         });
+
+        it('Should wrap element in-place when keepInPlace is true', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            element.classList.add('test-element');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                keepInPlace: true,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            // The element should still be inside its original parent's DOM tree
+            expect(parent.contains(element)).toBeTrue();
+            // A wrapper should have been inserted in the parent
+            const wrapper = parent.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(wrapper).toBeDefined();
+            // The element should be inside the wrapper's content div
+            expect(element.parentElement.classList.contains(CLASS_OVERLAY_CONTENT)).toBeTrue();
+            // No centralized overlay container should have been created
+            const overlayMain = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayMain).toBeUndefined();
+
+            overlay.detach(id);
+            parent.remove();
+        });
+
+        it('Should move element to overlay container when keepInPlace is false (default)', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            element.classList.add('test-element');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            // The element should have been moved to the overlay container
+            const overlayMain = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayMain).toBeDefined();
+            expect(overlayMain.contains(element)).toBeTrue();
+            // The element should no longer be in the original parent (only the hook remains)
+            expect(parent.contains(element)).toBeFalse();
+
+            overlay.detach(id);
+            parent.remove();
+        });
+
+        it('Should not create a hook element when keepInPlace is true', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                keepInPlace: true,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            // No hidden hook div should exist in the parent
+            const hookElements = Array.from(parent.querySelectorAll('div[style*="display: none"]'));
+            expect(hookElements.length).toEqual(0);
+
+            overlay.detach(id);
+            parent.remove();
+        });
+
+        it('Should unwrap element on detach when keepInPlace is true', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            element.classList.add('test-element');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                keepInPlace: true,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            // Verify element is wrapped
+            expect(element.parentElement.classList.contains(CLASS_OVERLAY_CONTENT)).toBeTrue();
+
+            overlay.detach(id);
+
+            // After detach, element should be back as a direct child of parent
+            expect(element.parentElement).toBe(parent);
+            // No wrapper should remain
+            const wrapper = parent.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(wrapper).toBeUndefined();
+
+            parent.remove();
+        });
+
+        it('Should show and hide overlay with keepInPlace using Popover API', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                keepInPlace: true,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            overlay.show(id);
+            const info = overlay.getOverlayById(id);
+            expect(info.visible).toBeTrue();
+            // The wrapper should have popover attribute
+            expect(info.wrapperElement.getAttribute('popover')).toEqual('manual');
+
+            overlay.hide(id);
+            expect(info.visible).toBeFalse();
+
+            overlay.detach(id);
+            parent.remove();
+        });
+
+        it('Should support multiple overlays with keepInPlace simultaneously', () => {
+            const parent1 = document.createElement('div');
+            document.body.appendChild(parent1);
+            const element1 = document.createElement('div');
+            element1.classList.add('element-1');
+            parent1.appendChild(element1);
+
+            const parent2 = document.createElement('div');
+            document.body.appendChild(parent2);
+            const element2 = document.createElement('div');
+            element2.classList.add('element-2');
+            parent2.appendChild(element2);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                keepInPlace: true,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+
+            const id1 = overlay.attach(new ElementRef(element1), settings);
+            const id2 = overlay.attach(new ElementRef(element2), settings);
+
+            // Both elements should be in-place wrapped
+            expect(parent1.contains(element1)).toBeTrue();
+            expect(parent2.contains(element2)).toBeTrue();
+
+            // No centralized overlay container should exist
+            const overlayMain = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayMain).toBeUndefined();
+
+            overlay.show(id1);
+            overlay.show(id2);
+
+            expect(overlay.getOverlayById(id1).visible).toBeTrue();
+            expect(overlay.getOverlayById(id2).visible).toBeTrue();
+
+            overlay.detach(id1);
+            overlay.detach(id2);
+
+            // Elements should be unwrapped back to their parents
+            expect(element1.parentElement).toBe(parent1);
+            expect(element2.parentElement).toBe(parent2);
+
+            parent1.remove();
+            parent2.remove();
+        });
+
+        it('Should allow mixing keepInPlace and legacy overlay modes', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element1 = document.createElement('div');
+            parent.appendChild(element1);
+
+            const element2 = document.createElement('div');
+            parent.appendChild(element2);
+
+            const keepInPlaceSettings: OverlaySettings = {
+                modal: false,
+                keepInPlace: true,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const legacySettings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+
+            const id1 = overlay.attach(new ElementRef(element1), keepInPlaceSettings);
+            const id2 = overlay.attach(new ElementRef(element2), legacySettings);
+
+            // keepInPlace element stays in parent
+            expect(parent.contains(element1)).toBeTrue();
+            // legacy element is moved to overlay container
+            const overlayMain = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayMain).toBeDefined();
+            expect(overlayMain.contains(element2)).toBeTrue();
+
+            overlay.detach(id1);
+            overlay.detach(id2);
+            parent.remove();
+        });
     });
 
     describe('Unit Tests: ', () => {

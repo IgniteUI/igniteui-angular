@@ -3312,7 +3312,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         modal: false,
         closeOnOutsideClick: false,
         outlet: this.rowOutletDirective,
-        positionStrategy: this.rowEditPositioningStrategy
+        positionStrategy: this.rowEditPositioningStrategy,
+        keepInPlace: true
     };
 
     private transactionChange$ = new Subject<void>();
@@ -4107,6 +4108,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /** @hidden @internal */
     public createFilterDropdown(column: ColumnType, options: OverlaySettings) {
         options.outlet = this.outlet;
+        options.keepInPlace = true;
         if (this.excelStyleFilteringComponent) {
             this.excelStyleFilteringComponent.initialize(column, this.overlayService);
             this.excelStyleFilteringComponent.populateData();
@@ -6439,6 +6441,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._advancedFilteringOverlaySettings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
             this._advancedFilteringOverlaySettings.outlet = this.outlet;
+            this._advancedFilteringOverlaySettings.keepInPlace = true;
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,

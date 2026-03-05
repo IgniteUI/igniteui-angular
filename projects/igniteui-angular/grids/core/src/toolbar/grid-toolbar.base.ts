@@ -97,7 +97,8 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnEscape: true,
-        closeOnOutsideClick: true
+        closeOnOutsideClick: true,
+        keepInPlace: true
     };
 
     /**
