@@ -414,7 +414,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             modal: false,
             positionStrategy: new SelectPositioningStrategy(this),
             scrollStrategy: new AbsoluteScrollStrategy(),
-            excludeFromOutsideClick: [this.inputGroup.element.nativeElement as HTMLElement]
+            excludeFromOutsideClick: [this.inputGroup.element.nativeElement as HTMLElement],
+            keepInPlace: true
         };
         const changes$ = this.children.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.setSelection(this.items.find(x => x.value === this.value));

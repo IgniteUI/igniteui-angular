@@ -256,7 +256,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return {
             closeOnOutsideClick: true,
             modal: false,
-            positionStrategy: new ConnectedPositioningStrategy()
+            positionStrategy: new ConnectedPositioningStrategy(),
+            keepInPlace: true
         };
     }
 

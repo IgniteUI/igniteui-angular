@@ -3312,7 +3312,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         modal: false,
         closeOnOutsideClick: false,
         outlet: this.rowOutletDirective,
-        positionStrategy: this.rowEditPositioningStrategy
+        positionStrategy: this.rowEditPositioningStrategy,
+        keepInPlace: true
     };
 
     private transactionChange$ = new Subject<void>();

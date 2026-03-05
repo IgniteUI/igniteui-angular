@@ -998,7 +998,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             positionStrategy: new AutoPositionStrategy(),
             modal: false,
             closeOnOutsideClick: true,
-            excludeFromOutsideClick: [targetElement]
+            excludeFromOutsideClick: [targetElement],
+            keepInPlace: true
         };
     }
 

@@ -67,7 +67,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         closeOnOutsideClick: true,
         modal: false,
         positionStrategy: new AutoPositionStrategy(this._customDialogPositionSettings),
-        scrollStrategy: new AbsoluteScrollStrategy()
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        keepInPlace: true
     };
 
     public ngAfterViewInit(): void {
