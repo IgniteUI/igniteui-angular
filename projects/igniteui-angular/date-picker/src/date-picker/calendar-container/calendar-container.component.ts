@@ -61,6 +61,12 @@ export class IgxCalendarContainerComponent {
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public pickerActions: IgxPickerActionsDirective;
 
+    @HostListener('keydown.alt.arrowup', ['$event'])
+    public onEscape(event) {
+        event.preventDefault();
+        this.calendarClose.emit();
+    }
+
     public get isReadonly() {
         return this.mode === PickerInteractionMode.Dialog;
     }

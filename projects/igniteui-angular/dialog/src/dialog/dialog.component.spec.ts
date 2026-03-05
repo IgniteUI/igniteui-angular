@@ -416,7 +416,6 @@ describe('Dialog', () => {
 
         const dialog: IgxDialogComponent = fix.componentInstance.dialog as IgxDialogComponent;
         dialog.open();
-        tick(100);
         fix.detectChanges();
         tick(100);
 
