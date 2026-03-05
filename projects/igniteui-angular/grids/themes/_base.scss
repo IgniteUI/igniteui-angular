@@ -414,7 +414,7 @@ $z-grid-loading: 10003;
 
             .igx-display-container {
                 overflow: visible !important;
-                flex: 1;
+                flex: 1 !important;
                 min-width: 0;
             }
 
@@ -1331,7 +1331,7 @@ $z-grid-loading: 10003;
 
             .igx-grid-th,
             .igx-grid-thead__title,
-            .igx-grid-td {
+            .igx-grid__td {
                 padding: 0 rem(4px) !important;
                 min-height: rem(24px) !important;
                 height: rem(24px);
@@ -1638,7 +1638,6 @@ $z-grid-loading: 10003;
                 igx-prefix,
                 igx-suffix {
                     height: 100% !important;
-                    padding: 0 sizable(rem(4px), rem(6px), rem(8px)) !important;
                 }
 
                 .igx-input-group__input {

@@ -48,6 +48,8 @@
                 background: transparent !important;
             }
 
+            border: rem(1px) solid color($color: 'gray', $variant: 300) !important;
+
             &:hover{
                 border-color: color($color: 'primary', $variant: 500) !important;
             }
@@ -105,6 +107,11 @@
                     margin-inline-start: rem(4px) !important;
                 }
             }
+        }
+
+        igx-prefix,
+        igx-suffix {
+            padding: 0 sizable(rem(8px), rem(10px), rem(14px)) !important;
         }
     }
 }

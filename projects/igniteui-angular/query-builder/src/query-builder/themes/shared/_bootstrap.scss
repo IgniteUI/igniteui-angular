@@ -1,5 +1,6 @@
 @use 'igniteui-theming/sass/bem/index' as *;
 @use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/typography/mixins' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
 @use 'styles/themes/standalone' as *;
 @use '../light/tokens' as *;
@@ -12,6 +13,12 @@ $_theme: $bootstrap;
     &:has(igx-query-builder-header) {
         .igx-query-builder-tree--level-0 {
             padding-block: rem(16px) var(--query-builder-outer-padding);
+        }
+    }
+
+    @include e(title) {
+        @include type-style('h5') {
+            margin-block: 0;
         }
     }
 }
@@ -66,5 +73,9 @@ $_theme: $bootstrap;
 
     @include e(expression-context-menu) {
         --ig-button-text-transform: capitalize;
+    }
+
+    @include e(inputs) {
+        --ig-size: 2;
     }
 }
