@@ -12,75 +12,10 @@ $input-inline-padding: rem(4px);
 $input-top-spacing: rem(20px);
 $input-bottom-spacing: rem(6px);
 
-@layer ig.material {
-    @container style(--ig-theme: material) {
-        %box-floating-label {
-            @include type-style(caption);
-
-            translate: 0 rem(-12px);
-        }
-
-        %box-floating-text-area-label {
-            @include type-style(caption);
-
-            --_input-top-spacing: #{sizable(rem(8px), rem(12px), rem(16px))};
-
-            translate: 0;
-            inset-block-start: calc(var(--_input-top-spacing) / 4);
-        }
-
-        %border-textarea-floating-label {
-            @include type-style(caption);
-
-            display: inline-block;
-            position: relative;
-            inset-block: 0;
-        }
-    }
-
-    .igx-input-group--base:not(.igx-input-group--filled, .igx-input-group--focused) {
-        &:has(input:placeholder-shown) {
-            .igx-input-group__label {
-                @extend %box-floating-label;
-            }
-        }
-
-        &:has(textarea:placeholder-shown) {
-            .igx-input-group__label {
-                @extend %box-floating-text-area-label;
-            }
-        }
-    }
-
-    .igx-input-group--border:not(.igx-input-group--filled, .igx-input-group--focused) {
-        &:has(input:placeholder-shown) {
-            .igx-input-group__label {
-                @include type-style(caption);
-            }
-        }
-
-        &:has(textarea:placeholder-shown) {
-            .igx-input-group__label {
-                @extend %border-textarea-floating-label;
-            }
-        }
-
-        &:has(input:placeholder-shown, textarea:placeholder-shown) {
-            .igx-input-group__label {
-                align-self: start;
-                translate: 0 var(--_label-translate-top);
-            }
-
-            .igx-input-group__notch {
-                border-block-start-color: transparent;
-            }
-        }
-    }
-}
-
 @include themed-block(igx-input-group, material) {
     --_prefix-suffix-spacing: #{pad-inline(rem(12px), rem(14px), rem(16px))};
     --_bundle-template-rows: #{var-get($_theme, 'size')};
+    --_floating-label-position: #{rem(-12px)};
 
     &:has([igxLabel], igx-label) {
         --_input-top-spacing: #{$input-top-spacing};
@@ -196,6 +131,27 @@ $input-bottom-spacing: rem(6px);
         }
     }
 
+    @include mx(base, ('not': (filled, focused))) {
+        &:has(input:placeholder-shown) {
+            .igx-input-group__label {
+                @include type-style(caption);
+
+                translate: 0 var(--_floating-label-position);
+            }
+        }
+
+        &:has(textarea:placeholder-shown) {
+            .igx-input-group__label {
+                @include type-style(caption);
+
+                --_input-top-spacing: #{sizable(rem(8px), rem(12px), rem(16px))};
+
+                translate: 0;
+                inset-block-start: calc(var(--_input-top-spacing) / 4);
+            }
+        }
+    }
+
     @include e(clear-icon) {
         background: transparent;
 
@@ -213,9 +169,10 @@ $input-bottom-spacing: rem(6px);
         }
 
         @include e(label) {
-            @extend %box-floating-label;
+            @include type-style(caption);
 
             color: var-get($_theme, 'focused-secondary-color');
+            translate: 0 var(--_floating-label-position);
         }
     }
 
@@ -275,7 +232,9 @@ $input-bottom-spacing: rem(6px);
 
     @include mx(base, filled) {
         @include e(label) {
-            @extend %box-floating-label;
+            @include type-style(caption);
+
+            translate: 0 var(--_floating-label-position);
         }
     }
 
@@ -394,13 +353,23 @@ $input-bottom-spacing: rem(6px);
 
     @include mx(base, textarea-group, filled) {
         @include e(label) {
-            @extend %box-floating-text-area-label;
+            @include type-style(caption);
+
+            --_input-top-spacing: #{sizable(rem(8px), rem(12px), rem(16px))};
+
+            translate: 0;
+            inset-block-start: calc(var(--_input-top-spacing) / 4);
         }
     }
 
     @include mx(base, textarea-group, focused) {
         @include e(label) {
-            @extend %box-floating-text-area-label;
+            @include type-style(caption);
+
+            --_input-top-spacing: #{sizable(rem(8px), rem(12px), rem(16px))};
+
+            translate: 0;
+            inset-block-start: calc(var(--_input-top-spacing) / 4);
         }
     }
 
@@ -537,13 +506,21 @@ $input-bottom-spacing: rem(6px);
 
     @include mx(border, textarea-group, filled) {
         @include e(label) {
-            @extend %border-textarea-floating-label;
+            @include type-style(caption);
+
+            display: inline-block;
+            position: relative;
+            inset-block: 0;
         }
     }
 
     @include mx(border, textarea-group, focused) {
         @include e(label) {
-            @extend %border-textarea-floating-label;
+            @include type-style(caption);
+
+            display: inline-block;
+            position: relative;
+            inset-block: 0;
         }
     }
 
@@ -663,6 +640,35 @@ $input-bottom-spacing: rem(6px);
         }
     }
 
+    @include mx(border, ('not': (filled, focused))) {
+        &:has(input:placeholder-shown) {
+            .igx-input-group__label {
+                @include type-style(caption);
+            }
+        }
+
+        &:has(textarea:placeholder-shown) {
+            .igx-input-group__label {
+                @include type-style(caption);
+
+                display: inline-block;
+                position: relative;
+                inset-block: 0;
+            }
+        }
+
+        &:has(input:placeholder-shown, textarea:placeholder-shown) {
+            .igx-input-group__label {
+                align-self: start;
+                translate: 0 var(--_label-translate-top);
+            }
+
+            .igx-input-group__notch {
+                border-block-start-color: transparent;
+            }
+        }
+    }
+
     @include mx(border, focused) {
         --_input-border-size-focus: calc(var(--_input-border-size) + #{rem(1px)});
 
@@ -717,12 +723,6 @@ $input-bottom-spacing: rem(6px);
         @include e(label) {
             translate: 0 var(--_label-translate-top);
             align-self: start;
-        }
-    }
-
-    @include mx(border, filled) {
-        @include e(notch) {
-            border-block-start-color: transparent;
         }
     }
 
@@ -822,9 +822,17 @@ $input-bottom-spacing: rem(6px);
         }
     }
 
+    @include mx(border, filled) {
+        @include e(notch) {
+            border-block-start-color: transparent;
+        }
+    }
+
     @include m(file, $not: (border)) {
         @include e(label) {
-            @extend %box-floating-label;
+            @include type-style(caption);
+
+            translate: 0 var(--_floating-label-position);
             grid-row: 1 / -1;
         }
     }

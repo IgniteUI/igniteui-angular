@@ -34,11 +34,11 @@
 <ng-template #clear>
     @if (isFileType && isFilled) {
         <igx-suffix
-                class="igx-input-group__clear-icon"
-                (click)="clearValueHandler()"
-                (keydown.Enter)="clearValueHandler()"
-                title="clear files"
-                tabindex="0"
+            class="igx-input-group__clear-icon"
+            (click)="clearValueHandler()"
+            (keydown.Enter)="clearValueHandler()"
+            title="clear files"
+            tabindex="0"
         >
             <igx-icon family="default" name="input_clear"></igx-icon>
         </igx-suffix>
@@ -87,7 +87,9 @@
     </div>
 
 
-    <div class="igx-input-group__hint" (click)="hintClickHandler($event)">
-        <ng-content select="igx-hint, [igxHint]"></ng-content>
-    </div>
+    @if (hasHints) {
+        <div class="igx-input-group__hint" (click)="hintClickHandler($event)">
+            <ng-content select="igx-hint, [igxHint]"></ng-content>
+        </div>
+    }
 </ng-template>

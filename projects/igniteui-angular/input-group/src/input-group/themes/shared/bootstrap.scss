@@ -10,45 +10,31 @@ $border-style: solid;
 $border-color: var-get($_theme, 'border-color');
 $border-radius: var-get($_theme, 'border-border-radius');
 
-@layer ig.bootstrap {
-    @container style(--ig-theme: bootstrap) {
-        %border-styles {
-            border-style: $border-style;
-            border-color: $border-color;
-        }
-
-        %disabled-styles {
-            background: var-get($_theme, 'border-disabled-background');
-            color: var-get($_theme, 'disabled-text-color');
-            border-color: var-get($_theme, 'disabled-border-color');
-        }
-
-        igx-input-group:not(.igx-input-group--prefixed, .igx-input-group--file) {
-            .igx-input-group__bundle-main {
-                border-start-start-radius: $border-radius;
-                border-end-start-radius: $border-radius;
-            }
-        }
-
-        igx-input-group:not(.igx-input-group--suffixed) {
-            .igx-input-group__bundle-main {
-                border-start-end-radius: $border-radius;
-                border-end-end-radius: $border-radius;
-                border-inline-start-width: $border-size;
-            }
-        }
-
-        igx-input-group:not(.igx-input-group--textarea-group) {
-            .igx-input-group__bundle {
-                border-radius: $border-radius;
-            }
-        }
-    }
-}
 
 @include themed-block(igx-input-group, bootstrap) {
     --_bundle-template-rows: revert;
     --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(10px), rem(14px))};
+
+    &:not(.igx-input-group--prefixed, .igx-input-group--file) {
+        .igx-input-group__bundle-main {
+            border-start-start-radius: $border-radius;
+            border-end-start-radius: $border-radius;
+        }
+    }
+
+    &:not(.igx-input-group--suffixed) {
+        .igx-input-group__bundle-main {
+            border-start-end-radius: $border-radius;
+            border-end-end-radius: $border-radius;
+            border-inline-start-width: $border-size;
+        }
+    }
+
+    &:not(.igx-input-group--textarea-group) {
+        .igx-input-group__bundle {
+            border-radius: $border-radius;
+        }
+    }
 
     row-gap: rem(4px);
 
@@ -64,8 +50,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
     }
 
     @include e(upload) {
-        @extend %border-styles;
-
+        border-style: $border-style;
+        border-color: $border-color;
         border-width: $border-size;
         grid-row: 2;
     }
@@ -119,8 +105,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
     }
 
     @include e(bundle-main) {
-        @extend %border-styles;
-
+        border-style: $border-style;
+        border-color: $border-color;
         z-index: 1;
         border-width: $border-size;
         height: var(--size);
@@ -155,8 +141,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
     @include m(prefixed) {
         @include e(bundle-start) {
-            @extend %border-styles;
-
+            border-style: $border-style;
+            border-color: $border-color;
             z-index: 0;
             border-block-width: $border-size;
             border-inline-start-width: $border-size;
@@ -187,8 +173,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
     @include m(suffixed) {
         @include e(bundle-end) {
-            @extend %border-styles;
-
+            border-style: $border-style;
+            border-color: $border-color;
             z-index: 0;
             border-width: $border-size;
             border-inline-start-width: 0;
@@ -487,15 +473,21 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
     @include m(disabled) {
         @include e(bundle) {
-            @extend %disabled-styles;
+            background: var-get($_theme, 'border-disabled-background');
+            color: var-get($_theme, 'disabled-text-color');
+            border-color: var-get($_theme, 'disabled-border-color');
         }
 
         @include e(bundle-main) {
-            @extend %disabled-styles;
+            background: var-get($_theme, 'border-disabled-background');
+            color: var-get($_theme, 'disabled-text-color');
+            border-color: var-get($_theme, 'disabled-border-color');
         }
 
         @include e(bundle-start) {
-            @extend %disabled-styles;
+            background: var-get($_theme, 'border-disabled-background');
+            color: var-get($_theme, 'disabled-text-color');
+            border-color: var-get($_theme, 'disabled-border-color');
 
             igx-prefix:not(:first-child),
             [igxPrefix]:not(:first-child) {
@@ -504,7 +496,9 @@ $border-radius: var-get($_theme, 'border-border-radius');
         }
 
         @include e(bundle-end) {
-            @extend %disabled-styles;
+            background: var-get($_theme, 'border-disabled-background');
+            color: var-get($_theme, 'disabled-text-color');
+            border-color: var-get($_theme, 'disabled-border-color');
 
             igx-suffix:not(:last-child),
             [igxSuffix]:not(:last-child) {

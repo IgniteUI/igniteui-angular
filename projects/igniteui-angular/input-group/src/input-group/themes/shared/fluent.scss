@@ -8,7 +8,7 @@ $_theme: $fluent;
 
 @include themed-block(igx-input-group, fluent) {
     --_bundle-template-rows: revert;
-    --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(10px), rem(14px))};
+    --_prefix-suffix-spacing: #{sizable(rem(8), rem(10), rem(14))};
 
     row-gap: rem(5px);
 
@@ -28,7 +28,7 @@ $_theme: $fluent;
 
         padding-inline: rem(8px);
         padding-block: 0;
-        height: calc(var-get($_theme, 'size') - rem(2px));
+        min-height: calc(var-get($_theme, 'size') - rem(2px));
     }
 
     @include e(textarea) {

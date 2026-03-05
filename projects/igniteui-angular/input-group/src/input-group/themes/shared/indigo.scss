@@ -9,7 +9,6 @@ $_theme: $indigo;
 
 @include themed-block(igx-input-group, indigo) {
     --_prefix-suffix-spacing: #{pad-inline(rem(2px), rem(4px), rem(6px))};
-    --_bundle-template-rows: revert;
 
     igx-prefix:first-child,
     [igxPrefix]:first-child {

@@ -20,7 +20,6 @@
             position: relative;
             color: var-get($theme, 'color');
             max-width: 100%;
-            line-height: normal;
 
             [dir='rtl'] & {
                 transform-origin: top right;

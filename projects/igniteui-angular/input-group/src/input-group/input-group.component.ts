@@ -117,8 +117,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     public hasWarning = false;
 
     /** @hidden */
-    @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
-    protected hints: QueryList<IgxHintDirective>;
+    @ContentChildren(IgxHintDirective, { read: IgxHintDirective, descendants: true })
+    protected _hints: QueryList<IgxHintDirective>;
 
     @ContentChildren(IgxPrefixDirective, { read: IgxPrefixDirective, descendants: true })
     protected _prefixes: QueryList<IgxPrefixDirective>;
@@ -279,7 +279,12 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * ```
      */
     public get hasHints() {
-        return this.hints.length > 0;
+        return this._hints.length > 0;
+    }
+
+    /** @hidden @internal */
+    public set hints(items: QueryList<IgxHintDirective>) {
+        this._hints = items;
     }
 
     /** @hidden @internal */

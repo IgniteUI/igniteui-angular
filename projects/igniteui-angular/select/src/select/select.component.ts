@@ -124,6 +124,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
 
+    @ContentChildren(IgxHintDirective, { descendants: true })
+    protected contentHints: QueryList<IgxHintDirective>;
+
     @ViewChildren(IgxSuffixDirective)
     protected internalSuffixes: QueryList<IgxSuffixDirective>;
 
@@ -546,6 +549,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
                 ...internalSuffixesArray
             ]);
             this.inputGroup.suffixes = mergedSuffixes;
+        }
+
+        if (this.inputGroup) {
+            this.inputGroup.hints = this.contentHints;
         }
     }
 
