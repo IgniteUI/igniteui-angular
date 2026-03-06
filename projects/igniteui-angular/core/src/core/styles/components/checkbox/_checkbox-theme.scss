@@ -1,0 +1,599 @@
+/* stylelint-disable max-nesting-depth */
+@use 'sass:map';
+@use 'sass:math';
+@use '../../base' as *;
+@use 'igniteui-theming/sass/animations' as *;
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin checkbox($theme) {
+    @include css-vars($theme);
+    $theme-variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
+    $material-theme: $variant == 'material';
+    $bootstrap-theme: $variant == 'bootstrap';
+
+    @include scale-in-out($start-scale: .9);
+
+    // If updating the WIDTH of the checkbox here, please update it in the grid theme as well.
+    // It is under the name of $cbx-size
+    $size: rem(20px);
+    $size-bs: rem(16px);
+    $checkbox-radius: math.div($size, 2);
+
+    $size: map.get((
+        'material': $size,
+        'fluent': $size,
+        'bootstrap': $size-bs,
+        'indigo': $size-bs,
+    ), $variant);
+
+    $border-width: map.get((
+        'material': rem(2px),
+        'fluent': rem(1px),
+        'bootstrap': rem(1px),
+        'indigo': rem(2px),
+    ), $variant);
+
+    $ripple-display: map.get((
+        'material': block,
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none,
+    ), $variant);
+
+    $label-margin: map.get((
+        'material': rem(2px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(8px),
+    ), $variant);
+
+    $mark-offset: map.get((
+        'material': 0,
+        'fluent': -1px,
+        'bootstrap': 1px,
+        'indigo': 1px,
+    ), $variant);
+
+    $mark-length: 24;
+    $mark-x-factor: calc(#{var-get($theme, 'tick-width')} / $mark-length);
+
+    $ripple-size: rem(40px);
+    $ripple-radius: math.div($ripple-size, 2);
+
+    @include scale-in-center();
+
+    %cbx-display {
+        position: relative;
+        display: inline-flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        outline-style: none;
+        cursor: pointer;
+    }
+
+    %cbx-display--disabled {
+        user-select: none;
+        pointer-events: none;
+        cursor: initial;
+    }
+
+    %cbx-input {
+        @include hide-default();
+    }
+
+    %cbx-composite-wrapper {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        position: relative;
+        width: $size;
+        height: $size;
+
+        @if $variant == 'material' {
+            padding: pad(rem(20px));
+        }
+
+        //ripple color
+        --color: #{var-get($theme, 'empty-color')};
+    }
+
+    %cbx-composite-wrapper--x {
+        //ripple color
+        --color: #{var-get($theme, 'fill-color')};
+    }
+
+    %cbx-composite {
+        position: relative;
+        display: inline-block;
+        width: $size;
+        height: $size;
+        min-width: $size;
+        background: var-get($theme, 'empty-fill-color');
+        border-width: $border-width;
+        border-style: solid;
+        border-color: var-get($theme, 'empty-color');
+        border-radius: var-get($theme, 'border-radius');
+        -webkit-tap-highlight-color: transparent;
+        transition: border-color .2s $ease-out-quad, background .2s $ease-out-quad;
+        overflow: hidden;
+    }
+
+    %cbx-composite--hover {
+        @if $variant == 'bootstrap' or $variant == 'indigo' {
+            border-color: var-get($theme, 'empty-color-hover');
+        }
+    }
+
+    %cbx-composite--x {
+        border-color: var-get($theme, 'fill-color');
+        background: var-get($theme, 'fill-color');
+    }
+
+    %cbx-composite--invalid {
+        border-color: var-get($theme, 'error-color');
+
+        @if $variant == 'bootstrap' and $theme-variant == 'dark' {
+            %cbx-composite-mark {
+                stroke: black;
+            }
+        }
+    }
+
+    %cbx-composite-wrapper--invalid {
+        //ripple color
+        --color: #{var-get($theme, 'error-color')};
+    }
+
+    %cbx-composite--invalid--hover {
+        border-color: var-get($theme, 'error-color-hover');
+    }
+
+    %cbx-composite--x--invalid {
+        border-color: var-get($theme, 'error-color');
+        background: var-get($theme, 'error-color');
+    }
+
+    %cbx-composite--x--hover {
+        border-color: var-get($theme, 'fill-color-hover');
+        background: var-get($theme, 'fill-color-hover');
+    }
+
+    %cbx-composite--x--invalid--hover {
+        border-color: var-get($theme, 'error-color-hover');
+        background: var-get($theme, 'error-color-hover');
+    }
+
+    %cbx-composite--disabled {
+        border-color: var-get($theme, 'disabled-color');
+
+        @if $variant == 'bootstrap' and $theme-variant == 'dark' {
+            background: color($color: 'surface', $variant: 500);
+        }
+    }
+
+    %cbx-composite--x--disabled {
+        @if $variant == 'material' or $variant == 'fluent' {
+            background: var-get($theme, 'disabled-color');
+            border-color: var-get($theme, 'disabled-color');
+        }
+
+        @if $variant == 'indigo' or $variant == 'bootstrap' {
+            background: var-get($theme, 'disabled-indeterminate-color');
+            border-color: transparent;
+        }
+
+        @if $variant != 'indigo' {
+            %cbx-composite-mark {
+                stroke: var-get($theme, 'disabled-tick-color');
+            }
+        } @else {
+            %cbx-composite-mark {
+                stroke: unset;
+                fill: var-get($theme, 'disabled-tick-color');
+            }
+        }
+    }
+
+    %cbx-composite-mark {
+        position: absolute;
+        inset: 0;
+        stroke: var-get($theme, 'tick-color');
+        stroke-linecap: square;
+        stroke-width: var-get($theme, 'tick-width');
+        stroke-dasharray: $mark-length;
+        stroke-dashoffset: $mark-length;
+        fill: none;
+        opacity: 0;
+        z-index: 1;
+    }
+
+    %cbx-composite-mark-material {
+        inset-inline-start: -.5px;
+    }
+
+    %cbx-composite-mark-indigo {
+        stroke: unset;
+        stroke-linecap: unset;
+        stroke-width: unset;
+        stroke-dasharray: unset;
+        stroke-dashoffset: unset;
+        fill: var-get($theme, 'tick-color');
+        transition: none !important;
+
+        rect {
+            fill: none;
+        }
+    }
+
+    %igx-checkbox--indeterminate {
+        %cbx-composite-mark {
+            top: $mark-offset;
+            margin-inline-start: $mark-offset;
+        }
+
+        &:hover {
+            %cbx-composite {
+                border-color: var-get($theme, 'fill-color-hover');
+
+                @if $variant != 'fluent' {
+                    background: var-get($theme, 'fill-color-hover');
+                } @else {
+                    background: transparent;
+                }
+
+                &::before {
+                    background: var-get($theme, 'fill-color-hover');
+                }
+            }
+        }
+    }
+
+    %igx-checkbox--indeterminate-indigo {
+        %cbx-composite-mark {
+            fill: none !important;
+            stroke-dashoffset: unset !important;
+            transform: none !important;
+
+            rect {
+                fill: var-get($theme, 'tick-color');
+                opacity: 1;
+            }
+        }
+    }
+
+    %igx-checkbox--disabled-indeterminate-indigo {
+        @extend %cbx-composite--x--disabled;
+
+        %cbx-composite-mark {
+            rect {
+                fill: var-get($theme, 'disabled-tick-color');
+            }
+        }
+    }
+
+    %igx-checkbox--indeterminate-fluent {
+        %cbx-composite-mark {
+            stroke: transparent;
+        }
+
+        %cbx-composite {
+            background: transparent;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: calc($size / 2 - rem(6px));
+                inset-inline-start: calc($size / 2 - rem(6px));
+                width: rem(10px);
+                height: rem(10px);
+                border-radius: border-radius(rem(2px));
+                background: var-get($theme, 'fill-color');
+                z-index: 1;
+            }
+        }
+
+        &:hover {
+            %cbx-composite {
+                &::before {
+                    background: var-get($theme, 'fill-color-hover');
+                }
+            }
+        }
+    }
+
+    %igx-checkbox--disabled-indeterminate-fluent {
+        %cbx-composite-mark {
+            stroke: transparent;
+        }
+
+        %cbx-composite--x--disabled {
+            border-color: var-get($theme, 'disabled-color');
+
+            &::before {
+                background: var-get($theme, 'disabled-color');
+            }
+        }
+    }
+
+    %igx-checkbox--disabled-indeterminate {
+        %cbx-composite--x--disabled {
+            border-color: var-get($theme, 'disabled-indeterminate-color');
+            background: var-get($theme, 'disabled-indeterminate-color');
+        }
+    }
+
+    %igx-checkbox--indeterminate--invalid {
+        %cbx-composite--x {
+            border-color: var-get($theme, 'error-color');
+            background: var-get($theme, 'error-color');
+        }
+
+        %cbx-composite--x--hover {
+            border-color: var-get($theme, 'error-color-hover');
+            background: var-get($theme, 'error-color-hover');
+        }
+
+        @if $variant == 'fluent' {
+            %cbx-composite {
+                border-color: var-get($theme, 'error-color');
+
+                &::before {
+                    background: var-get($theme, 'error-color');
+                }
+            }
+
+            %cbx-composite--x {
+                background: transparent;
+            }
+
+            &:hover {
+                %cbx-composite {
+                    background: transparent;
+                    border-color: var-get($theme, 'error-color-hover');
+
+                    &::before {
+                        background: var-get($theme, 'error-color-hover');
+                    }
+                }
+            }
+        }
+    }
+
+    %cbx-composite-mark--x {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        transition: all .2s $ease-out-quad, opacity .2s $ease-out-quad;
+    }
+
+    %cbx-composite-mark--in {
+        stroke-dashoffset: 41; /* length of path - adjacent line length */
+        opacity: 1;
+        transform: rotate(45deg) translateX(calc(#{$mark-x-factor} * -1em));
+    }
+
+    %cbx-composite-mark--fluent {
+        @if $variant == 'fluent' {
+            @extend %cbx-composite-mark;
+            @extend %cbx-composite-mark--x;
+            stroke: var-get($theme, 'tick-color-hover');
+        }
+    }
+
+    %cbx-composite-mark--x--fluent {
+        @if $variant == 'fluent' {
+            stroke: var-get($theme, 'tick-color');
+        }
+    }
+
+    %cbx-composite-mark--invalid--fluent {
+        @if $variant == 'fluent' {
+            stroke: var-get($theme, 'error-color');
+        }
+
+        @if $variant == 'fluent' and $theme-variant == 'dark' {
+            stroke: color($color: 'error', $variant: 500);
+        }
+    }
+
+    %cbx-composite-mark--in--fluent {
+        @if $variant == 'fluent' {
+            stroke: transparent;
+        }
+    }
+
+    %cbx-label {
+        display: inline-block;
+        color: var-get($theme, 'label-color');
+        user-select: none;
+        word-wrap: break-all;
+        transition: color .2s $ease-out-quad;
+
+        &:empty {
+            margin: 0;
+        }
+    }
+
+    %cbx-label--hover {
+        color: var-get($theme, 'label-color-hover');
+    }
+
+    %cbx-label-pos--before,
+    %cbx-label-pos--after {
+        &:empty {
+            margin: 0;
+        }
+    }
+
+    %cbx-label-pos--after {
+        margin-inline-start: $label-margin;
+    }
+
+    %cbx-label-pos--before {
+        margin-inline-end: $label-margin;
+        order: -1;
+    }
+
+    %cbx-label--invalid {
+        @if $variant != 'indigo' {
+            color: var-get($theme, 'error-color');
+        }
+    }
+
+    %cbx-label--disabled {
+        color: var-get($theme, 'disabled-color-label');
+    }
+
+    %cbx-ripple {
+        display: $ripple-display;
+        position: absolute;
+        top: calc(50% - #{$ripple-radius});
+        width: $ripple-size;
+        height: $ripple-size;
+        border-radius: var-get($theme, 'border-radius-ripple');
+        overflow: hidden;
+        pointer-events: none;
+        filter: opacity(1);
+    }
+
+    %cbx-ripple--hover {
+        background: var-get($theme, 'empty-color');
+        transition: background .2s $ease-out-quad;
+        opacity: .06;
+
+        @if $theme-variant == 'dark' {
+            opacity: .12;
+        }
+    }
+
+    %cbx-ripple--hover-checked {
+        background: var-get($theme, 'fill-color-hover');
+    }
+
+    %cbx-ripple--hover-invalid {
+        background: var-get($theme, 'error-color-hover');
+    }
+
+    %igx-checkbox--focused-indigo {
+        %cbx-composite {
+            border-radius: var-get($theme, 'border-radius');
+            box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
+        }
+    }
+
+    %igx-checkbox--focused-fluent {
+        position: relative;
+        $focus-outline-offset: rem(2px);
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: -$focus-outline-offset;
+            box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
+        }
+    }
+
+    %igx-checkbox--focused-bootstrap {
+        %cbx-composite {
+            border-radius: var-get($theme, 'border-radius');
+            border-color: var-get($theme, 'focus-border-color');
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
+        }
+    }
+
+    %igx-checkbox--focused-hovered-bootstrap {
+        %cbx-composite {
+            border-color: hsl(from var-get($theme, 'focus-border-color') h calc(s * 1.12) calc(l * 0.82));
+        }
+    }
+
+    %igx-checkbox--focused-checked-indigo {
+        %cbx-composite {
+            border-radius: var-get($theme, 'border-radius');
+            box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
+        }
+    }
+
+    %igx-checkbox--focused-checked-bootstrap {
+        %cbx-composite {
+            border-color: transparent;
+        }
+    }
+
+    %igx-checkbox--focused-invalid-indigo {
+        %cbx-composite {
+            box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-error');
+        }
+    }
+
+    %igx-checkbox--focused-invalid-bootstrap {
+        %cbx-composite {
+            border-color: var-get($theme, 'error-color');
+            box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color-error');
+        }
+
+        &:hover {
+            %cbx-composite {
+                border-color: var-get($theme, 'error-color-hover');
+            }
+        }
+    }
+
+    %cbx-ripple--focused {
+        background: var-get($theme, 'empty-color');
+        transition: background .2s $ease-out-quad;
+        opacity: .12;
+
+        @if $theme-variant == 'dark' {
+            opacity: .24;
+        }
+    }
+
+    %cbx-ripple--focused-checked {
+        background: var-get($theme, 'fill-color');
+    }
+
+    %cbx-ripple--focused--hover-checked {
+        background: var-get($theme, 'fill-color-hover');
+    }
+
+    %cbx-ripple--focused-invalid {
+        background: var-get($theme, 'error-color');
+    }
+
+    %cbx-ripple--pressed {
+        opacity: .12;
+
+        @if $theme-variant == 'dark' {
+            opacity: .24;
+        }
+    }
+
+    %cbx-display--plain {
+        %cbx-composite,
+        %cbx-composite::after,
+        %cbx-composite-mark,
+        %cbx-composite-mark--x {
+            transition: none;
+        }
+    }
+}
+
+/// Adds typography styles for the igx-checkbox component.
+/// Uses the 'subtitle-1' category from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+@mixin checkbox-typography(
+    $categories: (label: 'subtitle-1')
+) {
+    $label: map.get($categories, 'label');
+
+    %cbx-label {
+        @include type-style($label) {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+}

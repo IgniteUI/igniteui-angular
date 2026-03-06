@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 import {
     IGX_INPUT_GROUP_DIRECTIVES,
-    IGX_RADIO_GROUP_DIRECTIVES,
-    IgxButtonDirective,
-    IgxCheckboxComponent,
-    IgxSwitchComponent
-} from 'igniteui-angular';
+} from 'igniteui-angular/input-group';
+import { IGX_RADIO_GROUP_DIRECTIVES } from 'igniteui-angular/radio';
+import { IgxSwitchComponent } from 'igniteui-angular/switch';
 
 @Component({
     selector: 'app-form',

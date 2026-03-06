@@ -1,0 +1,1351 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+@mixin component {
+    @include b(igx-calendar) {
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-icon,
+            )
+        );
+
+        @extend %calendar !optional;
+
+        @include e(header) {
+            @extend %header-display !optional;
+        }
+
+        @include e(wrapper) {
+            @extend %calendar-wrapper !optional;
+        }
+
+        @include e(wrapper, $m: 'vertical') {
+            @extend %calendar-wrapper--vertical !optional;
+        }
+
+        @include e(pickers) {
+            @extend %pickers-display !optional;
+        }
+
+        @include e(pickers, $m: 'vertical') {
+            @extend %pickers-display--vertical !optional;
+        }
+
+        @include e(pickers, $m: 'days') {
+            @extend %pickers-display--days !optional;
+        }
+
+        @include e(body) {
+            @extend %body-display !optional;
+        }
+
+        @include e(body, $m: 'vertical') {
+            @extend %body-display--vertical !optional;
+        }
+
+        @include e(header-year) {
+            @extend %header-year !optional;
+        }
+
+        @include e(header-date) {
+            @extend %header-date !optional;
+        }
+
+        @include m(vertical) {
+            @extend %calendar !optional;
+            @extend %calendar-vertical !optional;
+
+            @include e(header) {
+                @extend %header-display-vertical !optional;
+            }
+
+            @include e(header-date) {
+                @extend %header-date !optional;
+                @extend %header-date-vertical !optional;
+            }
+        }
+
+        @include e(aria-off-screen) {
+            @extend %calendar__aria-off-screen !optional;
+        }
+    }
+
+    @include b(igx-calendar-picker) {
+        @extend %views-navigation !optional;
+
+        @include e(dates) {
+            @extend %picker-dates !optional;
+        }
+
+        @include e(nav) {
+            @extend %picker__nav !optional;
+        }
+
+        @include e(date) {
+            @extend %picker-date !optional;
+        }
+
+        @include e(prev) {
+            @extend %picker-arrow !optional;
+        }
+
+        @include e(next) {
+            @extend %picker-arrow !optional;
+        }
+    }
+
+    @include b(igx-days-view) {
+        @extend %calendar !optional;
+        @extend %days-view !optional;
+
+        @include e(grid) {
+            @extend %days-view-grid !optional;
+        }
+
+        @include e(row) {
+            @extend %days-view-row !optional;
+        }
+
+        // LABEL
+        @include e(label) {
+            @extend %date !optional;
+            @extend %weekday-label !optional;
+        }
+
+        @include e(label, 'week-number') {
+            @extend %label-week-number !optional;
+        }
+
+        @include e(label-inner) {
+            @extend %weekday-label-inner !optional;
+        }
+
+        // DATE
+        @include e(date) {
+            @extend %date !optional;
+        }
+
+        @include e(date-inner) {
+            @extend %date-inner !optional;
+        }
+
+        @include e(date-inner, 'week-number') {
+            @extend %date-inner-week-number !optional;
+        }
+
+        @include e(date, 'week-number') {
+            @extend %date-week-number !optional;
+        }
+
+        @include e(date, 'weekend') {
+            %date-inner {
+                @extend %date-weekend !optional;
+            }
+        }
+
+        @include e(date, 'inactive') {
+            %date-inner {
+                @extend %date-inactive !optional;
+            }
+        }
+
+        // HIDDEN
+        @include e(date, 'hidden') {
+            @extend %date-hidden !optional;
+        }
+
+
+
+
+
+
+
+
+
+
+        // STATE STYLES
+        // -----------------------------------------------------------------------------------
+
+        // ACTIVE PLAYS ROLE FOR FOCUS
+        @include e(date, 'active') {
+            %date-inner {
+                @extend %date-focus !optional;
+            }
+        }
+
+        // SELECTED
+        @include e(date, 'selected') {
+            %date-inner {
+                @extend %date-selected !optional;
+            }
+        }
+
+        @include e(date, $mods: ('selected', 'active')) {
+            %date-inner {
+                @extend %date-selected--focus !optional;
+            }
+        }
+
+        // CURRENT
+        @include e(date, 'current') {
+            %date-inner {
+                @extend %date-current !optional;
+                @extend %date-current-border-radius !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'active')) {
+            %date-inner {
+                @extend %date-current--focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'first', 'last')) {
+            @extend %date-current-border-radius !optional;
+        }
+
+        @include e(date, $mods: ('current', 'selected'), $not: ('range')) {
+            %date-inner {
+                @extend %date-current--selected !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'selected', 'active'), $not: ( 'range')) {
+            %date-inner {
+                @extend %date-current--selected-focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'selected', 'first')) {
+            %date-inner {
+                @extend %date-current--selected !optional;
+                @extend %date-current--selected-first !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'selected', 'active', 'first')) {
+            %date-inner {
+                @extend %date-current--selected-focus !optional;
+                @extend %date-current--selected-first-focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'selected', 'last')) {
+            %date-inner {
+                @extend %date-current--selected !optional;
+                @extend %date-current--selected-last !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'selected', 'active', 'last')) {
+            %date-inner {
+                @extend %date-current--selected-focus !optional;
+                @extend %date-current--selected-last-focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'selected', 'range', 'first')) {
+            &::before {
+                @extend %date-current-border-radius !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'selected', 'range', 'last')) {
+            &::before {
+                @extend %date-current-border-radius !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'range'), $not: ('first', 'last')) {
+            %date-inner {
+                @extend %date-selected-current-range !optional;
+            }
+        }
+
+        @include e(date, $mods: ('current', 'range', 'active'), $not: ('first', 'last')) {
+            %date-inner {
+                @extend %date-selected-current-focus !optional;
+            }
+        }
+
+        // SPECIAL
+        @include e(date, 'special') {
+            %date-inner {
+                @extend %date-special !optional;
+                @extend %date-special-border-radius !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'first', 'last')) {
+            @extend %date-special-border-radius !optional;
+        }
+
+        @include e(date, $mods: ('special', 'active')) {
+            %date-inner {
+                @extend %date-special--focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'selected'), $not: ('range')) {
+            %date-inner {
+                @extend %date-special--selected !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'first')) {
+            %date-inner {
+                @extend %date-special--selected !optional;
+                @extend %date-special--selected-first !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'last')) {
+            %date-inner {
+                @extend %date-special--selected !optional;
+                @extend %date-special--selected-last !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'active'), $not: ('range')) {
+            %date-inner {
+                @extend %date-special--selected-focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'active', 'first')) {
+            %date-inner {
+                @extend %date-special--selected-focus !optional;
+                @extend %date-special--selected-first-focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'active', 'last')) {
+            %date-inner {
+                @extend %date-special--selected-focus !optional;
+                @extend %date-special--selected-last-focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'range', 'first')) {
+            &::before {
+                @extend %date-special-border-radius !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'selected', 'range', 'last')) {
+            &::before {
+                @extend %date-special-border-radius !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'range'), $not: ('range-preview', 'first', 'last')) {
+            %date-inner {
+                @extend %date-special-range-not-preview !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'range', 'active'), $not: ('range-preview', 'first', 'last')) {
+            %date-inner {
+                @extend %date-special-range-not-preview-focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'range'), $not: ('first', 'last')) {
+            %date-inner {
+                @extend %date-special-range !optional;
+            }
+        }
+
+        @include e(date, $mods: ('special', 'range', 'active'), $not: ('first', 'last')) {
+            %date-inner {
+                @extend %date-special-range-focus !optional;
+            }
+        }
+
+        // SPECIAL + CURRENT
+        @include m(material) {
+            @include e(date, $mods: ('special', 'current')) {
+                %date-inner {
+                    @extend %material-date-special-current !optional;
+                }
+            }
+        }
+
+        // RANGE STYLES
+        @include e(date, 'range') {
+            @extend %date-range !optional;
+        }
+
+        @include e(date, 'first') {
+            @extend %date-first !optional;
+        }
+
+        @include e(date, 'last') {
+            @extend %date-last !optional;
+        }
+
+        @include e(date, 'first', $not: ( 'current', 'special')) {
+            %date-inner {
+                @extend %date-range-border !optional;
+            }
+        }
+
+        @include e(date, 'last', $not: ( 'current', 'special')) {
+            %date-inner {
+                @extend %date-range-border !optional;
+            }
+        }
+
+        @include e(date, $mods: ('range', 'first')) {
+            @extend %date-range--first !optional;
+        }
+
+        @include e(date, $mods: ('range', 'last')) {
+            @extend %date-range--last !optional;
+        }
+
+        @include e(date, $mods: ('range', 'first'), $not: ( 'current', 'special')) {
+            @extend %date-wrapper-range-border !optional;
+        }
+
+        @include e(date, $mods: ('range', 'last'), $not: ( 'current', 'special')) {
+            @extend %date-wrapper-range-border !optional;
+        }
+
+        @include e(date, 'range', $not: ('first', 'last', 'current', 'special')) {
+            %date-inner {
+                @extend %date-range-middle !optional;
+            }
+        }
+
+        @include e(date, $mods: ('range', 'active'), $not: ('first', 'last', 'current', 'special', 'range-preview')) {
+            %date-inner {
+                @extend %date-range-middle--focus !optional;
+            }
+        }
+
+        // PREVIEW STYLES
+        @include e(date, 'range-preview') {
+            @extend %date-range-preview !optional;
+        }
+
+        @include e(date, $mods:('range-preview', 'first')) {
+            @extend %date-preview--first !optional;
+        }
+
+        @include e(date, $mods:('range-preview', 'last')) {
+            @extend %date-preview--last !optional;
+        }
+
+        @include e(date, 'disabled') {
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        // DISABLED
+        @include e(date, $mods: ('disabled', 'special')) {
+            %date-inner {
+                opacity: .38;
+            }
+        }
+
+        @include e(date, $mods: ('disabled', 'current')) {
+            %date-inner {
+                opacity: .38;
+            }
+        }
+
+        @include e(date, 'disabled', $not: ('special', 'current', 'range', 'first', 'last')) {
+            %date-inner {
+                @extend %date-disabled !optional;
+            }
+        }
+
+        @include e(date, $mods: ('disabled', 'range'), $not: ('selected', 'special', 'current', 'range-preview', 'first', 'last')) {
+            %date-inner {
+                @extend %date-disabled-range !optional;
+            }
+        }
+
+        @include e(date, 'range-preview', $not: ('special', 'current', 'first', 'last')) {
+            %date-inner {
+                @extend %date-disabled-range-preview !optional;
+            }
+        }
+
+        // FLUENT THEME
+        @include m(fluent) {
+            // CURRENT
+            @include e(date, 'current') {
+                %date-inner {
+                    @extend %fluent-date-current !optional;
+                }
+            }
+
+            @include e(date, $mods: ('current', 'active')) {
+                %date-inner {
+                    @extend %fluent-date-current-focus !optional;
+                }
+            }
+
+            // CURRENT + SELECTED
+            @include e(date, $mods: ('current', 'selected')) {
+                %date-inner {
+                    @extend %fluent-date-current-selected !optional;
+                }
+            }
+
+            @include e(date, $mods: ('current', 'selected', 'active')) {
+                %date-inner {
+                    @extend %fluent-date-current-selected-focus !optional;
+                }
+            }
+
+            // SPECIAL
+            @include e(date, 'special') {
+                %date-inner {
+                    @extend %fluent-date-special !optional;
+                }
+            }
+
+            @include e(date, $mods: ('special', 'active')) {
+                %date-inner {
+                    @extend %fluent-date-special-focus !optional;
+                }
+            }
+
+            // SPECIAL + SELECTED
+            @include e(date, $mods: ('special', 'selected')) {
+                %date-inner {
+                    @extend %fluent-date-special-selected !optional;
+                }
+            }
+
+            @include e(date, $mods: ('special', 'selected', 'active')) {
+                %date-inner {
+                    @extend %fluent-date-special-selected-focus !optional;
+                }
+            }
+
+
+            // CURRENT + SPECIAL
+            @include e(date, $mods: ('current', 'special')) {
+                %date-inner {
+                    @extend %fluent-date-current-special !optional;
+                }
+            }
+            @include e(date, $mods: ('current', 'special', 'active')) {
+                %date-inner {
+                    @extend %fluent-date-current-special-focus !optional;
+                }
+            }
+
+            // CURRENT + SPECIAL + SELECTED
+            @include e(date, $mods: ('current', 'special', 'selected')) {
+                %date-inner {
+                    @extend %fluent-date-current-special-selected !optional;
+                }
+            }
+            @include e(date, $mods: ('current', 'special', 'selected', 'active')) {
+                %date-inner {
+                    @extend %fluent-date-current-special-selected-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('current', 'special', 'selected', 'range-preview', 'first')) {
+                %date-inner {
+                    @extend %fluent-date-current-special-selected-range-preview-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('current', 'special', 'selected', 'range-preview', 'last')) {
+                %date-inner {
+                    @extend %fluent-date-current-special-selected-range-preview-first-last !optional;
+                }
+            }
+
+            // FIRST + LAST
+            @include e(date, $mods: ('first', 'last'), $not: ('current', 'special')) {
+                %date-inner {
+                    @extend %fluent-date-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('first', 'last', 'active'), $not: ('current', 'special')) {
+                %date-inner {
+                    @extend %fluent-date-first-last-focus !optional;
+                }
+            }
+
+            // RANGE
+            @include e(date, range) {
+                @extend %fluent-date-range !optional;
+                @extend %fluent-date-range-plus !optional;
+
+            }
+
+            @include e(date, $mods: ('range', 'first')) {
+                @extend %fluent-date-range-first !optional;
+            }
+
+            @include e(date, $mods: ('range', 'last')) {
+                @extend %fluent-date-range-last !optional;
+            }
+
+            // PREVIEW
+            @include e(date, 'range-preview') {
+                @extend %fluent-date-range-preview-last-after !optional;
+
+                %date-inner {
+                    @extend %fluent-date-range-preview !optional;
+                }
+            }
+
+            @include e(date, 'range-preview', $not: ('disabled', 'inactive', 'weekend')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-not-disabled !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'inactive'), $not: ('disabled')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-inactive !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'weekend'), $not: ('current', 'special', 'inactive', 'disabled')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-weekend !optional;
+                }
+            }
+
+            @include e(date, 'range-preview', $not: ('first', 'last', 'current', 'special')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-middle !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'first')) {
+                @extend %fluent-date-range-preview-first !optional;
+            }
+
+            @include e(date, $mods: ('range-preview', 'last')) {
+                @extend %fluent-date-range-preview-last !optional;
+            }
+
+            @include e(date, $mods: ('range-preview', 'first', 'selected')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-first-last-selected !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'last', 'selected')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-first-last-selected !optional;
+                }
+            }
+
+            // RESET HOVER/FOCUS STYLES IN PREVIEW
+            @include e(date, $mods: ('range-preview', 'special')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-special !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'special', 'active')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-special-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-current !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'active')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-current-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'special')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-current-special !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'special', 'active')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-current-special-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('selected', 'first', 'last')) {
+                %date-inner {
+                    @extend %fluent-selected-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('selected', 'first', 'last', 'special')) {
+                %date-inner {
+                    @extend %fluent-selected-first-last-special !optional;
+                }
+            }
+
+            @include e(date, $mods: ('selected', 'first', 'last', 'current')) {
+                %date-inner {
+                    @extend %fluent-selected-first-last-current !optional;
+                }
+            }
+
+            @include e(date, $mods: ('selected', 'first', 'last', 'current', 'special')) {
+                %date-inner {
+                    @extend %fluent-selected-first-last-current-special !optional;
+                }
+            }
+
+            @include e(date, $mods: ('selected', 'first', 'last', 'current', 'special', 'active')) {
+                %date-inner {
+                    @extend %fluent-selected-first-last-current-special-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'selected', 'special', 'first')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-selected-special-first !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'selected', 'special', 'last')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-selected-special-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'selected', 'current', 'first')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-current-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'selected', 'current', 'last')) {
+                %date-inner {
+                    @extend %fluent-date-range-preview-current-first-last !optional;
+                }
+            }
+
+            // RANGE + SELECTED
+            @include e(date, $mods: ('range', 'selected')) {
+                @extend %fluent-date-range-selected !optional;
+            }
+
+            @include e(date, $mods: ('range', 'selected', 'first')) {
+                @extend %fluent-date-range-selected-first-last !optional;
+                @extend %fluent-date-range-selected-first !optional;
+            }
+
+            @include e(date, $mods: ('range', 'selected', 'last')) {
+                @extend %fluent-date-range-selected-first-last !optional;
+                @extend %fluent-date-range-selected-last !optional;
+            }
+
+            @include e(date, $mods: ('range', 'selected'), $not: ('range-preview', 'special', 'current', 'disabled')) {
+                %date-inner {
+                    @extend %fluent-date-range-selected-not-preview-disabled !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'selected', 'active'), $not: ('range-preview', 'special', 'current', 'disabled')) {
+                %date-inner {
+                    @extend %fluent-date-range-selected-not-preview-disabled-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'selected', 'inactive'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-selected-not-preview !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'selected', 'special'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-selected-special-not-preview !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'selected', 'current'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-selected-current-not-preview !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'special'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-special-not-preview !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'special', 'active'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-special-not-preview-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'current'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-current-not-preview !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'current', 'active'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-current-not-preview-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'current', 'special'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-current-special-not-preview !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'current', 'special', 'active'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-current-special-not-preview-focus !optional;
+                }
+            }
+
+            // DISABLED
+            @include e(date, $mods: ('range', 'special', 'disabled'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-special-disabled !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'current', 'disabled'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-special-disabled !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'special', 'current', 'disabled'), $not: ('range-preview')) {
+                %date-inner {
+                    @extend %fluent-date-range-special-current-disabled !optional;
+                }
+            }
+        }
+
+        // BOOTSTRAP THEME
+        @include m(bootstrap) {
+            // SPECIAL
+            @include e(date, 'special') {
+                %date-inner {
+                    @extend %bootstrap-date-special !optional;
+                }
+            }
+
+            @include e(date, $mods: ('special', 'first')) {
+                %date-inner {
+                    @extend %bootstrap-date-special-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('special', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-special-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('special', 'range'), $not: ('range-preview', 'current', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-special-range !optional;
+                }
+            }
+
+            @include e(date, $mods: ('special', 'range', 'active'), $not: ('range-preview', 'current', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-special-range-focus !optional;
+                }
+            }
+
+            // CURRENT
+            @include e(date, $mods: ('current', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-current-first-last !optional;
+                }
+            }
+
+            // CURRENT + SPECIAL
+            @include e(date, $mods: ('current', 'special'), $not: ('first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-current-special !optional;
+                }
+            }
+
+            @include e(date, $mods: ('current', 'special', 'active'), $not: ('first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-current-special-focus !optional;
+                }
+            }
+
+
+            // CURRENT + SPECIAL + RANGE
+            @include e(date, $mods: ('current', 'special', 'range'), $not: ('first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-current-special-range !optional;
+                }
+            }
+
+            @include e(date, $mods: ('current', 'special', 'range', 'active'), $not: ('first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-current-special-range-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('current', 'special', 'selected'), $not: ('range', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-current-special-selected-not-range !optional;
+                }
+            }
+
+            @include e(date, $mods: ('current', 'special', 'selected', 'active'), $not: ('range', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-current-special-selected-not-range-focus !optional;
+                }
+            }
+
+            // PREVIEW
+            @include e(date, 'range-preview') {
+                @extend %bootstrap-date-range-preview !optional;
+            }
+
+            @include e(date, $mods:('range-preview', 'first')) {
+                @extend %bootstrap-date-preview--first-last !optional;
+            }
+
+            @include e(date, $mods:('range-preview', 'last')) {
+                @extend %bootstrap-date-preview--first-last !optional;
+            }
+
+            @include e(date, $mods:('range-preview', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview--first-and-last !optional;
+                }
+            }
+
+            @include e(date, $mods:('range-preview', 'first', 'active')) {
+                @extend %bootstrap-date-preview--first-last-focus !optional;
+            }
+
+            @include e(date, $mods:('range-preview', 'last', 'active')) {
+                @extend %bootstrap-date-preview--first-last-focus !optional;
+            }
+
+            @include e(date, $mods: ('range-preview', 'current')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-preview-current !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'active')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-preview-current-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'first')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-preview-current-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-preview-current-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'active', 'first')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-preview-current-focus-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'active', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-preview-current-focus-first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'first')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-special--first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-special--first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'active', 'first')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-special-focus--first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'current', 'active', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-special-focus--first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'special', 'first')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-special--first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'special', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-special--first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'special', 'active', 'first')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-special-focus--first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'special', 'active', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-special-focus--first-last !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'weekend'), $not: ('special', 'current', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-weekend-inactive !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'weekend', 'active'), $not: ('special', 'current', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-weekend-inactive-focus !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'inactive'), $not: ('special', 'current', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-weekend-inactive !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range-preview', 'inactive', 'active'), $not: ('special', 'current', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-preview-weekend-inactive-focus !optional;
+                }
+            }
+
+
+            // RANGE
+            @include e(date, $mods: ('range', 'current', 'first')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-radius !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'current', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-radius !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'special', 'first')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-radius !optional;
+                }
+            }
+
+            @include e(date, $mods: ('range', 'special', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-range-radius !optional;
+                }
+            }
+
+
+            // DISABLED PREVIEW
+            @include e(date, $mods: ('disabled', 'range-preview'), $not: ('special', 'current', 'first', 'last')) {
+                %date-inner {
+                    @extend %bootstrap-date-disabled-range-preview !optional;
+                }
+            }
+        }
+
+        // INDIGO THEME
+        @include m(indigo) {
+            @include e(label, 'week-number') {
+                @extend %indigo-label-week-number !optional;
+            }
+
+            @include e(date-inner, 'week-number') {
+                @extend %indigo-date-inner-week-number !optional;
+            }
+
+            @include e(date, 'special') {
+                %date-inner {
+                    font-weight: 700;
+                }
+            }
+
+            // SELECTED + CURRENT + FIRST/ LAST
+            @include e(date,  $mods: ('current', 'selected', 'first')) {
+                %date-inner {
+                    @extend %indigo-current-selected-first-last !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('current', 'selected', 'last')) {
+                %date-inner {
+                    @extend %indigo-current-selected-first-last !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('current', 'selected', 'first', 'active')) {
+                %date-inner {
+                    @extend %indigo-current-selected-first-last-focus !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('current', 'selected', 'last', 'active')) {
+                %date-inner {
+                    @extend %indigo-current-selected-first-last-focus !optional;
+                }
+            }
+
+            // CURRENT + SELECTED RANGE + FIRST/ LAST
+            @include e(date,  $mods: ('current', 'selected', 'range', 'first')) {
+                %date-inner {
+                    @extend %indigo-current-selected-range-first-last !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('current', 'selected', 'range', 'last')) {
+                %date-inner {
+                    @extend %indigo-current-selected-range-first-last !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('current', 'selected', 'range', 'first', 'active')) {
+                %date-inner {
+                    @extend %indigo-current-selected-range-first-last-focus !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('current', 'selected', 'range', 'last', 'active')) {
+                %date-inner {
+                    @extend %indigo-current-selected-range-first-last-focus !optional;
+                }
+            }
+
+            // SPECIAL + SELECTED  FIRST/ LAST
+            @include e(date,  $mods: ('special', 'selected', 'first')) {
+                %date-inner {
+                    @extend %indigo-special-selected-first-last !optional;
+
+                    // stylelint-disable-next-line max-nesting-depth
+                    &::after {
+                        @extend %indigo-date-special-selected-inner-radius !optional;
+                    }
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'selected', 'last')) {
+                %date-inner {
+                    @extend %indigo-special-selected-first-last !optional;
+
+                    // stylelint-disable-next-line max-nesting-depth
+                    &::after {
+                        @extend %indigo-date-special-selected-inner-radius !optional;
+                    }
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'selected', 'first', 'active')) {
+                %date-inner {
+                    @extend %indigo-special-selected-first-last-focus !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'selected', 'last', 'active')) {
+                %date-inner {
+                    @extend %indigo-special-selected-first-last-focus !optional;
+                }
+            }
+
+            // SPECIAL + SELECTED
+            @include e(date, $mods: ('special', 'selected'), $not: ( 'range', 'range-preview')) {
+                %date-inner {
+                    // stylelint-disable-next-line max-nesting-depth
+                    &::after {
+                        @extend %indigo-date-special-selected-inner-radius !optional;
+                    }
+                }
+            }
+
+            // SPECIAL + CURRENT + RANGE
+            @include e(date,  $mods: ('special', 'current')) {
+                %date-inner {
+                    @extend %indigo-special-current !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'range')) {
+                %date-inner {
+                    @extend %indigo-special-current-range !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'range', 'active')) {
+                %date-inner {
+                    @extend %indigo-special-current-range-focus !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'range'), $not: ('first', 'last')) {
+                %date-inner {
+                    @extend %indigo-special-current-range-not-first-last !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'range', 'active'), $not: ('first', 'last')) {
+                %date-inner {
+                    @extend %indigo-special-current-range-not-first-last-focus !optional;
+                }
+            }
+
+
+            @include e(date,  $mods: ('special', 'current', 'range', 'first')) {
+                %date-inner {
+                    @extend %indigo-special-current-range-first-last !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'range', 'last')) {
+                %date-inner {
+                    @extend %indigo-special-current-range-first-last !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'range', 'active', 'first')) {
+                %date-inner {
+                    @extend %indigo-special-current-range-first-last-focus !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'range', 'active', 'last')) {
+                %date-inner {
+                    @extend %indigo-special-current-range-first-last-focus !optional;
+                }
+            }
+
+            // SPECIAL + CURRENT
+            @include e(date,  $mods: ('special', 'current'), $not: ('range')) {
+                %date-inner {
+                    @extend %indigo-date-special-current-indented !optional;
+
+                    // stylelint-disable-next-line max-nesting-depth
+                    &::after {
+                        @extend %indigo-date-special-selected-inner-radius !optional;
+                    }
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'active'), $not: ('range')) {
+                %date-inner {
+                    @extend %indigo-date-special-current-focus !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current'), $not: ('selected', 'range')) {
+                %date-inner {
+                    @extend %indigo-date-special-current-not-selected !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'active'), $not: ('selected', 'range')) {
+                %date-inner {
+                    @extend %indigo-date-special-current-focus-not-selected !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'selected'), $not: ( 'range')) {
+                %date-inner {
+                    @extend %indigo-date-special-current-selected !optional;
+                }
+            }
+
+            @include e(date,  $mods: ('special', 'current', 'selected', active), $not: ( 'range')) {
+                %date-inner {
+                    @extend %indigo-date-special-current-selected-focus !optional;
+                }
+            }
+        }
+    }
+
+    @include b(igx-calendar-view) {
+        @extend %calendar-view !optional;
+
+        @include e(items) {
+            @extend %calendar-items !optional;
+        }
+
+        @include e(item) {
+            @extend %view-item !optional;
+        }
+
+        @include e(item, 'current') {
+            @extend %calendar-view__item-current !optional;
+        }
+
+        @include e(item, $mods: ('current', 'active')) {
+            @extend %calendar-view__item-current-active !optional;
+        }
+
+        @include e(item, 'selected') {
+            @extend %calendar-view__item-selected !optional;
+        }
+
+        @include e(item, $mods: ('selected', 'active')) {
+            @extend %calendar-view__item-selected-active !optional;
+        }
+
+        @include e(item, $mods: ('selected', 'current')) {
+            @extend %calendar-view__item-selected-current !optional;
+        }
+
+        @include e(item, $mods: ('selected', 'current', 'active')) {
+            @extend %calendar-view__item-selected-current-active !optional;
+        }
+
+        @include e(item-inner) {
+            @extend %calendar-view__item-inner !optional;
+
+            &:hover {
+                @extend %calendar-view__item-inner-hover !optional;
+            }
+        }
+    }
+
+    @include b(igx-month-picker) {
+        @extend %month-picker !optional;
+    }
+}

@@ -1,5 +1,6 @@
 name: Npm.js deploy
 permissions:
+  id-token: write
   contents: read
 
 on:
@@ -10,12 +11,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
+
+      - name: Update NPM
+        run: npm install -g npm@latest
+
       - run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - run: echo ${VERSION}
 
@@ -36,10 +41,11 @@ jobs:
             if [[ ${VERSION} == *"alpha"* || ${VERSION} == *"beta"* || ${VERSION} == *"rc"* ]]; then echo "NPM_TAG=next"; else echo "NPM_TAG=latest"; fi >> $GITHUB_ENV
             echo ${NPM_TAG}
 
-      - name: Copy readme and license for igniteui-angular
+      - name: Copy readme, license & skills for igniteui-angular
         run: |
             cp ../../README.md README.md
             cp ../../LICENSE LICENSE
+            cp -r ../../skills/. skills
         working-directory: dist/igniteui-angular
 
       - name: Copy i18n files
@@ -60,11 +66,7 @@ jobs:
       - name: Publish igniteui-angular
         run: npm publish --tag ${NPM_TAG}
         working-directory: dist/igniteui-angular
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - name: Publish igniteui-angular-i18n
         run: npm publish --tag ${NPM_TAG}
         working-directory: dist/igniteui-angular-i18n
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

@@ -55,7 +55,7 @@
                     <span>Employees List</span>
                 </igc-list-header>
                 @for(employee of employeeItems; track employee){
-                    <igc-list-item>
+                    <igc-list-item [selected]="employee.selected">
                         @if(properties.addAvatarThumbnail) {
                             <igc-avatar slot="start" [src]="employee.imageURL"></igc-avatar>
                         }
@@ -69,7 +69,7 @@
                             <span slot="subtitle">{{employee.position}}</span>
                         }
                         @if(properties.addCheckboxAction) {
-                            <igc-checkbox slot="end"></igc-checkbox>
+                            <igc-checkbox slot="end" [checked]="employee.selected"></igc-checkbox>
                         }
                         @if(properties.addIconAction) {
                             <igc-icon slot="end" name="info"></igc-icon>

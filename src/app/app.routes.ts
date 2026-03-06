@@ -6,6 +6,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { ChatSampleComponent } from './chat/chat.sample';
 import { InputControlsSampleComponent } from './input-controls/input-controls.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
 import { CircularProgressSampleComponent } from './circular-progress-showcase/circular-progress-showcase.sample'
@@ -141,6 +142,7 @@ import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 import { GridExportComponent } from './grid-export/grid-export.sample';
+import { GridPdfExportSampleComponent } from './grid-pdf-export/grid-pdf-export.sample';
 import { DividerComponent } from './divider/divider.component';
 import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
 import { GridDockManagerSampleComponent } from './dockmanager-grid/dockmanager-grid.sample';
@@ -148,6 +150,7 @@ import { HoundComponent } from './hound/hound.component';
 import { LabelSampleComponent } from "./label/label.sample";
 import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
 import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
+import { GridLiteSampleComponent } from './grid-lite/grid-lite.sample';
 
 export const appRoutes: Routes = [
     {
@@ -200,6 +203,10 @@ export const appRoutes: Routes = [
         component: CarouselSampleComponent
     },
     {
+        path: 'chat',
+        component: ChatSampleComponent
+    },
+    {
         path: 'input-controls',
         component: InputControlsSampleComponent
     },
@@ -223,7 +230,7 @@ export const appRoutes: Routes = [
         path: 'circular-progress',
         component: CircularProgressSampleComponent
     },
-	{
+    {
         path: 'divider',
         component: DividerComponent
     },
@@ -533,8 +540,16 @@ export const appRoutes: Routes = [
         component: GridExportComponent
     },
     {
+        path: 'gridPdfExport',
+        component: GridPdfExportSampleComponent
+    },
+    {
         path: 'buttonGroup',
         component: ButtonGroupSampleComponent
+    },
+    {
+        path: "gridLite",
+        component: GridLiteSampleComponent
     },
     {
         path: 'gridColumnGroups',

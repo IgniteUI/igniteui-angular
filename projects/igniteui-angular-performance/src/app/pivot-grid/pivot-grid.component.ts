@@ -182,9 +182,9 @@ export class PivotGridComponent {
                 sortDirection: SortingDirection.None
             },
                 {
-                    fullDate: false,
+                    fullDate: true,
                     quarters: true,
-                    months: false,
+                    months: true,
                 }),
         ],
         values: [
