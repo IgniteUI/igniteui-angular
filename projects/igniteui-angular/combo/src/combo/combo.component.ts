@@ -7,8 +7,7 @@ import {
     IBaseEventArgs,
     IBaseCancelableEventArgs,
     CancelableEventArgs,
-    EditorProvider,
-    areEqualArrays
+    EditorProvider
 } from 'igniteui-angular/core';
 import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -42,9 +41,6 @@ export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventAr
     /** The user interaction that triggered the selection change */
     event?: Event;
 }
-
-/** Event emitted when an igx-combo's selection has been changed */
-export interface IComboSelectionChangedEventArgs extends IComboSelectionChangingEventArgs, CancelableEventArgs {}
 
 /** Event emitted when the igx-combo's search input changes */
 export interface IComboSearchInputEventArgs extends IBaseCancelableEventArgs {
@@ -156,16 +152,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     @Output()
     public selectionChanging = new EventEmitter<IComboSelectionChangingEventArgs>();
-
-    /**
-     * Emitted when item selection is changed, after the selection completes
-     *
-     * ```html
-     * <igx-combo (selectionChanged)='handleSelection()'></igx-combo>
-     * ```
-     */
-    @Output()
-    public selectionChanged = new EventEmitter<IComboSelectionChangedEventArgs>();
 
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
@@ -427,11 +413,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             displayText,
             cancel: false
         };
-        const previousValue = [...oldValue];
-        const previousSelection = [...oldSelection];
-        const previousDisplayValue = this._displayValue;
-        const previousDisplayText = this._displayText;
-        const previousRemoteSelection = this.isRemote ? { ...this._remoteSelection } : null;
         this.selectionChanging.emit(args);
         if (!args.cancel) {
             this.selectionService.select_items(this.id, args.newValue, true);
@@ -440,32 +421,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
                 this._displayValue = this._displayText = args.displayText;
             } else {
                 this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
-            }
-            if (!areEqualArrays(this.value, previousValue) || !areEqualArrays(this.selection, previousSelection)) {
-                const changedArgs: IComboSelectionChangedEventArgs = {
-                    newValue: this.value,
-                    oldValue: previousValue,
-                    newSelection: this.selection,
-                    oldSelection: previousSelection,
-                    added: this.convertKeysToItems(diffInSets(new Set(this.value), new Set(previousValue))),
-                    removed: this.convertKeysToItems(diffInSets(new Set(previousValue), new Set(this.value))),
-                    event,
-                    owner: this,
-                    displayText: this._displayValue,
-                    cancel: false
-                };
-                this.selectionChanged.emit(changedArgs);
-                if (changedArgs.cancel) {
-                    this.selectionService.select_items(this.id, previousValue, true);
-                    this._value = previousValue;
-                    if (this.isRemote && previousRemoteSelection) {
-                        this._remoteSelection = previousRemoteSelection;
-                    }
-                    this._displayValue = previousDisplayValue;
-                    this._displayText = previousDisplayText;
-                    this._onChangeCallback(previousValue);
-                    return;
-                }
             }
             this._onChangeCallback(args.newValue);
         } else if (this.isRemote) {

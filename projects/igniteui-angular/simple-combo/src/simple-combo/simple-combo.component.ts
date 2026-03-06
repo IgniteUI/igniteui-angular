@@ -27,9 +27,6 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
     displayText: string;
 }
 
-/** Emitted when an igx-simple-combo's selection has been changed. */
-export interface ISimpleComboSelectionChangedEventArgs extends ISimpleComboSelectionChangingEventArgs, CancelableEventArgs {}
-
 /**
  * Represents a drop-down list that provides filtering functionality, allowing users to choose a single option from a predefined list.
  *
@@ -80,16 +77,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      */
     @Output()
     public selectionChanging = new EventEmitter<ISimpleComboSelectionChangingEventArgs>();
-
-    /**
-     * Emitted when item selection is changed, after the selection completes
-     *
-     * ```html
-     * <igx-simple-combo (selectionChanged)='handleSelection()'></igx-simple-combo>
-     * ```
-     */
-    @Output()
-    public selectionChanged = new EventEmitter<ISimpleComboSelectionChangedEventArgs>();
 
     @ViewChild(IgxTextSelectionDirective, { static: true })
     private textSelection: IgxTextSelectionDirective;
@@ -511,8 +498,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
-        const previousValue = this.value;
-        const previousSelection = this.selection;
         if (args.newSelection !== args.oldSelection) {
             this.selectionChanging.emit(args);
         }
@@ -528,30 +513,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.comboInput.value = this._displayValue = this.searchValue = displayText !== args.displayText
                     ? args.displayText
                     : this.createDisplayText(super.selection, [args.oldValue]);
-            }
-            if (this.value !== previousValue || this.selection !== previousSelection) {
-                const changedArgs: ISimpleComboSelectionChangedEventArgs = {
-                    newValue: this.value,
-                    oldValue: previousValue,
-                    newSelection: this.selection,
-                    oldSelection: previousSelection,
-                    displayText: this._displayValue,
-                    owner: this,
-                    cancel: false
-                };
-                this.selectionChanged.emit(changedArgs);
-                if (changedArgs.cancel) {
-                    const rollbackSelection = this.isValid(previousValue) ? [previousValue] : [];
-                    this.selectionService.select_items(this.id, rollbackSelection, true);
-                    this._value = rollbackSelection;
-                    const rollbackDisplayText =
-                        rollbackSelection.length ? this.createDisplayText(super.selection, []) : '';
-                    this.comboInput.value = this._displayValue = this.searchValue = rollbackDisplayText;
-                    this.filterValue = rollbackDisplayText;
-                    this._onChangeCallback(previousValue);
-                    this._updateInput = true;
-                    return;
-                }
             }
             this._onChangeCallback(args.newValue);
             this._updateInput = true;
