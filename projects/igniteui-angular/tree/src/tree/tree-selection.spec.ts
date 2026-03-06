@@ -1,6 +1,6 @@
 import type { MockedObject } from "vitest";
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangeDetectorRef, ElementRef, EventEmitter, QueryList } from '@angular/core';
 import { IgxTreeComponent } from './tree.component';
@@ -14,27 +14,27 @@ import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeSelectionSampleComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 
 describe('IgxTree - Selection #treeView', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeSimpleComponent,
                 IgxTreeSelectionSampleComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('UI Interaction tests - None & BiState', () => {
         let fix;
         let tree: IgxTreeComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeSimpleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
             tree.selection = IgxTreeSelectionType.BiState;
             fix.detectChanges();
-        }));
+        });
 
         it('Should have checkbox on each node if selection mode is BiState', () => {
             const nodes = TreeTestFunctions.getAllNodes(fix);
@@ -176,13 +176,13 @@ describe('IgxTree - Selection #treeView', () => {
         let fix;
         let tree: IgxTreeComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeSimpleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
             tree.selection = IgxTreeSelectionType.Cascading;
             fix.detectChanges();
-        }));
+        });
 
         it('Should have checkbox on each node if selection mode is Cascading', () => {
             const nodes = TreeTestFunctions.getAllNodes(fix);
@@ -309,13 +309,13 @@ describe('IgxTree - Selection #treeView', () => {
         let fix;
         let tree: IgxTreeComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeSelectionSampleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
             tree.selection = IgxTreeSelectionType.BiState;
             fix.detectChanges();
-        }));
+        });
 
         it('Should correctly represent the node`s selection state on click', () => {
             const firstNode = tree.nodes.toArray()[0];
@@ -555,10 +555,9 @@ describe('IgxTree - Selection #treeView', () => {
         const treeService = new IgxTreeService();
         const elementRef = { nativeElement: null };
         const mockPlatform = {
-            isBrowser: vi.fn().mockName("platform.isBrowser"),
+            isBrowser: vi.fn().mockName("platform.isBrowser").mockReturnValue(true),
             isServer: vi.fn().mockName("platform.isServer")
         };
-        mockPlatform.isBrowser = true;
         let navService: IgxTreeNavigationService;
         let tree: IgxTreeComponent;
 

@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { GridFunctions } from "../../../test-utils/grid-functions.spec";
@@ -51,10 +52,10 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
         const $ = (selector: string) => fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(DefaultToolbarComponent);
             fixture.detectChanges();
-        }));
+        });
 
         it('toolbar is rendered when declared between grid tags', () => {
             expect($(TOOLBAR_TAG)).toBeInstanceOf(HTMLElement);
@@ -111,14 +112,14 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
         const $ = (selector: string) => fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ToolbarActionsComponent);
             fixture.detectChanges();
             instance = fixture.componentInstance;
-        }));
+        });
 
-        it('the buttons type should be set to "button"', fakeAsync(() => {
-            tick();
+        it('the buttons type should be set to "button"', async () => {
+            await wait();
             fixture.detectChanges();
 
             const pinningButtonType = $(TOOLBAR_PINNING_TAG).querySelector('button').getAttributeNode('type').value;
@@ -132,7 +133,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(hidingButtonType).toBe(expectedButtonType);
             expect(advancedFilteringButtonType).toBe(expectedButtonType);
             expect(exporterButtonType).toBe(expectedButtonType);
-        }));
+        });
 
         it('toolbar exporter props', () => {
             const exporterButton = $(TOOLBAR_EXPORTER_TAG).querySelector('button');
@@ -285,7 +286,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
         });
 
-        it('should initialize input property columnsAreaMaxHeight properly', fakeAsync(() => {
+        it('should initialize input property columnsAreaMaxHeight properly', async () => {
             expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('100%');
 
             instance.pinningAction.columnsAreaMaxHeight = '10px';
@@ -295,15 +296,15 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
             const pinningButton = GridFunctions.getColumnPinningButton(fixture);
             pinningButton.click();
-            tick();
+            await wait();
             fixture.detectChanges();
             const element = fixture.debugElement.query(By.css('.igx-column-actions__columns'));
             expect(element.attributes.style).toBe('max-height: 10px;');
 
             expect(instance.pinningAction.columnsAreaMaxHeight).toEqual('10px');
-        }));
+        });
 
-        it('should emit columnToggle event when a column is shown/hidden via the column hiding action', fakeAsync(() => {
+        it('should emit columnToggle event when a column is shown/hidden via the column hiding action', async () => {
             const spy = vi.spyOn(instance.hidingAction.columnToggle, 'emit');
             const hidingUI = $(TOOLBAR_HIDING_TAG);
             const grid = fixture.componentInstance.grid;
@@ -312,7 +313,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             const columnChooserElement = GridFunctions.getColumnHidingElement(fixture);
 
             hidingActionButton.click();
-            tick();
+            await wait();
             fixture.detectChanges();
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ProductID');
@@ -324,11 +325,11 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             // test after closing and reopening the hiding UI
             spy.mockClear();
             hidingActionButton.click();
-            tick();
+            await wait();
             fixture.detectChanges();
 
             hidingActionButton.click();
-            tick();
+            await wait();
             fixture.detectChanges();
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ProductID');
@@ -336,7 +337,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
             expect(instance.hidingAction.columnToggle.emit).toHaveBeenCalledTimes(1);
             expect(instance.hidingAction.columnToggle.emit).toHaveBeenCalledWith({ column: grid.getColumnByName('ProductID'), checked: true });
-        }));
+        });
     });
 });
 
