@@ -16,7 +16,7 @@
         @extend %igx-splitter-base !optional;
 
         @include b(#{$this}-bar-host) {
-            &:focus {
+            &:focus-visible {
                 @extend %igx-splitter-bar--focus !optional;
             }
         }
@@ -39,8 +39,34 @@
                 @extend %igx-splitter-expander--end !optional;
             }
 
+             &:active {
+                @extend %igx-splitter-bar--active !optional;
+
+                @include e(handle) {
+                    @extend %igx-splitter-handle--active !optional;
+                }
+
+                @include e(expander, 'start') {
+                    @extend %igx-splitter-expander--start--active !optional;
+                }
+
+                @include e(expander, 'end') {
+                    @extend %igx-splitter-expander--end--active !optional;
+                }
+            }
+
             @include m('vertical') {
                 @extend %igx-splitter-bar--vertical !optional;
+
+                &:active {
+                    @include e(expander, 'start') {
+                        @extend %igx-splitter-expander--start-vertical--active !optional;
+                    }
+
+                    @include e(expander, 'end') {
+                        @extend %igx-splitter-expander--end-vertical--active !optional;
+                    }
+                }
 
                 @include e(handle) {
                     @extend %igx-splitter-handle !optional;
