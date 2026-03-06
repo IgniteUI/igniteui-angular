@@ -22,25 +22,28 @@ import { IgxInputGroupComponent, IgxInputDirective, IgxReadOnlyInputDirective, I
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
-/** Event emitted when an igx-combo's selection is changing */
-export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
-    /** An array containing the values that are currently selected */
+/** Event emitted when an igx-combo's selection has been changed */
+export interface IComboSelectionChangedEventArgs extends IBaseEventArgs {
+    /** An array containing the values that were previously selected */
     oldValue: any[];
-    /** An array containing the values that will be selected after this event */
+    /** An array containing the values that are currently selected */
     newValue: any[];
-    /** An array containing the items that are currently selected */
+    /** An array containing the items that were previously selected */
     oldSelection: any[];
-    /** An array containing the items that will be selected after this event */
+    /** An array containing the items that are currently selected */
     newSelection: any[];
-    /** An array containing the items that will be added to the selection (if any) */
+    /** An array containing the items that were added to the selection (if any) */
     added: any[];
-    /** An array containing the items that will be removed from the selection (if any) */
+    /** An array containing the items that were removed from the selection (if any) */
     removed: any[];
-    /** The text that will be displayed in the combo text box */
+    /** The text that is displayed in the combo text box */
     displayText: string;
     /** The user interaction that triggered the selection change */
     event?: Event;
 }
+
+/** Event emitted when an igx-combo's selection is changing */
+export interface IComboSelectionChangingEventArgs extends IComboSelectionChangedEventArgs, IBaseCancelableEventArgs {}
 
 /** Event emitted when the igx-combo's search input changes */
 export interface IComboSearchInputEventArgs extends IBaseCancelableEventArgs {
@@ -125,7 +128,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     @Input({ transform: booleanAttribute })
     public autoFocusSearch = true;
 
-
     /**
      * Defines the placeholder value for the combo dropdown search field
      *
@@ -153,6 +155,16 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     @Output()
     public selectionChanging = new EventEmitter<IComboSelectionChangingEventArgs>();
+
+    /**
+     * Emitted when item selection is changed, after the selection completes
+     *
+     * ```html
+     * <igx-combo (selectionChanged)='handleSelection()'></igx-combo>
+     * ```
+     */
+    @Output()
+    public selectionChanged = new EventEmitter<IComboSelectionChangedEventArgs>();
 
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
@@ -423,7 +435,19 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             } else {
                 this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
-            this._onChangeCallback(args.newValue);
+            this._onChangeCallback(this.value);
+            const changedArgs: IComboSelectionChangedEventArgs = {
+                newValue: this.value,
+                oldValue,
+                newSelection: this.selection,
+                oldSelection,
+                added: this.convertKeysToItems(diffInSets(new Set(this.value), new Set(oldValue))),
+                removed: this.convertKeysToItems(diffInSets(new Set(oldValue), new Set(this.value))),
+                event,
+                owner: this,
+                displayText: this._displayValue
+            };
+            this.selectionChanged.emit(changedArgs);
         } else if (this.isRemote) {
             this.registerRemoteEntries(diffInSets(selection, currentSelection), false);
         }

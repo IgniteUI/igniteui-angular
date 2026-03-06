@@ -7,7 +7,6 @@ import {
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
@@ -20,7 +19,7 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IComboFilteringOptions, IGX_COMBO_COMPONENT } from './combo.common';
 import {
-    IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
+    IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangedEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
 } from './combo.component';
 import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
 import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
@@ -658,6 +657,83 @@ describe('igxCombo', () => {
                 });
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             });
+            it('should emit selectionChanged after selectionChanging with the committed state', () => {
+                const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+                combo.ngOnInit();
+                combo.data = data;
+                combo.dropdown = dropdown;
+                spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+                const callOrder: string[] = [];
+                spyOn(combo.selectionChanging, 'emit').and.callFake(() => callOrder.push('changing'));
+                spyOn(combo.selectionChanged, 'emit').and.callFake(() => callOrder.push('changed'));
+
+                const selectedItems = [combo.data[1], combo.data[5]];
+                combo.select(selectedItems);
+
+                expect(callOrder).toEqual(['changing', 'changed']);
+                expect(combo.selectionChanged.emit).toHaveBeenCalledTimes(1);
+                expect(combo.selectionChanged.emit).toHaveBeenCalledWith({
+                    oldValue: [],
+                    newValue: selectedItems,
+                    oldSelection: [],
+                    newSelection: selectedItems,
+                    added: selectedItems,
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: selectedItems.join(', ')
+                });
+            });
+            it('should not emit selectionChanged when selectionChanging is canceled', () => {
+                const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+                combo.ngOnInit();
+                combo.data = data;
+                combo.dropdown = dropdown;
+                spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+                spyOn(combo.selectionChanging, 'emit').and.callFake((args: IComboSelectionChangingEventArgs) => {
+                    args.cancel = true;
+                });
+                spyOn(combo.selectionChanged, 'emit');
+
+                combo.select([combo.data[1], combo.data[5]]);
+
+                expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
+                expect(combo.selectionChanged.emit).not.toHaveBeenCalled();
+                expect(combo.selection).toEqual([]);
+                expect(combo.value).toEqual([]);
+            });
+            it('should emit selectionChanged with the actual committed state when selectionChanging modifies newValue', () => {
+                const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+                combo.ngOnInit();
+                combo.data = data;
+                combo.dropdown = dropdown;
+                spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+                spyOn(combo.selectionChanging, 'emit').and.callFake((args: IComboSelectionChangingEventArgs) => {
+                    args.newValue = [combo.data[2], combo.data[4]];
+                    args.displayText = `${combo.data[2]}, ${combo.data[4]}`;
+                });
+
+                spyOn(combo.selectionChanged, 'emit');
+
+                combo.select([combo.data[0], combo.data[1]]);
+
+                expect(combo.selection).toEqual([combo.data[2], combo.data[4]]);
+                expect(combo.value).toEqual([combo.data[2], combo.data[4]]);
+                expect(combo.selectionChanged.emit).toHaveBeenCalledWith({
+                    oldValue: [],
+                    newValue: [combo.data[2], combo.data[4]],
+                    oldSelection: [],
+                    newSelection: [combo.data[2], combo.data[4]],
+                    added: [combo.data[2], combo.data[4]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: `${combo.data[2]}, ${combo.data[4]}`
+                });
+            });
             it('should handle select/deselect ALL items', () => {
                 const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
                 combo.ngOnInit();
@@ -854,7 +930,8 @@ describe('igxCombo', () => {
                     ComboModelBindingComponent,
                     IgxComboBindingDataAfterInitComponent,
                     IgxComboFormComponent,
-                    IgxComboInTemplatedFormComponent
+                    IgxComboInTemplatedFormComponent,
+                    ComboSelectionChangedNgModelOrderComponent
                 ]
             }).compileComponents();
         }));
@@ -1506,6 +1583,23 @@ describe('igxCombo', () => {
                 combo.select([...data].splice(1, 3), true);
                 fixture.detectChanges();
                 expect(fixture.componentInstance.selectedItems).toEqual([...data].splice(1, 3));
+            }));
+            it('should emit selectionChanged after ngModelChange', fakeAsync(() => {
+                fixture = TestBed.createComponent(ComboSelectionChangedNgModelOrderComponent);
+                fixture.detectChanges();
+                tick();
+
+                const host = fixture.componentInstance;
+                combo = host.combo;
+
+                combo.select([1]);
+                fixture.detectChanges();
+                tick();
+
+                expect(host.eventLog).toEqual(['ngModelChange', 'selectionChanged']);
+                expect(host.comboValue).toEqual([1]);
+                expect(host.changedArgs.newValue).toEqual([1]);
+                expect(host.changedArgs.newSelection).toEqual([host.items[1]]);
             }));
         });
         describe('Dropdown tests: ', () => {
@@ -3989,5 +4083,44 @@ export class ComboWithIdComponent {
                 value: "Option3",
             }
         ];
+    }
+}
+
+@Component({
+    template: `
+        <igx-combo
+            #combo
+            [data]="items"
+            [displayKey]="'text'"
+            [valueKey]="'id'"
+            [ngModel]="comboValue"
+            (ngModelChange)="onNgModelChange($event)"
+            (selectionChanged)="onSelectionChanged($event)">
+        </igx-combo>
+    `,
+    imports: [IgxComboComponent, FormsModule]
+})
+class ComboSelectionChangedNgModelOrderComponent {
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+
+    public items = [
+        { id: 0, text: 'One' },
+        { id: 1, text: 'Two' },
+        { id: 2, text: 'Three' }
+    ];
+
+    public comboValue: number[] = [];
+    public eventLog: string[] = [];
+    public changedArgs: IComboSelectionChangedEventArgs;
+
+    public onNgModelChange(value: number[]): void {
+        this.eventLog.push('ngModelChange');
+        this.comboValue = value;
+    }
+
+    public onSelectionChanged(args: IComboSelectionChangedEventArgs): void {
+        this.eventLog.push('selectionChanged');
+        this.changedArgs = args;
     }
 }
