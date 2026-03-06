@@ -32,6 +32,8 @@ class IgxGridLite<T extends object = any> extends IgcGridLite<T> {
  * @fires sorted - Emitted when a sort operation initiated through the UI has completed.
  * @fires filtering - Emitted when filtering is initiated through the UI.
  * @fires filtered - Emitted when a filter operation initiated through the UI has completed.
+ *
+ * @developerPreview 21.1.0
  */
 @Component({
     selector: 'igx-grid-lite',
@@ -44,7 +46,8 @@ class IgxGridLite<T extends object = any> extends IgcGridLite<T> {
         '[sortingOptions]': "sortingOptions()",
         '[dataPipelineConfiguration]': "dataPipelineConfiguration()",
         '(sorted)': "onSorted($any($event))",
-        '(filtered)': "onFiltered($any($event))"
+        '(filtered)': "onFiltered($any($event))",
+        'adopt-root-styles': '',
     },
     template: `<ng-content></ng-content>`
 })

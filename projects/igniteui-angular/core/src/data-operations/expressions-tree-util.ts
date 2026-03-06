@@ -138,7 +138,7 @@ function recreateOperatorFromDataType(expression: IFilteringExpression, dataType
  * @param fields An array of fields to use for recreating the expression.
  * @returns The recreated expression.
  */
-function recreateExpression(expression: IFilteringExpression, fields: FieldType[]): IFilteringExpression {
+export function recreateExpression(expression: IFilteringExpression, fields: FieldType[]): IFilteringExpression {
     const field = fields?.find(f => f.field === expression.fieldName);
 
     if (field && !expression.condition?.logic) {

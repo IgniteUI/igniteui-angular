@@ -167,7 +167,6 @@
             $icon-size: #{if($variant == 'indigo', rem(16px), rem(24px))};
 
             --ig-icon-size: #{$icon-size};
-            --igx-icon-size: #{$icon-size};
         }
 
         [dir='rtl'] & {
