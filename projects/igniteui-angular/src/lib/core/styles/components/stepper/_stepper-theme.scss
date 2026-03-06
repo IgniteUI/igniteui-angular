@@ -35,7 +35,7 @@
         'material': clamp(1px, rem(1px), rem(1px)),
         'fluent': clamp(1px, rem(1px), rem(1px)),
         'bootstrap': clamp(1px, rem(1px), rem(1px)),
-        'indigo': clamp(2px, rem(2px), rem(2px))
+        'indigo': clamp(1px, rem(1px), rem(1px))
     ), $variant);
 
     $separator-size: map.get((
@@ -99,17 +99,17 @@
         &:focus {
             outline: none;
 
-            %igx-stepper__step-title {
-                color: var-get($theme, 'title-focus-color');
-            }
-
-            %igx-stepper__step-subtitle {
-                color: var-get($theme, 'subtitle-focus-color');
-            }
-
             %igx-stepper__step-header {
                 background: var-get($theme, 'step-focus-background');
                 color: var-get($theme, 'title-focus-color');
+
+                %igx-stepper__step-title {
+                    color: var-get($theme, 'title-focus-color');
+                }
+
+                %igx-stepper__step-subtitle {
+                    color: var-get($theme, 'subtitle-focus-color');
+                }
 
                 @if $variant == 'bootstrap' {
                     box-shadow: inset 0 0 0 $outline-width var-get($theme, 'indicator-outline');
@@ -203,6 +203,7 @@
         font-size: rem(12px);
         height: $indicator-size;
         width: $indicator-size;
+        min-width: $indicator-size;
         white-space: nowrap;
         border-radius: var-get($theme, 'border-radius-indicator');
         color: var-get($theme, 'indicator-color');
@@ -239,13 +240,13 @@
     }
 
     %igx-stepper__step-header--current {
-        background: var-get($theme, 'current-step-background') !important;
+        background: var-get($theme, 'current-step-background');
         color: var-get($theme, 'current-title-color');
 
         %igx-stepper__step-indicator {
-            color: var-get($theme, 'current-indicator-color') !important;
-            background: var-get($theme, 'current-indicator-background') !important;
-            box-shadow: 0 0 0 $outline-width var-get($theme, 'current-indicator-outline') !important;
+            color: var-get($theme, 'current-indicator-color');
+            background: var-get($theme, 'current-indicator-background');
+            box-shadow: 0 0 0 $outline-width var-get($theme, 'current-indicator-outline');
         }
 
         %igx-stepper__step-title {
@@ -263,7 +264,7 @@
         }
 
         &:hover {
-            background: var-get($theme, 'current-step-hover-background') !important;
+            background: var-get($theme, 'current-step-hover-background');
 
             %igx-stepper__step-title {
                 color: var-get($theme, 'current-title-hover-color');
@@ -349,6 +350,7 @@
 
     %igx-stepper__step-content-wrapper {
         margin-inline-start: $v-line-indent;
+        padding-inline-start: $v-line-indent;
         position: relative;
         min-height: if($variant == 'indigo', rem(24px), rem(32px));
 
@@ -360,12 +362,6 @@
             bottom: calc(-#{$step-header-padding} + #{$title-gap});
             width: $separator-size;
             border-inline-start: $separator-size var-get($theme, 'step-separator-style') var-get($theme, 'step-separator-color');
-        }
-    }
-
-    [aria-selected='true'] {
-        %igx-stepper__step-content-wrapper {
-            padding-inline-start: $v-line-indent;
         }
     }
 
@@ -418,12 +414,26 @@
     }
 
     %igx-stepper__step--completed {
-
-        %igx-stepper__step-header {
+        %igx-stepper__step-header:not(%igx-stepper__step-header--current) {
             background: var-get($theme, 'complete-step-background');
+
+            %igx-stepper__step-indicator {
+                color: var-get($theme, 'complete-indicator-color');
+                background: var-get($theme, 'complete-indicator-background');
+                box-shadow: 0 0 0 $outline-width var-get($theme, 'complete-indicator-outline');
+            }
+
+            %igx-stepper__step-title {
+                color: var-get($theme, 'complete-title-color');
+            }
+
+            %igx-stepper__step-subtitle {
+                color: var-get($theme, 'complete-subtitle-color');
+            }
 
             &:hover {
                 background: var-get($theme, 'complete-step-hover-background');
+
                 %igx-stepper__step-title {
                     color: var-get($theme, 'complete-title-hover-color');
                 }
@@ -432,29 +442,15 @@
                     color: var-get($theme, 'complete-subtitle-hover-color');
                 }
             }
-
-            &::after {
-                border-top-color: var-get($theme, 'complete-step-separator-color') !important;
-                border-top-style: var-get($theme, 'complete-step-separator-style') !important;
-            }
         }
 
-        %igx-stepper__step-indicator {
-            color: var-get($theme, 'complete-indicator-color');
-            background: var-get($theme, 'complete-indicator-background');
-            box-shadow: 0 0 0 $outline-width var-get($theme, 'complete-indicator-outline');
-        }
-
-        %igx-stepper__step-title {
-            color: var-get($theme, 'complete-title-color');
-        }
-
-        %igx-stepper__step-subtitle {
-            color: var-get($theme, 'complete-subtitle-color');
+        %igx-stepper__step-header::after {
+            border-top-color: var-get($theme, 'complete-step-separator-color') !important;
+            border-top-style: var-get($theme, 'complete-step-separator-style') !important;
         }
 
         &:focus {
-            %igx-stepper__step-header {
+            %igx-stepper__step-header:not(%igx-stepper__step-header--current) {
                 background: var-get($theme, 'complete-step-focus-background');
 
                 %igx-stepper__step-title {
@@ -633,10 +629,6 @@
 
         %igx-stepper__step--start,
         %igx-stepper__step--end {
-            %igx-stepper__step-indicator {
-                flex: 1 0 auto;
-            }
-
             %igx-stepper__step-header {
                 @if $variant != 'fluent' {
                     padding: calc(#{$step-header-padding} / 2);

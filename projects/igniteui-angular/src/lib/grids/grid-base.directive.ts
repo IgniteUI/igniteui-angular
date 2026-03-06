@@ -2321,7 +2321,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (value !== this._pinning) {
             this.resetCaches();
         }
-        this._pinning = value;
+        this._pinning = Object.assign({}, this._pinning, value);
     }
 
     /**
@@ -5668,7 +5668,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public getPossibleColumnWidth(baseWidth: number = null, minColumnWidth: number = null) {
+    public getPossibleColumnWidth(baseWidth: number = null) {
         let computedWidth;
         if (baseWidth !== null) {
             computedWidth = baseWidth;
@@ -5715,13 +5715,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!sumExistingWidths && !columnsToSize) {
             return '0px';
         }
+
         computedWidth -= this.featureColumnsWidth();
 
-        const minColWidth = minColumnWidth || this.minColumnWidth;
-
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / columnsToSize, minColWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, minColWidth);
+            computedWidth / columnsToSize :
+            (computedWidth - sumExistingWidths) / columnsToSize;
 
         return columnWidth + 'px';
     }
@@ -6831,47 +6830,36 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected _derivePossibleWidth() {
         if (!this.columnWidthSetByUser) {
-            this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : this.minColumnWidth + 'px';
-        }
-        this._columns.forEach((column: IgxColumnComponent) => {
-            if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
-                const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
-                column.defaultWidth = columnWidthCombined + 'px';
+            const possibleWidth = this.getPossibleColumnWidth();
+            if (possibleWidth === "0px") {
+                // all columns - hidden
+                // Do not update _columnWidth to preserve valid column widths for when columns are unhidden
+                // Only update column defaultWidth if _columnWidth is already set and not '0px'
+                if (this._columnWidth && this._columnWidth !== '0px') {
+                    this._updateColumnDefaultWidths();
+                }
+                this.resetCachedWidths();
+                return;
+            } else if (this.width !== null) {
+                this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
-                // D.K. March 29th, 2021 #9145 Consider min/max width when setting defaultWidth property
-                column.defaultWidth = this.getExtremumBasedColWidth(column);
-                column.resetCaches();
+                this._columnWidth =  this.minColumnWidth + 'px';
             }
-        });
+        }
+        this._updateColumnDefaultWidths();
         this.resetCachedWidths();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    protected getExtremumBasedColWidth(column: IgxColumnComponent): string {
-        let width = this._columnWidth;
-        if (width && typeof width !== 'string') {
-            width = String(width);
-        }
-        const minWidth = width.indexOf('%') === -1 ? column.userSetMinWidthPx : column.minWidthPercent;
-        const maxWidth = width.indexOf('%') === -1 ? column.maxWidthPx : column.maxWidthPercent;
-        if (column.hidden) {
-            return width;
-        }
-
-        if (minWidth > parseFloat(width)) {
-            width = String(column.minWidth);
-        } else if (maxWidth < parseFloat(width)) {
-            width = String(column.maxWidth);
-        }
-
-        // if no px or % are defined in maxWidth/minWidth consider it px
-        if (width.indexOf('%') === -1 && width.indexOf('px') === -1) {
-            width += 'px';
-        }
-        return width;
+    private _updateColumnDefaultWidths() {
+        this._columns.forEach((column: IgxColumnComponent) => {
+            if (this.hasColumnLayouts) {
+                const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
+                column.defaultWidth = columnWidthCombined + 'px';
+            } else {
+                column.defaultWidth = this._columnWidth;
+                column.resetCaches();
+            }
+        });
     }
 
     protected resetNotifyChanges() {
@@ -7167,13 +7155,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
-        // in case horizontal scrollbar has appeared recalc to size correctly.
-        if (hasHScroll !== this.hasHorizontalScroll()) {
-            this.isHorizontalScrollHidden = !this.hasHorizontalScroll();
-            this.cdr.detectChanges();
-            this.calculateGridHeight();
-            this.cdr.detectChanges();
-        }
         if (this.zone.isStable) {
             this.zone.run(() => {
                 this._applyWidthHostBinding();
@@ -7192,6 +7173,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this._autoSizeColumnsNotify.next();
             });
+        }
+
+        // in case horizontal scrollbar has appeared recalc to size correctly.
+        if (hasHScroll !== this.hasHorizontalScroll()) {
+            this.isHorizontalScrollHidden = !this.hasHorizontalScroll();
+            this.cdr.detectChanges();
+            this.calculateGridHeight();
+            this.cdr.detectChanges();
+        } else {
+            this.resetCaches(recalcFeatureWidth);
         }
     }
 
@@ -7976,8 +7967,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If record is pinned but is not in pinned area then it is a ghost record.
      *
      * @param dataViewIndex The index of that record in the data view.
+     * @hidden
+     * @internal
      */
-    private isGhostRecordAtIndex(dataViewIndex) {
+    public isGhostRecordAtIndex(dataViewIndex) {
         const isPinned = this.isRecordPinned(this.dataView[dataViewIndex]);
         const isInPinnedArea = this.isRecordPinnedByViewIndex(dataViewIndex);
         return isPinned && !isInPinnedArea;
@@ -8140,7 +8133,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected updateDefaultRowHeight() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
-            const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            const targetCell = this.dataRowList.first.cells.toArray().find((x: IgxGridCellComponent) => !x.isMerged);
+            if (!targetCell) {
+                this._shouldRecalcRowHeight = true;
+                return;
+            }
+            const height = parseFloat(this.document.defaultView.getComputedStyle(targetCell.nativeElement)?.getPropertyValue('height'));
             if (height) {
                 this._defaultRowHeight = height;
             } else {

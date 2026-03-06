@@ -98,22 +98,6 @@
         user-select: none;
     }
 
-    %radio-label--invalid {
-        color: var-get($theme, 'error-color');
-
-        @if $variant == 'indigo' {
-            color: var-get($theme, 'label-color');
-
-            &:hover {
-                color: var-get($theme, 'label-color-hover');
-            }
-        }
-    }
-
-    %radio-label--disabled {
-        color: var-get($theme, 'disabled-label-color');
-    }
-
     %radio-composite {
         position: relative;
         display: inline-block;
@@ -247,11 +231,6 @@
 
         &::after {
             border: $border-width $border-style var-get($theme, 'error-color');
-
-            @if $bootstrap-theme {
-                background: transparent;
-                border: $border-width $border-style var-get($theme, 'error-color');
-            }
         }
     }
 
@@ -268,11 +247,10 @@
         @if $bootstrap-theme {
             &::after {
                 background: var-get($theme, 'error-color');
-                border-color: var-get($theme, 'error-color');
             }
 
             &::before {
-                background: white;
+                background: var-get($theme, 'fill-hover-border-color');
             }
         }
     }
@@ -317,9 +295,27 @@
     }
 
     %radio-label--hover {
+        color: var-get($theme, 'label-color-hover');
+    }
+
+    %radio-label--invalid {
+        color: var-get($theme, 'error-color');
+
+        @if $variant == 'indigo' {
+            color: var-get($theme, 'label-color');
+        }
+    }
+
+    %radio-label--invalid--hover {
+        color: var-get($theme, 'error-color');
+
         @if $variant == 'indigo' {
             color: var-get($theme, 'label-color-hover');
         }
+    }
+
+    %radio-label--disabled {
+        color: var-get($theme, 'disabled-label-color');
     }
 
     %radio-label--after {

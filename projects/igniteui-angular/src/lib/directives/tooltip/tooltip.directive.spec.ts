@@ -2,7 +2,7 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipMultipleTooltipsComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent } from '../../test-utils/tooltip-components.spec';
+import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipMultipleTooltipsComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent, IgxTooltipNestedTooltipsComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
@@ -29,7 +29,8 @@ describe('IgxTooltip', () => {
                 IgxTooltipPlainStringComponent,
                 IgxTooltipWithToggleActionComponent,
                 IgxTooltipWithCloseButtonComponent,
-                IgxTooltipWithNestedContentComponent
+                IgxTooltipWithNestedContentComponent,
+                IgxTooltipNestedTooltipsComponent
             ]
         }).compileComponents();
         UIInteractions.clearOverlay();
@@ -530,6 +531,69 @@ describe('IgxTooltip', () => {
 
             const maxWidth = getComputedStyle(tooltipNativeElement).maxWidth;
             expect(maxWidth).toBe('none');
+        }));
+    });
+
+    describe('Nested tooltips', () => {
+        let tooltipTarget1: IgxTooltipTargetDirective;
+        let tooltipTarget2: IgxTooltipTargetDirective;
+        let tooltipTarget3: IgxTooltipTargetDirective;
+
+        let tooltip1: IgxTooltipDirective;
+        let tooltip2: IgxTooltipDirective;
+        let tooltip3: IgxTooltipDirective;
+
+        // Handles getting the left offset when tooltip placement is Bottom
+        const getArrowLeftOffset = (tooltip: IgxTooltipDirective) => {
+            const tooltipRect = tooltip.element.getBoundingClientRect();
+            const arrowRect = tooltip.arrow.getBoundingClientRect();
+
+            const offset = tooltipRect.width / 2 - arrowRect.width / 2;
+            return Math.round(offset);
+        };
+
+        const verifyTooltipArrowAlignment = (tooltip: IgxTooltipDirective) => {
+            const arrowClassName = 'igx-tooltip--bottom';
+            const arrowTopOffset = '-4px';
+            const arrowLeftOffset = getArrowLeftOffset(tooltip) + 'px';
+
+            expect(tooltip.arrow.classList.contains(arrowClassName)).toBeTrue();
+            expect(tooltip.arrow.style.top).toBe(arrowTopOffset);
+            expect(tooltip.arrow.style.left).toBe(arrowLeftOffset);
+        };
+
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxTooltipNestedTooltipsComponent);
+            fix.detectChanges();
+
+            tooltipTarget1 = fix.componentInstance.targetLevel1;
+            tooltipTarget2 = fix.componentInstance.targetLevel2;
+            tooltipTarget3 = fix.componentInstance.targetLevel3;
+
+            tooltip1 = fix.componentInstance.tooltipLevel1;
+            tooltip2 = fix.componentInstance.tooltipLevel2;
+            tooltip3 = fix.componentInstance.tooltipLevel3;
+        }));
+
+        it('should show arrow for each tooltip', fakeAsync(() => {
+            hoverElement(tooltipTarget1);
+            flush();
+            verifyTooltipVisibility(tooltip1.element, tooltipTarget1, true);
+            expect(tooltipTarget1.hasArrow).toBeTrue();
+            verifyTooltipArrowAlignment(tooltip1);
+
+            hoverElement(tooltipTarget2);
+            flush();
+            verifyTooltipVisibility(tooltip2.element, tooltipTarget2, true);
+            expect(tooltipTarget2.hasArrow).toBeTrue();
+            verifyTooltipArrowAlignment(tooltip2);
+
+            hoverElement(tooltipTarget3);
+            flush();
+            verifyTooltipVisibility(tooltip3.element, tooltipTarget3, true);
+            expect(tooltipTarget3.hasArrow).toBeTrue();
+            verifyTooltipArrowAlignment(tooltip3);
+
         }));
     });
 

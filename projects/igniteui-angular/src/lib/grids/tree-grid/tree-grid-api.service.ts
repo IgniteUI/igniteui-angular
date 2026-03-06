@@ -76,12 +76,14 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         if (expanded !== undefined) {
             return expanded;
         } else {
-            return record.children && record.children.length && record.level < grid.expansionDepth;
+            return record.children && !!record.children.length && record.level < grid.expansionDepth;
         }
     }
 
     public override should_apply_number_style(column: ColumnType): boolean {
-        return column.dataType === GridColumnDataType.Number && column.visibleIndex !== 0;
+        return (column.dataType === GridColumnDataType.Number
+            || column.dataType === GridColumnDataType.Currency
+            || column.dataType === GridColumnDataType.Percent) && column.visibleIndex !== 0;
     }
 
     public override deleteRowById(rowID: any): any {

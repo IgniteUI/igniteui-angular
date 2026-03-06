@@ -89,7 +89,6 @@
         // https://github.com/IgniteUI/igniteui-angular/issues/11597
         z-index: 0;
         height: $slider-height;
-        flex-grow: 1;
         align-items: center;
         transition: all .2s $out-quad;
         touch-action: pan-y pinch-zoom;

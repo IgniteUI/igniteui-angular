@@ -59,8 +59,8 @@
     $material-box-top-padding: sizable(rem(16px), rem(20px), rem(24px));
     $material-border-top-padding: sizable(rem(8px), rem(12px), rem(16px));
 
-    $textarea-top-padding: map.get((
-        'material': rem(0px),
+    $textarea-padding: map.get((
+        'material': sizable(rem(8px), rem(12px), rem(16px)),
         'fluent': sizable(rem(6px), rem(10px), rem(14px)),
         'bootstrap': sizable(rem(4px), rem(8px), rem(12px)),
         'indigo': sizable(rem(4px), rem(6px), rem(8px)),
@@ -96,13 +96,7 @@
         display: inline-flex;
         width: max-content;
         align-items: center;
-
-        @if $indigo-theme {
-            min-height: calc(100% - #{rem(1px)}) !important;
-        } @else {
-            min-height: 100% !important;
-        }
-
+        min-height: 100% !important;
         transition: color $transition-timing, background $transition-timing;
 
         &:not(:empty) {
@@ -155,12 +149,32 @@
         [igxPrefix] {
             @extend %form-group-prefix;
             outline-style: none;
+            cursor: default;
+
+            &:first-child {
+                @if $variant == 'fluent' {
+                    border-start-start-radius: calc(var-get($theme, 'border-border-radius') - var(--_fluent-input-border-size));
+                    border-end-start-radius: calc(var-get($theme, 'border-border-radius') - var(--_fluent-input-border-size));
+                } @else if $variant == "indigo" {
+                    border-start-start-radius: var-get($theme, 'box-border-radius');
+                }
+            }
         }
 
         igx-suffix,
         [igxSuffix] {
             @extend %form-group-suffix;
             outline-style: none;
+            cursor: default;
+
+            &:last-child {
+                @if $variant == 'fluent' {
+                    border-start-end-radius: calc(var-get($theme, 'border-border-radius') - var(--_fluent-input-border-size));
+                    border-end-end-radius: calc(var-get($theme, 'border-border-radius') - var(--_fluent-input-border-size));
+                } @else if $variant == "indigo" {
+                    border-start-end-radius: var-get($theme, 'box-border-radius');
+                }
+            }
         }
 
         input,
@@ -343,7 +357,7 @@
 
         &%form-group-display--search {
             %form-group-bundle-search--hover:not(:focus-within) {
-                box-shadow: var-get($theme, 'search-resting-shadow');
+                box-shadow: var-get($theme, 'search-resting-elevation');
             }
         }
 
@@ -364,7 +378,7 @@
     %form-group-display--disabled {
         pointer-events: none;
         user-select: none;
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
 
         igx-prefix,
         [igxPrefix] {
@@ -680,7 +694,7 @@
     %bootstrap-file-warning,
     %bootstrap-file-invalid {
         %form-group-bundle {
-            border-radius: var-get($theme, 'box-border-radius');
+            border-radius: var-get($theme, 'border-border-radius');
             transition: box-shadow .15s ease-out, border .15s ease-out;
 
             &:hover {
@@ -793,7 +807,7 @@
 
     .igx-input-group--bootstrap:not(.igx-input-group--prefixed) {
         .igx-input-group__upload-button {
-            border-radius: var-get($theme, 'box-border-radius') 0 0 var-get($theme, 'box-border-radius');
+            border-radius: var-get($theme, 'border-border-radius') 0 0 var-get($theme, 'border-border-radius');
         }
 
         .igx-input-group__file-input {
@@ -1024,10 +1038,10 @@
 
     %form-group-bundle--search {
         background: var-get($theme, 'search-background');
-        box-shadow: var-get($theme, 'search-resting-shadow');
+        box-shadow: var-get($theme, 'search-resting-elevation');
+        border-radius: var-get($theme, 'search-border-radius');
 
         @if $variant != 'bootstrap' {
-            border-radius: var-get($theme, 'search-border-radius');
             overflow: hidden;
         }
 
@@ -1039,28 +1053,28 @@
     }
 
     %form-group-bundle-search--hover {
-        box-shadow: var-get($theme, 'search-hover-shadow');
+        box-shadow: var-get($theme, 'search-hover-elevation');
         border-color: var-get($theme, 'hover-border-color');
     }
 
     %form-group-bundle-search--focus {
-        box-shadow: var-get($theme, 'search-hover-shadow');
+        box-shadow: var-get($theme, 'search-hover-elevation');
         border-color: var-get($theme, 'hover-border-color');
     }
 
     %form-group-bundle-search--error {
-        box-shadow: var-get($theme, 'search-hover-shadow');
-        border-color: var-get($theme, 'search-hover-shadow');
+        box-shadow: var-get($theme, 'search-hover-elevation');
+        border-color: var-get($theme, 'search-hover-elevation');
     }
 
     %form-group-bundle-search--success {
-        box-shadow: var-get($theme, 'search-hover-shadow');
-        border-color: var-get($theme, 'search-hover-shadow');
+        box-shadow: var-get($theme, 'search-hover-elevation');
+        border-color: var-get($theme, 'search-hover-elevation');
     }
 
     %form-group-bundle-search--disabled {
         background: var-get($theme, 'search-disabled-background');
-        box-shadow: var-get($theme, 'search-disabled-shadow');
+        box-shadow: var-get($theme, 'search-disabled-elevation');
         border-color: var-get($theme, 'disabled-border-color');
 
         igx-prefix,
@@ -1277,7 +1291,7 @@
 
         %textarea-group-label--focused {
             transform: translateY(0);
-            top: calc(#{$material-box-top-padding} / 4);
+            top: calc(#{$textarea-padding} / 4);
         }
 
         %textarea-group-label--filled--border,
@@ -1413,7 +1427,6 @@
     }
 
     %form-group-input--hover {
-        cursor: pointer;
         color: var-get($theme, 'filled-text-hover-color');
 
         &::placeholder {
@@ -1422,7 +1435,6 @@
     }
 
     %form-group-input--focus {
-        cursor: text;
         color: var-get($theme, 'focused-text-color');
 
         &::placeholder {
@@ -1433,7 +1445,7 @@
     %form-group-input--disabled {
         cursor: default;
 
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
 
         &::placeholder {
             color: var-get($theme, 'disabled-placeholder-color');
@@ -1453,9 +1465,10 @@
         resize: vertical;
         overflow: hidden;
         z-index: 1;
+        padding-block-end: $textarea-padding;
 
         @if $material-theme {
-            padding: 0;
+            padding-block-start: 0;
         }
     }
 
@@ -1483,7 +1496,7 @@
     }
 
     %form-group-textarea--disabled {
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
         cursor: default;
 
         &::placeholder {
@@ -1500,7 +1513,7 @@
             align-self: end;
             transform: scaleX(0);
             transform-origin: center;
-            background: var-get($theme, 'focused-secondary-color');
+            background: var-get($theme, 'focused-bottom-line-color');
             z-index: 1;
         }
     }
@@ -2011,14 +2024,14 @@
     }
 
     %indigo-textarea {
-        padding-block: $textarea-top-padding 0;
+        padding-block: $textarea-padding;
         padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
         inset-block-end: rem(2px);
     }
 
     %fluent-textarea {
         padding-inline: pad-inline(rem(8px));
-        padding-block: $textarea-top-padding 0;
+        padding-block: $textarea-padding;
     }
 
     %fluent-input-disabled {
@@ -2053,15 +2066,15 @@
     }
 
     %fluent-label-success {
-        color: var-get($theme, 'idle-text-color');
+        color: var-get($theme, 'idle-secondary-color');
     }
 
     %fluent-label-error {
-        color: var-get($theme, 'idle-text-color');
+        color: var-get($theme, 'idle-secondary-color');
     }
 
     %fluent-label-disabled {
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
     }
 
     %fluent-label-filled {
@@ -2084,23 +2097,6 @@
         button {
             border-radius: 0;
             height: 100%;
-        }
-    }
-
-    .igx-input-group--fluent [igxPrefix],
-    .igx-input-group--fluent igx-prefix {
-        &:first-child {
-            [igxButton]::after,
-            button::after {
-                border: {
-                    start: {
-                        start-radius: var-get($theme, 'border-border-radius');
-                    };
-                    end: {
-                        start-radius: var-get($theme, 'border-border-radius');
-                    };
-                }
-            }
         }
     }
 
@@ -2233,10 +2229,10 @@
                 end-width: rem(1px);
             };
             start: {
-                start-radius: var-get($theme, 'box-border-radius');
+                start-radius: var-get($theme, 'border-border-radius');
             };
             end: {
-                start-radius: var-get($theme, 'box-border-radius');
+                start-radius: var-get($theme, 'border-border-radius');
             };
         }
     }
@@ -2253,10 +2249,10 @@
                 end-width: rem(1px);
             };
             start: {
-                end-radius: var-get($theme, 'box-border-radius');
+                end-radius: var-get($theme, 'border-border-radius');
             };
             end: {
-                end-radius: var-get($theme, 'box-border-radius');
+                end-radius: var-get($theme, 'border-border-radius');
             };
         }
     }
@@ -2297,7 +2293,7 @@
         );
 
         &:is(textarea) {
-            padding-block: $textarea-top-padding 0;
+            padding-block: $textarea-padding;
         }
     }
 
@@ -2323,7 +2319,7 @@
             map.get($bootstrap-inline-padding, 'cosy'),
             map.get($bootstrap-inline-padding, 'comfortable')
         );
-        border-radius: var-get($theme, 'box-border-radius');
+        border-radius: var-get($theme, 'border-border-radius');
 
     }
 

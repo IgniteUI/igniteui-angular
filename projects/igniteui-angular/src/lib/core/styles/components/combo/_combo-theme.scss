@@ -178,11 +178,14 @@
 
     .igx-input-group {
         %igx-combo__toggle-button {
+            cursor: pointer;
             background: var-get($theme, 'toggle-button-background');
             color: var-get($theme, 'toggle-button-foreground');
         }
 
         %igx-combo__clear-button {
+            cursor: pointer;
+
             @if $variant == 'bootstrap' {
                 border-inline-end: rem(1px) solid var(--border-color);
             }
@@ -210,12 +213,24 @@
             color: var-get($theme, 'clear-button-foreground-focus');
             background: var-get($theme, 'clear-button-background-focus');
         }
+
+        &%form-group-bundle--border {
+            %igx-combo__toggle-button {
+                background: var-get($theme, 'toggle-button-background-focus--border');
+            }
+        }
     }
 
     @if $variant == 'indigo' {
         %form-group-bundle:not(%form-group-bundle--disabled):hover {
             %igx-combo__toggle-button {
                 color: var-get($theme, 'toggle-button-foreground-focus');
+                background: var-get($theme, 'toggle-button-background-focus');
+            }
+
+            %igx-combo__clear-button {
+                color: var-get($theme, 'clear-button-foreground-focus');
+                background: var-get($theme, 'clear-button-background-focus');
             }
         }
     }
@@ -223,6 +238,14 @@
     .igx-input-group--filled {
         %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-filled');
+        }
+
+        @if $variant == 'material' {
+            &.igx-input-group--focused {
+                %igx-combo__toggle-button {
+                    color: var-get($theme, 'toggle-button-foreground-filled');
+                }
+            }
         }
     }
 
@@ -254,18 +277,10 @@
         }
     }
 
-    //.igx-input-group:not(.igx-input-group--box) {
-    //    %igx-combo__toggle-button:focus {
-    //        @if $variant == 'material' {
-    //            background: var-get($theme, 'toggle-button-background-focus--border');
-    //        }
-    //    }
-    //}
-
     .igx-input-group--disabled {
         %igx-combo__toggle-button {
-            background: var-get($theme, 'toggle-button-background-disabled') !important;
-            color: var-get($theme, 'toggle-button-foreground-disabled') !important;
+            background: var-get($theme, 'toggle-button-background-disabled');
+            color: var-get($theme, 'toggle-button-foreground-disabled');
         }
 
         %igx-combo__clear-button {
@@ -275,11 +290,11 @@
         }
     }
 
-    %form-group-bundle {
-        &:hover {
-            %igx-combo__clear-button {
-                color: inherit;
-            }
+    igx-combo {
+        %form-group-input,
+        %form-group-prefix,
+        %form-group-suffix {
+            cursor: pointer;
         }
     }
 }
