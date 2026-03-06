@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-components
-description: "All Ignite UI Angular UI components: application setup and architecture, form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider, reactive forms), layout (Tabs, Bottom Navigation, Stepper, Accordion, Splitter, Navigation Drawer, Layout Manager), data display (List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress bar, Linear Progress Bar, Circular Progress Bar, Chat), feedback/overlays (Dialog, Snackbar, Toast, Banner), directives (Button, Ripple, Tooltip, Drag and Drop), Dock Manager, and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart, IgxCategoryChart, IgxFinancialChart, IgxDataChart, IgxPieChart). Use for any non-grid Ignite UI Angular UI question."
+description: "All Ignite UI Angular UI components: application setup and architecture, form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider, reactive forms), layout (Tabs, Bottom Navigation, Stepper, Accordion, Splitter, Navigation Drawer, Layout Manager), data display (List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress bar, Linear Progress Bar, Circular Progress Bar, Chat), feedback/overlays (Dialog, Snackbar, Toast, Banner), directives (Button, Icon Button, Button Group, Ripple, Tooltip, Drag and Drop), Dock Manager, and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart, IgxCategoryChart, IgxFinancialChart, IgxDataChart, IgxPieChart). Use for any non-grid Ignite UI Angular UI question."
 user-invokable: true
 ---
 
@@ -36,7 +36,7 @@ Base your code and explanation exclusively on what you read. If the reference fi
 | Tabs, Bottom Navigation, Stepper, Accordion, Expansion Panel, Splitter, Navigation Drawer | [`references/layout.md`](./references/layout.md) |
 | List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress Indicators, Chat | [`references/data-display.md`](./references/data-display.md) |
 | Dialog, Snackbar, Toast, Banner | [`references/feedback.md`](./references/feedback.md) |
-| Button, Icon Button, Ripple, Tooltip, Drag and Drop | [`references/directives.md`](./references/directives.md) |
+| Button, Icon Button, Button Group, Ripple, Tooltip, Drag and Drop | [`references/directives.md`](./references/directives.md) |
 | Layout Manager (`igxLayout`, `igxFlex` directives), Dock Manager (`igc-dockmanager` web component) | [`references/layout-manager.md`](./references/layout-manager.md) |
 | Charts (Area, Bar, Column, Stock/Financial, Pie), chart configuration, chart features (animation, tooltips, markers, highlighting, zooming), data binding | [`references/charts.md`](./references/charts.md) |
 
