@@ -1,0 +1,38 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/standalone' as *;
+
+@include layer(base) {
+    @include b(igx-tabs-content) {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+
+        @include e(inner) {
+            position: absolute;
+            inset: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            flex: 1 1 auto;
+
+            &::-moz-focus-inner {
+                // remove dotted border on :focus in firefox
+                border: 0;
+            }
+
+            &:focus {
+                outline-width: 0;
+            }
+
+            &[tabindex='0'] {
+                position: relative;
+            }
+        }
+    }
+
+}

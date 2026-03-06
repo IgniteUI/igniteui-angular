@@ -15,7 +15,6 @@ import { IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular/grids/gr
 import { IComboSelectionChangingEventArgs, IgxComboAPIService, IgxComboDropDownComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from 'igniteui-angular/combo';
 import { RemoteDataService } from 'igniteui-angular/combo/src/combo/combo.component.spec';
 
-
 const CSS_CLASS_COMBO = 'igx-combo';
 const SIMPLE_COMBO_ELEMENT = 'igx-simple-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -486,6 +485,74 @@ describe('IgxSimpleCombo', () => {
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
             expect(dropDownScrollList.childElementCount).toEqual(0);
         });
+        it('should render correct ARIA attributes on combo input', () => {
+            const inputEl = input.nativeElement;
+
+            expect(inputEl.getAttribute('role'))
+                .withContext('Combo input should have role="combobox"')
+                .toBe('combobox');
+
+            expect(inputEl.getAttribute('aria-haspopup'))
+                .withContext('Combo input should indicate listbox as popup')
+                .toBe('listbox');
+
+            expect(inputEl.getAttribute('aria-readonly'))
+                .withContext('Combo input should not be readonly')
+                .toBe('false');
+
+            expect(inputEl.getAttribute('aria-expanded'))
+                .withContext('Combo input should not be expanded initially')
+                .toBe('false');
+
+            expect(inputEl.getAttribute('aria-controls'))
+                .withContext('aria-controls should point to dropdown list ID')
+                .toBe(combo.dropdown.listId);
+
+            expect(inputEl.getAttribute('aria-labelledby'))
+                .withContext('aria-labelledby should point to placeholder')
+                .toBe(combo.placeholder);
+
+            const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
+            expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by'))
+                .withContext('Dropdown should reflect the labelled-by value')
+                .toBe(combo.placeholder);
+        });
+        it('should update aria-activedescendant when navigating with keyboard', fakeAsync(() => {
+            const comboHost = fixture.debugElement.query(By.directive(IgxSimpleComboComponent));
+            expect(comboHost).withContext('Combo host should be present').not.toBeNull();
+
+            const dropdownListBox = fixture.debugElement.query(By.css(`[role='listbox']`));
+            expect(dropdownListBox.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
+
+            combo.open();
+            tick();
+            fixture.detectChanges();
+
+            const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`)).nativeElement;
+            expect(list).withContext('Dropdown list should be rendered').not.toBeNull();
+
+            const initialActiveDescendant = list.getAttribute('aria-activedescendant');
+            expect(initialActiveDescendant)
+                .withContext('aria-activedescendant should point to focused item after open')
+                .toBe(combo.dropdown.focusedItem.id);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', comboHost);
+            tick();
+            fixture.detectChanges();
+
+            const updatedActiveDescendant = list.getAttribute('aria-activedescendant');
+            expect(updatedActiveDescendant)
+                .withContext('aria-activedescendant should update after ArrowDown')
+                .toBe(combo.dropdown.focusedItem.id);
+
+            expect(updatedActiveDescendant).not.toBe(initialActiveDescendant);
+
+            const focusedItem = fixture.debugElement.query(By.css('.igx-drop-down__item--focused'));
+            expect(focusedItem).withContext('A dropdown item should be visually focused').not.toBeNull();
+            expect(focusedItem.nativeElement.id)
+                .withContext('Focused item id should match aria-activedescendant')
+                .toBe(updatedActiveDescendant);
+        }));
         it('should render aria attributes properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('role')).toEqual('combobox');
             expect(input.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');

@@ -1,15 +1,33 @@
-import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef, booleanAttribute, inject } from '@angular/core';
 import {
-    IgxSummaryOperand
-} from './grid-summary';
+    Component,
+    Input,
+    HostBinding,
+    HostListener,
+    ChangeDetectionStrategy,
+    ElementRef,
+    TemplateRef,
+    booleanAttribute,
+    ViewEncapsulation,
+    inject
+} from '@angular/core';
+import { IgxSummaryOperand } from './grid-summary';
 import { NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
-import { GridTypeBase,  ColumnType, GridColumnDataType, IgxSummaryResult, trackByIdentity, BaseFormatter } from 'igniteui-angular/core';
+import {
+    GridTypeBase,
+    ColumnType,
+    GridColumnDataType,
+    IgxSummaryResult,
+    trackByIdentity,
+    BaseFormatter
+} from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-summary-cell',
     templateUrl: './summary-cell.component.html',
+    styleUrl: 'grid-summary.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [NgTemplateOutlet]
 })
 export class IgxSummaryCellComponent {

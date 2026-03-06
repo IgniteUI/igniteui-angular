@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputGroupType, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputGroupType, IgxHintDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import {
     DateRange,
     EditorProvider,
@@ -287,6 +287,9 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
 
+    @ContentChildren(IgxHintDirective, { descendants: true })
+    protected contentHints: QueryList<IgxHintDirective>;
+
     @ViewChild(IgxInputGroupComponent)
     protected inputGroup: IgxInputGroupComponent;
 
@@ -354,6 +357,10 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
         if (this.inputGroup && this.suffixes?.length > 0) {
             this.inputGroup.suffixes = this.suffixes;
+        }
+
+        if (this.inputGroup) {
+            this.inputGroup.hints = this.contentHints;
         }
     }
 

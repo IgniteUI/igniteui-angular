@@ -1,0 +1,113 @@
+$diameter: calc(var(--circular-size) + var(--stroke-thickness));
+$radius: calc(var(--circular-size) / 2 - var(--stroke-thickness) * .5);
+$circumference: calc(#{$radius} * 2 * 3.1416);
+
+@keyframes igx-indeterminate-accordion {
+    0% {
+        stroke-dashoffset: calc(#{$circumference} * 2);
+        stroke-dasharray: calc(#{$circumference} * 9 / 10);
+    }
+
+    100% {
+        stroke-dashoffset: calc(#{$circumference} * 2 / 5);
+    }
+}
+
+@keyframes igx-indeterminate-accordion-rtl {
+    0% {
+        stroke-dashoffset: calc(#{$circumference} * -2);
+        stroke-dasharray: calc(#{$circumference} * 9 / 10);
+    }
+
+    100% {
+        stroke-dashoffset: calc(#{$circumference} * -2 / 5);
+    }
+}
+
+// Fluent: Circular progress animation for indeterminate state.
+// Dynamically changes stroke-dasharray and rotates for a smooth spinning effect.
+@keyframes igx-indeterminate-circular-fluent {
+    0% {
+        // Start the stroke at the correct position by adjusting the dasharray and dashoffset
+        stroke-dasharray: calc(#{$circumference} * 0.0001), #{$circumference};
+        stroke-dashoffset: calc(-1 * #{$circumference} / 4);
+
+        // Start at 12 o'clock
+        transform: rotate(-90deg);
+    }
+
+    50% {
+        stroke-dasharray: calc(#{$circumference} / 2), calc(#{$circumference} / 2);
+
+        // Adjust to keep starting point correct
+        stroke-dashoffset: calc(-1 * #{$circumference} / 4);
+
+        // Continue rotating smoothly
+        transform: rotate(360deg);
+    }
+
+    100% {
+        stroke-dasharray: calc(#{$circumference} * 0.0001), #{$circumference};
+
+        // Reset properly
+        stroke-dashoffset: calc(-1 * #{$circumference} / 4);
+
+        // Complete the full rotation
+        transform: rotate(990deg);
+    }
+}
+
+@keyframes igx-indeterminate-circular-fluent-rtl {
+    0% {
+        stroke-dasharray: calc(#{$circumference} * 0.0001), #{$circumference};
+
+        // Positive offset for opposite direction
+        stroke-dashoffset: calc(#{$circumference} / 4);
+        transform: rotate(90deg);
+    }
+
+    50% {
+        stroke-dasharray: calc(#{$circumference} / 2), calc(#{$circumference} / 2);
+
+        // Positive offset for opposite direction
+        stroke-dashoffset: calc(#{$circumference} / 4);
+        transform: rotate(-360deg);
+    }
+
+    100% {
+        stroke-dasharray: calc(#{$circumference} * 0.0001), #{$circumference};
+
+        // Positive offset for opposite direction
+        stroke-dashoffset: calc(#{$circumference} / 4);
+        transform: rotate(-990deg);
+    }
+}
+
+@keyframes igx-initial-dashoffset {
+    from {
+        /* Start with no progress (0%) */
+        stroke-dashoffset: #{$circumference};
+    }
+
+    to {
+        stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
+    }
+}
+
+// Generic animations
+@keyframes igc-initial-counter {
+    from {
+        --_progress-integer: 0;
+        --_progress-fraction: 0;
+    }
+}
+
+@keyframes igx-rotate-center {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

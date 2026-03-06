@@ -1,0 +1,48 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+$btn-indent: rem(3px);
+
+@include themed-block(igx-carousel, fluent) {
+    @include e(arrow) {
+        &[igxButton].igx-button--focused {
+            border: none;
+    
+            igx-icon {
+                color: var-get($_theme, 'indicator-focus-color');
+            }
+    
+            &::after {
+                position: absolute;
+                content: '';
+                pointer-events: none;
+                inset-block-start: $btn-indent;
+                inset-inline-start: $btn-indent;
+                width: calc(100% - (#{$btn-indent} * 2));
+                height: calc(100% - (#{$btn-indent} * 2));
+                box-shadow: 0 0 0 rem(1px) var-get($_theme, 'button-focus-border-color');
+            }
+        }
+    }
+}
+
+@include themed-block(igx-carousel-indicators, fluent) {
+    @include m(focused) {
+        &::after {
+            border: none;
+            inset-block-start: $btn-indent;
+            inset-inline-start: $btn-indent;
+            width: calc(100% - (#{$btn-indent} * 2));
+            height: calc(100% - (#{$btn-indent} * 2));
+            box-shadow: 0 0 0 rem(1px) var-get($_theme, 'button-focus-border-color');
+            border-radius: 0;
+        }
+    }
+}
+
+@include themed-block(igx-carousel-label-indicator, fluent) {
+    border-radius: rem(2px);
+}
