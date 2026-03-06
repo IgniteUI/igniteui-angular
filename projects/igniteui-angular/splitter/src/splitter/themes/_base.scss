@@ -13,13 +13,14 @@ $theme: $base;
 
 @include layer(base) {
     $splitter-color: var-get($theme, 'bar-color');
+    $splitter-size: var-get($theme, 'size');
     $hitbox-size: rem(4px);
     $debug-hitbox: false;
     $hitbox-debug-color: rgba(coral, 0.24);
 
     @include b(igx-splitter) {
         //splitter-size (convert rem to px) + padding
-        --splitter-size: #{unitless(map.get($theme, 'size')) * 16 + 2};
+        --splitter-size: calc(#{unitless(map.get($theme, 'size'))} * (var(--ig-base-font-size, 16px) / 1px) + 2);
 
         &[aria-orientation='horizontal'] {
             [dir='rtl'] & {
@@ -99,12 +100,12 @@ $theme: $base;
 
         @include e(handle, $m: horizontal) {
             width: 25%;
-            height: var-get($theme, 'size');
+            height: $splitter-size;
             margin: 0 rem(48px);
         }
 
         @include e(handle, $m: vertical) {
-            width: var-get($theme, 'size');
+            width: $splitter-size;
             height: 25%;
             margin: rem(48px) 0;
         }
@@ -113,8 +114,8 @@ $theme: $base;
             position: relative;
             width: 0;
             height: 0;
-            border-inline-end: var-get($theme, 'size') solid transparent;
-            border-inline-start: var-get($theme, 'size') solid transparent;
+            border-inline-end: $splitter-size solid transparent;
+            border-inline-start: $splitter-size solid transparent;
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.25s 0.5s ease;
@@ -129,7 +130,7 @@ $theme: $base;
         }
 
         @include e(expander, $m: 'start') {
-            border-block-end: var-get($theme, 'size') solid
+            border-block-end: $splitter-size solid
                 var-get($theme, 'expander-color');
 
             &::before {
@@ -141,7 +142,7 @@ $theme: $base;
         }
 
         @include e(expander, $m: 'end') {
-            border-block-start: var-get($theme, 'size') solid
+            border-block-start: $splitter-size solid
                 var-get($theme, 'expander-color');
 
             &::before {
@@ -190,10 +191,10 @@ $theme: $base;
             }
 
             @include e(expander, $m: 'start') {
-                border-block-start: var-get($theme, 'size') solid transparent;
-                border-inline-end: var-get($theme, 'size') solid
+                border-block-start: $splitter-size solid transparent;
+                border-inline-end: $splitter-size solid
                     var-get($theme, 'expander-color');
-                border-block-end: var-get($theme, 'size') solid transparent;
+                border-block-end: $splitter-size solid transparent;
                 border-inline-start: unset;
 
                 &::before {
@@ -205,10 +206,10 @@ $theme: $base;
             }
 
             @include e(expander, $m: 'end') {
-                border-block-start: var-get($theme, 'size') solid transparent;
+                border-block-start: $splitter-size solid transparent;
                 border-inline-end: unset;
-                border-block-end: var-get($theme, 'size') solid transparent;
-                border-inline-start: var-get($theme, 'size') solid
+                border-block-end: $splitter-size solid transparent;
+                border-inline-start: $splitter-size solid
                     var-get($theme, 'expander-color');
 
                 &::before {
