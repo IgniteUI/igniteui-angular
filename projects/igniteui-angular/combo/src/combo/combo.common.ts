@@ -982,6 +982,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
+    public abstract selectionChanged: EventEmitter<any>;
 
     constructor() {
         onResourceChangeHandle(this.destroy$, () => {
