@@ -1836,7 +1836,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
     protected override getNodeSize(rNode: Element, index?: number): number {
         if (this.igxForScrollOrientation === 'vertical') {
             const view = this._embeddedViews[index];
-            return this._embeddedViewSizesCache.get(view) || parseInt(this.igxForItemSize, 10);
+            return this._embeddedViewSizesCache.get(view) || parseFloat(this.igxForItemSize);
         } else {
             return super.getNodeSize(rNode, index);
         }
