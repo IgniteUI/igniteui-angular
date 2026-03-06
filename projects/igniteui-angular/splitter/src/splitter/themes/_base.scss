@@ -18,8 +18,8 @@ $theme: $base;
     $hitbox-debug-color: rgba(coral, 0.24);
 
     @include b(igx-splitter) {
-        //splitter-size + borders
-        --splitter-size: #{unitless(map.get($theme, 'size')) + 2};
+        //splitter-size (convert rem to px) + padding
+        --splitter-size: #{unitless(map.get($theme, 'size')) * 16 + 2};
 
         &[aria-orientation='horizontal'] {
             [dir='rtl'] & {
@@ -29,9 +29,12 @@ $theme: $base;
     }
 
     @include b(igx-splitter-bar-host) {
-        &:focus {
-            outline: transparent solid rem(1px);
-            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focus-color');
+        transition: box-shadow 0.15s ease-in;
+
+        &:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-color');
+            z-index: 100;
         }
     }
 
@@ -42,7 +45,7 @@ $theme: $base;
         justify-content: center;
         align-items: center;
         background: $splitter-color;
-        border: rem(1px) solid $splitter-color;
+        padding-block: rem(1px);
         z-index: 99;
         opacity: 0.68;
         transition: opacity 0.15s $ease-out-quad !important;
@@ -67,6 +70,23 @@ $theme: $base;
         &:hover {
             transition: all 0.25s ease-out;
             opacity: 1;
+        }
+
+        &:active {
+            background: var-get($theme, 'bar-color-active');
+            opacity: 1;
+
+            @include e(handle) {
+                background: var-get($theme, 'handle-color-active');
+            }
+
+            @include e(expander, $m: 'start') {
+                border-block-end-color: var-get($theme, 'expander-color-active');
+            }
+
+            @include e(expander, $m: 'end') {
+                border-block-start-color: var-get($theme, 'expander-color-active');
+            }
         }
 
         @include e(handle) {
@@ -109,7 +129,7 @@ $theme: $base;
         }
 
         @include e(expander, $m: 'start') {
-            border-bottom: var-get($theme, 'size') solid
+            border-block-end: var-get($theme, 'size') solid
                 var-get($theme, 'expander-color');
 
             &::before {
@@ -121,8 +141,7 @@ $theme: $base;
         }
 
         @include e(expander, $m: 'end') {
-            border-bottom: unset;
-            border-top: var-get($theme, 'size') solid
+            border-block-start: var-get($theme, 'size') solid
                 var-get($theme, 'expander-color');
 
             &::before {
@@ -153,6 +172,7 @@ $theme: $base;
         @include m(vertical) {
             flex-direction: column;
             height: 100%;
+            padding: 0 rem(1px);
 
             &::before,
             &::after {
@@ -170,10 +190,10 @@ $theme: $base;
             }
 
             @include e(expander, $m: 'start') {
-                border-top: var-get($theme, 'size') solid transparent;
+                border-block-start: var-get($theme, 'size') solid transparent;
                 border-inline-end: var-get($theme, 'size') solid
                     var-get($theme, 'expander-color');
-                border-bottom: var-get($theme, 'size') solid transparent;
+                border-block-end: var-get($theme, 'size') solid transparent;
                 border-inline-start: unset;
 
                 &::before {
@@ -185,9 +205,9 @@ $theme: $base;
             }
 
             @include e(expander, $m: 'end') {
-                border-top: var-get($theme, 'size') solid transparent;
+                border-block-start: var-get($theme, 'size') solid transparent;
                 border-inline-end: unset;
-                border-bottom: var-get($theme, 'size') solid transparent;
+                border-block-end: var-get($theme, 'size') solid transparent;
                 border-inline-start: var-get($theme, 'size') solid
                     var-get($theme, 'expander-color');
 
@@ -196,6 +216,18 @@ $theme: $base;
                     left: calc(100% - (#{map.get($theme, 'size')} * 2));
                     height: calc(#{map.get($theme, 'size')} * 4);
                     width: calc(#{map.get($theme, 'size')} * 3);
+                }
+            }
+
+            &:active {
+                @include e(expander, $m: 'start') {
+                    border-block-end-color: transparent;
+                    border-inline-end-color: var-get($theme, 'expander-color-active');
+                }
+
+                @include e(expander, $m: 'end') {
+                    border-block-start-color: transparent;
+                    border-inline-start-color: var-get($theme, 'expander-color-active');
                 }
             }
         }
