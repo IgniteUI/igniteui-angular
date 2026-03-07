@@ -39,6 +39,7 @@ yarn-error.log
 testem.log
 /typings
 TESTS-**.xml
+polluter-runner.spec.ts
 
 # System Files
 .DS_Store
