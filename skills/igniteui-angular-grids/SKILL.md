@@ -1,7 +1,7 @@
 ---
 name: igniteui-angular-grids
 description: "Provides guidance on all Ignite UI for Angular data grid types (Flat Grid, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) including setup, column configuration, sorting, filtering, selection, editing, grouping, summaries, toolbar, export, paging, remote data, and state persistence. Use when users ask about grids, tables, data grids, tabular data display, cell editing, batch editing, row selection, column pinning, column hiding, grouping rows, pivot tables, tree-structured data, hierarchical data, master-detail views, or exporting grid data."
-user-invokable: true
+user-invocable: true
 ---
 
 # Ignite UI for Angular — Data Grids
