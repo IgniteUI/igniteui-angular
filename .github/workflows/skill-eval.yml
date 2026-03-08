@@ -6,6 +6,10 @@ on:
       - 'skills/**'
       - 'evals/**'
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   eval:
     runs-on: ubuntu-latest
