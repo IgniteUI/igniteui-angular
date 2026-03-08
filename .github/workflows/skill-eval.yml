@@ -1,0 +1,88 @@
+name: Skill Eval
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**'
+      - 'evals/**'
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install eval dependencies
+        working-directory: evals
+        run: npm install
+
+      - name: Run skill evals
+        working-directory: evals
+        run: npx skill-eval _ --suite=all --trials=5
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-eval-results
+          path: evals/results/
+          retention-days: 30
+
+      - name: Post summary comment
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const resultsDir = 'evals/results';
+            let summary = '## 📊 Skill Eval Results\n\n';
+
+            try {
+              const files = fs.readdirSync(resultsDir).filter(f => f.endsWith('.json'));
+              if (files.length === 0) {
+                summary += '> ⚠️ No eval results found. The eval run may have failed.\n';
+              } else {
+                summary += '| Task | Pass Rate | pass@5 | Status |\n';
+                summary += '|---|---|---|---|\n';
+
+                for (const file of files) {
+                  try {
+                    const data = JSON.parse(fs.readFileSync(path.join(resultsDir, file), 'utf8'));
+                    const taskName = data.task || file.replace('.json', '');
+                    const passRate = data.passRate != null ? `${(data.passRate * 100).toFixed(0)}%` : 'N/A';
+                    const passAtK = data.passAtK != null ? `${(data.passAtK * 100).toFixed(0)}%` : 'N/A';
+                    const status = data.passAtK >= 0.8 ? '✅' : data.passAtK >= 0.6 ? '⚠️' : '❌';
+                    summary += `| ${taskName} | ${passRate} | ${passAtK} | ${status} |\n`;
+                  } catch (e) {
+                    summary += `| ${file} | Error | Error | ❌ |\n`;
+                  }
+                }
+
+                summary += '\n### Thresholds\n';
+                summary += '- ✅ `pass@5 ≥ 80%` — merge gate passed\n';
+                summary += '- ⚠️ `pass@5 ≥ 60%` — needs investigation\n';
+                summary += '- ❌ `pass@5 < 60%` — blocks merge for affected skill\n';
+              }
+            } catch (e) {
+              summary += `> ⚠️ Could not read results: ${e.message}\n`;
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: summary,
+            });

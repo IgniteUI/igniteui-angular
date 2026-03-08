@@ -1,0 +1,21 @@
+{
+  "name": "igniteui-angular-skill-evals",
+  "version": "1.0.0",
+  "description": "Evaluation suite for Ignite UI for Angular agent skills",
+  "private": true,
+  "scripts": {
+    "eval": "npx skill-eval",
+    "eval:grid": "npx skill-eval grid-basic-setup",
+    "eval:combo": "npx skill-eval component-combo-reactive-form",
+    "eval:theming": "npx skill-eval theming-palette-generation",
+    "eval:all": "npx skill-eval _ --suite=all",
+    "preview": "npx skill-eval preview",
+    "preview:browser": "npx skill-eval preview browser"
+  },
+  "dependencies": {
+    "skill-eval": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
