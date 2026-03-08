@@ -1,7 +1,7 @@
 ---
 name: igniteui-angular-theming
 description: "Generates and customizes Ignite UI for Angular themes including color palettes, typography, elevations, and component-level styles using the Sass theming system and the igniteui-theming MCP server. Use when users ask to theme, restyle, or style Ignite UI components, change colors or the color palette, switch between light and dark themes, create or apply a global theme, customize typography or elevation shadows, adjust spacing, sizing, or roundness, or configure per-component design tokens."
-user-invokable: true
+user_invokable: true
 ---
 
 # Ignite UI for Angular — Theming Skill
