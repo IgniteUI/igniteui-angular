@@ -24,7 +24,10 @@ if [ -z "${STYLES_FILE:-}" ]; then
 fi
 
 # --- Check 1: Import from igniteui-angular/theming ---
-if grep -qE "@use ['\"]igniteui-angular/theming['\"]|@use ['\"]@infragistics/igniteui-angular/theming['\"]|@import ['\"]igniteui-angular/theming['\"]|@import ['\"]@infragistics/igniteui-angular/theming['\"]|@import ['\"]~igniteui-angular/lib/core/styles/themes" "$STYLES_FILE" 2>/dev/null; then
+# Accepts @use or @import with either the OSS or licensed package path
+THEMING_IMPORT_PATTERN="@(use|import) ['\"](@infragistics/)?igniteui-angular/theming['\"]"
+LEGACY_IMPORT_PATTERN="@import ['\"]~igniteui-angular/lib/core/styles/themes"
+if grep -qE "$THEMING_IMPORT_PATTERN|$LEGACY_IMPORT_PATTERN" "$STYLES_FILE" 2>/dev/null; then
   SCORE=$((SCORE + 1))
   DETAILS="${DETAILS}PASS: Correct theming import found\n"
 else

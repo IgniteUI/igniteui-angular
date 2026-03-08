@@ -38,8 +38,10 @@ else
 fi
 
 # --- Check 3: Correct import from igniteui-angular entry point ---
+# Accepts either the OSS or licensed package path
+GRID_IMPORT_PATTERN="from ['\"](@infragistics/)?igniteui-angular/grids/grid['\"]"
 if [ -n "$COMPONENT_FILE" ]; then
-  if grep -qE "from ['\"]igniteui-angular/grids/grid['\"]|from ['\"]@infragistics/igniteui-angular/grids/grid['\"]" "$COMPONENT_FILE" 2>/dev/null; then
+  if grep -qE "$GRID_IMPORT_PATTERN" "$COMPONENT_FILE" 2>/dev/null; then
     SCORE=$((SCORE + 1))
     DETAILS="${DETAILS}PASS: Correct grid entry-point import found\n"
   else
