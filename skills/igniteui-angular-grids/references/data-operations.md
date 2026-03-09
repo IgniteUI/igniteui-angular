@@ -6,6 +6,14 @@
 > For editing and validation — see [`editing.md`](./editing.md).
 > For state persistence — see [`state.md`](./state.md).
 
+## Contents
+
+- [Accessing the Grid Instance](#accessing-the-grid-instance)
+- [Sorting](#sorting)
+- [Filtering](#filtering)
+- [Grouping (Flat Grid Only)](#grouping-flat-grid-only)
+- [Key Rules](#key-rules)
+
 ## Accessing the Grid Instance
 
 All programmatic data operations require a reference to the grid component. Use `viewChild` with the **correct component type** for your grid.
@@ -190,7 +198,7 @@ onSortingDone(event: ISortingEventArgs) {
 Implement `ISortingStrategy` to control how values are compared:
 
 ```typescript
-import { ISortingStrategy, SortingDirection } from 'igniteui-angular/grids/core';
+import { ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 
 class PrioritySortStrategy implements ISortingStrategy {
   private priorityOrder = ['Critical', 'High', 'Medium', 'Low'];
@@ -249,7 +257,8 @@ import {
   IgxBooleanFilteringOperand,
   FilteringExpressionsTree,
   FilteringLogic
-} from 'igniteui-angular/grids/core';
+} from 'igniteui-angular/core';
+// import { ... } from '@infragistics/igniteui-angular/core'; for licensed package
 
 // Simple single-column filter
 this.gridRef().filter('name', 'John', IgxStringFilteringOperand.instance().condition('contains'), true);
@@ -309,7 +318,7 @@ Control the AND/OR logic between **different column** filters:
 ```
 
 ```typescript
-import { FilteringLogic } from 'igniteui-angular/grids/core';
+import { FilteringLogic } from 'igniteui-angular';
 
 // FilteringLogic.And (default) — row must match ALL column filters
 // FilteringLogic.Or — row must match ANY column filter
@@ -369,7 +378,7 @@ onFilteringDone(event: IFilteringEventArgs) {
 ### Programmatic Grouping
 
 ```typescript
-import { SortingDirection } from 'igniteui-angular/grids/core';
+import { SortingDirection } from 'igniteui-angular/core';
 
 // Group by a column
 this.gridRef().groupBy({ fieldName: 'category', dir: SortingDirection.Asc, ignoreCase: true });
