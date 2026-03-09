@@ -247,5 +247,19 @@ $_theme: $fluent;
             border-color: var-get($_theme, 'disabled-border-color');
         }
     }
+
+    @include e(file-input) {
+        height: 100%;
+    }
+
+    @include m(file) {
+        @include e(input) {
+            grid-row: 1;
+        }
+
+        @include e(upload) {
+            grid-row: 1;
+        }
+    }
 }
 
