@@ -75,6 +75,10 @@
             width: var(--ig-icon-size, #{$icon-in-button-size});
             height: var(--ig-icon-size, #{$icon-in-button-size});
             font-size: var(--ig-icon-size, #{$icon-in-button-size});
+
+            igx-icon {
+                --size: #{$icon-in-button-size};
+            }
         }
 
         @if $variant == 'fluent' {
@@ -93,7 +97,6 @@
             );
 
             igx-icon {
-                --ig-icon-size: #{$icon-in-button-size};
                 --component-size: 2;
 
                 display: flex;

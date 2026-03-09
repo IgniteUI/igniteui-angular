@@ -331,11 +331,12 @@
 
             igx-icon {
                 --component-size: var(--ig-size, var(--ig-size-large));
+                --size: var(--ig-icon-size, #{$icon-in-button-size});
+
                 display: flex;
                 justify-content: center;
                 width: var(--ig-icon-size, #{$icon-in-button-size});
                 height: var(--ig-icon-size, #{$icon-in-button-size});
-                font-size: var(--ig-icon-size, #{$icon-in-button-size});
                 transition: var(--_button-transition);
             }
         }
@@ -779,6 +780,7 @@
 
             min-width: var-get($fab-theme, 'size');
             min-height: var-get($fab-theme, 'size');
+            aspect-ratio: 1;
             line-height: unset;
             white-space: nowrap;
             color: var-get($fab-theme, 'foreground');
