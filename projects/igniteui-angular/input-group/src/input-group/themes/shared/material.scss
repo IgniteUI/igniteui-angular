@@ -61,7 +61,7 @@ $input-bottom-spacing: rem(6px);
 
     @include e(hint) {
         grid-row: var(--_hint-row);
-        min-height: rem(18px);
+        min-height: rem(21px);
         padding-inline: sizable(rem(12px), rem(14px), rem(16px));
     }
 
@@ -93,6 +93,7 @@ $input-bottom-spacing: rem(6px);
             @extend %input-paddings;
 
             padding-inline: 0;
+            height: inherit;
         }
     }
 
