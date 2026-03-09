@@ -3,6 +3,11 @@
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 > For app setup, providers, and import patterns — see [`setup.md`](./setup.md).
 
+## Contents
+
+- [Layout Manager Directives](#layout-manager-directives)
+- [Dock Manager](#dock-manager)
+
 ---
 
 ## Layout Manager Directives
