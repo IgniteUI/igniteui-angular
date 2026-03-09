@@ -258,4 +258,16 @@ $_theme: $indigo;
             }
         }
     }
+
+    @include e(bundle-start) {
+        height: inherit;
+    }
+
+    @include e(bundle-end) {
+        height: inherit;
+    }
+
+    @include e(bundle-main) {
+        height: inherit;
+    }
 }

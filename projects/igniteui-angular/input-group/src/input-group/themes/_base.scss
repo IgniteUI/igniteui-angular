@@ -128,7 +128,7 @@ $transition-timing: .25s $out-cubic;
         @include e(bundle-start) {
             display: flex;
             min-width: 0;
-            height: inherit;
+
             grid-row: var(--_bundle-row);
             grid-column: 1;
         }
@@ -136,7 +136,7 @@ $transition-timing: .25s $out-cubic;
         @include e(bundle-end) {
             display: flex;
             min-width: 0;
-            height: inherit;
+
             grid-row: var(--_bundle-row);
             grid-column: 3;
         }
@@ -144,7 +144,6 @@ $transition-timing: .25s $out-cubic;
         @include e(bundle-main) {
             grid-row: var(--_bundle-row);
             min-width: 0;
-            height: inherit;
         }
 
         %input-textarea-common {

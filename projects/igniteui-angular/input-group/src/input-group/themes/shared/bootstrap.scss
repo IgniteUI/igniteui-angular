@@ -137,6 +137,12 @@ $border-radius: var-get($_theme, 'border-border-radius');
             border: 0;
             visibility: hidden;
         }
+
+        height: inherit;
+    }
+
+    @include e(bundle-end) {
+        height: inherit;
     }
 
     @include m(prefixed) {

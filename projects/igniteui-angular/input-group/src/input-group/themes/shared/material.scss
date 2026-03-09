@@ -575,11 +575,13 @@ $input-bottom-spacing: rem(6px);
             border-inline-end-width: 0;
             border-start-start-radius: var-get($_theme, 'border-border-radius');
             border-end-start-radius: var-get($_theme, 'border-border-radius');
+            height: inherit;
         }
 
         @include e(bundle-main) {
             grid-column: 2 / span 2;
             padding-inline: $input-inline-padding;
+            height: inherit;
         }
 
         @include e(notch)  {
@@ -616,6 +618,7 @@ $input-bottom-spacing: rem(6px);
             grid-column: 4;
             border-start-end-radius: var-get($_theme, 'border-border-radius');
             border-end-end-radius: var-get($_theme, 'border-border-radius');
+            height: inherit;
         }
 
         &:hover {
