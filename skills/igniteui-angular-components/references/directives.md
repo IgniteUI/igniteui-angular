@@ -3,6 +3,14 @@
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 > For app setup, providers, and import patterns — see [`setup.md`](./setup.md).
 
+## Contents
+
+- [Button & Icon Button](#button--icon-button)
+- [Button Group](#button-group)
+- [Ripple Effect](#ripple-effect)
+- [Tooltip](#tooltip)
+- [Drag and Drop](#drag-and-drop)
+
 ## Button & Icon Button
 
 > **Docs:** [Button Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)
@@ -38,11 +46,15 @@ Button variants for `igxIconButton`: `'flat'`, `'outlined'`, `'contained'`.
 > **Docs:** [Button Group Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/buttongroup)
 
 ```typescript
-import { IgxButtonGroupComponent, IGX_BUTTON_GROUP_DIRECTIVES } from 'igniteui-angular/button-group';
+// Option A — convenience collection (includes IgxButtonGroupComponent + IgxButtonDirective)
+import { IGX_BUTTON_GROUP_DIRECTIVES } from 'igniteui-angular/button-group';
+
+// Option B — individual imports
+import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+
 import { IgxIconComponent } from 'igniteui-angular/icon';
 ```
-
-Use `IGX_BUTTON_GROUP_DIRECTIVES` (includes `IgxButtonGroupComponent` + `IgxButtonDirective`) for convenience, or import individually.
 
 ```html
 <!-- Text buttons — single selection (default) -->
@@ -114,7 +126,7 @@ onDeselected(event: IButtonGroupEventArgs) {
 | `(selected)` | `IButtonGroupEventArgs` | A button is selected. |
 | `(deselected)` | `IButtonGroupEventArgs` | A button is deselected. |
 
-`IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`.
+`IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`, where `IgxButtonDirective` is imported from `igniteui-angular/directives` (see **Button & Icon Button** section above).
 
 **Key inputs on each `<button igxButton>` child:**
 

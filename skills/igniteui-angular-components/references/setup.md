@@ -2,6 +2,13 @@
 
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 
+## Contents
+
+- [Installation](#installation)
+- [Required Providers (`app.config.ts`)](#required-providers-appconfigts)
+- [Architecture — Standalone Components](#architecture--standalone-components)
+- [Multi-Entry-Point Imports](#multi-entry-point-imports)
+
 ## Installation
 
 ```bash
@@ -153,7 +160,7 @@ For complex components, use the bundled directive arrays instead of listing ever
 - [`layout.md`](./layout.md) — Tabs, Stepper, Accordion, Splitter, Navigation Drawer
 - [`data-display.md`](./data-display.md) — List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress, Chat
 - [`feedback.md`](./feedback.md) — Dialog, Snackbar, Toast, Banner
-- [`directives.md`](./directives.md) — Button, Button Group, Ripple, Tooltip, Drag and Drop
+- [`directives.md`](./directives.md) — Button, Icon Button, Button Group, Ripple, Tooltip, Drag and Drop
 - [`layout-manager.md`](./layout-manager.md) — Layout Manager directives, Dock Manager
 - [`../../igniteui-angular-grids/SKILL.md`](../../igniteui-angular-grids/SKILL.md) — Data Grids
 - [`../../igniteui-angular-theming/SKILL.md`](../../igniteui-angular-theming/SKILL.md) — Theming & Styling
