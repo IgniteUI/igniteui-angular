@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../../test-utils/grid-samples.spec';
@@ -31,13 +31,13 @@ describe('IgxGrid - Column Selection #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 ProductsComponent, ColumnSelectionGroupTestComponent, NoopAnimationsModule
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base tests: ', () => {
         let colProductName: IgxColumnComponent;
@@ -956,7 +956,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             colProductName = grid.getColumnByName('ProductName');
         });
 
-        it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
+        it('Filtering: Verify column selection when filter row is opened ', async () => {
             grid.allowFiltering = true;
             fix.detectChanges();
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductID');
@@ -967,7 +967,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             expect(filterCell.nativeElement.classList.contains(SELECTED_FILTER_CELL_CLASS)).toBeTruthy();
             GridFunctions.clickFilterCellChipUI(fix, 'InStock'); // Name column contains nested object as a value
-            tick(150);
+            await fix.whenStable();
             fix.detectChanges();
 
             const filterRow = GridFunctions.getFilterRow(fix);
@@ -976,14 +976,14 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
 
             GridFunctions.clickColumnHeaderUI('InStock', fix);
-            tick();
+            await fix.whenStable();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock, false);
             expect(grid.filteringRow.column.field).toEqual('InStock');
 
             GridFunctions.clickColumnHeaderUI('ProductID', fix);
-            tick();
+            await fix.whenStable();
 
             const productIDHeader = GridFunctions.getColumnHeader('ProductID', fix);
             expect(productIDHeader.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toBeFalsy();
@@ -998,7 +998,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnHeaderHasSelectableClass(productNameHeader, false);
-        }));
+        });
 
         it('Filtering: Verify column selection when filter', () => {
             colProductName.selected = true;
@@ -1087,27 +1087,27 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
         });
 
-        it('Moving: Verify that when move a column, it stays selected', fakeAsync(() => {
+        it('Moving: Verify that when move a column, it stays selected', async () => {
             colProductID.selected = true;
             fix.detectChanges();
 
             grid.moveColumn(colProductID, colProductName);
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
             expect(colProductID.visibleIndex).toEqual(1);
-        }));
+        });
 
-        it('Paging: Verify column stays selected when change page', fakeAsync(() => {
+        it('Paging: Verify column stays selected when change page', async () => {
             colProductName.selected = true;
             colProductID.selected = true;
             fix.componentInstance.paging = true;
             fix.detectChanges();
             fix.componentInstance.paginator.perPage = 3;
             fix.detectChanges();
-            tick(30);
+            await fix.whenStable();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
@@ -1115,11 +1115,11 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             fix.componentInstance.paginator.paginate(1);
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
             expect(grid.getSelectedColumnsData()).toEqual(selectedData());
-        }));
+        });
     });
 });

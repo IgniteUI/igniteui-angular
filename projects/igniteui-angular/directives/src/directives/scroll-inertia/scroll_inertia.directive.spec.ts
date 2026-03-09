@@ -1,5 +1,5 @@
 import { Component, Directive, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { wait } from '../../../../test-utils/ui-interactions.spec';
@@ -8,14 +8,14 @@ import { describe, it, test, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 IgxTestScrollInertiaDirective,
                 ScrollInertiaComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(ScrollInertiaComponent);
@@ -27,7 +27,7 @@ describe('Scroll Inertia Directive - Rendering', () => {
     });
 
     it('should initialize directive on non-scrollable container.', async () => {
-        expect(fix.componentInstance.scrInertiaDir).toBeDefined('scroll inertia initializing through markup failed');
+        expect(fix.componentInstance.scrInertiaDir, 'scroll inertia initializing through markup failed').toBeDefined();
         await fix.whenStable();
     });
 
@@ -79,7 +79,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     let scrollInertiaDir: IgxTestScrollInertiaDirective;
     let scrollContainerMock;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         scrollContainerMock = {
             scrollLeft: 0,
             scrollTop: 0,
@@ -87,12 +87,12 @@ describe('Scroll Inertia Directive - Scrolling', () => {
             children: [{ style: { width: '50px', height: '500px', scrollHeight: 100 } }]
         };
 
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             providers: [
                 { provide: ElementRef, useValue: null },
                 IgxTestScrollInertiaDirective
             ]
-        });
+        }).compileComponents();
 
         scrollInertiaDir = TestBed.inject(IgxTestScrollInertiaDirective);
         scrollInertiaDir.IgxScrollInertiaScrollContainer = scrollContainerMock;
@@ -191,7 +191,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     });
 
     // Unit tests for touch events with inertia - Chrome, FireFox, Safari.
-    it('should change scroll top for related scrollbar on touch start/move/end', fakeAsync(() => {
+    it('should change scroll top for related scrollbar on touch start/move/end', async () => {
         let evt = {
             touches: [{
                     pageX: 0,
@@ -208,16 +208,16 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 }],
             preventDefault: () => { }
         };
-        tick(10);
+        await wait(16);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
         // wait for inertia to complete
-        tick(300);
+        await wait(16);
         expect(scrollContainerMock.scrollTop).toBeGreaterThan(3000);
-    }));
+    });
 
-    it('should stop inertia if another touch event is initiated while inertia is executing.', fakeAsync(() => {
+    it('should stop inertia if another touch event is initiated while inertia is executing.', async () => {
         let evt = {
             touches: [{
                     pageX: 0,
@@ -234,11 +234,11 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 }],
             preventDefault: () => { }
         };
-        tick(10);
+        await wait(16);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
-        tick(10);
+        await wait(16);
 
         // don't wait for inertia to end. Instead start another touch interaction.
         evt = {
@@ -251,9 +251,9 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         scrollInertiaDir.onTouchStart(evt);
 
         expect(scrollContainerMock.scrollTop).toBeLessThan(1000);
-    }));
+    });
 
-    it('should honor the defined swipeToleranceX.', fakeAsync(() => {
+    it('should honor the defined swipeToleranceX.', async () => {
         // if scroll is initiated on Y and on X within the defined tolerance no scrolling should occur on X.
         let evt = {
             touches: [{
@@ -270,17 +270,17 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 }],
             preventDefault: () => { }
         };
-        tick(10);
+        await wait(16);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
 
-        tick(300);
+        await wait(16);
         expect(scrollContainerMock.scrollLeft).toEqual(0);
         expect(scrollContainerMock.scrollTop).toBeGreaterThan(100);
-    }));
+    });
 
-    it('should change scroll left for related scrollbar on touch start/move/end', fakeAsync(() => {
+    it('should change scroll left for related scrollbar on touch start/move/end', async () => {
         let evt = {
             touches: [{
                     pageX: 0,
@@ -297,15 +297,15 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 }],
             preventDefault: () => { }
         };
-        tick(10);
+        await wait(16);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
         // wait for inertia to complete
-        tick(300);
+        await wait(16);
         expect(scrollContainerMock.scrollLeft).toBeGreaterThan(3000);
 
-    }));
+    });
     it('should not throw errors on touch start/move/end if no scrollbar is associated.', () => {
         scrollInertiaDir.IgxScrollInertiaScrollContainer = null;
         const evt = { preventDefault: () => { } };

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './public_api';
 import { BasicGridSearchComponent } from '../../../test-utils/grid-base-components.spec';
@@ -23,8 +23,8 @@ describe('IgxGrid - search API #grid', () => {
     let grid: IgxGridComponent;
     let fixNativeElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 BasicGridSearchComponent,
@@ -33,7 +33,7 @@ describe('IgxGrid - search API #grid', () => {
                 ScrollableGridSearchComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('BasicGrid - ', () => {
         beforeEach(() => {
@@ -235,9 +235,9 @@ describe('IgxGrid - search API #grid', () => {
             fix.detectChanges();
         });
 
-        it('Should update exact match highlights when clearing filter.', fakeAsync(() => {
+        it('Should update exact match highlights when clearing filter.', async () => {
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
-            tick(16);
+            await wait(16);
             fix.detectChanges();
 
             grid.findNext('Software Developer', false, true);
@@ -247,13 +247,13 @@ describe('IgxGrid - search API #grid', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('JobTitle');
-            tick(16);
+            await wait(16);
             fix.detectChanges();
             activeHighlight = getActiveHighlight();
             highlights = getHighlights();
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
-        }));
+        });
 
         it('Should update the active highlight when sorting', () => {
             const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));

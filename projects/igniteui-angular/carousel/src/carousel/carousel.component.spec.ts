@@ -1,5 +1,5 @@
 import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxCarouselComponent, ISlideEventArgs } from './carousel.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,10 +15,10 @@ describe('Carousel', () => {
     let mockElement: any;
     let mockElementRef: ElementRef;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         mockElement = document.createElement("div");
         mockElementRef = new ElementRef(mockElement);
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CarouselTestComponent,
@@ -32,7 +32,7 @@ describe('Carousel', () => {
                 IgxSlideComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests: ', () => {
         beforeEach(() => {
@@ -784,9 +784,11 @@ describe('Carousel', () => {
             carousel = fixture.componentInstance.carousel;
             slides = fixture.componentInstance.slides;
         });
+        afterEach(() => vi.useRealTimers());
 
-        it('should activate slide when change its property active', fakeAsync(() => {
-            tick();
+        it('should activate slide when change its property active', () => {
+            vi.useFakeTimers();
+            vi.runAllTimers();
             // Verify 3th slide is active
             HelperTestFunctions.verifyActiveSlide(carousel, 2);
 
@@ -795,10 +797,11 @@ describe('Carousel', () => {
             fixture.detectChanges();
 
             HelperTestFunctions.verifyActiveSlide(carousel, 0);
-        }));
+        });
 
-        it('should add slides to the carousel when collection is changed', fakeAsync(() => {
-            tick();
+        it('should add slides to the carousel when collection is changed', () => {
+            vi.useFakeTimers();
+            vi.runAllTimers();
             vi.spyOn(carousel.slideAdded, 'emit');
 
             // add a slide
@@ -811,16 +814,17 @@ describe('Carousel', () => {
             // add an active slide
             slides.push({ text: 'Slide 6', active: true });
             fixture.detectChanges();
-            tick(100);
+            vi.advanceTimersByTime(100);
 
             HelperTestFunctions.verifyActiveSlide(carousel, 5);
             expect(carousel.total).toEqual(6);
 
             expect(carousel.slideAdded.emit).toHaveBeenCalledTimes(2);
-        }));
+        });
 
-        it('should remove slides in the carousel', fakeAsync(() => {
-            tick();
+        it('should remove slides in the carousel', () => {
+            vi.useFakeTimers();
+            vi.runAllTimers();
             vi.spyOn(carousel.slideRemoved, 'emit');
 
             // remove a slide
@@ -833,19 +837,20 @@ describe('Carousel', () => {
             // remove active slide
             slides.pop();
             fixture.detectChanges();
-            tick(200);
+            vi.advanceTimersByTime(200);
             fixture.detectChanges();
 
             expect(carousel.total).toEqual(2);
             HelperTestFunctions.verifyActiveSlide(carousel, 1);
 
             expect(carousel.slideRemoved.emit).toHaveBeenCalledTimes(2);
-        }));
+        });
 
-        it('should not render navigation buttons and indicators when carousel does not have slides', fakeAsync(() => {
+        it('should not render navigation buttons and indicators when carousel does not have slides', () => {
+            vi.useFakeTimers();
             fixture.componentInstance.removeAllSlides();
             fixture.detectChanges();
-            tick(200);
+            vi.advanceTimersByTime(200);
 
             expect(carousel.total).toEqual(0);
             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeNull();
@@ -856,14 +861,14 @@ describe('Carousel', () => {
             // add a slide
             fixture.componentInstance.addSlides();
             fixture.detectChanges();
-            tick(200);
+            vi.advanceTimersByTime(200);
 
             expect(carousel.total).toEqual(2);
             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
             expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.start)).toBeDefined();
             expect(HelperTestFunctions.getNextButton(fixture).hidden).toBeFalsy();
             expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeFalsy();
-        }));
+        });
     });
 
     describe('Gestures Tests: ', () => {

@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from './checkbox.component';
@@ -8,8 +8,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxCheckbox', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 InitCheckboxComponent,
@@ -25,7 +25,7 @@ describe('IgxCheckbox', () => {
                 IgxCheckboxComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes a checkbox', () => {
         const fixture = TestBed.createComponent(InitCheckboxComponent);
@@ -56,7 +56,7 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.getAttribute('aria-label')).toMatch('New Label');
     });
 
-    it('Initializes with ngModel', fakeAsync(() => {
+    it('Initializes with ngModel', async () => {
         const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         fixture.detectChanges();
 
@@ -73,15 +73,15 @@ describe('IgxCheckbox', () => {
         checkboxInstance.name = 'my-checkbox';
         // One change detection cycle for updating our checkbox
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         expect(checkboxInstance.checked).toBe(true);
 
         // Now one more change detection cycle to update the native checkbox
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         expect(nativeCheckbox.checked).toBe(true);
         expect(checkboxInstance.name).toEqual('my-checkbox');
-    }));
+    });
 
     it('Initializes with form group', () => {
         const fixture = TestBed.createComponent(CheckboxFormGroupComponent);
@@ -134,7 +134,7 @@ describe('IgxCheckbox', () => {
         expect(labelStyles.order).toEqual('-1');
     });
 
-    it('Indeterminate state', fakeAsync(() => {
+    it('Indeterminate state', async () => {
         const fixture = TestBed.createComponent(CheckboxIndeterminateComponent);
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
@@ -149,14 +149,14 @@ describe('IgxCheckbox', () => {
         testInstance.subscribed = true;
 
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         // First change detection should update our checkbox state and API call should not change indeterminate
         expect(checkboxInstance.checked).toBe(true);
         expect(checkboxInstance.indeterminate).toBe(true);
 
         // Second change detection should update native checkbox state but indeterminate should not change
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         expect(nativeCheckbox.indeterminate).toBe(true);
         expect(nativeCheckbox.checked).toBe(true);
 
@@ -191,7 +191,7 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.indeterminate).toBe(true);
         expect(checkboxInstance.checked).toBe(true);
         expect(nativeCheckbox.checked).toBe(true);
-    }));
+    });
 
     it('Disabled state', () => {
         const fixture = TestBed.createComponent(IgxCheckboxComponent);
@@ -356,10 +356,10 @@ describe('IgxCheckbox', () => {
         expect(domCheckbox.classList.contains('igx-checkbox--invalid')).toBe(true);
     });
 
-    it('Should work properly with ngModel', fakeAsync(() => {
+    it('Should work properly with ngModel', async () => {
         const fixture = TestBed.createComponent(CheckboxFormComponent);
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         const checkbox = fixture.componentInstance.checkbox;
         expect(checkbox.invalid).toEqual(false);
@@ -368,9 +368,9 @@ describe('IgxCheckbox', () => {
         expect(checkbox.invalid).toEqual(true);
 
         fixture.componentInstance.ngForm.resetForm();
-        tick();
+        await fixture.whenStable();
         expect(checkbox.invalid).toEqual(false);
-    }));
+    });
 
     it('Should work properly with reactive forms validation.', () => {
         const fixture = TestBed.createComponent(CheckboxFormGroupComponent);
