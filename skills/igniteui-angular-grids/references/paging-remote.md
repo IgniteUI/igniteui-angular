@@ -5,6 +5,14 @@
 > For editing and validation — see [`editing.md`](./editing.md).
 > For state persistence — see [`state.md`](./state.md).
 
+## Contents
+
+- [Paging](#paging)
+- [Remote Data Operations](#remote-data-operations)
+- [Virtualization](#virtualization)
+- [Multi-Grid Coordination](#multi-grid-coordination)
+- [Key Rules](#key-rules)
+
 ## Paging
 
 > **Docs:** [Paging — Remote Paging](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging) (substitute URL prefix per grid type)
@@ -51,7 +59,8 @@ this.gridRef().paginator.perPage = 25;
 ### Remote Paging
 
 ```typescript
-import { GridPagingMode } from 'igniteui-angular/grids/grid';
+import { GridPagingMode } from 'igniteui-angular/grids/core';
+import { IPageEventArgs } from 'igniteui-angular/paginator';
 
 export class RemotePagingComponent {
   data = signal<Product[]>([]);
@@ -120,12 +129,12 @@ import { Component, ChangeDetectionStrategy, signal, viewChild, inject, DestroyR
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
 import {
-  IForOfState,
-  ISortingEventArgs,
   IFilteringExpressionsTree,
   NoopSortingStrategy,
   NoopFilteringStrategy
-} from 'igniteui-angular/grids/core';
+} from 'igniteui-angular/core';
+import { IForOfState } from 'igniteui-angular/directives';
+import { ISortingEventArgs } from 'igniteui-angular/grids/core';
 import { debounceTime, Subject } from 'rxjs';
 
 @Component({
