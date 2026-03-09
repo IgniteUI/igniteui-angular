@@ -1,5 +1,5 @@
 import { Component, ViewChild, Pipe, PipeTransform, ElementRef, inject } from '@angular/core';
-import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAutocompleteDirective, AutocompleteOverlaySettings } from './autocomplete.directive';
@@ -25,8 +25,8 @@ describe('IgxAutocomplete', () => {
     let input: IgxInputDirective;
     let dropDown: IgxDropDownComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 AutocompleteComponent,
@@ -34,23 +34,22 @@ describe('IgxAutocomplete', () => {
                 AutocompleteFormComponent
             ]
         }).compileComponents();
-    }));
+    });
     describe('General tests: ', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
             group = fixture.componentInstance.group;
             input = fixture.componentInstance.input;
             dropDown = fixture.componentInstance.dropDown;
-        }));
-        it('Should open/close dropdown properly', fakeAsync(() => {
+        });
+        it('Should open/close dropdown properly', async () => {
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
 
@@ -60,97 +59,82 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeFalsy();
 
             autocomplete.onTab();
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
 
             autocomplete.open();
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             autocomplete.close();
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
-        }));
-        it('Should close dropdown on Tab without calling super.handleKeyDown', fakeAsync(() => {
-            spyOn(autocomplete, 'handleKeyDown').and.callThrough();
-            spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown').and.callThrough();
+        });
+        it('Should close dropdown on Tab without calling super.handleKeyDown', async () => {
+            vi.spyOn(autocomplete, 'handleKeyDown');
+            vi.spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown');
 
             input.nativeElement.focus();
             UIInteractions.setInputElementValue(input, 's', fixture);
-            tick();
             expect(dropDown.collapsed).toBeFalsy();
 
             // IgxDropDownItemNavigationDirective handleKeyDown is not called when dropdown is closed on Tab
             UIInteractions.triggerKeyDownEvtUponElem('Tab', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(1);
             expect(IgxDropDownItemNavigationDirective.prototype.handleKeyDown).toHaveBeenCalledTimes(0);
-        }));
-        it('Should open drop down on (Alt+)ArrowUp/ArrowDown', fakeAsync(() => {
+        });
+        it('Should open drop down on (Alt+)ArrowUp/ArrowDown', async () => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
             expect(dropDown.items[0].focused).toBeTruthy();
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
             expect(dropDown.items[0].focused).toBeTruthy();
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
 
             const altKey = true;
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true, altKey);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
             expect(dropDown.items[0].focused).toBeTruthy();
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true, altKey);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
             expect(dropDown.items[0].focused).toBeTruthy();
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
-        }));
-        it('Should close the dropdown when no items match the filter', fakeAsync(() => {
+        });
+        it('Should close the dropdown when no items match the filter', async () => {
             expect((autocomplete as any).collapsed).toEqual(true);
             vi.spyOn(autocomplete.target, 'close');
             vi.spyOn(autocomplete, 'open');
             vi.spyOn(autocomplete.target, 'open');
             expect(autocomplete.target.close).not.toHaveBeenCalled();
             UIInteractions.setInputElementValue(input, 'a', fixture);
-            tick();
             expect(autocomplete.open).toHaveBeenCalledTimes(1);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
             expect(autocomplete.target.collapsed).toEqual(false);
 
             UIInteractions.setInputElementValue(input, 'ax', fixture);
-            tick();
             expect(autocomplete.target.close).toHaveBeenCalledTimes(1);
             expect(autocomplete.open).toHaveBeenCalledTimes(2);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
@@ -159,71 +143,60 @@ describe('IgxAutocomplete', () => {
 
             // Should not try to reopen if no items
             UIInteractions.setInputElementValue(input, 'axx', fixture);
-            tick();
             expect(autocomplete.target.close).toHaveBeenCalledTimes(1);
             expect(autocomplete.open).toHaveBeenCalledTimes(3);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
             expect(autocomplete.target.collapsed).toEqual(true);
 
 
-        }));
-        it('Should close the dropdown when disabled dynamically', fakeAsync(() => {
+        });
+        it('Should close the dropdown when disabled dynamically', async () => {
             vi.spyOn(autocomplete.target, 'open');
             vi.spyOn(autocomplete.target, 'close');
 
             UIInteractions.setInputElementValue(input, 's', fixture);
-            tick();
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeFalsy();
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
 
             autocomplete.disabled = true;
             autocomplete.close();
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(autocomplete.target.close).toHaveBeenCalledTimes(1);
             UIInteractions.setInputElementValue(input, 's', fixture);
-            tick();
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
-        }));
-        it('Should not close the dropdown when clicked on a input or the group', fakeAsync(() => {
+        });
+        it('Should not close the dropdown when clicked on a input or the group', async () => {
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             input.nativeElement.click();
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             group.element.nativeElement.click();
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             // Click in center of the body.
             const bodyRect = document.body.getBoundingClientRect();
             UIInteractions.simulateMouseEvent('click', document.body, bodyRect.left + bodyRect.width / 2, bodyRect.top + bodyRect.height / 2);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
-        }));
-        it('Should select item and close dropdown with ENTER and do not close it with SPACE key', fakeAsync(() => {
+        });
+        it('Should select item and close dropdown with ENTER and do not close it with SPACE key', async () => {
             let startsWith = 's';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeFalsy();
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(fixture.componentInstance.townSelected).toBe(filteredTowns[0]);
             expect(input.value).toBe(filteredTowns[0]);
@@ -232,82 +205,68 @@ describe('IgxAutocomplete', () => {
             filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeFalsy();
 
             UIInteractions.triggerKeyDownEvtUponElem('space', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
             expect(fixture.componentInstance.townSelected).toBe('bu');
             expect(input.value).toBe('bu');
-        }));
-        it('Should not open dropdown with ENTER key', fakeAsync(() => {
+        });
+        it('Should not open dropdown with ENTER key', async () => {
             let startsWith = 's';
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.value).toBe('');
 
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.value).toBe(filteredTowns[0]);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.value).toBe(filteredTowns[0]);
 
             startsWith = '';
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.value).toBe(fixture.componentInstance.towns[0]);
-        }));
-        it('Should not open dropdown and select items with SPACE key', fakeAsync(() => {
+        });
+        it('Should not open dropdown and select items with SPACE key', async () => {
             let startsWith = 'd';
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
 
             UIInteractions.triggerKeyDownEvtUponElem('space', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.value).toBe('');
 
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.value).toBe(filteredTowns[0]);
 
             UIInteractions.triggerKeyDownEvtUponElem('space', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.value).toBe(filteredTowns[0]);
 
             startsWith = '';
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             UIInteractions.triggerKeyDownEvtUponElem('space', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeFalsy();
             expect(input.value).toBe(startsWith);
-        }));
+        });
         it('Should not open dropdown on input focusing', () => {
             input.nativeElement.focus();
             fixture.detectChanges();
@@ -326,7 +285,7 @@ describe('IgxAutocomplete', () => {
             expect(dropdownList.nativeElement.attributes['aria-hidden'].value).toEqual('true');
             expect(dropdownListScrollElement.children.length).toEqual(0);
         });
-        it('Should not open dropdown when disabled', fakeAsync(() => {
+        it('Should not open dropdown when disabled', async () => {
             fixture.detectChanges();
             vi.spyOn(autocomplete.target, 'open');
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
@@ -347,14 +306,12 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListScrollElement.children.length).toEqual(0);
@@ -362,37 +319,33 @@ describe('IgxAutocomplete', () => {
 
             const altKey = true;
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true, altKey);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true, altKey);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
-        }));
-        it('Should select item when drop down item is clicked', fakeAsync(() => {
+        });
+        it('Should select item when drop down item is clicked', async () => {
             input.nativeElement.focus();
             expect(input.nativeElement as Element).toBe(document.activeElement);
             const startsWith = 's';
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             expect(dropDown.collapsed).toBeFalsy();
             const targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_ITEM))[0];
             targetElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(fixture.componentInstance.townSelected).toBe(filteredTowns[0]);
             expect(input.value).toBe(filteredTowns[0]);
             expect(input.nativeElement as Element).toBe(document.activeElement);
-        }));
-        it('Should filter and select duplicated items properly', fakeAsync(() => {
+        });
+        it('Should filter and select duplicated items properly', async () => {
             fixture.componentInstance.towns.push('Sofia', 'Sofia');
             fixture.detectChanges();
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
@@ -418,20 +371,17 @@ describe('IgxAutocomplete', () => {
 
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             fixture.detectChanges();
-            tick();
             verifyDropdownItems();
 
             startsWith = 'sof';
             filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             fixture.detectChanges();
-            tick();
             verifyDropdownItems();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             fixture.detectChanges();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.value).toEqual(filteredTowns[1]);
@@ -441,17 +391,15 @@ describe('IgxAutocomplete', () => {
             filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             fixture.detectChanges();
-            tick();
             verifyDropdownItems();
 
             startsWith = 'so';
             filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             fixture.detectChanges();
-            tick();
             verifyDropdownItems();
 
-        }));
+        });
         it('Should filter and populate dropdown list with matching values on every key stroke', () => {
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
             const verifyDropdownItems = () => {
@@ -525,64 +473,55 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropdownListScrollElement.children.length).toEqual(0);
         });
-        it('Should not preserve selected value', fakeAsync(() => {
+        it('Should not preserve selected value', async () => {
             let startsWith = 'q';
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
 
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(input.nativeElement.value).toEqual(startsWith);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(input.nativeElement.value).toEqual(startsWith);
 
             startsWith = 'd';
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             expect(dropdownListScrollElement.children.length).toEqual(filteredTowns.length);
             expect(input.nativeElement.value).toEqual(startsWith);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(fixture.componentInstance.townSelected).toBe(filteredTowns[0]);
             expect(input.value).toBe(filteredTowns[0]);
 
             startsWith = 'q';
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(input.nativeElement.value).toEqual(startsWith);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
-            tick();
             fixture.detectChanges();
             expect(input.nativeElement.value).toEqual(startsWith);
             expect(fixture.componentInstance.townSelected).toBe(startsWith);
-        }));
-        it('Should auto-highlight first suggestion', fakeAsync(() => {
+        });
+        it('Should auto-highlight first suggestion', async () => {
             let startsWith = 's';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             expect(dropDown.children.first.focused).toBeTruthy();
             expect(dropDown.items[0].focused).toBeTruthy();
             expect(dropDown.items[0].value).toBe(filteredTowns[0]);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(fixture.componentInstance.townSelected).toBe(filteredTowns[0]);
 
             startsWith = 'st';
             filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             expect(dropDown.children.first.focused).toBeTruthy();
             expect(dropDown.items[0].focused).toBeTruthy();
             expect(dropDown.items[0].value).toBe(filteredTowns[0]);
@@ -590,34 +529,29 @@ describe('IgxAutocomplete', () => {
             startsWith = 's';
             filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             expect(dropDown.children.first.focused).toBeTruthy();
             expect(dropDown.items[0].focused).toBeTruthy();
             expect(dropDown.items[0].value).toBe(filteredTowns[0]);
             expect(dropDown.items[1].focused).toBeFalsy();
             expect(dropDown.items[1].value).toBe(filteredTowns[1]);
-        }));
-        it('Should trigger selectionChanging event on item selection', fakeAsync(() => {
+        });
+        it('Should trigger selectionChanging event on item selection', async () => {
             let startsWith = 'st';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             vi.spyOn(autocomplete.selectionChanging, 'emit');
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(fixture.componentInstance.townSelected).toBe(filteredTowns[0]);
             expect(autocomplete.selectionChanging.emit).toHaveBeenCalledTimes(1);
 
             startsWith = 't';
             filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(fixture.componentInstance.townSelected).toBe(filteredTowns[0]);
             expect(autocomplete.selectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(autocomplete.selectionChanging.emit).toHaveBeenCalledWith({ value: 'Stara Zagora', cancel: false });
@@ -626,11 +560,10 @@ describe('IgxAutocomplete', () => {
                 args.cancel = true;
             };
             UIInteractions.setInputElementValue(input, 's', fixture);
-            tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             expect(fixture.componentInstance.townSelected).toBe('s');
-        }));
-        it('Should trigger selectionChanging only once when the event is cancelled (issue #7483)', fakeAsync(() => {
+        });
+        it('Should trigger selectionChanging only once when the event is cancelled (issue #7483)', async () => {
             vi.spyOn(autocomplete.selectionChanging, 'emit');
 
             fixture.componentInstance.selectionChanging = (args) => {
@@ -638,10 +571,8 @@ describe('IgxAutocomplete', () => {
             };
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
-            tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             expect(fixture.componentInstance.townSelected).toBe('s');
-            tick();
             fixture.detectChanges();
             expect(autocomplete.selectionChanging.emit).toHaveBeenCalledTimes(1);
             expect(autocomplete.selectionChanging.emit).toHaveBeenCalledWith({ value: 'Sofia', cancel: true });
@@ -651,15 +582,13 @@ describe('IgxAutocomplete', () => {
             };
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
-            tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             expect(fixture.componentInstance.townSelected).toBe('s');
-            tick();
             fixture.detectChanges();
             expect(autocomplete.selectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(autocomplete.selectionChanging.emit).toHaveBeenCalledWith({ value: 'Sofia', cancel: true });
-        }));
-        it('Should call onInput/open/close methods properly', fakeAsync(() => {
+        });
+        it('Should call onInput/open/close methods properly', async () => {
             let startsWith = 'g';
             vi.spyOn(autocomplete, 'onInput');
             vi.spyOn(autocomplete, 'handleKeyDown');
@@ -669,16 +598,12 @@ describe('IgxAutocomplete', () => {
             vi.spyOn(autocomplete.target.opening, 'emit');
 
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             fixture.detectChanges();
-            tick();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(1);
 
             startsWith = 'ga';
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             fixture.detectChanges();
-            tick();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(2);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
             // opening is emitted once, so no impact on UX
@@ -689,7 +614,6 @@ describe('IgxAutocomplete', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(1);
             expect(autocomplete.onInput).toHaveBeenCalledTimes(2);
             expect(autocomplete.close).toHaveBeenCalledTimes(1);
@@ -699,23 +623,19 @@ describe('IgxAutocomplete', () => {
             vi.spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown');
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(2);
             expect(IgxDropDownItemNavigationDirective.prototype.handleKeyDown).toHaveBeenCalledTimes(0);
 
             startsWith = 'w';
             UIInteractions.setInputElementValue(input, startsWith, fixture);
-            tick();
             fixture.detectChanges();
-            tick();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(3);
             // initially calls open 2 times. This has no effect on UX, as dropdown.opening is not emitted
             expect(autocomplete.target.opening.emit).toHaveBeenCalledTimes(2);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(2);
-        }));
-        it('Should navigate through dropdown items with arrow up/down keys', fakeAsync(() => {
+        });
+        it('Should navigate through dropdown items with arrow up/down keys', async () => {
             UIInteractions.setInputElementValue(input, 'a', fixture);
-            tick();
             expect(dropDown.items[0].focused).toBeTruthy();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
@@ -732,7 +652,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.items[0].focused).toBeTruthy();
             expect(dropDown.items[dropDown.items.length - 1].focused).toBeFalsy();
-        }));
+        });
         it('Should not overwrite browser functionality for Home/End keys', () => {
             UIInteractions.setInputElementValue(input, 'r', fixture);
             fixture.detectChanges();
@@ -767,7 +687,7 @@ describe('IgxAutocomplete', () => {
             const dropDownAny = dropDown as any;
             expect(dropDownAny.scrollContainer.getBoundingClientRect().width).toEqual(600);
         });
-        it('Should render aria attributes properly', fakeAsync(() => {
+        it('Should render aria attributes properly', async () => {
             expect(input.nativeElement.attributes['autocomplete'].value).toEqual('off');
             expect(input.nativeElement.attributes['role'].value).toEqual('combobox');
             expect(input.nativeElement.attributes['aria-autocomplete'].value).toEqual('list');
@@ -776,25 +696,22 @@ describe('IgxAutocomplete', () => {
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');
             expect(input.nativeElement.attributes['aria-activedescendant']).toBeUndefined();
             UIInteractions.setInputElementValue(input, 's', fixture);
-            tick();
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('true');
             expect(input.nativeElement.attributes['aria-activedescendant'].value).toEqual(dropDown.focusedItem.id);
             autocomplete.close();
-            tick();
             fixture.detectChanges();
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');
-        }));
-        it('Should accept Japanese input', fakeAsync(() => {
+        });
+        it('Should accept Japanese input', async () => {
             UIInteractions.setInputElementValue(input, '東京', fixture);
             fixture.detectChanges();
-            tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
             expect(input.value).toBe('東京');
-        }));
+        });
     });
     describe('Positioning settings tests', () => {
-        it('Panel settings - direction and startPoint: top', fakeAsync(() => {
+        it('Panel settings - direction and startPoint: top', async () => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.componentInstance.settings = {
                 positionStrategy: new ConnectedPositioningStrategy({
@@ -813,15 +730,14 @@ describe('IgxAutocomplete', () => {
 
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
-            tick();
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
             const ddRect = dropdownListElement.nativeElement.getBoundingClientRect();
             const gRect = group.element.nativeElement.getBoundingClientRect();
             expect(ddRect.bottom).toEqual(gRect.top);
             expect(ddRect.left).toEqual(gRect.left);
-        }));
+        });
 
-        it('Panel settings - direction: left; StartPoint: right', fakeAsync(() => {
+        it('Panel settings - direction: left; StartPoint: right', async () => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.componentInstance.settings = {
                 positionStrategy: new ConnectedPositioningStrategy({
@@ -840,17 +756,16 @@ describe('IgxAutocomplete', () => {
 
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
-            tick();
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
             const ddRect = dropdownListElement.nativeElement.getBoundingClientRect();
             const gRect = group.element.nativeElement.getBoundingClientRect();
             expect(ddRect.left).toEqual(gRect.left);
             expect(ddRect.right).toEqual(gRect.right);
             expect(ddRect.width).toEqual(gRect.width);
-        }));
+        });
     });
     describe('Other elements integration tests', () => {
-        it('Should be instantiated properly on HTML input', fakeAsync(() => {
+        it('Should be instantiated properly on HTML input', async () => {
             fixture = TestBed.createComponent(AutocompleteInputComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
@@ -863,7 +778,6 @@ describe('IgxAutocomplete', () => {
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
             UIInteractions.setInputElementValue(plainInput, startsWith, fixture);
-            tick();
             expect(dropDown.collapsed).toBeFalsy();
             expect(dropdownListScrollElement.children.length).toEqual(filteredTowns.length);
             expect(dropDown.children.first.focused).toBeTruthy();
@@ -872,12 +786,11 @@ describe('IgxAutocomplete', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', plainInput.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(plainInput.nativeElement.value).toBe(filteredTowns[0]);
-        }));
-        it('Should be instantiated properly on HTML textarea', fakeAsync(() => {
+        });
+        it('Should be instantiated properly on HTML textarea', async () => {
             fixture = TestBed.createComponent(AutocompleteInputComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
@@ -890,7 +803,6 @@ describe('IgxAutocomplete', () => {
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
             UIInteractions.setInputElementValue(textarea, startsWith, fixture);
-            tick();
             expect(dropDown.collapsed).toBeFalsy();
             expect(dropdownListScrollElement.children.length).toEqual(filteredTowns.length);
             expect(dropDown.children.first.focused).toBeTruthy();
@@ -899,15 +811,13 @@ describe('IgxAutocomplete', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', textarea.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(textarea.nativeElement.value).toBe(filteredTowns[0]);
-        }));
-        it('Should be instantiated properly on ReactiveForm', fakeAsync(() => {
+        });
+        it('Should be instantiated properly on ReactiveForm', async () => {
             fixture = TestBed.createComponent(AutocompleteFormComponent);
             fixture.detectChanges();
-            tick();
             autocomplete = fixture.componentInstance.autocomplete;
             input = fixture.componentInstance.input;
             group = fixture.componentInstance.group;
@@ -915,7 +825,6 @@ describe('IgxAutocomplete', () => {
             input.nativeElement.click();
             input.nativeElement.focus();
             UIInteractions.clickAndSendInputElementValue(input, 's', fixture);
-            tick();
             expect(dropDown.collapsed).toBeFalsy();
             expect(dropDown.children.first.focused).toBeTruthy();
             expect(dropDown.items[0].focused).toBeTruthy();
@@ -923,16 +832,14 @@ describe('IgxAutocomplete', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
-            tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.nativeElement.value).toBe('Sofia');
             expect(group.element.nativeElement.classList.contains('igx-input-group--valid')).toBeTruthy();
 
             fixture.componentInstance.plainInput.nativeElement.focus();
             fixture.detectChanges();
-            tick();
             expect(group.element.nativeElement.classList.contains('igx-input-group--valid')).toBeFalsy();
-        }));
+        });
     });
 });
 

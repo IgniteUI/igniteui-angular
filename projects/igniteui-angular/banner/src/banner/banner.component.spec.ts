@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
-import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,8 +24,8 @@ describe('igxBanner', () => {
     let bannerTextElement: DebugElement = null;
     let bannerActionsElement: DebugElement = null;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxBannerEmptyComponent,
@@ -36,7 +36,7 @@ describe('igxBanner', () => {
                 IgxBannerInitializedOpenComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('General tests: ', () => {
         it('Should initialize properly banner component with empty template', () => {
@@ -93,7 +93,7 @@ describe('igxBanner', () => {
             expect(buttons[1].innerHTML).toEqual('DISMISS');
         });
 
-        it('Should properly set base classes', fakeAsync(() => {
+        it('Should properly set base classes', async () => {
             const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
 
@@ -107,7 +107,7 @@ describe('igxBanner', () => {
 
             const banner = fixture.componentInstance.banner;
             banner.open();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             getBaseClassElements(fixture);
@@ -117,9 +117,9 @@ describe('igxBanner', () => {
             expect(bannerIllustrationElement).toBeDefined();
             expect(bannerTextElement).toBeDefined();
             expect(bannerActionsElement).toBeDefined();
-        }));
+        });
 
-        it('Should initialize banner with at least one and up to two buttons', fakeAsync(() => {
+        it('Should initialize banner with at least one and up to two buttons', async () => {
             const fixture: ComponentFixture<IgxBannerEmptyComponent> = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
 
@@ -133,7 +133,7 @@ describe('igxBanner', () => {
 
             const banner = fixture.componentInstance.banner;
             banner.open();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             getBaseClassElements(fixture);
@@ -145,7 +145,7 @@ describe('igxBanner', () => {
             expect(bannerActionsElement).not.toBeNull();
 
             banner.close();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             getBaseClassElements(fixture);
@@ -155,15 +155,15 @@ describe('igxBanner', () => {
             expect(bannerIllustrationElement).toBeNull();
             expect(bannerTextElement).toBeNull();
             expect(bannerActionsElement).toBeNull();
-        }));
+        });
 
-        it('Should position buttons next to the banner content', fakeAsync(() => {
+        it('Should position buttons next to the banner content', async () => {
             const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
 
             const banner: IgxBannerComponent = fixture.componentInstance.banner;
             banner.open();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             getBaseClassElements(fixture);
@@ -172,15 +172,15 @@ describe('igxBanner', () => {
             const bannerActionsElementTop = bannerActionsElement.nativeElement.getClientRects().y;
 
             expect(bannerMessageElementTop).toBe(bannerActionsElementTop);
-        }));
+        });
 
-        it('Should span the entire width of the parent element', fakeAsync(() => {
+        it('Should span the entire width of the parent element', async () => {
             const fixture: ComponentFixture<IgxBannerOneButtonComponent> = TestBed.createComponent(IgxBannerOneButtonComponent);
             fixture.detectChanges();
 
             const banner: IgxBannerComponent = fixture.componentInstance.banner;
             banner.open();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             getBaseClassElements(fixture);
@@ -194,9 +194,9 @@ describe('igxBanner', () => {
             expect(parentElementRect.top).toBe(bannerElementRect.top);
             expect(parentElementRect.right).toBe(bannerElementRect.right);
             expect(parentElementRect.bottom).toBe(bannerElementRect.bottom);
-        }));
+        });
 
-        it('Should push parent element content downwards on loading', fakeAsync(() => {
+        it('Should push parent element content downwards on loading', async () => {
             const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
 
@@ -205,7 +205,7 @@ describe('igxBanner', () => {
 
             const banner: IgxBannerComponent = fixture.componentInstance.banner;
             banner.open();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const bannerElementRect = banner.elementRef.nativeElement.getBoundingClientRect();
@@ -216,17 +216,17 @@ describe('igxBanner', () => {
             expect(pageContentElementTop).toBe(bannerElementRect.bottom);
 
             banner.close();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             pageContentElement = fixture.debugElement.query(By.css('#content'));
             pageContentElementTop = pageContentElement.nativeElement.getBoundingClientRect().top;
             expect(pageContentElementTop).toBe(bannerElementRect.top);
-        }));
+        });
     });
 
     describe('Action tests: ', () => {
-        it('Should dismiss/confirm banner on button clicking', fakeAsync(() => {
+        it('Should dismiss/confirm banner on button clicking', async () => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -240,7 +240,7 @@ describe('igxBanner', () => {
             vi.spyOn(banner, 'close');
 
             banner.open();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(banner.open).toHaveBeenCalledTimes(1);
@@ -260,7 +260,7 @@ describe('igxBanner', () => {
             const buttons = bannerActionsElement.nativeElement.querySelectorAll('button');
             expect(buttons.length).toEqual(2);
             buttons[0].click();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             getBaseClassElements(fixture);
@@ -273,7 +273,7 @@ describe('igxBanner', () => {
             expect(bannerActionsElement).toBeNull();
 
             banner.open();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             getBaseClassElements(fixture);
@@ -290,7 +290,7 @@ describe('igxBanner', () => {
             expect(bannerActionsElement).not.toBeNull();
 
             buttons[1].click();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             getBaseClassElements(fixture);
@@ -300,7 +300,7 @@ describe('igxBanner', () => {
             expect(banner.collapsed).toBeTruthy();
             expect(bannerMessageElement).toBeNull();
             expect(bannerActionsElement).toBeNull();
-        }));
+        });
 
         it('Should not be dismissed on user actions outside the component', () => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
@@ -334,7 +334,7 @@ describe('igxBanner', () => {
             targetDiv.parentNode.removeChild(targetDiv);
         });
 
-        it('Should properly emit events', fakeAsync(() => {
+        it('Should properly emit events', async () => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -348,20 +348,20 @@ describe('igxBanner', () => {
             expect(banner.closing.emit).toHaveBeenCalledTimes(0);
             expect(banner.closed.emit).toHaveBeenCalledTimes(0);
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             expect(banner.opening.emit).toHaveBeenCalledTimes(1);
             expect(banner.opened.emit).toHaveBeenCalledTimes(1);
             expect(banner.closing.emit).toHaveBeenCalledTimes(0);
             expect(banner.closed.emit).toHaveBeenCalledTimes(0);
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             expect(banner.opening.emit).toHaveBeenCalledTimes(1);
             expect(banner.opened.emit).toHaveBeenCalledTimes(1);
             expect(banner.closing.emit).toHaveBeenCalledTimes(1);
             expect(banner.closed.emit).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('Should properly cancel opening and closing', fakeAsync(() => {
+        it('Should properly cancel opening and closing', async () => {
             const fixture = TestBed.createComponent(SimpleBannerEventsComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -372,63 +372,63 @@ describe('igxBanner', () => {
             expect(banner.collapsed).toEqual(true);
             fixture.componentInstance.cancelFlag = true;
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             expect(banner.collapsed).toEqual(true);
             expect(banner.opening.emit).toHaveBeenCalledTimes(1);
             expect(banner.opened.emit).toHaveBeenCalledTimes(0);
             fixture.componentInstance.cancelFlag = false;
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             expect(banner.collapsed).toEqual(false);
             expect(banner.opening.emit).toHaveBeenCalledTimes(2);
             expect(banner.opened.emit).toHaveBeenCalledTimes(1);
             fixture.componentInstance.cancelFlag = true;
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             expect(banner.collapsed).toEqual(false);
             expect(banner.closing.emit).toHaveBeenCalledTimes(1);
             expect(banner.closed.emit).toHaveBeenCalledTimes(0);
             fixture.componentInstance.cancelFlag = false;
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             expect(banner.collapsed).toEqual(true);
             expect(banner.closing.emit).toHaveBeenCalledTimes(2);
             expect(banner.closed.emit).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('Should toggle banner state when expanded property changes', fakeAsync(() => {
+        it('Should toggle banner state when expanded property changes', async () => {
             const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
 
             banner.expanded = false;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(banner.expanded).toBe(false);
 
             banner.expanded = true;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(banner.expanded).toBe(true);
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
 
             banner.expanded = false;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(banner.expanded).toBe(false);
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
 
             banner.expanded = true;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(banner.expanded).toBe(true);
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
-        }));
+        });
     });
 
     describe('Rendering tests: ', () => {
-        it('Should apply all appropriate classes on initialization_default template', fakeAsync(() => {
+        it('Should apply all appropriate classes on initialization_default template', async () => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -443,7 +443,7 @@ describe('igxBanner', () => {
             expect(bannerTextElement).toBeNull();
             expect(bannerActionsElement).toBeNull();
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             getBaseClassElements(fixture);
             expect(bannerElement).not.toBeNull();
@@ -452,7 +452,7 @@ describe('igxBanner', () => {
             expect(bannerTextElement).not.toBeNull();
             expect(bannerActionsElement).not.toBeNull();
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             getBaseClassElements(fixture);
             expect(bannerElement).toBeNull();
@@ -460,9 +460,9 @@ describe('igxBanner', () => {
             expect(bannerIllustrationElement).toBeNull();
             expect(bannerTextElement).toBeNull();
             expect(bannerActionsElement).toBeNull();
-        }));
+        });
 
-        it('Should apply all appropriate classes on initialization_custom template', fakeAsync(() => {
+        it('Should apply all appropriate classes on initialization_custom template', async () => {
             const fixture = TestBed.createComponent(IgxBannerCustomTemplateComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -472,7 +472,7 @@ describe('igxBanner', () => {
             expect(panel.childElementCount).toEqual(0);
 
             banner.open();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panel.childElementCount).toEqual(1);
 
@@ -480,32 +480,32 @@ describe('igxBanner', () => {
             expect(panelBody.attributes.getNamedItem('class').nodeValue).toContain(CSS_CLASS_EXPANSION_PANEL_BODY);
             expect(panelBody.attributes.getNamedItem('role').nodeValue).toEqual('region');
             expect(panelBody.childElementCount).toEqual(1);
-        }));
+        });
 
-        it('Should apply the appropriate display style to the banner host', fakeAsync(() => {
+        it('Should apply the appropriate display style to the banner host', async () => {
             const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
             // Banner is collapsed, display is '';
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             // Banner is expanded, display is 'block';
             fixture.detectChanges();
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
             expect(banner.collapsed).toBeFalsy();
             banner.toggle();
-            tick();
+            await fixture.whenStable();
             // Banner is collapsING, display is 'block';
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             // Banner is collapsed, display is '';
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
             expect(banner.collapsed).toBeTruthy();
-        }));
+        });
 
-        it('Should apply the appropriate attributes on initialization', fakeAsync(() => {
+        it('Should apply the appropriate attributes on initialization', async () => {
             const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
             fixture.detectChanges();
 
@@ -513,9 +513,9 @@ describe('igxBanner', () => {
             expect(panel).not.toBeNull();
             expect(panel.attributes.getNamedItem('role').nodeValue).toEqual('status');
             expect(panel.attributes.getNamedItem('aria-live').nodeValue).toEqual('polite');
-        }));
+        });
 
-        it('Should initialize banner as open when expanded is set to true', fakeAsync(() => {
+        it('Should initialize banner as open when expanded is set to true', async () => {
             const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
@@ -523,7 +523,7 @@ describe('igxBanner', () => {
             expect(banner.expanded).toBe(true);
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
             expect(banner.elementRef.nativeElement.querySelector('.' + CSS_CLASS_BANNER)).not.toBeNull();
-        }));
+        });
     });
 
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {

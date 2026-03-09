@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -15,8 +15,8 @@ describe('Multi-View Calendar - ', () => {
     let fixture: ComponentFixture<any>;
     let calendar: any;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 MultiViewCalendarSampleComponent,
@@ -24,14 +24,14 @@ describe('Multi-View Calendar - ', () => {
                 MultiViewNgModelSampleComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests - ', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
             fixture.detectChanges();
             calendar = fixture.componentInstance.calendar;
-        }));
+        });
 
         it('should render properly when monthsViewNumber is initially set or changed runtime', () => {
             const today = new Date(Date.now());
@@ -202,15 +202,15 @@ describe('Multi-View Calendar - ', () => {
             { type: DateRangeType.Between, dateRange: [new Date(2020, 1, 25), new Date(2020, 2, 11)] }
         ];
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
             fixture.detectChanges();
             calendar = fixture.componentInstance.calendar;
             const viewDate = new Date(2019, 9, 25);
             calendar.viewDate = viewDate;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
         it('Verify navigation with arrow up', () => {
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
@@ -517,7 +517,7 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [ymd('2017-10-19'), ymd('2017-11-19'), ymd('2017-12-19')]);
         });
 
-        it('Verify navigation with Shift plus pageDown', fakeAsync(() => {
+        it('Verify navigation with Shift plus pageDown', async () => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild); // TODO: Use pointerdown for focus & remove
             UIInteractions.simulateClickAndSelectEvent(monthDates[16].firstChild);
@@ -536,7 +536,7 @@ describe('Multi-View Calendar - ', () => {
             expect(calendar.activeDate.getDate()).toEqual(17);
             expect(calendar.activeDate.getFullYear()).toEqual(2021);
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [oct2021, nov2021, dec2021]);
-        }));
+        });
 
         it('Verify navigation with Home and End keys', () => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
@@ -716,14 +716,14 @@ describe('Multi-View Calendar - ', () => {
         const octoberDate = ymd('2019-10-16');
         const novemberDate = ymd('2019-11-16');
         const decemberDate = ymd('2019-12-16');
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
             fixture.detectChanges();
             calendar = fixture.componentInstance.calendar;
             calendar.viewDate = new Date(2019, 8, 1); // 1st September 2019
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
 
         it('should select the days in only in of the months in single/multi selection mode', () => {
@@ -999,14 +999,14 @@ describe('Multi-View Calendar - ', () => {
     });
 
     describe('Selection tests with ngModel - ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(MultiViewNgModelSampleComponent);
             fixture.detectChanges();
             calendar = fixture.componentInstance.calendar;
             calendar.viewDate = new Date(2019, 8, 1); // 1st September 2019
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
         it('Should be able to select/deselect dates in multi mode', () => {
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
@@ -1032,19 +1032,21 @@ describe('Multi-View Calendar - ', () => {
     describe('DatePicker/Calendar Integration Tests - ', () => {
         let datePicker;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(MultiViewDatePickerSampleComponent);
             fixture.detectChanges();
             datePicker = fixture.componentInstance.datePicker;
-        }));
+        });
         afterEach(() => {
             UIInteractions.clearOverlay();
+            vi.useRealTimers();
         });
 
-        it('Verify opening Multi View Calendar from datepicker', fakeAsync(() => {
+        it('Verify opening Multi View Calendar from datepicker', () => {
+            vi.useFakeTimers();
             let target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
             UIInteractions.simulateClickAndSelectEvent(target);
-            tick(400);
+            vi.advanceTimersByTime(400);
             fixture.detectChanges();
 
             let overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
@@ -1053,17 +1055,17 @@ describe('Multi-View Calendar - ', () => {
 
             // close the datePicker
             datePicker.close();
-            tick(400);
+            vi.advanceTimersByTime(400);
             fixture.detectChanges();
 
             datePicker.mode = 'dropdown';
             datePicker.displayMonthsCount = 2;
-            tick();
+            vi.runAllTimers();
             fixture.detectChanges();
 
             target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
             UIInteractions.simulateClickAndSelectEvent(target);
-            tick(400);
+            vi.advanceTimersByTime(400);
             fixture.detectChanges();
 
             overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
@@ -1071,13 +1073,14 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [ymd('2019-09-16'), ymd('2019-10-16')]);
 
             // clean up test
-            tick(350);
-        }));
+            vi.advanceTimersByTime(350);
+        });
 
-        it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', fakeAsync(() => {
+        it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', () => {
+            vi.useFakeTimers();
             const target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
             UIInteractions.simulateClickAndSelectEvent(target);
-            tick(400);
+            vi.advanceTimersByTime(400);
             fixture.detectChanges();
 
             expect(datePicker.hideOutsideDays).toBe(true);
@@ -1088,15 +1091,15 @@ describe('Multi-View Calendar - ', () => {
 
             // close the datePicker
             datePicker.close();
-            tick(400);
+            vi.advanceTimersByTime(400);
             fixture.detectChanges();
 
             datePicker.hideOutsideDays = false;
-            tick();
+            vi.runAllTimers();
             fixture.detectChanges();
 
             UIInteractions.simulateClickAndSelectEvent(target);
-            tick(400);
+            vi.advanceTimersByTime(400);
             fixture.detectChanges();
 
             expect(datePicker.hideOutsideDays).toBe(false);
@@ -1106,8 +1109,8 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(5);
 
             // clean up test
-            tick(350);
-        }));
+            vi.advanceTimersByTime(350);
+        });
     });
 });
 

@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
@@ -103,11 +103,11 @@ describe('IgxChip', () => {
     let fix: ComponentFixture<TestChipComponent | TestChipsLabelAndSuffixComponent>;
     let chipArea;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [TestChipComponent, TestChipsLabelAndSuffixComponent]
         }).compileComponents();
-    }));
+    });
 
     describe('Rendering Tests: ', () => {
         beforeEach(() => {
@@ -313,8 +313,7 @@ describe('IgxChip', () => {
             });
         });
 
-        it('should fire selectedChanged event when selectable is true', (async () => {
-            pending('This should be tested in the e2e test');
+        it.skip('should fire selectedChanged event when selectable is true', (async () => {
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
 
             vi.spyOn(secondChipComp.selectedChanging, 'emit');

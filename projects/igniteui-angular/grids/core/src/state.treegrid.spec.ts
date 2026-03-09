@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
@@ -22,17 +22,17 @@ import { describe, it, expect, beforeEach } from 'vitest';
 describe('IgxTreeGridState - input properties #tGrid', () => {
     let fix;
     let grid;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxTreeGridTreeDataTestComponent]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fix = TestBed.createComponent(IgxTreeGridTreeDataTestComponent);
         fix.detectChanges();
         grid = fix.componentInstance.treeGrid;
-    }));
+    });
 
     it('should initialize an IgxGridState with default options object', () => {
         const defaultOptions = {

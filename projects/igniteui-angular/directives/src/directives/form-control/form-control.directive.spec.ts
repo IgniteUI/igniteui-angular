@@ -1,5 +1,5 @@
 import { Component, DebugElement, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
@@ -16,17 +16,17 @@ describe('IgcFormControlDirective - ', () => {
 
     describe('Unit tests: ', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             defineComponents(IgcRatingComponent);
 
-            TestBed.configureTestingModule({
+            await TestBed.configureTestingModule({
                 providers: [
                     { provide: ElementRef, useValue: elementRef },
                     { provide: Renderer2, useValue: renderer2Mock },
                     IgcFormControlDirective
                 ]
             });
-        }));
+        });
 
         const elementRef = { nativeElement: document.createElement('igc-rating') };
 
@@ -34,7 +34,6 @@ describe('IgcFormControlDirective - ', () => {
             writeValue: vi.fn().mockName("NgControl.writeValue"),
             onChange: vi.fn().mockName("NgControl.onChange"),
             setDisabledState: vi.fn().mockName("NgControl.setDisabledState"),
-            onChange: vi.fn().mockName("NgControl.onChange"),
             registerOnChangeCb: vi.fn().mockName("NgControl.registerOnChangeCb"),
             registerOnTouchedCb: vi.fn().mockName("NgControl.registerOnTouchedCb")
         };
@@ -69,23 +68,23 @@ describe('IgcFormControlDirective - ', () => {
     });
 
     describe('ngModel two-way binding tests: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     IgxFormsControlComponent
                 ]
             }).compileComponents();
             defineComponents(IgcRatingComponent);
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxFormsControlComponent);
             fixture.detectChanges();
             input = fixture.debugElement.query(By.css(`#basicModelRating`));
             rating = fixture.debugElement.query(By.directive(IgcFormControlDirective)).nativeElement;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
         it('Should properly init for igc-rating.', () => {
             directive = fixture.componentInstance.directive;

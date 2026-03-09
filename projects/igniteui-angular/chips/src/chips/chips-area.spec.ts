@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
@@ -110,15 +110,15 @@ describe('IgxChipsArea ', () => {
     let chipArea: IgxChipsAreaComponent;
     let chipAreaElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 TestChipComponent,
                 TestChipReorderComponent,
                 TestChipSelectComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Basic', () => {
         beforeEach(() => {

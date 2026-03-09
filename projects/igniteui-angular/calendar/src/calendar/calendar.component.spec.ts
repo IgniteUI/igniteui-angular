@@ -1,5 +1,5 @@
 import { Component, DebugElement, LOCALE_ID, ViewChild } from "@angular/core";
-import { TestBed, tick, fakeAsync, flush, waitForAsync, ComponentFixture, } from "@angular/core/testing";
+import { TestBed, ComponentFixture } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -8,7 +8,7 @@ import { registerLocaleData } from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
 
 import { Calendar, IgxCalendarComponent, IgxCalendarView, isLeap, IViewDateChangeEventArgs, monthRange, weekDay, } from "./public_api";
-import { UIInteractions } from "../../../test-utils/ui-interactions.spec";
+import { UIInteractions, wait } from "../../../test-utils/ui-interactions.spec";
 import { DateRangeDescriptor, DateRangeType, } from "../../../core/src/core/dates/dateRange";
 
 import { IgxDayItemComponent } from "./days-view/day-item.component";
@@ -109,8 +109,8 @@ describe("IgxCalendar - ", () => {
 
     describe("Basic -", () => {
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxCalendarSampleComponent,
@@ -119,20 +119,20 @@ describe("IgxCalendar - ", () => {
                     IgxCalendarValueComponent,
                 ],
             }).compileComponents();
-        }));
+        });
 
         describe("Calendar - ", () => {
             let fixture: ComponentFixture<any>;
             let calendar: IgxCalendarComponent;
             let dom: DebugElement;
 
-            beforeEach(waitForAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
 
                 fixture.detectChanges();
                 calendar = fixture.componentInstance.calendar;
                 dom = fixture.debugElement;
-            }));
+            });
             afterEach(() => {
                 fixture = undefined;
                 calendar = undefined;
@@ -742,10 +742,10 @@ describe("IgxCalendar - ", () => {
             describe("Keyboard Navigation - ", () => {
                 let component: DebugElement;
 
-                beforeEach(waitForAsync(() => {
+                beforeEach(async () => {
                     component = dom.query(By.css(HelperTestFunctions.CALENDAR_WRAPPER_CLASS));
                     component.nativeElement.focus();
-                }));
+                });
 
                 it("Calendar keyboard navigation - PageUp/PageDown", () => {
                     UIInteractions.triggerKeyDownEvtUponElem("PageUp", component.nativeElement);
@@ -1120,11 +1120,11 @@ describe("IgxCalendar - ", () => {
             });
 
             describe("Disabled special dates - ", () => {
-                beforeEach(waitForAsync(() => {
+                beforeEach(async () => {
                     fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
                     fixture.detectChanges();
                     calendar = fixture.componentInstance.calendar;
-                }));
+                });
 
                 it("Should be able to set disabled and active dates as @Input", () => {
                     expect(calendar.specialDates).toEqual([
@@ -1236,12 +1236,12 @@ describe("IgxCalendar - ", () => {
             describe("Select and deselect dates - ", () => {
                 let ci: any;
 
-                beforeEach(waitForAsync(() => {
+                beforeEach(async () => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
                     ci = fixture.componentInstance;
                     calendar = ci.calendar;
-                }));
+                });
 
                 it('Deselect using API. Should deselect in "single" selection mode.', () => {
                     const date = calendar.viewDate;
@@ -1739,21 +1739,21 @@ describe("IgxCalendar - ", () => {
             });
 
             describe("Advanced KB Navigation - ", () => {
-                beforeEach(waitForAsync(() => {
+                beforeEach(async () => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
                     calendar = fixture.componentInstance.calendar;
                     dom = fixture.debugElement;
-                }));
+                });
 
-                it("Should navigate to the previous/next month via KB.", fakeAsync(() => {
+                it("Should navigate to the previous/next month via KB.", async () => {
                     const prev = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS))[0];
                     prev.nativeElement.focus();
 
                     expect(prev.nativeElement).toBe(document.activeElement);
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", prev.nativeElement);
                     fixture.detectChanges();
-                    tick(100);
+                    await wait(100);
 
                     expect(calendar.viewDate.getMonth()).toEqual(4);
                     const next = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS))[0];
@@ -1763,15 +1763,15 @@ describe("IgxCalendar - ", () => {
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", next.nativeElement);
 
                     fixture.detectChanges();
-                    tick(100);
+                    await wait(100);
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", next.nativeElement);
-                    tick(100);
+                    await wait(100);
                     fixture.detectChanges();
 
                     expect(calendar.viewDate.getMonth()).toEqual(6);
-                }));
+                });
 
-                it("Should open years view, navigate through and select an year via KB.", fakeAsync(() => {
+                it("Should open years view, navigate through and select an year via KB.", async () => {
                     const year = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS))[1];
                     year.nativeElement.focus();
 
@@ -1781,7 +1781,7 @@ describe("IgxCalendar - ", () => {
 
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", document.activeElement);
                     fixture.detectChanges();
-                    tick();
+                    await fixture.whenStable();
 
                     expect(calendar.activeViewChanged.emit).toHaveBeenCalledTimes(1);
                     expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(IgxCalendarView.Decade);
@@ -1812,7 +1812,7 @@ describe("IgxCalendar - ", () => {
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", document.activeElement);
 
                     fixture.detectChanges();
-                    tick();
+                    await fixture.whenStable();
 
                     const eventArgs: IViewDateChangeEventArgs = {
                         previousValue,
@@ -1821,9 +1821,9 @@ describe("IgxCalendar - ", () => {
                     expect(calendar.viewDateChanged.emit).toHaveBeenCalledTimes(1);
                     expect(calendar.viewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
                     expect(calendar.viewDate.getFullYear()).toEqual(2016);
-                }));
+                });
 
-                it("Should open months view, navigate through and select a month via KB.", fakeAsync(() => {
+                it("Should open months view, navigate through and select a month via KB.", async () => {
                     const month = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS))[0];
                     month.nativeElement.focus();
                     vi.spyOn(calendar.activeViewChanged, "emit");
@@ -1832,7 +1832,7 @@ describe("IgxCalendar - ", () => {
 
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", document.activeElement);
                     fixture.detectChanges();
-                    tick();
+                    await fixture.whenStable();
 
                     expect(calendar.activeViewChanged.emit).toHaveBeenCalledTimes(1);
                     expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(IgxCalendarView.Year);
@@ -1870,7 +1870,7 @@ describe("IgxCalendar - ", () => {
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", document.activeElement);
                     fixture.detectChanges();
 
-                    tick();
+                    await fixture.whenStable();
 
                     const eventArgs: IViewDateChangeEventArgs = {
                         previousValue,
@@ -1879,7 +1879,7 @@ describe("IgxCalendar - ", () => {
                     expect(calendar.viewDateChanged.emit).toHaveBeenCalledTimes(1);
                     expect(calendar.viewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
                     expect(calendar.viewDate.getMonth()).toEqual(8);
-                }));
+                });
 
                 it('Should navigate to the first enabled date from the previous month when using "arrow up" key.', () => {
                     const dateRangeDescriptors: DateRangeDescriptor[] = [];
@@ -2074,7 +2074,7 @@ describe("IgxCalendar - ", () => {
             let prevMonthBtn: HTMLElement;
             let nextMonthBtn: HTMLElement;
 
-            beforeEach(waitForAsync(() => {
+            beforeEach(async () => {
                 TestBed.overrideProvider(LOCALE_ID, { useValue: "fr" });
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                 fixture.detectChanges();
@@ -2083,43 +2083,43 @@ describe("IgxCalendar - ", () => {
 
                 prevMonthBtn = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS))[0].nativeElement;
                 nextMonthBtn = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS))[0].nativeElement;
-            }));
+            });
 
-            it("Should increment/decrement months continuously on mousedown.", fakeAsync(() => {
+            it("Should increment/decrement months continuously on mousedown.", async () => {
                 expect(calendar.viewDate.getMonth()).toEqual(5);
                 // Have no idea how this test worked before,
                 // changing expectation based on my udnerstanding of that the test does
                 UIInteractions.simulateMouseEvent("mousedown", prevMonthBtn, 0, 0);
-                tick();
+                await fixture.whenStable();
                 UIInteractions.simulateMouseEvent("mouseup", prevMonthBtn, 0, 0);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(4);
 
                 UIInteractions.simulateMouseEvent("mousedown", nextMonthBtn, 0, 0);
-                tick();
+                await fixture.whenStable();
                 UIInteractions.simulateMouseEvent("mouseup", nextMonthBtn, 0, 0);
                 fixture.detectChanges();
-                flush();
+                await fixture.whenStable();
                 expect(calendar.viewDate.getMonth()).toEqual(5);
-            }));
+            });
 
-            it("Should increment/decrement months continuously on enter keydown.", fakeAsync(() => {
+            it("Should increment/decrement months continuously on enter keydown.", async () => {
                 expect(calendar.viewDate.getMonth()).toEqual(5);
 
                 prevMonthBtn.focus();
                 UIInteractions.triggerKeyDownEvtUponElem("Enter", prevMonthBtn);
-                tick(100);
+                await wait(100);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(4);
 
                 nextMonthBtn.focus();
                 UIInteractions.triggerKeyDownEvtUponElem("Enter", nextMonthBtn);
-                tick(100);
+                await wait(100);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(5);
-            }));
+            });
 
-            it("Should prioritize weekStart property over locale.", fakeAsync(() => {
+            it("Should prioritize weekStart property over locale.", async () => {
                 calendar.locale = "en";
                 fixture.detectChanges();
                 expect(calendar.weekStart).toEqual(0);
@@ -2131,10 +2131,10 @@ describe("IgxCalendar - ", () => {
                 fixture.detectChanges();
 
                 expect(calendar.weekStart).toEqual(5);
-                flush();
-            }));
+                await fixture.whenStable();
+            });
 
-            it("Should throw error when setting incorrect locale", fakeAsync(() => {
+            it("Should throw error when setting incorrect locale", async () => {
                 let errorThrown;
                 try {
                     calendar.locale = "frrr";
@@ -2144,10 +2144,10 @@ describe("IgxCalendar - ", () => {
                 }
 
                 expect(errorThrown).not.toBeUndefined();
-                flush();
-            }));
+                await fixture.whenStable();
+            });
 
-            it("Should setting the global LOCALE_ID, Calendar must be displayed per current locale.", fakeAsync(() => {
+            it("Should setting the global LOCALE_ID, Calendar must be displayed per current locale.", async () => {
                 // Verify locale is set respecting the globally LOCALE_ID provider
                 expect(calendar.locale).toEqual("fr");
 
@@ -2180,8 +2180,8 @@ describe("IgxCalendar - ", () => {
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch("2022");
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch("juin");
 
-                flush();
-            }));
+                await fixture.whenStable();
+            });
         });
     });
 });
@@ -2256,9 +2256,8 @@ class DateTester {
     // tests whether a date is disabled or not
     public static testDatesAvailability(dates: IgxDayItemComponent[], disabled: boolean) {
         for (const day of dates) {
-            expect(day.isDisabled).toBe(disabled, day.date.native.toLocaleDateString() + " is not disabled");
-            expect(day.isDisabledCSS).toBe(disabled, day.date.native.toLocaleDateString() +
-                " is not with disabled style");
+            expect(day.isDisabled, day.date.native.toLocaleDateString() + " is not disabled").toBe(disabled, );
+            expect(day.isDisabledCSS, day.date.native.toLocaleDateString() + " is not with disabled style").toBe(disabled);
         }
     }
 

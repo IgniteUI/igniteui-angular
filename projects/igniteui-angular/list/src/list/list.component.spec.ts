@@ -1,5 +1,5 @@
 import { QueryList } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
@@ -12,8 +12,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('List', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 CustomEmptyListComponent,
                 EmptyListComponent,
@@ -29,7 +29,7 @@ describe('List', () => {
                 ListWithSelectedItemComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should initialize igx-list with item and header', () => {
         const fixture = TestBed.createComponent(ListWithHeaderComponent);
@@ -483,7 +483,7 @@ describe('List', () => {
         expect(list.resetPan.emit).toHaveBeenCalledTimes(1);
     });
 
-    it('checking the panLeftTemplate is not visible when releasing a list item.', fakeAsync(() => {
+    it('checking the panLeftTemplate is not visible when releasing a list item.', async () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -495,12 +495,12 @@ describe('List', () => {
 
         /* Pan item left */
         panItem(itemNativeElements[1], -0.3);
-        tick(600);
+        await wait(600);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
-    }));
+    });
 
-    it('checking the panRightTemplate is not visible when releasing a list item.', fakeAsync(() => {
+    it('checking the panRightTemplate is not visible when releasing a list item.', async () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -512,12 +512,11 @@ describe('List', () => {
 
         /* Pan item right */
         panItem(itemNativeElements[1], 0.3);
-        tick(600);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
-    }));
+    });
 
-    it('cancel left panning', fakeAsync(() => {
+    it('cancel left panning', async () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -532,16 +531,16 @@ describe('List', () => {
 
         /* Pan item left */
         cancelItemPanning(itemNativeElements[1], -2, -8);
-        tick(600);
+        await wait(600);
 
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(list.startPan.emit).toHaveBeenCalledTimes(1);
         expect(list.endPan.emit).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('cancel right panning', fakeAsync(() => {
+    it('cancel right panning', async () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -556,14 +555,14 @@ describe('List', () => {
 
         /* Pan item right */
         cancelItemPanning(itemNativeElements[1], 2, 8);
-        tick(600);
+        await wait(600);
 
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(list.startPan.emit).toHaveBeenCalledTimes(1);
         expect(list.endPan.emit).toHaveBeenCalledTimes(1);
-    }));
+    });
 
     it('checking the header list item does not have panning and content containers.', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
@@ -612,7 +611,7 @@ describe('List', () => {
         unsubscribeEvents(list);
     });
 
-    it('should allow setting the index of list items', (async () => {
+    it('should allow setting the index of list items', async () => {
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
         await wait(50);
@@ -627,9 +626,9 @@ describe('List', () => {
         expect(fixture.componentInstance.forOfList.items[0].index).toEqual(3);
         expect(items[len - 1].nativeElement.textContent).toContain('10');
         expect(fixture.componentInstance.forOfList.items[len - 1].index).toEqual(9);
-    }));
+    });
 
-    it('should return items as they appear in the list with virtualization', (async () => {
+    it('should return items as they appear in the list with virtualization', async () => {
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
         await wait(50);
@@ -644,7 +643,7 @@ describe('List', () => {
         for (let i = 0; i < len; i++) {
             expect(dItems[i].nativeElement).toEqual(pItems[i].element);
         }
-    }));
+    });
 
     it('should properly set and get the selected property of list items', () => {
         const fixture = TestBed.createComponent(ListWithSelectedItemComponent);
