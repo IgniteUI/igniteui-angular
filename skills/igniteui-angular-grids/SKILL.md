@@ -1,7 +1,7 @@
 ---
 name: igniteui-angular-grids
-description: "All grid topics for Ignite UI Angular: grid setup, column configuration, sorting, filtering, selection, editing, grouping, summaries, toolbar, export, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, and Pivot Grid. Use for any grid-related question."
-user-invokable: true
+description: "Provides guidance on all Ignite UI for Angular data grid types (Flat Grid, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) including setup, column configuration, sorting, filtering, selection, editing, grouping, summaries, toolbar, export, paging, remote data, and state persistence. Use when users ask about grids, tables, data grids, tabular data display, cell editing, batch editing, row selection, column pinning, column hiding, grouping rows, pivot tables, tree-structured data, hierarchical data, master-detail views, or exporting grid data. Do NOT use for non-grid UI components (forms, dialogs, navigation, charts) — use igniteui-angular-components instead. Do NOT use for theming or styling — use igniteui-angular-theming instead."
+user-invocable: true
 ---
 
 # Ignite UI for Angular — Data Grids
@@ -21,8 +21,8 @@ Use the Grid Selection Decision Guide below. If the grid type is not explicitly 
 **STEP 2 — Identify every task category involved.**
 Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., remote paging AND editing requires reading both `paging-remote.md` AND `editing.md`).
 
-**STEP 3 — Read every identified reference file in full.**
-Call `read_file` (or equivalent) on each reference file identified in Step 2. You must do this even if you believe you already know the answer. Do not skip, skim, or partially read a reference file.
+**STEP 3 — Read every identified reference file in full (PARALLEL).**
+Call `read_file` (or equivalent) on **all** reference files identified in Step 2 **in a single parallel batch** — do NOT read them one at a time sequentially. You must do this even if you believe you already know the answer. Do not skip, skim, or partially read a reference file.
 
 **STEP 4 — Only then produce output.**
 Base your code and explanation exclusively on what you read in Step 3. If the reference files do not cover something, say so explicitly rather than guessing.
@@ -33,11 +33,11 @@ Base your code and explanation exclusively on what you read in Step 3. If the re
 |---|---|
 | Grid type selection, column config, column templates, column groups, MRL, pinning, sorting UI, filtering UI, selection | [`references/structure.md`](./references/structure.md) |
 | Grouping, summaries, cell merging, toolbar, export, row drag, action strip, master-detail, clipboard | [`references/features.md`](./references/features.md) |
-| Tree Grid specifics, Hierarchical Grid specifics, Grid Lite setup, Pivot Grid setup | [`references/types.md`](./references/types.md) |
+| Tree Grid specifics, Hierarchical Grid specifics, Grid Lite setup, Grid Lite data operations, Pivot Grid setup | [`references/types.md`](./references/types.md) |
 | Programmatic sorting / filtering / grouping, canonical import patterns, `viewChild` access | [`references/data-operations.md`](./references/data-operations.md) |
 | Cell editing, row editing, batch editing, transactions, validation, summaries | [`references/editing.md`](./references/editing.md) |
 | Paging, remote data, server-side ops, noop strategies, virtual scroll, multi-grid coordination | [`references/paging-remote.md`](./references/paging-remote.md) |
-| State persistence, Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite data operations | [`references/state.md`](./references/state.md) |
+| State persistence, Tree Grid / Hierarchical Grid / Pivot Grid data operations | [`references/state.md`](./references/state.md) |
 
 > **When in doubt, read more rather than fewer reference files.** The cost of an unnecessary file read is negligible; the cost of hallucinated API usage is a broken application.
 
