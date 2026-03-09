@@ -152,6 +152,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public onConditionsChanged(eventArgs: any) {
         const value = (eventArgs.newSelection as IgxSelectComponent).value;
         this.expressionUI.expression.condition = this.getCondition(value);
+        this.expressionUI.expression.conditionName = value;
 
         this.focus();
     }
