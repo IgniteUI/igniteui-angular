@@ -9,35 +9,6 @@
 $_theme: $material;
 
 @include layer(base) {
-    // This placeholder is needed to fix the specificity order
-    %item {
-        color: var-get($_theme, 'item-text-color');
-
-        igx-icon {
-            color: var-get($_theme, 'item-icon-color');
-        }
-    }
-
-    // This placeholder is needed to fix the specificity order
-    %hover-item {
-        background: var-get($_theme, 'item-hover-background');
-        color: var-get($_theme, 'item-hover-text-color');
-        box-shadow: none;
-
-        igx-icon {
-            color: var-get($_theme, 'item-hover-icon-color');
-        }
-    }
-
-    %active {
-        color: var-get($_theme, 'item-active-text-color');
-        background: var-get($_theme, 'item-active-background');
-
-        igx-icon {
-            color: var-get($_theme, 'item-active-icon-color');
-        }
-    }
-
     @include b(igx-nav-drawer) {
         // TODO: These should probably be a part of the design tokens schema
         --ig-nav-drawer-size: #{rem(240px)};
@@ -190,8 +161,6 @@ $_theme: $material;
     }
 
     @include b(igx-nav-drawer-item) {
-        @extend %item;
-
         position: relative;
         display: flex;
         align-items: center;
@@ -208,8 +177,10 @@ $_theme: $material;
         border: none;
         justify-content: flex-start;
         contain: paint layout content;
+        color: var-get($_theme, 'item-text-color');
 
         igx-icon {
+            --item-icon-color: inherit;
             --component-size: 3;
         }
 
@@ -232,18 +203,10 @@ $_theme: $material;
             }
         }
 
-        &:hover,
-        &:focus {
-            @extend %hover-item;
-        }
-
-        @include m(active) {
-            @extend %active;
-
-            &:focus,
-            &:hover {
-                @extend %active;
-            }
+        &:hover:not(.igx-nav-drawer-item--active),
+        &:focus:not(.igx-nav-drawer-item--active) {
+            background: var-get($_theme, 'item-hover-background');
+            color: var-get($_theme, 'item-hover-text-color');
         }
 
         @include m(header) {

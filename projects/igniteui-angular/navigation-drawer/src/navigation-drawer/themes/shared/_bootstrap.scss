@@ -1,6 +1,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
 
 @include themed-block(igx-nav-drawer, bootstrap) {
     --aside-padding: #{rem(16px)};
@@ -13,6 +16,25 @@
 
 @include themed-block(igx-nav-drawer-item, bootstrap) {
     @include type-style('body-2');
+
+    @include m(active) {
+        color: var-get($_theme, 'item-active-text-color');
+        background: var-get($_theme, 'item-active-background');
+
+        igx-icon {
+            color: var-get($_theme, 'item-active-icon-color');
+        }
+
+        &:focus,
+        &:hover {
+            color: var-get($_theme, 'item-active-text-color');
+            background: var-get($_theme, 'item-active-background');
+
+            igx-icon {
+                color: var-get($_theme, 'item-active-icon-color');
+            }
+        }
+    }
 
     @include m(header) {
         @include type-style('caption');

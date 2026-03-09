@@ -27,7 +27,7 @@
             <span igxDrawerItem [isHeader]="true">Components</span>
 
             @for (item of filteredComponentLinks(); track item) {
-                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
                     <igx-icon>{{item.icon}}</igx-icon>
                     <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
@@ -42,7 +42,7 @@
       <span igxDrawerItem [isHeader]="true">Directives</span>
 
             @for (item of filteredDirectiveLinks(); track item) {
-                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
                     <igx-icon>{{item.icon}}</igx-icon>
                     <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
@@ -51,7 +51,7 @@
       <span igxDrawerItem [isHeader]="true">Style</span>
 
             @for (item of filteredStyleLinks(); track item) {
-                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
                     <igx-icon>{{item.icon}}</igx-icon>
                     <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>

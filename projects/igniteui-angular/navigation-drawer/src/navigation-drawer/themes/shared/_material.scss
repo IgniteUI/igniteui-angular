@@ -43,14 +43,16 @@ $_theme: $material;
     }
 
     @include m(active) {
-        background: unset;
+        color: var-get($_theme, 'item-active-text-color');
 
         &::after {
             background: var-get($_theme, 'item-active-background');
         }
 
-        &:hover,
-        &:focus {
+        &:focus,
+        &:hover {
+            color: var-get($_theme, 'item-active-text-color');
+
             &::after {
                 background: var-get($_theme, 'item-active-background');
             }
