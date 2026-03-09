@@ -3,6 +3,21 @@
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 > For app setup, providers, and import patterns — see [`setup.md`](./setup.md).
 
+## Contents
+
+- [Input Group](#input-group)
+- [Combo (Multi-Select Dropdown)](#combo-multi-select-dropdown)
+- [Simple Combo (Single-Select)](#simple-combo-single-select)
+- [Select](#select)
+- [Date Picker](#date-picker)
+- [Date Range Picker](#date-range-picker)
+- [Time Picker](#time-picker)
+- [Calendar](#calendar)
+- [Checkbox, Radio, Switch](#checkbox-radio-switch)
+- [Slider](#slider)
+- [Reactive Forms Integration](#reactive-forms-integration)
+- [Key Rules](#key-rules)
+
 ## Input Group
 
 > **Docs:** [Input Group](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)
