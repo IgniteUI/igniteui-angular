@@ -26,14 +26,11 @@ jobs:
 
       - name: Install eval dependencies
         working-directory: evals
-        run: npm install
+        run: npm install --ignore-scripts
 
-      - name: Run skill evals
+      - name: Validate graders against reference solutions
         working-directory: evals
-        run: npx skill-eval _ --suite=all --trials=5
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: bash run-eval.sh --all --validate
 
       - name: Upload results
         if: always()

@@ -4,16 +4,15 @@
   "description": "Evaluation suite for Ignite UI for Angular agent skills",
   "private": true,
   "scripts": {
-    "eval": "npx skill-eval",
-    "eval:grid": "npx skill-eval grid-basic-setup",
-    "eval:combo": "npx skill-eval component-combo-reactive-form",
-    "eval:theming": "npx skill-eval theming-palette-generation",
-    "eval:all": "npx skill-eval _ --suite=all",
-    "preview": "npx skill-eval preview",
-    "preview:browser": "npx skill-eval preview browser"
-  },
-  "dependencies": {
-    "skill-eval": "^1.0.0"
+    "eval": "bash run-eval.sh",
+    "eval:grid": "bash run-eval.sh grid-basic-setup",
+    "eval:combo": "bash run-eval.sh component-combo-reactive-form",
+    "eval:theming": "bash run-eval.sh theming-palette-generation",
+    "eval:all": "bash run-eval.sh --all",
+    "validate": "bash run-eval.sh --all --validate",
+    "validate:grid": "bash run-eval.sh grid-basic-setup --validate",
+    "validate:combo": "bash run-eval.sh component-combo-reactive-form --validate",
+    "validate:theming": "bash run-eval.sh theming-palette-generation --validate"
   },
   "engines": {
     "node": ">=20.0.0"
