@@ -6,6 +6,14 @@
 > For editing and validation — see [`editing.md`](./editing.md).
 > For state persistence — see [`state.md`](./state.md).
 
+## Contents
+
+- [Accessing the Grid Instance](#accessing-the-grid-instance)
+- [Sorting](#sorting)
+- [Filtering](#filtering)
+- [Grouping (Flat Grid Only)](#grouping-flat-grid-only)
+- [Key Rules](#key-rules)
+
 ## Accessing the Grid Instance
 
 All programmatic data operations require a reference to the grid component. Use `viewChild` with the **correct component type** for your grid.
@@ -249,7 +257,8 @@ import {
   IgxBooleanFilteringOperand,
   FilteringExpressionsTree,
   FilteringLogic
-} from 'igniteui-angular';
+} from 'igniteui-angular/core';
+// import { ... } from '@infragistics/igniteui-angular/core'; for licensed package
 
 // Simple single-column filter
 this.gridRef().filter('name', 'John', IgxStringFilteringOperand.instance().condition('contains'), true);
