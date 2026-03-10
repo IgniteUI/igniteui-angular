@@ -1,0 +1,70 @@
+<h2>Signal Forms Demo</h2>
+<p>Demonstrates Ignite UI Angular form components with Angular signal forms.</p>
+
+<div class="form-container">
+    <h3>Text Input (native)</h3>
+    <igx-input-group>
+        <label igxLabel for="fullName">Full Name</label>
+        <input igxInput id="fullName" type="text" [formField]="signalForm.fullName" />
+        @if (signalForm.fullName().errors().length) {
+            <igx-hint>Full name is required</igx-hint>
+        }
+    </igx-input-group>
+
+    <h3>Checkbox</h3>
+    <igx-checkbox [formField]="signalForm.acceptTerms">Accept Terms</igx-checkbox>
+
+    <h3>Switch</h3>
+    <igx-switch [formField]="signalForm.enableNotifications">Enable Notifications</igx-switch>
+
+    <h3>Radio Group</h3>
+    <igx-radio-group name="priority">
+        <igx-radio value="low">Low</igx-radio>
+        <igx-radio value="medium">Medium</igx-radio>
+        <igx-radio value="high">High</igx-radio>
+    </igx-radio-group>
+
+    <h3>Slider</h3>
+    <igx-slider [formField]="signalForm.volume" [minValue]="0" [maxValue]="100"></igx-slider>
+    <span>Volume: {{ signalForm.volume().value() }}</span>
+
+    <h3>Select</h3>
+    <igx-select [formField]="signalForm.movie" placeholder="Pick a movie">
+        @for (movie of movies; track movie) {
+            <igx-select-item [value]="movie">{{ movie }}</igx-select-item>
+        }
+    </igx-select>
+    @if (signalForm.movie().errors().length) {
+        <span class="error-hint">Movie is required</span>
+    }
+
+    <h3>Combo (multi-select)</h3>
+    <igx-combo [formField]="signalForm.genres" [data]="genres" placeholder="Pick genres"></igx-combo>
+
+    <h3>Simple Combo (single-select)</h3>
+    <igx-simple-combo [formField]="signalForm.country" [data]="countries" placeholder="Pick a country"></igx-simple-combo>
+
+    <h3>Date Picker</h3>
+    <igx-date-picker [formField]="signalForm.birthDate" placeholder="Select birth date"></igx-date-picker>
+
+    <h3>Date Range Picker</h3>
+    <igx-date-range-picker [formField]="signalForm.dateRange">
+    </igx-date-range-picker>
+
+    <h3>Time Picker</h3>
+    <igx-time-picker [formField]="signalForm.meetingTime" placeholder="Select meeting time"></igx-time-picker>
+
+    <h3>Calendar</h3>
+    <igx-calendar [formField]="signalForm.calendarDate"></igx-calendar>
+
+    <div class="actions">
+        <button igxButton="contained" igxRipple (click)="onReset()">Reset</button>
+        <button igxButton="contained" igxRipple (click)="onSubmit()">Submit</button>
+    </div>
+
+    <h3>Form State</h3>
+    <pre>{{ model() | json }}</pre>
+    <p>Valid: {{ signalForm().valid() }}</p>
+    <p>Dirty: {{ signalForm().dirty() }}</p>
+    <p>Touched: {{ signalForm().touched() }}</p>
+</div>

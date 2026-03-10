@@ -1,0 +1,30 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+    padding: 24px;
+
+    h3 {
+        margin: 8px 0 4px;
+    }
+
+    .error-hint {
+        color: var(--igx-error-500, #f44336);
+        font-size: 12px;
+    }
+
+    .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    pre {
+        background: var(--igx-grays-100, #f5f5f5);
+        padding: 12px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-size: 13px;
+    }
+}
