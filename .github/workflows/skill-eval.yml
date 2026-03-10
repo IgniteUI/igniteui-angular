@@ -52,7 +52,7 @@ jobs:
             let summary = '## 📊 Skill Eval Results\n\n';
 
             try {
-              const files = fs.readdirSync(resultsDir).filter(f => f.endsWith('.json'));
+              const files = fs.readdirSync(resultsDir).filter(f => f.endsWith('.json') && f !== 'baseline.json');
               if (files.length === 0) {
                 summary += '> ⚠️ No eval results found. The eval run may have failed.\n';
               } else {

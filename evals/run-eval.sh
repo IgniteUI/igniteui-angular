@@ -83,21 +83,28 @@ run_task() {
   fi
 
   local STATUS="fail"
+  local PASS_RATE="0"
+  local PASS_AT_K="0"
   if [ "$GRADER_EXIT" -eq 0 ]; then
     STATUS="pass"
+    PASS_RATE="1"
+    PASS_AT_K="1"
   fi
 
   echo ""
   echo "  Result: $STATUS  (reward=$REWARD)"
   echo ""
 
-  # Persist result
+  # Persist result — includes passRate/passAtK so the CI summary comment can
+  # read them directly (these are the fields the workflow script expects).
   mkdir -p "$RESULTS_DIR"
   cat > "$RESULTS_DIR/${TASK_ID}.json" <<EOF
 {
   "task": "$TASK_ID",
   "reward": $REWARD,
   "status": "$STATUS",
+  "passRate": $PASS_RATE,
+  "passAtK": $PASS_AT_K,
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 EOF
