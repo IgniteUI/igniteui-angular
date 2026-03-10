@@ -41,7 +41,7 @@ jobs:
           retention-days: 30
 
       - name: Post summary comment
-        if: always() && github.event_name == 'pull_request'
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false
         uses: actions/github-script@v7
         with:
           script: |
