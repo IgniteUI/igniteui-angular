@@ -10,7 +10,7 @@ mkdir -p src/app/user-settings
 cat > src/app/user-settings/user-settings.component.ts << 'EOF'
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { IgxComboComponent } from 'igniteui-angular';
+import { IgxComboComponent } from 'igniteui-angular/combo';
 
 @Component({
   selector: 'app-user-settings',
