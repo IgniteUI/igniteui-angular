@@ -24,10 +24,6 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install eval dependencies
-        working-directory: evals
-        run: npm install --ignore-scripts
-
       - name: Validate graders against reference solutions
         working-directory: evals
         run: bash run-eval.sh --all --validate
