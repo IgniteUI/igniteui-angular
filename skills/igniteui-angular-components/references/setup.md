@@ -2,6 +2,13 @@
 
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 
+## Contents
+
+- [Installation](#installation)
+- [Required Providers (`app.config.ts`)](#required-providers-appconfigts)
+- [Architecture — Standalone Components](#architecture--standalone-components)
+- [Multi-Entry-Point Imports](#multi-entry-point-imports)
+
 ## Installation
 
 ```bash
