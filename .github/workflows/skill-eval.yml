@@ -28,7 +28,7 @@ jobs:
 
       - name: Validate graders against reference solutions
         working-directory: evals
-        run: bash run-eval.sh --all --validate
+        run: npm run validate
 
       - name: Upload validation results
         if: always()
@@ -59,7 +59,7 @@ jobs:
         working-directory: evals
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash run-eval.sh --all --agent copilot
+        run: npm run agent:copilot
 
       - name: Upload Copilot eval results
         if: always()
@@ -90,7 +90,7 @@ jobs:
         working-directory: evals
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: bash run-eval.sh --all --agent gemini
+        run: npm run agent:gemini
 
       - name: Upload Gemini eval results
         if: always()

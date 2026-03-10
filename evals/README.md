@@ -23,8 +23,9 @@ The suite tests three skills:
 
 Each task includes:
 
-- **`instruction.md`** — the prompt given to the agent
-- **`tests/test.sh`** — deterministic grader (file checks, compilation, lint)
+- **`prompt.md`** — the agent prompt sent to the CLI (concise, actionable)
+- **`instruction.md`** — human-readable task description (detailed requirements)
+- **`tests/test.sh`** — deterministic grader (file checks, import validation, ordering)
 - **`prompts/quality.md`** — LLM rubric grader (intent routing, API usage)
 - **`solution/solve.sh`** — reference solution for baseline validation
 - **`environment/Dockerfile`** — isolated environment for agent execution
@@ -54,31 +55,34 @@ confirm the grader scores 100%. Use this to catch grader regressions.
 cd evals
 
 # Validate all tasks
-bash run-eval.sh --all --validate
+npm run validate
 
 # Validate a single task
-bash run-eval.sh grid-basic-setup --validate
+npm run validate:grid
+npm run validate:combo
+npm run validate:theming
 ```
 
 ### Run evals against an AI agent
 
-Send the `instruction.md` to a coding agent CLI, let the agent generate code
+Send the `prompt.md` to a coding agent CLI, let the agent generate code
 in an isolated workspace, then run the deterministic grader on the output.
 
 ```bash
 cd evals
 
 # Run all tasks with GitHub Copilot CLI
-bash run-eval.sh --all --agent copilot
+npm run agent:copilot
 
-# Run a single task with Gemini CLI
-bash run-eval.sh grid-basic-setup --agent gemini
+# Run all tasks with Gemini CLI
+npm run agent:gemini
 
-# Run 3 trials per task for statistical robustness
-bash run-eval.sh --all --agent copilot --trials 3
+# Run a single task with a specific agent
+npm run agent:copilot:grid
+npm run agent:gemini:theming
 ```
 
-### npm scripts (convenience wrappers)
+### All npm scripts
 
 ```bash
 cd evals
@@ -134,7 +138,8 @@ To switch the default agent, change `defaultAgent`.
    ```
    tasks/<task-id>/
    ├── task.toml               # Config: grader metadata, weights, timeouts
-   ├── instruction.md          # Agent prompt
+   ├── prompt.md               # Agent prompt (sent to CLI agents)
+   ├── instruction.md          # Human-readable task description
    ├── environment/Dockerfile  # Container setup (for future Docker-based runs)
    ├── tests/test.sh           # Deterministic grader
    ├── prompts/quality.md      # LLM rubric grader
@@ -143,29 +148,31 @@ To switch the default agent, change `defaultAgent`.
        └── <skill-name>/SKILL.md
    ```
 
-2. Write a clear, unambiguous `instruction.md` that tells the agent exactly what
-   to build.
+2. Write a clear, unambiguous `instruction.md` with full task requirements.
 
-3. Write `tests/test.sh` to check **outcomes** (files exist, correct selectors
+3. Write a concise `prompt.md` that is sent directly to the agent CLI. This
+   should be a focused, actionable prompt derived from the instruction.
+
+4. Write `tests/test.sh` to check **outcomes** (files exist, correct selectors
    and entry-point imports are present, correct API call ordering) rather than
    specific steps. The grader must write a reward (0.0–1.0) to
    `logs/verifier/reward.txt`.
 
-4. Write `prompts/quality.md` with rubric dimensions that sum to 1.0.
+5. Write `prompts/quality.md` with rubric dimensions that sum to 1.0.
 
-5. Write `solution/solve.sh` — a shell script that proves the task is solvable
+6. Write `solution/solve.sh` — a shell script that proves the task is solvable
    and validates that the graders work correctly.
 
-6. Validate graders before submitting:
+7. Validate graders before submitting:
 
    ```bash
-   bash run-eval.sh <task-id> --validate
+   npm run validate:<task-shortname>
    ```
 
-7. Test against at least one agent:
+8. Test against at least one agent:
 
    ```bash
-   bash run-eval.sh <task-id> --agent copilot
+   npm run agent:copilot:<task-shortname>
    ```
 
 ## Pass / Fail Thresholds

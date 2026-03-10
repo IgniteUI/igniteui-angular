@@ -99,14 +99,18 @@ run_agent_task() {
   local WORK_DIR="$2"
   local AGENT_NAME="$3"
 
-  local INSTRUCTION_FILE="$TASK_DIR/instruction.md"
-  if [ ! -f "$INSTRUCTION_FILE" ]; then
-    echo "ERROR: No instruction.md found at $INSTRUCTION_FILE" >&2
+  # Prefer prompt.md (agent-oriented prompt) over instruction.md (human-oriented task description)
+  local PROMPT_FILE="$TASK_DIR/prompt.md"
+  if [ ! -f "$PROMPT_FILE" ]; then
+    PROMPT_FILE="$TASK_DIR/instruction.md"
+  fi
+  if [ ! -f "$PROMPT_FILE" ]; then
+    echo "ERROR: No prompt.md or instruction.md found in $TASK_DIR" >&2
     return 1
   fi
 
   local PROMPT
-  PROMPT=$(cat "$INSTRUCTION_FILE")
+  PROMPT=$(cat "$PROMPT_FILE")
 
   # Build the skill context preamble if skills/ directory exists
   local SKILL_CONTEXT=""
@@ -118,7 +122,7 @@ run_agent_task() {
     done
   fi
 
-  # Combine skill context + instruction into a single prompt
+  # Combine skill context + prompt into a single agent instruction
   local FULL_PROMPT=""
   if [ -n "$SKILL_CONTEXT" ]; then
     FULL_PROMPT="Use the following skill reference when completing the task:\n\n${SKILL_CONTEXT}---\n\n${PROMPT}"
