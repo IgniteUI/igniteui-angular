@@ -47,8 +47,8 @@
     ), $variant);
 
     %navdrawer-display {
-        --igx-nav-drawer-size: #{rem(240px)};
-        --igx-nav-drawer-size--mini: #{$item-mini-size};
+        --ig-nav-drawer-size: #{rem(240px)};
+        --ig-nav-drawer-size--mini: #{$item-mini-size};
 
         flex-basis: 0;
         transition: flex-basis;
@@ -58,11 +58,11 @@
     }
 
     %navdrawer-display-pinned {
-        flex-basis: var(--igx-nav-drawer-size);
+        flex-basis: var(--ig-nav-drawer-size);
     }
 
     %navdrawer-display-mini-pinned {
-        flex-basis: calc(var(--igx-mini-nav-drawer-size, #{$item-mini-size}) + rem(1px));
+        flex-basis: calc(var(--ig-mini-nav-drawer-size, #{$item-mini-size}) + rem(1px));
     }
 
     %aside {
@@ -71,15 +71,18 @@
         min-height: 100%;
         overflow-x: hidden;
         background: var-get($theme, 'background');
-        top: 0;
-        bottom: 0;
-        width: var(--igx-nav-drawer-size);
+        inset: 0 auto;
+        width: var(--ig-nav-drawer-size);
         inset-inline-start: 0;
-        z-index: 999;
         transition: width, padding, transform;
         transition-timing-function: $in-out-quad;
         box-shadow: var-get($theme, 'elevation');
         padding: $aside-padding;
+
+        // additional popover overrides:
+        margin: 0;
+        border: none;
+        display: block;
 
         @if $variant != 'fluent' {
             border-inline-end: rem(1px) solid var-get($theme, 'border-color');
@@ -98,7 +101,6 @@
     %aside--pinned {
         position: relative;
         box-shadow: none;
-        z-index: 0;
     }
 
     %aside--collapsed--right {
@@ -140,7 +142,7 @@
 
     %aside--mini {
         transition-duration: .3s;
-        width: var(--igx-nav-drawer-size--mini);
+        width: var(--ig-nav-drawer-size--mini);
         min-width: fit-content;
 
         %item {
@@ -166,7 +168,7 @@
 
     %aside--normal {
         transition-duration: .3s;
-        width: var(--igx-nav-drawer-size);
+        width: var(--ig-nav-drawer-size);
     }
 
     %overlay {
@@ -178,11 +180,16 @@
         transition-delay: 0s, 0s;
         position: absolute;
         inset-inline-start: 0;
-        top: 0;
+        inset: 0;
         width: 100%;
         height: 100%;
         visibility: visible;
-        z-index: 999;
+
+        // additional popover overrides:
+        margin: 0;
+        padding: 0;
+        border: none;
+        display: block;
     }
 
     %overlay-panning {
@@ -329,9 +336,9 @@
             box-shadow: none;
 
             igx-icon {
-                width: var(--igx-icon-size, #{$drawer-icon-size});
-                height: var(--igx-icon-size, #{$drawer-icon-size});
-                font-size: var(--igx-icon-size, #{$drawer-icon-size});
+                width: var(--ig-icon-size, #{$drawer-icon-size});
+                height: var(--ig-icon-size, #{$drawer-icon-size});
+                font-size: var(--ig-icon-size, #{$drawer-icon-size});
                 margin: 0;
             }
 

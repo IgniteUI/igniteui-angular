@@ -49,8 +49,11 @@ let NEXT_ID = 0;
     imports: [NgClass]
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
+    /* blazorSuppress */
     public readonly gridAPI = inject<IgxHierarchicalGridAPIService>(IGX_GRID_SERVICE_BASE);
+    /* blazorSuppress */
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    /* blazorSuppress */
     public cdr = inject(ChangeDetectorRef);
 
     @Input()
@@ -421,6 +424,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
     }
 
+    /* blazorCSSuppress */
     public override get advancedFilteringExpressionsTree(): IFilteringExpressionsTree {
         return super.advancedFilteringExpressionsTree;
     }
@@ -589,6 +593,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    /* blazorCSSuppress */
     public override get resourceStrings() {
         return super.resourceStrings;
     }

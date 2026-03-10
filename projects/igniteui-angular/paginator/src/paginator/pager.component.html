@@ -1,5 +1,6 @@
 <button
     [title]="paginator.resourceStrings.igx_paginator_first_page_button_text"
+    [attr.aria-label]="paginator.resourceStrings.igx_paginator_first_page_button_text"
     [disabled]="paginator.isFirstPage"
     [attr.aria-disabled]="paginator.isFirstPage"
     (click)="paginator.paginate(0)"
@@ -12,6 +13,7 @@
 </button>
 <button
     [title]="paginator.resourceStrings.igx_paginator_previous_page_button_text"
+    [attr.aria-label]="paginator.resourceStrings.igx_paginator_previous_page_button_text"
     [disabled]="paginator.isFirstPage"
     [attr.aria-disabled]="paginator.isFirstPage"
     (click)="paginator.previousPage()"
@@ -33,6 +35,7 @@
 </div>
 <button
     [title]="paginator.resourceStrings.igx_paginator_next_page_button_text"
+    [attr.aria-label]="paginator.resourceStrings.igx_paginator_next_page_button_text"
     [disabled]="paginator.isLastPage"
     [attr.aria-disabled]="paginator.isLastPage"
     (click)="paginator.nextPage()"
@@ -45,6 +48,7 @@
 </button>
 <button
     [title]="paginator.resourceStrings.igx_paginator_last_page_button_text"
+    [attr.aria-label]="paginator.resourceStrings.igx_paginator_last_page_button_text"
     [disabled]="paginator.isLastPage"
     [attr.aria-disabled]="paginator.isLastPage"
     (click)="paginator.paginate(paginator.totalPages - 1)"

@@ -181,8 +181,12 @@ abstract class BaseRow implements RowType {
         return false;
     }
 
+    /**
+     * Gets whether the row is disabled.
+     * A disabled row represents a ghost placeholder created by row pinning.
+     */
     public get disabled(): boolean {
-        return this.grid.isGhostRecord(this.data);
+        return this.grid.isGhostRecordAtIndex(this.index);
     }
 
     /**

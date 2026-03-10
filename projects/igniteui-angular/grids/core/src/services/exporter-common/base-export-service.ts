@@ -1,7 +1,8 @@
 import { EventEmitter } from '@angular/core';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
-import { type ITreeGridRecord, type ColumnType, type GridTypeBase, type IPathSegment, type IgxSummaryResult, type GridColumnDataType, DataUtil, FilterUtil, GridSummaryCalculationMode, IBaseEventArgs, IFilteringState, IGroupByExpandState, IGroupByRecord, IGroupingState, TreeGridFilteringStrategy, cloneArray, cloneValue, columnFieldPath, resolveNestedPath, yieldingLoop, getHierarchy, isHierarchyMatch, BaseFormatter } from 'igniteui-angular/core';
+import { yieldingLoop } from './yielding-loop';
+import { type ITreeGridRecord, type ColumnType, type GridTypeBase, type IPathSegment, type IgxSummaryResult, type GridColumnDataType, DataUtil, FilterUtil, GridSummaryCalculationMode, IBaseEventArgs, IFilteringState, IGroupByExpandState, IGroupByRecord, IGroupingState, TreeGridFilteringStrategy, cloneArray, cloneValue, columnFieldPath, resolveNestedPath, getHierarchy, isHierarchyMatch, BaseFormatter } from 'igniteui-angular/core';
 import { FormatWidth, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 
 export enum ExportRecordType {
@@ -247,7 +248,8 @@ export abstract class IgxBaseExporter {
             const childLayoutList = grid.childLayoutList;
 
             for (const island of childLayoutList) {
-                this.mapHierarchicalGridColumns(island, grid.data[0]);
+                const gridData = grid.data && grid.data.length > 0 ? grid.data[0] : {};
+                this.mapHierarchicalGridColumns(island, gridData);
             }
         } else if (grid.type === 'pivot') {
             this.pivotGridColumns = [];
@@ -631,7 +633,8 @@ export abstract class IgxBaseExporter {
         const columnFields = this._ownersMap.get(grid).columns.map(col => col.field);
 
         for (const entry of records) {
-            const expansionStateVal = grid.expansionStates.has(entry) ? grid.expansionStates.get(entry) : grid.getDefaultExpandState(entry);
+            const rowKey = grid.primaryKey ? entry[grid.primaryKey] : entry;
+            const expansionStateVal = grid.expansionStates.has(rowKey) ? grid.expansionStates.get(rowKey) : grid.getDefaultExpandState(entry);
 
             const dataWithoutChildren = Object.keys(entry)
                 .filter(k => columnFields.includes(k))
@@ -652,8 +655,8 @@ export abstract class IgxBaseExporter {
 
             for (const island of childLayoutList) {
                 const path: IPathSegment = {
-                    rowID: island.primaryKey ? entry[island.primaryKey] : entry,
-                    rowKey: island.primaryKey ? entry[island.primaryKey] : entry,
+                    rowID: grid.primaryKey ? entry[grid.primaryKey] : entry,
+                    rowKey: grid.primaryKey ? entry[grid.primaryKey] : entry,
                     rowIslandKey: island.key
                 };
 
@@ -792,16 +795,17 @@ export abstract class IgxBaseExporter {
                 this.flatRecords.push(exportRecord);
 
                 if (island.children.length > 0) {
+                    const islandRowKey = grid?.primaryKey ? rec[grid.primaryKey] : rec;
                     const islandExpansionStateVal = grid === undefined ?
                         false :
-                        grid.expansionStates.has(rec) ?
-                            grid.expansionStates.get(rec) :
+                        grid.expansionStates.has(islandRowKey) ?
+                            grid.expansionStates.get(islandRowKey) :
                             false;
 
                     for (const childIsland of island.children) {
                         const path: IPathSegment = {
-                            rowID: childIsland.primaryKey ? rec[childIsland.primaryKey] : rec,
-                            rowKey: childIsland.primaryKey ? rec[childIsland.primaryKey] : rec,
+                            rowID: grid?.primaryKey ? rec[grid.primaryKey] : rec,
+                            rowKey: grid?.primaryKey ? rec[grid.primaryKey] : rec,
                             rowIslandKey: childIsland.key
                         };
 
@@ -809,7 +813,9 @@ export abstract class IgxBaseExporter {
                         const childIslandGrid = grid?.gridAPI.getChildGrid([path]);
                         const keyRecordData = this.prepareIslandData(island, childIslandGrid, rec[childIsland.key]) || [];
 
-                        this.getAllChildColumnsAndData(childIsland, keyRecordData, islandExpansionStateVal, childIslandGrid);
+                        // Children should only be visible if both parent and current row are expanded
+                        const combinedExpansionState = expansionStateVal && islandExpansionStateVal;
+                        this.getAllChildColumnsAndData(childIsland, keyRecordData, combinedExpansionState, childIslandGrid);
                     }
                 }
             }
@@ -1212,22 +1218,27 @@ export abstract class IgxBaseExporter {
         let keyData;
 
         if (island.autoGenerate) {
-            keyData = gridData[island.key];
-            const islandKeys = island.children.map(i => i.key);
+            keyData = gridData && gridData[island.key] ? gridData[island.key] : undefined;
+            const islandKeys = island.children && island.children.length > 0 ? island.children.map(i => i.key) : [];
 
-            const islandData = keyData.map(i => {
-                const newItem = {};
+            if (keyData && Array.isArray(keyData) && keyData.length > 0) {
+                const islandData = keyData.map(i => {
+                    const newItem = {};
 
-                Object.keys(i).map(k => {
-                    if (!islandKeys.includes(k)) {
-                        newItem[k] = i[k];
-                    }
+                    Object.keys(i).map(k => {
+                        if (!islandKeys.includes(k)) {
+                            newItem[k] = i[k];
+                        }
+                    });
+
+                    return newItem;
                 });
 
-                return newItem;
-            });
-
-            columnList = this.getAutoGeneratedColumns(islandData);
+                columnList = this.getAutoGeneratedColumns(islandData);
+            } else {
+                // If no data available, create empty column list
+                columnList = this.getAutoGeneratedColumns([{}]);
+            }
         } else {
             const islandColumnList = island.columns;
             columnList = this.getColumns(islandColumnList);
@@ -1235,9 +1246,9 @@ export abstract class IgxBaseExporter {
 
         this._ownersMap.set(island, columnList);
 
-        if (island.children.length > 0) {
+        if (island.children && island.children.length > 0) {
             for (const childIsland of island.children) {
-                const islandKeyData = keyData !== undefined ? keyData[0] : {};
+                const islandKeyData = keyData && Array.isArray(keyData) && keyData.length > 0 ? keyData[0] : {};
                 this.mapHierarchicalGridColumns(childIsland, islandKeyData);
             }
         }

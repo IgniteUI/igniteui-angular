@@ -277,6 +277,26 @@ describe('IgxPaginator with custom settings', () => {
         expect(paginator.resourceStrings.igx_paginator_label).toEqual('Per page');
     });
 
+    it('should have correct accessibility attributes', () => {
+        const fix = TestBed.createComponent(DefaultPaginatorComponent);
+        fix.detectChanges();
+        const paginator = fix.componentInstance.paginator;
+        const dom = fix.nativeElement;
+
+        const label = dom.querySelector('.igx-page-size__label');
+        const select = dom.querySelector('igx-select');
+        const input = select.querySelector('input[role="combobox"]');
+
+        expect(label.id).toBeTruthy();
+        expect(label.id).toContain('igx-paginator-');
+        expect(input.getAttribute('aria-labelledby')).toBe(label.id);
+
+        const buttons = dom.querySelectorAll('igx-page-nav button');
+        expect(buttons[0].getAttribute('aria-label')).toBe(paginator.resourceStrings.igx_paginator_first_page_button_text);
+        expect(buttons[1].getAttribute('aria-label')).toBe(paginator.resourceStrings.igx_paginator_previous_page_button_text);
+        expect(buttons[2].getAttribute('aria-label')).toBe(paginator.resourceStrings.igx_paginator_next_page_button_text);
+        expect(buttons[3].getAttribute('aria-label')).toBe(paginator.resourceStrings.igx_paginator_last_page_button_text);
+    });
 });
 @Component({
     template: `

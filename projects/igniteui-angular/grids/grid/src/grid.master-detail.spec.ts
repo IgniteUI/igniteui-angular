@@ -15,8 +15,9 @@ import { GridSummaryCalculationMode, IgxStringFilteringOperand, SortingDirection
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
-const DEBOUNCE_TIME = 30;
+const DEBOUNCE_TIME = 60;
 const ROW_TAG = 'igx-grid-row';
 const GROUP_ROW_TAG = 'igx-grid-groupby-row';
 const SUMMARY_ROW_TAG = 'igx-grid-summary-row';
@@ -41,6 +42,12 @@ describe('IgxGrid Master Detail #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
+    }));
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
+        });
     }));
 
     describe('Basic', () => {
@@ -472,7 +479,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const detailRow = row.nativeElement.previousElementSibling as HTMLElement;
+            const detailRow = row.nativeElement.parentElement.previousElementSibling.children[0] as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
@@ -492,7 +499,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(2);
-            const detailRow = row.nativeElement.previousElementSibling as HTMLElement;
+            const detailRow = row.nativeElement.parentElement.previousElementSibling.children[0] as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
@@ -607,6 +614,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
             await wait(DEBOUNCE_TIME);
+            fix.detectChanges();
 
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
@@ -1022,7 +1030,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 // check row can be expanded
                 const lastRow = grid.rowList.last;
                 GridFunctions.toggleMasterRow(fix, lastRow);
-                await wait();
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 expect(lastRow.expanded).toBeTruthy();
                 const lastRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.last);
@@ -1124,19 +1132,21 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 let targetCellElement2 = grid.getCellByColumn(0, 'Address');
                 expect(targetCellElement2.active).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
                 GridFunctions.verifyMasterDetailRowFocused(firstRowDetail);
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-                await wait();
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 targetCellElement2 = grid.getCellByColumn(2, 'CompanyName');
@@ -1151,19 +1161,21 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-                await wait();
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 let targetCellElement2 = grid.getCellByColumn(2, 'CompanyName');
                 expect(targetCellElement2.active).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
                 GridFunctions.verifyMasterDetailRowFocused(firstRowDetail);
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 targetCellElement2 = grid.getCellByColumn(0, 'Address');
@@ -1192,7 +1204,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 await wait();
                 fix.detectChanges();
 
-                const allRows = grid.tbody.nativeElement.firstElementChild.children;
+                const allRows = [...grid.tbody.nativeElement.firstElementChild.children].map(x=> x.children[0]);
                 expect(allRows.length).toBe(8);
                 expect(allRows[0].tagName.toLowerCase()).toBe(GROUP_ROW_TAG);
                 expect(allRows[1].tagName.toLowerCase()).toBe(ROW_TAG);
@@ -1215,7 +1227,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid.summaryPosition = GridSummaryPosition.top;
                 fix.detectChanges();
 
-                const allRows = grid.tbody.nativeElement.firstElementChild.children;
+                const allRows = [...grid.tbody.nativeElement.firstElementChild.children].map(x=> x.children[0]);
                 expect(allRows.length).toBe(8);
                 expect(allRows[0].tagName.toLowerCase()).toBe(GROUP_ROW_TAG);
                 expect(allRows[1].tagName.toLowerCase()).toBe(SUMMARY_ROW_TAG);
@@ -1233,7 +1245,7 @@ describe('IgxGrid Master Detail #grid', () => {
             after grouping by and detail views for the group rows are collapsed.`, () => {
                 grid.summaryPosition = GridSummaryPosition.top;
                 fix.detectChanges();
-                const allRows = grid.tbody.nativeElement.firstElementChild.children;
+                const allRows = [...grid.tbody.nativeElement.firstElementChild.children].map(x=> x.children[0]);
                 expect(allRows.length).toBe(9);
                 expect(allRows[0].tagName.toLowerCase()).toBe(GROUP_ROW_TAG);
                 expect(allRows[1].tagName.toLowerCase()).toBe(SUMMARY_ROW_TAG);
@@ -1248,7 +1260,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             it(`Should correctly position summary rows when summary
             row position is bottom after grouping by and detail views for the group rows are collapsed.`, () => {
-                const allRows = grid.tbody.nativeElement.firstElementChild.children;
+                const allRows = [...grid.tbody.nativeElement.firstElementChild.children].map(x=> x.children[0]);
                 expect(allRows.length).toBe(9);
                 expect(allRows[0].tagName.toLowerCase()).toBe(GROUP_ROW_TAG);
                 expect(allRows[1].tagName.toLowerCase()).toBe(ROW_TAG);

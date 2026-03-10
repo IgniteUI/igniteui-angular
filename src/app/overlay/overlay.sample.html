@@ -1,5 +1,22 @@
-<div #container>
+<div #container class="container">
     <section class="sample-content">
+        <div class="column">
+            <p>Translate view</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 20px; flex-direction: column;">
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'up', 1)">UP 1px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'down', 1)">DOWN 1px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'left', 1)">LEFT 1px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'right', 1)">RIGHT 1px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'up', 10)">UP 10px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'down', 10)">DOWN 10px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'left', 10)">LEFT 10px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'right', 10)">RIGHT 10px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'up', 100)">UP 100px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'down', 100)">DOWN 100px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'left', 100)">LEFT 100px</button>
+                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'right', 100)">RIGHT 100px</button>
+            </div>
+        </div>
         <div class="column">
             <p>Directions</p>
             <div class="direction-container">

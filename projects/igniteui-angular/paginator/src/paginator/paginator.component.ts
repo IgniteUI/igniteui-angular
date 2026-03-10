@@ -362,6 +362,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     }
 }
 
+let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-page-size',
@@ -377,6 +378,14 @@ export class IgxPageSizeSelectorComponent {
      */
     @HostBinding('class.igx-page-size')
     public cssClass = 'igx-page-size';
+
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-paginator-${NEXT_ID++}`;
+
+    public get labelId() {
+        return `${this.id}-label`;
+    }
 }
 
 

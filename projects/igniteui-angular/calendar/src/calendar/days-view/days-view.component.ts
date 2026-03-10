@@ -11,7 +11,8 @@ import {
     ElementRef,
     ChangeDetectorRef,
     ChangeDetectionStrategy,
-    inject
+    inject,
+    AfterContentChecked
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
@@ -27,6 +28,7 @@ import {
     getPreviousActiveDate,
     intoChunks,
     isDateInRanges,
+    getComponentTheme,
     IgxTheme,
     THEME_TOKEN,
     ThemeToken
@@ -53,7 +55,7 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxDayItemComponent, TitleCasePipe, DayDigitPipe]
 })
-export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
+export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements AfterContentChecked {
     protected el = inject(ElementRef);
     public override cdr = inject(ChangeDetectorRef);
     private themeToken: ThemeToken = inject(THEME_TOKEN);
@@ -229,6 +231,39 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     @HostBinding('class.igx-days-view--indigo')
     protected get isIndigo(): boolean {
         return this._theme === 'indigo';
+    }
+
+    /**
+     * @hidden
+     */
+    constructor() {
+        super();
+        this._theme = this.themeToken.theme;
+
+        const themeChange = this.themeToken.onChange((theme) => {
+            if (this._theme !== theme) {
+                this._theme = theme;
+                this.cdr.detectChanges();
+            }
+        });
+
+        this._destroyRef.onDestroy(() => themeChange.unsubscribe());
+    }
+
+    private setComponentTheme() {
+        // allow DOM theme override (same pattern as input-group)
+        if (!this.themeToken.preferToken) {
+            const theme = getComponentTheme(this.el.nativeElement);
+
+            if (theme && theme !== this._theme) {
+                this._theme = theme;
+                this.cdr.markForCheck();
+            }
+        }
+    }
+
+    public ngAfterContentChecked() {
+        this.setComponentTheme();
     }
 
     /**

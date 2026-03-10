@@ -15,6 +15,7 @@
 
     .igx-input-group {
         %igx-select__toggle-button {
+            cursor: pointer;
             background: var-get($theme, 'toggle-button-background');
             color: var-get($theme, 'toggle-button-foreground');
         }
@@ -58,6 +59,14 @@
         %form-group-bundle %igx-select__toggle-button {
             background: var-get($theme, 'toggle-button-background-disabled');
             color: var-get($theme, 'toggle-button-foreground-disabled');
+        }
+    }
+
+    igx-select {
+        %form-group-input,
+        %form-group-prefix,
+        %form-group-suffix {
+            cursor: pointer;
         }
     }
 }

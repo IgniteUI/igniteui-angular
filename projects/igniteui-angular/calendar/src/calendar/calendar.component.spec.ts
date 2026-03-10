@@ -621,7 +621,7 @@ describe("IgxCalendar - ", () => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 5) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "12",
+                                "13",
                             );
                         }
                     });
@@ -638,7 +638,7 @@ describe("IgxCalendar - ", () => {
                         const firstRowItem = row.nativeElement.children[0];
                         if (idx === 5) {
                             expect(firstRowItem.firstChild.innerText).toEqual(
-                                "43",
+                                "44",
                             );
                         }
                     });

@@ -1,4 +1,3 @@
-import DOMPurify from 'dompurify';
 import { inject, Pipe, type PipeTransform } from '@angular/core';
 import { IgxChatMarkdownService } from './markdown-service';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
@@ -11,8 +10,8 @@ export class MarkdownPipe implements PipeTransform {
 
 
     public async transform(text?: string): Promise<SafeHtml> {
-        return this._sanitizer.bypassSecurityTrustHtml(DOMPurify.sanitize(
+        return this._sanitizer.bypassSecurityTrustHtml(
             await this._service.parse(text ?? '')
-        ));
+        );
     }
 }

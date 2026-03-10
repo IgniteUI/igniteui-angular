@@ -1221,7 +1221,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             return;
         }
         this.searchValue = '';
-        if (!e.event) {
+        const isTab = (e.event as KeyboardEvent)?.key === 'Tab';
+        if (!e.event || isTab) {
             this.comboInput?.nativeElement.focus();
         } else {
             this._onTouchedCallback();
@@ -1241,13 +1242,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             event.stopPropagation();
             this.close();
         }
-    }
-
-    /** @hidden @internal */
-    public handleToggleKeyDown(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === 'Enter' || eventArgs.key === ' ') {
-            eventArgs.preventDefault();
-            this.toggle();
+        if (event.key === 'Tab') {
+            this.close();
         }
     }
 

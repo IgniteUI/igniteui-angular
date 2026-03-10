@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
 import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 
-const DEBOUNCETIME = 30;
+const DEBOUNCETIME = 60;
 
 describe('IgxGrid - Row Adding #grid', () => {
         const GRID_ROW = 'igx-grid-row';
