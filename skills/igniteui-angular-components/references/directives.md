@@ -3,6 +3,13 @@
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 > For app setup, providers, and import patterns — see [`setup.md`](./setup.md).
 
+## Contents
+
+- [Button & Icon Button](#button--icon-button)
+- [Ripple Effect](#ripple-effect)
+- [Tooltip](#tooltip)
+- [Drag and Drop](#drag-and-drop)
+
 ## Button & Icon Button
 
 > **Docs:** [Button Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)

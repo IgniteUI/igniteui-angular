@@ -5,6 +5,21 @@
 > For Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid specifics — see [`types.md`](./types.md).
 > For full editing coverage (cell/row/batch) — see [`editing.md`](./editing.md).
 
+## Contents
+
+- [Editing](#editing)
+- [Grouping (Grid only)](#grouping-grid-only)
+- [Summaries](#summaries)
+- [Cell Merging](#cell-merging)
+- [Toolbar](#toolbar)
+- [Export](#export)
+- [Virtualization & Performance](#virtualization--performance)
+- [Row Drag](#row-drag)
+- [Action Strip](#action-strip)
+- [Master-Detail (Grid only)](#master-detail-grid-only)
+- [Clipboard](#clipboard)
+- [Key Rules](#key-rules)
+
 ## Editing
 
 > **Full editing coverage is in [`editing.md`](./editing.md)**, which includes cell editing, row editing, batch editing with transactions, row adding/deleting, validation, and summaries. Use that reference for any editing task.
@@ -43,15 +58,9 @@ For advanced programmatic grouping patterns — see [`data-operations.md`](./dat
 
 ## Summaries
 
-> **Full summaries coverage (built-in and custom summary operands) is in [`editing.md`](./editing.md).**
-
-Quick reference — enable per-column summaries:
-
-```html
-<igx-column field="salary" dataType="number" [hasSummary]="true"></igx-column>
-```
-
-Default summaries by type: **number** → Count/Min/Max/Sum/Average; **date** → Count/Earliest/Latest; **string/boolean** → Count.
+> **Full summaries coverage — built-in summaries, custom summary operands, and summaries with grouping — is in [`editing.md`](./editing.md#summaries).**
+>
+> Quick reference: enable per-column summaries with `[hasSummary]="true"` on an `igx-column`. Default operands: **number** → Count/Min/Max/Sum/Average; **date** → Count/Earliest/Latest; **string/boolean** → Count.
 
 ## Cell Merging
 
@@ -68,7 +77,10 @@ Or apply a custom merge strategy:
 ```
 
 ```typescript
-priceRangeMerge: IgxCellMergeStrategy = {
+import { IGridMergeStrategy } from 'igniteui-angular/core';
+// import { IGridMergeStrategy } from '@infragistics/igniteui-angular/core'; for licensed package
+
+priceRangeMerge: IGridMergeStrategy = {
   shouldMerge(prevCell, curCell) {
     return Math.abs(prevCell.value - curCell.value) < 10;
   }
@@ -78,6 +90,10 @@ priceRangeMerge: IgxCellMergeStrategy = {
 ## Toolbar
 
 > **Docs:** [Toolbar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/toolbar)
+
+```typescript
+import { IgxGridToolbarComponent } from 'igniteui-angular/grids/core';
+```
 
 ```html
 <igx-grid [data]="data()">

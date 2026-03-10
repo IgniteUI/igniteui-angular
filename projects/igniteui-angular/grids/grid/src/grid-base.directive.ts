@@ -3325,6 +3325,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: ɵSize = ɵSize.Large;
     private _defaultRowHeight = 50;
+    private _borderSize = 1;
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
@@ -5598,7 +5599,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.hasCellsToMerge) {
             return this.rowHeight;
         }
-        return this.rowHeight + 1;
+        return this.rowHeight + this._borderSize;
     }
 
     /**
@@ -7826,12 +7827,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected get renderedActualRowHeight() {
-        let border = 1;
-        if (this.rowList.toArray().length > 0) {
-            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
-            border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
-        }
-        return this.rowHeight + border;
+        return this.rowHeight + this._borderSize;
     }
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: (args: any) => void = null) {
@@ -8109,6 +8105,13 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this._defaultRowHeight = height;
             } else {
                 this._shouldRecalcRowHeight = true;
+            }
+
+            const rowStyles = this.document.defaultView.getComputedStyle(this.dataRowList.first.nativeElement);
+
+            const border = rowStyles.borderBottomWidth ? parseFloat(rowStyles.borderBottomWidth) : 1;
+            if (border) {
+                this._borderSize = border;
             }
         }
     }
