@@ -91,7 +91,7 @@ describe('igxGridPinningActions #grid ', () => {
             jumpButton.triggerEventHandler('click', new Event('click'));
             await wait();
             fixture.detectChanges();
-            await wait(DEBOUNCETIME);
+            await wait(60);
             fixture.detectChanges();
 
             expect(actionStrip.hidden).toBeFalse();
