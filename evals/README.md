@@ -180,23 +180,18 @@ Following [Anthropic's recommendations](https://www.anthropic.com/engineering/de
 
 ## CI Integration
 
-The GitHub Actions workflow at `.github/workflows/skill-eval.yml` provides two
-evaluation modes:
+The GitHub Actions workflow at `.github/workflows/skill-eval.yml` runs
+both on PRs (that modify `skills/**` or `evals/**`) and via manual
+`workflow_dispatch`. Every run executes three parallel jobs:
 
-### Automatic (on PR)
-Runs on every PR that modifies `skills/**` or `evals/**`:
-1. Validates all graders against their reference solutions
-2. Uploads results as an artifact
-3. Posts a summary comment on the PR
+1. **Grader validation** — applies reference solutions, verifies graders score 100%
+2. **Copilot agent eval** — installs `@github/copilot`, runs all tasks against Copilot CLI
+3. **Gemini agent eval** — installs `@google/gemini-cli`, runs all tasks against Gemini CLI
 
-### Manual (workflow_dispatch)
-Triggered manually from the Actions tab to run agent-based evaluation:
-1. Select the agent (`copilot` or `gemini`) and number of trials
-2. Installs the selected agent CLI
-3. Runs all tasks against the agent
-4. Uploads results as an artifact
+A fourth summary job collects results from all three and posts a combined
+PR comment showing pass rates per task per agent.
 
-**Secrets required for agent-based CI:**
+**Secrets required:**
 - `GITHUB_TOKEN` — automatically available (for Copilot)
 - `GEMINI_API_KEY` — must be added as a repository secret (for Gemini)
 

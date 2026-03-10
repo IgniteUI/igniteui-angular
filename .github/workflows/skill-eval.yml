@@ -6,27 +6,13 @@ on:
       - 'skills/**'
       - 'evals/**'
   workflow_dispatch:
-    inputs:
-      agent:
-        description: 'Agent to run evals against (copilot or gemini)'
-        required: true
-        default: 'copilot'
-        type: choice
-        options:
-          - copilot
-          - gemini
-      trials:
-        description: 'Number of trials per task'
-        required: false
-        default: '1'
-        type: string
 
 permissions:
   contents: read
   pull-requests: write
 
 jobs:
-  # Job 1: Always validate graders against reference solutions
+  # Job 1: Validate graders against reference solutions
   validate_graders:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -52,9 +38,8 @@ jobs:
           path: evals/results/
           retention-days: 30
 
-  # Job 2: Run evals against an AI agent (copilot or gemini)
-  # Triggered manually via workflow_dispatch, or can be called from other workflows
-  agent_eval:
+  # Job 2: Run evals against the Copilot agent
+  agent_eval_copilot:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -68,35 +53,57 @@ jobs:
           node-version: '22'
 
       - name: Install Copilot CLI
-        if: inputs.agent == 'copilot'
         run: npm install -g @github/copilot
 
-      - name: Install Gemini CLI
-        if: inputs.agent == 'gemini'
-        run: npm install -g @google/gemini-cli
-
-      - name: Run agent-based eval
+      - name: Run eval against Copilot
         working-directory: evals
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          bash run-eval.sh --all \
-            --agent ${{ inputs.agent }} \
-            --trials ${{ inputs.trials || '1' }}
+        run: bash run-eval.sh --all --agent copilot
 
-      - name: Upload agent eval results
+      - name: Upload Copilot eval results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: skill-eval-agent-${{ inputs.agent }}-results
+          name: skill-eval-agent-copilot-results
           path: evals/results/
           retention-days: 30
 
-  # Job 3: Post summary comment on PRs
+  # Job 3: Run evals against the Gemini agent
+  agent_eval_gemini:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Gemini CLI
+        run: npm install -g @google/gemini-cli
+
+      - name: Run eval against Gemini
+        working-directory: evals
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: bash run-eval.sh --all --agent gemini
+
+      - name: Upload Gemini eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-eval-agent-gemini-results
+          path: evals/results/
+          retention-days: 30
+
+  # Job 4: Post combined summary comment on PRs
   post_summary:
     if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false
-    needs: [validate_graders]
+    needs: [validate_graders, agent_eval_copilot, agent_eval_gemini]
     runs-on: ubuntu-latest
 
     steps:
@@ -104,7 +111,22 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: skill-eval-validation-results
-          path: evals/results/
+          path: evals/results/validation
+        continue-on-error: true
+
+      - name: Download Copilot results
+        uses: actions/download-artifact@v4
+        with:
+          name: skill-eval-agent-copilot-results
+          path: evals/results/copilot
+        continue-on-error: true
+
+      - name: Download Gemini results
+        uses: actions/download-artifact@v4
+        with:
+          name: skill-eval-agent-gemini-results
+          path: evals/results/gemini
+        continue-on-error: true
 
       - name: Post summary comment
         uses: actions/github-script@v7
@@ -113,39 +135,68 @@ jobs:
             const fs = require('fs');
             const path = require('path');
 
-            const resultsDir = 'evals/results';
-            let summary = '## 📊 Skill Eval Results\n\n';
-
-            try {
-              const files = fs.readdirSync(resultsDir).filter(f => f.endsWith('.json') && f !== 'baseline.json');
-              if (files.length === 0) {
-                summary += '> ⚠️ No eval results found. The eval run may have failed.\n';
-              } else {
-                summary += '| Task | Agent | Pass Rate | pass@k | Status |\n';
-                summary += '|---|---|---|---|---|\n';
-
+            function readResults(dir) {
+              const results = [];
+              try {
+                if (!fs.existsSync(dir)) return results;
+                const files = fs.readdirSync(dir).filter(f => f.endsWith('.json') && f !== 'baseline.json');
                 for (const file of files) {
                   try {
-                    const data = JSON.parse(fs.readFileSync(path.join(resultsDir, file), 'utf8'));
-                    const taskName = data.task || file.replace('.json', '');
-                    const agent = data.agent || 'reference';
-                    const passRate = data.passRate != null ? `${(data.passRate * 100).toFixed(0)}%` : 'N/A';
-                    const passAtK = data.passAtK != null ? `${(data.passAtK * 100).toFixed(0)}%` : 'N/A';
-                    const status = data.passAtK >= 0.8 ? '✅' : data.passAtK >= 0.6 ? '⚠️' : '❌';
-                    summary += `| ${taskName} | ${agent} | ${passRate} | ${passAtK} | ${status} |\n`;
+                    results.push(JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8')));
                   } catch (e) {
-                    summary += `| ${file} | — | Error | Error | ❌ |\n`;
+                    results.push({ task: file.replace('.json', ''), error: true });
                   }
                 }
-
-                summary += '\n### Thresholds\n';
-                summary += '- ✅ `pass@k ≥ 80%` — merge gate passed\n';
-                summary += '- ⚠️ `pass@k ≥ 60%` — needs investigation\n';
-                summary += '- ❌ `pass@k < 60%` — blocks merge for affected skill\n';
-              }
-            } catch (e) {
-              summary += `> ⚠️ Could not read results: ${e.message}\n`;
+              } catch (e) { /* dir doesn't exist */ }
+              return results;
             }
+
+            let summary = '## 📊 Skill Eval Results\n\n';
+
+            // --- Validation results ---
+            const validation = readResults('evals/results/validation');
+            if (validation.length > 0) {
+              summary += '### Grader Validation (reference solutions)\n\n';
+              summary += '| Task | Pass Rate | Status |\n';
+              summary += '|---|---|---|\n';
+              for (const r of validation) {
+                if (r.error) { summary += `| ${r.task} | Error | ❌ |\n`; continue; }
+                const passRate = r.passRate != null ? `${(r.passRate * 100).toFixed(0)}%` : 'N/A';
+                const status = r.passRate >= 1.0 ? '✅' : '❌';
+                summary += `| ${r.task} | ${passRate} | ${status} |\n`;
+              }
+              summary += '\n';
+            }
+
+            // --- Agent results ---
+            const copilot = readResults('evals/results/copilot');
+            const gemini = readResults('evals/results/gemini');
+
+            if (copilot.length > 0 || gemini.length > 0) {
+              summary += '### Agent Evaluation\n\n';
+              summary += '| Task | Agent | Pass Rate | pass@k | Status |\n';
+              summary += '|---|---|---|---|---|\n';
+
+              for (const r of [...copilot, ...gemini]) {
+                if (r.error) { summary += `| ${r.task} | — | Error | Error | ❌ |\n`; continue; }
+                const taskName = r.task || 'unknown';
+                const agent = r.agent || 'unknown';
+                const passRate = r.passRate != null ? `${(r.passRate * 100).toFixed(0)}%` : 'N/A';
+                const passAtK = r.passAtK != null ? `${(r.passAtK * 100).toFixed(0)}%` : 'N/A';
+                const status = r.passAtK >= 0.8 ? '✅' : r.passAtK >= 0.6 ? '⚠️' : '❌';
+                summary += `| ${taskName} | ${agent} | ${passRate} | ${passAtK} | ${status} |\n`;
+              }
+              summary += '\n';
+            }
+
+            if (validation.length === 0 && copilot.length === 0 && gemini.length === 0) {
+              summary += '> ⚠️ No eval results found. The eval runs may have failed.\n';
+            }
+
+            summary += '### Thresholds\n';
+            summary += '- ✅ `pass@k ≥ 80%` — merge gate passed\n';
+            summary += '- ⚠️ `pass@k ≥ 60%` — needs investigation\n';
+            summary += '- ❌ `pass@k < 60%` — blocks merge for affected skill\n';
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
