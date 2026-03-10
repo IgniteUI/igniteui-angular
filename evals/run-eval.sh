@@ -138,15 +138,15 @@ run_agent_task() {
 
   # Add prompt args (e.g., -p)
   if [ -n "$AGENT_PROMPT_ARGS" ]; then
-    # shellcheck disable=SC2206
-    CMD_ARGS+=($AGENT_PROMPT_ARGS)
+    read -ra _PROMPT_PARTS <<< "$AGENT_PROMPT_ARGS"
+    CMD_ARGS+=("${_PROMPT_PARTS[@]}")
   fi
   CMD_ARGS+=("$FULL_PROMPT")
 
   # Add auto-approve args (e.g., --yes, --sandbox)
   if [ -n "$AGENT_APPROVE_ARGS" ]; then
-    # shellcheck disable=SC2206
-    CMD_ARGS+=($AGENT_APPROVE_ARGS)
+    read -ra _APPROVE_PARTS <<< "$AGENT_APPROVE_ARGS"
+    CMD_ARGS+=("${_APPROVE_PARTS[@]}")
   fi
 
   # Run the agent in the work directory with a timeout
@@ -304,6 +304,10 @@ run_task_trials() {
   done
 
   # Calculate aggregate metrics
+  if [ "$TRIALS" -le 0 ]; then
+    echo "ERROR: TRIALS must be > 0" >&2
+    return 1
+  fi
   local PASS_RATE
   PASS_RATE=$(echo "scale=2; $PASS_COUNT / $TRIALS" | bc)
   # pass@k = 1 if at least one trial passed, else 0
