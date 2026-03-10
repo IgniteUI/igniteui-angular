@@ -85,6 +85,15 @@ export class MyCombo {
 }
 ```
 
+### Selection Events
+
+The `igx-simple-combo` exposes both `selectionChanging` and `selectionChanged`.
+
+- `selectionChanging` is emitted **before** the selection is committed and can be canceled.
+- `selectionChanged` is emitted **after** the selection is committed and the component state is updated.
+- When the combo is used with `ngModel` or Angular forms, `selectionChanged` is emitted after the value change callback is invoked.
+- `selectionChanged` is not cancelable and always reports the final committed single selection state.
+
 ### Value Binding
 
 If we want to use a two-way data-binding, we could just use `ngModel` like this:
@@ -305,7 +314,8 @@ When the combo is opened, allow custom values are enabled and add item button is
 ### Events
 | Name                | Description                                                             | Cancelable   | Parameters                              |
 |------------------   |-------------------------------------------------------------------------|------------- |-----------------------------------------|
-| `selectionChanging` | Emitted when item selection is changing, before the selection completes | true         | { oldSelection: `any`, newSelection: `any`,  displayText: `string`, owner: `IgxSimpleComboComponent` } |
+| `selectionChanging` | Emitted when item selection is changing, before the selection completes | true         | { oldValue: `any`, newValue: `any`, oldSelection: `any`, newSelection: `any`, displayText: `string`, owner: `IgxSimpleComboComponent` } |
+| `selectionChanged`  | Emitted after the selection completes and the component state has been updated | false | { oldValue: `any`, newValue: `any`, oldSelection: `any`, newSelection: `any`, displayText: `string`, owner: `IgxSimpleComboComponent` } |
 | `searchInputUpdate`     | Emitted when an the search input's input event is triggered             | true         | `IComboSearchInputEventArgs`               |
 | `addition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `Array<any>`, addedItem: `<any>`, newCollection: `Array<any>`, owner: `IgxSimpleComboComponent` }|
 | `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        |            `IForOfState`          |

@@ -86,6 +86,16 @@ export class MyCombo {
 }
 ```
 
+### Selection Events
+
+The `igx-combo` exposes both `selectionChanging` and `selectionChanged`.
+
+- `selectionChanging` is emitted **before** a new selection state is committed and can be canceled.
+- If `selectionChanging` is not canceled, the component commits the final selection state and then emits `selectionChanged`.
+- `selectionChanged` is emitted **after** the selection completes and the component state is updated.
+- When the combo is used with `ngModel` or Angular forms, `selectionChanged` is emitted after the value change callback is invoked.
+- `selectionChanged` is not cancelable and reports the final committed selection state.
+
 ### Value Binding
 
 If we want to use a two-way data-binding, we could just use `ngModel` like this:
@@ -330,7 +340,8 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 
 | Name                | Description                                                             | Cancelable   | Emitted with                      |
 |---------------------|-------------------------------------------------------------------------|--------------|-----------------------------------|
-| `selectionChanging`   | Emitted when item selection is changing, before the selection completes | true         | `IComboSelectionChangingEventArgs`  |
+| `selectionChanging` | Emitted when item selection is changing, before the selection completes | true         | `IComboSelectionChangingEventArgs` |
+| `selectionChanged`  | Emitted after the selection completes and the component state has been updated | false | `IComboSelectionChangedEventArgs` |
 | `searchInputUpdate` | Emitted when an the search input's input event is triggered             | true         | `IComboSearchInputEventArgs`      |
 | `addition`          | Emitted when an item is being added to the data collection              | true         | `IComboItemAdditionEvent`         |
 | `dataPreLoad`       | Emitted when new chunk of data is loaded from the virtualization        | false        | `IForOfState`                     |
