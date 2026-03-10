@@ -569,6 +569,11 @@ export class AppComponent implements OnInit {
             name: 'Reactive Form'
         },
         {
+            link: '/signal-forms',
+            icon: 'web',
+            name: 'Signal Forms'
+        },
+        {
             link: '/slider',
             icon: 'tab',
             name: 'Slider'
