@@ -7,7 +7,9 @@ architecture and extended with patterns from
 
 The infrastructure is **self-contained** — there are no external eval-framework
 dependencies. A lightweight shell runner (`run-eval.sh`) executes each task's
-reference solution and deterministic grader.
+reference solution and deterministic grader, and can also dispatch tasks to
+AI coding agents (GitHub Copilot CLI or Google Gemini CLI) for end-to-end
+evaluation.
 
 ## Overview
 
@@ -32,6 +34,14 @@ Each task includes:
 
 - Bash 4+
 - `bc` (installed by default on most Linux / macOS systems)
+- Node.js 20+ (for config parsing and agent CLI installation)
+
+**For agent-based evaluation (optional):**
+
+| Agent | Install | Auth |
+|---|---|---|
+| GitHub Copilot | `npm install -g @github/copilot` | Active Copilot subscription; `GITHUB_TOKEN` env var |
+| Google Gemini | `npm install -g @google/gemini-cli` | `GEMINI_API_KEY` env var |
 
 ## Running Evals Locally
 
@@ -50,15 +60,72 @@ bash run-eval.sh --all --validate
 bash run-eval.sh grid-basic-setup --validate
 ```
 
+### Run evals against an AI agent
+
+Send the `instruction.md` to a coding agent CLI, let the agent generate code
+in an isolated workspace, then run the deterministic grader on the output.
+
+```bash
+cd evals
+
+# Run all tasks with GitHub Copilot CLI
+bash run-eval.sh --all --agent copilot
+
+# Run a single task with Gemini CLI
+bash run-eval.sh grid-basic-setup --agent gemini
+
+# Run 3 trials per task for statistical robustness
+bash run-eval.sh --all --agent copilot --trials 3
+```
+
 ### npm scripts (convenience wrappers)
 
 ```bash
 cd evals
+
+# Validation (reference solutions)
 npm run validate               # all tasks
 npm run validate:grid          # grid-basic-setup only
 npm run validate:combo         # component-combo-reactive-form only
 npm run validate:theming       # theming-palette-generation only
+
+# Agent-based evaluation
+npm run agent:copilot          # all tasks with Copilot
+npm run agent:copilot:grid     # grid task with Copilot
+npm run agent:gemini           # all tasks with Gemini
+npm run agent:gemini:theming   # theming task with Gemini
 ```
+
+## Agent Configuration
+
+Agent settings are stored in `eval-config.json`:
+
+```json
+{
+  "defaultAgent": "copilot",
+  "agents": {
+    "copilot": {
+      "command": "copilot",
+      "installCommand": "npm install -g @github/copilot",
+      "promptArgs": ["-p"],
+      "autoApproveArgs": ["--yes"],
+      "envAuth": "GITHUB_TOKEN"
+    },
+    "gemini": {
+      "command": "gemini",
+      "installCommand": "npm install -g @google/gemini-cli",
+      "promptArgs": ["-p"],
+      "autoApproveArgs": ["--sandbox"],
+      "envAuth": "GEMINI_API_KEY"
+    }
+  },
+  "trialCount": 1,
+  "timeoutSec": 600
+}
+```
+
+You can customize the agent command, flags, and timeouts by editing this file.
+To switch the default agent, change `defaultAgent`.
 
 ## Adding a New Task
 
@@ -95,25 +162,43 @@ npm run validate:theming       # theming-palette-generation only
    bash run-eval.sh <task-id> --validate
    ```
 
+7. Test against at least one agent:
+
+   ```bash
+   bash run-eval.sh <task-id> --agent copilot
+   ```
+
 ## Pass / Fail Thresholds
 
 Following [Anthropic's recommendations](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents):
 
 | Metric | Threshold | Effect |
 |---|---|---|
-| `pass@5 ≥ 80%` | **Merge gate** | At least 1 success in 5 trials required |
-| `pass^5 ≥ 60%` | **Tracked** | Flags flaky skills for investigation |
-| `pass@5 < 60%` | **Blocks merge** | On PRs touching the relevant skill |
+| `pass@k ≥ 80%` | **Merge gate** | At least 1 success in k trials required |
+| `pass@k ≥ 60%` | **Tracked** | Flags flaky skills for investigation |
+| `pass@k < 60%` | **Blocks merge** | On PRs touching the relevant skill |
 
 ## CI Integration
 
-The GitHub Actions workflow at `.github/workflows/skill-eval.yml` runs
-automatically on PRs that modify `skills/**` or `evals/**`. It:
+The GitHub Actions workflow at `.github/workflows/skill-eval.yml` provides two
+evaluation modes:
 
-1. Checks out the repo
-2. Validates all graders against their reference solutions
-3. Uploads results as an artifact
-4. Posts a summary comment on the PR
+### Automatic (on PR)
+Runs on every PR that modifies `skills/**` or `evals/**`:
+1. Validates all graders against their reference solutions
+2. Uploads results as an artifact
+3. Posts a summary comment on the PR
+
+### Manual (workflow_dispatch)
+Triggered manually from the Actions tab to run agent-based evaluation:
+1. Select the agent (`copilot` or `gemini`) and number of trials
+2. Installs the selected agent CLI
+3. Runs all tasks against the agent
+4. Uploads results as an artifact
+
+**Secrets required for agent-based CI:**
+- `GITHUB_TOKEN` — automatically available (for Copilot)
+- `GEMINI_API_KEY` — must be added as a repository secret (for Gemini)
 
 ## Grading Strategy
 
@@ -135,3 +220,7 @@ automatically on PRs that modify `skills/**` or `evals/**`. It:
 Baseline results are stored in `evals/results/baseline.json` and used for
 regression comparison on PRs. The CI workflow uploads per-run results as
 GitHub Actions artifacts.
+
+Agent-based results are suffixed with the agent name (e.g.,
+`grid-basic-setup-copilot.json`) to distinguish them from reference
+validation results.

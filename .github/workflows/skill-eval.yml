@@ -5,15 +5,31 @@ on:
     paths:
       - 'skills/**'
       - 'evals/**'
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: 'Agent to run evals against (copilot or gemini)'
+        required: true
+        default: 'copilot'
+        type: choice
+        options:
+          - copilot
+          - gemini
+      trials:
+        description: 'Number of trials per task'
+        required: false
+        default: '1'
+        type: string
 
 permissions:
   contents: read
   pull-requests: write
 
 jobs:
-  skill_eval:
+  # Job 1: Always validate graders against reference solutions
+  validate_graders:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
@@ -28,16 +44,70 @@ jobs:
         working-directory: evals
         run: bash run-eval.sh --all --validate
 
-      - name: Upload results
+      - name: Upload validation results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: skill-eval-results
+          name: skill-eval-validation-results
           path: evals/results/
           retention-days: 30
 
+  # Job 2: Run evals against an AI agent (copilot or gemini)
+  # Triggered manually via workflow_dispatch, or can be called from other workflows
+  agent_eval:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Copilot CLI
+        if: inputs.agent == 'copilot'
+        run: npm install -g @github/copilot
+
+      - name: Install Gemini CLI
+        if: inputs.agent == 'gemini'
+        run: npm install -g @google/gemini-cli
+
+      - name: Run agent-based eval
+        working-directory: evals
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          bash run-eval.sh --all \
+            --agent ${{ inputs.agent }} \
+            --trials ${{ inputs.trials || '1' }}
+
+      - name: Upload agent eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-eval-agent-${{ inputs.agent }}-results
+          path: evals/results/
+          retention-days: 30
+
+  # Job 3: Post summary comment on PRs
+  post_summary:
+    if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false
+    needs: [validate_graders]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download validation results
+        uses: actions/download-artifact@v4
+        with:
+          name: skill-eval-validation-results
+          path: evals/results/
+
       - name: Post summary comment
-        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false
         uses: actions/github-script@v7
         with:
           script: |
@@ -52,26 +122,27 @@ jobs:
               if (files.length === 0) {
                 summary += '> ⚠️ No eval results found. The eval run may have failed.\n';
               } else {
-                summary += '| Task | Pass Rate | pass@5 | Status |\n';
-                summary += '|---|---|---|---|\n';
+                summary += '| Task | Agent | Pass Rate | pass@k | Status |\n';
+                summary += '|---|---|---|---|---|\n';
 
                 for (const file of files) {
                   try {
                     const data = JSON.parse(fs.readFileSync(path.join(resultsDir, file), 'utf8'));
                     const taskName = data.task || file.replace('.json', '');
+                    const agent = data.agent || 'reference';
                     const passRate = data.passRate != null ? `${(data.passRate * 100).toFixed(0)}%` : 'N/A';
                     const passAtK = data.passAtK != null ? `${(data.passAtK * 100).toFixed(0)}%` : 'N/A';
                     const status = data.passAtK >= 0.8 ? '✅' : data.passAtK >= 0.6 ? '⚠️' : '❌';
-                    summary += `| ${taskName} | ${passRate} | ${passAtK} | ${status} |\n`;
+                    summary += `| ${taskName} | ${agent} | ${passRate} | ${passAtK} | ${status} |\n`;
                   } catch (e) {
-                    summary += `| ${file} | Error | Error | ❌ |\n`;
+                    summary += `| ${file} | — | Error | Error | ❌ |\n`;
                   }
                 }
 
                 summary += '\n### Thresholds\n';
-                summary += '- ✅ `pass@5 ≥ 80%` — merge gate passed\n';
-                summary += '- ⚠️ `pass@5 ≥ 60%` — needs investigation\n';
-                summary += '- ❌ `pass@5 < 60%` — blocks merge for affected skill\n';
+                summary += '- ✅ `pass@k ≥ 80%` — merge gate passed\n';
+                summary += '- ⚠️ `pass@k ≥ 60%` — needs investigation\n';
+                summary += '- ❌ `pass@k < 60%` — blocks merge for affected skill\n';
               }
             } catch (e) {
               summary += `> ⚠️ Could not read results: ${e.message}\n`;

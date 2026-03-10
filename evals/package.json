@@ -12,7 +12,15 @@
     "validate": "bash run-eval.sh --all --validate",
     "validate:grid": "bash run-eval.sh grid-basic-setup --validate",
     "validate:combo": "bash run-eval.sh component-combo-reactive-form --validate",
-    "validate:theming": "bash run-eval.sh theming-palette-generation --validate"
+    "validate:theming": "bash run-eval.sh theming-palette-generation --validate",
+    "agent:copilot": "bash run-eval.sh --all --agent copilot",
+    "agent:copilot:grid": "bash run-eval.sh grid-basic-setup --agent copilot",
+    "agent:copilot:combo": "bash run-eval.sh component-combo-reactive-form --agent copilot",
+    "agent:copilot:theming": "bash run-eval.sh theming-palette-generation --agent copilot",
+    "agent:gemini": "bash run-eval.sh --all --agent gemini",
+    "agent:gemini:grid": "bash run-eval.sh grid-basic-setup --agent gemini",
+    "agent:gemini:combo": "bash run-eval.sh component-combo-reactive-form --agent gemini",
+    "agent:gemini:theming": "bash run-eval.sh theming-palette-generation --agent gemini"
   },
   "engines": {
     "node": ">=20.0.0"

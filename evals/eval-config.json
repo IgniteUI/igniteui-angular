@@ -1,0 +1,23 @@
+{
+  "defaultAgent": "copilot",
+  "agents": {
+    "copilot": {
+      "command": "copilot",
+      "installCommand": "npm install -g @github/copilot",
+      "promptArgs": ["-p"],
+      "autoApproveArgs": ["--yes"],
+      "envAuth": "GITHUB_TOKEN",
+      "description": "GitHub Copilot CLI (requires active Copilot subscription)"
+    },
+    "gemini": {
+      "command": "gemini",
+      "installCommand": "npm install -g @google/gemini-cli",
+      "promptArgs": ["-p"],
+      "autoApproveArgs": ["--sandbox"],
+      "envAuth": "GEMINI_API_KEY",
+      "description": "Google Gemini CLI (requires GEMINI_API_KEY)"
+    }
+  },
+  "trialCount": 1,
+  "timeoutSec": 600
+}
