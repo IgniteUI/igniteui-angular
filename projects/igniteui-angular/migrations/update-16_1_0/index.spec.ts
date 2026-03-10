@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const version = '16.1.0';
 
@@ -16,9 +17,7 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-31';
 
     it('Should replace IgxStepSubTitleDirective with IgxStepSubtitleDirective', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `import { Component, ViewChild } from '@angular/core';
         import { IgxStepSubTitleDirective } from 'igniteui-angular';
 
         @Component({
@@ -52,9 +51,7 @@ describe(`Update to ${version}`, () => {
     });
 
     it('should update IgxStepSubTitle selectors', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html',
-            `<igx-stepper>
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `<igx-stepper>
                 <igx-step>
                    <p igxStepTitle>Home</p>
                    <p igxStepSubTitle>Home Sub Title</p>
@@ -64,8 +61,7 @@ describe(`Update to ${version}`, () => {
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(
-            `<igx-stepper>
+            .toEqual(`<igx-stepper>
                 <igx-step>
                    <p igxStepTitle>Home</p>
                    <p igxStepSubtitle>Home Sub Title</p>
@@ -75,8 +71,7 @@ describe(`Update to ${version}`, () => {
     });
 
     it('Should properly rename value property to displayValue and selection to value', async () => {
-        appTree.create('/testSrc/appPrefix/component/test.component.ts',
-        `
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `
         import { IgxComboComponent, IgxSimpleComboComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxComboComponent, { read: IgxComboComponent })
@@ -94,10 +89,7 @@ describe(`Update to ${version}`, () => {
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
-        ).toEqual(
-        `
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(`
         import { IgxComboComponent, IgxSimpleComboComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxComboComponent, { read: IgxComboComponent })
@@ -111,14 +103,11 @@ describe(`Update to ${version}`, () => {
                 const simpleComboSelectionValue = this.simpleCombo.value;
             }
         }
-        `
-        );
+        `);
     });
 
     it('Should remove button-group multiSelection property set to "true" and replace it with selectionMode property set to "multi"', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
-            `<igx-buttongroup [multiSelection]="true">
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`, `<igx-buttongroup [multiSelection]="true">
                 <button igxButton>
                     Button 1
                 </button>
@@ -130,8 +119,7 @@ describe(`Update to ${version}`, () => {
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(
-            `<igx-buttongroup [selectionMode]="'multi'">
+            .toEqual(`<igx-buttongroup [selectionMode]="'multi'">
                 <button igxButton>
                     Button 1
                 </button>
@@ -142,9 +130,7 @@ describe(`Update to ${version}`, () => {
     });
 
     it('Should remove button-group multiSelection property set to "false"', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html',
-            `<igx-buttongroup [multiSelection]="false">
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `<igx-buttongroup [multiSelection]="false">
                 <button igxButton>
                     Button 1
                 </button>
@@ -156,8 +142,7 @@ describe(`Update to ${version}`, () => {
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(
-            `<igx-buttongroup >
+            .toEqual(`<igx-buttongroup >
                 <button igxButton>
                     Button 1
                 </button>

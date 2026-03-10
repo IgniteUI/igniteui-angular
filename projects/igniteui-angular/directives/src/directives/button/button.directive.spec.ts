@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxButtonDirective } from './button.directive';
 
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const BUTTON_COMFORTABLE = 'igx-button';
 
@@ -18,15 +19,15 @@ describe('IgxButton', () => {
         fab: `${baseClass}--fab`,
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 InitButtonComponent,
                 ButtonWithAttribsComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes a button', () => {
         const fixture = TestBed.createComponent(InitButtonComponent);
@@ -87,7 +88,7 @@ describe('IgxButton', () => {
         const fixture = TestBed.createComponent(InitButtonComponent);
         fixture.detectChanges();
         const button = fixture.componentInstance.button;
-        spyOn(button.buttonSelected, 'emit');
+        vi.spyOn(button.buttonSelected, 'emit');
 
         expect(button.buttonSelected.emit).not.toHaveBeenCalled();
 

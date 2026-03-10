@@ -1,6 +1,7 @@
 import * as path from 'path';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Update 10.1.0', () => {
     let appTree: UnitTestTree;
@@ -11,9 +12,7 @@ describe('Update 10.1.0', () => {
     });
 
     it('should upgrade the igx-action-icon to igx-navbar-action', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html',
-            `<igx-navbar title="Test title">
+        appTree.create('/testSrc/appPrefix/component/custom.component.html', `<igx-navbar title="Test title">
             <igx-action-icon>
             <igx-icon>arrow_back</igx-icon>
             </igx-action-icon>
@@ -21,8 +20,7 @@ describe('Update 10.1.0', () => {
         const tree = await schematicRunner.runSchematic('migration-16', {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
-            .toEqual(
-            `<igx-navbar title="Test title">
+            .toEqual(`<igx-navbar title="Test title">
             <igx-navbar-action>
             <igx-icon>arrow_back</igx-icon>
             </igx-navbar-action>
@@ -30,8 +28,7 @@ describe('Update 10.1.0', () => {
     });
 
     it('should update IgxActionIconDirective to IgxNavbarActionDirective', async () => {
-        appTree.create('/testSrc/appPrefix/component/custom.component.ts',
-            `import { IgxActionIconDirective } from 'igniteui-angular';
+        appTree.create('/testSrc/appPrefix/component/custom.component.ts', `import { IgxActionIconDirective } from 'igniteui-angular';
             export class TestNavbar {
             @ViewChild(IgxActionIconDirective, { read: IgxActionIconDirective })
             private actionIcon: IgxActionIconDirective; }`);
@@ -39,16 +36,14 @@ describe('Update 10.1.0', () => {
         const tree = await schematicRunner.runSchematic('migration-16', {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.ts'))
-            .toEqual(
-            `import { IgxNavbarActionDirective } from 'igniteui-angular';
+            .toEqual(`import { IgxNavbarActionDirective } from 'igniteui-angular';
             export class TestNavbar {
             @ViewChild(IgxNavbarActionDirective, { read: IgxNavbarActionDirective })
             private actionIcon: IgxNavbarActionDirective; }`);
     });
 
     it('should update DropPosition.None', async () => {
-        const origFileContent =
-            `import { Component, Injectable, ViewChild } from "@angular/core";` +
+        const origFileContent = `import { Component, Injectable, ViewChild } from "@angular/core";` +
             `import { IgxGridComponent, DropPosition } from "igniteui-angular";` +
             `import { IgxColumnComponent } from "igniteui-angular";\r\n` +
             `@Component({` +
@@ -62,8 +57,7 @@ describe('Update 10.1.0', () => {
             `        this.grid1.moveColumn(col1, col2, DropPosition.None);` +
             `    }` +
             `}`;
-        const expectedFileContent =
-            `import { Component, Injectable, ViewChild } from "@angular/core";` +
+        const expectedFileContent = `import { Component, Injectable, ViewChild } from "@angular/core";` +
             `import { IgxGridComponent, DropPosition } from "igniteui-angular";` +
             `import { IgxColumnComponent } from "igniteui-angular";\r\n` +
             `@Component({` +
@@ -77,9 +71,7 @@ describe('Update 10.1.0', () => {
             `        this.grid1.moveColumn(col1, col2, DropPosition.AfterDropTarget);` +
             `    }` +
             `}`;
-        appTree.create(
-            '/testSrc/appPrefix/component/drop.component.ts',
-            origFileContent);
+        appTree.create('/testSrc/appPrefix/component/drop.component.ts', origFileContent);
 
         const tree = await schematicRunner.runSchematic('migration-16', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/drop.component.ts'))
@@ -87,10 +79,7 @@ describe('Update 10.1.0', () => {
     });
 
     it('should replace onDataPreLoad with onScroll ', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/tree-grid.component.html`,
-            '<igx-tree-grid (onDataPreLoad)="handleEvent($event)"></igx-tree-grid>'
-        );
+        appTree.create(`/testSrc/appPrefix/component/tree-grid.component.html`, '<igx-tree-grid (onDataPreLoad)="handleEvent($event)"></igx-tree-grid>');
 
         const tree = await schematicRunner.runSchematic('migration-16', {}, appTree);
 

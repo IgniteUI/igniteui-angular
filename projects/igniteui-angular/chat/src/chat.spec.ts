@@ -1,7 +1,8 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
-import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component'
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component';
 import { Component, signal, TemplateRef, viewChild } from '@angular/core';
 import type { IgcChatComponent, IgcChatMessage, IgcTextareaComponent } from 'igniteui-webcomponents';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Chat wrapper', () => {
 
@@ -9,18 +10,18 @@ describe('Chat wrapper', () => {
     let chatElement: IgcChatComponent;
     let fixture: ComponentFixture<IgxChatComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxChatComponent);
         chatComponent = fixture.componentInstance;
         chatElement = getChatElement(fixture);
         fixture.detectChanges();
-    })
+    });
 
     it('is created', () => {
         expect(chatComponent).toBeDefined();
@@ -61,11 +62,11 @@ describe('Chat templates', () => {
     let fixture: ComponentFixture<ChatTemplatesBed>;
     let chatElement: IgcChatComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent, IgxChatMessageContextDirective, ChatTemplatesBed]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ChatTemplatesBed);
@@ -90,11 +91,11 @@ describe('Chat dynamic templates binding', () => {
     let fixture: ComponentFixture<ChatDynamicTemplatesBed>;
     let chatElement: IgcChatComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent, IgxChatMessageContextDirective, ChatDynamicTemplatesBed]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ChatDynamicTemplatesBed);
@@ -127,10 +128,10 @@ describe('Chat dynamic templates binding', () => {
 })
 class ChatTemplatesBed {
     public messages = signal<IgcChatMessage[]>([{
-        id: '1',
-        sender: 'user',
-        text: 'Hello world'
-    }]);
+            id: '1',
+            sender: 'user',
+            text: 'Hello world'
+        }]);
     public messageTemplate = viewChild.required<TemplateRef<any>>('message');
 }
 
@@ -146,10 +147,10 @@ class ChatTemplatesBed {
 class ChatDynamicTemplatesBed {
     public templates = signal<IgxChatTemplates | null>(null);
     public messages = signal<IgcChatMessage[]>([{
-        id: '1',
-        sender: 'user',
-        text: 'Hello world'
-    }]);
+            id: '1',
+            sender: 'user',
+            text: 'Hello world'
+        }]);
     public messageTemplate = viewChild.required<TemplateRef<any>>('message');
 
     public bindTemplates(): void {

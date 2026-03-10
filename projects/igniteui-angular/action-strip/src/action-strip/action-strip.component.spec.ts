@@ -1,10 +1,11 @@
 import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { wait } from '../../../test-utils/ui-interactions.spec';
+import { describe, it, test, expect, beforeEach, vi } from 'vitest';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
@@ -16,8 +17,8 @@ describe('igxActionStrip', () => {
     let parentContainer: ElementRef;
     let innerContainer: ViewContainerRef;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxActionStripComponent,
@@ -26,7 +27,7 @@ describe('igxActionStrip', () => {
                 IgxActionStripCombinedMenuTestingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Unit tests: ', () => {
 
@@ -114,8 +115,10 @@ describe('igxActionStrip', () => {
             expect(dropDownItems.length).toBe(3);
         });
 
-        it('should emit onMenuOpen/onMenuOpening when toggling the menu', () => {
-            pending('implementation');
+        it.skip('should emit onMenuOpen/onMenuOpening when toggling the menu', () => {
+            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
+            // pending('implementation');
+            ;
         });
 
         it('should allow combining content outside and inside the menu', () => {

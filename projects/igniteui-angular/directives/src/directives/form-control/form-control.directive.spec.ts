@@ -1,10 +1,11 @@
 import { Component, DebugElement, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 
 import { IgcFormControlDirective } from './form-control.directive';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgcFormControlDirective - ', () => {
 
@@ -15,32 +16,31 @@ describe('IgcFormControlDirective - ', () => {
 
     describe('Unit tests: ', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             defineComponents(IgcRatingComponent);
 
-            TestBed.configureTestingModule({
+            await TestBed.configureTestingModule({
                 providers: [
                     { provide: ElementRef, useValue: elementRef },
                     { provide: Renderer2, useValue: renderer2Mock },
                     IgcFormControlDirective
                 ]
             });
-        }));
+        });
 
         const elementRef = { nativeElement: document.createElement('igc-rating') };
 
-        const mockNgControl = jasmine.createSpyObj('NgControl', [
-            'writeValue',
-            'onChange',
-            'setDisabledState',
-            'onChange',
-            'registerOnChangeCb',
-            'registerOnTouchedCb'
-        ]);
+        const mockNgControl = {
+            writeValue: vi.fn().mockName("NgControl.writeValue"),
+            onChange: vi.fn().mockName("NgControl.onChange"),
+            setDisabledState: vi.fn().mockName("NgControl.setDisabledState"),
+            registerOnChangeCb: vi.fn().mockName("NgControl.registerOnChangeCb"),
+            registerOnTouchedCb: vi.fn().mockName("NgControl.registerOnTouchedCb")
+        };
 
-        const renderer2Mock = jasmine.createSpyObj('renderer2Mock', [
-            'setProperty'
-        ]);
+        const renderer2Mock = {
+            setProperty: vi.fn().mockName("renderer2Mock.setProperty")
+        };
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             directive = TestBed.inject(IgcFormControlDirective);
@@ -68,23 +68,23 @@ describe('IgcFormControlDirective - ', () => {
     });
 
     describe('ngModel two-way binding tests: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     IgxFormsControlComponent
                 ]
             }).compileComponents();
             defineComponents(IgcRatingComponent);
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxFormsControlComponent);
             fixture.detectChanges();
             input = fixture.debugElement.query(By.css(`#basicModelRating`));
             rating = fixture.debugElement.query(By.directive(IgcFormControlDirective)).nativeElement;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
         it('Should properly init for igc-rating.', () => {
             directive = fixture.componentInstance.directive;

@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBadgeComponent, IgxBadgeType } from './badge.component';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Badge', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InitBadgeComponent,
                 InitBadgeWithDefaultsComponent,
@@ -15,7 +16,7 @@ describe('Badge', () => {
                 InitBadgeWithDotComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes outlined badge of type error', () => {
         const fixture = TestBed.createComponent(InitBadgeComponent);
@@ -115,7 +116,8 @@ describe('Badge', () => {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }
 
 @Component({
@@ -123,7 +125,8 @@ class InitBadgeComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithDefaultsComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }
 
 @Component({
@@ -131,7 +134,8 @@ class InitBadgeWithDefaultsComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }
 
 @Component({
@@ -139,7 +143,8 @@ class InitBadgeWithIconComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconARIAComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }
 
 @Component({
@@ -147,5 +152,6 @@ class InitBadgeWithIconARIAComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithDotComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true })
+    public badge: IgxBadgeComponent;
 }

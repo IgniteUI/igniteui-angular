@@ -2,6 +2,7 @@ import { IgxTransactionService } from './igx-transaction';
 import { Transaction, TransactionType, HierarchicalTransaction } from './transaction';
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
@@ -158,7 +159,7 @@ describe('IgxTransaction', () => {
 
         it('Should add ADD type transaction - all feasible paths, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
-            spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+            vi.spyOn(trans.onStateUpdate, 'emit');
             expect(trans).toBeDefined();
 
             // ADD
@@ -663,7 +664,7 @@ describe('IgxTransaction', () => {
 
         it('Should add pending transaction and push it to transaction log, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
-            spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+            vi.spyOn(trans.onStateUpdate, 'emit');
 
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
@@ -691,18 +692,17 @@ describe('IgxTransaction', () => {
 
             expect(trans.getState('Key1')).toBeTruthy();
             expect(trans.getAggregatedValue('Key1', true)).toEqual({ key: 'Key1', value1: 10, value2: 2, value3: 30 });
-            expect(trans.getTransactionLog() as any).toEqual(
-                [
-                    {
-                        id: 'Key1',
-                        newValue: { key: 'Key1', value1: 10 },
-                        type: 'update'
-                    }, {
-                        id: 'Key1',
-                        newValue: { key: 'Key1', value3: 30 },
-                        type: 'update'
-                    }
-                ]);
+            expect(trans.getTransactionLog() as any).toEqual([
+                {
+                    id: 'Key1',
+                    newValue: { key: 'Key1', value1: 10 },
+                    type: 'update'
+                }, {
+                    id: 'Key1',
+                    newValue: { key: 'Key1', value3: 30 },
+                    type: 'update'
+                }
+            ]);
             expect(trans.getState(updateTransaction.id)).toEqual({
                 value: { value1: 10, value3: 30 },
                 recordRef,
@@ -713,7 +713,7 @@ describe('IgxTransaction', () => {
 
         it('Should not add pending transaction and push it to transaction log, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
-            spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+            vi.spyOn(trans.onStateUpdate, 'emit');
 
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
@@ -935,7 +935,7 @@ describe('IgxTransaction', () => {
             };
             transaction.add(deleteTransaction, data[0].Employees[2].Employees[0]);
 
-            updateTransaction.newValue = { Name: 'New Name'};
+            updateTransaction.newValue = { Name: 'New Name' };
             transaction.add(updateTransaction, data[0].Employees[0]);
 
             expect(data.find(i => i.ID === 999)).toBeUndefined();
@@ -1034,7 +1034,7 @@ describe('IgxTransaction', () => {
         it('Should emit onStateUpdate once when commiting a hierarchical transaction', () => {
             const data = SampleTestData.employeeTreeData();
             const transaction = new IgxHierarchicalTransactionService();
-            spyOn(transaction.onStateUpdate, 'emit').and.callThrough();
+            vi.spyOn(transaction.onStateUpdate, 'emit');
             expect(transaction).toBeDefined();
 
             const updateTransaction: HierarchicalTransaction = {

@@ -14,6 +14,7 @@ import { IgxColumnResizerDirective } from 'igniteui-angular/grids/core';
 import { ɵSize } from 'igniteui-angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { Calendar } from 'igniteui-angular/calendar';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
@@ -143,13 +144,13 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             const resizer = GridFunctions.getResizer(fixture);
             const resizerDirective = resizer.componentInstance.resizer as IgxColumnResizerDirective;
-            const leftSetterSpy = spyOnProperty(resizerDirective, 'left', 'set').and.callThrough();
+            const leftSetterSpy = vi.spyOn(resizerDirective, 'left', 'set');
             UIInteractions.simulateMouseEvent('mousemove', resizer.nativeElement, 200, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer.nativeElement, 200, 5);
             fixture.detectChanges();
 
             expect(leftSetterSpy).toHaveBeenCalled();
-            expect(parseInt(leftSetterSpy.calls.mostRecent().args[0].toFixed(0))).toEqual(200);
+            expect(parseInt(vi.mocked(leftSetterSpy).mock.lastCall[0].toFixed(0))).toEqual(200);
             expect(parseInt(grid.columnList.get(1).headerCell.nativeElement.getBoundingClientRect().width.toFixed(0))).toEqual(173);
         }));
 
@@ -199,7 +200,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('80px');
-            setElementSize(grid.nativeElement, ɵSize.Medium)
+            setElementSize(grid.nativeElement, ɵSize.Medium);
             tick(16); // needed because of the throttleTime of the resize obserer
             fixture.detectChanges();
 
@@ -214,7 +215,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('64px');
-            setElementSize(grid.nativeElement, ɵSize.Small)
+            setElementSize(grid.nativeElement, ɵSize.Small);
             tick(16); // needed because of the throttleTime of the resize obserer
             fixture.detectChanges();
 
@@ -673,7 +674,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         }));
 
         it('should fire columnResized with correct event args.', fakeAsync(() => {
-            const resizingSpy = spyOn<any>(grid.columnResized, 'emit').and.callThrough();
+            const resizingSpy = vi.spyOn(grid.columnResized, 'emit');
             const headers: DebugElement[] = GridFunctions.getColumnHeaders(fixture);
 
             expect(grid.columnList.get(0).width).toEqual('150px');
@@ -981,19 +982,20 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ResizableColumnsComponent {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
 
     public data = SampleTestData.personIDNameRegionData();
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``,
-        '<igx-grid-toolbar><igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title></igx-grid-toolbar>' +
+    template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``, '<igx-grid-toolbar><igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title></igx-grid-toolbar>' +
         ColumnDefinitions.resizableThreeOfFour),
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent]
 })
 export class ResizableColumnsWithToolbarComponent {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
 
     public data = SampleTestData.personIDNameRegionData();
 }
@@ -1015,7 +1017,8 @@ export class ResizableColumnsWithToolbarComponent {
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class LargePinnedColGridComponent implements OnInit {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
 
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
@@ -1036,7 +1039,8 @@ export class LargePinnedColGridComponent implements OnInit {
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxAvatarComponent]
 })
 export class GridFeaturesComponent {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
 
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
@@ -1049,7 +1053,8 @@ export class GridFeaturesComponent {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class NullColumnsComponent implements OnInit {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
 
     public data = [];
     public columns = [];
@@ -1080,7 +1085,8 @@ export class NullColumnsComponent implements OnInit {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class MinWidthColumnsComponent implements OnInit {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
 
     public data = [];
 
@@ -1099,7 +1105,8 @@ export class MinWidthColumnsComponent implements OnInit {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColGridComponent implements OnInit {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
 
     public data = [];
 
@@ -1116,7 +1123,8 @@ export class ColGridComponent implements OnInit {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColPercentageGridComponent implements OnInit {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
 
     public data = [];
 
@@ -1141,7 +1149,8 @@ export class ColPercentageGridComponent implements OnInit {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColAutosizeGridComponent implements OnInit {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
 
     public data = [];
 
