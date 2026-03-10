@@ -79,9 +79,10 @@ npm run validate:theming       # theming-palette-generation only
 2. Write a clear, unambiguous `instruction.md` that tells the agent exactly what
    to build.
 
-3. Write `tests/test.sh` to check **outcomes** (files exist, project compiles,
-   correct selectors are present) rather than specific steps. The grader must
-   write a reward (0.0–1.0) to `logs/verifier/reward.txt`.
+3. Write `tests/test.sh` to check **outcomes** (files exist, correct selectors
+   and entry-point imports are present, correct API call ordering) rather than
+   specific steps. The grader must write a reward (0.0–1.0) to
+   `logs/verifier/reward.txt`.
 
 4. Write `prompts/quality.md` with rubric dimensions that sum to 1.0.
 
@@ -117,10 +118,11 @@ automatically on PRs that modify `skills/**` or `evals/**`. It:
 ## Grading Strategy
 
 **Deterministic grader (60% weight)** — checks:
-- Project builds without errors
+- Expected component files exist
 - Correct Ignite UI selector is present in the generated template
-- Required imports exist
+- Required entry-point imports exist (not root barrel)
 - No use of forbidden alternatives
+- Correct API call ordering (e.g. `core()` before `theme()`)
 
 **LLM rubric grader (40% weight)** — evaluates:
 - Correct intent routing

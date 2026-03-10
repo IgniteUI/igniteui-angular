@@ -73,19 +73,21 @@ else
   DETAILS="${DETAILS}FAIL: Forbidden alternative (native select, mat-select, igx-select) detected\n"
 fi
 
-# --- Check 5: Correct import from igniteui-angular ---
+# --- Check 5: Correct entry-point import from igniteui-angular/combo ---
+# The skill requires entry-point imports (not the root barrel).
+COMBO_IMPORT_PATTERN="from ['\"](@infragistics/)?igniteui-angular/combo['\"]"
 IMPORT_FOUND=0
 if [ -n "${COMPONENT_FILE:-}" ]; then
-  if grep -qE "from ['\"]igniteui-angular|from ['\"]@infragistics/igniteui-angular" "$COMPONENT_FILE" 2>/dev/null; then
+  if grep -qE "$COMBO_IMPORT_PATTERN" "$COMPONENT_FILE" 2>/dev/null; then
     IMPORT_FOUND=1
   fi
 fi
 
 if [ "$IMPORT_FOUND" -eq 1 ]; then
   SCORE=$((SCORE + 1))
-  DETAILS="${DETAILS}PASS: igniteui-angular import found\n"
+  DETAILS="${DETAILS}PASS: Correct combo entry-point import found\n"
 else
-  DETAILS="${DETAILS}FAIL: No igniteui-angular import found\n"
+  DETAILS="${DETAILS}FAIL: Missing import from igniteui-angular/combo entry point\n"
 fi
 
 # --- Calculate reward ---

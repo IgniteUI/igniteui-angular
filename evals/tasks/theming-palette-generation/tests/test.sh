@@ -50,12 +50,17 @@ else
   DETAILS="${DETAILS}FAIL: No theme() mixin call found\n"
 fi
 
-# --- Check 4: core() mixin call (must be before theme) ---
-if grep -qE '@include.*core\(' "$STYLES_FILE" 2>/dev/null; then
-  SCORE=$((SCORE + 1))
-  DETAILS="${DETAILS}PASS: core() mixin call found\n"
-else
+# --- Check 4: core() mixin call must appear before theme() ---
+CORE_LINE=$(grep -nE '@include.*core\(' "$STYLES_FILE" 2>/dev/null | head -1 | cut -d: -f1)
+THEME_LINE=$(grep -nE '@include.*theme\(' "$STYLES_FILE" 2>/dev/null | head -1 | cut -d: -f1)
+
+if [ -z "${CORE_LINE:-}" ]; then
   DETAILS="${DETAILS}FAIL: No core() mixin call found\n"
+elif [ -n "${THEME_LINE:-}" ] && [ "$CORE_LINE" -gt "$THEME_LINE" ]; then
+  DETAILS="${DETAILS}FAIL: core() must be called before theme() (core on line $CORE_LINE, theme on line $THEME_LINE)\n"
+else
+  SCORE=$((SCORE + 1))
+  DETAILS="${DETAILS}PASS: core() mixin call found before theme()\n"
 fi
 
 # --- Check 5: No hardcoded CSS custom properties as the sole theming approach ---
