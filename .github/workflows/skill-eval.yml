@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  eval:
+  skill_eval:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
