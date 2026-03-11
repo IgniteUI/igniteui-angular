@@ -694,7 +694,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         const isPinned = this.pinned && !this.disabled;
         const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
         const size = this.grid.verticalScrollContainer.getSizeAt(indexInData);
-        return (size - this.grid._borderSize) || this.grid.rowHeight;
+        return size || this.grid.rowHeight;
     }
 
     /**
