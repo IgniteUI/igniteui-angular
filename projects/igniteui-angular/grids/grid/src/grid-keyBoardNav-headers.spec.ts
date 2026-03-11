@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
@@ -19,8 +19,8 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     SelectionWithScrollsComponent, NoopAnimationsModule
                 ],
@@ -28,7 +28,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
                     IgxGridMRLNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
@@ -285,7 +285,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.headerContainer.getScroll().scrollLeft).toEqual(hScroll);
         });
 
-        it('Sorting: Should be able to sort a column with the keyboard', fakeAsync(() => {
+        it('Sorting: Should be able to sort a column with the keyboard', async () => {
             vi.spyOn(grid.sorting, 'emit');
             vi.spyOn(grid.sortingDone, 'emit');
             grid.getColumnByName('ID').sortable = true;
@@ -300,7 +300,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader, false, false, true);
-            tick(DEBOUNCETIME);
+            await fix.whenStable();
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, true);
@@ -317,7 +317,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader, false, false, true);
-            tick(DEBOUNCETIME);
+            await fix.whenStable();
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, false);
@@ -326,7 +326,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader, false, false, true);
-            tick(DEBOUNCETIME);
+            await fix.whenStable();
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, true);
@@ -335,7 +335,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader, false, false, true);
-            tick(DEBOUNCETIME);
+            await fix.whenStable();
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, true);
@@ -344,7 +344,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Desc);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader, false, false, true);
-            tick(DEBOUNCETIME);
+            await fix.whenStable();
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, false);
@@ -358,14 +358,14 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader, false, false, true);
-            tick(DEBOUNCETIME);
+            await fix.whenStable();
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, false, false);
             expect(grid.sortingExpressions.length).toEqual(0);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader, false, false, true);
-            tick(DEBOUNCETIME);
+            await fix.whenStable();
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, false, false);
@@ -373,7 +373,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             expect(grid.sorting.emit).toHaveBeenCalledTimes(5);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(5);
-        }));
+        });
 
         it('Filtering: Should be able to open filter row with the keyboard', () => {
             // Focus grid header
@@ -474,7 +474,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
         });
 
-        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"', fakeAsync(() => {
+        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"', async () => {
             // Enable Advanced Filtering
             grid.allowAdvancedFiltering = true;
             fix.detectChanges();
@@ -493,14 +493,14 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             const afDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
             UIInteractions.triggerKeyDownEvtUponElem('Escape', afDialog);
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             // Verify AF dialog is closed.
             header = GridFunctions.getColumnHeader('Name', fix);
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
             GridFunctions.verifyHeaderIsFocused(header.parent);
-        }));
+        });
 
 
         it('Column selection: Should be able to select columns when columnSelection is multi', () => {
@@ -670,19 +670,19 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.groupingDone.emit).toHaveBeenCalled();
         });
 
-        it('Group by: Should be able group columns with keyboard when hideGroupedColumns is true', fakeAsync(() => {
+        it('Group by: Should be able group columns with keyboard when hideGroupedColumns is true', async () => {
             grid.width = '1000px';
             grid.hideGroupedColumns = true;
             grid.columns.forEach(c => c.groupable = true);
             fix.detectChanges();
-            tick(100);
+            await fix.whenStable();
             let header = GridFunctions.getColumnHeader('ID', fix);
             UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Group by first column
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader, true, true);
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ParentID', fix);
@@ -700,7 +700,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader, true, true);
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('Age', fix);
@@ -715,7 +715,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             header = GridFunctions.getColumnHeader('HireDate', fix);
             GridFunctions.verifyHeaderIsFocused(header.parent);
-        }));
+        });
 
         it('Group by: Should respect column properties when grouping with keyboard', () => {
             grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc });
@@ -761,8 +761,8 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     MRLTestComponent, NoopAnimationsModule
                 ],
@@ -770,7 +770,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
                     IgxGridMRLNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(MRLTestComponent);
@@ -992,13 +992,13 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     ColumnGroupsNavigationTestComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(ColumnGroupsNavigationTestComponent);

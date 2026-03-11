@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { GridWithUndefinedDataComponent } from '../../../test-utils/grid-samples.spec';
 import { PagingComponent, RemotePagingComponent } from '../../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -32,8 +32,8 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 
 describe('IgxGrid - Grid Paging #grid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 PagingComponent,
@@ -41,7 +41,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
                 RemotePagingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fix;
     let grid;
@@ -49,12 +49,12 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
     describe('General', () => {
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(PagingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             paginator = grid.paginator;
-        }));
+        });
 
         it('should paginate data UI', () => {
             fix.detectChanges();
@@ -200,7 +200,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
 
 
-        it('change paging pages per page API', (async () => {
+        it('change paging pages per page API', async () => {
             fix.detectChanges();
             grid.height = '300px';
             paginator.perPage = 2;
@@ -245,7 +245,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
-        }));
+        });
 
         it('activate/deactivate paging', () => {
             let paginatorEl = GridFunctions.getGridPaginator(grid);
@@ -264,7 +264,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(paginatorEl).not.toBeNull();
         });
 
-        it('should change not leave prev page data after scorlling', (async () => {
+        it('should change not leave prev page data after scorlling', async () => {
             fix.componentInstance.perPage = 5;
             fix.componentInstance.data = fix.componentInstance.data.slice(0, 7);
             grid.height = '300px';
@@ -283,7 +283,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
             await wait(100);
             expect(grid.rowList.first._data).toEqual(grid.data[0]);
-        }));
+        });
 
         it('should work correct with filtering', () => {
             grid.getColumnByName('ID').filterable = true;
@@ -436,7 +436,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
     });
 
-    it('should not throw error when data is undefined', fakeAsync(() => {
+    it('should not throw error when data is undefined', async () => {
         let errorMessage = '';
         fix = TestBed.createComponent(GridWithUndefinedDataComponent);
         try {
@@ -447,25 +447,25 @@ describe('IgxGrid - Grid Paging #grid', () => {
         expect(errorMessage).toBe('');
         grid = fix.componentInstance.grid;
         expect(grid.rowList.length).toBe(0);
-        tick(16);
+        await fix.whenStable();
         fix.detectChanges();
 
         expect(grid.rowList.length).toBe(5);
-    }));
+    });
 
-    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', fakeAsync(() => {
+    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', async () => {
         fix = TestBed.createComponent(RemotePagingComponent);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
 
         grid = fix.componentInstance.grid;
         expect(grid.paginator.totalPages).toBe(4);
-    }));
+    });
 
-    it('should get correct rowIndex in remote paging', fakeAsync(() => {
+    it('should get correct rowIndex in remote paging', async () => {
         fix = TestBed.createComponent(RemotePagingComponent);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
 
         grid = fix.componentInstance.grid;
         expect(grid.paginator.totalPages).toBe(4);
@@ -473,11 +473,11 @@ describe('IgxGrid - Grid Paging #grid', () => {
         const desiredPageIndex = 2;
         page(2);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
         expect(grid.page).toBe(desiredPageIndex);
 
         expect(grid.getRowByIndex(0).cells[1].value).toBe('Debra Morton');
         expect(grid.getRowByIndex(0).viewIndex).toBe(6);
-    }));
+    });
 });
 

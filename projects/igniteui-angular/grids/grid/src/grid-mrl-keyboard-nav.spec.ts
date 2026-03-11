@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -22,17 +22,17 @@ const CELL_BLOCK = `.${GRID_MRL_BLOCK}`;
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, ColumnLayoutTestComponent],
             providers: [IgxGridMRLNavigationService]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
-        });
+        }).compileComponents();
         fix = TestBed.createComponent(ColumnLayoutTestComponent);
     });
 
@@ -1009,7 +1009,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         });
 
         describe('Column Moving Integration', () => {
-            it('tab navigation should follow correct sequence if a column is moved.', fakeAsync(() => {
+            it('tab navigation should follow correct sequence if a column is moved.', async () => {
                 fix.componentInstance.colGroups = [{
                         group: 'group1',
                         // row span 3
@@ -1040,7 +1040,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const col1 = grid.getColumnByName('group3');
                 const col2 = grid.getColumnByName('group1');
                 grid.moveColumn(col2, col1);
-                tick();
+                await fix.whenStable();
                 fix.detectChanges();
 
                 // check visible indexes are correct
@@ -1051,7 +1051,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(grid.getCellByColumn(0, 'City').column.visibleIndex).toBe(4);
                 expect(grid.getCellByColumn(0, 'ContactTitle').column.visibleIndex).toBe(5);
                 expect(grid.getCellByColumn(0, 'PostalCode').column.visibleIndex).toBe(6);
-            }));
+            });
         });
 
         describe('Pinning integration', () => {

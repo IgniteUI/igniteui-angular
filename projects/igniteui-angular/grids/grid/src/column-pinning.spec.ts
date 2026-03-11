@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent, ColumnPinningWithTemplateTestComponent } from '../../../test-utils/grid-base-components.spec';
@@ -19,8 +19,8 @@ describe('Column Pinning UI #grid', () => {
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnPinningTestComponent,
@@ -28,7 +28,7 @@ describe('Column Pinning UI #grid', () => {
                 ColumnPinningWithTemplateTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base', () => {
         beforeEach(() => {
@@ -139,7 +139,7 @@ describe('Column Pinning UI #grid', () => {
             verifyColumnIsPinned(column, false, 0);
         });
 
-        it('columnPin event is fired on toggling checkboxes.', waitForAsync(() => {
+        it('columnPin event is fired on toggling checkboxes.', async () => {
             vi.spyOn(grid.columnPin, 'emit');
             vi.spyOn(grid.columnPinned, 'emit');
 
@@ -189,9 +189,9 @@ describe('Column Pinning UI #grid', () => {
 
             expect(grid.columnPinned.emit).toHaveBeenCalledTimes(5);
             expect(grid.columnPinned.emit).toHaveBeenCalledWith({ column: grid.getColumnByName('ProductName'), insertAtIndex: 0, isPinned: true });
-        }));
+        });
 
-        it('columnPin event should fire when pinning and unpining using api', waitForAsync(() => {
+        it('columnPin event should fire when pinning and unpining using api', async () => {
             vi.spyOn(grid.columnPin, 'emit');
             vi.spyOn(grid.columnPinned, 'emit');
 
@@ -216,7 +216,7 @@ describe('Column Pinning UI #grid', () => {
 
             expect(grid.columnPinned.emit).toHaveBeenCalledTimes(2);
             expect(grid.columnPinned.emit).toHaveBeenCalledWith({ column: grid.getColumnByName('ID'), insertAtIndex: 0, isPinned: false });
-        }));
+        });
 
         it('does pin columns if unpinned area width will become less than the defined minimum.', () => {
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ID');

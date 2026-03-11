@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxReadOnlyInputDirective } from './read-only-input.directive';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
@@ -9,15 +9,15 @@ import { By } from '@angular/platform-browser';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxReadOnlyInputDirective', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 TestComponent
             ]
         })
             .compileComponents();
-    }));
+    });
 
     it('should update readOnly property and `igx-input-group--readonly` class correctly', () => {
         const fixture = TestBed.createComponent(TestComponent);

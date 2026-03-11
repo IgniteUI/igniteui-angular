@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IDialogCancellableEventArgs, IDialogEventArgs, IgxDialogComponent } from './dialog.component';
 import { useAnimation } from '@angular/animations';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular/core';
@@ -17,8 +17,8 @@ const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--modal`;
 const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
 describe('Dialog', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 AlertComponent,
@@ -32,7 +32,7 @@ describe('Dialog', () => {
                 DialogTwoWayDataBindingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -144,22 +144,22 @@ describe('Dialog', () => {
         expect(document.activeElement).toEqual(toggle.nativeElement);
     });
 
-    it('Should open and close dialog when set values to IsOpen', fakeAsync(() => {
+    it('Should open and close dialog when set values to IsOpen', async () => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
 
         dialog.isOpen = true;
-        tick(100);
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(true);
 
         dialog.close();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(false);
-    }));
+    });
 
-    it('Should open and close dialog with isOpen two way data binding', fakeAsync(() => {
+    it('Should open and close dialog with isOpen two way data binding', async () => {
         const fixture = TestBed.createComponent(DialogTwoWayDataBindingComponent);
         const dialog = fixture.componentInstance.dialog;
         fixture.detectChanges();
@@ -167,16 +167,15 @@ describe('Dialog', () => {
         fixture.componentInstance.myDialog = true;
 
         fixture.detectChanges();
-        tick(100);
+        await wait(100);
         expect(dialog.isOpen).toEqual(true);
 
 
         fixture.componentInstance.myDialog = false;
 
         fixture.detectChanges();
-        tick();
         expect(dialog.isOpen).toEqual(false);
-    }));
+    });
 
     it('Should set custom modal message.', () => {
         const fixture = TestBed.createComponent(CustomDialogComponent);
@@ -208,7 +207,7 @@ describe('Dialog', () => {
         expect(dialog.rightButtonRipple).toEqual('white');
     });
 
-    it('Should execute open/close methods.', fakeAsync(() => {
+    it('Should execute open/close methods.', async () => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
         fixture.detectChanges();
@@ -216,42 +215,42 @@ describe('Dialog', () => {
 
         dialog.open();
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         expect(dialog.isOpen).toEqual(true);
 
         dialog.close();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(false);
-    }));
+    });
 
-    it('Should set closeOnOutsideSelect.', fakeAsync(() => {
+    it('Should set closeOnOutsideSelect.', async () => {
         const fixture = TestBed.createComponent(AlertComponent);
         fixture.detectChanges();
         const dialog = fixture.componentInstance.dialog;
         dialog.open();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
         dialogElem.click();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(dialog.isOpen).toEqual(false);
 
         dialog.closeOnOutsideSelect = false;
         dialog.open();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         dialogElem.click();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(true);
-    }));
+    });
 
-    it('Should test events.', fakeAsync(() => {
+    it('Should test events.', async () => {
         const fixture = TestBed.createComponent(DialogSampleComponent);
         const dialog = fixture.componentInstance.dialog;
         const args: IDialogEventArgs = {
@@ -271,7 +270,7 @@ describe('Dialog', () => {
         vi.spyOn(dialog.closed, 'emit');
 
         dialog.open();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(dialog.opening.emit).toHaveBeenCalledWith(cancellableArgs);
@@ -279,7 +278,7 @@ describe('Dialog', () => {
         // expect(dialog.onOpened.emit).toHaveBeenCalled();
 
         dialog.close();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         cancellableArgs = { dialog, event: undefined, cancel: false };
@@ -288,7 +287,7 @@ describe('Dialog', () => {
         expect(dialog.isOpenChange.emit).toHaveBeenCalledWith(false);
 
         dialog.open();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         const buttons = document.querySelectorAll('button');
         const leftButton = buttons[0];
@@ -300,9 +299,9 @@ describe('Dialog', () => {
 
         vi.spyOn(dialog.rightButtonSelect, 'emit');
         dispatchEvent(rightButton, 'click');
-        tick();
+        await fixture.whenStable();
         expect(dialog.rightButtonSelect.emit).toHaveBeenCalled();
-    }));
+    });
 
     it('Should set ARIA attributes.', () => {
         const alertFixture = TestBed.createComponent(AlertComponent);
@@ -323,7 +322,7 @@ describe('Dialog', () => {
         expect(titleWrapper.attributes.id).toEqual(dialogWindow.attributes['aria-labelledby']);
     });
 
-    it('Should close only inner dialog on closeOnOutsideSelect.', fakeAsync(() => {
+    it('Should close only inner dialog on closeOnOutsideSelect.', async () => {
         const fixture = TestBed.createComponent(NestedDialogsComponent);
         fixture.detectChanges();
 
@@ -331,10 +330,10 @@ describe('Dialog', () => {
         const childDialog = fixture.componentInstance.child;
 
         mainDialog.open();
-        tick();
+        await fixture.whenStable();
 
         childDialog.open();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const dialogs = fixture.debugElement.queryAll(By.css('.igx-dialog'));
@@ -342,19 +341,19 @@ describe('Dialog', () => {
         const childDialogElem = dialogs[1].nativeElement;
 
         childDialogElem.click();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(mainDialog.isOpen).toEqual(true);
         expect(childDialog.isOpen).toEqual(false);
 
         maindDialogElem.click();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(mainDialog.isOpen).toEqual(false);
         expect(childDialog.isOpen).toEqual(false);
-    }));
+    });
 
     it('Should initialize igx-dialog custom title and actions', () => {
         const data = [{
@@ -381,14 +380,14 @@ describe('Dialog', () => {
 
     });
 
-    it('When modal mode is changed, overlay should be informed', fakeAsync(() => {
+    it('When modal mode is changed, overlay should be informed', async () => {
         const fix = TestBed.createComponent(AlertComponent);
         fix.detectChanges();
 
         const dialog = fix.componentInstance.dialog;
 
         dialog.open();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
         let overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
@@ -397,31 +396,31 @@ describe('Dialog', () => {
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(false);
 
         dialog.close();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
         fix.componentInstance.isModal = true;
         fix.detectChanges();
 
         dialog.open();
-        tick(16);
+        await fix.whenStable();
         fix.detectChanges();
 
         overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
         overlayWrapper = overlaydiv.children[0];
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(true);
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
-    }));
+    });
 
-    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync(() => {
+    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', async () => {
         const fix = TestBed.createComponent(DialogComponent);
         fix.detectChanges();
 
         const dialog: IgxDialogComponent = fix.componentInstance.dialog as IgxDialogComponent;
         dialog.open();
-        tick(100);
+        await wait(100);
         fix.detectChanges();
-        tick(100);
+        await wait(100);
 
         // Verify dialog is opened and its default right button is focused
         const dialogDOM = fix.debugElement.query(By.css('.igx-dialog'));
@@ -431,28 +430,27 @@ describe('Dialog', () => {
 
         // Press 'escape' key
         UIInteractions.triggerKeyDownEvtUponElem('Escape', document.activeElement);
-        tick(100);
         fix.detectChanges();
 
         // Verify dialog is closed and its default right button is no longer focused
         expect(document.activeElement).not.toBe(rightButton.nativeElement);
         expect(dialog.isOpen).toEqual(false);
-    }));
+    });
 
     describe('Position settings', () => {
         let fix;
         let dialog;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(PositionSettingsDialogComponent);
             fix.detectChanges();
             dialog = fix.componentInstance.dialog;
-        }));
+        });
 
-        it('Define different position settings ', fakeAsync(() => {
+        it('Define different position settings ', async () => {
             const currentElement = fix.componentInstance;
             dialog.open();
-            tick(16);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(dialog.isOpen).toEqual(true);
@@ -463,16 +461,16 @@ describe('Dialog', () => {
             expect(firstContentRect.top, 'OffsetTop position check').toBeLessThanOrEqual(middleDialogPosition + 2);
 
             dialog.close();
-            tick(16);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(dialog.isOpen).toEqual(false);
             dialog.positionSettings = currentElement.newPositionSettings;
-            tick(16);
+            await fix.whenStable();
             fix.detectChanges();
 
             dialog.open();
-            tick(16);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(dialog.isOpen).toEqual(true);
@@ -483,11 +481,10 @@ describe('Dialog', () => {
             expect(secondContentRect.left, 'OffsetLeft position check').toBeLessThanOrEqual(topDialogPosition + 2);
 
             dialog.close();
-            tick(16);
             fix.detectChanges();
 
             expect(dialog.isOpen).toEqual(false);
-        }));
+        });
 
         it('Set animation settings', () => {
             const currentElement = fix.componentInstance;

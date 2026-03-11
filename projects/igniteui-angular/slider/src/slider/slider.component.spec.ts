@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -36,10 +36,10 @@ interface FakeDoc {
 
 describe('IgxSlider', () => {
     let fakeDoc: FakeDoc;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fakeDoc = { body: {}, documentElement: {} };
 
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule,
                 SliderInitializeTestComponent,
@@ -59,7 +59,7 @@ describe('IgxSlider', () => {
                 { provide: ɵDIR_DOCUMENT, useFactory: () => fakeDoc }
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base tests', () => {
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
@@ -753,7 +753,7 @@ describe('IgxSlider', () => {
             expect(slider.maxValue).toBe(3);
         });
 
-        it('tick marks(steps) should be shown equally spread based on labels length', () => {
+        it(' marks(steps) should be shown equally spread based on labels length', () => {
             const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
             fixture.detectChanges();
@@ -1031,7 +1031,7 @@ describe('IgxSlider', () => {
             expect(slider.maxValue).toBe(6);
         });
 
-        it('tick marks(steps) should be shown equally spread based on labels length', () => {
+        it(' marks(steps) should be shown equally spread based on labels length', () => {
             const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
             fixture.detectChanges();
@@ -1228,7 +1228,7 @@ describe('IgxSlider', () => {
 
         });
 
-        it('should draw tick marks', () => {
+        it('should draw marks', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
             const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps > svg > line');
             fixture.detectChanges();
@@ -1236,14 +1236,14 @@ describe('IgxSlider', () => {
             // Slider steps <= 1. No marks should be drawn;
             expect(ticks.style.visibility).toEqual('hidden');
 
-            // Slider steps > 1. Should draw tick marks;
+            // Slider steps > 1. Should draw marks;
             fixture.componentInstance.slider.step = 10;
             fixture.detectChanges();
 
             expect(ticks.style.visibility).toEqual('visible');
         });
 
-        it('should hide tick marks', () => {
+        it('should hide marks', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
             fixture.detectChanges();
 
@@ -1594,7 +1594,7 @@ describe('IgxSlider', () => {
             expect(ticksTop).toBeNull();
         });
 
-        it('show/hide primary tick labels', () => {
+        it('show/hide primary labels', () => {
             const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
             const primaryTicks = 5;
             const secondaryTicks = 3;
@@ -1619,7 +1619,7 @@ describe('IgxSlider', () => {
         });
 
 
-        it('show/hide secondary tick labels', () => {
+        it('show/hide secondary labels', () => {
             const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
             const primaryTicks = 5;
             const secondaryTicks = 3;
@@ -1765,10 +1765,9 @@ describe('IgxSlider', () => {
     });
 
     describe('Form Component', () => {
-        it('Should correctly bind, update and get updated by ngModel', fakeAsync(() => {
+        it('Should correctly bind, update and get updated by ngModel', async () => {
             const fixture = TestBed.createComponent(SliderTemplateFormComponent);
             fixture.detectChanges();
-            tick();
 
             const slider = fixture.componentInstance.slider;
 
@@ -1776,14 +1775,12 @@ describe('IgxSlider', () => {
 
             fixture.componentInstance.value = 20;
             fixture.detectChanges();
-            tick();
             expect(slider.value).toBe(fixture.componentInstance.value);
 
             slider.value = 30;
             fixture.detectChanges();
-            tick();
             expect(slider.value).toBe(fixture.componentInstance.value);
-        }));
+        });
 
         it('Should correctly bind, update and get updated by ngModel', () => {
             const fixture = TestBed.createComponent(SliderReactiveFormComponent);
@@ -1803,7 +1800,7 @@ describe('IgxSlider', () => {
             expect(slider.value).toBe(formControl.value);
         });
 
-        it('Should respect the ngModelOptions updateOn: blur', fakeAsync(() => {
+        it('Should respect the ngModelOptions updateOn: blur', async () => {
             const fixture = TestBed.createComponent(SliderTemplateFormComponent);
             fixture.componentInstance.updateOn = 'blur';
             fixture.componentInstance.value = 0;
@@ -1820,11 +1817,11 @@ describe('IgxSlider', () => {
 
             (slider as any).onPointerDown(new PointerEvent('pointerdown', { pointerId: 1, clientX: startX }));
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             (slider as any).onPointerMove(new PointerEvent('pointermove', { pointerId: 1, clientX: startX + 150 }));
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             const activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
             expect(activeThumb).not.toBeNull();
@@ -1832,10 +1829,9 @@ describe('IgxSlider', () => {
 
             thumbEl.dispatchEvent(new Event('blur'));
             fixture.detectChanges();
-            tick();
 
             expect(fixture.componentInstance.value).toBeGreaterThan(0);
-        }));
+        });
     });
 
     describe('Accessibility: ARIA Attributes', () => {
@@ -1848,11 +1844,10 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
         });
 
-        it('should apply all ARIA properties correctly to both thumbs', fakeAsync(() => {
+        it('should apply all ARIA properties correctly to both thumbs', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
@@ -1877,50 +1872,47 @@ describe('IgxSlider', () => {
 
             slider.labels = ['Low', 'Medium', 'High'];
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(thumbFrom.getAttribute('aria-valuetext')).toBe('Low');
             expect(thumbTo.getAttribute('aria-valuetext')).toBe('High');
 
             slider.disabled = true;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(thumbFrom.getAttribute('aria-disabled')).toBe('true');
             expect(thumbTo.getAttribute('aria-disabled')).toBe('true');
-        }));
+        });
 
-        it('should apply correct tabindex to thumbs', fakeAsync(() => {
+        it('should apply correct tabindex to thumbs', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
 
             expect(thumbFrom.getAttribute('tabindex')).toBe('0');
             expect(thumbTo.getAttribute('tabindex')).toBe('0');
-        }));
+        });
 
-        it('should apply correct role to thumbs', fakeAsync(() => {
+        it('should apply correct role to thumbs', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
 
             expect(thumbFrom.getAttribute('role')).toBe('slider');
             expect(thumbTo.getAttribute('role')).toBe('slider');
-        }));
+        });
 
-        it('should apply aria-valuenow, aria-valuemin, and aria-valuemax to thumbs', fakeAsync(() => {
+        it('should apply aria-valuenow, aria-valuemin, and aria-valuemax to thumbs', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
@@ -1932,26 +1924,24 @@ describe('IgxSlider', () => {
             expect(thumbTo.getAttribute('aria-valuenow')).toBe(String(slider.upperValue));
             expect(thumbTo.getAttribute('aria-valuemin')).toBe(String(slider.minValue));
             expect(thumbTo.getAttribute('aria-valuemax')).toBe(String(slider.maxValue));
-        }));
+        });
 
-        it('should apply aria-valuenow to the thumbs', fakeAsync(() => {
+        it('should apply aria-valuenow to the thumbs', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
 
             expect(thumbFrom.getAttribute('aria-valuenow')).toBe(String(slider.lowerLabel));
             expect(thumbTo.getAttribute('aria-valuenow')).toBe(String(slider.upperLabel));
-        }));
+        });
 
-        it('should update aria-valuenow when the slider value changes', fakeAsync(() => {
+        it('should update aria-valuenow when the slider value changes', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
@@ -1964,20 +1954,17 @@ describe('IgxSlider', () => {
                 upper: 70
             };
             fixture.detectChanges();
-            tick();
 
             expect(thumbFrom.getAttribute('aria-valuenow')).toBe('30');
             expect(thumbTo.getAttribute('aria-valuenow')).toBe('70');
-        }));
+        });
 
-        it('should apply aria-valuetext when labels are provided', fakeAsync(() => {
+        it('should apply aria-valuetext when labels are provided', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             slider.labels = ['Low', 'Medium', 'High'];
-            tick();
             fixture.detectChanges();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
@@ -1991,43 +1978,39 @@ describe('IgxSlider', () => {
                 upper: 1
             };
             fixture.detectChanges();
-            tick();
 
             expect(thumbFrom.getAttribute('aria-valuetext')).toBe('Medium');
             expect(thumbTo.getAttribute('aria-valuetext')).toBe('Medium');
-        }));
+        });
 
-        it('should apply correct aria-label to thumbs', fakeAsync(() => {
+        it('should apply correct aria-label to thumbs', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
 
             expect(thumbFrom.getAttribute('aria-label')).toBe('Slider thumb from');
             expect(thumbTo.getAttribute('aria-label')).toBe('Slider thumb to');
-        }));
+        });
 
-        it('should apply correct aria-orientation to thumbs', fakeAsync(() => {
+        it('should apply correct aria-orientation to thumbs', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
 
             expect(thumbFrom.getAttribute('aria-orientation')).toBe('horizontal');
             expect(thumbTo.getAttribute('aria-orientation')).toBe('horizontal');
-        }));
+        });
 
-        it('should update aria-disabled when the slider is disabled', fakeAsync(() => {
+        it('should update aria-disabled when the slider is disabled', async () => {
             fixture = TestBed.createComponent(RangeSliderTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
-            tick();
 
             const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
@@ -2037,11 +2020,10 @@ describe('IgxSlider', () => {
 
             slider.disabled = true;
             fixture.detectChanges();
-            tick();
 
             expect(thumbFrom.getAttribute('aria-disabled')).toBe('true');
             expect(thumbTo.getAttribute('aria-disabled')).toBe('true');
-        }));
+        });
     });
 
     const verifySecondaryTicsLabelsAreHidden = (ticks, hidden) => {

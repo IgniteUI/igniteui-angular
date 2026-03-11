@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform, Renderer2 } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IgxMaskDirective } from './mask.directive';
 
@@ -13,8 +13,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('igxMask', () => {
     // TODO: Refactor tests to reuse components
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 AlphanumSpaceMaskComponent,
                 AnyCharMaskComponent,
@@ -32,7 +32,7 @@ describe('igxMask', () => {
                 ReadonlyMaskTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes an input with default mask', () => {
         const fixture = TestBed.createComponent(DefMaskComponent);
@@ -88,73 +88,73 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('CC abcd - 00_ - X99');
     });
 
-    it('Mask rules - digit (0-9) or a space', fakeAsync(() => {
+    it('Mask rules - digit (0-9) or a space', async () => {
         const fixture = TestBed.createComponent(DigitSpaceMaskComponent);
         fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('555 55');
 
-    }));
+    });
 
-    it('Mask rules - digit (0-9), plus (+), or minus (-) sign', fakeAsync(() => {
+    it('Mask rules - digit (0-9), plus (+), or minus (-) sign', async () => {
         const fixture = TestBed.createComponent(DigitPlusMinusMaskComponent);
         fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('+359-884 19 08 54');
-    }));
+    });
 
-    it('Mask rules - letter (a-Z) or a space', fakeAsync(() => {
+    it('Mask rules - letter (a-Z) or a space', async () => {
         const fixture = TestBed.createComponent(LetterSpaceMaskComponent);
         fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('AB _CD E');
-    }));
+    });
 
-    it('Mask rules - alphanumeric (0-9, a-Z) or a space', fakeAsync(() => {
+    it('Mask rules - alphanumeric (0-9, a-Z) or a space', async () => {
         const fixture = TestBed.createComponent(AlphanumSpaceMaskComponent);
         fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('7c_ 8u');
-    }));
+    });
 
-    it('Mask rules - any keyboard character', fakeAsync(() => {
+    it('Mask rules - any keyboard character', async () => {
         const fixture = TestBed.createComponent(AnyCharMaskComponent);
         fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('_=%. p]');
-    }));
+    });
 
-    it('Enter value with a preset mask and value', fakeAsync(() => {
+    it('Enter value with a preset mask and value', async () => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
-        tick(); // NgModel updateValue Promise
+        await fixture.whenStable(); // NgModel updateValue Promise
 
         const comp = fixture.componentInstance;
         const input = comp.input;
@@ -165,17 +165,17 @@ describe('igxMask', () => {
 
         comp.value = '7777';
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('(777) 7___-___');
         expect(comp.value).toEqual('7777');
-    }));
+    });
 
-    it('Should be able to type full-width numbers', fakeAsync(() => {
+    it('Should be able to type full-width numbers', async () => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.componentInstance.mask = '00/00/0000';
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         const input = fixture.debugElement.query(By.css('input'));
         input.triggerEventHandler('focus', {});
@@ -185,17 +185,17 @@ describe('igxMask', () => {
         fixture.detectChanges();
 
         input.triggerEventHandler('blur', { target: input.nativeElement });
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('09/06/2021');
-    }));
+    });
 
-    it('Should be able to type full-width characters', fakeAsync(() => {
+    it('Should be able to type full-width characters', async () => {
         const fixture = TestBed.createComponent(DefMaskComponent);
         fixture.componentInstance.mask = 'CCC';
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         const input = fixture.debugElement.query(By.css('input'));
         input.triggerEventHandler('focus', {});
@@ -205,36 +205,36 @@ describe('igxMask', () => {
         fixture.detectChanges();
 
         input.triggerEventHandler('blur', { target: input.nativeElement });
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('あんｓ');
-    }));
+    });
 
-    it('Should move the cursor to the next character if the same character is typed', fakeAsync(() => {
+    it('Should move the cursor to the next character if the same character is typed', async () => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.componentInstance.mask = '00/00/0000';
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.value = '22222222';
         fixture.detectChanges();
         input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('22/22/2222');
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         const target = fixture.debugElement.query(By.css('input'));
         target.triggerEventHandler('focus', {});
@@ -242,102 +242,102 @@ describe('igxMask', () => {
 
         UIInteractions.simulatePaste('2', target, 0, 1);
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         target.triggerEventHandler('blur', { target: input.nativeElement });
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.selectionEnd).toEqual(1);
-    }));
+    });
 
-    it('Should handle the input of invalid values', fakeAsync(() => {
+    it('Should handle the input of invalid values', async () => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.value = 'abc4569d12';
         fixture.detectChanges();
         input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(___) 4569-_12');
-    }));
+    });
 
-    it('Enter incorrect value with a preset mask', fakeAsync(() => {
-        pending('This must be remade into a typing test.');
+    it.skip('Enter incorrect value with a preset mask', async () => {
+        // pending('This must be remade into a typing test.');
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.value = 'abc4569d12';
         input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(456) 912_-___');
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.value = '1111111111111111111';
         fixture.detectChanges();
         input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('(111) 1111-111');
-    }));
+    });
 
-    it('Include literals in component value', fakeAsync(() => {
+    it('Include literals in component value', async () => {
         const fixture = TestBed.createComponent(IncludeLiteralsComponent);
         fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('(555) 55__-___');
-    }));
+    });
 
-    it('Correct event firing', fakeAsync(() => {
+    it('Correct event firing', async () => {
         const fixture = TestBed.createComponent(EventFiringComponent);
         fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.value = '123';
         fixture.detectChanges();
         input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('(123) ____-___');
         expect(fixture.componentInstance.raw).toEqual('123');
-    }));
+    });
 
-    it('One way binding', fakeAsync(() => {
+    it('One way binding', async () => {
         const fixture = TestBed.createComponent(OneWayBindComponent);
         fixture.detectChanges();
 
@@ -347,7 +347,7 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('3456____');
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('3456****');
         expect(comp.value).toEqual(3456);
@@ -355,58 +355,58 @@ describe('igxMask', () => {
         input.nativeElement.value = 'A';
         fixture.detectChanges();
         input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('A*******');
-    }));
+    });
 
-    it('Selection', fakeAsync(() => {
+    it('Selection', async () => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.focus();
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.select();
-        tick();
+        await fixture.whenStable();
 
         const keyEvent = new KeyboardEvent('keydown', { key: '57' });
         input.nativeElement.dispatchEvent(keyEvent);
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.value = '';
         input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('(___) ____-___');
-    }));
+    });
 
-    it('Enter value over literal', fakeAsync(() => {
+    it('Enter value over literal', async () => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
         const input = fixture.componentInstance.input;
 
         input.nativeElement.focus();
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.select();
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.value = '';
         fixture.detectChanges();
         input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('(___) ____-___');
 
@@ -414,36 +414,36 @@ describe('igxMask', () => {
         fixture.detectChanges();
         input.nativeElement.dispatchEvent(new Event('input'));
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('(666) 6___-___');
-    }));
+    });
 
-    it('Should successfully drop text in the input', fakeAsync(() => {
+    it('Should successfully drop text in the input', async () => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
         const input = fixture.componentInstance.input;
 
         input.nativeElement.focus();
-        tick();
+        await fixture.whenStable();
         input.nativeElement.select();
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.value = '4576';
         UIInteractions.simulateDropEvent(input.nativeElement, '4576', 'text');
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
 
         expect(input.nativeElement.value).toEqual('(457) 6___-___');
-    }));
+    });
 
-    it('Should display mask on dragenter and remove it on dragleave', fakeAsync(() => {
+    it('Should display mask on dragenter and remove it on dragleave', async () => {
         const fixture = TestBed.createComponent(MaskTestComponent);
         fixture.detectChanges();
         const input = fixture.componentInstance.input;
@@ -467,30 +467,30 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new DragEvent('dragenter'));
         expect(input.nativeElement.value).toEqual('___76_____');
-    }));
+    });
 
-    it('Apply display and input pipes on blur and focus.', fakeAsync(() => {
+    it('Apply display and input pipes on blur and focus.', async () => {
         const fixture = TestBed.createComponent(PipesMaskComponent);
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('SSS');
 
         input.nativeElement.dispatchEvent(new Event('blur'));
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('sss');
-    }));
+    });
 
-    it('Apply placeholder when value is not defined.', fakeAsync(() => {
+    it('Apply placeholder when value is not defined.', async () => {
         const fixture = TestBed.createComponent(PlaceholderMaskComponent);
         fixture.detectChanges();
 
@@ -510,15 +510,15 @@ describe('igxMask', () => {
 
         expect(input.nativeElement.value).toEqual('');
         expect(input.nativeElement.placeholder).toEqual('hello');
-    }));
+    });
 
-    it('should not enter edit mode if it is marked as readonly', fakeAsync(() => {
+    it('should not enter edit mode if it is marked as readonly', async () => {
         const fixture = TestBed.createComponent(ReadonlyMaskTestComponent);
         fixture.detectChanges();
 
         const maskDirective = fixture.componentInstance.mask;
         vi.spyOn(maskDirective, 'onFocus');
-        vi.spyOn(maskDirective, 'showMask');
+        vi.spyOn(maskDirective as any, 'showMask');
 
         const input = fixture.debugElement.query(By.css('.igx-input-group__input'));
         input.triggerEventHandler('focus', {});
@@ -527,9 +527,9 @@ describe('igxMask', () => {
         expect(maskDirective.onFocus).toHaveBeenCalledTimes(1);
         expect((maskDirective as any).showMask).toHaveBeenCalledTimes(0);
         expect((maskDirective as any).inputValue).toEqual('');
-    }));
+    });
 
-    it('should be able to update the mask dynamically', fakeAsync(() => {
+    it('should be able to update the mask dynamically', async () => {
         const fixture = TestBed.createComponent(DefMaskComponent);
         fixture.detectChanges();
         const input = fixture.componentInstance.input;
@@ -561,7 +561,7 @@ describe('igxMask', () => {
         fixture.detectChanges();
         expect(fixture.componentInstance.maskDirective.mask).toEqual('##.##');
         expect(input.nativeElement.placeholder).toEqual('##.##');
-    }));
+    });
 
     it('should update input properly on selection with DELETE', () => {
         const fixture = TestBed.createComponent(MaskComponent);
@@ -590,7 +590,7 @@ describe('igxMask', () => {
 describe('igxMaskDirective ControlValueAccessor Unit', () => {
     let mask: IgxMaskDirective;
     let renderer2: Renderer2;
-    it('Should correctly implement interface methods', () => {
+    it('Should correctly implement interface methods', async () => {
         const mockNgControl = {
             registerOnChangeCb: vi.fn().mockName("NgControl.registerOnChangeCb"),
             registerOnTouchedCb: vi.fn().mockName("NgControl.registerOnTouchedCb")
@@ -615,9 +615,9 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         // init
         renderer2 = {
             setAttribute: vi.fn().mockName("Renderer2.setAttribute")
-        };
+        } as unknown as Renderer2;
 
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             providers: [
                 { provide: ElementRef, useValue: { nativeElement: {} } },
                 { provide: MaskParsingService, useValue: mockParser },
@@ -625,7 +625,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
                 { provide: PlatformUtil, useValue: platformMock },
                 IgxMaskDirective
             ]
-        });
+        }).compileComponents();
 
         mask = TestBed.inject(IgxMaskDirective);
         mask.mask = format;

@@ -2,7 +2,7 @@ import type { MockedObject } from "vitest";
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { formatDate, registerLocaleData } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject, Renderer2, ElementRef } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,7 +37,7 @@ describe('IgxDateTimeEditor', () => {
             dateTimeEditor.ngOnChanges(changes);
         };
 
-        beforeEach(() => {
+        beforeEach(async () => {
             const mockNativeEl = document.createElement("div");
             (mockNativeEl as any).setSelectionRange = () => { };
             maskParsingService = {
@@ -46,13 +46,13 @@ describe('IgxDateTimeEditor', () => {
                 parseMaskValue: vi.fn().mockName("MaskParsingService.parseMaskValue"),
                 applyMask: vi.fn().mockName("MaskParsingService.applyMask"),
                 parseValueFromMask: vi.fn().mockName("MaskParsingService.parseValueFromMask")
-            };
+            } as unknown as MockedObject<MaskParsingService>;
             renderer2 = {
                 setAttribute: vi.fn().mockName("Renderer2.setAttribute")
-            };
+            } as unknown as MockedObject<Renderer2>;
             elementRef = { nativeElement: mockNativeEl };
 
-            TestBed.configureTestingModule({
+            await TestBed.configureTestingModule({
                 providers: [
                     { provide: MaskParsingService, useValue: maskParsingService },
                     { provide: Renderer2, useValue: renderer2 },
@@ -521,8 +521,8 @@ describe('IgxDateTimeEditor', () => {
         let inputElement: DebugElement;
         let dateTimeEditorDirective: IgxDateTimeEditorDirective;
         describe('Key interaction tests', () => {
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDateTimeEditorSampleComponent,
@@ -530,7 +530,7 @@ describe('IgxDateTimeEditor', () => {
                         IgxDateTimeEditorShadowDomComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(async () => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorSampleComponent);
                 fixture.detectChanges();
@@ -821,12 +821,12 @@ describe('IgxDateTimeEditor', () => {
                 result = formatDate(date, 'longTime', 'en-US').normalize("NFKD");
                 expect(removeUnicodeSpaces(inputElement.nativeElement.value)).toContain(result);
             });
-            it('should be able to apply custom display format.', fakeAsync(() => {
+            it('should be able to apply custom display format.', async () => {
                 // default format
                 const date = new Date(2003, 3, 5, 0, 0, 0, 0);
                 fixture.componentInstance.date = new Date(2003, 3, 5, 0, 0, 0, 0);
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
                 let result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '').replace(/\./g, ':');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
@@ -848,7 +848,7 @@ describe('IgxDateTimeEditor', () => {
                 const resultDate = ControlsFunction.formatDate(date, dateOptions, 'en-GB').replace(/,/g, '');
                 result = `${resultDate} ${ControlsFunction.formatDate(date, shortTimeOptions)}`;
                 expect(inputElement.nativeElement.value).toEqual(result);
-            }));
+            });
             it('should convert dates correctly on paste when different display and input formats are set.', () => {
                 // display format = input format
                 let date = new Date(2020, 10, 10, 10, 10, 10);
@@ -906,22 +906,22 @@ describe('IgxDateTimeEditor', () => {
                 inputDate = ControlsFunction.formatDate(date, longDateOptions, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
             });
-            it('should clear input date on clear()', fakeAsync(() => {
+            it('should clear input date on clear()', async () => {
                 const date = new Date(2003, 3, 5);
                 fixture.componentInstance.date = date;
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
                 const result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '').replace(/\./g, ':');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
                 expect(inputElement.nativeElement.value).toEqual('');
-            }));
-            it('should move the caret to the start/end of the portion with CTRL + arrow left/right keys.', fakeAsync(() => {
+            });
+            it('should move the caret to the start/end of the portion with CTRL + arrow left/right keys.', async () => {
                 const date = new Date(2003, 4, 5);
                 fixture.componentInstance.date = date;
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
                 const result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '').replace(/\./g, ':');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
@@ -984,7 +984,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 expect(inputHTMLElement.selectionStart).toEqual(17);
                 expect(inputHTMLElement.selectionEnd).toEqual(17);
-            }));
+            });
             it('should not block the user from typing/pasting dates outside of min/max range', () => {
                 fixture.componentInstance.minDate = '01/01/2000';
                 fixture.componentInstance.maxDate = '31/12/2000';
@@ -1018,20 +1018,20 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual('../../.... ..:..:..:...');
             });
-            it('should be en/disabled when the input is en/disabled.', fakeAsync(() => {
+            it('should be en/disabled when the input is en/disabled.', async () => {
                 vi.spyOn(dateTimeEditorDirective, 'setDisabledState');
                 fixture.componentInstance.disabled = true;
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
                 expect(dateTimeEditorDirective.setDisabledState).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.setDisabledState).toHaveBeenCalledWith(true);
 
                 fixture.componentInstance.disabled = false;
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
                 expect(dateTimeEditorDirective.setDisabledState).toHaveBeenCalledTimes(2);
                 expect(dateTimeEditorDirective.setDisabledState).toHaveBeenCalledWith(false);
-            }));
+            });
             it('should emit valueChange event on blur', () => {
                 const newDate = new Date(2004, 11, 18);
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
@@ -1137,7 +1137,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
-            it('should properly increment/decrement date-time portions on wheel', fakeAsync(() => {
+            it('should properly increment/decrement date-time portions on wheel', async () => {
                 fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
                 fixture.detectChanges();
                 const today = new Date(2021, 12, 12);
@@ -1155,7 +1155,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaY: 40 }));
                 fixture.detectChanges();
                 expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate() - 1);
-            }));
+            });
             it('should properly set placeholder with inputFormat applied', () => {
                 fixture.componentInstance.placeholder = 'Date:';
                 fixture.detectChanges();
@@ -1313,14 +1313,14 @@ describe('IgxDateTimeEditor', () => {
 
         describe('Form control tests: ', () => {
             let form: UntypedFormGroup;
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxDateTimeEditorFormComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorFormComponent);
                 fixture.detectChanges();
