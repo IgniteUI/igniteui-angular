@@ -8,12 +8,13 @@
     <igx-grid [allowFiltering]="true" [moving]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data">
         <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
-               <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-               <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                 <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column [resizable]="true"  field="Missing"></igx-column>
+        <!-- <igx-column [resizable]="true"  field="Missing"></igx-column> -->
         <igx-column-group header="General Information" title="General Company Information" [collapsible]="true" [expanded]="true" [hidden]="true">
             <igx-column [filterable]="false" [hidden]="true" [sortable]="true" [resizable]="true" field="CompanyName" title="Company Name" width="200px" [visibleWhenCollapsed]="false"></igx-column>
             <igx-column  field="Missing"></igx-column>
@@ -26,13 +27,14 @@
             </ng-template>
         </igx-column-group>
         <igx-column [hidden]="s" [resizable]="true" field="ID" [editable]="true"></igx-column>
-        <igx-column-group header="Address Information" [(collapsible)]='s' [expanded]='true'>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Country" [visibleWhenCollapsed]= 'false'></igx-column>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Region" [visibleWhenCollapsed]= 'false'></igx-column>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="City" [visibleWhenCollapsed]= 'false'></igx-column>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Address" [visibleWhenCollapsed]= 'false'></igx-column>
-            <igx-column [filterable]="true" [editable]="true" [sortable]="true" [visibleWhenCollapsed]= 'true'  field="FullAddress"></igx-column>
+        <igx-column-group header="Address Information" [(collapsible)]="s" [expanded]="true">
+            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Country" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Region" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="City" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Address" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column [filterable]="true" [editable]="true" [sortable]="true" [visibleWhenCollapsed]="true" field="FullAddress"></igx-column>
         </igx-column-group>
+        <!-- <igx-column  field="Missing"></igx-column>
         <igx-column  field="Missing"></igx-column>
         <igx-column  field="Missing"></igx-column>
         <igx-column  field="Missing"></igx-column>
@@ -43,8 +45,7 @@
         <igx-column  field="Missing"></igx-column>
         <igx-column  field="Missing"></igx-column>
         <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
+        <igx-column  field="Missing"></igx-column> -->
         <igx-column-group header="Address Information">
             <igx-column-group header="Location">
                 <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Country"></igx-column>

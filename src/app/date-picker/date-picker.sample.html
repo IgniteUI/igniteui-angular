@@ -1,35 +1,37 @@
 <div class="preview" [igSize]="properties.size">
     <h6>Angular Date Picker</h6>
-    <igx-date-picker
-        #dpAng
-        [mode]="modeAngular"
-        [type]="properties.type"
-        [value]="properties.value"
-        [displayFormat]="properties.displayFormat"
-        [inputFormat]="properties.inputFormat"
-        [required]="properties.required"
-        [readOnly]="properties.readonly"
-        [disabled]="properties.disabled"
-        [placeholder]="properties.placeholder"
-        showWeekNumbers="true"
-        headerOrientation="vertical"
-    >
-        <label igxLabel>Select a Date</label>
-        <igx-suffix (click)="dpAng.open()">
-            <igx-icon>alarm</igx-icon>
-        </igx-suffix>
-        <ng-template igxPickerActions let-calendar>
-            <button igxButton="flat" (click)="calendar.viewDate = today">
-                Today
-            </button>
-            <button igxButton="flat" (click)="calendar.viewDate = nextYear">
-                Next Year
-            </button>
-            <button igxButton="flat" (click)="dpAng.selectToday()">
-                Select Today
-            </button>
-        </ng-template>
-    </igx-date-picker>
+    <form [formGroup]="reactiveForm">
+        <igx-date-picker
+            #dpAng
+            formControlName="datePicker"
+            [mode]="modeAngular"
+            [type]="properties.type"
+            [displayFormat]="properties.displayFormat"
+            [inputFormat]="properties.inputFormat"
+            [readOnly]="properties.readonly"
+            [disabled]="properties.disabled"
+            [placeholder]="properties.placeholder"
+            showWeekNumbers="true"
+            headerOrientation="vertical"
+        >
+            <label igxLabel>Select a Date</label>
+            <igx-suffix (click)="dpAng.open()">
+                <igx-icon>alarm</igx-icon>
+            </igx-suffix>
+            <span igxHint>Helper text</span>
+            <ng-template igxPickerActions let-calendar>
+                <button igxButton="flat" (click)="calendar.viewDate = today">
+                    Today
+                </button>
+                <button igxButton="flat" (click)="calendar.viewDate = nextYear">
+                    Next Year
+                </button>
+                <button igxButton="flat" (click)="dpAng.selectToday()">
+                    Select Today
+                </button>
+            </ng-template>
+        </igx-date-picker>
+    </form>
 
     <h6>WC Date Picker</h6>
     <igc-date-picker
@@ -40,6 +42,7 @@
         [displayFormat]="properties.displayFormat"
         [inputFormat]="properties.inputFormat"
         [required]="properties.required"
+        [readOnly]="properties.readonly"
         [disabled]="properties.disabled"
         [placeholder]="properties.placeholder"
         show-week-numbers="true"

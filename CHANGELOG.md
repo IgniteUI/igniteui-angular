@@ -2,16 +2,226 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 20.2.0
+## 21.2.0
 
 ### General
 - `IgxHierarchicalGrid`
     - **Deprecation** - `schema` input property has been deprecated and will be removed in a future version.
 
-## 20.1.0
+## 21.1.0
 
 ### New Features
 
+- `IgxPdfExporterService`
+    - Added `customFont` property to `IgxPdfExporterOptions` for Unicode character support in PDF exports. By default, the PDF exporter uses Helvetica, which only supports basic Latin characters. When exporting data containing non-Latin characters (Cyrillic, Chinese, Japanese, Arabic, Hebrew, special symbols, etc.), you can now provide a custom TrueType font (TTF) with the required character glyphs.
+
+        ```typescript
+        import { IgxPdfExporterService, IgxPdfExporterOptions } from 'igniteui-angular/grids/core';
+        import { NOTO_SANS_REGULAR, NOTO_SANS_BOLD } from './fonts/noto-sans';
+
+        constructor(private pdfExporter: IgxPdfExporterService) {}
+
+        exportWithUnicodeSupport() {
+            const options = new IgxPdfExporterOptions('GridExport');
+            options.customFont = {
+                name: 'NotoSans',
+                data: NOTO_SANS_REGULAR,  // Base64-encoded TTF font data
+                bold: {
+                    name: 'NotoSans-Bold',
+                    data: NOTO_SANS_BOLD  // Optional: Base64-encoded bold TTF font data
+                }
+            };
+            
+            this.pdfExporter.export(this.grid, options);
+        }
+        ```
+
+        Key features:
+        - Supports any TrueType font (TTF) provided as Base64-encoded data
+        - Optional bold font variant for header styling
+        - Automatic fallback to Helvetica if custom font loading fails
+        - Works with all grid types (IgxGrid, IgxTreeGrid, IgxHierarchicalGrid, IgxPivotGrid)
+
+- `IgxTooltipTarget`
+    - Added new properties:
+        - `showTriggers` - Which event triggers will show the tooltip. Expects a comma-separated string of different event triggers. Defaults to `pointerenter`.
+        - `hideTriggers` - Which event triggers will hide the tooltip. Expects a comma-separated string of different event triggers. Defaults to `pointerleave` and `click`.
+
+        ```html
+        <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'" [hideTriggers]="'keypress,blur'">info</igx-icon>
+        <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+        ```
+- `IgxNavigationDrawer` - Integrated HTML Popover API to place overlay elements when not pinned in the top layer, eliminating z-index stacking issues.
+
+- `IgxOverlayService`
+    - Integrated HTML Popover API into the overlay service for improved z-index management and layering control.
+    - The overlay service now uses the Popover API to place overlay elements in the top layer, eliminating z-index stacking issues.
+    - Improved positioning accuracy for container-based overlays with fixed container bounds.
+
+- **AI-Assisted Development - Copilot Skills**
+    - Three consolidated Copilot Skills are now included in the repository to teach AI coding assistants/agents (e.g., GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to work with Ignite UI for Angular:
+        - **Components** - UI Components (form controls, layout, data display, feedback/overlays, directives — Input Group, Combo, Select, Date/Time Pickers, Calendar, Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, Button, Ripple, Tooltip, Drag and Drop, Layout Manager, Dock Manager and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart))
+        - **Data Grids** - Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid)
+        - **Theming & Styling** - Theming & Styling (includes MCP server setup for live theming tools)
+    - These skills are automatically discovered when placed in the agent's skills path ( e.g. `.claude/skills`) and this release ships with an optional migration to add those to your project. For more information, see the [README](README.md#ai-assisted-development).
+
+- Added `IgxGridLiteComponent` wrapper around the `igc-grid-lite` Web Component _(in Developer Preview)_ 
+
+  Available from the `igniteui-angular/grids/lite` entry point. The wrapper component adds Angular-friendly API with similar inputs, including two-way bindable `sortingExpressions` and `filteringExpressions`, Angular template-based cell and header rendering with declarative templates via the `igxGridLiteCell` and `igxGridLiteHeader` directives.
+
+    ```
+    npm i igniteui-grid-lite
+    ```
+    ```ts
+    import { IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective } from "igniteui-angular/grids/lite";
+
+    @Component({
+        selector: 'app-grid-lite-sample',
+        templateUrl: 'grid-lite.sample.html',
+        imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective]
+    })
+    export class GridLiteSampleComponent { }
+    ```
+    ```html
+    <igx-grid-lite [data]="data">
+        <igx-grid-lite-column field="name" header="Name" [sortable]="true">
+            <ng-template igxGridLiteCell let-value>
+                <strong>{{ value }}</strong>
+            </ng-template>
+        </igx-grid-lite-column>
+    </igx-grid-lite>
+    ```
+
+### General
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - Improved performance by dynamically adjusting the scroll throttle based on the data displayed in grid.
+
+- `IgxCombo`, `IgxSimpleCombo`
+    - Combo and Simple Combo now close the dropdown list and move the focus to the next focusable element on "Tab" press and clear the selection if the combo is collapsed on "Escape".
+
+### Breaking Changes
+
+- `igxForOf`, `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`, `igxPivotGrid`
+    - original `data` array mutations (like adding/removing/moving records in the original array) are no longer detected automatically. Components need an array ref change for the change to be detected.
+- `IgxGridGroupByAreaComponent` has moved from the `grids/core` to the `grids/grid` entry point. The `ng update` migration will prompt you to optionally migrate your imports to the new entry point.
+
+### Localization(i18n)
+
+- `IgxActionStrip`, `IgxBanner`, `IgxCalendar`, `IgxCarousel`, `IgxChip`, `IgxCombo`, `IgxDatePicker`, `IgxDateRangePicker`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxInputs`, `IgxList`, `IgxPaginator`, `IgxQueryBuilder`, `IgxTimePicker`, `IgxTree`
+  - New `Intl` implementation for all currently supported components that format and render data like dates and numbers.
+  - New localization implementation for the currently supported languages for all components that have resource strings in the currently supported languages.
+  - New public localization API and package named `igniteui-i18n-resources` containing the new resources that are used in conjunction.
+  - Added API to toggle off Angular's default formatting completely in favor of the new `Intl` implementation. Otherwise `Intl` will be used when a locale is not defined for Angular to use.
+  - Old resources and API should still remain working and not experience any change in behavior, despite internally using the new localization as well.
+
+## 21.0.0
+
+### New Features
+
+- **New component** `IgxChat`:
+    - A component that provides complete solution for building conversational interfaces in your applications. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/chat/README.md)
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added PDF export functionality to grid components. Grids can now be exported to PDF format alongside the existing Excel and CSV export options.
+
+        The new `IgxPdfExporterService` follows the same pattern as Excel and CSV exporters:
+
+        ```ts
+        import { IgxPdfExporterService, IgxPdfExporterOptions } from 'igniteui-angular';
+
+        constructor(private pdfExporter: IgxPdfExporterService) {}
+        
+        exportToPdf() {
+            const options = new IgxPdfExporterOptions('MyGridExport');
+            options.pageOrientation = 'landscape'; // 'portrait' or 'landscape' (default: 'landscape')
+            options.pageSize = 'a4'; // 'a3', 'a4', 'a5', 'letter', 'legal', etc.
+            options.fontSize = 10;
+            options.showTableBorders = true;
+            
+            this.pdfExporter.export(this.grid, options);
+        }
+        ```
+
+        The grid toolbar exporter component now includes a PDF export button:
+
+        ```html
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-exporter 
+                [exportPDF]="true" 
+                [exportExcel]="true" 
+                [exportCSV]="true">
+            </igx-grid-toolbar-exporter>
+        </igx-grid-toolbar>
+        ```
+
+        Key features:
+        - **Multi-page support** with automatic page breaks
+        - **Hierarchical visualization** for TreeGrid (with indentation) and HierarchicalGrid (with child tables)
+        - **Multi-level column headers** (column groups) support
+        - **Summary rows** with proper value formatting
+        - **Text truncation** with ellipsis for long content
+        - **Landscape orientation** by default (suitable for wide grids)
+        - **Internationalization** support for all 19 supported languages
+        - Respects all grid export options (ignoreFiltering, ignoreSorting, ignoreColumnsVisibility, etc.)
+
+### Breaking Changes
+
+- `IgxButton`
+    - The following shadow-related parameters were removed from the `outlined-button-theme` and `flat-button-theme`:
+        - `resting-shadow`
+        - `hover-shadow`
+        - `focus-shadow`
+        - `active-shadow`
+
+#### Dependency Injection Refactor
+- All internal DI now uses the `inject()` API across `igniteui-angular` (no more constructor DI in library code).
+- If you extend our components/services or call their constructors directly, remove DI params and switch to `inject()` (e.g., `protected foo = inject(FooService);`).
+- App usage via templates remains the same; no action needed unless you subclass/override our types.
+
+#### Multiple Entry Points Support
+
+The library now supports multiple entry points for better tree-shaking and code splitting. While the main entry point (`igniteui-angular`) remains fully backwards compatible by re-exporting all granular entry points, we recommend migrating to the new entry points for optimal bundle sizes.
+
+**Entry Points:**
+- `igniteui-angular/core` - Core utilities, services, and base types
+- `igniteui-angular/directives` - Common directives
+- Component-specific entry points: `igniteui-angular/grids`, `igniteui-angular/input-group`, `igniteui-angular/drop-down`, etc.
+- Grid-specific entry points for tree-shakable imports:
+  - `igniteui-angular/grids/core` - Shared grid infrastructure (columns, toolbar, filtering, sorting, etc.)
+  - `igniteui-angular/grids/grid` - Standard grid component (`IgxGridComponent`)
+  - `igniteui-angular/grids/tree-grid` - Tree grid component (`IgxTreeGridComponent`)
+  - `igniteui-angular/grids/hierarchical-grid` - Hierarchical grid component (`IgxHierarchicalGridComponent`, `IgxRowIslandComponent`)
+  - `igniteui-angular/grids/pivot-grid` - Pivot grid component (`IgxPivotGridComponent`, `IgxPivotDataSelectorComponent`)
+
+**Migration:**
+The `ng update` migration will prompt you to optionally migrate your imports to the new entry points. If you choose not to migrate, you can continue using the main entry point with full backwards compatibility.
+
+To migrate manually later:
+```bash
+ng update igniteui-angular --migrate-only --from=20.1.0 --to=21.0.0
+```
+
+**Component Relocations:**
+- Input directives (`IgxHintDirective`, `IgxInputDirective`, `IgxLabelDirective`, `IgxPrefixDirective`, `IgxSuffixDirective`) → `igniteui-angular/input-group`
+- `IgxAutocompleteDirective` → `igniteui-angular/drop-down`
+- `IgxRadioGroupDirective` → `igniteui-angular/radio`
+
+**Type Renames (to avoid conflicts):**
+- `Direction` → `CarouselAnimationDirection` (in carousel)
+
+**Benefits:**
+- Better tree-shaking - unused components won't be bundled
+- Code splitting - each component can be lazy-loaded separately
+- Smaller bundle sizes - import only what you need
+- Improved build performance
+
+See the [Angular Package Format documentation](https://angular.io/guide/angular-package-format#entrypoints-and-code-splitting) for more details on entry points.
+
+
+## 20.1.0
+
+### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced a new cell merging feature that allows you to configure and merge cells in a column based on same data or other custom condition, into a single cell.
 
