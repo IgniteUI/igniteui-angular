@@ -1,4 +1,5 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     DefaultTreeGridMergeStrategy,
@@ -57,6 +58,8 @@ import { INVOICE_DATA } from '../shared/invoiceData';
     ]
 })
 export class GridCellMergingComponent {
+    private readonly document = inject(DOCUMENT);
+    public themeLoaded = signal(false);
     public hierarchicalData = HIERARCHICAL_DATA.concat(HIERARCHICAL_DATA).concat(HIERARCHICAL_DATA);
     public treeData = HIERARCHICAL_SAMPLE_DATA;
     public treeGridMergeStrategy =  new ByLevelTreeGridMergeStrategy();
@@ -75,6 +78,22 @@ export class GridCellMergingComponent {
         }
 
         this.data = allData;
+    }
+
+    public toggleTheme(): void {
+        const id = 'grid-cell-merging-theme';
+        const existing = this.document.getElementById(id);
+        if (existing) {
+            existing.remove();
+            this.themeLoaded.set(false);
+        } else {
+            const link = this.document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'assets/grid-cellMerging/theme.css';
+            link.id = id;
+            this.document.head.appendChild(link);
+            this.themeLoaded.set(true);
+        }
     }
 
     public toggleStrategy() {

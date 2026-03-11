@@ -28,7 +28,12 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/web.config"
+              "src/web.config",
+              {
+                "glob": "theme.css",
+                "input": "src/app/grid-cellMerging",
+                "output": "assets/grid-cellMerging"
+              }
             ],
             "styles": [
               "src/styles/styles.scss"
