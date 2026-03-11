@@ -60,6 +60,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run agent:copilot
+        continue-on-error: true
 
       - name: Upload Copilot eval results
         if: always()
@@ -91,6 +92,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npm run agent:gemini
+        continue-on-error: true
 
       - name: Upload Gemini eval results
         if: always()

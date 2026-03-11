@@ -147,7 +147,7 @@ run_agent_task() {
   fi
   CMD_ARGS+=("$FULL_PROMPT")
 
-  # Add auto-approve args (e.g., --yes, --sandbox)
+  # Add auto-approve args (e.g., --yes for copilot, --yolo for gemini)
   if [ -n "$AGENT_APPROVE_ARGS" ]; then
     read -ra _APPROVE_PARTS <<< "$AGENT_APPROVE_ARGS"
     CMD_ARGS+=("${_APPROVE_PARTS[@]}")
@@ -256,6 +256,12 @@ run_task() {
 }
 EOF
 
+  # In agent mode, a low score is a measurement result, NOT a script error.
+  # Only propagate the grader exit code in validate mode (where failure means
+  # the reference solution itself is broken).
+  if [ "$MODE" = "agent" ]; then
+    return 0
+  fi
   return "$GRADER_EXIT"
 }
 
@@ -345,7 +351,8 @@ run_task_trials() {
 }
 EOF
 
-  [ "$PASS_AT_K" -eq 1 ] && return 0 || return 1
+  # Agent eval scores are measurements, not pass/fail gates — always succeed.
+  return 0
 }
 
 # --- main ------------------------------------------------------------------ #

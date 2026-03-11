@@ -13,7 +13,7 @@
       "command": "gemini",
       "installCommand": "npm install -g @google/gemini-cli",
       "promptArgs": ["-p"],
-      "autoApproveArgs": ["--sandbox"],
+      "autoApproveArgs": ["--yolo"],
       "envAuth": "GEMINI_API_KEY",
       "description": "Google Gemini CLI (requires GEMINI_API_KEY)"
     }
