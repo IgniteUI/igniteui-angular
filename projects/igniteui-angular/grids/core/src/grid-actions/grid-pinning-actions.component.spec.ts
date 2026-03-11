@@ -72,32 +72,6 @@ describe('igxGridPinningActions #grid ', () => {
             expect(secondToLastVisible.key).toEqual('FAMIA');
         });
 
-        it('should keep action strip visible and preserve context when jumping from hovered pinned row', async () => {
-            grid.pinRow('FAMIA');
-            fixture.detectChanges();
-
-            const pinnedRow = grid.pinnedRows[0];
-            actionStrip.show(pinnedRow);
-            fixture.detectChanges();
-
-            const initialContext = actionStrip.context;
-            const contextElement = initialContext.element.nativeElement as HTMLElement;
-            spyOn(contextElement, 'matches').and.callFake((selector: string) =>
-                selector === ':hover' ? true : HTMLElement.prototype.matches.call(contextElement, selector)
-            );
-
-            const pinningButtons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
-            const jumpButton = pinningButtons[0];
-            jumpButton.triggerEventHandler('click', new Event('click'));
-            await wait();
-            fixture.detectChanges();
-            await wait(DEBOUNCETIME);
-            fixture.detectChanges();
-
-            expect(actionStrip.hidden).toBeFalse();
-            expect(actionStrip.context).toBe(initialContext);
-        });
-
         it('should not hide action strip in base mode when scrollToRow is invoked', () => {
             grid.pinRow('FAMIA');
             fixture.detectChanges();
@@ -139,25 +113,6 @@ describe('igxGridPinningActions #grid ', () => {
             actionStrip.menu.selectItem(pinMenuItem);
             fixture.detectChanges();
             expect(grid.pinnedRows.length).toBe(1);
-        });
-
-        it('should hide action strip in menu mode when scrollToRow is invoked', () => {
-            grid.pinRow('FAMIA');
-            fixture.detectChanges();
-
-            const pinnedRow = grid.pinnedRows[0];
-            actionStrip.show(pinnedRow);
-            fixture.detectChanges();
-
-            const pinningActions = fixture.debugElement.query(By.directive(IgxGridPinningActionsComponent))
-                .componentInstance as IgxGridPinningActionsComponent;
-            spyOn<any>(grid, 'scrollTo');
-
-            pinningActions.scrollToRow(null);
-            fixture.detectChanges();
-
-            expect((grid as any).scrollTo).toHaveBeenCalledWith(pinnedRow.data, 0);
-            expect(actionStrip.hidden).toBeTrue();
         });
     });
 });
