@@ -1,15 +1,15 @@
-<div class="hgrid-sample">
-    <h4 class="sample-title">Sample One</h4>
-    <button igxButton="contained" (click)="log()">Layout</button>
-    <div class="density-chooser" style="margin-bottom: 16px">
-        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"
-            style="display: block; width: 500px"></igx-buttongroup>
+
+    <div class="sample-header">
+        <button igxButton="contained" (click)="log()">Layout</button>
+        <div class="density-chooser">
+            <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
+        </div>
+        <button igxButton="contained" (click)="getState()">Get state</button>
     </div>
-    <button igxButton="contained" (click)="getState()">Get state</button>
     <igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" class="hgrid"
         [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
         [rowDraggable]="true" [height]="'800px'" filterMode="excelStyleFilter" [width]="'100%'" [expandChildren]="rootExpanded"
-        #hGrid [rowClasses]="rowClasses">
+        #hGrid>
         <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'500px'">
             <igx-excel-style-column-operations>
                 <igx-excel-style-header [showPinning]="true" [showHiding]="true">
@@ -127,8 +127,8 @@
         <igx-paginator></igx-paginator>
     </igx-hierarchical-grid>
 
-    <h4 class="sample-title">Sample two</h4>
-    <div class="sample-actions">
+
+    <div class="sample-header">
         <button igxButton="contained" (click)="enableSummary()">Enable Summaries</button>
         <button igxButton="contained" (click)='setterBindingChange()'>Set rowSelection via binding</button>
         <button igxButton="contained" (click)='setterChange()'>Set rowSelection via setter on 1st layout</button>
@@ -155,8 +155,8 @@
     </igx-hierarchical-grid>
 
 
-    <h4 class="sample-title">Sample three (batch editing)</h4>
-    <div class="sample-actions">
+    <h4 class="sample-title">Three batch editing</h4>
+    <div class="sample-header">
         <button igxButton="contained" (click)='riToggle = !riToggle'>Change row islands runtime</button>
         <button igxButton="contained" (click)="columnsReady = !columnsReady">Toggle columns</button>
         <button igxButton="contained" (click)="layoutsReady = !layoutsReady">Toggle child layouts</button>
@@ -195,8 +195,7 @@
         }
     </igx-hierarchical-grid>
 
-    <h4 class="sample-title">Sample 4</h4>
-    <div class="sample-actions">
+    <div class="sample-header">
         <button igxButton="contained" (click)='LoadMoreColumns()'>Add columns runtime</button>
         <button igxButton="contained" (click)='changeData()'>Change data runtime</button>
         <button igxButton="contained" (click)='changeHeaderRI(ri1, 0)'>Change child col header 1</button>
@@ -217,4 +216,4 @@
             }
         </igx-row-island>
     </igx-hierarchical-grid>
-</div>
+

@@ -45,11 +45,6 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     public childColumns;
     public toolbarTitle = 'Child Grid 1';
 
-    public evenCondition = (row: RowType) =>  parseInt(row.data['ID'], 0) % 2 === 0;
-    public rowClasses = {
-        activeRow: this.evenCondition,
-    };
-
     constructor(private cdr: ChangeDetectorRef) {
         this.sizes = [
             { label: 'small', selected: this.size === 'small', togglable: true },
