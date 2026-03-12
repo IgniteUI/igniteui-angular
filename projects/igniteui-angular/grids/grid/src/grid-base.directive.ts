@@ -7797,7 +7797,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keepActionStrip =
             !!context?.pinned &&
             !!contextEl?.isConnected &&
-            !context?.asMenuItems;
+            !(this.actionStrip?.menuItems?.length > 0);
 
         if (!keepActionStrip) {
             if (this.actionStrip) {
