@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/switch' as *;
+
+$material: digest-schema($dark-material-switch);
+$bootstrap: digest-schema($dark-bootstrap-switch);
+$fluent: digest-schema($dark-fluent-switch);
+$indigo: digest-schema($dark-indigo-switch);

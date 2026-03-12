@@ -1,0 +1,18 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-tabs) {
+        --nav-btn-border-color: #{var-get($theme, 'border-color')};
+
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+}

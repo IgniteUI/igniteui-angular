@@ -1,0 +1,83 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/themes/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-calendar-picker) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: rem(24px);
+        position: relative;
+        color: var-get($theme, 'picker-foreground');
+        background: var-get($theme, 'picker-background');
+        margin: 0;
+
+        &:focus,
+        &:focus-within {
+            outline: none;
+        }
+
+        @include e(dates) {
+            display: flex;
+            gap: rem(4px);
+        }
+
+        @include e(nav) {
+            display: flex;
+            position: absolute;
+            inset-inline-end: rem(16px);
+        }
+
+        @include e(date) {
+            color: var-get($theme, 'picker-foreground');
+            text-align: center;
+            outline: none;
+            transition: color 150ms ease-in-out 0s;
+
+            &:hover {
+                color: var-get($theme, 'picker-hover-foreground');
+                cursor: pointer;
+            }
+
+            &:focus {
+                color: var-get($theme, 'picker-focus-foreground');
+            }
+        }
+
+        // Styles for the previous/next month/year view
+        %igx-calendar-picker__prev-next {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var-get($theme, 'navigation-color');
+            user-select: none;
+            outline: none;
+            cursor: pointer;
+
+            &:hover {
+                color: var-get($theme, 'navigation-hover-color');
+            }
+
+            &:focus {
+                color: var-get($theme, 'navigation-focus-color');
+            }
+
+            [dir='rtl'] & {
+                transform: scaleX(-1);
+            }
+        }
+
+        @include e(prev) {
+            @extend %igx-calendar-picker__prev-next;
+        }
+
+        @include e(next) {
+            @extend %igx-calendar-picker__prev-next;
+        }
+    }
+}
