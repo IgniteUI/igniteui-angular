@@ -16,10 +16,10 @@
 >
 </igx-grid-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
+<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)"
         (keydown)="navigation.handleNavigation($event)" (dragStop)="selectionService.dragMode = $event"
-        (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? null : 'row'"
+        (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? 'rowgroup' : 'row'"
         [style.height.px]="totalHeight" [style.width.px]="totalCalcWidth" [style.width]="!platform.isBrowser ? '100%' : undefined" #tbody (scroll)="preventContainerScroll($event)">
         @if (moving && columnInDrag && pinnedColumns.length <= 0) {
             <span
@@ -151,8 +151,8 @@
     <div igxOverlayOutlet #igxBodyOverlayOutlet="overlay-outlet"></div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]="summaryRowHeight" #tfoot>
-    <div tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
+<div class="igx-grid__tfoot" role="presentation" [style.height.px]="summaryRowHeight" #tfoot>
+    <div tabindex="0" role="rowgroup" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
         (keydown)="navigation.summaryNav($event)">
         @if (hasSummarizedColumns && rootSummariesEnabled) {
             <igx-grid-summary-row [style.width.px]="calcWidth" [style.height.px]="summaryRowHeight"

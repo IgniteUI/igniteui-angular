@@ -30,8 +30,8 @@
 >
 </igx-grid-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
-    <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
+<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
+    <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? 'rowgroup' : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]="totalHeight" [style.width.px]="totalCalcWidth" [style.width]="!platform.isBrowser ? '100%' : undefined" #tbody [attr.aria-activedescendant]="activeDescendant">
@@ -185,8 +185,8 @@
 </div>
 
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]="summaryRowHeight" #tfoot>
-    <div tabindex="0" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" [attr.aria-activedescendant]="activeDescendant">
+<div class="igx-grid__tfoot" role="presentation" [style.height.px]="summaryRowHeight" #tfoot>
+    <div tabindex="0" role="rowgroup" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" [attr.aria-activedescendant]="activeDescendant">
         @if (hasSummarizedColumns && rootSummariesEnabled) {
             <igx-grid-summary-row [style.width.px]="calcWidth"  [style.height.px]="summaryRowHeight"
                 [gridID]="id" role="row"

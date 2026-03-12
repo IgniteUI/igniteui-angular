@@ -17,9 +17,9 @@
 >
 </igx-pivot-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
+<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <ng-container *ngTemplateOutlet="rowDimensions.length ? (hasHorizontalLayout ? horizontalRowDimensionsTemplate : defaultRowDimensionsTemplate) : emptyRowDimensionsTemplate; context: this"></ng-container>
-    <div class="igx-grid__tbody-content" tabindex="0"  [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
+    <div class="igx-grid__tbody-content" tabindex="0"  [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? 'rowgroup' : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]="totalHeight" [style.width.px]="pivotContentCalcWidth || null" [style.width]="!platform.isBrowser ? '100%' : undefined" #tbody [attr.aria-activedescendant]="activeDescendant">
@@ -94,7 +94,7 @@
     <div class="igx-grid__scroll-end" [style.width.px]="pivotPinnedEndWidth" [style.min-width.px]="pivotPinnedEndWidth" [hidden]="pivotPinnedEndWidth === 0"></div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup" #tfoot>
+<div class="igx-grid__tfoot" role="presentation" #tfoot>
 </div>
 
 <div class="igx-grid__footer" role="presentation" #footer>
