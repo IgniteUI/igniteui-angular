@@ -9,7 +9,6 @@ import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirect
 import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
 import {
-    IgxOverlayOutletDirective,
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
     WEEKDAYS,
@@ -1064,7 +1063,6 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.isDropdown).toEqual(true);
                 expect(datePicker.minValue).toEqual(undefined);
                 expect(datePicker.maxValue).toEqual(undefined);
-                expect(datePicker.outlet).toEqual(undefined);
                 expect(datePicker.specialDates).toEqual(null);
                 expect(datePicker.spinDelta).toEqual(undefined);
                 expect(datePicker.spinLoop).toEqual(true);
@@ -1152,15 +1150,6 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.maxValue).toEqual(today);
                 datePicker.maxValue = '12/12/1998';
                 expect(datePicker.maxValue).toEqual('12/12/1998');
-                datePicker.outlet = null;
-                expect(datePicker.outlet).toEqual(null);
-                const mockEl: ElementRef = jasmine.createSpyObj<ElementRef>('mockEl', ['nativeElement']);
-                datePicker.outlet = mockEl;
-                expect(datePicker.outlet).toEqual(mockEl);
-                const mockOverlayDirective: IgxOverlayOutletDirective =
-                    jasmine.createSpyObj<IgxOverlayOutletDirective>('mockEl', ['nativeElement']);
-                datePicker.outlet = mockOverlayDirective;
-                expect(datePicker.outlet).toEqual(mockOverlayDirective);
                 const specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Weekdays },
                 { type: DateRangeType.Before, dateRange: [today] }];
                 datePicker.specialDates = specialDates;
@@ -1286,13 +1275,11 @@ describe('IgxDatePicker', () => {
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDropdownSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
-                const mockOutlet = {} as any;
-                datePicker.outlet = mockOutlet;
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
                     viewsContainerRef,
-                    Object.assign({}, baseDropdownSettings, { outlet: mockOutlet }),
+                    Object.assign({}, baseDropdownSettings),
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 let mockSettings: OverlaySettings = {
@@ -1300,7 +1287,6 @@ describe('IgxDatePicker', () => {
                     closeOnOutsideClick: true,
                     modal: false
                 };
-                datePicker.outlet = null;
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,

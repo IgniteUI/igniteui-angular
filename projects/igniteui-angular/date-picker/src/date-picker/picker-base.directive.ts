@@ -12,7 +12,6 @@ import {
     EditorProvider,
     IBaseCancelableBrowserEventArgs,
     IBaseEventArgs,
-    IgxOverlayOutletDirective,
     IgxPickerClearComponent,
     IgxPickerToggleComponent,
     IToggleView,
@@ -184,24 +183,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     public set weekStart(value: WEEKDAYS | number) {
         this._weekStart = value;
     }
-
-    /**
-     * @deprecated Still supported and used by the overlay service when provided but will
-     * be removed in a future version. Avoid using this property in new code and prefer
-     * the default in-place rendering with the HTML Popover API.
-     *
-     * The container used for the pop-up element.
-     *
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * <!-- ... -->
-     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
-     * <!-- ... -->
-     * ```
-     */
-    @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * Determines how the picker's input will be styled.
