@@ -298,6 +298,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.selectionChanging.emit(args);
             if (!args.cancel) {
                 this.selectionService.select_items(this.id, [], true);
+                const changedArgs: ISimpleComboSelectionChangedEventArgs = {
+                    newValue: undefined,
+                    oldValue: this.selectedItem,
+                    newSelection: undefined,
+                    oldSelection: this.selection,
+                    displayText: typeof event === 'string' ? event : event?.target?.value,
+                    owner: this
+                };
+                this.selectionChanged.emit(changedArgs);
             }
         }
         // when filtering the focused item should be the first item or the currently selected item
