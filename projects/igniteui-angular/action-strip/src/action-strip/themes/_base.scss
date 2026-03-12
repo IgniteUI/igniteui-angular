@@ -30,6 +30,7 @@ $_theme: $material;
 
     @include b(igx-action-strip) {
         @include sizable();
+
         --action-strip-size: var(--component-size);
         --button-size: #{sizable(rem(28px), rem(28px), rem(36px))};
 
@@ -70,7 +71,6 @@ $_theme: $material;
             color: var-get($_theme, 'icon-color');
             border-radius: var-get($_theme, 'actions-border-radius');
             background: var-get($_theme, 'actions-background');
-            max-height: rem(36px);
 
             &:last-child {
                 margin-inline-end: 0;
