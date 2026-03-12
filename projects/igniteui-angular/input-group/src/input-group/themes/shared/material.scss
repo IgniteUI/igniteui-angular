@@ -15,7 +15,7 @@ $input-bottom-spacing: rem(6px);
 @include themed-block(igx-input-group, material) {
     --_prefix-suffix-spacing: #{pad-inline(rem(12px), rem(14px), rem(16px))};
     --_bundle-template-rows: #{var-get($_theme, 'size')};
-    --_floating-label-position: #{rem(-12px)};
+    --_floating-label-position: #{rem(-10px)};
 
     &:has([igxLabel], igx-label) {
         --_input-top-spacing: #{$input-top-spacing};
@@ -25,16 +25,16 @@ $input-bottom-spacing: rem(6px);
         --_hint-row: 2;
     }
 
-    &:has(:not([igxLabel], igx-label)) {
-        --_hint-row: 2;
-    }
-
     row-gap: rem(4px);
 
     @include e(bundle) {
         grid-row: var(--_bundle-row);
 
         grid-template-columns: subgrid;
+
+        > * {
+            grid-row: var(--_bundle-row);
+        }
     }
 
     @include e(file-input) {
@@ -46,22 +46,18 @@ $input-bottom-spacing: rem(6px);
     @include e(bundle-start) {
         overflow: clip;
         min-width: $bundle-start-end-min-width;
+        height: var-get($_theme, 'size');
     }
 
     @include e(bundle-end) {
         overflow: clip;
         min-width: $bundle-start-end-min-width;
-    }
-
-    @include e(bundle) {
-        > * {
-            grid-row: var(--_bundle-row);
-        }
+        height: var-get($_theme, 'size');
     }
 
     @include e(hint) {
         grid-row: var(--_hint-row);
-        min-height: rem(21px);
+        min-height: rem(22px);
         padding-inline: sizable(rem(12px), rem(14px), rem(16px));
     }
 
@@ -80,6 +76,7 @@ $input-bottom-spacing: rem(6px);
         @include e(bundle-main) {
             padding-inline: $input-inline-padding;
             grid-column: 2;
+            height: var-get($_theme, 'size');
         }
 
         @include e(label) {
@@ -308,6 +305,7 @@ $input-bottom-spacing: rem(6px);
 
         @include e(bundle-main) {
             padding-block-start: var(--_input-top-spacing);
+            height: auto;
         }
 
         @include e(textarea) {
@@ -466,6 +464,10 @@ $input-bottom-spacing: rem(6px);
     }
 
     @include m(file) {
+        @include e(input) {
+            grid-row: var(--_bundle-row);
+        }
+
         @include e(file-input) {
             background: var-get($_theme, 'file-names-background');
             color: var-get($_theme, 'file-names-foreground');
@@ -555,6 +557,7 @@ $input-bottom-spacing: rem(6px);
         }
 
         @include e(bundle) {
+            grid-template-columns: var(--_bundle-template-columns);
             grid-column: 1 / -1;
             background: var-get($_theme, 'border-background');
             border-radius: var-get($_theme, 'border-border-radius');

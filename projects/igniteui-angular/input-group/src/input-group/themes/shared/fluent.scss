@@ -48,7 +48,6 @@ $_theme: $fluent;
         border: rem(1px) solid var-get($_theme, 'border-color');
 
         > * {
-            grid-row: revert;
             min-height: 0;
             height: 100%;
         }
@@ -75,8 +74,8 @@ $_theme: $fluent;
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            background: transparent;
-            color: color($color: 'primary', $variant: 500);
+            background: transparent !important;
+            color: color($color: 'primary', $variant: 500) !important;
         }
     }
 
@@ -90,7 +89,7 @@ $_theme: $fluent;
 
         igx-suffix,
         [igxSuffix] {
-            color: var(--ig-input-group-input-suffix-color--focused, var(--ig-gray-900));
+            color: var(--ig-input-group-input-suffix-color--focused, var(--ig-gray-900)) !important;
         }
     }
 
@@ -114,14 +113,14 @@ $_theme: $fluent;
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            color: var(--ig-input-group-disabled-text-color, var(--ig-gray-500));
+            color: var(--ig-input-group-disabled-text-color, var(--ig-gray-500)) !important;
         }
     }
 
     @include mx(readonly, search, focused) {
         igx-suffix,
         [igxSuffix] {
-            color: var(--ig-input-group-input-suffix-color--focused, var(--ig-gray-900));
+            color: var(--ig-input-group-input-suffix-color--focused, var(--ig-gray-500)) !important;
         }
     }
 
@@ -254,11 +253,11 @@ $_theme: $fluent;
 
     @include m(file) {
         @include e(input) {
-            grid-row: 1;
+            grid-row: var(--_bundle-row);
         }
 
         @include e(upload) {
-            grid-row: 1;
+            grid-row: var(--_bundle-row);
         }
     }
 }

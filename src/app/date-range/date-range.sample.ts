@@ -151,7 +151,15 @@ export class DateRangeSampleComponent {
         hint: {
             label: 'Hint Text',
             control: {
-                type: 'text'
+                type: 'text',
+                defaultValue: 'Helper text'
+            }
+        },
+        inputLabel: {
+            label: 'Label text',
+            control: {
+                type: 'text',
+                defaultValue: 'Start Date'
             }
         },
         displayFormat: {

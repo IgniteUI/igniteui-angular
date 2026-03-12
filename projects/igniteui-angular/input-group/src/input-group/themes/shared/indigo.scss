@@ -141,11 +141,12 @@ $_theme: $indigo;
     @include m(file) {
         @include e(input) {
             padding-block: 0;
+            grid-row: var(--_bundle-row);
         }
 
         @include e(bundle) {
             > * {
-                grid-row: 1;
+                grid-row: var(--_bundle-row);
             }
         }
     }

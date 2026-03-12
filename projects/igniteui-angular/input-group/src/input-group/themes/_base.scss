@@ -16,18 +16,10 @@ $transition-timing: .25s $out-cubic;
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --_bundle-template-columns: auto 1fr auto;
         --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(12px), rem(16px))};
-        --_bundle-row: 1;
+        --_label-row: var(--_ig-input-label-row, 1);
+        --_bundle-row: var(--_ig-input-bundle-row, calc(var(--_label-row) + 1));
+        --_hint-row: var(--_ig-input-hint-row, calc(var(--_bundle-row) + 1));
 
-        &:has([igxLabel], igx-label) {
-            --_label-row: 1;
-            --_bundle-row: 2;
-            --_hint-row: 3;
-        }
-
-        &:not(:has([igxLabel], igx-label)) {
-            --_bundle-row: 1;
-            --_hint-row: 2;
-        }
 
         display: grid;
         grid-template-columns: var(--_bundle-template-columns);
@@ -254,7 +246,7 @@ $transition-timing: .25s $out-cubic;
             height: var-get($theme, 'size');
             color: var-get($theme, 'placeholder-color');
             grid-column: 3 / -2;
-            grid-row: 1;
+            grid-row: var(--_bundle-row);
 
             span {
                 @include ellipsis();
@@ -286,10 +278,6 @@ $transition-timing: .25s $out-cubic;
 
         @include m(file, $not: (border)) {
             --_bundle-template-columns: auto auto 1fr auto;
-
-            @include e(upload) {
-                grid-column: 2;
-            }
 
 
             @include e(bundle-main) {

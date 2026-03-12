@@ -70,6 +70,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
     @include e(hint) {
         @include type-style(body-2);
+
+        min-height: rem(24px);
     }
 
     @include e(input) {
@@ -338,6 +340,10 @@ $border-radius: var-get($_theme, 'border-border-radius');
     $transition-box-shadow: box-shadow .15s ease-out;
 
     @include m(file) {
+        @include e(input) {
+            grid-row: 2;
+        }
+
         @include e(bundle) {
             transition: $transition-box-shadow
         }
