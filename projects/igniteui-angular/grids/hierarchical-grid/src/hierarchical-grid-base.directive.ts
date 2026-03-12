@@ -83,6 +83,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /* blazorSuppress */
     /**
+     * @deprecated Still supported and used by the overlay service when provided but will
+     * be removed in a future version. Avoid using this property in new code and prefer
+     * the default in-place rendering with the HTML Popover API.
+     *
      * Gets the outlet used to attach the grid's overlays to.
      *
      * @remarks
@@ -94,6 +98,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /* blazorSuppress */
     /**
+     * @deprecated Still supported and used by the overlay service when provided but will
+     * be removed in a future version. Avoid using this property in new code and prefer
+     * the default in-place rendering with the HTML Popover API.
+     *
      * Sets the outlet used to attach the grid's overlays to.
      */
     public override set outlet(val: any) {

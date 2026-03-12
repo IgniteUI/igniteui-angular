@@ -31,6 +31,7 @@ import {
     OverlaySettings,
     Point,
     PositionSettings,
+    Util,
     VerticalAlignment
 } from './utilities';
 
@@ -40,7 +41,6 @@ const CLASS_OVERLAY_CONTENT_RELATIVE = 'igx-overlay__content--relative';
 const CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const CLASS_OVERLAY_WRAPPER_MODAL = 'igx-overlay__wrapper--modal';
 const CLASS_OVERLAY_WRAPPER_FLEX = 'igx-overlay__wrapper--flex';
-const CLASS_OVERLAY_MAIN = 'igx-overlay';
 const CLASS_SCROLLABLE_DIV = 'scrollableDiv';
 const DEBOUNCE_TIME = 16;
 
@@ -88,80 +88,80 @@ export const addScrollDivToElement = (parent) => {
  * @param screenRect Rectangle of the visible area
  * @param elastic Is elastic position strategy, defaults to false
  */
-// const getOverlayWrapperLocation = (
-//     positionSettings: PositionSettings,
-//     targetRect: ClientRect,
-//     wrapperRect: ClientRect,
-//     screenRect: ClientRect,
-//     elastic = false): Point => {
-//     const location: Point = new Point(0, 0);
+const getOverlayWrapperLocation = (
+    positionSettings: PositionSettings,
+    targetRect: DOMRect,
+    wrapperRect: DOMRect,
+    screenRect: DOMRect,
+    elastic = false): Point => {
+    const location: Point = new Point(0, 0);
 
-//     location.x =
-//         targetRect.left +
-//         targetRect.width * (1 + positionSettings.horizontalStartPoint) +
-//         wrapperRect.width * positionSettings.horizontalDirection;
-//     if (location.x < screenRect.left) {
-//         if (elastic) {
-//             let offset = screenRect.left - location.x;
-//             if (offset > wrapperRect.width - positionSettings.minSize.width) {
-//                 offset = wrapperRect.width - positionSettings.minSize.width;
-//             }
-//             location.x += offset;
-//         } else {
-//             const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
-//             if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
-//                 location.x = Math.max(0, targetRect.right - flipOffset);
-//             } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
-//                 location.x =
-//                     Math.max(0, targetRect.left + targetRect.width / 2 - flipOffset);
-//             } else {
-//                 location.x = Math.max(0, targetRect.left - flipOffset);
-//             }
-//         }
-//     } else if (location.x + wrapperRect.width > screenRect.right && !elastic) {
-//         const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
-//         if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
-//             location.x = Math.min(screenRect.right, targetRect.right - flipOffset);
-//         } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
-//             location.x = Math.min(screenRect.right, targetRect.left + targetRect.width / 2 - flipOffset);
-//         } else {
-//             location.x = Math.min(screenRect.right, targetRect.left - flipOffset);
-//         }
-//     }
+    location.x =
+        targetRect.left +
+        targetRect.width * (1 + positionSettings.horizontalStartPoint) +
+        wrapperRect.width * positionSettings.horizontalDirection;
+    if (location.x < screenRect.left) {
+        if (elastic) {
+            let offset = screenRect.left - location.x;
+            if (offset > wrapperRect.width - positionSettings.minSize.width) {
+                offset = wrapperRect.width - positionSettings.minSize.width;
+            }
+            location.x += offset;
+        } else {
+            const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
+            if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
+                location.x = Math.max(0, targetRect.right - flipOffset);
+            } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
+                location.x =
+                    Math.max(0, targetRect.left + targetRect.width / 2 - flipOffset);
+            } else {
+                location.x = Math.max(0, targetRect.left - flipOffset);
+            }
+        }
+    } else if (location.x + wrapperRect.width > screenRect.right && !elastic) {
+        const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
+        if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
+            location.x = Math.min(screenRect.right, targetRect.right - flipOffset);
+        } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
+            location.x = Math.min(screenRect.right, targetRect.left + targetRect.width / 2 - flipOffset);
+        } else {
+            location.x = Math.min(screenRect.right, targetRect.left - flipOffset);
+        }
+    }
 
-//     location.y =
-//         targetRect.top +
-//         targetRect.height * (1 + positionSettings.verticalStartPoint) +
-//         wrapperRect.height * positionSettings.verticalDirection;
-//     if (location.y < screenRect.top) {
-//         if (elastic) {
-//             let offset = screenRect.top - location.y;
-//             if (offset > wrapperRect.height - positionSettings.minSize.height) {
-//                 offset = wrapperRect.height - positionSettings.minSize.height;
-//             }
-//             location.y += offset;
-//         } else {
-//             const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
-//             if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
-//                 location.y = Math.max(0, targetRect.bottom - flipOffset);
-//             } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
-//                 location.y = Math.max(0, targetRect.top + targetRect.height / 2 - flipOffset);
-//             } else {
-//                 location.y = Math.max(0, targetRect.top - flipOffset);
-//             }
-//         }
-//     } else if (location.y + wrapperRect.height > screenRect.bottom && !elastic) {
-//         const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
-//         if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
-//             location.y = Math.min(screenRect.bottom, targetRect.bottom - flipOffset);
-//         } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
-//             location.y = Math.min(screenRect.bottom, targetRect.top + targetRect.height / 2 - flipOffset);
-//         } else {
-//             location.y = Math.min(screenRect.bottom, targetRect.top - flipOffset);
-//         }
-//     }
-//     return location;
-// };
+    location.y =
+        targetRect.top +
+        targetRect.height * (1 + positionSettings.verticalStartPoint) +
+        wrapperRect.height * positionSettings.verticalDirection;
+    if (location.y < screenRect.top) {
+        if (elastic) {
+            let offset = screenRect.top - location.y;
+            if (offset > wrapperRect.height - positionSettings.minSize.height) {
+                offset = wrapperRect.height - positionSettings.minSize.height;
+            }
+            location.y += offset;
+        } else {
+            const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
+            if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
+                location.y = Math.max(0, targetRect.bottom - flipOffset);
+            } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
+                location.y = Math.max(0, targetRect.top + targetRect.height / 2 - flipOffset);
+            } else {
+                location.y = Math.max(0, targetRect.top - flipOffset);
+            }
+        }
+    } else if (location.y + wrapperRect.height > screenRect.bottom && !elastic) {
+        const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
+        if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
+            location.y = Math.min(screenRect.bottom, targetRect.bottom - flipOffset);
+        } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
+            location.y = Math.min(screenRect.bottom, targetRect.top + targetRect.height / 2 - flipOffset);
+        } else {
+            location.y = Math.min(screenRect.bottom, targetRect.top - flipOffset);
+        }
+    }
+    return location;
+};
 
 /**
  * Formats a string according to the given formatters
@@ -312,6 +312,205 @@ describe('igxOverlay', () => {
             listener!(new KeyboardEvent('keydown', { key: 'Escape' }));
             expect(hideSpy).toHaveBeenCalledTimes(1);
         });
+
+        it('Should wrap element in-place', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            element.classList.add('test-element');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            // The element should still be inside its original parent's DOM tree
+            expect(parent.contains(element)).toBeTrue();
+            // A wrapper should have been inserted in the parent
+            const wrapper = parent.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(wrapper).toBeDefined();
+            // The element should be inside the wrapper's content div
+            expect(element.parentElement.classList.contains(CLASS_OVERLAY_CONTENT)).toBeTrue();
+
+            overlay.detach(id);
+            parent.remove();
+        });
+
+        it('Should move element to outlet when outlet is provided', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            element.classList.add('test-element');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                outlet: new ElementRef(outlet),
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            // The element should have been moved to the outlet
+            expect(outlet.contains(element)).toBeTrue();
+            // The element should no longer be in the original parent (only the hook remains)
+            expect(parent.contains(element)).toBeFalse();
+
+            overlay.detach(id);
+            parent.remove();
+        });
+
+        it('Should not create a hook element when outlet is not provided', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            // No hidden hook div should exist in the parent
+            const hookElements = Array.from(parent.querySelectorAll('div[style*="display: none"]'));
+            expect(hookElements.length).toEqual(0);
+
+            overlay.detach(id);
+            parent.remove();
+        });
+
+        it('Should unwrap element on detach', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            element.classList.add('test-element');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            // Verify element is wrapped
+            expect(element.parentElement.classList.contains(CLASS_OVERLAY_CONTENT)).toBeTrue();
+
+            overlay.detach(id);
+
+            // After detach, element should be back as a direct child of parent
+            expect(element.parentElement).toBe(parent);
+            // No wrapper should remain
+            const wrapper = parent.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(wrapper).toBeUndefined();
+
+            parent.remove();
+        });
+
+        it('Should show and hide overlay in-place', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(elementRef, settings);
+
+            overlay.show(id);
+            const info = overlay.getOverlayById(id);
+            expect(info.visible).toBeTrue();
+            // The wrapper should have popover attribute
+            expect(info.wrapperElement.getAttribute('popover')).toEqual('manual');
+
+            overlay.hide(id);
+            expect(info.visible).toBeFalse();
+
+            overlay.detach(id);
+            parent.remove();
+        });
+
+        it('Should support multiple in-place overlays simultaneously', () => {
+            const parent1 = document.createElement('div');
+            document.body.appendChild(parent1);
+            const element1 = document.createElement('div');
+            element1.classList.add('element-1');
+            parent1.appendChild(element1);
+
+            const parent2 = document.createElement('div');
+            document.body.appendChild(parent2);
+            const element2 = document.createElement('div');
+            element2.classList.add('element-2');
+            parent2.appendChild(element2);
+
+            const settings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+
+            const id1 = overlay.attach(new ElementRef(element1), settings);
+            const id2 = overlay.attach(new ElementRef(element2), settings);
+
+            // Both elements should be in-place wrapped
+            expect(parent1.contains(element1)).toBeTrue();
+            expect(parent2.contains(element2)).toBeTrue();
+
+            overlay.show(id1);
+            overlay.show(id2);
+
+            expect(overlay.getOverlayById(id1).visible).toBeTrue();
+            expect(overlay.getOverlayById(id2).visible).toBeTrue();
+
+            overlay.detach(id1);
+            overlay.detach(id2);
+
+            // Elements should be unwrapped back to their parents
+            expect(element1.parentElement).toBe(parent1);
+            expect(element2.parentElement).toBe(parent2);
+
+            parent1.remove();
+            parent2.remove();
+        });
+
+        it('Should allow mixing in-place and outlet overlay modes', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element1 = document.createElement('div');
+            parent.appendChild(element1);
+
+            const element2 = document.createElement('div');
+            parent.appendChild(element2);
+
+            const inPlaceSettings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const outletSettings: OverlaySettings = {
+                modal: false,
+                outlet: new ElementRef(outlet),
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+
+            const id1 = overlay.attach(new ElementRef(element1), inPlaceSettings);
+            const id2 = overlay.attach(new ElementRef(element2), outletSettings);
+
+            // in-place element stays in parent
+            expect(parent.contains(element1)).toBeTrue();
+            // outlet element is moved to the outlet
+            expect(outlet.contains(element2)).toBeTrue();
+
+            overlay.detach(id1);
+            overlay.detach(id2);
+            parent.remove();
+        });
     });
 
     describe('Unit Tests: ', () => {
@@ -329,16 +528,16 @@ describe('igxOverlay', () => {
             }).compileComponents();
         }));
 
-        it('OverlayElement should return a div attached to Document\'s body.', fakeAsync(() => {
+        it('should return a div attached to Document\'s body when dynamic component is shown without viewContainerRef', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
 
             fixture.componentInstance.buttonElement.nativeElement.click();
-            tick();
-            const overlayDiv = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv).toHaveClass(CLASS_OVERLAY_MAIN);
+            tick(DEBOUNCE_TIME);
+            const wrapperDiv = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
+            expect(wrapperDiv).toBeDefined();
+            expect(wrapperDiv).toHaveClass(CLASS_OVERLAY_WRAPPER_MODAL);
 
             fixture.componentInstance.overlay.detachAll();
         }));
@@ -349,7 +548,7 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             fixture.detectChanges();
 
-            let id = overlay.attach(SimpleDynamicComponent, { outlet: button, modal: false });
+            let id = overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { outlet: button, modal: false });
             overlay.show(id);
             tick();
 
@@ -360,19 +559,18 @@ describe('igxOverlay', () => {
             overlay.detach(id);
             tick();
 
-            id = overlay.attach(SimpleDynamicComponent, { modal: false });
+            id = overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { modal: false });
             overlay.show(id);
             tick();
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement.parentElement.classList).toContain(CLASS_OVERLAY_MAIN);
-            expect(wrapperElement.parentElement.parentElement).toBe(document.body);
+            expect((fixture.nativeElement as HTMLElement).parentElement.contains(wrapperElement)).toBeTrue();
             overlay.detach(id);
             tick();
 
             fixture.debugElement.nativeElement.appendChild(outlet);
-            id = overlay.attach(SimpleDynamicComponent, { modal: false, outlet: TestBed.inject(IgxOverlayOutletDirective) });
+            id = overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { modal: false, outlet: TestBed.inject(IgxOverlayOutletDirective) });
             overlay.show(id);
             tick();
             wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -390,12 +588,8 @@ describe('igxOverlay', () => {
             fixture.componentInstance.buttonElement.nativeElement.click();
             tick(DEBOUNCE_TIME);
 
-            const overlayElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayElement).toBeDefined();
-            expect(overlayElement.children.length).toEqual(1);
-
-            const wrapperElement = overlayElement.children[0];
+            const wrapperElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
             expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER_MODAL);
             expect(wrapperElement.children[0].localName).toEqual('div');
@@ -413,34 +607,31 @@ describe('igxOverlay', () => {
 
             const overlay = fixture.componentInstance.overlay;
 
-            overlay.show(overlay.attach(SimpleDynamicComponent));
-            tick();
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
+            tick(DEBOUNCE_TIME);
 
-            overlay.show(overlay.attach(SimpleDynamicComponent));
-            tick();
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
+            tick(DEBOUNCE_TIME);
 
-            let overlayDiv = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.children.length).toEqual(2);
-            expect((overlayDiv.children[0] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayDiv.children[1] as HTMLElement).style.visibility).toEqual('');
+            const wrappers = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL);
+            expect(wrappers.length).toEqual(2);
+            const wrapper0 = wrappers[0] as HTMLElement;
+            const wrapper1 = wrappers[1] as HTMLElement;
+            expect(wrapper0.style.visibility).toEqual('');
+            expect(wrapper1.style.visibility).toEqual('');
 
             overlay.hide('0');
             tick();
 
-            overlayDiv = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect((overlayDiv.children[0] as HTMLElement).style.visibility).toEqual('hidden');
-            expect((overlayDiv.children[1] as HTMLElement).style.visibility).toEqual('');
+            expect(wrapper0.style.visibility).toEqual('hidden');
+            expect(wrapper1.style.visibility).toEqual('');
 
             overlay.hide('1');
             tick();
 
-            overlayDiv = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect((overlayDiv.children[0] as HTMLElement).style.visibility).toEqual('hidden');
-            expect((overlayDiv.children[1] as HTMLElement).style.visibility).toEqual('hidden');
+            expect(wrapper0.style.visibility).toEqual('hidden');
+            expect(wrapper1.style.visibility).toEqual('hidden');
 
             overlay.detachAll();
         }));
@@ -450,24 +641,23 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
             const overlay = fixture.componentInstance.overlay;
 
-            overlay.show(overlay.attach(SimpleDynamicComponent));
-            overlay.show(overlay.attach(SimpleDynamicComponent));
-            tick();
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
+            tick(DEBOUNCE_TIME);
             fixture.detectChanges();
 
-            let overlayDiv = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.children.length).toEqual(2);
-            expect((overlayDiv.children[0] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayDiv.children[1] as HTMLElement).style.visibility).toEqual('');
+            const wrappers = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL);
+            expect(wrappers.length).toEqual(2);
+            const wrapper0 = wrappers[0] as HTMLElement;
+            const wrapper1 = wrappers[1] as HTMLElement;
+            expect(wrapper0.style.visibility).toEqual('');
+            expect(wrapper1.style.visibility).toEqual('');
 
             overlay.hideAll();
             tick();
-            overlayDiv = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect((overlayDiv.children[0] as HTMLElement).style.visibility).toEqual('hidden');
-            expect((overlayDiv.children[1] as HTMLElement).style.visibility).toEqual('hidden');
+            expect(wrapper0.style.visibility).toEqual('hidden');
+            expect(wrapper1.style.visibility).toEqual('hidden');
 
             overlay.detachAll();
         }));
@@ -478,17 +668,17 @@ describe('igxOverlay', () => {
             fixture.componentInstance.show();
             tick();
 
-            let overlayDiv = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.children.length).toEqual(1);
-            expect(overlayDiv.children[0].localName).toEqual('div');
+            let overlayWrapper = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_FLEX)[0] as HTMLElement;
+            expect(overlayWrapper).toBeDefined();
+            expect(overlayWrapper.children.length).toEqual(1);
+            expect(overlayWrapper.children[0].localName).toEqual('div');
 
             fixture.componentInstance.hide();
             tick();
-            overlayDiv = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayDiv).toBeUndefined();
+            overlayWrapper = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_FLEX)[0] as HTMLElement;
+            expect(overlayWrapper).toBeUndefined();
         }));
 
         it('Should properly emit events.', fakeAsync(() => {
@@ -831,14 +1021,14 @@ describe('igxOverlay', () => {
             button1.click();
             tick();
 
-            const overlayDiv = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            const wrapperElement1 = overlayDiv.children[0] as HTMLElement;
+            const wrappers = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER);
+            const wrapperElement1 = wrappers[0] as HTMLElement;
             expect(wrapperElement1.style.visibility).toEqual('');
 
             button2.click();
             tick();
-            const wrapperElement2 = overlayDiv.children[1] as HTMLElement;
+            const wrapperElement2 = wrappers[1] as HTMLElement;
             expect(wrapperElement1.style.visibility).toEqual('');
             expect(wrapperElement2.style.visibility).toEqual('');
 
@@ -851,9 +1041,9 @@ describe('igxOverlay', () => {
             fixture.componentInstance.show(overlaySettings);
             tick();
 
-            let overlayElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayElement).toBeDefined();
+            let overlayWrapperElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_FLEX)[0] as HTMLElement;
+            expect(overlayWrapperElement).toBeDefined();
 
             const scrollableDiv = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_SCROLLABLE_DIV)[0] as HTMLElement;
@@ -861,67 +1051,66 @@ describe('igxOverlay', () => {
             scrollableDiv.dispatchEvent(new Event('scroll'));
             tick();
 
-            overlayElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayElement).toBeDefined();
+            overlayWrapperElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_FLEX)[0] as HTMLElement;
+            expect(overlayWrapperElement).toBeDefined();
 
             scrollableDiv.scrollTop += 100;
             scrollableDiv.dispatchEvent(new Event('scroll'));
             tick();
 
-            overlayElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayElement).toBeDefined();
+            overlayWrapperElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_FLEX)[0] as HTMLElement;
+            expect(overlayWrapperElement).toBeDefined();
 
             fixture.componentInstance.hide();
         }));
 
-        // TODO: refactor utilities to include all exported methods in a class
-        // it('#1799 - content div should reposition on window resize.', fakeAsync(() => {
-        //     const rect: ClientRect = {
-        //         bottom: 50,
-        //         height: 0,
-        //         left: 50,
-        //         right: 50,
-        //         top: 50,
-        //         width: 0
-        //     };
-        //     const getPointSpy = spyOn(Util, 'getTargetRect').and.returnValue(rect);
-        //     const fixture = TestBed.createComponent(FlexContainerComponent);
-        //     fixture.detectChanges();
-        //     const overlayInstance = fixture.componentInstance.overlay;
-        //     const buttonElement: HTMLElement = fixture.componentInstance.buttonElement.nativeElement;
+        it('#1799 - content div should reposition on window resize.', fakeAsync(() => {
+            const rect = {
+                bottom: 50,
+                height: 0,
+                left: 50,
+                right: 50,
+                top: 50,
+                width: 0
+            };
+            const getPointSpy = spyOn(Util, 'getTargetRect').and.returnValue(rect);
+            const fixture = TestBed.createComponent(FlexContainerComponent);
+            fixture.detectChanges();
+            const overlayInstance = fixture.componentInstance.overlay;
+            const buttonElement: HTMLElement = fixture.componentInstance.buttonElement.nativeElement;
 
-        //     const id = overlayInstance.attach(
-        //         SimpleDynamicComponent,
-        //         { positionStrategy: new ConnectedPositioningStrategy({ target: buttonElement }) });
-        //     overlayInstance.show(id);
-        //     tick(DEBOUNCE_TIME);
+            const id = overlayInstance.attach(
+                SimpleDynamicComponent,
+                { positionStrategy: new ConnectedPositioningStrategy(), target: buttonElement });
+            overlayInstance.show(id);
+            tick(DEBOUNCE_TIME);
 
-        //     let contentElement = (fixture.nativeElement as HTMLElement)
-        //         .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0] as HTMLElement;
-        //     let contentRect = contentElement.getBoundingClientRect();
+            let contentElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0] as HTMLElement;
+            let contentRect = contentElement.getBoundingClientRect();
 
-        //     expect(50).toEqual(contentRect.left);
-        //     expect(50).toEqual(contentRect.top);
+            expect(50).toBeCloseTo(contentRect.left, 0);
+            expect(50).toBeCloseTo(contentRect.top, 0);
 
-        //     rect.left = 200;
-        //     rect.right = 200;
-        //     rect.top = 200;
-        //     rect.bottom = 200;
-        //     getPointSpy.and.callThrough().and.returnValue(rect);
-        //     window.resizeBy(200, 200);
-        //     window.dispatchEvent(new Event('resize'));
-        //     tick(DEBOUNCE_TIME);
+            rect.left = 200;
+            rect.right = 200;
+            rect.top = 200;
+            rect.bottom = 200;
+            getPointSpy.and.callThrough().and.returnValue(rect);
+            window.resizeBy(200, 200);
+            window.dispatchEvent(new Event('resize'));
+            tick(DEBOUNCE_TIME);
 
-        //     contentElement = (fixture.nativeElement as HTMLElement)
-        //         .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0] as HTMLElement;
-        //     contentRect = contentElement.getBoundingClientRect();
-        //     expect(200).toEqual(contentRect.left);
-        //     expect(200).toEqual(contentRect.top);
+            contentElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0] as HTMLElement;
+            contentRect = contentElement.getBoundingClientRect();
+            expect(200).toBeCloseTo(contentRect.left, 0);
+            expect(200).toBeCloseTo(contentRect.top, 0);
 
-        //     overlayInstance.hide(id);
-        // }));
+            overlayInstance.hide(id);
+        }));
 
         it('#2475 - An error is thrown for IgxOverlay when showing a component' +
             'instance that is not attached to the DOM', fakeAsync(() => {
@@ -947,9 +1136,8 @@ describe('igxOverlay', () => {
                 expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER_MODAL);
                 expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER_FLEX);
 
-                const overlayElement = wrapperElement.parentElement;
-                expect(overlayElement).toBeDefined();
-                expect(overlayElement).toHaveClass(CLASS_OVERLAY_MAIN);
+                // The wrapper is appended directly to document.body since the element was detached from the DOM
+                expect(wrapperElement.parentElement).toBe(document.body);
 
                 overlay.detachAll();
             }));
@@ -1032,28 +1220,25 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: true
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, overlaySettings));
             overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
-            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, overlaySettings));
             fixture.detectChanges();
             tick();
 
-            let overlayElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayElement).toBeDefined();
-            expect(overlayElement.childElementCount).toEqual(2);
-            expect((overlayElement.children[0] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[1] as HTMLElement).style.visibility).toEqual('');
+            const wrappers = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER);
+            expect(wrappers.length).toEqual(2);
+            expect((wrappers[0] as HTMLElement).style.visibility).toEqual('');
+            expect((wrappers[1] as HTMLElement).style.visibility).toEqual('');
 
             (overlay as any)._overlayInfos[0].elementRef.nativeElement.click();
             fixture.detectChanges();
             tick();
 
-            overlayElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayElement.childElementCount).toEqual(2);
-            expect((overlayElement.children[0] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[1] as HTMLElement).style.visibility).toEqual('hidden');
+            expect(wrappers.length).toEqual(2);
+            expect((wrappers[0] as HTMLElement).style.visibility).toEqual('');
+            expect((wrappers[1] as HTMLElement).style.visibility).toEqual('hidden');
 
             overlay.detachAll();
         }));
@@ -1200,45 +1385,45 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         });
 
-        // it('##6474 - should calculate correctly position', () => {
-        //     const elastic: ElasticPositionStrategy = new ElasticPositionStrategy();
-        //     const targetRect: ClientRect = {
-        //         top: 100,
-        //         bottom: 200,
-        //         height: 100,
-        //         left: 100,
-        //         right: 200,
-        //         width: 100
-        //     };
-        //     const elementRect: ClientRect = {
-        //         top: 0,
-        //         bottom: 300,
-        //         height: 300,
-        //         left: 0,
-        //         right: 300,
-        //         width: 300
-        //     };
-        //     const viewPortRect: ClientRect = {
-        //         top: 1000,
-        //         bottom: 1300,
-        //         height: 300,
-        //         left: 1000,
-        //         right: 1300,
-        //         width: 300
-        //     };
-        //     spyOn<any>(elastic, 'setStyle').and.returnValue({});
-        //     spyOn(Util, 'getViewportRect').and.returnValue(viewPortRect);
-        //     spyOn(Util, 'getTargetRect').and.returnValue(targetRect);
+        it('##6474 - should calculate correctly position', () => {
+            const elastic: ElasticPositionStrategy = new ElasticPositionStrategy();
+            const targetRect = {
+                top: 100,
+                bottom: 200,
+                height: 100,
+                left: 100,
+                right: 200,
+                width: 100
+            };
+            const elementRect = {
+                top: 0,
+                bottom: 300,
+                height: 300,
+                left: 0,
+                right: 300,
+                width: 300
+            };
+            const viewPortRect = {
+                top: 1000,
+                bottom: 1300,
+                height: 300,
+                left: 1000,
+                right: 1300,
+                width: 300
+            };
+            spyOn<any>(elastic, 'setStyle').and.returnValue({});
+            spyOn(Util, 'getViewportRect').and.returnValue(viewPortRect);
+            spyOn(Util, 'getTargetRect').and.returnValue(targetRect);
 
-        //     const mockElement = jasmine.createSpyObj('HTMLElement', ['getBoundingClientRect']);
-        //     spyOn(mockElement, 'getBoundingClientRect').and.returnValue(elementRect);
-        //     mockElement.classList = { add: () => { } };
-        //     mockElement.style = { width: '', height: '' };
-        //     elastic.position(mockElement, null, null, true);
+            const mockElement = jasmine.createSpyObj('HTMLElement', ['getBoundingClientRect']);
+            spyOn(mockElement, 'getBoundingClientRect').and.returnValue(elementRect);
+            mockElement.classList = { add: () => { } };
+            mockElement.style = { width: '', height: '' };
+            elastic.position(mockElement, null, null, true);
 
-        //     expect(mockElement.style.width).toBe('200px');
-        //     expect(mockElement.style.height).toBe('100px');
-        // });
+            expect(mockElement.style.width).toBe('200px');
+            expect(mockElement.style.height).toBe('100px');
+        });
 
         it('#16988 - should not reposition overlay when detached', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -1580,6 +1765,52 @@ describe('igxOverlay', () => {
 
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
         }));
+
+        it('Should show dynamic component without ViewContainerRef and log a warning', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+            const overlay = fixture.componentInstance.overlay;
+
+            spyOn(console, 'warn');
+
+            const id = overlay.attach(SimpleDynamicComponent);
+            overlay.show(id);
+            tick(DEBOUNCE_TIME);
+
+            expect(console.warn).toHaveBeenCalledWith(
+                'Overlay component is created without a ViewContainerRef. The element will be outside the Angular component tree and may not inherit styles. Prefer using the ViewContainerRef overload or provide an outlet.'
+            );
+
+            const wrapperElement = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
+            expect(wrapperElement).toBeDefined();
+            const componentElement = wrapperElement.querySelector('test-simple-dynamic-component');
+            expect(componentElement).toBeDefined();
+            expect(document.body.contains(wrapperElement)).toBeTrue();
+
+            overlay.detachAll();
+        }));
+
+        it('Should append dynamic component without ViewContainerRef to document body', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+            const overlay = fixture.componentInstance.overlay;
+
+            const id = overlay.attach(SimpleDynamicComponent);
+            overlay.show(id);
+            tick(DEBOUNCE_TIME);
+
+            const overlayInfo = overlay.getOverlayById(id);
+            expect(overlayInfo).toBeDefined();
+            expect(overlayInfo.wrapperElement).toBeDefined();
+            expect(overlayInfo.wrapperElement.isConnected).toBeTrue();
+            expect(document.body.contains(overlayInfo.wrapperElement)).toBeTrue();
+
+            const componentEl = overlayInfo.elementRef.nativeElement;
+            expect(componentEl).toBeDefined();
+            expect(document.body.contains(componentEl)).toBeTrue();
+
+            overlay.detachAll();
+        }));
     });
 
     describe('Integration tests: ', () => {
@@ -1610,12 +1841,12 @@ describe('igxOverlay', () => {
                 verticalStartPoint: VerticalAlignment.Top
             };
             overlaySettings.positionStrategy = new GlobalPositionStrategy(positionSettings);
-            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, overlaySettings));
             tick();
             fixture.detectChanges();
-            const overlayElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            const wrapperElement = overlayElement.children[0];
+            const wrapperElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
+            expect(wrapperElement).toBeDefined();
             expect(wrapperElement).toHaveClass(CLASS_OVERLAY_WRAPPER);
 
             overlay.detachAll();
@@ -1712,13 +1943,14 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
             const overlay = fixture.componentInstance.overlay;
 
-            overlay.show(overlay.attach(SimpleDynamicComponent));
-            tick();
-            const componentElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByTagName('test-simple-dynamic-component')[0] as HTMLElement;
-            const componentRect = componentElement.getBoundingClientRect();
-            expect((window.innerWidth - componentRect.width) / 2).toBeCloseTo(componentRect.left, 0);
-            expect((window.innerHeight - componentRect.height) / 2).toBeCloseTo(componentRect.top, 0);
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
+            tick(DEBOUNCE_TIME);
+            const wrapperElement = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
+            expect(wrapperElement).toBeDefined();
+            expect(wrapperElement).toHaveClass('igx-overlay__wrapper--flex');
+            expect(wrapperElement.style.justifyContent).toBe('center');
+            expect(wrapperElement.style.alignItems).toBe('center');
 
             overlay.detachAll();
         }));
@@ -2352,155 +2584,141 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
-        // it('Should display each shown component based on the options specified if the component fits into the visible window.',
-        //     fakeAsync(() => {
-        //         const fixture = TestBed.createComponent(EmptyPageComponent);
-        //         fixture.detectChanges();
+        it('Should display each shown component based on the options specified if the component fits into the visible window.',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
 
-        //         const overlay = fixture.componentInstance.overlay;
-        //         const button = fixture.componentInstance.buttonElement.nativeElement;
-        //         button.style.left = '150px';
-        //         button.style.top = '150px';
-        //         button.style.position = 'relative';
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                button.style.left = '150px';
+                button.style.top = '150px';
+                button.style.position = 'relative';
 
-        //         const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
-        //         const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-        //         hAlignmentArray.forEach(horizontalStartPoint => {
-        //             vAlignmentArray.forEach(verticalStartPoint => {
-        //                 hAlignmentArray.forEach(horizontalDirection => {
-        //                     //  do not check Center as we do nothing here
-        //                     if (horizontalDirection === 'Center') {
-        //                         return;
-        //                     }
-        //                     vAlignmentArray.forEach(verticalDirection => {
-        //                         //  do not check Middle as we do nothing here
-        //                         if (verticalDirection === 'Middle') {
-        //                             return;
-        //                         }
-        //                         const positionSettings: PositionSettings = {};
-        //                         positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
-        //                         positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
-        //                         positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
-        //                         positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
+                const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+                const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+                hAlignmentArray.forEach(horizontalStartPoint => {
+                    vAlignmentArray.forEach(verticalStartPoint => {
+                        hAlignmentArray.forEach(horizontalDirection => {
+                            //  do not check Center as we do nothing here
+                            if (horizontalDirection === 'Center') {
+                                return;
+                            }
+                            vAlignmentArray.forEach(verticalDirection => {
+                                //  do not check Middle as we do nothing here
+                                if (verticalDirection === 'Middle') {
+                                    return;
+                                }
+                                const positionSettings: PositionSettings = {};
+                                positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
+                                positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
+                                positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
+                                positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
 
-        //                         const overlaySettings: OverlaySettings = {
-        //                             target: button,
-        //                             positionStrategy: new AutoPositionStrategy(positionSettings),
-        //                             modal: false,
-        //                             closeOnOutsideClick: false
-        //                         };
+                                const overlaySettings: OverlaySettings = {
+                                    target: button,
+                                    positionStrategy: new AutoPositionStrategy(positionSettings),
+                                    modal: false,
+                                    closeOnOutsideClick: false
+                                };
 
-        //                         overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-        //                         tick();
-        //                         fixture.detectChanges();
+                                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                                tick();
+                                fixture.detectChanges();
 
-        //                         const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect();
-        //                         const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
-        //                             .parentElement.getElementsByTagName('test-simple-dynamic-component')[0];
-        //                         const componentRect = componentElement.getBoundingClientRect();
-        //                         const screenRect: ClientRect = {
-        //                             left: 0,
-        //                             top: 0,
-        //                             right: window.innerWidth,
-        //                             bottom: window.innerHeight,
-        //                             width: window.innerWidth,
-        //                             height: window.innerHeight,
-        //                         };
+                                const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect();
+                                const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
+                                    .parentElement.getElementsByTagName('test-simple-dynamic-component')[0];
+                                const componentRect = componentElement.getBoundingClientRect();
+                                const screenRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
 
-        //                         const location = getOverlayWrapperLocation(positionSettings, targetRect, componentRect, screenRect);
-        //                         expect(componentRect.top.toFixed(1)).toEqual(location.y.toFixed(1));
-        //                         expect(componentRect.left.toFixed(1)).toEqual(location.x.toFixed(1));
-        //                         expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
-        //                         fixture.componentInstance.overlay.detachAll();
-        //                         tick();
-        //                         fixture.detectChanges();
-        //                     });
-        //                 });
-        //             });
-        //         });
-        //     }));
+                                const location = getOverlayWrapperLocation(positionSettings, targetRect, componentRect, screenRect);
+                                expect(componentRect.top.toFixed(1)).toEqual(location.y.toFixed(1));
+                                expect(componentRect.left.toFixed(1)).toEqual(location.x.toFixed(1));
+                                expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
+                                fixture.componentInstance.overlay.detachAll();
+                                tick();
+                                fixture.detectChanges();
+                            });
+                        });
+                    });
+                });
+            }));
 
-        // it(`Should reposition the component and render it correctly in the window, even when the rendering options passed
-        //     should result in otherwise a partially hidden component. No scrollbars should appear.`,
-        //     fakeAsync(() => {
-        //         const fixture = TestBed.createComponent(EmptyPageComponent);
-        //         fixture.detectChanges();
+        it(`Should reposition the component and render it correctly in the window, even when the rendering options passed
+            should result in otherwise a partially hidden component. No scrollbars should appear.`,
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
 
-        //         const button = fixture.componentInstance.buttonElement.nativeElement;
-        //         const overlay = fixture.componentInstance.overlay;
-        //         button.style.position = 'relative';
-        //         button.style.width = '50px';
-        //         button.style.height = '50px';
-        //         const buttonLocations = [
-        //             { left: `0px`, top: `0px` }, // topLeft
-        //             { left: `${window.innerWidth - 200}px`, top: `0px` }, // topRight
-        //             { left: `0px`, top: `${window.innerHeight - 200}px` }, // bottomLeft
-        //             { left: `${window.innerWidth - 200}px`, top: `${window.innerHeight - 200}px` } // bottomRight
-        //         ];
-        //         const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
-        //         const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-        //         for (const buttonLocation of buttonLocations) {
-        //             for (const horizontalStartPoint of hAlignmentArray) {
-        //                 for (const verticalStartPoint of vAlignmentArray) {
-        //                     for (const horizontalDirection of hAlignmentArray) {
-        //                         for (const verticalDirection of vAlignmentArray) {
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                const overlay = fixture.componentInstance.overlay;
+                button.style.position = 'relative';
+                button.style.width = '50px';
+                button.style.height = '50px';
+                const buttonLocations = [
+                    { left: `0px`, top: `0px` }, // topLeft
+                    { left: `${window.innerWidth - 200}px`, top: `0px` }, // topRight
+                    { left: `0px`, top: `${window.innerHeight - 200}px` }, // bottomLeft
+                    { left: `${window.innerWidth - 200}px`, top: `${window.innerHeight - 200}px` } // bottomRight
+                ];
+                const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+                const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+                for (const buttonLocation of buttonLocations) {
+                    for (const horizontalStartPoint of hAlignmentArray) {
+                        for (const verticalStartPoint of vAlignmentArray) {
+                            for (const horizontalDirection of hAlignmentArray) {
+                                for (const verticalDirection of vAlignmentArray) {
 
-        //                             const positionSettings: PositionSettings = {};
-        //                             button.style.left = buttonLocation.left;
-        //                             button.style.top = buttonLocation.top;
+                                    const positionSettings: PositionSettings = {};
+                                    button.style.left = buttonLocation.left;
+                                    button.style.top = buttonLocation.top;
 
-        //                             positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
-        //                             positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
-        //                             positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
-        //                             positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
+                                    positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
+                                    positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
+                                    positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
+                                    positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
 
-        //                             const overlaySettings: OverlaySettings = {
-        //                                 target: button,
-        //                                 positionStrategy: new AutoPositionStrategy(positionSettings),
-        //                                 modal: false,
-        //                                 closeOnOutsideClick: false
-        //                             };
+                                    const overlaySettings: OverlaySettings = {
+                                        target: button,
+                                        positionStrategy: new AutoPositionStrategy(positionSettings),
+                                        modal: false,
+                                        closeOnOutsideClick: false
+                                    };
 
-        //                             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-        //                             tick();
-        //                             fixture.detectChanges();
+                                    overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                                    tick();
+                                    fixture.detectChanges();
 
-        //                             const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect();
-        //                             const contentElement = (fixture.nativeElement as HTMLElement)
-        //                                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
-        //                             const contentRect = contentElement.getBoundingClientRect();
-        //                             const screenRect: ClientRect = {
-        //                                 left: 0,
-        //                                 top: 0,
-        //                                 right: window.innerWidth,
-        //                                 bottom: window.innerHeight,
-        //                                 width: window.innerWidth,
-        //                                 height: window.innerHeight,
-        //                             };
+                                    const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect();
+                                    const contentElement = (fixture.nativeElement as HTMLElement)
+                                        .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                                    const contentRect = contentElement.getBoundingClientRect();
+                                    const screenRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
 
-        //                             const loc = getOverlayWrapperLocation(positionSettings, targetRect, contentRect, screenRect);
-        //                             expect(contentRect.top.toFixed(1))
-        //                                 .withContext(`YYY HD: ${horizontalDirection}; VD: ${verticalDirection}; ` +
-        //                                     `HSP: ${horizontalStartPoint}; VSP: ${verticalStartPoint}; ` +
-        //                                     `BL: ${buttonLocation.left}; BT: ${buttonLocation.top}; ` +
-        //                                     `STYLE: ${contentElement.getAttribute('style')};`)
-        //                                 .toEqual(loc.y.toFixed(1));
-        //                             expect(contentRect.left.toFixed(1))
-        //                                 .withContext(`XXX HD: ${horizontalDirection}; VD: ${verticalDirection}; ` +
-        //                                     `HSP: ${horizontalStartPoint}; VSP: ${verticalStartPoint}; ` +
-        //                                     `BL: ${buttonLocation.left}; BT: ${buttonLocation.top}; ` +
-        //                                     `STYLE: ${contentElement.getAttribute('style')};`)
-        //                                 .toEqual(loc.x.toFixed(1));
-        //                             expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
-        //                             fixture.componentInstance.overlay.detachAll();
-        //                             tick();
-        //                             fixture.detectChanges();
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }));
+                                    const loc = getOverlayWrapperLocation(positionSettings, targetRect, contentRect, screenRect);
+                                    expect(contentRect.top.toFixed(1))
+                                        .withContext(`YYY HD: ${horizontalDirection}; VD: ${verticalDirection}; ` +
+                                            `HSP: ${horizontalStartPoint}; VSP: ${verticalStartPoint}; ` +
+                                            `BL: ${buttonLocation.left}; BT: ${buttonLocation.top}; ` +
+                                            `STYLE: ${contentElement.getAttribute('style')};`)
+                                        .toEqual(loc.y.toFixed(1));
+                                    expect(contentRect.left.toFixed(1))
+                                        .withContext(`XXX HD: ${horizontalDirection}; VD: ${verticalDirection}; ` +
+                                            `HSP: ${horizontalStartPoint}; VSP: ${verticalStartPoint}; ` +
+                                            `BL: ${buttonLocation.left}; BT: ${buttonLocation.top}; ` +
+                                            `STYLE: ${contentElement.getAttribute('style')};`)
+                                        .toEqual(loc.x.toFixed(1));
+                                    expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
+                                    fixture.componentInstance.overlay.detachAll();
+                                    tick();
+                                    fixture.detectChanges();
+                                }
+                            }
+                        }
+                    }
+                }
+            }));
 
         it('Should render margins correctly.', fakeAsync(() => {
             const expectedMargin = '0px';
@@ -2830,177 +3048,169 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         }));
 
-        // it('Should display each shown component based on the options specified if the component fits into the visible window.',
-        //     fakeAsync(() => {
-        //         const fixture = TestBed.createComponent(EmptyPageComponent);
-        //         fixture.detectChanges();
+        it('Should display each shown component based on the options specified if the component fits into the visible window.',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
 
-        //         const overlay = fixture.componentInstance.overlay;
-        //         const button = fixture.componentInstance.buttonElement.nativeElement;
-        //         button.style.left = '150px';
-        //         button.style.top = '150px';
-        //         button.style.position = 'relative';
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                button.style.left = '150px';
+                button.style.top = '150px';
+                button.style.position = 'relative';
 
-        //         const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
-        //         const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-        //         hAlignmentArray.forEach(horizontalStartPoint => {
-        //             vAlignmentArray.forEach(verticalStartPoint => {
-        //                 hAlignmentArray.forEach(horizontalDirection => {
-        //                     vAlignmentArray.forEach(verticalDirection => {
-        //                         const positionSettings: PositionSettings = {};
-        //                         positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
-        //                         positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
-        //                         positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
-        //                         positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
-        //                         positionSettings.minSize = { width: 80, height: 80 };
+                const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+                const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+                hAlignmentArray.forEach(horizontalStartPoint => {
+                    vAlignmentArray.forEach(verticalStartPoint => {
+                        hAlignmentArray.forEach(horizontalDirection => {
+                            vAlignmentArray.forEach(verticalDirection => {
+                                const positionSettings: PositionSettings = {};
+                                positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
+                                positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
+                                positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
+                                positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
+                                positionSettings.minSize = { width: 80, height: 80 };
 
-        //                         const overlaySettings: OverlaySettings = {
-        //                             target: button,
-        //                             positionStrategy: new ElasticPositionStrategy(positionSettings),
-        //                             modal: false,
-        //                             closeOnOutsideClick: false
-        //                         };
+                                const overlaySettings: OverlaySettings = {
+                                    target: button,
+                                    positionStrategy: new ElasticPositionStrategy(positionSettings),
+                                    modal: false,
+                                    closeOnOutsideClick: false
+                                };
 
-        //                         overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-        //                         tick();
-        //                         fixture.detectChanges();
+                                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                                tick();
+                                fixture.detectChanges();
 
-        //                         const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect() as ClientRect;
-        //                         //  we need original rect of the wrapper element. After it was shown in overlay elastic may
-        //                         //  set width and/or height. To get original rect remove width and height, get the rect and
-        //                         //  restore width and height;
-        //                         const contentElement = (fixture.nativeElement as HTMLElement)
-        //                             .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
-        //                         const width = contentElement.style.width;
-        //                         contentElement.style.width = '';
-        //                         const height = contentElement.style.height;
-        //                         contentElement.style.height = '';
-        //                         let contentRect = contentElement.getBoundingClientRect() as ClientRect;
-        //                         contentElement.style.width = width;
-        //                         contentElement.style.height = height;
-        //                         const screenRect: ClientRect = {
-        //                             left: 0,
-        //                             top: 0,
-        //                             right: window.innerWidth,
-        //                             bottom: window.innerHeight,
-        //                             width: window.innerWidth,
-        //                             height: window.innerHeight,
-        //                         };
+                                const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect();
+                                //  we need original rect of the wrapper element. After it was shown in overlay elastic may
+                                //  set width and/or height. To get original rect remove width and height, get the rect and
+                                //  restore width and height. Also hide overflow to prevent scrollbar-induced dimension changes.
+                                const contentElement = (fixture.nativeElement as HTMLElement)
+                                    .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                                const width = contentElement.style.width;
+                                contentElement.style.width = '';
+                                const height = contentElement.style.height;
+                                contentElement.style.height = '';
+                                contentElement.style.overflow = 'hidden';
+                                let contentRect = contentElement.getBoundingClientRect();
+                                contentElement.style.width = width;
+                                contentElement.style.height = height;
+                                const screenRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
 
-        //                         const location =
-        //                             getOverlayWrapperLocation(positionSettings, targetRect, contentRect, screenRect, true);
-        //                         //  now get the wrapper rect as it is after elastic was applied
-        //                         contentRect = contentElement.getBoundingClientRect() as ClientRect;
-        //                         expect(contentRect.top.toFixed(1))
-        //                             .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
-        //                                 `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
-        //                                 `STYLE: ${contentElement.getAttribute('style')};`)
-        //                             .toEqual(location.y.toFixed(1));
-        //                         expect(contentRect.left.toFixed(1))
-        //                             .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
-        //                                 `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
-        //                                 `STYLE: ${contentElement.getAttribute('style')};`)
-        //                             .toEqual(location.x.toFixed(1));
-        //                         fixture.componentInstance.overlay.detachAll();
-        //                         tick();
-        //                         fixture.detectChanges();
-        //                     });
-        //                 });
-        //             });
-        //         });
-        //     }));
+                                const location =
+                                    getOverlayWrapperLocation(positionSettings, targetRect, contentRect, screenRect, true);
+                                //  now get the wrapper rect as it is after elastic was applied
+                                //  keep overflow hidden to avoid scrollbar-induced height changes affecting position
+                                contentRect = contentElement.getBoundingClientRect();
+                                contentElement.style.overflow = '';
+                                expect(contentRect.top.toFixed(1))
+                                    .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
+                                        `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
+                                        `STYLE: ${contentElement.getAttribute('style')};`)
+                                    .toEqual(location.y.toFixed(1));
+                                expect(contentRect.left.toFixed(1))
+                                    .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
+                                        `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
+                                        `STYLE: ${contentElement.getAttribute('style')};`)
+                                    .toEqual(location.x.toFixed(1));
+                                fixture.componentInstance.overlay.detachAll();
+                                tick();
+                                fixture.detectChanges();
+                            });
+                        });
+                    });
+                });
+            }));
 
-        // it(`Should reposition the component and render it correctly in the window, even when the rendering options passed
-        // should result in otherwise a partially hidden component.No scrollbars should appear.`,
-        //     fakeAsync(() => {
-        //         const fixture = TestBed.createComponent(EmptyPageComponent);
-        //         fixture.detectChanges();
+        it(`Should reposition the component and render it correctly in the window, even when the rendering options passed
+        should result in otherwise a partially hidden component. No scrollbars should appear.`,
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
 
-        //         const overlay = fixture.componentInstance.overlay;
-        //         const button = fixture.componentInstance.buttonElement.nativeElement;
-        //         button.style.position = 'relative';
-        //         button.style.width = '50px';
-        //         button.style.height = '50px';
-        //         const buttonLocations = [
-        //             { left: `0px`, top: `0px` }, // topLeft
-        //             { left: `${window.innerWidth - button.width} px`, top: `0px` }, // topRight
-        //             { left: `0px`, top: `${window.innerHeight - button.height} px` }, // bottomLeft
-        //             { left: `${window.innerWidth - button.width} px`, top: `${window.innerHeight - button.height} px` } // bottomRight
-        //         ];
-        //         const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
-        //         const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-        //         for (const buttonLocation of buttonLocations) {
-        //             for (const horizontalStartPoint of hAlignmentArray) {
-        //                 for (const verticalStartPoint of vAlignmentArray) {
-        //                     for (const horizontalDirection of hAlignmentArray) {
-        //                         for (const verticalDirection of vAlignmentArray) {
-        //                             const positionSettings: PositionSettings = {};
-        //                             button.style.left = buttonLocation.left;
-        //                             button.style.top = buttonLocation.top;
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                button.style.position = 'relative';
+                button.style.width = '50px';
+                button.style.height = '50px';
+                const buttonLocations = [
+                    { left: `0px`, top: `0px` }, // topLeft
+                    { left: `${window.innerWidth - 200}px`, top: `0px` }, // topRight
+                    { left: `0px`, top: `${window.innerHeight - 200}px` }, // bottomLeft
+                    { left: `${window.innerWidth - 200}px`, top: `${window.innerHeight - 200}px` } // bottomRight
+                ];
+                const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+                const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+                for (const buttonLocation of buttonLocations) {
+                    for (const horizontalStartPoint of hAlignmentArray) {
+                        for (const verticalStartPoint of vAlignmentArray) {
+                            for (const horizontalDirection of hAlignmentArray) {
+                                for (const verticalDirection of vAlignmentArray) {
+                                    const positionSettings: PositionSettings = {};
+                                    button.style.left = buttonLocation.left;
+                                    button.style.top = buttonLocation.top;
 
-        //                             positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
-        //                             positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
-        //                             positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
-        //                             positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
-        //                             positionSettings.minSize = { width: 80, height: 80 };
+                                    positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
+                                    positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
+                                    positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
+                                    positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
+                                    positionSettings.minSize = { width: 80, height: 80 };
 
-        //                             const overlaySettings: OverlaySettings = {
-        //                                 target: button,
-        //                                 positionStrategy: new ElasticPositionStrategy(positionSettings),
-        //                                 modal: false,
-        //                                 closeOnOutsideClick: false
-        //                             };
+                                    const overlaySettings: OverlaySettings = {
+                                        target: button,
+                                        positionStrategy: new ElasticPositionStrategy(positionSettings),
+                                        modal: false,
+                                        closeOnOutsideClick: false
+                                    };
 
-        //                             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-        //                             tick();
-        //                             fixture.detectChanges();
+                                    overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                                    tick();
+                                    fixture.detectChanges();
 
-        //                             const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect() as ClientRect;
-        //                             //  we need original rect of the wrapper element. After it was shown in overlay elastic may
-        //                             //  set width and/or height. To get original rect remove width and height, get the rect and
-        //                             //  restore width and height;
-        //                             const contentElement = (fixture.nativeElement as HTMLElement)
-        //                                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
-        //                             const width = contentElement.style.width;
-        //                             contentElement.style.width = '';
-        //                             const height = contentElement.style.height;
-        //                             contentElement.style.height = '';
-        //                             let contentRect = contentElement.getBoundingClientRect();
-        //                             contentElement.style.width = width;
-        //                             contentElement.style.height = height;
-        //                             const screenRect: ClientRect = {
-        //                                 left: 0,
-        //                                 top: 0,
-        //                                 right: window.innerWidth,
-        //                                 bottom: window.innerHeight,
-        //                                 width: window.innerWidth,
-        //                                 height: window.innerHeight,
-        //                             };
+                                    const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect();
+                                    //  we need original rect of the wrapper element. After it was shown in overlay elastic may
+                                    //  set width and/or height. To get original rect remove width and height, get the rect and
+                                    //  restore width and height. Also hide overflow to prevent scrollbar-induced dimension changes.
+                                    const contentElement = (fixture.nativeElement as HTMLElement)
+                                        .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                                    const width = contentElement.style.width;
+                                    contentElement.style.width = '';
+                                    const height = contentElement.style.height;
+                                    contentElement.style.height = '';
+                                    contentElement.style.overflow = 'hidden';
+                                    let contentRect = contentElement.getBoundingClientRect();
+                                    contentElement.style.width = width;
+                                    contentElement.style.height = height;
+                                    const screenRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
 
-        //                             const loc =
-        //                                 getOverlayWrapperLocation(positionSettings, targetRect, contentRect, screenRect, true);
-        //                             //  now get the wrapper rect as it is after elastic was applied
-        //                             contentRect = contentElement.getBoundingClientRect();
-        //                             expect(contentRect.top.toFixed(1))
-        //                                 .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
-        //                                     `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
-        //                                     `STYLE: ${contentElement.getAttribute('style')};`)
-        //                                 .toEqual(loc.y.toFixed(1));
-        //                             expect(contentRect.left.toFixed(1))
-        //                                 .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
-        //                                     `VD: ${verticalDirection}; VSP: ${verticalStartPoint}` +
-        //                                     `STYLE: ${contentElement.getAttribute('style')};`)
-        //                                 .toEqual(loc.x.toFixed(1));
-        //                             expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbars
-        //                             fixture.componentInstance.overlay.detachAll();
-        //                             tick();
-        //                             fixture.detectChanges();
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }));
+                                    const loc =
+                                        getOverlayWrapperLocation(positionSettings, targetRect, contentRect, screenRect, true);
+                                    //  now get the wrapper rect as it is after elastic was applied
+                                    //  keep overflow hidden to avoid scrollbar-induced height changes affecting position
+                                    contentRect = contentElement.getBoundingClientRect();
+                                    contentElement.style.overflow = '';
+                                    expect(contentRect.top.toFixed(1))
+                                        .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
+                                            `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
+                                            `STYLE: ${contentElement.getAttribute('style')};`)
+                                        .toEqual(loc.y.toFixed(1));
+                                    expect(contentRect.left.toFixed(1))
+                                        .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
+                                            `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
+                                            `STYLE: ${contentElement.getAttribute('style')};`)
+                                        .toEqual(loc.x.toFixed(1));
+                                    expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbars
+                                    fixture.componentInstance.overlay.detachAll();
+                                    tick();
+                                    fixture.detectChanges();
+                                }
+                            }
+                        }
+                    }
+                }
+            }));
 
         it('Should render margins correctly.', fakeAsync(() => {
             const expectedMargin = '0px';
@@ -3522,26 +3732,28 @@ describe('igxOverlay', () => {
         it('Should close the opened overlays consecutively on esc keypress', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
-            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
-            tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
-            tick();
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: true }));
+            tick(DEBOUNCE_TIME);
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: true }));
+            tick(DEBOUNCE_TIME);
 
-            const overlayElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayElement.children.length).toBe(2);
-            expect((overlayElement.children[0] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[1] as HTMLElement).style.visibility).toEqual('');
-
-            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
-            tick();
-            expect((overlayElement.children[0] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[1] as HTMLElement).style.visibility).toEqual('hidden');
+            const wrappers = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL);
+            expect(wrappers.length).toBe(2);
+            const wrapper0 = wrappers[0] as HTMLElement;
+            const wrapper1 = wrappers[1] as HTMLElement;
+            expect(wrapper0.style.visibility).toEqual('');
+            expect(wrapper1.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
             tick();
-            expect((overlayElement.children[0] as HTMLElement).style.visibility).toEqual('hidden');
-            expect((overlayElement.children[1] as HTMLElement).style.visibility).toEqual('hidden');
+            expect(wrapper0.style.visibility).toEqual('');
+            expect(wrapper1.style.visibility).toEqual('hidden');
+
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
+            tick();
+            expect(wrapper0.style.visibility).toEqual('hidden');
+            expect(wrapper1.style.visibility).toEqual('hidden');
 
             overlay.detachAll();
         }));
@@ -3549,31 +3761,34 @@ describe('igxOverlay', () => {
         it('Should not close the opened overlays consecutively on esc keypress', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
-            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
-            tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: false }));
-            tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent, { closeOnEscape: true }));
-            tick();
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: true }));
+            tick(DEBOUNCE_TIME);
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: false }));
+            tick(DEBOUNCE_TIME);
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: true }));
+            tick(DEBOUNCE_TIME);
 
-            const overlayElement = (fixture.nativeElement as HTMLElement)
-                .parentElement.getElementsByClassName(CLASS_OVERLAY_MAIN)[0] as HTMLElement;
-            expect(overlayElement.children.length).toBe(3);
-            expect((overlayElement.children[0] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[1] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[2] as HTMLElement).style.visibility).toEqual('');
-
-            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
-            tick();
-            expect((overlayElement.children[0] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[1] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[2] as HTMLElement).style.visibility).toEqual('hidden');
+            const wrappers = (fixture.nativeElement as HTMLElement)
+                .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL);
+            expect(wrappers.length).toBe(3);
+            const wrapper0 = wrappers[0] as HTMLElement;
+            const wrapper1 = wrappers[1] as HTMLElement;
+            const wrapper2 = wrappers[2] as HTMLElement;
+            expect(wrapper0.style.visibility).toEqual('');
+            expect(wrapper1.style.visibility).toEqual('');
+            expect(wrapper2.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
             tick();
-            expect((overlayElement.children[0] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[1] as HTMLElement).style.visibility).toEqual('');
-            expect((overlayElement.children[2] as HTMLElement).style.visibility).toEqual('hidden');
+            expect(wrapper0.style.visibility).toEqual('');
+            expect(wrapper1.style.visibility).toEqual('');
+            expect(wrapper2.style.visibility).toEqual('hidden');
+
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
+            tick();
+            expect(wrapper0.style.visibility).toEqual('');
+            expect(wrapper1.style.visibility).toEqual('');
+            expect(wrapper2.style.visibility).toEqual('hidden');
 
             overlay.detachAll();
         }));
@@ -4441,9 +4656,9 @@ describe('igxOverlay', () => {
                 scrollStrategy
             };
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+            overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, overlaySettings));
             tick();
-            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+            expect((fixture.nativeElement as HTMLElement).parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
 
             const componentElement = (fixture.debugElement.nativeElement as HTMLElement)
                 .parentElement.getElementsByTagName('test-simple-dynamic-component')[0];
@@ -4734,7 +4949,7 @@ export class EmptyPageComponent {
     @ViewChild('div', { static: true }) public divElement: ElementRef;
 
     public click() {
-        this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
+        this.overlay.show(this.overlay.attach(SimpleDynamicComponent, this.viewContainerRef));
     }
 }
 
@@ -4769,6 +4984,7 @@ export class EmptyPageInShadowDomComponent {
 })
 export class DownRightButtonComponent {
     public overlay = inject<IgxOverlayService>(IgxOverlayService);
+    public viewContainerRef = inject(ViewContainerRef);
 
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
 
@@ -4785,7 +5001,7 @@ export class DownRightButtonComponent {
 
     public click() {
         this.positionStrategy.settings = this.ButtonPositioningSettings;
-        this.overlay.show(this.overlay.attach(SimpleDynamicComponent, {
+        this.overlay.show(this.overlay.attach(SimpleDynamicComponent, this.viewContainerRef, {
             target: this.target,
             positionStrategy: this.positionStrategy,
             scrollStrategy: new NoOpScrollStrategy(),
@@ -4809,12 +5025,12 @@ export class DownRightButtonComponent {
 })
 export class TopLeftOffsetComponent {
     public overlay = inject<IgxOverlayService>(IgxOverlayService);
-
+    public viewContainerRef = inject(ViewContainerRef);
 
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
 
     public click() {
-        this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
+        this.overlay.show(this.overlay.attach(SimpleDynamicComponent, this.viewContainerRef));
     }
 }
 
@@ -4830,15 +5046,16 @@ export class TopLeftOffsetComponent {
 })
 export class TwoButtonsComponent {
     public overlay = inject<IgxOverlayService>(IgxOverlayService);
+    public viewContainerRef = inject(ViewContainerRef);
 
     public settings: OverlaySettings = { modal: false };
 
     public clickOne() {
-        this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.settings);
+        this.overlay.show(this.overlay.attach(SimpleDynamicComponent, this.viewContainerRef), this.settings);
     }
 
     public clickTwo() {
-        this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.settings);
+        this.overlay.show(this.overlay.attach(SimpleDynamicComponent, this.viewContainerRef), this.settings);
     }
 
     public divClick(ev: Event) {
@@ -4937,11 +5154,12 @@ export class ScrollableComponent {
 })
 export class FlexContainerComponent {
     public overlay = inject<IgxOverlayService>(IgxOverlayService);
+    public viewContainerRef = inject(ViewContainerRef);
 
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
     public overlaySettings: OverlaySettings = {};
 
     public click() {
-        this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.overlaySettings);
+        this.overlay.show(this.overlay.attach(SimpleDynamicComponent, this.viewContainerRef), this.overlaySettings);
     }
 }

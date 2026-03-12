@@ -2,6 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.1.1
+
+### New Features
+
+- `IgxOverlayService`
+    - The overlay service now integrates the HTML Popover API and prefers rendering content in place / in the top layer, significantly reducing the need for outlet containers. When configured, `OverlaySettings.outlet` is still honored, and overlays may also fall back to being appended to `document.body` when required.
+
+    - **Deprecation** - The `outlet` property in `OverlaySettings`, `IgxOverlayOutletDirective`, and `igxToggleOutlet` input on `IgxToggleActionDirective` are deprecated and will be removed in a future version. They remain functional in this release for backward compatibility, but new code should rely on the default in-place / top-layer rendering behavior instead of custom outlet containers.
 ## 21.1.0
 
 ### New Features

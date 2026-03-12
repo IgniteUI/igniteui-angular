@@ -360,6 +360,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('expressionsContainer')
     private expressionsContainer: ElementRef;
 
+    // outlet - not public - do not deprecate
     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     private overlayOutlet: IgxOverlayOutletDirective;
 
@@ -406,6 +407,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public searchValue: { value: any } = { value: null };
 
+    // outlet - not public - do not deprecate
     /**
      * @hidden @internal
      */
@@ -741,6 +743,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return this._selectedField;
     }
 
+    // outlet - not public - do not deprecate
     /**
      * @hidden @internal
      *

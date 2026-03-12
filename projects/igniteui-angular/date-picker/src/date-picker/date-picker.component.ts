@@ -244,6 +244,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public spinDelta: Pick<DatePartDeltas, 'date' | 'month' | 'year'>;
 
     /**
+     * @deprecated Still supported and used by the overlay service when provided but will
+     * be removed in a future version. Avoid using this property in new code and prefer
+     * the default in-place rendering with the HTML Popover API.
+     *
      * Gets/Sets the container used for the popup element.
      *
      * @remarks

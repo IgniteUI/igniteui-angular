@@ -78,7 +78,7 @@ this.overlay.show(component, overlaySettings);
 | scrollStrategy      | IScrollStrategy                         | Scroll strategy to use with this settings           |
 | modal               | boolean                                 | Set if the overlay should be in modal mode          |
 | closeOnOutsideClick | boolean                                 | Set if the overlay should closed on outside click   |
-| outlet              | IgxOverlayOutletDirective or ElementRef | Set the outlet container to attach the overlay to   |
+| outlet              | IgxOverlayOutletDirective or ElementRef | **Deprecated.** Still supported and used by the overlay service when provided but will be removed in a future version. Avoid using this property in new code and prefer the default in-place rendering with the HTML Popover API. |
 
 ###### PositionSettings
 
@@ -135,7 +135,7 @@ this.overlay.show(component, overlaySettings);
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
 |getPointFromPositionsSettings| Calculates the point from which the overlay should start showing    |settings    |
-|createAbsoluteOverlaySettings| Creates overlay settings with global or container position strategy based on a preset position settings    |position?, outlet?|
+|createAbsoluteOverlaySettings| Creates overlay settings with a global or container position strategy based on preset position settings and the provided outlet. When an outlet is specified, a container strategy is used and the content is rendered inside that outlet; otherwise, a global strategy is used and the content is rendered in place.    |position?, outlet?|
 |createRelativeOverlaySettings| Creates overlay settings with auto, connected or elastic position strategy based on a preset position settings    |target, strategy?, position?|
 
 

@@ -30,6 +30,10 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
     public displayTime = 4000;
 
     /**
+     * @deprecated The `outlet` property is deprecated and will be removed in a future version.
+     * While still honored by the overlay service, it should no longer be used in new code.
+     * Future versions will always render overlay content in place using the HTML Popover API.
+     *
      * Gets/Sets the container used for the element.
      *
      * @remarks

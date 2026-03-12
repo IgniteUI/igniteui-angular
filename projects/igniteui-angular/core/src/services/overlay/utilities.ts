@@ -131,7 +131,11 @@ export interface OverlaySettings {
     /** Set if the overlay should close when `Esc` key is pressed */
     closeOnEscape?: boolean;
     /* blazorSuppress */
-    /** Set the outlet container to attach the overlay to */
+    /**
+     * @deprecated Still supported and used by the overlay service when provided but will
+     * be removed in a future version. Avoid using this property in new code and prefer
+     * the default in-place rendering with the HTML Popover API.
+     */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
      * @hidden @internal
@@ -200,7 +204,8 @@ export interface OverlayInfo {
     transformY?: number;
     event?: Event;
     wrapperElement?: HTMLElement;
-    size?: string
+    size?: string;
+    appendedToBody?: boolean
 }
 
 /** @hidden */

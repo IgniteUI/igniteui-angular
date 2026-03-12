@@ -28,8 +28,8 @@ export class UIInteractions {
      * Clears all opened overlays and resets document scrollTop and scrollLeft
      */
     public static clearOverlay() {
-        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
-        Array.from(overlays).forEach(element => {
+        const overlays = document.querySelectorAll('[class*="igx-overlay__wrapper"]');
+        overlays.forEach(element => {
             element.remove();
         });
         document.documentElement.scrollTop = 0;

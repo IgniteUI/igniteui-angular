@@ -225,7 +225,7 @@ export class OverlaySampleComponent implements OnInit {
             positionStrategy: stringMapping['PositionStrategy'][this.positionStrategy],
             scrollStrategy: stringMapping['ScrollStrategy'][this.scrollStrategy],
             modal: this.modal,
-            closeOnOutsideClick: this.closeOnOutsideClick
+            closeOnOutsideClick: this.closeOnOutsideClick,
         };
         this._overlaySettings.positionStrategy.settings.verticalDirection =
             stringMapping['VerticalDirection'][this.verticalDirection];

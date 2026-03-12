@@ -1147,6 +1147,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @ViewChild('loadingOverlay', { read: IgxToggleDirective, static: true })
     public loadingOverlay: IgxToggleDirective;
 
+    // outlet - not public - do not deprecate
     /**
      * @hidden @internal
      */
@@ -1335,6 +1336,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef<HTMLElement>;
 
+    // outlet - not public - do not deprecate
     /**
      * @hidden @internal
      */
@@ -1760,6 +1762,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @ContentChildren(IgxPaginatorToken)
     protected paginationComponents: QueryList<IgxPaginatorComponent>;
 
+    // outlet - not public - do not deprecate
     /**
      * @hidden @internal
      */
@@ -4487,6 +4490,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * @deprecated The `outlet` property is deprecated and will be removed in a future version.
+     * It is still honored by the overlay service for attaching the grid's overlays to a specific outlet.
+     *
      * Gets/Sets the outlet used to attach the grid's overlays to.
      *
      * @remarks

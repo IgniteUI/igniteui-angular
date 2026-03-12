@@ -111,6 +111,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _injector = inject(Injector);
     private _cdr = inject(ChangeDetectorRef);
     private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    private _hostViewContainerRef = inject(ViewContainerRef);
 
 
     /**
@@ -366,6 +367,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public override placeholder = '';
 
     /**
+     * @deprecated Still supported and used by the overlay service when provided but will
+     * be removed in a future version. Avoid using this property in new code and prefer
+     * the default in-place rendering with the HTML Popover API.
+     *
      * Gets/Sets the container used for the popup element.
      *
      * @remarks
@@ -436,7 +441,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public cssClass = 'igx-date-range-picker';
 
     @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
-    private viewContainerRef: ViewContainerRef;
+    private _inputGroupViewContainerRef: ViewContainerRef;
+
+    private get viewContainerRef(): ViewContainerRef {
+        return this._inputGroupViewContainerRef ?? this._hostViewContainerRef;
+    }
 
     /** @hidden @internal */
     @ViewChild(IgxInputDirective)
