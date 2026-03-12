@@ -1,5 +1,17 @@
 # Angular Charts Reference
 
+## Contents
+
+- [Overview](#overview)
+- [General Chart Configuration](#general-chart-configuration)
+- [Key Chart Features](#key-chart-features)
+- [Chart Types Reference](#chart-types-reference)
+- [Common API Members by Chart Type](#common-api-members-by-chart-type)
+- [Import Paths](#import-paths)
+- [Styling & Theming](#styling--theming)
+- [Data Requirements](#data-requirements)
+- [Documentation References](#documentation-references)
+
 ## Overview
 
 Ignite UI for Angular Charts provides 65+ chart types for data visualization. Charts are packaged separately in `igniteui-angular-charts` (or `@infragistics/igniteui-angular-charts` for licensed users).
