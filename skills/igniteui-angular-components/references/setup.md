@@ -120,6 +120,7 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Circular Progress | `igniteui-angular/progressbar` |
 | Chat | `igniteui-angular/chat` |
 | Button / Icon Button | `igniteui-angular/directives` |
+| Button Group | `igniteui-angular/button-group` |
 | Ripple | `igniteui-angular/directives` |
 | IgxTooltipDirective, IgxTooltipTargetDirective | `igniteui-angular/directives` |
 | Drag & Drop | `igniteui-angular/directives` |
@@ -145,6 +146,7 @@ For complex components, use the bundled directive arrays instead of listing ever
 
 | Token | Entry Point | Includes |
 |---|---|---|
+| `IGX_BUTTON_GROUP_DIRECTIVES` | `igniteui-angular/button-group` | Button group + button directive |
 | `IGX_INPUT_GROUP_DIRECTIVES` | `igniteui-angular/input-group` | Input group + label, hint, prefix, suffix |
 | `IGX_TABS_DIRECTIVES` | `igniteui-angular/tabs` | Tabs + tab item, header, content |
 | `IGX_STEPPER_DIRECTIVES` | `igniteui-angular/stepper` | Stepper + step |
@@ -158,7 +160,7 @@ For complex components, use the bundled directive arrays instead of listing ever
 - [`layout.md`](./layout.md) — Tabs, Stepper, Accordion, Splitter, Navigation Drawer
 - [`data-display.md`](./data-display.md) — List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress, Chat
 - [`feedback.md`](./feedback.md) — Dialog, Snackbar, Toast, Banner
-- [`directives.md`](./directives.md) — Button, Ripple, Tooltip, Drag and Drop
+- [`directives.md`](./directives.md) — Button, Icon Button, Button Group, Ripple, Tooltip, Drag and Drop
 - [`layout-manager.md`](./layout-manager.md) — Layout Manager directives, Dock Manager
 - [`../../igniteui-angular-grids/SKILL.md`](../../igniteui-angular-grids/SKILL.md) — Data Grids
 - [`../../igniteui-angular-theming/SKILL.md`](../../igniteui-angular-theming/SKILL.md) — Theming & Styling
