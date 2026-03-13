@@ -137,6 +137,8 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
+     * @deprecated The outlet parameter is deprecated. Please provide the container or outlet element through the
+     * `createAbsoluteOverlaySettings` method when calling `attach` method.
      * Creates overlay settings with global or container position strategy and preset position settings
      *
      * @param position Preset position settings. Default position is 'center'
@@ -144,15 +146,29 @@ export class IgxOverlayService implements OnDestroy {
      * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
      */
     public static createAbsoluteOverlaySettings(
-        position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings {
+        position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings;
+    /**
+     * Creates overlay settings with global or container position strategy and preset position settings
+     *
+     * @param position Preset position settings. Default position is 'center'
+     * @param container The container element to attach the overlay to
+     * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
+     */
+    public static createAbsoluteOverlaySettings(
+        position?: AbsolutePosition, container?: HTMLElement): OverlaySettings;
+    public static createAbsoluteOverlaySettings(
+        position?: AbsolutePosition, containerOrOutlet?: IgxOverlayOutletDirective | ElementRef | HTMLElement): OverlaySettings {
         const positionSettings = this.createAbsolutePositionSettings(position);
-        const strategy = outlet ? new ContainerPositionStrategy(positionSettings) : new GlobalPositionStrategy(positionSettings);
+        const strategy = containerOrOutlet ? new ContainerPositionStrategy(positionSettings) : new GlobalPositionStrategy(positionSettings);
+        const container = containerOrOutlet instanceof HTMLElement ? containerOrOutlet : null;
+        const outlet = containerOrOutlet instanceof ElementRef || containerOrOutlet instanceof IgxOverlayOutletDirective ? containerOrOutlet : null;
         const overlaySettings: OverlaySettings = {
             positionStrategy: strategy,
             scrollStrategy: new NoOpScrollStrategy(),
             modal: false,
             closeOnOutsideClick: true,
-            outlet
+            outlet,
+            target: container
         };
         return overlaySettings;
     }
@@ -333,7 +349,8 @@ export class IgxOverlayService implements OnDestroy {
         info.initialSize = { width: elementRect.width, height: elementRect.height };
         // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
         this.getComponentSize(info);
-        if (info.settings.outlet) {
+        if (info.settings.outlet ||
+            (info.settings.positionStrategy instanceof ContainerPositionStrategy && info.settings.target instanceof HTMLElement)) {
             this.moveElementToOutlet(info);
         } else if (info.elementRef.nativeElement.parentElement) {
             this.wrapElementInPlace(info);
@@ -658,8 +675,13 @@ export class IgxOverlayService implements OnDestroy {
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         info.wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
-        const outlet = info.settings.outlet.nativeElement || info.settings.outlet;
-        outlet.appendChild(info.wrapperElement);
+        let container = info.settings.outlet?.nativeElement || info.settings.outlet;
+        if (info.settings.positionStrategy instanceof ContainerPositionStrategy &&
+            info.settings.target instanceof HTMLElement
+        ) {
+            container = info.settings.target;
+        }
+        container.appendChild(info.wrapperElement);
         contentElement.appendChild(info.elementRef.nativeElement);
     }
 

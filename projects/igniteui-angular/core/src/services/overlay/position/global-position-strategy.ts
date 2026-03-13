@@ -1,5 +1,5 @@
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
-import { HorizontalAlignment, PositionSettings, Util, VerticalAlignment } from './../utilities';
+import { HorizontalAlignment, Point, PositionSettings, Size, Util, VerticalAlignment } from './../utilities';
 import { IPositionStrategy } from './IPositionStrategy';
 
 /**
@@ -38,7 +38,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
      * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
-    public position(contentElement: HTMLElement): void {
+    public position(contentElement: HTMLElement, _size?: Size, _document?: Document, _initialCall?: boolean, _target?: Point | HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex');
         this.setPosition(contentElement);

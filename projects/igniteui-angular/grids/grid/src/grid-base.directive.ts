@@ -1151,8 +1151,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    @ViewChild('igxLoadingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    public loadingOutlet: IgxOverlayOutletDirective;
+    @ViewChild('igxLoadingOverlayOutlet', { static: true })
+    public loadingOutlet: ElementRef<HTMLElement>;
 
     /* reactContentChildren */
     /* blazorInclude */
@@ -6748,7 +6748,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.shouldOverlayLoading) {
             // a new overlay should be shown
             const overlaySettings: OverlaySettings = {
-                outlet: this.loadingOutlet,
+                target: this.loadingOutlet.nativeElement,
                 closeOnOutsideClick: false,
                 positionStrategy: new ContainerPositionStrategy()
             };

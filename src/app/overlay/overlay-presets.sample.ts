@@ -25,8 +25,8 @@ export class OverlayPresetsSampleComponent implements OnInit {
     private igxDropDown: IgxDropDownComponent;
     @ViewChild('button', { static: true })
     private button: ElementRef;
-    @ViewChild('outlet', { static: true })
-    private outletElement: ElementRef;
+    @ViewChild('container', { static: true })
+    private containerElement: ElementRef<HTMLElement>;
     @ViewChild(IgxDragDirective, { static: true })
     private igxDrag: IgxDragDirective;
 
@@ -79,7 +79,7 @@ export class OverlayPresetsSampleComponent implements OnInit {
                 break;
             case 'Container':
                 this.relPosition = null;
-                this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition, this.outletElement);
+                this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition, this.containerElement.nativeElement);
                 break;
             default:
                 this.relPosition = null;

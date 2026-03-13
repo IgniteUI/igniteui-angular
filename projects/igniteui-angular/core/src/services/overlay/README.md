@@ -73,12 +73,12 @@ this.overlay.show(component, overlaySettings);
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| target              | Point | HTMLElement                     | Attaching target for the component to show          |
+| target              | Point | HTMLElement                     | Attaching target for the component to show. When set to an `HTMLElement` in combination with `ContainerPositionStrategy`, the element serves as the container in which the overlay is rendered. |
 | positionStrategy    | IPositionStrategy                       | Position strategy to use with this settings         | 
 | scrollStrategy      | IScrollStrategy                         | Scroll strategy to use with this settings           |
 | modal               | boolean                                 | Set if the overlay should be in modal mode          |
 | closeOnOutsideClick | boolean                                 | Set if the overlay should closed on outside click   |
-| outlet              | IgxOverlayOutletDirective or ElementRef | **Deprecated.** Still supported and used by the overlay service when provided but will be removed in a future version. Avoid using this property in new code and prefer the default in-place rendering with the HTML Popover API. |
+| outlet              | IgxOverlayOutletDirective or ElementRef | **Deprecated.** Use `target` with an `HTMLElement` and `ContainerPositionStrategy` instead. Still supported for backward compatibility but will be removed in a future version. |
 
 ###### PositionSettings
 
@@ -135,7 +135,7 @@ this.overlay.show(component, overlaySettings);
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
 |getPointFromPositionsSettings| Calculates the point from which the overlay should start showing    |settings    |
-|createAbsoluteOverlaySettings| Creates overlay settings with a global or container position strategy based on preset position settings and the provided outlet. When an outlet is specified, a container strategy is used and the content is rendered inside that outlet; otherwise, a global strategy is used and the content is rendered in place.    |position?, outlet?|
+|createAbsoluteOverlaySettings| Creates overlay settings with a global or container position strategy based on preset position settings. Accepts either a deprecated outlet (`IgxOverlayOutletDirective` / `ElementRef`) or an `HTMLElement` container. When a container or outlet is provided, a `ContainerPositionStrategy` is used; otherwise, a `GlobalPositionStrategy` is used.    |position?, container?|
 |createRelativeOverlaySettings| Creates overlay settings with auto, connected or elastic position strategy based on a preset position settings    |target, strategy?, position?|
 
 
