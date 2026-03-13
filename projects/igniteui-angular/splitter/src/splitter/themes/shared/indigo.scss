@@ -9,16 +9,12 @@ $slim-splitter: calc(1 / var(--splitter-size));
 
 @include themed-block(igx-splitter, indigo) {
     @include b(igx-splitter-bar-host) {
-        &:focus {
-            box-shadow: none;
+        transition: box-shadow 0.25s 0.1s ease-in;
+
+        &:focus-visible {
+            transition-duration: 0.15s;
 
             .igx-splitter-bar {
-                opacity: 1;
-                background: var-get($theme, 'focus-color');
-                border-color: var-get($theme, 'focus-color');
-            }
-
-            .igx-splitter-bar--collapsible {
                 [aria-orientation='horizontal'] & {
                     transform: scaleX(1);
                 }
@@ -27,16 +23,29 @@ $slim-splitter: calc(1 / var(--splitter-size));
                     transform: scaleY(1);
                 }
 
-                .igx-splitter-bar__handle,
-                .igx-splitter-bar__expander {
-                    opacity: 1;
-                    pointer-events: auto;
+                transition-delay: 0s !important;
+
+                &.igx-splitter-bar--collapsible {
+                    .igx-splitter-bar__handle,
+                    .igx-splitter-bar__expander {
+                        opacity: 0.68;
+                        pointer-events: auto;
+                    }
+
+                    &:hover {
+                        .igx-splitter-bar__handle,
+                        .igx-splitter-bar__expander {
+                            opacity: 1;
+                        }
+                    }
                 }
             }
         }
     }
 
     @include b(igx-splitter-bar) {
+        transition: all 0.25s 0.3s $ease-in-out-quad !important;
+
         [aria-orientation='horizontal'] & {
             transform: scaleX($slim-splitter);
         }
@@ -45,34 +54,42 @@ $slim-splitter: calc(1 / var(--splitter-size));
             transform: scaleY($slim-splitter);
         }
 
+        &:hover {
+            [aria-orientation='horizontal'] & {
+                transform: scaleX(1);
+            }
+
+            [aria-orientation='vertical'] & {
+                transform: scaleY(1);
+            }
+
+            transition-delay: 0s !important;
+        }
+
         @include m(collapsible) {
             @include e(handle) {
                 opacity: 0;
                 pointer-events: none;
+                transition-delay: 0.3s;
             }
 
             @include e(expander) {
                 opacity: 0;
                 pointer-events: none;
+                transition-delay: 0.3s;
             }
 
             &:hover {
-                [aria-orientation='horizontal'] & {
-                    transform: scaleX(1);
-                }
-
-                [aria-orientation='vertical'] & {
-                    transform: scaleY(1);
-                }
-
                 @include e(handle) {
                     opacity: 1;
                     pointer-events: auto;
+                    transition-delay: 0.1s;
                 }
 
                 @include e(expander) {
                     opacity: 1;
                     pointer-events: auto;
+                    transition-delay: 0.1s;
                 }
             }
         }
