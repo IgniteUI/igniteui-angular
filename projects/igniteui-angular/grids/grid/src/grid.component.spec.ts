@@ -341,7 +341,6 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it('should have correct ARIA role structure on tbody and tfoot', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
-            const grid = fixture.componentInstance.grid;
             fixture.componentInstance.columns[0].hasSummary = true;
 
             fixture.componentInstance.generateData(30);
