@@ -228,6 +228,9 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
             (this.isActive() ? ` ${this.defaultCssClass}--active` : '');
     }
 
+    /**
+     * @hidden @internal
+     */
     @HostBinding('attr.role')
     public role = 'row';
 
