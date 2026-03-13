@@ -14,7 +14,6 @@ on:
 
 jobs:
   dispatch-to-private-repo:
-    if: github.event_name != 'push' || !github.event.deleted
     runs-on: ubuntu-latest
 
     steps:
