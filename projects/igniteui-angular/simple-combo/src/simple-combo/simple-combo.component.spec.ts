@@ -915,7 +915,6 @@ describe('IgxSimpleCombo', () => {
                     IgxComboInContainerTestComponent,
                     IgxComboRemoteDataComponent,
                     ComboModelBindingComponent,
-                    IgxSimpleComboNgModelChangeOrderComponent
                 ]
             }).compileComponents();
         }));
@@ -1069,23 +1068,6 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toEqual(undefined);
             combo.select(combo.data[7][combo.valueKey]);
             expect(combo.displayValue).toEqual(combo.data[7][combo.displayKey]);
-        }));
-        it('should emit selectionChanged after ngModelChange', fakeAsync(() => {
-            fixture = TestBed.createComponent(IgxSimpleComboNgModelChangeOrderComponent);
-            fixture.detectChanges();
-            tick();
-
-            const host = fixture.componentInstance;
-            combo = host.combo;
-
-            combo.select('California');
-            fixture.detectChanges();
-            tick();
-
-            expect(host.eventLog).toEqual(['ngModelChange', 'selectionChanged']);
-            expect(host.comboValue).toEqual('California');
-            expect(host.changedArgs.newValue).toEqual('California');
-            expect(host.changedArgs.newSelection).toEqual(jasmine.objectContaining({ field: 'California' }));
         }));
     });
 
@@ -3621,44 +3603,5 @@ export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {
             { id: 4, name: 'Houston' },
             { id: 5, name: 'Phoenix' }
         ];
-    }
-}
-
-@Component({
-    template: `
-        <igx-simple-combo
-            #combo
-            [data]="items"
-            [displayKey]="'field'"
-            [valueKey]="'field'"
-            [ngModel]="comboValue"
-            (ngModelChange)="onNgModelChange($event)"
-            (selectionChanged)="onSelectionChanged($event)">
-        </igx-simple-combo>
-    `,
-    imports: [IgxSimpleComboComponent, FormsModule]
-})
-class IgxSimpleComboNgModelChangeOrderComponent {
-    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
-    public combo: IgxSimpleComboComponent;
-
-    public items = [
-        { field: 'Arizona' },
-        { field: 'California' },
-        { field: 'Nevada' }
-    ];
-
-    public comboValue = 'Arizona';
-    public eventLog: string[] = [];
-    public changedArgs: ISimpleComboSelectionChangedEventArgs;
-
-    public onNgModelChange(value: any): void {
-        this.eventLog.push('ngModelChange');
-        this.comboValue = value;
-    }
-
-    public onSelectionChanged(args: ISimpleComboSelectionChangedEventArgs): void {
-        this.eventLog.push('selectionChanged');
-        this.changedArgs = args;
     }
 }

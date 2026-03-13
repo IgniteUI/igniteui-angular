@@ -931,7 +931,6 @@ describe('igxCombo', () => {
                     IgxComboBindingDataAfterInitComponent,
                     IgxComboFormComponent,
                     IgxComboInTemplatedFormComponent,
-                    ComboSelectionChangedNgModelOrderComponent
                 ]
             }).compileComponents();
         }));
@@ -1583,23 +1582,6 @@ describe('igxCombo', () => {
                 combo.select([...data].splice(1, 3), true);
                 fixture.detectChanges();
                 expect(fixture.componentInstance.selectedItems).toEqual([...data].splice(1, 3));
-            }));
-            it('should emit selectionChanged after ngModelChange', fakeAsync(() => {
-                fixture = TestBed.createComponent(ComboSelectionChangedNgModelOrderComponent);
-                fixture.detectChanges();
-                tick();
-
-                const host = fixture.componentInstance;
-                combo = host.combo;
-
-                combo.select([1]);
-                fixture.detectChanges();
-                tick();
-
-                expect(host.eventLog).toEqual(['ngModelChange', 'selectionChanged']);
-                expect(host.comboValue).toEqual([1]);
-                expect(host.changedArgs.newValue).toEqual([1]);
-                expect(host.changedArgs.newSelection).toEqual([host.items[1]]);
             }));
         });
         describe('Dropdown tests: ', () => {
@@ -4083,44 +4065,5 @@ export class ComboWithIdComponent {
                 value: "Option3",
             }
         ];
-    }
-}
-
-@Component({
-    template: `
-        <igx-combo
-            #combo
-            [data]="items"
-            [displayKey]="'text'"
-            [valueKey]="'id'"
-            [ngModel]="comboValue"
-            (ngModelChange)="onNgModelChange($event)"
-            (selectionChanged)="onSelectionChanged($event)">
-        </igx-combo>
-    `,
-    imports: [IgxComboComponent, FormsModule]
-})
-class ComboSelectionChangedNgModelOrderComponent {
-    @ViewChild('combo', { read: IgxComboComponent, static: true })
-    public combo: IgxComboComponent;
-
-    public items = [
-        { id: 0, text: 'One' },
-        { id: 1, text: 'Two' },
-        { id: 2, text: 'Three' }
-    ];
-
-    public comboValue: number[] = [];
-    public eventLog: string[] = [];
-    public changedArgs: IComboSelectionChangedEventArgs;
-
-    public onNgModelChange(value: number[]): void {
-        this.eventLog.push('ngModelChange');
-        this.comboValue = value;
-    }
-
-    public onSelectionChanged(args: IComboSelectionChangedEventArgs): void {
-        this.eventLog.push('selectionChanged');
-        this.changedArgs = args;
     }
 }

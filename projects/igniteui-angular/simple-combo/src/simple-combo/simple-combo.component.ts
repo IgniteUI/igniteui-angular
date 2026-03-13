@@ -13,21 +13,21 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGX_COMBO_COMPONENT, IgxComboAddItemComponent, IgxComboAPIService, IgxComboBaseDirective, IgxComboDropDownComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboItemComponent } from 'igniteui-angular/combo';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
-/** Emitted when an igx-simple-combo's selection has been changed. */
+/** Emitted when the Combo's selection has changed. */
 export interface ISimpleComboSelectionChangedEventArgs extends IBaseEventArgs {
-    /** An object which represents the value that was previously selected */
+    /** The old selection value */
     oldValue: any;
-    /** An object which represents the value that is currently selected */
+    /** The new selection value */
     newValue: any;
-    /** An object which represents the item that was previously selected */
+    /** The old selection item */
     oldSelection: any;
-    /** An object which represents the item that is currently selected */
+    /** The new selection item */
     newSelection: any;
-    /** The text that is displayed in the combo text box */
+    /** The display text of the combo text box */
     displayText: string;
 }
 
-/** Emitted when an igx-simple-combo's selection is changing. */
+/** Emitted when the Combo's selection is changing. */
 export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSelectionChangedEventArgs, CancelableEventArgs {}
 
 /**

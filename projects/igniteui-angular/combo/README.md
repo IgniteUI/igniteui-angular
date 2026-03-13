@@ -93,7 +93,6 @@ The `igx-combo` exposes both `selectionChanging` and `selectionChanged`.
 - `selectionChanging` is emitted **before** a new selection state is committed and can be canceled.
 - If `selectionChanging` is not canceled, the component commits the final selection state and then emits `selectionChanged`.
 - `selectionChanged` is emitted **after** the selection completes and the component state is updated.
-- When the combo is used with `ngModel` or Angular forms, `selectionChanged` is emitted after the value change callback is invoked.
 - `selectionChanged` is not cancelable and reports the final committed selection state.
 
 ### Value Binding

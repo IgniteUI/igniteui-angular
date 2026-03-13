@@ -22,27 +22,27 @@ import { IgxInputGroupComponent, IgxInputDirective, IgxReadOnlyInputDirective, I
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
-/** Event emitted when an igx-combo's selection has been changed */
+/** Event emitted when the Combo's selection has changed */
 export interface IComboSelectionChangedEventArgs extends IBaseEventArgs {
-    /** An array containing the values that were previously selected */
+    /** An array containing the old selection values */
     oldValue: any[];
-    /** An array containing the values that are currently selected */
+    /** An array containing the new selection items */
     newValue: any[];
-    /** An array containing the items that were previously selected */
+    /** An array containing the old selection items */
     oldSelection: any[];
-    /** An array containing the items that are currently selected */
+    /** An array containing the new selection items */
     newSelection: any[];
-    /** An array containing the items that were added to the selection (if any) */
+    /** An array containing the items added to the selection (if any) */
     added: any[];
-    /** An array containing the items that were removed from the selection (if any) */
+    /** An array containing the items removed from the selection (if any) */
     removed: any[];
-    /** The text that is displayed in the combo text box */
+    /** The display text of the combo text box */
     displayText: string;
     /** The user interaction that triggered the selection change */
     event?: Event;
 }
 
-/** Event emitted when an igx-combo's selection is changing */
+/** Event emitted when the Combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IComboSelectionChangedEventArgs, IBaseCancelableEventArgs {}
 
 /** Event emitted when the igx-combo's search input changes */
