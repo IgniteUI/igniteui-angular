@@ -182,7 +182,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
             fix.detectChanges();
@@ -190,7 +190,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(4);
             TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[0]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.rowToggle.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
@@ -199,7 +199,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(4);
             TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[0]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.rowToggle.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, true);
@@ -208,7 +208,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
             TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[0]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.rowToggle.emit).toHaveBeenCalledTimes(2);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, true);
@@ -217,7 +217,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
             TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[0]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.rowToggle.emit).toHaveBeenCalledTimes(2);
         });
 
@@ -230,7 +230,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, true);
             fix.detectChanges();
@@ -238,7 +238,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(7);
             TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[3]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.rowToggle.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, true);
@@ -247,7 +247,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(7);
             TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[3]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.rowToggle.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, true);
@@ -256,7 +256,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
             TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[3]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.rowToggle.emit).toHaveBeenCalledTimes(2);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, true);
@@ -265,7 +265,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
             TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[3]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.rowToggle.emit).toHaveBeenCalledTimes(2);
         });
 
@@ -598,7 +598,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(7);
             TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[3]);
@@ -607,7 +607,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            // TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(8);
             TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[3]);
@@ -767,7 +767,9 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.headerContainer.getScroll().scrollLeft).toEqual(scrollLeft);
         });
 
-        it('should select correct cells after expand/collapse row', async () => {
+        /* S.S. The test is now redundant as it covers the same scenario as a previous one just also including scrolls, which
+            no longer change anything because of the behavioral change that clears selection on expand/collapse. */
+        xit('should select correct cells after expand/collapse row', async () => {
             // Select first cell and expand collapse
             let rows;
             let cell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
