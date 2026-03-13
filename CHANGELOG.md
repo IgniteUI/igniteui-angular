@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 21.1.1
+## 21.2.0
 
 ### New Features
 
@@ -17,6 +17,10 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxNotificationsDirective`, `IgxSnackbarComponent`, `IgxToastComponent`
     - Added a new `container` input property of type `HTMLElement`. When set, overlay content is rendered inside the given container using `ContainerPositionStrategy`. The deprecated `outlet` property now points users to `container` as its replacement.
+
+- `IgxCombo`, `IgxSimpleCombo`
+    - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
+
 ## 21.1.0
 
 ### New Features
