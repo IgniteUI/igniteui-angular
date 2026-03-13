@@ -283,7 +283,7 @@ describe('IgxSimpleCombo', () => {
                 newSelection: combo.data[1],
                 owner: combo,
                 displayText: combo.data[1].trim()
-            });
+            } satisfies ISimpleComboSelectionChangedEventArgs);
         });
         it('should not emit selectionChanged when selectionChanging is canceled', () => {
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
@@ -340,7 +340,7 @@ describe('IgxSimpleCombo', () => {
                 newSelection: combo.data[2],
                 owner: combo,
                 displayText: combo.data[2]
-            });
+            } satisfies ISimpleComboSelectionChangedEventArgs);
         });
         it('should properly emit added and removed values in change event on single value selection', () => {
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);

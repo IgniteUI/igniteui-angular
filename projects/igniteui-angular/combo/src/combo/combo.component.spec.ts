@@ -683,7 +683,7 @@ describe('igxCombo', () => {
                     event: undefined,
                     owner: combo,
                     displayText: selectedItems.join(', ')
-                });
+                } satisfies IComboSelectionChangedEventArgs);
             });
             it('should not emit selectionChanged when selectionChanging is canceled', () => {
                 const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
@@ -732,7 +732,7 @@ describe('igxCombo', () => {
                     event: undefined,
                     owner: combo,
                     displayText: `${combo.data[2]}, ${combo.data[4]}`
-                });
+                } satisfies IComboSelectionChangedEventArgs);
             });
             it('should handle select/deselect ALL items', () => {
                 const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
