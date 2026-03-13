@@ -1,4 +1,5 @@
 import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
+import { StyleInheritanceTestComponent } from './style-inheritance-test/style-inheritance-test.component';
 import { Routes } from '@angular/router';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
@@ -729,5 +730,9 @@ export const appRoutes: Routes = [
     {
         path: 'labelDirective',
         component: LabelSampleComponent
+    },
+    {
+        path: 'style-inheritance-test',
+        component: StyleInheritanceTestComponent
     }
 ];
