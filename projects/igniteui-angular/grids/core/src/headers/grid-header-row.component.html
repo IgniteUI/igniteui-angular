@@ -1,4 +1,4 @@
-<div role="rowgroup" class="igx-grid-thead__wrapper" (scroll)="scroll($event)" [style.width.px]="width"
+<div class="igx-grid-thead__wrapper" (scroll)="scroll($event)" [style.width.px]="width"
     [class.igx-grid__tr--mrl]="hasMRL">
 
     <!-- Column headers area -->
@@ -16,7 +16,7 @@
 
         <!-- Row dragging area -->
         @if (grid.rowDraggable) {
-            <div #headerDragContainer class="igx-grid__drag-indicator igx-grid__tr-action" (pointerdown)="$event.preventDefault()" [class.igx-grid__drag-indicator--header]="!grid.isRowSelectable">
+            <div #headerDragContainer class="igx-grid__drag-indicator igx-grid__tr-action" role="columnheader" (pointerdown)="$event.preventDefault()" [class.igx-grid__drag-indicator--header]="!grid.isRowSelectable">
                 <div style="visibility: hidden;">
                     <ng-container *ngTemplateOutlet="grid.dragIndicatorIconTemplate || grid.dragIndicatorIconBase"></ng-container>
                 </div>
@@ -25,7 +25,7 @@
 
         <!-- Row selectors area -->
         @if (grid.showRowSelectors) {
-            <div #headerSelectorContainer class="igx-grid__cbx-selection igx-grid__tr-action"
+            <div #headerSelectorContainer class="igx-grid__cbx-selection igx-grid__tr-action" role="columnheader"
                 [class.igx-grid__cbx-selection--push]="grid.filteringService.isFilterRowVisible"
                 (click)="headerRowSelection($event)"
                 (pointerdown)="$event.preventDefault()">
@@ -41,6 +41,7 @@
                 (click)="grid.toggleAll()"
                 (pointerdown)="$event.preventDefault()"
                 [hidden]="!grid.hasExpandableChildren || !grid.hasVisibleColumns"
+                role="columnheader"
                 [ngClass]="{
                     'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header igx-grid__tr-action': grid.hasExpandableChildren,
                     'igx-grid__hierarchical-expander--push': grid.filteringService.isFilterRowVisible,
@@ -55,7 +56,8 @@
         @if (grid?.groupingExpressions?.length) {
             <div #headerGroupContainer class="{{ indentationCSSClasses }}"
                 (click)="grid.toggleAllGroupRows()"
-                (pointerdown)="$event.preventDefault()">
+                (pointerdown)="$event.preventDefault()"
+                role="columnheader">
                 <ng-container *ngTemplateOutlet="grid.iconTemplate; context: { $implicit: grid }"></ng-container>
             </div>
         }
