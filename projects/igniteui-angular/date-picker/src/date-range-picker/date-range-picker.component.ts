@@ -38,7 +38,6 @@ import {
     IgxPickerActionsDirective,
     isDateInRanges,
     PickerCalendarOrientation,
-    IgxOverlayOutletDirective
 } from 'igniteui-angular/core';
 import { IgxCalendarContainerComponent } from '../date-picker/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-picker/picker-base.directive';
@@ -365,26 +364,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     @Input()
     public override placeholder = '';
-
-    /**
-     * @deprecated Still supported and used by the overlay service when provided but will
-     * be removed in a future version. Avoid using this property in new code and prefer
-     * the default in-place rendering with the HTML Popover API.
-     *
-     * Gets/Sets the container used for the popup element.
-     *
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-date-range-picker [outlet]="outlet"></igx-date-range-picker>
-     * //..
-     * ```
-     */
-    @Input()
-    public override outlet: IgxOverlayOutletDirective | ElementRef<any>;
 
     /**
      * Show/hide week numbers
