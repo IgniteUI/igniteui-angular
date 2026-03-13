@@ -2,7 +2,13 @@ name: Trigger Licensed Release
 
 on:
   release:
-    types: [published]
+    types: [published, created]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to dispatch (e.g. 21.1.1)'
+        required: true
+        type: string
 
 jobs:
   dispatch-to-private-repo:
@@ -25,6 +31,6 @@ jobs:
           event-type: igniteui-angular-public-release-created
           client-payload: |
             {
-              "release_tag": "${{ github.event.release.tag_name }}",
+              "release_tag": "${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.event.release.tag_name }}",
               "public_repo": "${{ github.repository }}"
             }
