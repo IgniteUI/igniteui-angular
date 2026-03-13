@@ -64,6 +64,7 @@ export class IgxCalendarContainerComponent {
     @HostListener('keydown.alt.arrowup', ['$event'])
     public onEscape(event) {
         event.preventDefault();
+        event.stopPropagation();
         this.calendarClose.emit();
     }
 

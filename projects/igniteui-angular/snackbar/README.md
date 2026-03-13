@@ -54,3 +54,22 @@ By default, the IgxSnackbar will be automatically hidden after 4000 milliseconds
 </igx-snackbar>
 ```
 You can display custom content by adding elements inside the snackbar.
+
+## Snackbar with a container
+
+You can render the snackbar inside a specific container element by setting the `container` input to an `HTMLElement`.
+
+```html
+<div #myContainer style="position: relative; height: 300px;">
+    <button type="button" igxButton (click)="snackbar.open()">Show snackbar</button>
+
+    <igx-snackbar #snackbar
+                 [container]="myContainer"
+                 message="This snackbar is rendered inside a container!">
+    </igx-snackbar>
+</div>
+```
+
+When a `container` is set, the snackbar uses a `ContainerPositionStrategy` and is positioned relative to the container bounds.
+
+> **Note:** The `outlet` property is deprecated. Use `container` instead.

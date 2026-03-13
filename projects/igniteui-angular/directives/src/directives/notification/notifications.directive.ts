@@ -30,6 +30,9 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
     public displayTime = 4000;
 
     /**
+     * @deprecated The `outlet` property is deprecated and will be removed in a future version.
+     * Use the `container` property instead.
+     *
      * Gets/Sets the container used for the element.
      *
      * @remarks
@@ -37,6 +40,16 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef<HTMLElement>;
+
+    /**
+     * Gets/Sets the container used for the element.
+     *
+     * @remarks
+     *  `container` is an instance of `HTMLElement`.
+     */
+    @Input()
+    public container: HTMLElement;
+
 
     /**
      * Enables/Disables the visibility of the element.
@@ -86,6 +99,7 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
             closeOnEscape: false,
             closeOnOutsideClick: false,
             modal: false,
+            target: this.container,
             outlet: this.outlet
         };
 

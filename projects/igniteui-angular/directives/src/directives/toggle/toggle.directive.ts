@@ -444,6 +444,10 @@ export class IgxToggleActionDirective implements OnInit {
      * <div igxToggleAction [igxToggleOutlet]="outlet"></div>
      * ```
      * Where `outlet` in an instance of `IgxOverlayOutletDirective` or an `ElementRef`
+     *
+     * @deprecated Still supported and used by the overlay service when provided but will
+     * be removed in a future version. Avoid using this property in new code and prefer
+     * the default in-place rendering with the HTML Popover API.
      */
     @Input('igxToggleOutlet')
     public outlet: IgxOverlayOutletDirective | ElementRef;

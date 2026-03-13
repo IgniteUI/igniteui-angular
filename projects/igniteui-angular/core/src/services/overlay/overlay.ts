@@ -117,7 +117,6 @@ export class IgxOverlayService implements OnDestroy {
 
     private _componentId = 0;
     private _overlayInfos: OverlayInfo[] = [];
-    private _overlayElement: HTMLElement;
     private _document: Document;
     private _keyPressEventListener: Subscription;
     private destroy$ = new Subject<boolean>();
@@ -138,6 +137,8 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
+     * @deprecated The outlet parameter is deprecated. Please provide the container or outlet element through the
+     * `createAbsoluteOverlaySettings` method when calling `attach` method.
      * Creates overlay settings with global or container position strategy and preset position settings
      *
      * @param position Preset position settings. Default position is 'center'
@@ -145,15 +146,29 @@ export class IgxOverlayService implements OnDestroy {
      * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
      */
     public static createAbsoluteOverlaySettings(
-        position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings {
+        position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings;
+    /**
+     * Creates overlay settings with global or container position strategy and preset position settings
+     *
+     * @param position Preset position settings. Default position is 'center'
+     * @param container The container element to attach the overlay to
+     * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
+     */
+    public static createAbsoluteOverlaySettings(
+        position?: AbsolutePosition, container?: HTMLElement): OverlaySettings;
+    public static createAbsoluteOverlaySettings(
+        position?: AbsolutePosition, containerOrOutlet?: IgxOverlayOutletDirective | ElementRef | HTMLElement): OverlaySettings {
         const positionSettings = this.createAbsolutePositionSettings(position);
-        const strategy = outlet ? new ContainerPositionStrategy(positionSettings) : new GlobalPositionStrategy(positionSettings);
+        const strategy = containerOrOutlet ? new ContainerPositionStrategy(positionSettings) : new GlobalPositionStrategy(positionSettings);
+        const container = containerOrOutlet instanceof HTMLElement ? containerOrOutlet : null;
+        const outlet = containerOrOutlet instanceof ElementRef || containerOrOutlet instanceof IgxOverlayOutletDirective ? containerOrOutlet : null;
         const overlaySettings: OverlaySettings = {
             positionStrategy: strategy,
             scrollStrategy: new NoOpScrollStrategy(),
             modal: false,
             closeOnOutsideClick: true,
-            outlet
+            outlet,
+            target: container
         };
         return overlaySettings;
     }
@@ -330,13 +345,19 @@ export class IgxOverlayService implements OnDestroy {
         // Append the content to the overlay
         info.settings = eventArgs.settings;
         this._overlayInfos.push(info);
-        info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
         info.initialSize = { width: elementRect.width, height: elementRect.height };
         // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
         this.getComponentSize(info);
-        this.moveElementToOverlay(info);
-        // Update the container size after moving if there is size.
+        if (info.settings.outlet ||
+            (info.settings.positionStrategy instanceof ContainerPositionStrategy && info.settings.target instanceof HTMLElement)) {
+            this.moveElementToOutlet(info);
+        } else if (info.elementRef.nativeElement.parentElement) {
+            this.wrapElementInPlace(info);
+        } else {
+            this.appendElementToDocument(info);
+        }
+        // Update the container size after wrapping/moving if there is size.
         if (info.size) {
             info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
         }
@@ -619,6 +640,7 @@ export class IgxOverlayService implements OnDestroy {
                 if (createSettings) {
                     ({ injector: elementInjector, ...overlaySettings } = createSettings);
                 }
+                console.warn('Overlay component is created without a ViewContainerRef. The element will be outside the Angular component tree and may not inherit styles. Prefer using the ViewContainerRef overload or provide an outlet.');
                 dynamicComponent = createComponent(component, { environmentInjector, elementInjector });
                 this._appRef.attachView(dynamicComponent.hostView);
             }
@@ -649,11 +671,35 @@ export class IgxOverlayService implements OnDestroy {
         return hook;
     }
 
-    private moveElementToOverlay(info: OverlayInfo) {
+    private moveElementToOutlet(info: OverlayInfo) {
+        info.hook = this.placeElementHook(info.elementRef.nativeElement);
         info.wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
-        this.getOverlayElement(info).appendChild(info.wrapperElement);
+        let container = info.settings.outlet?.nativeElement || info.settings.outlet;
+        if (info.settings.positionStrategy instanceof ContainerPositionStrategy &&
+            info.settings.target instanceof HTMLElement
+        ) {
+            container = info.settings.target;
+        }
+        container.appendChild(info.wrapperElement);
         contentElement.appendChild(info.elementRef.nativeElement);
+    }
+
+    private wrapElementInPlace(info: OverlayInfo) {
+        info.wrapperElement = this.getWrapperElement();
+        const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
+        const element = info.elementRef.nativeElement;
+        // Insert wrapper where element currently is, then move element inside the content div
+        element.parentElement.insertBefore(info.wrapperElement, element);
+        contentElement.appendChild(element);
+    }
+
+    private appendElementToDocument(info: OverlayInfo) {
+        info.wrapperElement = this.getWrapperElement();
+        const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
+        this._document.body.appendChild(info.wrapperElement);
+        contentElement.appendChild(info.elementRef.nativeElement);
+        info.appendedToBody = true;
     }
 
     private getWrapperElement(): HTMLElement {
@@ -682,18 +728,6 @@ export class IgxOverlayService implements OnDestroy {
         wrapperElement.style.visibility = 'hidden';
         wrapperElement.appendChild(content);
         return content;
-    }
-
-    private getOverlayElement(info: OverlayInfo): HTMLElement {
-        if (info.settings.outlet) {
-            return info.settings.outlet.nativeElement || info.settings.outlet;
-        }
-        if (!this._overlayElement) {
-            this._overlayElement = this._document.createElement('div');
-            this._overlayElement.classList.add('igx-overlay');
-            this._document.body.appendChild(this._overlayElement);
-        }
-        return this._overlayElement;
     }
 
     private updateSize(info: OverlayInfo) {
@@ -734,11 +768,23 @@ export class IgxOverlayService implements OnDestroy {
 
     private cleanUp(info: OverlayInfo) {
         const child: HTMLElement = info.elementRef.nativeElement;
-        const outlet = this.getOverlayElement(info);
-        // if same element is shown in other overlay outlet will not contain
-        // the element and we should not remove it form outlet
-        if (outlet.contains(child)) {
-            outlet.removeChild(child.parentNode.parentNode);
+        if (info.appendedToBody) {
+            // Element was appended to document body as a fallback (no outlet, no parent).
+            // Just remove the wrapper; the dynamic component will be destroyed below.
+            info.wrapperElement?.parentElement?.removeChild(info.wrapperElement);
+        } else if (!info.settings.outlet) {
+            // Unwrap: move element back to wrapper's parent position, then remove wrapper
+            if (info.wrapperElement?.parentElement) {
+                info.wrapperElement.parentElement.insertBefore(child, info.wrapperElement);
+                info.wrapperElement.parentElement.removeChild(info.wrapperElement);
+            }
+        } else {
+            const outlet = info.settings.outlet.nativeElement || info.settings.outlet;
+            // if same element is shown in other overlay outlet will not contain
+            // the element and we should not remove it form outlet
+            if (outlet.contains(child)) {
+                outlet.removeChild(child.parentNode.parentNode);
+            }
         }
         if (info.componentRef) {
             this._appRef.detachView(info.componentRef.hostView);
@@ -754,12 +800,7 @@ export class IgxOverlayService implements OnDestroy {
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
 
-        // this._overlayElement.parentElement check just for tests that manually delete the element
         if (this._overlayInfos.length === 0) {
-            if (this._overlayElement && this._overlayElement.parentElement) {
-                this._overlayElement.parentElement.removeChild(this._overlayElement);
-                this._overlayElement = null;
-            }
             this.removeCloseOnEscapeListener();
         }
 

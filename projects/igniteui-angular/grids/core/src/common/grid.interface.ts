@@ -518,6 +518,11 @@ export interface GridType extends IGridDataBindable {
     navigation: any;
     /** @hidden @internal */
     filteringService: any;
+    /**
+     * @deprecated The `outlet` property is deprecated and will be removed in a future version.
+     * It is still honored by the overlay service to determine where the overlay wrapper is attached,
+     * but no new code should rely on it and existing usages should migrate away from it.
+     */
     outlet: any;
     /** Indicates whether the grid has columns that can be moved */
     /** @hidden @internal */

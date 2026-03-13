@@ -6,6 +6,18 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxOverlayService`
+    - The overlay service now integrates the HTML Popover API and prefers rendering content in place / in the top layer, significantly reducing the need for outlet containers. When configured, `OverlaySettings.outlet` is still honored, and overlays may also fall back to being appended to `document.body` when required.
+
+    - **Deprecation** - The `outlet` property in `OverlaySettings`, `IgxOverlayOutletDirective`, and `igxToggleOutlet` input on `IgxToggleActionDirective` are deprecated and will be removed in a future version. They remain functional in this release for backward compatibility, but new code should rely on the default in-place / top-layer rendering behavior instead of custom outlet containers.
+
+    - `ContainerPositionStrategy` - The `ContainerPositionStrategy` now uses the `target` property from `OverlaySettings` (when set to an `HTMLElement`) as the container in which the overlay is rendered. This replaces the previous reliance on the deprecated `outlet` property and internal DOM traversal. The overlay wrapper is sized and positioned to match the target container's bounds and automatically updates on resize via `ResizeObserver`.
+
+    - `IgxOverlayService.createAbsoluteOverlaySettings` - Added a new overload accepting `container?: HTMLElement` as the second parameter. When a container element is provided, a `ContainerPositionStrategy` is used and the `target` in the returned overlay settings is set to the container element. The previous overload accepting `outlet?: IgxOverlayOutletDirective | ElementRef` is still supported but deprecated.
+
+- `IgxNotificationsDirective`, `IgxSnackbarComponent`, `IgxToastComponent`
+    - Added a new `container` input property of type `HTMLElement`. When set, overlay content is rendered inside the given container using `ContainerPositionStrategy`. The deprecated `outlet` property now points users to `container` as its replacement.
+
 - `IgxCombo`, `IgxSimpleCombo`
     - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
 

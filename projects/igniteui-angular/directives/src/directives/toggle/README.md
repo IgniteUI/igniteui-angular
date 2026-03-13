@@ -103,9 +103,11 @@ Providing reference from custom component which has already been registered into
 |:----------:|:-------------|:------|
 | `igxToggleAction`| `IToggleView` \| `string` | Determines the target that have to be controled. |
 | `overlaySettings` | `OverlaySettings`| Passes `igxOverlay` settings for applicable targets (`igxToggle`) that control positioning, interaction and scroll behavior.
-| `igxToggleOutlet` | `IgxOverlayOutletDirective` \| `ElementRef`| Determines where the target overlay element should be attached. Shortcut for `overlaySettings.outlet`.
+| `igxToggleOutlet` | `IgxOverlayOutletDirective` \| `ElementRef`| **Deprecated.** Still supported and used by the overlay service when provided but will be removed in a future version. Avoid using this property in new code and prefer the default in-place rendering with the HTML Popover API.
 
 # IgxOverlayOutlet Directive
+
+> **Deprecated.** The `IgxOverlayOutletDirective` and the `outlet` property on `OverlaySettings` are deprecated. They are still supported and used by the overlay service when provided but will be removed in a future version. Avoid using this property in new code and prefer the default in-place rendering with the HTML Popover API.
 
 The **IgxOverlayOutlet** provides a way to mark an element as an `igxOverlay` outlet container through the component template only.
 Directive instance is exported as `overlay-outlet`, so it can be assigned within the template:
@@ -118,3 +120,5 @@ This allows to provide the `outlet` templates variable as a setting to the toggl
 <button type="button" igxButton [igxToggleAction]="reference" [igxToggleOutlet]="outlet">Toggle</button>
 <custom-component #reference></custom-component>
 ```
+
+The overlay service now always renders content in place using the HTML Popover API, so specifying an outlet is no longer necessary. Simply remove the `outlet` and `igxToggleOutlet` references from your templates and settings.

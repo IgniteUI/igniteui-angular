@@ -32,7 +32,12 @@ export interface AutocompleteOverlaySettings {
     positionStrategy?: IPositionStrategy;
     /** Scroll strategy to use with this settings */
     scrollStrategy?: IScrollStrategy;
-    /** Set the outlet container to attach the overlay to */
+    /**
+     * @deprecated Still supported and used by the overlay service when provided but will
+     * be removed in a future version. Avoid using this property in new code and prefer
+     * the default in-place rendering with the HTML Popover API.
+     *
+     * Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
 }
 

@@ -186,6 +186,10 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     }
 
     /**
+     * @deprecated Still supported and used by the overlay service when provided but will
+     * be removed in a future version. Avoid using this property in new code and prefer
+     * the default in-place rendering with the HTML Popover API.
+     *
      * The container used for the pop-up element.
      *
      * @example
