@@ -1,6 +1,5 @@
-import { Directive, ElementRef, HostBinding, Input, OnDestroy, booleanAttribute } from '@angular/core';
-import { IgxOverlayOutletDirective, IToggleView } from 'igniteui-angular/core';
-import { IPositionStrategy, OverlaySettings } from 'igniteui-angular/core';
+import { booleanAttribute, Directive, HostBinding, Input, OnDestroy } from '@angular/core';
+import { IPositionStrategy, IToggleView, OverlaySettings } from 'igniteui-angular/core';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 
 @Directive()
@@ -28,18 +27,6 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      */
     @Input()
     public displayTime = 4000;
-
-    /**
-     * @deprecated The `outlet` property is deprecated and will be removed in a future version.
-     * Use the `container` property instead.
-     *
-     * Gets/Sets the container used for the element.
-     *
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     */
-    @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef<HTMLElement>;
 
     /**
      * Gets/Sets the container used for the element.
@@ -100,7 +87,6 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
             closeOnOutsideClick: false,
             modal: false,
             target: this.container,
-            outlet: this.outlet
         };
 
         super.open(overlaySettings);
