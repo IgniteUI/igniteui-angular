@@ -41,6 +41,7 @@
                 (click)="grid.toggleAll()"
                 (pointerdown)="$event.preventDefault()"
                 [hidden]="!grid.hasExpandableChildren || !grid.hasVisibleColumns"
+                role="columnheader"
                 [ngClass]="{
                     'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header igx-grid__tr-action': grid.hasExpandableChildren,
                     'igx-grid__hierarchical-expander--push': grid.filteringService.isFilterRowVisible,
@@ -55,7 +56,8 @@
         @if (grid?.groupingExpressions?.length) {
             <div #headerGroupContainer class="{{ indentationCSSClasses }}"
                 (click)="grid.toggleAllGroupRows()"
-                (pointerdown)="$event.preventDefault()">
+                (pointerdown)="$event.preventDefault()"
+                role="columnheader">
                 <ng-container *ngTemplateOutlet="grid.iconTemplate; context: { $implicit: grid }"></ng-container>
             </div>
         }
