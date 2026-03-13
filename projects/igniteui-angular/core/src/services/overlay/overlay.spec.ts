@@ -3699,6 +3699,449 @@ describe('igxOverlay', () => {
                 // expect(overlayChild.getBoundingClientRect().height).toBeCloseTo(280, 0);
                 fixture.componentInstance.overlay.detachAll();
             }));
+
+        // CSS Anchor Positioning Tests
+        it('Should set anchor-name on target element when using ConnectedPositioningStrategy with HTMLElement target',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new ConnectedPositioningStrategy(),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                // Verify anchor-name is set on the target button
+                const anchorName = button.style.getPropertyValue('anchor-name');
+                expect(anchorName).toContain('--igx-anchor-');
+
+                // Verify position-anchor is set on the content element
+                const contentElement = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                const positionAnchor = contentElement.style.getPropertyValue('position-anchor');
+                expect(positionAnchor).toContain('--igx-anchor-');
+                expect(positionAnchor).toEqual(anchorName);
+
+                // Content should be position: fixed for cross-tree anchor resolution
+                expect(contentElement.style.position).toEqual('fixed');
+
+                overlay.detachAll();
+            }));
+
+        it('Should NOT set anchor-name when target is a Point (not HTMLElement)',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+
+                const overlaySettings: OverlaySettings = {
+                    target: new Point(100, 100),
+                    positionStrategy: new ConnectedPositioningStrategy(),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                // Content element should NOT have position-anchor set
+                const contentElement = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                const positionAnchor = contentElement.style.getPropertyValue('position-anchor');
+                expect(positionAnchor).toEqual('');
+
+                overlay.detachAll();
+            }));
+
+        it('Should NOT set anchor-name when using GlobalPositionStrategy',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new GlobalPositionStrategy(),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                // Target should NOT have anchor-name set
+                const anchorName = button.style.getPropertyValue('anchor-name');
+                expect(anchorName).toEqual('');
+
+                overlay.detachAll();
+            }));
+
+        it('Should clean up anchor-name from target after detach',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new ConnectedPositioningStrategy(),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                expect(button.style.getPropertyValue('anchor-name')).toContain('--igx-anchor-');
+
+                overlay.detach(id);
+                tick();
+                fixture.detectChanges();
+
+                // After detach, anchor-name should be removed from the target
+                expect(button.style.getPropertyValue('anchor-name')).toEqual('');
+
+                overlay.detachAll();
+            }));
+
+        it('Should position content correctly using CSS anchor with ConnectedPositioningStrategy',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                const buttonRect = button.getBoundingClientRect();
+
+                const positionSettings: PositionSettings = {
+                    horizontalDirection: HorizontalAlignment.Right,
+                    verticalDirection: VerticalAlignment.Bottom,
+                    horizontalStartPoint: HorizontalAlignment.Left,
+                    verticalStartPoint: VerticalAlignment.Bottom
+                };
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new ConnectedPositioningStrategy(positionSettings),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                const contentElement = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                const contentRect = contentElement.getBoundingClientRect();
+
+                // Content should be positioned at button's left edge (horizontalStartPoint=Left)
+                // and button's bottom edge (verticalStartPoint=Bottom)
+                expect(contentRect.left).toBeCloseTo(buttonRect.left, 0);
+                expect(contentRect.top).toBeCloseTo(buttonRect.bottom, 0);
+
+                overlay.detachAll();
+            }));
+
+        it('Should position content correctly using CSS anchor with AutoPositionStrategy',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                const buttonRect = button.getBoundingClientRect();
+
+                const positionSettings: PositionSettings = {
+                    horizontalDirection: HorizontalAlignment.Right,
+                    verticalDirection: VerticalAlignment.Bottom,
+                    horizontalStartPoint: HorizontalAlignment.Left,
+                    verticalStartPoint: VerticalAlignment.Bottom
+                };
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new AutoPositionStrategy(positionSettings),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                const contentElement = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                const contentRect = contentElement.getBoundingClientRect();
+
+                expect(contentRect.left).toBeCloseTo(buttonRect.left, 0);
+                expect(contentRect.top).toBeCloseTo(buttonRect.bottom, 0);
+
+                overlay.detachAll();
+            }));
+
+        it('Should position content correctly using CSS anchor with ElasticPositionStrategy',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                const buttonRect = button.getBoundingClientRect();
+
+                const positionSettings: PositionSettings = {
+                    horizontalDirection: HorizontalAlignment.Right,
+                    verticalDirection: VerticalAlignment.Bottom,
+                    horizontalStartPoint: HorizontalAlignment.Left,
+                    verticalStartPoint: VerticalAlignment.Bottom,
+                    minSize: { width: 50, height: 50 }
+                };
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new ElasticPositionStrategy(positionSettings),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                const contentElement = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                const contentRect = contentElement.getBoundingClientRect();
+
+                expect(contentRect.left).toBeCloseTo(buttonRect.left, 0);
+                expect(contentRect.top).toBeCloseTo(buttonRect.bottom, 0);
+
+                overlay.detachAll();
+            }));
+
+        it('Should work correctly with CSS anchor in modal overlays',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                const buttonRect = button.getBoundingClientRect();
+
+                const positionSettings: PositionSettings = {
+                    horizontalDirection: HorizontalAlignment.Right,
+                    verticalDirection: VerticalAlignment.Bottom,
+                    horizontalStartPoint: HorizontalAlignment.Left,
+                    verticalStartPoint: VerticalAlignment.Bottom
+                };
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new ConnectedPositioningStrategy(positionSettings),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: true,
+                    closeOnOutsideClick: false
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                // Verify modal content class is present (added synchronously)
+                const contentElement = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0] as HTMLElement;
+                expect(contentElement).toBeDefined();
+
+                // Verify positioning still works in modal mode
+                const contentRect = contentElement.getBoundingClientRect();
+                expect(contentRect.left).toBeCloseTo(buttonRect.left, 0);
+                expect(contentRect.top).toBeCloseTo(buttonRect.bottom, 0);
+
+                // Verify anchor was set up
+                expect(button.style.getPropertyValue('anchor-name')).toContain('--igx-anchor-');
+
+                overlay.detachAll();
+            }));
+
+        it('Should close on outside click with CSS anchor positioning',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new ConnectedPositioningStrategy(),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: true
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                // Overlay should be visible
+                let wrapperElements = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER);
+                expect(wrapperElements.length).toEqual(1);
+                expect((wrapperElements[0] as HTMLElement).style.visibility).toEqual('');
+
+                // Click outside should close
+                document.body.click();
+                tick();
+                fixture.detectChanges();
+
+                // Verify the overlay closed
+                const info = overlay.getOverlayById(id);
+                expect(info?.visible).toBeFalsy();
+
+                overlay.detachAll();
+            }));
+
+        it('Should work with CSS anchor positioning and outlet',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(EmptyPageInShadowDomComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                const outlet = fixture.componentInstance.outletElement;
+
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new ConnectedPositioningStrategy(),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false,
+                    outlet
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                // Verify the overlay is rendered inside the outlet
+                const outletEl = outlet.nativeElement || outlet;
+                expect(outletEl.children.length).toBeGreaterThan(0);
+                const wrapperElement = outletEl.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
+                expect(wrapperElement).toBeDefined();
+
+                // Verify anchor-name on target and position-anchor on content
+                const anchorName = button.style.getPropertyValue('anchor-name');
+                expect(anchorName).toContain('--igx-anchor-');
+
+                overlay.detachAll();
+            }));
+
+        it('Should support multiple overlays with different targets using CSS anchor',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+
+                // Create a second target
+                const secondTarget = document.createElement('button');
+                secondTarget.style.position = 'absolute';
+                secondTarget.style.top = '200px';
+                secondTarget.style.left = '200px';
+                secondTarget.style.width = '50px';
+                secondTarget.style.height = '50px';
+                (fixture.nativeElement as HTMLElement).appendChild(secondTarget);
+                fixture.detectChanges();
+
+                const settings1: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new ConnectedPositioningStrategy(),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                const settings2: OverlaySettings = {
+                    target: secondTarget,
+                    positionStrategy: new ConnectedPositioningStrategy(),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+
+                const id1 = overlay.attach(SimpleDynamicComponent, settings1);
+                const id2 = overlay.attach(SimpleDynamicComponent, settings2);
+                overlay.show(id1);
+                overlay.show(id2);
+                tick();
+                fixture.detectChanges();
+
+                // Both targets should have unique anchor names
+                const anchorName1 = button.style.getPropertyValue('anchor-name');
+                const anchorName2 = secondTarget.style.getPropertyValue('anchor-name');
+                expect(anchorName1).toContain('--igx-anchor-');
+                expect(anchorName2).toContain('--igx-anchor-');
+                expect(anchorName1).not.toEqual(anchorName2);
+
+                // Both overlays should be visible
+                const wrapperElements = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER);
+                expect(wrapperElements.length).toEqual(2);
+
+                overlay.detachAll();
+
+                // After detach, both anchor names should be cleaned up
+                expect(button.style.getPropertyValue('anchor-name')).toEqual('');
+                expect(secondTarget.style.getPropertyValue('anchor-name')).toEqual('');
+
+                (fixture.nativeElement as HTMLElement).removeChild(secondTarget);
+            }));
+
+        it('Should position correctly with CSS anchor when using HorizontalAlignment.Left direction',
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                fixture.detectChanges();
+                const overlay = fixture.componentInstance.overlay;
+                const button = fixture.componentInstance.buttonElement.nativeElement;
+                const buttonRect = button.getBoundingClientRect();
+
+                const positionSettings: PositionSettings = {
+                    horizontalDirection: HorizontalAlignment.Left,
+                    verticalDirection: VerticalAlignment.Top,
+                    horizontalStartPoint: HorizontalAlignment.Left,
+                    verticalStartPoint: VerticalAlignment.Top
+                };
+                const overlaySettings: OverlaySettings = {
+                    target: button,
+                    positionStrategy: new ConnectedPositioningStrategy(positionSettings),
+                    scrollStrategy: new NoOpScrollStrategy(),
+                    modal: false,
+                    closeOnOutsideClick: false
+                };
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
+                tick();
+                fixture.detectChanges();
+
+                const contentElement = (fixture.nativeElement as HTMLElement)
+                    .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                const contentRect = contentElement.getBoundingClientRect();
+
+                // Content should be to the left of button (right edge at button's left)
+                expect(contentRect.right).toBeCloseTo(buttonRect.left, 0);
+                // Content should be above button (bottom edge at button's top)
+                expect(contentRect.bottom).toBeCloseTo(buttonRect.top, 0);
+
+                overlay.detachAll();
+            }));
     });
 
     describe('Integration tests - Scroll Strategies: ', () => {

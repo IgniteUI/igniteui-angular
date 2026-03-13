@@ -200,7 +200,11 @@ export interface OverlayInfo {
     transformY?: number;
     event?: Event;
     wrapperElement?: HTMLElement;
-    size?: string
+    size?: string;
+    /** @hidden @internal CSS anchor name for CSS anchor positioning */
+    anchorName?: string;
+    /** @hidden @internal Target element with anchor-name set for CSS anchor positioning */
+    anchorTarget?: HTMLElement;
 }
 
 /** @hidden */
