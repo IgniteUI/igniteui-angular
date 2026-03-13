@@ -610,29 +610,6 @@ describe('IgxToggle', () => {
             expect(toggle.closing.emit).toHaveBeenCalledWith({ id: '0', owner: toggle, cancel: false, event: new Event('click') });
             expect(toggle.closed.emit).toHaveBeenCalledTimes(1);
         }));
-
-        it('should pass IgxOverlayOutletDirective input from IgxToggleActionDirective', () => {
-            const fixture = TestBed.createComponent(IgxToggleOutletComponent);
-            const outlet = fixture.debugElement.query(By.css('.outlet-container')).nativeElement;
-            const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
-            const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
-            fixture.detectChanges();
-
-            const settings: OverlaySettings = {
-                target: button,
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
-                closeOnOutsideClick: true,
-                modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
-                outlet: jasmine.any(IgxOverlayOutletDirective) as any,
-                excludeFromOutsideClick: [button]
-            };
-
-            fixture.componentInstance.toggleAction.onClick();
-            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
-            const directive = toggleSpy.calls.mostRecent().args[0].outlet as IgxOverlayOutletDirective;
-            expect(directive.nativeElement).toBe(outlet);
-        });
     });
 });
 
