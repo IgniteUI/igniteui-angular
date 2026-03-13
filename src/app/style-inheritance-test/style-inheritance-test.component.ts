@@ -3,6 +3,7 @@ import { ChildAComponent } from './child-a/child-a.component';
 import { ChildCComponent } from './child-c/child-c.component';
 import { ChildDComponent } from './child-d/child-d.component';
 import { ChildEComponent } from './child-e/child-e.component';
+import { ChildFComponent } from './child-f/child-f.component';
 
 /**
  * Test Page Component
@@ -11,6 +12,7 @@ import { ChildEComponent } from './child-e/child-e.component';
  * 1. styleUrls array (duplicates styles)
  * 2. Single styleUrl (missing base styles)
  * 3. Adopted StyleSheets (NO duplication!) ✨
+ * 4. ViewEncapsulation.None (global styles)
  */
 @Component({
     selector: 'app-style-inheritance-test',
@@ -192,6 +194,79 @@ childE.shadowRoot.adoptedStyleSheets = [sheet];</pre>
                 </div>
             </section>
 
+            <!-- APPROACH 4: ViewEncapsulation.None -->
+            <section class="test-section encap-none">
+                <h2>🔓 Approach 4: ViewEncapsulation.None</h2>
+                <p class="approach-tag">Child F</p>
+                
+                <div class="approach-description">
+                    <p>
+                        When a component uses <code>ViewEncapsulation.None</code>, its styles become 
+                        <strong>global</strong> - they're injected into the document without any scoping.
+                    </p>
+                    <pre class="code-block">&#64;Component(&#123;
+    styles: ['.base-class &#123; padding: 20px; &#125;'],
+    encapsulation: ViewEncapsulation.None  // Styles are global!
+&#125;)
+export class BaseComponent &#123;&#125;
+
+// Child extends Base but Base is NEVER rendered
+export class ChildComponent extends BaseComponent &#123;&#125;</pre>
+                </div>
+
+                <div class="key-finding">
+                    <h4>🚨 KEY FINDING: Styles are NOT available!</h4>
+                    <p>
+                        Even with <code>ViewEncapsulation.None</code>, if the base component is 
+                        <strong>never instantiated/rendered</strong>, Angular will NOT include its 
+                        styles in the bundle. The styles are only injected when the component is 
+                        actually created.
+                    </p>
+                    <p>
+                        <strong>This means:</strong> Child F below will be MISSING the base styles 
+                        because <code>BaseNoEncapsulationComponent</code> is never rendered on this page.
+                    </p>
+                </div>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Pros (when base IS rendered)</h4>
+                        <ul>
+                            <li>No style duplication - styles are truly global</li>
+                            <li>Simple to implement</li>
+                            <li>Children automatically have access to styles</li>
+                            <li>Full browser support</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>❌ Cons</h4>
+                        <ul>
+                            <li><strong>Base must be rendered!</strong> Styles only load when component is created</li>
+                            <li>No encapsulation - styles can conflict with other components</li>
+                            <li>Risky for large applications</li>
+                            <li>Order-dependent - styles may override unexpectedly</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="references">
+                    <h4>📚 References</h4>
+                    <ul>
+                        <li><a href="https://angular.dev/api/core/ViewEncapsulation" target="_blank">Angular API: ViewEncapsulation</a></li>
+                        <li><a href="https://angular.dev/guide/components/styling#view-encapsulation" target="_blank">Angular Guide: View Encapsulation</a></li>
+                    </ul>
+                </div>
+
+                <div class="demo">
+                    <h4>Demo: (Notice the MISSING base styles - no purple border, no padding)</h4>
+                    <app-child-f />
+                    <p class="warning-note">
+                        ⚠️ <strong>As predicted:</strong> The base component's styles (.base-no-encap-container, 
+                        .base-no-encap-button) are NOT applied because BaseNoEncapsulationComponent was never rendered.
+                    </p>
+                </div>
+            </section>
+
             <!-- Summary comparison table -->
             <section class="summary-section">
                 <h2>📊 Summary Comparison</h2>
@@ -241,9 +316,17 @@ childE.shadowRoot.adoptedStyleSheets = [sheet];</pre>
                             <td class="neutral">⭐⭐ Medium</td>
                             <td class="good">✅ All</td>
                         </tr>
+                        <tr>
+                            <td><code>ViewEncapsulation.None</code></td>
+                            <td class="good">✅ None</td>
+                            <td class="bad">❌ None</td>
+                            <td class="good">⭐ Easy</td>
+                            <td class="neutral">⚠️ Base must render</td>
+                        </tr>
                     </tbody>
                 </table>
                 <p class="table-note">* CSS Custom Properties don't duplicate variable definitions, but you still need to write the property declarations in each component.</p>
+                <p class="table-note"><strong>Important:</strong> ViewEncapsulation.None only works if the base component is actually rendered somewhere on the page!</p>
             </section>
 
             <!-- Other approaches -->
@@ -325,6 +408,37 @@ childE.shadowRoot.adoptedStyleSheets = [sheet];</pre>
             background: #f1f8e9;
         }
         .test-section.adopted h2 { color: #2e7d32; }
+        .test-section.encap-none {
+            border-left: 5px solid #673ab7;
+            background: #f3e5f5;
+        }
+        .test-section.encap-none h2 { color: #512da8; }
+        
+        .key-finding {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .key-finding h4 { color: #c62828; margin-bottom: 10px; }
+        .key-finding p { color: #555; margin: 0 0 10px 0; line-height: 1.6; }
+        .key-finding p:last-child { margin-bottom: 0; }
+        .key-finding code {
+            background: #ffcdd2;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .warning-note {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: #fff3e0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #e65100;
+            border-left: 3px solid #ff9800;
+        }
         
         .approach-description {
             background: white;
@@ -502,7 +616,7 @@ childE.shadowRoot.adoptedStyleSheets = [sheet];</pre>
             }
         }
     `],
-    imports: [ChildAComponent, ChildCComponent, ChildDComponent, ChildEComponent],
+    imports: [ChildAComponent, ChildCComponent, ChildDComponent, ChildEComponent, ChildFComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StyleInheritanceTestComponent {}
