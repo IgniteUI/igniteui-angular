@@ -18,6 +18,7 @@ import { DropPosition, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, Ig
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridSummaryCalculationMode, IColumnPipeArgs, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 describe('IgxGrid - Summaries #grid', () => {
 
@@ -1204,6 +1205,9 @@ describe('IgxGrid - Summaries #grid', () => {
         let fix;
         let grid;
         beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
+            });
             fix = TestBed.createComponent(SummariesGroupByTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1497,6 +1501,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
             fix.detectChanges();
+            await wait(60);
+
 
             const newRow = {
                 ID: 777,
@@ -1508,6 +1514,7 @@ describe('IgxGrid - Summaries #grid', () => {
             };
             grid.addRow(newRow);
             fix.detectChanges();
+            await wait(60);
 
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
@@ -1516,7 +1523,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(50);
+            await wait(60);
             fix.detectChanges();
 
             let row = grid.gridAPI.get_row_by_index(16);
@@ -1528,7 +1535,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             // Undo transactions
             grid.transactions.undo();
-            await wait(50);
+            await wait(60);
             fix.detectChanges();
             row = grid.gridAPI.get_row_by_index(16);
             expect(row).toBeUndefined();
@@ -1537,7 +1544,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             // redo transactions
             grid.transactions.redo();
-            await wait(50);
+            await wait(60);
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(16);
@@ -1546,13 +1553,13 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 5, ['Count'], ['9']);
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(50);
+            await wait(60);
             fix.detectChanges();
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 18, 5, ['Count'], ['1']);
 
             // Discard
             grid.transactions.clear();
-            await wait(50);
+            await wait(60);
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(16);

@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/directive-selector */
 import { Directive, HostBinding } from '@angular/core';
 import { HeaderContentBaseDirective } from './expansion-panel.common';
 

@@ -82,11 +82,13 @@
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
             [igxForContainerSize]="calcHeight" [igxForItemSize]="renderedRowHeight" [igxForTrackBy]="trackChanges"
             #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
+            <div [attr.data-index]="rowIndex">
             <ng-template
                 [igxTemplateOutlet]="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) ? child_record_template : hierarchical_record_template))"
                 [igxTemplateOutletContext]="getContext(rowData, rowIndex, false)" (viewCreated)="viewCreatedHandler($event)"
                 (viewMoved)="viewMovedHandler($event)" (cachedViewLoaded)="cachedViewLoaded($event)" (beforeViewDetach)="viewDetachHandler($event)">
             </ng-template>
+            </div>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
         <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-metaData="metaData">

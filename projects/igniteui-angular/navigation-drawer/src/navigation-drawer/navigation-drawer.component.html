@@ -9,6 +9,7 @@
 </ng-template>
 
 <div [hidden]="pin"
+    [attr.popover]="pin ? null : 'manual'"
     class="igx-nav-drawer__overlay"
     [class.igx-nav-drawer__overlay--hidden]="!isOpen"
     [class.igx-nav-drawer--disable-animation]="disableAnimation"
@@ -16,6 +17,7 @@
 </div>
 <nav
     class="igx-nav-drawer__aside"
+    [attr.popover]="pin ? null : 'manual'"
     [class.igx-nav-drawer__aside--collapsed]="!miniTemplate && !isOpen"
     [class.igx-nav-drawer__aside--mini]="miniTemplate && !isOpen"
     [class.igx-nav-drawer__aside--normal]="!miniTemplate || isOpen"

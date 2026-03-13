@@ -83,10 +83,10 @@ describe('Localization', () => {
 
         it('should return correct date and time format per locale', () => {
             // Defaults to Angular's one because they are registered in tests
-            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'short', timeStyle: 'short' })).toEqual('M/d/yy, h:mm tt');
-            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'medium', timeStyle: 'short' })).toEqual('MMM d, yyyy, h:mm tt');
-            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'long', timeStyle: 'long' })).toEqual(`MMMM d, yyyy at h:mm:ss tt z`);
-            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'full', timeStyle: 'short' })).toEqual(`EEEE, MMMM d, yyyy at h:mm tt`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'short', timeStyle: 'short' })).toEqual('M/d/yy, h:mm tt');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'medium', timeStyle: 'short' })).toEqual('MMM d, yyyy, h:mm tt');
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'long', timeStyle: 'long' })).toEqual(`MMMM d, yyyy at h:mm:ss tt z`);
+            expect(i18nFormatter.getLocaleDateTimeFormat('en', false, { dateStyle: 'full', timeStyle: 'short' })).toEqual(`EEEE, MMMM d, yyyy at h:mm tt`);
 
             expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'short', timeStyle: 'short' })).toEqual('dd.MM.yy, HH:mm');
             expect(i18nFormatter.getLocaleDateTimeFormat('de', false, { dateStyle: 'medium', timeStyle: 'short' })).toEqual('dd.MM.yyyy, HH:mm');

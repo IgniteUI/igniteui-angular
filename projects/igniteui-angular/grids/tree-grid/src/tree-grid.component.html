@@ -88,11 +88,13 @@
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
             (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
+            <div [attr.data-index]="rowIndex">
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)'
                 (beforeViewDetach)="viewDetachHandler($event)"
                 (cachedViewLoaded)='cachedViewLoaded($event)'>
             </ng-template>
+            </div>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
         <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-metaData="metaData">

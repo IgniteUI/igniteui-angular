@@ -5,15 +5,12 @@
     "entryFile": "src/public_api.ts"
   },
   "allowedNonPeerDependencies": [
-    "@types/hammerjs",
-    "hammerjs",
     "fflate",
     "jspdf",
     "igniteui-trial-watermark",
     "lodash-es",
     "@igniteui/material-icons-extended",
     "igniteui-theming",
-    "igniteui-i18n-core",
-    "igniteui-webcomponents"
+    "igniteui-i18n-core"
   ]
 }

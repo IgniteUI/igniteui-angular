@@ -2,8 +2,13 @@ import { Component, DestroyRef, HostBinding, inject, Input } from '@angular/core
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 
-
 /* wcElementTag: igc-query-builder-header */
+/* blazorElement */
+/* jsonAPIManageItemInMarkup */
+/* jsonAPIManageCollectionInMarkup */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/* contentParent: QueryBuilder */
 /**
 * @igxParent IgxQueryBuilderComponent
 */

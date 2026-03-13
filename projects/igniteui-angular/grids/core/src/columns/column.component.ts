@@ -1795,6 +1795,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /* alternateName: parentColumn */
+    /* blazorAlternateType: object */
+    // We need that because Blazor cannot handle the type correctly.
     /**
      * Sets/gets the parent column.
      * ```typescript
