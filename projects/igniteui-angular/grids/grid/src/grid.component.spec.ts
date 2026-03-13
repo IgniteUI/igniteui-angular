@@ -319,9 +319,9 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(100);
-            // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+            // With data, igx-grid__tbody-content is the rowgroup focus host
             const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
-            expect(container.getAttribute('role')).toBe(null);
+            expect(container.getAttribute('role')).toBe('rowgroup');
 
             //Filter grid so no results are available and grid is empty
             grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
