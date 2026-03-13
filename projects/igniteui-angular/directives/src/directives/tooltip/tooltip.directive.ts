@@ -3,8 +3,9 @@ import {
     OnDestroy, inject, HostListener,
     Renderer2,
     AfterViewInit,
+    OnInit,
 } from '@angular/core';
-import { OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
+import { OverlayInfo, OverlaySettings, OverlaySizeRegistry, PlatformUtil } from 'igniteui-angular/core';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 
@@ -28,7 +29,7 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]',
     standalone: true
 })
-export class IgxTooltipDirective extends IgxToggleDirective implements AfterViewInit, OnDestroy {
+export class IgxTooltipDirective extends IgxToggleDirective implements OnInit, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
@@ -116,6 +117,13 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     private _role: 'tooltip' | 'status' = 'tooltip';
     private _renderer = inject(Renderer2);
     private _platformUtil = inject(PlatformUtil);
+    private _sizeRegistry = inject(OverlaySizeRegistry);
+
+    /** @hidden */
+    public override ngOnInit() {
+        super.ngOnInit();
+        this._sizeRegistry.register(this.element, this.setInitialSize);
+    }
 
     /** @hidden */
     public ngAfterViewInit(): void {
@@ -131,6 +139,8 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
         if (this.arrow) {
             this._removeArrow();
         }
+
+        this._sizeRegistry.clear(this.element);
     }
 
     /**
@@ -205,5 +215,15 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     private _removeArrow(): void {
         this._arrowEl.remove();
         this._arrowEl = null;
+    }
+
+    /**
+    * Measures **after** moving the element into the overlay outlet so that parent
+    * style constraints do not affect the initial size.
+    */
+    private setInitialSize = (info: OverlayInfo, moveToOverlay: () => void) => {
+        moveToOverlay();
+        const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+        info.initialSize = { width: elementRect.width, height: elementRect.height };
     }
 }
