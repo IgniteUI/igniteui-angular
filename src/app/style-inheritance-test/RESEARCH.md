@@ -27,6 +27,49 @@ element2.shadowRoot.adoptedStyleSheets = [sheet];
 - ✅ Firefox 101+
 - ✅ Safari 16.4+
 
+**Source:** [Can I Use: adoptedStyleSheets](https://caniuse.com/mdn-api_document_adoptedstylesheets)
+
+---
+
+## References & Sources
+
+### Official Documentation
+1. **MDN Web Docs - adoptedStyleSheets**
+   - https://developer.mozilla.org/en-US/docs/Web/API/Document/adoptedStyleSheets
+   - https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet/CSSStyleSheet
+
+2. **web.dev - Constructable Stylesheets**
+   - https://web.dev/articles/constructable-stylesheets
+
+3. **Google Developers - Constructable Stylesheets**
+   - https://developers.google.com/web/updates/2019/02/constructable-stylesheets
+
+4. **Angular Documentation**
+   - Component Styling: https://angular.dev/guide/components/styling
+   - ViewEncapsulation: https://angular.dev/api/core/ViewEncapsulation
+   - Component Inheritance: https://angular.dev/guide/components/inheritance
+
+### Framework Implementations
+5. **Lit (Google's Web Components Library)**
+   - https://lit.dev/docs/components/styles/
+   - Lit uses `adoptedStyleSheets` by default for all components
+
+6. **Stencil.js**
+   - https://stenciljs.com/docs/styling
+   - Uses constructable stylesheets with automatic fallback
+
+7. **Shoelace (Web Components Library)**
+   - https://shoelace.style/
+   - Uses shared stylesheet registry pattern
+
+### Community Discussions
+8. **Angular GitHub Issues**
+   - Style inheritance discussion: https://github.com/angular/angular/issues/7773
+   - Component inheritance and decorators: https://github.com/angular/angular/issues/31495
+
+9. **CSS Working Group - Constructable Stylesheets Spec**
+   - https://wicg.github.io/construct-stylesheets/
+
 ---
 
 ## Implementation Approaches
