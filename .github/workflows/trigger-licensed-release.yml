@@ -1,5 +1,7 @@
 name: Trigger Licensed Release
 
+permissions: {}
+
 on:
   push:
     tags:
