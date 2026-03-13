@@ -58,7 +58,7 @@
         </ng-template>
 
         <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
-        <igc-trial-watermark></igc-trial-watermark>
+        <!-- <igc-trial-watermark></igc-trial-watermark> -->
     </div>
     <div igxToggle #loadingOverlay>
         @if (shouldOverlayLoading) {
@@ -139,7 +139,7 @@
 
 <ng-template #defaultRowDimensionsTemplate>
     @for (dim of rowDimensions; track dim.memberName; let dimIndex = $index) {
-        <div tabindex="0" [style.height.px]="totalHeight" #rowDimensionContainer class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)"
+        <div tabindex="0" role="rowgroup" [style.height.px]="totalHeight" #rowDimensionContainer class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)"
             [attr.aria-activedescendant]="headerRowActiveDescendant">
             <ng-template igxGridFor let-rowData
                 [igxGridForOf]="dataView | pivotGridCellMerging:pivotConfiguration:dim:pipeTrigger"
@@ -164,10 +164,10 @@
 </ng-template>
 
 <ng-template #horizontalRowDimensionsTemplate>
-    <div tabindex="0" class="igx-grid__tbody-pivot-mrl-dimension" #rowDimensionContainer [style.height.px]="totalHeight" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)"
+    <div tabindex="0" role="rowgroup" class="igx-grid__tbody-pivot-mrl-dimension" #rowDimensionContainer [style.height.px]="totalHeight" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)"
         [attr.aria-activedescendant]="headerRowActiveDescendant">
         @if (dataView | pivotGridHorizontalRowGrouping:pivotConfiguration:pipeTrigger:regroupTrigger; as groupedData) {
-            <ng-template #verticalRowDimScrollContainer role="rowgroup" igxGridFor let-rowGroup let-rowIndex="index"
+            <ng-template #verticalRowDimScrollContainer igxGridFor let-rowGroup let-rowIndex="index"
                 [igxGridForOf]="groupedData"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForScrollContainer]="verticalScroll"
