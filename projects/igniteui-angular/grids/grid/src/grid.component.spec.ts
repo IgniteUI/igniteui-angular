@@ -319,9 +319,9 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(100);
-            // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+            // With data, igx-grid__tbody-content is the rowgroup focus host
             const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
-            expect(container.getAttribute('role')).toBe(null);
+            expect(container.getAttribute('role')).toBe('rowgroup');
 
             //Filter grid so no results are available and grid is empty
             grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
@@ -337,6 +337,34 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(container.getAttribute('role')).toMatch('row');
 
+        }));
+
+        it('should have correct ARIA role structure on tbody and tfoot', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            const grid = fixture.componentInstance.grid;
+            fixture.componentInstance.columns[0].hasSummary = true;
+
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(100);
+
+            // Outer tbody wrapper is layout-only
+            const tbodyWrapper = fixture.nativeElement.querySelector('.igx-grid__tbody');
+            expect(tbodyWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner focus host is the rowgroup
+            const tbodyContent = fixture.nativeElement.querySelector('.igx-grid__tbody-content');
+            expect(tbodyContent.getAttribute('role')).toBe('rowgroup');
+            expect(tbodyContent.getAttribute('tabindex')).toBe('0');
+
+            // Outer tfoot wrapper is layout-only
+            const tfootWrapper = fixture.nativeElement.querySelector('.igx-grid__tfoot');
+            expect(tfootWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner tfoot div is the rowgroup focus host
+            const tfootContent = fixture.nativeElement.querySelector('.igx-grid__tfoot > div');
+            expect(tfootContent.getAttribute('role')).toBe('rowgroup');
+            expect(tfootContent.getAttribute('tabindex')).toBe('0');
         }));
 
         it('should render empty message', fakeAsync(() => {
