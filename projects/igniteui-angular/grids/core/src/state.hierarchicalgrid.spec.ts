@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,14 +16,14 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent],
             providers: [
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
@@ -168,7 +168,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         HelperFunctions.verifyMoving(grid.moving, gridState);
     });
 
-    it('setState should correctly restore grid moving state from string', fakeAsync(() => {
+    it('setState should correctly restore grid moving state from string', async () => {
         const state = fix.componentInstance.state;
 
         const initialState = HelperFunctions.buildStateString(grid, 'moving', 'true', 'true');
@@ -180,7 +180,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(initialState);
 
         state.setState(JSON.stringify(movingStateObject));
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         gridState = state.getState(false, ['moving', 'rowIslands']) as IGridState;
         HelperFunctions.verifyMoving(grid.moving, gridState);
@@ -190,7 +190,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         });
         gridState = state.getState(true, ['moving', 'rowIslands']);
         expect(gridState).toBe(movingState);
-    }));
+    });
 
     it('getState should return correct filtering state', () => {
         const state = fix.componentInstance.state;
@@ -206,7 +206,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
     });
 
-    it('setState should correctly restore grid filtering state from string', fakeAsync(() => {
+    it('setState should correctly restore grid filtering state from string', async () => {
         const state = fix.componentInstance.state;
 
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
@@ -222,7 +222,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(initialState);
 
         state.setState(JSON.stringify(filteringStateObject));
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         gridState = state.getState(false, ['filtering', 'rowIslands']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
@@ -232,9 +232,9 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         });
         gridState = state.getState(true, ['filtering', 'rowIslands']);
         expect(gridState).toBe(filteringState);
-    }));
+    });
 
-    it('setState should correctly restore grid filtering state from object', fakeAsync(() => {
+    it('setState should correctly restore grid filtering state from object', async () => {
         const state = fix.componentInstance.state;
 
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
@@ -250,7 +250,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(initialState);
 
         state.setState(filteringStateObject);
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         gridState = state.getState(false, ['filtering', 'rowIslands']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
@@ -260,7 +260,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         });
         gridState = state.getState(true, ['filtering', 'rowIslands']);
         expect(gridState).toBe(filteringState);
-    }));
+    });
 
     it('setState should correctly restore grid sorting state from string', () => {
         const state = fix.componentInstance.state;
@@ -464,7 +464,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(expansionState);
     });
 
-    it('setState should correctly restore grid columns state from string', fakeAsync(() => {
+    it('setState should correctly restore grid columns state from string', async () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
@@ -479,7 +479,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(initialState);
 
         state.setState(newColumnsState);
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
         gridState = state.getState(false, ['columns', 'rowIslands']) as IGridState;
@@ -493,7 +493,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         gridState = state.getState(true, ['columns', 'rowIslands']);
         expect(gridState).toBe(newColumnsState);
-    }));
+    });
 });
 
 class HelperFunctions {

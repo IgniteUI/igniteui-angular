@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseProgressDirective } from './progressbar.component';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
@@ -15,7 +15,7 @@ describe('BaseProgressDirective', () => {
     let nativeElement: HTMLElement;
 
     beforeEach(async () => {
-        await TestBed.configureTestingModule({
+        await await TestBed.configureTestingModule({
             imports: [TestComponent], // Declare the test component
         }).compileComponents();
 
@@ -150,10 +150,8 @@ describe('BaseProgressDirective', () => {
         expect(component.animate).toBe(true);
     });
 
-    it('should correctly update host styles', fakeAsync(() => {
+    it('should correctly update host styles', async () => {
         component.value = 50;
-
-        tick(50);
 
         fixture.detectChanges();
 
@@ -161,18 +159,16 @@ describe('BaseProgressDirective', () => {
         expect(nativeElement.style.getPropertyValue('--_progress-fraction')).toBe('0');
         expect(nativeElement.style.getPropertyValue('--_progress-whole')).toBe('50.00');
         expect(nativeElement.style.getPropertyValue('--_transition-duration')).toBe('2000ms');
-    }));
+    });
 
-    it('should correctly calculate fraction and integer values for progress', fakeAsync(() => {
+    it('should correctly calculate fraction and integer values for progress', async () => {
         component.value = 75.25;
-
-        tick(50);
         fixture.detectChanges();
 
         expect(nativeElement.style.getPropertyValue('--_progress-integer')).toBe('75');
         expect(nativeElement.style.getPropertyValue('--_progress-fraction')).toBe('25');
         expect(nativeElement.style.getPropertyValue('--_progress-whole')).toBe('75.25');
-    }));
+    });
 
     it('should trigger progressChanged event when value changes', () => {
         vi.spyOn(component.progressChanged, 'emit');

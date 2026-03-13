@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -27,8 +27,8 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         let rowDimension: DebugElement;
         let headerRow: DebugElement;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridMultipleRowComponent
@@ -37,16 +37,16 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                     IgxGridNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(fakeAsync(async () => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
             fixture.detectChanges();
             pivotGrid = fixture.componentInstance.pivotGrid;
             await fixture.whenStable();
             rowDimension = fixture.debugElement.query(By.css(CSS_CLASS_ROW_DIMENSION_CONTAINER));
             headerRow = fixture.debugElement.query(By.directive(IgxPivotHeaderRowComponent));
-        }));
+        });
 
         it('should allow navigating between row headers', () => {
             const allGroups = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
@@ -321,8 +321,8 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     describe('Row Dimension Expand/Collapse Keyboard Interactions', () => {
         let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxPivotGridTestBaseComponent
@@ -331,12 +331,12 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                     IgxGridNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
-        }));
+        });
 
         it('should allow row dimension expand(Alt + ArrowDown/ArrowRight) and collapse(Alt + ArrowUp/ArrowLeft)', async () => {
             const rowDimension = fixture.debugElement.queryAll(By.css(CSS_CLASS_ROW_DIMENSION_CONTAINER));

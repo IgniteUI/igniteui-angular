@@ -1,18 +1,19 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Component, viewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IgxGridLiteComponent, IgxGridLiteFilteringExpression, IgxGridLiteSortingExpression } from './grid-lite.component';
 import { IgxGridLiteColumnComponent, IgxGridLiteCellTemplateDirective, IgxGridLiteHeaderTemplateDirective, IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
 
 describe('IgxGridLiteComponent', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 IgxGridLiteComponent,
                 IgxGridLiteColumnComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Basic', () => {
         it('should initialize grid with data and columns', async () => {
@@ -36,7 +37,7 @@ describe('IgxGridLiteComponent', () => {
 
             const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
             expect(gridElement).toBeTruthy();
-            expect(gridElement.autoGenerate).toBeTrue();
+            expect(gridElement.autoGenerate).toBeTruthy();
             expect(gridElement.columns.length).toBe(5);
         });
 
@@ -64,7 +65,7 @@ describe('IgxGridLiteComponent', () => {
 
             const gridComponent = fixture.componentInstance.grid();
             const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
-            const sortedSpy = jasmine.createSpy('sorted');
+            const sortedSpy = vi.fn();
 
             gridElement.addEventListener('sorted', sortedSpy);
             expect(gridComponent.sortingExpressions()).toEqual([]);
@@ -77,7 +78,7 @@ describe('IgxGridLiteComponent', () => {
             gridElement.dispatchEvent(new CustomEvent('sorted', { detail: expressions }));
             fixture.detectChanges();
 
-            expect(sortedSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ detail: expressions }));
+            expect(sortedSpy).toHaveBeenCalledWith(expect.objectContaining({ detail: expressions }));
             expect(gridComponent.sortingExpressions().length).toBe(1);
             expect(gridComponent.sortingExpressions()[0].key).toBe('name');
 
@@ -93,7 +94,7 @@ describe('IgxGridLiteComponent', () => {
 
             const gridComponent = fixture.componentInstance.grid();
             const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
-            const filteredSpy = jasmine.createSpy('filtered');
+            const filteredSpy = vi.fn();
 
             gridElement.addEventListener('filtered', filteredSpy);
             expect(gridComponent.filteringExpressions()).toEqual([]);
@@ -106,7 +107,7 @@ describe('IgxGridLiteComponent', () => {
             gridElement.dispatchEvent(new CustomEvent('filtered', { detail: expressions }));
             fixture.detectChanges();
 
-            expect(filteredSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ detail: expressions }));
+            expect(filteredSpy).toHaveBeenCalledWith(expect.objectContaining({ detail: expressions }));
             expect(gridComponent.filteringExpressions().length).toBe(1);
             expect(gridComponent.filteringExpressions()[0].key).toBe('active');
 

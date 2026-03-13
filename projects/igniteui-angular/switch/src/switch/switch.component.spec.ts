@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxSwitchComponent } from './switch.component';
@@ -9,8 +9,8 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxSwitch', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 InitSwitchComponent,
@@ -23,7 +23,7 @@ describe('IgxSwitch', () => {
                 IgxSwitchComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes', () => {
         const fixture = TestBed.createComponent(InitSwitchComponent);
@@ -247,10 +247,10 @@ describe('IgxSwitch', () => {
         expect(domSwitch.classList.contains('igx-switch--invalid')).toBe(true);
     });
 
-    it('Should work properly with ngModel', fakeAsync(() => {
+    it('Should work properly with ngModel', async () => {
         const fixture = TestBed.createComponent(SwitchFormComponent);
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         const switchEl = fixture.componentInstance.switch;
         expect(switchEl.invalid).toEqual(false);
@@ -259,9 +259,9 @@ describe('IgxSwitch', () => {
         expect(switchEl.invalid).toEqual(true);
 
         fixture.componentInstance.ngForm.resetForm();
-        tick();
+        await fixture.whenStable();
         expect(switchEl.invalid).toEqual(false);
-    }));
+    });
 
     it('Should work properly with reactive forms validation.', () => {
         const fixture = TestBed.createComponent(SwitchFormGroupComponent);

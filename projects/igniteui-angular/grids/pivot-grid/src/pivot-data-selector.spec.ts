@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { fakeAsync, TestBed, waitForAsync } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxExpansionPanelHeaderComponent } from 'igniteui-angular/expansion-panel';
@@ -16,13 +16,13 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe("Pivot data selector", () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, IgxPivotDataSelectorComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it("should initialize standalone before a grid is set ", () => {
         const fixture = TestBed.createComponent(IgxPivotDataSelectorComponent);
@@ -37,8 +37,8 @@ describe("Pivot data selector integration", () => {
     let selector: IgxPivotDataSelectorComponent;
     let pivotItems: (IPivotDimension | IPivotValue)[];
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent
@@ -47,9 +47,9 @@ describe("Pivot data selector integration", () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
         fixture.detectChanges();
         grid = fixture.componentInstance.pivotGrid;
@@ -60,7 +60,7 @@ describe("Pivot data selector integration", () => {
             ...grid.pivotConfiguration.filters,
             ...grid.pivotConfiguration.values,
         ];
-    }));
+    });
 
     it("should set its size based on the passed grid instance size", () => {
         setElementSize(grid.nativeElement, ɵSize.Small);
