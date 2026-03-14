@@ -2009,6 +2009,34 @@ export class CollapsibleGroupsDynamicColComponent {
     }
 }
 
+/**
+ * Test component for verifying that a collapsed collapsible column group with explicit column widths
+ * smaller than the grid's MINIMUM_COLUMN_WIDTH does not cause header/cell misalignment.
+ * Regression test for: https://github.com/IgniteUI/igniteui-angular/issues/17042
+ */
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" width="900px">
+        <igx-column-group header="Customer Information" [collapsible]="true" [expanded]="false">
+            <igx-column field="ID" width="100px" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column field="CompanyName" width="100px" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="ContactName" width="100px" [visibleWhenCollapsed]="false"></igx-column>
+        </igx-column-group>
+        <igx-column field="ContactTitle"></igx-column>
+        <igx-column field="Address"></igx-column>
+        <igx-column field="City"></igx-column>
+        <igx-column field="Country"></igx-column>
+        <igx-column field="Phone"></igx-column>
+    </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
+})
+export class CollapsibleColumnGroupWithExplicitWidthsComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+    public data = SampleTestData.contactInfoDataFull();
+}
+
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
