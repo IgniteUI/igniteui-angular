@@ -79,12 +79,16 @@
                     (change)="onSwitchChange($event)">Modal</igx-switch>
             </div>
             <div>
-                <igx-switch class="settings" [(ngModel)]="useContainer" name="outlet" [value]="useContainer"
+                <igx-switch class="settings" [(ngModel)]="useOutlet" name="outlet" [value]="useOutlet"
                     (change)="onSwitchChange($event)">Open in outlet</igx-switch>
             </div>
             <div>
-                <igx-switch class="settings" [(ngModel)]="hasAnimation" name="outlet" [value]="hasAnimation"
+                <igx-switch class="settings" [(ngModel)]="hasAnimation" name="animation" [value]="hasAnimation"
                     (change)="onSwitchChange($event)">Has animation</igx-switch>
+            </div>
+            <div>
+                <igx-switch class="settings" [(ngModel)]="changeOutlet" name="changeOutlet" [value]="changeOutlet"
+                    (change)="onSwitchChange($event)">Change the outlet</igx-switch>
             </div>
             <div>
                 <igx-input-group>
@@ -101,9 +105,6 @@
                 </igx-input-group>
             </div>
         </div>
-        <div #outlet class="outlet column">
-            Outlet
-        </div>
         <button #button igxButton="contained" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
             (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
         <igx-drop-down width="{{dropDownWidth}}px">
@@ -116,4 +117,5 @@
             }
         </igx-drop-down>
     </section>
+    <div #outlet></div>
 </div>

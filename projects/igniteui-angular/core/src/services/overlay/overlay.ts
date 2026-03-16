@@ -677,13 +677,20 @@ export class IgxOverlayService implements OnDestroy {
 
     private moveElementToOutlet(info: OverlayInfo) {
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
-        let container = info.settings.outlet?.nativeElement || info.settings.outlet;
+        let outlet = info.settings.outlet?.nativeElement || info.settings.outlet;
         if (info.settings.positionStrategy instanceof ContainerPositionStrategy &&
             info.settings.target instanceof HTMLElement
         ) {
-            container = info.settings.target;
+            outlet = info.settings.target;
         }
+        var container = this._document.createElement('div');
+
+        // TODO: set some class to container and add it to the theme
+        container.style.position = 'absolute';
+        container.style.inset = '0';
+        container.style.pointerEvents = 'none';
         container.appendChild(info.wrapperElement);
+        outlet.appendChild(container);
     }
 
     private wrapElementInPlace(info: OverlayInfo) {
@@ -767,18 +774,20 @@ export class IgxOverlayService implements OnDestroy {
             // Element was appended to document body as a fallback (no outlet, no parent).
             // Just remove the wrapper; the dynamic component will be destroyed below.
             info.wrapperElement?.parentElement?.removeChild(info.wrapperElement);
-        } else if (!info.settings.outlet) {
+        } else if (!info.settings.outlet &&
+                   !(info.settings.positionStrategy instanceof ContainerPositionStrategy && info.settings.target instanceof HTMLElement)
+        ) {
             // Unwrap: move element back to wrapper's parent position, then remove wrapper
             if (info.wrapperElement?.parentElement) {
                 info.wrapperElement.parentElement.insertBefore(child, info.wrapperElement);
                 info.wrapperElement.parentElement.removeChild(info.wrapperElement);
             }
         } else {
-            const outlet = info.settings.outlet.nativeElement || info.settings.outlet;
+            const outlet = info.settings.outlet?.nativeElement || info.settings.outlet || info.settings.target;
             // if same element is shown in other overlay outlet will not contain
             // the element and we should not remove it form outlet
             if (outlet.contains(child)) {
-                outlet.removeChild(child.parentNode.parentNode);
+                outlet.removeChild(child.parentNode.parentNode.parentNode);
             }
         }
         if (info.componentRef) {

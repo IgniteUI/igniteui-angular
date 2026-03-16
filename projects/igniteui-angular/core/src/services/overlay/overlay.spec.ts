@@ -555,7 +555,7 @@ describe('igxOverlay', () => {
             let wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement.parentNode).toBe(button.nativeElement);
+            expect(wrapperElement.parentNode.parentNode).toBe(button.nativeElement);
             overlay.detach(id);
             tick();
 
@@ -576,7 +576,7 @@ describe('igxOverlay', () => {
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
-            expect(wrapperElement.parentNode).toBe(outlet);
+            expect(wrapperElement.parentNode.parentNode).toBe(outlet);
 
             overlay.detachAll();
         }));

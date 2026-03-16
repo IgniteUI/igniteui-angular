@@ -18,16 +18,16 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         // Set up intersection observer
         this.io?.disconnect();
         const outletElement = contentElement.parentElement.parentElement;
-        if (!target || target instanceof Point || !outletElement) {
+        if ((!target || target instanceof Point) && !outletElement) {
             super.position(contentElement, _size, _document, _initialCall, target);
             return;
         }
         this.io = Util.setupIntersectionObserver(
-            outletElement || target,
+            outletElement || target as HTMLElement,
             contentElement.ownerDocument,
-            () => this.updatePosition(contentElement, target)
+            () => this.updatePosition(contentElement, target as HTMLElement)
         );
-        this.internalPosition(contentElement, target);
+        this.internalPosition(contentElement, target as HTMLElement);
     }
 
     /**

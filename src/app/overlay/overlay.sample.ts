@@ -39,7 +39,7 @@ export class OverlaySampleComponent implements OnInit {
     @ViewChild(IgxDragDirective, { static: true })
     private igxDrag: IgxDragDirective;
     @ViewChild('outlet', { static: true })
-    private containerElement: ElementRef;
+    private outlet: ElementRef;
 
     public items = [];
     public itemsCount = 10;
@@ -58,8 +58,9 @@ export class OverlaySampleComponent implements OnInit {
     public scrollStrategy = 'NoOp';
     public closeOnOutsideClick = true;
     public modal = true;
-    public useContainer = false;
+    public useOutlet = false;
     public hasAnimation = true;
+    public changeOutlet = false;
     public animationLength = 300; // in ms
 
     private xAddition = 0;
@@ -136,7 +137,7 @@ export class OverlaySampleComponent implements OnInit {
                         this.verticalStartPoint = 'Middle';
                         this.closeOnOutsideClick = true;
                         this.modal = true;
-                        this.useContainer = true;
+                        this.useOutlet = true;
                         document.getElementById('mcd').classList.add('selected');
                         document.getElementById('mcsp').classList.add('selected');
                         break;
@@ -235,8 +236,9 @@ export class OverlaySampleComponent implements OnInit {
             stringMapping['HorizontalDirection'][this.horizontalDirection];
         this._overlaySettings.positionStrategy.settings.horizontalStartPoint =
             stringMapping['HorizontalStartPoint'][this.horizontalStartPoint];
-        if (this.useContainer) {
-            this._overlaySettings.target = this.containerElement.nativeElement;
+        if (this.useOutlet) {
+            this._overlaySettings.outlet = this.outlet.nativeElement;
+            this._overlaySettings.target = null;
         }
     }
 
@@ -249,7 +251,24 @@ export class OverlaySampleComponent implements OnInit {
                 this._overlaySettings.modal = ev.checked;
                 break;
             case 'outlet':
-                this._overlaySettings.target = ev.checked ? this.containerElement.nativeElement : null;
+                this._overlaySettings.outlet = ev.checked ? this.outlet.nativeElement : null;
+                break;
+            case 'changeOutlet':
+                if (ev.checked) {
+                    this.outlet.nativeElement.style.position = 'fixed';
+                    this.outlet.nativeElement.style.width = '600px';
+                    this.outlet.nativeElement.style.height = '400px';
+                    this.outlet.nativeElement.style.border = '1px solid red';
+                    this.outlet.nativeElement.style.top = '50px';
+                    this.outlet.nativeElement.style.left = '50px';
+                } else {
+                    this.outlet.nativeElement.style.position = 'static';
+                    this.outlet.nativeElement.style.width = 'unset';
+                    this.outlet.nativeElement.style.height = 'unset';
+                    this.outlet.nativeElement.style.border = '0';
+                    this.outlet.nativeElement.style.top = 'unset';
+                    this.outlet.nativeElement.style.left = 'unset';
+                }
                 break;
         }
     }
@@ -356,8 +375,9 @@ export class OverlaySampleComponent implements OnInit {
             this.cdr.detectChanges();
             this.onChange2();
             this._overlaySettings.target = this.button.nativeElement;
-            if (this.useContainer) {
-                this._overlaySettings.target = this.containerElement.nativeElement;
+            if (this.useOutlet) {
+                this._overlaySettings.outlet = this.outlet.nativeElement;
+                this._overlaySettings.target = null;
             }
             (this._overlaySettings.positionStrategy.settings.openAnimation.options.params as IAnimationParams).duration
                 = `${this.animationLength}ms`;
