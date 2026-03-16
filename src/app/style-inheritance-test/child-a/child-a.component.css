@@ -1,0 +1,27 @@
+/* ===========================================
+   CHILD A COMPONENT - EXTRA STYLES ONLY
+   This file should ONLY contain Child A specific styles.
+   Base styles should come from the parent component.
+   =========================================== */
+
+/* Child A specific wrapper modification */
+.child-a-wrapper {
+    border-color: #4caf50;
+    background-color: #e8f5e9;
+}
+
+/* Child A specific elements */
+.child-a-extra {
+    margin: 15px 0;
+}
+
+.child-a-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
