@@ -27,7 +27,7 @@ Check the relevant skill file for component APIs and patterns:
 ## GREEN Phase — Make Tests Pass
 
 1. Write the **minimum code** to make each failing test pass.
-2. Follow the conventions from `AGENTS.md` (Boundaries section) and `.github/copilot-instructions.md`.
+2. Follow the conventions from `.github/copilot-instructions.md`.
 3. Handle **deprecations** if applicable:
    - Add `@deprecated` JSDoc: `@deprecated in version X.Y.0. Use \`newName\` instead.`
    - Keep old API functional — delegate to the new API internally.
@@ -38,8 +38,6 @@ Check the relevant skill file for component APIs and patterns:
 ---
 
 ## Deprecation Workflow
-
-When deprecating an existing API (per [CONTRIBUTING.md](../CONTRIBUTING.md)):
 
 1. **Properties/methods**: Add `@deprecated` JSDoc tag.
 2. **Selectors**: Add `isDevMode()` warning in the component/directive.
@@ -65,7 +63,6 @@ Every new UI element must include:
 - `aria-label`, `aria-expanded`, `aria-selected`, `aria-disabled` as applicable
 - `tabindex` for keyboard focusability
 - Keyboard handlers for full keyboard navigation
-- CSS classes following BEM convention from `css-naming-convention.md`: `block-name__elem-name--mod-name`
 
 ---
 

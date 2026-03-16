@@ -48,11 +48,13 @@ Before starting, read [copilot-instructions.md](../copilot-instructions.md).
 ## Your Responsibilities
 
 1. **Analyze** the feature request
-2. **Plan** the implementation
-3. **Delegate** to sub-agents in the correct order
-4. **Verify** completion at the end
+2. **Identify the full impact surface** across the repository
+3. **Plan** all required implementation and follow-through changes
+4. **Delegate** to sub-agents in the correct order
 
-You do NOT write - you delegate that work.
+You do NOT write tests or production code directly.
+
+You are responsible for ensuring the work is complete across all affected areas, not just the first component or file that appears to need a change.
 
 ---
 
@@ -75,11 +77,8 @@ src/app/app.routes.ts                          ← demo routing
 ### Step 1 — Analyze
 
 1. Read the feature request thoroughly.
-2. Identify everything, every component, directive, service, or pipe affected.
-3. Check the relevant skill file for component-specific knowledge:
-   - Non-grid components → [`skills/igniteui-angular-components/SKILL.md`](../../skills/igniteui-angular-components/SKILL.md)
-   - Grid components → [`skills/igniteui-angular-grids/SKILL.md`](../../skills/igniteui-angular-grids/SKILL.md)
-   - Theming/styles → [`skills/igniteui-angular-theming/SKILL.md`](../../skills/igniteui-angular-theming/SKILL.md)
+2. Identify everything affected: components, directives, services, pipes, utilities, styles, docs, tests, migrations, and public exports.
+3. Determine the **full impact surface** before delegating.
 4. Determine public API changes: new `input()` signals, `output()` functions, methods, CSS custom properties, i18n strings.
 5. List acceptance criteria as discrete, individually testable behaviors.
 6. Assess deprecation and breaking change impact:
@@ -92,6 +91,8 @@ src/app/app.routes.ts                          ← demo routing
    - Hierarchical-grid → `npm run test:lib:hgrid`
    - Pivot-grid → `npm run test:lib:pgrid`
    - Everything else → `npm run test:lib:others`
+
+Do not delegate until you have identified the likely implementation files **and** the follow-through files that also need updates.
 
 ### Step 2 — Present the Plan
 
@@ -113,22 +114,16 @@ Wait for user confirmation before delegating.
 
 After user confirms the plan, delegate to sub-agents in this sequence:
 
-1. **`tdd-test-writer-agent`** — writes failing tests for all acceptance criteria
+1. **`tdd-test-writer-agent`** — writes failing tests
 2. **`feature-implementer-agent`** — makes tests pass, then refactors
 3. **`migration-agent`** — creates migration schematics *(only if breaking changes exist)*
-4. **`validator-agent`** — runs lint, build, and all test suites
 5. **`changelog-agent`** — updates CHANGELOG.md
+4. **`validator-agent`** — validate the result, runs lint, build, and all test suites
 
-### Step 4 — Final Review
+### Step 4 — Completion
 
-1. Verify all tests pass.
-2. Verify lint and build pass.
-3. Verify CHANGELOG.md is updated.
-4. Verify migration schematics exist for any breaking changes.
-5. Verify component `README.md` is updated with new API members.
-6. Verify accessibility: ARIA attributes are tested, keyboard navigation works.
-7. Suggest demo page additions in `src/app/<component>/`.
-8. Draft the PR description per [PULL_REQUEST_TEMPLATE.md](../PULL_REQUEST_TEMPLATE.md):
-   - Title: `feat(<component>): <description>`
-   - Link issue
-   - Check applicable boxes
+After all delegated steps finish, provide a concise summary of:
+- what was planned
+- which agents were used
+- what was implemented
+- any remaining follow-up items

@@ -41,8 +41,7 @@ css-naming-convention.md           ← CSS naming rules
 
 ## Coding Conventions
 
-See [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for full Angular coding standards.
-See [`./skills/*/SKILL.md`](./skills/) for domain-specific implementation guidance.
+[`.github/copilot-instructions.md`](.github/copilot-instructions.md) for full Ignite UI Angular coding standards.
 
 ## Working Rules
 

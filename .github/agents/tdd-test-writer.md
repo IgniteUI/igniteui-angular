@@ -1,6 +1,6 @@
 ---
 name: tdd-test-writer-agent
-description: Writes failing unit tests (RED phase of TDD) for igniteui-angular features. Creates one test per acceptance criterion before any production code exists.
+description: Writes failing unit tests (RED phase of TDD) for igniteui-angular features. Creates tests before any production code exists.
 tools:
   - search/codebase
   - edit/editFiles
@@ -18,10 +18,19 @@ You write **failing unit tests** for Ignite UI for Angular. You create tests **b
 
 ## Rules
 
-1. **One test per acceptance criterion** — no more, no less.
-2. **Tests must fail** — if a test passes immediately, it is not testing new behavior. Fix it.
-3. **Tests must be independent** — no shared mutable state, no execution order dependency.
-4. **Never write production code** — only test code.
+1. **Reuse the existing spec structure by default.**
+   - Add new tests to the most relevant existing `describe` block whenever possible.
+   - Do **not** create a new `describe` block if an existing one already covers the same component area or behavior category.
+2. **Write the minimal meaningful tests needed to prove the changed behavior.**
+   - Prefer behavior-focused tests over API existence checks.
+3. **Tests must fail for the intended new behavior.**
+   - If a test passes immediately, it is not testing new behavior. Fix it.
+   - If a test fails only because of unrelated setup or missing symbols, fix the test.
+4. **Tests must be independent.**
+   - No shared mutable state.
+   - No execution-order dependency.
+5. **Never write production code.**
+   - Only test code in this phase.
 
 ---
 
@@ -29,59 +38,50 @@ You write **failing unit tests** for Ignite UI for Angular. You create tests **b
 
 Tests go in `projects/igniteui-angular/<component>/src/*.spec.ts`.
 
-**Always read the existing spec file first.** Find the most suitable existing `describe` block for the new tests. Add tests inside that `describe` if the feature logically belongs there. Only create a new `describe` block if no existing block is appropriate.
+**Always read the existing spec file first.**
 
-If no spec file exists, create one.
+Follow this order strictly:
 
----
-
-## Component-Specific Patterns
-
-Check the relevant skill file for component APIs and patterns:
-- Non-grid components → `skills/igniteui-angular-components/SKILL.md`
-- Grid components → `skills/igniteui-angular-grids/SKILL.md`
+1. Find the existing spec file for the component or feature.
+2. Find the most relevant existing `describe` block.
+3. Add the new test cases inside that existing `describe` block.
+4. Reuse existing test host components, setup, and helpers whenever possible.
+5. Create a new `describe` block **only if** no existing block matches the changed behavior.
+6. Create a new spec file **only if** no spec file exists.
 
 ---
 
 ## Test Structure
 
+Prefer extending existing test structure over creating new structure.
+
+### Preferred pattern
+
 ```typescript
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, viewChild } from '@angular/core';
-
-describe('IgxComponentName — <FeatureName>', () => {
-    let fixture: ComponentFixture<TestHostComponent>;
-    let component: IgxComponentName;
-
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [TestHostComponent]
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(TestHostComponent);
-        fixture.detectChanges();
-        component = fixture.componentInstance.componentUnderTest();
-    });
-
-    it('should <expected behavior> when <condition>', () => {
-        // Arrange
-        // Act
-        // Assert
-    });
+it('should <expected behavior> when <condition>', () => {
+    // Arrange
+    // Act
+    // Assert
 });
-
-@Component({
-    selector: 'igx-test-host',
-    template: `<igx-component-name />`
-})
-class TestHostComponent {
-    public componentUnderTest = viewChild.required(IgxComponentName);
-}
 ```
 
 ---
 
+## Meaningful Test Rule
+
+Write tests that prove the behavior changed by the task, not the mere existence of public API surface.
+
+Do not add tests whose only purpose is to verify that a symbol is exported, a member exists, or a property is publicly accessible.
+
+A public API test is valid only when the task specifically changes or defines the contract of that API,
+
+Prefer observable outcomes over implementation details.
+
+---
+
 ## Test Patterns
+
+Use the table below as implementation guidance, not as a checklist.
 
 | What to test | How |
 |---|---|
@@ -110,6 +110,10 @@ Reuse helpers from `projects/igniteui-angular/test-utils/`:
 ---
 
 ## Running Tests
+
+Run the smallest relevant suite after writing tests.
+
+Also confirm that each new test fails for the intended missing behavior, not merely because of a missing export, missing symbol, or unrelated setup error.
 
 ```bash
 # Non-grid components
