@@ -24,7 +24,6 @@
         [weekStart]="column.pipeArgs.weekStart ?? weekStart"
         [(ngModel)]="searchVal"
         [locale]="grid.locale"
-        [outlet]="grid.outlet"
         (click)="picker.open()"
         [placeholder]="inputDatePlaceholder"
         [formatter]="column.formatter"
@@ -41,7 +40,6 @@
     <igx-time-picker #picker
         [(ngModel)]="searchVal"
         [locale]="grid.locale"
-        [outlet]="grid.outlet"
         (click)="picker.open()"
         [placeholder]="inputTimePlaceholder"
         [displayFormat]="column.pipeArgs.format"
