@@ -159,7 +159,7 @@ export class DateRangeSampleComponent {
             label: 'Label text',
             control: {
                 type: 'text',
-                defaultValue: 'Start Date'
+                defaultValue: 'Input label'
             }
         },
         displayFormat: {

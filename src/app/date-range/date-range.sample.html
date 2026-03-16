@@ -39,7 +39,9 @@
         <igx-picker-clear igxSuffix>
           <igx-icon>clear</igx-icon>
         </igx-picker-clear>
-        <label igxLabel>Start date</label>
+
+            <label igxLabel>Input lable</label>
+
         <input
           igxInput
           [igxDateTimeEditor]="properties.inputFormat"
@@ -57,14 +59,18 @@
         <igx-picker-clear igxSuffix>
           <igx-icon>clear</igx-icon>
         </igx-picker-clear>
-        <label igxLabel>End date</label>
+          @if (properties.inputLabel) {
+              <label igxLabel>{{ properties.inputLabel }}</label>
+          }
         <input
           igxInput
           [igxDateTimeEditor]="properties.inputFormat"
           type="text"
           [placeholder]="properties.placeholder"
         />
-        <igx-hint>Helper text</igx-hint>
+          @if (properties.hint) {
+              <span igxHint>{{ properties.hint }}</span>
+          }
       </igx-date-range-end>
     </igx-date-range-picker>
   </div>
