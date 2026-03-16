@@ -1766,30 +1766,6 @@ describe('igxOverlay', () => {
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should show dynamic component without ViewContainerRef and log a warning', fakeAsync(() => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            fixture.detectChanges();
-            const overlay = fixture.componentInstance.overlay;
-
-            spyOn(console, 'warn');
-
-            const id = overlay.attach(SimpleDynamicComponent);
-            overlay.show(id);
-            tick(DEBOUNCE_TIME);
-
-            expect(console.warn).toHaveBeenCalledWith(
-                'Overlay component is created without a ViewContainerRef. The element will be outside the Angular component tree and may not inherit styles. Prefer using the ViewContainerRef overload or provide an outlet.'
-            );
-
-            const wrapperElement = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
-            expect(wrapperElement).toBeDefined();
-            const componentElement = wrapperElement.querySelector('test-simple-dynamic-component');
-            expect(componentElement).toBeDefined();
-            expect(document.body.contains(wrapperElement)).toBeTrue();
-
-            overlay.detachAll();
-        }));
-
         it('Should append dynamic component without ViewContainerRef to document body', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();

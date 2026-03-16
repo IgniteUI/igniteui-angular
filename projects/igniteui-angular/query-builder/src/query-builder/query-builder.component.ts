@@ -291,7 +291,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
         this.destroy$.complete();
     }
 
-    // outlet - not public - do not deprecate
     /**
      * @hidden @internal
      *

@@ -321,6 +321,7 @@ export class IgxOverlayService implements OnDestroy {
     /**
      * Generates an Id. Provide this Id when calling the `show(id)` method
      *
+     * @note If `viewContainerRef` is not provided, the component is created in the root scope and attached to the document body.
      * @param component Component Type to show in overlay
      * @param viewContainerRef Reference to the container where created component's host view will be inserted
      * @param settings (optional): Display settings for the overlay, such as positioning and scroll/close behavior.
@@ -349,6 +350,8 @@ export class IgxOverlayService implements OnDestroy {
         info.initialSize = { width: elementRect.width, height: elementRect.height };
         // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
         this.getComponentSize(info);
+        info.wrapperElement = this.getWrapperElement();
+        const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
         if (info.settings.outlet ||
             (info.settings.positionStrategy instanceof ContainerPositionStrategy && info.settings.target instanceof HTMLElement)) {
             this.moveElementToOutlet(info);
@@ -357,6 +360,8 @@ export class IgxOverlayService implements OnDestroy {
         } else {
             this.appendElementToDocument(info);
         }
+        contentElement.appendChild(info.elementRef.nativeElement);
+
         // Update the container size after wrapping/moving if there is size.
         if (info.size) {
             info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
@@ -640,7 +645,6 @@ export class IgxOverlayService implements OnDestroy {
                 if (createSettings) {
                     ({ injector: elementInjector, ...overlaySettings } = createSettings);
                 }
-                console.warn('Overlay component is created without a ViewContainerRef. The element will be outside the Angular component tree and may not inherit styles. Prefer using the ViewContainerRef overload or provide an outlet.');
                 dynamicComponent = createComponent(component, { environmentInjector, elementInjector });
                 this._appRef.attachView(dynamicComponent.hostView);
             }
@@ -673,8 +677,6 @@ export class IgxOverlayService implements OnDestroy {
 
     private moveElementToOutlet(info: OverlayInfo) {
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
-        info.wrapperElement = this.getWrapperElement();
-        const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
         let container = info.settings.outlet?.nativeElement || info.settings.outlet;
         if (info.settings.positionStrategy instanceof ContainerPositionStrategy &&
             info.settings.target instanceof HTMLElement
@@ -682,23 +684,16 @@ export class IgxOverlayService implements OnDestroy {
             container = info.settings.target;
         }
         container.appendChild(info.wrapperElement);
-        contentElement.appendChild(info.elementRef.nativeElement);
     }
 
     private wrapElementInPlace(info: OverlayInfo) {
-        info.wrapperElement = this.getWrapperElement();
-        const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
-        const element = info.elementRef.nativeElement;
         // Insert wrapper where element currently is, then move element inside the content div
+        const element = info.elementRef.nativeElement;
         element.parentElement.insertBefore(info.wrapperElement, element);
-        contentElement.appendChild(element);
     }
 
     private appendElementToDocument(info: OverlayInfo) {
-        info.wrapperElement = this.getWrapperElement();
-        const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
         this._document.body.appendChild(info.wrapperElement);
-        contentElement.appendChild(info.elementRef.nativeElement);
         info.appendedToBody = true;
     }
 

@@ -78,7 +78,7 @@ this.overlay.show(component, overlaySettings);
 | scrollStrategy      | IScrollStrategy                         | Scroll strategy to use with this settings           |
 | modal               | boolean                                 | Set if the overlay should be in modal mode          |
 | closeOnOutsideClick | boolean                                 | Set if the overlay should closed on outside click   |
-| outlet              | IgxOverlayOutletDirective or ElementRef | **Deprecated.** Use `target` with an `HTMLElement` and `ContainerPositionStrategy` instead. Still supported for backward compatibility but will be removed in a future version. |
+| outlet              | IgxOverlayOutletDirective or ElementRef | **Deprecated.** Set the outlet container to attach the overlay to |
 
 ###### PositionSettings
 
@@ -135,7 +135,7 @@ this.overlay.show(component, overlaySettings);
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
 |getPointFromPositionsSettings| Calculates the point from which the overlay should start showing    |settings    |
-|createAbsoluteOverlaySettings| Creates overlay settings with a global or container position strategy based on preset position settings. Accepts either a deprecated outlet (`IgxOverlayOutletDirective` / `ElementRef`) or an `HTMLElement` container. When a container or outlet is provided, a `ContainerPositionStrategy` is used; otherwise, a `GlobalPositionStrategy` is used.    |position?, container?|
+|createAbsoluteOverlaySettings| Creates overlay settings with global or container position strategy based on a preset position settings    |position?, container?|
 |createRelativeOverlaySettings| Creates overlay settings with auto, connected or elastic position strategy based on a preset position settings    |target, strategy?, position?|
 
 
