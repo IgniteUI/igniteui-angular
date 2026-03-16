@@ -1338,12 +1338,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    public rowEditingOutletDirective: IgxOverlayOutletDirective;
-
-    /**
-     * @hidden @internal
-     */
     @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
     public tmpOutlets: QueryList<any> = new QueryList<any>();
 
@@ -2674,20 +2668,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public get rowOutletDirective() {
-        return this.rowEditingOutletDirective;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get parentRowOutletDirective() {
-        return this.outlet;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get rowEditCustom(): TemplateRef<IgxGridRowEditTemplateContext> {
         if (this.rowEditCustomDirectives && this.rowEditCustomDirectives.first) {
             return this.rowEditCustomDirectives.first;
@@ -3311,7 +3291,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
-        outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
 
@@ -6365,7 +6344,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * TODO: MOVE to CRUD
      */
     public openRowOverlay(id) {
-        this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
+        this.configureRowEditingOverlay(id);
 
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler);
@@ -8121,13 +8100,12 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     // TODO: About to Move to CRUD
-    private configureRowEditingOverlay(rowID: any, useOuter = false) {
+    private configureRowEditingOverlay(rowID: any) {
         let settings = this.rowEditSettings;
         const overlay = this.overlayService.getOverlayById(this.rowEditingOverlay.overlayId);
         if (overlay) {
             settings = overlay.settings;
         }
-        settings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
         const targetRow = !pinned ?
