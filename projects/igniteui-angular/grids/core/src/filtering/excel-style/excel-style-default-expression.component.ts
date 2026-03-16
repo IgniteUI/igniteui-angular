@@ -47,9 +47,9 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public logicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
     /**
-     * @deprecated The `outlet` property is deprecated but still functional until its removal in a future version.
-     * It continues to be passed to the overlay service via `OverlaySettings.outlet`, but consumers should migrate away
-     * from it as it may be removed in a later release.
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
      */
     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public overlayOutlet: IgxOverlayOutletDirective;

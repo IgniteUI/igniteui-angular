@@ -367,9 +367,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public override placeholder = '';
 
     /**
-     * @deprecated Still supported and used by the overlay service when provided but will
-     * be removed in a future version. Avoid using this property in new code and prefer
-     * the default in-place rendering with the HTML Popover API.
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead.
      *
      * Gets/Sets the container used for the popup element.
      *

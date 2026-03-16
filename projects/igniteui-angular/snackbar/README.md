@@ -71,5 +71,3 @@ You can render the snackbar inside a specific container element by setting the `
 ```
 
 When a `container` is set, the snackbar uses a `ContainerPositionStrategy` and is positioned relative to the container bounds.
-
-> **Note:** The `outlet` property is deprecated. Use `container` instead.

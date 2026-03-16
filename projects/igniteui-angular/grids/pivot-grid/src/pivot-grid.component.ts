@@ -1079,7 +1079,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /** @hidden @internal */
     public createFilterESF(dropdown: any, column: ColumnType, options: OverlaySettings, shouldReatach: boolean) {
         options.outlet = this.outlet;
-
         if (dropdown) {
             dropdown.initialize(column, this.overlayService);
             dropdown.populateData();

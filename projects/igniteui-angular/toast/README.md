@@ -27,20 +27,6 @@ You can set the `positon` property to `top`, `middle`, or `bottom`, which will p
 <igx-toast #toast position="top">Top Positioned Toast</igx-toast>
 ```
 
-## Toast with a container
-
-You can render the toast inside a specific container element by setting the `container` input to an `HTMLElement`.
-
-```html
-<div #myContainer style="position: relative; height: 300px;">
-    <igx-toast #toast [container]="myContainer">Toast inside a container</igx-toast>
-</div>
-```
-
-When a `container` is set, the toast uses a `ContainerPositionStrategy` and is positioned relative to the container bounds.
-
-> **Note:** The `outlet` property is deprecated. Use `container` instead.
-
 ## Toast with different content
 
 ```html

@@ -23,11 +23,11 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
             return;
         }
         this.io = Util.setupIntersectionObserver(
-            target as HTMLElement || outletElement,
+            outletElement || target,
             contentElement.ownerDocument,
-            () => this.updatePosition(contentElement, target as HTMLElement)
+            () => this.updatePosition(contentElement, target)
         );
-        this.internalPosition(contentElement, target as HTMLElement);
+        this.internalPosition(contentElement, target);
     }
 
     /**
@@ -42,29 +42,20 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
         this.setPosition(contentElement);
-        this.updatePosition(contentElement, targetElement);
+        const outletElement = contentElement.parentElement?.parentElement;
+        this.updatePosition(contentElement, outletElement ?? targetElement);
     }
 
     private updatePosition(contentElement: HTMLElement, targetElement: HTMLElement): void {
-        const outletElement = contentElement.parentElement?.parentElement;
-        if (!targetElement && !outletElement)
+        if (!targetElement)
             return;
 
         // TODO: consider using new anchor() CSS function when it becomes more widely
         // supported: https://caniuse.com/mdn-css_properties_anchor
-        if (outletElement) {
-            const outletRect = outletElement.getBoundingClientRect();
-            contentElement.parentElement.style.width = `${outletRect.width}px`;
-            contentElement.parentElement.style.height = `${outletRect.height}px`;
-            contentElement.parentElement.style.top = `${outletRect.top}px`;
-            contentElement.parentElement.style.left = `${outletRect.left}px`;
-        }
-        if (targetElement) {
-            const targetRect = targetElement.getBoundingClientRect();
-            contentElement.parentElement.style.width = `${targetRect.width}px`;
-            contentElement.parentElement.style.height = `${targetRect.height}px`;
-            contentElement.parentElement.style.top = `${targetRect.top}px`;
-            contentElement.parentElement.style.left = `${targetRect.left}px`;
-        }
+        const targetRect = targetElement.getBoundingClientRect();
+        contentElement.parentElement.style.width = `${targetRect.width}px`;
+        contentElement.parentElement.style.height = `${targetRect.height}px`;
+        contentElement.parentElement.style.top = `${targetRect.top}px`;
+        contentElement.parentElement.style.left = `${targetRect.left}px`;
     }
 }
