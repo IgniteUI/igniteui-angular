@@ -4,13 +4,55 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
-    CollapsibleGroupsDynamicColComponent
+    CollapsibleGroupsDynamicColComponent,
+    CollapsibleColumnGroupWithExplicitWidthsComponent
 } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { SortingDirection } from 'igniteui-angular/core';
+
+describe('IgxGrid - collapsible column group with explicit widths regression #17042 #grid', () => {
+    let fixture;
+    let grid: IgxGridComponent;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                CollapsibleColumnGroupWithExplicitWidthsComponent
+            ]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(CollapsibleColumnGroupWithExplicitWidthsComponent);
+        fixture.detectChanges();
+        grid = fixture.componentInstance.grid;
+    });
+
+    it('collapsed column group calcPixelWidth should equal the sum of visible children calcPixelWidth when columns have explicit widths smaller than minColumnWidth', () => {
+        const colGroup = grid.getColumnByName('ID').parent as IgxColumnGroupComponent;
+        const visibleChild = grid.getColumnByName('ID');
+
+        // Group is collapsed by default (expanded=false in the template)
+        expect(colGroup.collapsible).toBeTrue();
+        expect(colGroup.expanded).toBeFalse();
+
+        // The visible child has explicit width 100px, which is less than the grid's MINIMUM_COLUMN_WIDTH (136px).
+        // The column group's calcPixelWidth should equal its visible child's calcPixelWidth,
+        // NOT be inflated to the grid's minimum column width.
+        const visibleChildWidth = visibleChild.calcPixelWidth;
+        const groupWidth = colGroup.calcPixelWidth;
+
+        expect(visibleChildWidth).toBe(100);
+        expect(groupWidth).toBe(visibleChildWidth,
+            `Column group calcPixelWidth (${groupWidth}) should equal the visible child calcPixelWidth ` +
+            `(${visibleChildWidth}). The group header must not be inflated by minColumnWidth because ` +
+            `that causes header/cell misalignment on horizontal scroll.`);
+    });
+});
 
 describe('IgxGrid - multi-column headers #grid', () => {
     let contactInf;
