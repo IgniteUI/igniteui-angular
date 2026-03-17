@@ -255,6 +255,31 @@ describe('IgxPaginator with default settings', () => {
         expect(paginator.resourceStrings.igx_paginator_pager_text).toBe('of');
     });
 
+    it('should preserve default resource strings when partial resourceStrings are provided', () => {
+        const fix = TestBed.createComponent(DefaultPaginatorComponent);
+        fix.detectChanges();
+
+        const paginator = fix.componentInstance.paginator;
+
+        // Set only a partial resource string (only override label)
+        paginator.resourceStrings = { igx_paginator_label: 'Custom per page' };
+        fix.detectChanges();
+
+        const pageNavTextDiv = fix.debugElement.query(By.css('.igx-page-nav__text')).nativeElement;
+        const spans = pageNavTextDiv.querySelectorAll('span');
+
+        // Verify the custom label is set
+        expect(paginator.resourceStrings.igx_paginator_label).toBe('Custom per page');
+
+        // Verify the pager text ("of") is still present from defaults
+        expect(paginator.resourceStrings.igx_paginator_pager_text).toBe('of');
+        expect(spans[1].innerText.trim()).toBe('of');
+
+        // Verify other default strings are also preserved
+        expect(paginator.resourceStrings.igx_paginator_first_page_button_text).toBe('Go to first page');
+        expect(paginator.resourceStrings.igx_paginator_next_page_button_text).toBe('Next page');
+    });
+
 });
 
 describe('IgxPaginator with custom settings', () => {
