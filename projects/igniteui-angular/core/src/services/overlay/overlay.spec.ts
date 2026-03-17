@@ -1241,6 +1241,44 @@ describe('igxOverlay', () => {
         //     expect(mockElement.style.height).toBe('100px');
         // });
 
+        it('#16988 - should not reposition overlay when detached', async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.debugElement.nativeElement.appendChild(outlet);
+            outlet.style.width = '800px';
+            outlet.style.height = '600px';
+            outlet.style.position = 'fixed';
+            outlet.style.top = '100px';
+            outlet.style.left = '200px';
+            outlet.style.overflow = 'hidden';
+            fixture.detectChanges();
+
+            const positionStrategy = new ContainerPositionStrategy();
+            const overlaySettings: OverlaySettings = {
+                outlet,
+                positionStrategy
+            };
+
+            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent, overlaySettings);
+            fixture.componentInstance.overlay.show(id);
+            await fixture.whenStable();
+
+            // Capture the content element while it is still in the DOM
+            const contentElement = fixture.nativeElement.parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0] as HTMLElement;
+
+            // Detaching the overlay calls dispose() on the position strategy which disconnects
+            // the IntersectionObserver and sets it to null. However, if a callback was already
+            // queued by the observer before disconnect, it will still fire and call updatePosition
+            // with the now-detached contentElement (parentElement === null).
+            fixture.componentInstance.overlay.detach(id);
+            await fixture.whenStable();
+
+            // Simulate the stale IntersectionObserver callback firing after detach.
+            // Should not throw even though contentElement is no longer attached to the DOM.
+            expect(() => (positionStrategy as any).updatePosition(contentElement)).not.toThrow();
+
+            fixture.componentInstance.overlay.detachAll();
+        });
+
         it('should close overlay on outside click when target is point, #8297', async () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;

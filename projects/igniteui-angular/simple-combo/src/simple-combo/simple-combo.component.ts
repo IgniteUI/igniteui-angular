@@ -13,19 +13,22 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGX_COMBO_COMPONENT, IgxComboAddItemComponent, IgxComboAPIService, IgxComboBaseDirective, IgxComboDropDownComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboItemComponent } from 'igniteui-angular/combo';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
-/** Emitted when an igx-simple-combo's selection is changing.  */
-export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    /** An object which represents the value that is currently selected */
+/** Emitted when the Combo's selection has changed. */
+export interface ISimpleComboSelectionChangedEventArgs extends IBaseEventArgs {
+    /** The old selection value */
     oldValue: any;
-    /** An object which represents the value that will be selected after this event */
+    /** The new selection value */
     newValue: any;
-    /** An object which represents the item that is currently selected */
+    /** The old selection item */
     oldSelection: any;
-    /** An object which represents the item that will be selected after this event */
+    /** The new selection item */
     newSelection: any;
-    /** The text that will be displayed in the combo text box */
+    /** The display text of the combo text box */
     displayText: string;
 }
+
+/** Emitted when the Combo's selection is changing. */
+export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSelectionChangedEventArgs, CancelableEventArgs {}
 
 /**
  * Represents a drop-down list that provides filtering functionality, allowing users to choose a single option from a predefined list.
@@ -77,6 +80,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      */
     @Output()
     public selectionChanging = new EventEmitter<ISimpleComboSelectionChangingEventArgs>();
+
+    /**
+     * Emitted when item selection is changed, after the selection completes
+     *
+     * ```html
+     * <igx-simple-combo (selectionChanged)='handleSelection()'></igx-simple-combo>
+     * ```
+     */
+    @Output()
+    public selectionChanged = new EventEmitter<ISimpleComboSelectionChangedEventArgs>();
 
     @ViewChild(IgxTextSelectionDirective, { static: true })
     private textSelection: IgxTextSelectionDirective;
@@ -285,6 +298,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.selectionChanging.emit(args);
             if (!args.cancel) {
                 this.selectionService.select_items(this.id, [], true);
+                const changedArgs: ISimpleComboSelectionChangedEventArgs = {
+                    newValue: undefined,
+                    oldValue: this.selectedItem,
+                    newSelection: undefined,
+                    oldSelection: this.selection,
+                    displayText: typeof event === 'string' ? event : event?.target?.value,
+                    owner: this
+                };
+                this.selectionChanged.emit(changedArgs);
             }
         }
         // when filtering the focused item should be the first item or the currently selected item
@@ -498,7 +520,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
-        if (args.newSelection !== args.oldSelection) {
+        const shouldEmitSelectionEvents = args.newSelection !== args.oldSelection;
+        if (shouldEmitSelectionEvents) {
             this.selectionChanging.emit(args);
         }
         // TODO: refactor below code as it sets the selection and the display text
@@ -514,7 +537,18 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                     ? args.displayText
                     : this.createDisplayText(super.selection, [args.oldValue]);
             }
-            this._onChangeCallback(args.newValue);
+            this._onChangeCallback(this.value);
+            if (shouldEmitSelectionEvents) {
+                const changedArgs: ISimpleComboSelectionChangedEventArgs = {
+                    newValue: this.value,
+                    oldValue: oldValueAsArray[0],
+                    newSelection: this.selection,
+                    oldSelection: oldItems[0],
+                    displayText: this._displayValue,
+                    owner: this
+                };
+                this.selectionChanged.emit(changedArgs);
+            }
             this._updateInput = true;
         } else if (this.isRemote) {
             this.registerRemoteEntries(newValueAsArray, false);

@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.2.0
+
+### New Features
+
+- `IgxCombo`, `IgxSimpleCombo`
+    - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
+
 ## 21.1.0
 
 ### New Features

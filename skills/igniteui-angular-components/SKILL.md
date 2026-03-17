@@ -1,7 +1,7 @@
 ---
 name: igniteui-angular-components
-description: "Provides guidance on all non-grid Ignite UI for Angular UI components including application setup and architecture, form controls (Input Group, Combo, Select, Date/Time Pickers, Calendar, Checkbox, Radio, Switch, Slider, reactive forms), layout (Tabs, Bottom Navigation, Stepper, Accordion, Splitter, Navigation Drawer, Layout Manager), data display (List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress Bar, Linear Progress Bar, Circular Progress Bar, Chat), feedback/overlays (Dialog, Snackbar, Toast, Banner), directives (Button, Ripple, Tooltip, Drag and Drop), Dock Manager, and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart, IgxCategoryChart, IgxFinancialChart, IgxDataChart, IgxPieChart). Use when users ask about any Ignite UI Angular component that is not a data grid, such as forms, inputs, dropdowns, date pickers, dialogs, navigation, lists, trees, cards, charts, or application scaffolding and setup."
-user-invokable: true
+description: "Covers all non-grid Ignite UI for Angular UI components: application scaffolding and setup, form controls (inputs, combos, selects, date/time pickers, calendar, checkbox, radio, switch, slider), layout containers (tabs, stepper, accordion, splitter, navigation drawer), data-display components (list, tree, card, chips, carousel, paginator, progress indicators, chat), feedback overlays (dialog, snackbar, toast, banner), directives (button, icon button, button group, ripple, tooltip, drag-and-drop), Dock Manager, Layout Manager, and Charts. Use when users ask about any Ignite UI Angular component that is NOT a data grid — such as forms, dropdowns, pickers, dialogs, navigation, lists, trees, cards, charts, or initial project setup. Do NOT use for data grids, tables, or tabular data — use igniteui-angular-grids instead. Do NOT use for theming or styling — use igniteui-angular-theming instead."
+user-invocable: true
 ---
 
 # Ignite UI for Angular — UI Components
@@ -33,7 +33,7 @@ Base your code and explanation exclusively on what you read. If the reference fi
 | Tabs, Bottom Navigation, Stepper, Accordion, Expansion Panel, Splitter, Navigation Drawer | [`references/layout.md`](./references/layout.md) |
 | List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress Indicators, Chat | [`references/data-display.md`](./references/data-display.md) |
 | Dialog, Snackbar, Toast, Banner | [`references/feedback.md`](./references/feedback.md) |
-| Button, Icon Button, Ripple, Tooltip, Drag and Drop | [`references/directives.md`](./references/directives.md) |
+| Button, Icon Button, Button Group, Ripple, Tooltip, Drag and Drop | [`references/directives.md`](./references/directives.md) |
 | Layout Manager (`igxLayout`, `igxFlex` directives), Dock Manager (`igc-dockmanager` web component) | [`references/layout-manager.md`](./references/layout-manager.md) |
 | Charts (Area, Bar, Column, Stock/Financial, Pie), chart configuration, chart features (animation, tooltips, markers, highlighting, zooming), data binding | [`references/charts.md`](./references/charts.md) |
 

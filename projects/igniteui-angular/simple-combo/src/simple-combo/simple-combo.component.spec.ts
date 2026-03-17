@@ -12,7 +12,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputState, IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
+import { IgxSimpleComboComponent, ISimpleComboSelectionChangedEventArgs, ISimpleComboSelectionChangingEventArgs } from './public_api';
 import { IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IComboSelectionChangingEventArgs, IgxComboAPIService, IgxComboDropDownComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from 'igniteui-angular/combo';
 import { RemoteDataService } from 'igniteui-angular/combo/src/combo/combo.component.spec';
@@ -281,6 +281,95 @@ describe('IgxSimpleCombo', () => {
                 cancel: false
             });
         });
+        it('should emit selectionChanged after selectionChanging with the committed state', () => {
+            const dropdown = {
+                selectItem: vi.fn().mockName('IgxComboDropDownComponent.selectItem')
+            };
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown as any;
+
+            const comboInput = { value: 'test' };
+            combo.comboInput = comboInput as any;
+
+            vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
+
+            const callOrder = [];
+            vi.spyOn(combo.selectionChanging, 'emit').mockImplementation(() => { callOrder.push('changing'); });
+            vi.spyOn(combo.selectionChanged, 'emit').mockImplementation(() => { callOrder.push('changed'); });
+
+            combo.select(combo.data[1]);
+
+            expect(callOrder).toEqual(['changing', 'changed']);
+            expect(combo.selectionChanged.emit).toHaveBeenCalledTimes(1);
+            expect(combo.selectionChanged.emit).toHaveBeenCalledWith({
+                oldValue: undefined,
+                newValue: combo.data[1],
+                oldSelection: undefined,
+                newSelection: combo.data[1],
+                owner: combo,
+                displayText: combo.data[1].trim()
+            } satisfies ISimpleComboSelectionChangedEventArgs);
+        });
+        it('should not emit selectionChanged when selectionChanging is canceled', () => {
+            const dropdown = {
+                selectItem: vi.fn().mockName('IgxComboDropDownComponent.selectItem')
+            };
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown as any;
+
+            const comboInput = { value: 'test' };
+            combo.comboInput = comboInput as any;
+
+            vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
+
+            vi.spyOn(combo.selectionChanging, 'emit').mockImplementation((args: ISimpleComboSelectionChangingEventArgs) => {
+                args.cancel = true;
+            });
+            vi.spyOn(combo.selectionChanged, 'emit');
+
+            combo.select(combo.data[1]);
+
+            expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
+            expect(combo.selectionChanged.emit).not.toHaveBeenCalled();
+            expect(combo.selection).toBeUndefined();
+            expect(combo.value).toBeUndefined();
+        });
+        it('should emit selectionChanged with the actual committed state when selectionChanging modifies newValue', () => {
+            const dropdown = {
+                selectItem: vi.fn().mockName('IgxComboDropDownComponent.selectItem')
+            };
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown as any;
+
+            const comboInput = { value: 'test' };
+            combo.comboInput = comboInput as any;
+
+            vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
+
+            vi.spyOn(combo.selectionChanging, 'emit').mockImplementation((args: ISimpleComboSelectionChangingEventArgs) => {
+                args.newValue = combo.data[2];
+                args.newSelection = combo.data[2];
+                args.displayText = combo.data[2];
+            });
+
+            vi.spyOn(combo.selectionChanged, 'emit');
+
+            combo.select(combo.data[1]);
+
+            expect(combo.selection).toEqual(combo.data[2]);
+            expect(combo.value).toEqual(combo.data[2]);
+            expect(combo.selectionChanged.emit).toHaveBeenCalledWith({
+                oldValue: undefined,
+                newValue: combo.data[2],
+                oldSelection: undefined,
+                newSelection: combo.data[2],
+                owner: combo,
+                displayText: combo.data[2]
+            } satisfies ISimpleComboSelectionChangedEventArgs);
+        });
         it('should properly emit added and removed values in change event on single value selection', () => {
             const dropdown = {
                 selectItem: vi.fn().mockName("IgxComboDropDownComponent.selectItem")
@@ -494,7 +583,7 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboEmptyComponent,
                     IgxSimpleComboFormControlRequiredComponent,
                     IgxSimpleComboFormWithFormControlComponent,
-                    IgxSimpleComboNgModelComponent
+                    IgxSimpleComboNgModelComponent,
                 ]
             }).compileComponents();
         });
@@ -858,7 +947,7 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboSampleComponent,
                     IgxComboInContainerTestComponent,
                     IgxComboRemoteDataComponent,
-                    ComboModelBindingComponent
+                    ComboModelBindingComponent,
                 ]
             }).compileComponents();
         });

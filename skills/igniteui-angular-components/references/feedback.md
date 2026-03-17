@@ -5,6 +5,14 @@
 
 > **AGENT INSTRUCTION:** All components in this file rely on Angular animations and the Ignite UI overlay system. Before using any of them, ensure `provideAnimations()` (or `provideAnimationsAsync()`) is present in `app.config.ts`. If it is missing, add it — these components will throw runtime errors or silently fail to animate without it.
 
+## Contents
+
+- [Dialog](#dialog)
+- [Snackbar](#snackbar)
+- [Toast](#toast)
+- [Banner](#banner)
+- [Key Rules](#key-rules)
+
 ## Dialog
 
 > **Docs:** [Dialog Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)
