@@ -6,6 +6,7 @@ tools:
   - edit/editFiles
   - edit/createFile
   - execute/runTests
+  - execute/runInTerminal
   - read/problems
   - read/terminalLastCommand
 ---
@@ -26,6 +27,19 @@ Check the relevant skill file for component APIs and patterns:
 - Theming & styling → `skills/igniteui-angular-theming/SKILL.md`
 
 Each skill file is a routing hub pointing to detailed reference files under its `references/` folder. **Read the relevant reference files in full** before modifying any component code.
+
+---
+
+## Key Repository Paths
+
+```
+projects/igniteui-angular/<component>/src/     ← source + tests
+projects/igniteui-angular/<component>/index.ts ← public barrel
+projects/igniteui-angular/test-utils/          ← shared test helpers
+projects/igniteui-angular/migrations/          ← migration schematics
+CHANGELOG.md                                   ← root changelog
+src/app/<component>/                           ← demo pages
+```
 
 ---
 
@@ -52,6 +66,39 @@ Each skill file is a routing hub pointing to detailed reference files under its 
 
 Before touching production code, add or update a unit test that reproduces the bug. The test **must fail** at this point.
 
+#### Test File Location
+
+Tests live in `projects/igniteui-angular/<component>/src/*.spec.ts`.
+
+**Always read the existing spec file first.** Follow this order:
+
+1. Find the existing spec file for the component.
+2. Find the most relevant existing `describe` block.
+3. Add the new test case inside that block.
+4. Reuse existing test host components, setup, and helpers.
+5. Create a new `describe` block **only if** no existing block covers the behavior.
+
+#### Test Structure
+
+```typescript
+it('should <expected behavior> when <condition>', () => {
+    // Arrange
+    // Act
+    // Assert
+});
+```
+
+#### Shared Test Utilities
+
+Reuse helpers from `projects/igniteui-angular/test-utils/`:
+
+- `UIInteractions` — click, keyboard, input simulation
+- `GridFunctions` — grid-specific helpers
+- `SampleTestData` — reusable grid data
+- `wait` / `GridAsyncService` — async grid helpers
+
+#### Running Tests
+
 Tests use **Jasmine** (framework) and **Karma** (runner). Run the smallest relevant suite:
 
 | Components changed | Command |
@@ -63,7 +110,7 @@ Tests use **Jasmine** (framework) and **Karma** (runner). Run the smallest relev
 | Pivot-grid | `npm run test:lib:pgrid` |
 | Schematics / migrations | `npm run test:schematics` |
 
-Confirm the test fails for the intended broken behavior, not because of missing imports or unrelated setup errors.
+Confirm the test fails for the intended broken behavior, not because of missing imports or unrelated setup errors. If a test passes immediately, it is not reproducing the bug — fix it.
 
 ### 5. Implement the Fix (GREEN Phase)
 
@@ -78,14 +125,23 @@ If the fix introduces a **breaking change**:
 
 If the fix adds or modifies **user-facing strings**, see [Localization](#localization) below.
 
-### 6. Validate
+### 6. Update Documentation
+
+If the fix changes public API surface (new parameters, changed behavior, renamed members):
+
+- Add or update **JSDoc** on affected public members with `@param`, `@returns`, and `@example`.
+- Update the component `README.md` at `projects/igniteui-angular/<component>/README.md`.
+
+Skip this step if the fix is purely internal with no public API impact.
+
+### 7. Validate
 
 - Run `npm run lint:lib` — must pass.
 - Re-run the relevant test suite — the previously failing test must now pass.
 - Ensure no existing tests broke.
 - If the fix changes DOM structure or ARIA attributes, verify accessibility. See [Accessibility](#accessibility) below.
 
-### 7. Reproduction Sample *(strongly recommended)*
+### 8. Reproduction Sample *(strongly recommended)*
 
 Create a minimal reproduction that demonstrates the bug before the fix and confirms correct behavior after the fix.
 
