@@ -93,13 +93,18 @@ Before making any changes, review the following:
       - Whether the fix requires cherry-picking to other version branches (see [Multi-branch fixes](#multi-branch-fixes)).
    5. Ensure the project builds (`npm run build:lib`) and all tests pass.
 
-9. **Optional Bug Reproduction Sample**
-    If the bug involves UI behavior, user interaction, or is difficult to validate from code alone, create a minimal reproduction example.
+9. **Bug Reproduction Sample** *(strongly recommended)*
+    > **Do not skip this step.** Always attempt to create a reproduction sample unless the bug is purely internal logic with no UI or interaction component. If you decide to skip, you **must** explain why in the PR description under a "Reproduction Sample" heading.
 
-    - The reproduction must not be committed to the main fix branch.
-    - Instead, create a dedicated reproduction branch `copilot/repro-<issue-number>-<short-description>`.
-    - The reproduction branch must be created from the fix branch, so the example includes the bug fix.
-    - Add a reference to the reproduction branch in the PR description.
+    Create a minimal reproduction example that:
+    - Demonstrates the bug **before** the fix.
+    - Confirms the fix works **after** applying the patch.
+
+    The reproduction must not be committed to the main fix branch.
+    Instead:
+    1. Create a dedicated reproduction branch: `copilot/repro-<issue-number>-<short-description>`.
+    2. The reproduction branch must be created **from the fix branch**, so the example includes the bug fix.
+    3. Add a reference to the reproduction branch in the PR description.
 
 ## Edge Cases and Escalation
 
