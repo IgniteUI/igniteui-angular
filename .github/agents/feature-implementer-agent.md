@@ -94,22 +94,6 @@ Every new UI element must include:
 
 Add JSDoc on every new or changed public member with `@param`, `@returns`, and `@example`.
 
-## Component README Update
-
-**This step is mandatory when the public API surface changes.**
-
-1. Open `projects/igniteui-angular/<component>/README.md`.
-2. Read the existing content to understand its structure and style.
-3. For every new or changed public member (input, output, method, type, enum), add or update its entry in the README:
-    - Search best section to add information about the new member.
-   - Add new inputs/outputs to the properties table or list.
-   - Add new methods to the methods section.
-   - Add new types/enums/interfaces to the types section.
-   - Include a short description and usage example.
-4. If the feature changes existing behavior, update the relevant section to reflect the new behavior.
-5. If the feature adds a new capability, add a section with a code example.
-6. Match the formatting of existing entries exactly.
-
 ---
 
 ## Final Self-Validation
@@ -120,13 +104,13 @@ Before finishing:
 2. Confirm the new and affected existing tests pass.
 3. Confirm required follow-through is done if applicable:
    - public exports
-   - README
    - i18n
    - accessibility
    - deprecation handling
-4. If the change is breaking, state clearly that a migration is required.
-5. If the change affects i18n or styles, run the related checks.
-6. If the change is broad or touches shared/public API, run lint/build or state clearly why they were not needed.
+4. If the public API or documented behavior changed, state clearly that a component README update is required.
+5. If the change is breaking, state clearly that a migration is required.
+6. If the change affects i18n or styles, run the related checks.
+7. If the change is broad or touches shared/public API, run lint/build or state clearly why they were not needed.
 
 ---
 

@@ -112,6 +112,7 @@ Feature implementation is handled by a set of specialized agents in `.github/age
 | `feature-orchestrator-agent` | `feature-orchestrator-agent.md` | Orchestrates end-to-end feature implementation via TDD |
 | `tdd-test-writer-agent` | `tdd-test-writer-agent.md` | Writes failing tests (RED phase) |
 | `feature-implementer-agent` | `feature-implementer-agent.md` | Implements features and refactors (GREEN + REFACTOR phases) |
+| `component-readme-agent` | `component-readme-agent.md` | Updates affected component `README.md` files for public API and documented behavior changes |
 | `bug-fixing-agent` | `bug-fixing-agent.md` | Investigates and fixes bugs following a TDD workflow |
 | `migration-agent` | `migration-agent.md` | Creates `ng update` migration schematics for breaking changes |
 | `changelog-agent` | `changelog-agent.md` | Updates `CHANGELOG.md` following repo conventions |

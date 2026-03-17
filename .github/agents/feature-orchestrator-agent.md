@@ -20,11 +20,15 @@ handoffs:
     agent: feature-implementer-agent
     prompt: "Read the user's feature request and the existing failing tests. Implement the feature as judged best. Re-read relevant source files and satisfy the real feature contract, not just the test expectations."
     send: false
-  - label: "3. Create Migration"
+  - label: "3. Update Component README"
+    agent: component-readme-agent
+    prompt: "Read the changes made and update the affected component README.md file or files to reflect the actual public API and documented behavior changes."
+    send: false
+  - label: "4. Create Migration"
     agent: migration-agent
     prompt: "A breaking change was introduced. Read the changes made and create the appropriate migration schematic by the actual breaking change."
     send: false
-  - label: "4. Update Changelog"
+  - label: "5. Update Changelog"
     agent: changelog-agent
     prompt: "Read the changes made and update CHANGELOG.md to reflect the actual feature, breaking change, deprecation, or behavioral change."
     send: false
@@ -149,6 +153,7 @@ Use agents in this order:
 
 1. **`tdd-test-writer-agent`** — decides what tests to write
 2. **`feature-implementer-agent`** — independently implements the real feature contract
+3. **`component-readme-agent`** — updates affected component `README.md` files
 3. **`migration-agent`** — only if breaking changes exist
 4. **`changelog-agent`** — updates CHANGELOG.md
 
