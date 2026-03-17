@@ -73,6 +73,15 @@ If the subsection exists, append to it. If not, create it following this order: 
 - If the component already has entries in the same subsection, add sub-bullets under the same component heading.
 - Include short code examples only if they clarify usage.
 
+## 5. Final Self-Validation
+
+Before finishing:
+
+1. Confirm the entry is under the latest version section.
+2. Confirm it is in the correct subsection.
+3. Confirm the formatting matches the existing CHANGELOG style.
+4. Confirm you updated an existing component entry instead of duplicating it when appropriate.
+
 ### 5. Commit
 
 For features and deprecations:

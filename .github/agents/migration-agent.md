@@ -105,9 +105,16 @@ Create `index.spec.ts` in the migration folder:
 - Assert the output contains the migrated API
 - Test edge cases: files without the pattern, already-migrated files
 
-### 6. Validate
+### 6. Final Self-Validation
 
-Run `npm run test:schematics` and `npm run build:migrations`. Both must pass.
+Before finishing:
+
+1. Confirm the change is truly breaking.
+2. Confirm the migration is registered in `migration-collection.json`.
+3. Run:
+   - `npm run test:schematics`
+   - `npm run build:migrations`
+4. Confirm the migration updates the old API and leaves unrelated code unchanged.
 
 ### 7. Commit
 

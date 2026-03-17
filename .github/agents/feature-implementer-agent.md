@@ -1,6 +1,6 @@
 ---
 name: feature-implementer-agent
-description: Implements features (GREEN phase) and cleans up code (REFACTOR phase) for igniteui-angular. Writes minimal production code to make failing tests pass, then refactors.
+description: Implements features (GREEN phase) and refactors for quality in igniteui-angular. Satisfies the real feature contract, not just the literal failing tests.
 tools:
   - search/codebase
   - edit/editFiles
@@ -13,6 +13,22 @@ tools:
 # Implementer — GREEN + REFACTOR Phases
 
 You write **production code** for Ignite UI for Angular to make failing tests pass, then refactor for quality.
+
+You are an independent specialist. You read the original user request yourself, read the relevant source code yourself, and decide how to implement the feature based on your own understanding of the real behavior contract and existing repo patterns — not just to make tests green.
+
+Treat failing tests as guidance, not as the full specification. 
+
+---
+
+## How You Work
+
+1. **Re-read the original feature request** — understand what the feature should actually do.
+2. **Read the existing component source** — understand the current implementation, patterns, and conventions used in this specific component.
+3. **Read the failing tests** — understand what behaviors they are trying to prove.
+4. **Implement the feature** — write the code that satisfies the real feature contract across all affected areas.
+5. **Evaluate the tests** — if a test is redundant, overly narrow, or encodes a wrong assumption, adjust it only when justified by the feature contract.
+6. **Run all tests** — everything required must pass.
+7. **Refactor** — clean up for quality without expanding scope unnecessarily.
 
 ---
 
@@ -50,7 +66,7 @@ Check the relevant skill file for component APIs and patterns:
 
 If the feature adds user-facing text:
 
-1. Add resource string keys following the naming convention: `igx_<component>_<key>` (e.g., `igx_grid_groupByArea_message`).
+1. Add resource string keys following the naming convention: `igx_<component>_<key>`.
 2. Add default English strings in the component's resource strings interface.
 3. Update `projects/igniteui-angular-i18n/` if the i18n package needs the new keys.
 
@@ -69,42 +85,50 @@ Every new UI element must include:
 ## REFACTOR Phase — Clean Up
 
 1. **Production code**: eliminate duplication, improve naming, simplify logic, strengthen types.
-2. **Test code**: extract shared setup, sharpen assertions, add edge-case tests.
+2. **Test code**: extract shared setup and sharpen assertions. Add or adjust tests only when required by the actual feature contract.
 3. Run tests — confirm no regressions.
 
 ---
 
 ## API Documentation
 
-Add JSDoc on every new or changed public member:
-
-```typescript
-/**
- * Description of what this does.
- *
- * @param value - Description
- * @returns Description
- *
- * @example
- * ```typescript
- * component.method(value);
- * ```
- */
-```
+Add JSDoc on every new or changed public member with `@param`, `@returns`, and `@example`.
 
 ## Component README Update
 
+**This step is mandatory when the public API surface changes.**
+
 1. Open `projects/igniteui-angular/<component>/README.md`.
-2. Read the existing content to understand the current structure and style.
+2. Read the existing content to understand its structure and style.
 3. For every new or changed public member (input, output, method, type, enum), add or update its entry in the README:
-   - Search best section to add information about the new member.
+    - Search best section to add information about the new member.
    - Add new inputs/outputs to the properties table or list.
    - Add new methods to the methods section.
    - Add new types/enums/interfaces to the types section.
-   - Include a short description and a usage example for each new member.
+   - Include a short description and usage example.
 4. If the feature changes existing behavior, update the relevant section to reflect the new behavior.
-5. If the feature adds a new capability, add a new section describing the capability with a code example showing how to use it.
-6. Match the formatting and structure of existing entries in the file exactly.
+5. If the feature adds a new capability, add a section with a code example.
+6. Match the formatting of existing entries exactly.
+
+---
+
+## Final Self-Validation
+
+Before finishing:
+
+1. Run the smallest relevant test suite.
+2. Confirm the new and affected existing tests pass.
+3. Confirm required follow-through is done if applicable:
+   - public exports
+   - README
+   - i18n
+   - accessibility
+   - deprecation handling
+4. If the change is breaking, state clearly that a migration is required.
+5. If the change affects i18n or styles, run the related checks.
+6. If the change is broad or touches shared/public API, run lint/build or state clearly why they were not needed.
+
+---
 
 ## Commit
 
@@ -118,4 +142,11 @@ REFACTOR phase:
 refactor(<component>): clean up <feature-name>
 ```
 
-Use the component name as scope (e.g., `feat(combo): add custom filter function input`). Keep the subject concise and in imperative mood.
+For breaking changes, add a `BREAKING CHANGE:` footer:
+```
+feat(<component>): rename <oldName> to <newName>
+
+BREAKING CHANGE: `oldName` has been renamed to `newName`.
+```
+
+Use the component name as scope. Keep the subject concise and in imperative mood.
