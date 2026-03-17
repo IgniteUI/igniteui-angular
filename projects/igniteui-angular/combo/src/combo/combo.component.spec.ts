@@ -704,8 +704,12 @@ describe('igxCombo', () => {
                 vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
 
                 const callOrder: string[] = [];
-                vi.spyOn(combo.selectionChanging, 'emit').mockImplementation(() => { callOrder.push('changing'); });
-                vi.spyOn(combo.selectionChanged, 'emit').mockImplementation(() => { callOrder.push('changed'); });
+                vi.spyOn(combo.selectionChanging, 'emit').mockImplementation(() => {
+                    callOrder.push('changing');
+                });
+                vi.spyOn(combo.selectionChanged, 'emit').mockImplementation(() => {
+                    callOrder.push('changed');
+                });
 
                 const selectedItems = [combo.data[1], combo.data[5]];
                 combo.select(selectedItems);

@@ -2334,24 +2334,24 @@ describe('IgxQueryBuilder', () => {
     });
 
     describe('Templates', () => {
-        let fix: ComponentFixture<IgxQueryBuilderCustomTemplateSampleTestComponent>;
+        let fixture: ComponentFixture<IgxQueryBuilderCustomTemplateSampleTestComponent>;
         beforeEach(async () => {
-            fix = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
-            fix.detectChanges();
-            queryBuilder = fix.componentInstance.queryBuilder;
+            fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
+            fixture.detectChanges();
+            queryBuilder = fixture.componentInstance.queryBuilder;
         });
 
         it('Should render custom header properly.', () => {
-            expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe('Custom Title');
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe('Custom Title');
         });
 
         it('Should render custom input template properly.', async () => {
             //Enter edit mode
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
-            await fix.whenStable();
-            fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-            const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false);
+            const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fixture, false);
             const input = editModeContainer.querySelector('input.custom-class') as HTMLInputElement;
             const selectedField = editModeContainer.querySelector('p.selectedField') as HTMLInputElement;
             const selectedCondition = editModeContainer.querySelector('p.selectedCondition') as HTMLInputElement;
@@ -2365,16 +2365,16 @@ describe('IgxQueryBuilder', () => {
 
             //Edit input value
             UIInteractions.clickAndSendInputElementValue(input, '5');
-            await fix.whenStable();
-            fix.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
-            await fix.whenStable();
-            fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fixture);
+            await fixture.whenStable();
+            fixture.detectChanges();
 
             //Verify that expressionTree is correct
-            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            const exprTree = JSON.stringify(fixture.componentInstance.queryBuilder.expressionTree, null, 2);
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
@@ -2403,45 +2403,45 @@ describe('IgxQueryBuilder', () => {
 
         it('Should apply field formatter properly.', async () => {
             // Add new expression
-            const btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
+            const btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fixture, 0)[0] as HTMLElement;
             btn.click();
-            fix.detectChanges();
+            fixture.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 0); // Select 'Equals' operator.
 
             // Verify combo template is displayed
-            let editModeContainer = Array.from(QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix).querySelectorAll('.igx-filter-tree__inputs'))[1];
+            let editModeContainer = Array.from(QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture).querySelectorAll('.igx-filter-tree__inputs'))[1];
             let combo = editModeContainer.querySelector('.igx-combo');
             expect(combo).toBeDefined();
 
             // Open the combo
             (combo.querySelector('igx-input-group') as HTMLElement).click();
-            await fix.whenStable();
-            fix.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
             // Select item
             const outlet = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`))
                 .filter(item => (item as HTMLElement).checkVisibility())[0] as HTMLElement;
 
             const comboItem = outlet.querySelectorAll(`.igx-drop-down__item`)[0] as HTMLElement;
             comboItem.click();
-            await fix.whenStable();
-            fix.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
             // Commit the expression
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
-            fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fixture);
+            fixture.detectChanges();
             // Verify chips
-            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'OrderId', 'Greater Than', '3');
-            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Equals', '0');
+            QueryBuilderFunctions.verifyExpressionChipContent(fixture, [0], 'OrderId', 'Greater Than', '3');
+            QueryBuilderFunctions.verifyExpressionChipContent(fixture, [1], 'OrderId', 'Equals', '0');
 
             // Enter edit mode
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
-            await fix.whenStable();
-            fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
+            await fixture.whenStable();
+            fixture.detectChanges();
             // Verify inputs values
-            editModeContainer = Array.from(QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix).querySelectorAll('.igx-filter-tree__inputs'))[1];
+            editModeContainer = Array.from(QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture).querySelectorAll('.igx-filter-tree__inputs'))[1];
             const selects = Array.from(editModeContainer.querySelectorAll('igx-select'));
             combo = editModeContainer.querySelector('.igx-combo');
             expect(selects[0].querySelector('input').value).toBe('OrderId');

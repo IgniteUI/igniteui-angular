@@ -1223,9 +1223,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('Should not add child row to deleted parent row - Hierarchical DS', () => {
-            const fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
-            const grid = fix.componentInstance.treeGrid;
-            fix.detectChanges();
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            const grid = fixture.componentInstance.treeGrid;
+            fixture.detectChanges();
 
             grid.deleteRowById(147);
             expect(grid.transactions.getTransactionLog().length).toBe(1);
@@ -1235,10 +1235,10 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('Should not add child row to deleted parent row - Flat DS', () => {
-            const fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
-            const grid = (fix as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            const grid = (fixture as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
             grid.cascadeOnDelete = false;
-            fix.detectChanges();
+            fixture.detectChanges();
 
             grid.deleteRowById(1);
             expect(grid.transactions.getTransactionLog().length).toBe(1);
@@ -1248,44 +1248,44 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('should return correctly the rowData', () => {
-            const fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
-            const grid = (fix as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            const grid = (fixture as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
             grid.cascadeOnDelete = false;
-            fix.detectChanges();
+            fixture.detectChanges();
 
             const row = { ID: 2, ParentID: 1, Name: 'Gilberto Todd', JobTitle: 'Director', Age: 41 };
             expect(grid.getRowData(2)).toEqual(row);
 
             grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true });
-            fix.detectChanges();
+            fixture.detectChanges();
 
             expect(grid.getRowData(2)).toEqual(row);
             expect(grid.getRowData(11)).toEqual({});
 
             grid.filter('Age', 43, IgxNumberFilteringOperand.instance().condition('greaterThan'));
-            fix.detectChanges();
+            fixture.detectChanges();
 
             expect(grid.getRowData(2)).toEqual(row);
             expect(grid.getRowData(11)).toEqual({});
 
             const newRow = { ID: 11, ParentID: 1, Name: 'Joe Peterson', JobTitle: 'Manager', Age: 37 };
             grid.addRow(newRow);
-            fix.detectChanges();
+            fixture.detectChanges();
 
             grid.clearFilter();
-            fix.detectChanges();
+            fixture.detectChanges();
 
             expect(grid.transactions.getTransactionLog().length).toEqual(1);
             expect(grid.getRowData(11)).toEqual(newRow);
         });
 
         it('Should have transactions enabled when batchEditing === false and service is provider', () => {
-            const fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
-            const grid = fix.componentInstance.treeGrid;
-            fix.detectChanges();
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            const grid = fixture.componentInstance.treeGrid;
+            fixture.detectChanges();
 
             grid.batchEditing = false;
-            fix.detectChanges();
+            fixture.detectChanges();
 
             expect(grid.batchEditing).toBeFalsy();
             expect(grid.transactions.enabled).toBeTruthy();

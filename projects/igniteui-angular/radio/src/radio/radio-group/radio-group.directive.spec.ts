@@ -622,7 +622,7 @@ describe('IgxRadioGroupDirective', () => {
             fixture.detectChanges();
 
             // Import RadioGroupAlignment from the directive
-            const RadioGroupAlignment = { horizontal: 'horizontal', vertical: 'vertical' } as const;
+            // const RadioGroupAlignment = { horizontal: 'horizontal', vertical: 'vertical' } as const;
 
             radioGroup.alignment = RadioGroupAlignment.vertical as any;
             fixture.detectChanges();

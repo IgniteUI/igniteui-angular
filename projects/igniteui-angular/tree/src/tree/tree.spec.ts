@@ -97,7 +97,9 @@ describe('IgxTree #treeView', () => {
         });
         describe('IgxTreeComponent', () => {
             it('Should update nav children cache when events are fired', () => {
-                vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: FrameRequestCallback) => { cb(0); return 0; });
+                vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: FrameRequestCallback) => {
+                    cb(0); return 0; 
+                });
                 expect(mockNavService.init_invisible_cache).toHaveBeenCalledTimes(0);
                 expect(mockNavService.update_visible_cache).toHaveBeenCalledTimes(0);
                 expect(mockNavService.update_disabled_cache).toHaveBeenCalledTimes(0);

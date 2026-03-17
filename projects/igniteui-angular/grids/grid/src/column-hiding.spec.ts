@@ -856,5 +856,5 @@ describe('Column Hiding UI #grid', () => {
         });
     });
 
-    const getColumnChooserButtonIcon = <T>(fix: ComponentFixture<T>) => getColumnHidingButton(fix).querySelector('igx-icon');
+    const getColumnChooserButtonIcon = <T>(fixture: ComponentFixture<T>) => getColumnHidingButton(fixture).querySelector('igx-icon');
 });

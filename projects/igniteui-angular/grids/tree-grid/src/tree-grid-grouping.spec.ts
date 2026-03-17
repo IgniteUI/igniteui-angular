@@ -209,8 +209,8 @@ describe('IgxTreeGrid', () => {
         });
     });
 
-    const getChips = (fix) => {
-        const chipsAreaElement = fix.debugElement.nativeElement.querySelector('igx-chips-area');
+    const getChips = (fixture) => {
+        const chipsAreaElement = fixture.debugElement.nativeElement.querySelector('igx-chips-area');
         return chipsAreaElement.querySelectorAll('igx-chip');
     };
 });
