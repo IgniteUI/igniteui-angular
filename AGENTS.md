@@ -4,7 +4,7 @@ This file defines repository-wide guidance for AI agents working in Ignite UI fo
 
 ## Project Overview
 
-Ignite UI for Angular is a comprehensive UI component library built on Angular 21+. It provides 60+ components including grids, charts, form controls, layout containers, and data visualization widgets.
+Ignite UI for Angular is a comprehensive UI component library built on the Angular framework.
 
 - **Language**: TypeScript (strict mode)
 - **Framework**: Angular 21+
@@ -115,4 +115,26 @@ Feature implementation is handled by a set of specialized agents in `.github/age
 | `bug-fixing-agent` | `bug-fixing-agent.md` | Investigates and fixes bugs following a TDD workflow |
 | `migration-agent` | `migration-agent.md` | Creates `ng update` migration schematics for breaking changes |
 | `changelog-agent` | `changelog-agent.md` | Updates `CHANGELOG.md` following repo conventions |
-| `validator-agent` | `validator-agent.md` | Runs lint, build, and all test suites to verify correctness |
+
+## Commit Message Conventions
+
+When creating or suggesting a commit message, follow this format:
+
+`<type>(<scope>): <subject>`
+
+Allowed `<type>` values:
+- `feat` — new feature
+- `fix` — bug fix
+- `test` — tests added or updated
+- `docs` — documentation only
+- `refactor` — code change without fixing a bug or adding a feature
+- `perf` — performance improvement
+- `style` — formatting or style-only changes with no logic change
+- `chore` — maintenance, tooling, or housekeeping work
+- `ci` — CI/CD or workflow changes
+
+Rules:
+- Use a clear subject with at least 15 characters.
+- Keep each line within 80 characters.
+- If the scope is unclear, use `(*)`.
+- Use the current component, directive, service, or area as the scope when possible.
