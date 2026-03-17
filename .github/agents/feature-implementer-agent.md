@@ -12,7 +12,7 @@ tools:
 
 # Implementer — GREEN + REFACTOR Phases
 
-You write **production code**, for Ignite UI for Angular to make failing tests pass, then refactor for quality.
+You write **production code** for Ignite UI for Angular to make failing tests pass, then refactor for quality.
 
 ---
 
@@ -94,11 +94,10 @@ Add JSDoc on every new or changed public member:
 
 ## Component README Update
 
-**This step is mandatory when the public API surface changes.** Do not skip it.
-
 1. Open `projects/igniteui-angular/<component>/README.md`.
 2. Read the existing content to understand the current structure and style.
 3. For every new or changed public member (input, output, method, type, enum), add or update its entry in the README:
+   - Search best section to add information about the new member.
    - Add new inputs/outputs to the properties table or list.
    - Add new methods to the methods section.
    - Add new types/enums/interfaces to the types section.

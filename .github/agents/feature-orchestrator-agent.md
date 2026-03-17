@@ -61,13 +61,13 @@ You are responsible for ensuring the work is complete across all affected areas,
 ## Key Repository Paths
 
 ```
-projects/igniteui-angular/<component>/src/     ← source + tests
-projects/igniteui-angular/<component>/index.ts ← public barrel
-projects/igniteui-angular/test-utils/          ← shared test helpers
-projects/igniteui-angular/migrations/          ← migration schematics
-CHANGELOG.md                                   ← root changelog
-src/app/<component>/                           ← demo pages
-src/app/app.routes.ts                          ← demo routing
+projects/igniteui-angular/<component>/src/        ← source + tests
+projects/igniteui-angular/<component>/index.ts    ← public barrel
+projects/igniteui-angular/<component>/README.md   ← component documentation
+projects/igniteui-angular/test-utils/             ← shared test helpers
+projects/igniteui-angular/migrations/             ← migration schematics
+CHANGELOG.md                                      ← root changelog
+src/app/<component>/                              ← demo pages
 ```
 
 ---
