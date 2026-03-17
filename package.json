@@ -170,6 +170,16 @@
       "astro": {
         "zod": "~3.25.0"
       }
+    },
+    "igniteui-angular-charts": {
+      "@angular/core": "^21.0.0",
+      "@angular/common": "^21.0.0",
+      "@angular/compiler": "^21.0.0"
+    },
+    "igniteui-angular-core": {
+      "@angular/core": "^21.0.0",
+      "@angular/common": "^21.0.0",
+      "@angular/compiler": "^21.0.0"
     }
   }
 }
