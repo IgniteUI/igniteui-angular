@@ -1825,14 +1825,14 @@
 
         igx-prefix,
         [igxPrefix] {
-            background: var(--igx-input-group-input-prefix-background, transparent);
-            color: var(--igx-input-group-input-prefix-color, var(--ig-primary-500));
+            background: var(--ig-input-group-input-prefix-background, transparent);
+            color: var(--ig-input-group-input-prefix-color, var(--ig-primary-500));
         }
 
         igx-suffix,
         [igxSuffix] {
-            background: var(--igx-input-group-input-suffix-background, transparent);
-            color: var(--igx-input-group-input-suffix-color, var(--ig-primary-500));
+            background: var(--ig-input-group-input-suffix-background, transparent);
+            color: var(--ig-input-group-input-suffix-color, var(--ig-primary-500));
         }
 
         &%form-group-display--readonly {
@@ -1840,7 +1840,7 @@
             [igxPrefix],
             igx-suffix,
             [igxSuffix] {
-                color: var(--igx-input-group-disabled-text-color, var(--ig-gray-500));
+                color: var(--ig-input-group-disabled-text-color, var(--ig-gray-500));
             }
         }
     }
@@ -1853,13 +1853,13 @@
 
         igx-suffix,
         [igxSuffix] {
-            color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
+            color: var(--ig-input-group-input-suffix-color--focused, var(--ig-gray-900));
         }
 
         &%form-group-display--readonly {
             igx-suffix,
             [igxSuffix] {
-                color: var(--igx-input-group-input-suffix-color--focused, var(--ig-gray-900));
+                color: var(--ig-input-group-input-suffix-color--focused, var(--ig-gray-900));
             }
         }
     }

@@ -94,8 +94,8 @@ import {
     onResourceChangeHandle
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
-import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
+import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
+import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile, throttle, take, switchMap } from 'rxjs/operators';
 import {
     IgxToggleDirective,
     IForOfDataChangeEventArgs,
@@ -113,11 +113,11 @@ import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from '
 import { I18N_FORMATTER } from 'igniteui-angular/core';
 
 /**
- * Injection token for setting the throttle time used in grid virtual scroll.
+ * Injection token for setting the throttle time multiplier used in grid virtual scroll.
  * @hidden
  */
-export const SCROLL_THROTTLE_TIME = /*@__PURE__*/new InjectionToken<number>('SCROLL_THROTTLE_TIME', {
-    factory: () => 40
+export const SCROLL_THROTTLE_TIME_MULTIPLIER = /*@__PURE__*/new InjectionToken<number>('SCROLL_THROTTLE_TIME_MULTIPLIER', {
+    factory: () => 10
 });
 
 
@@ -177,7 +177,11 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _diTransactions = inject(IgxGridTransaction, { optional: true });
     /** @hidden @internal */
     public i18nFormatter = inject(I18N_FORMATTER);
-    private readonly THROTTLE_TIME = inject(SCROLL_THROTTLE_TIME);
+    private readonly THROTTLE_TIME_MULTIPLIER = inject(SCROLL_THROTTLE_TIME_MULTIPLIER);
+    private throttleTime$ = new BehaviorSubject<number>(this.THROTTLE_TIME_MULTIPLIER);
+    /** @hidden @internal */
+    public throttleScheduler = animationFrameScheduler;
+    private readonly MAX_SCROLL_THROTTLE: number = 60;
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
@@ -3321,6 +3325,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: ɵSize = ɵSize.Large;
     private _defaultRowHeight = 50;
+    private _borderSize = 1;
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
@@ -3731,7 +3736,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.scrollNotify.pipe(
             filter(() => !this._init),
-            throttleTime(this.THROTTLE_TIME, animationFrameScheduler, { leading: false, trailing: true }),
+            throttle(() =>
+                this.throttleTime$.pipe(
+                  take(1),
+                  switchMap(time => timer(time, this.throttleScheduler))
+                )
+              ),
             destructor
         )
             .subscribe((event) => {
@@ -3820,6 +3830,14 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             this.evaluateLoadingState();
             this.updateMergedData();
+        });
+
+        this.verticalScrollContainer.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
+            this.updateScrollThrottle(count * this.headerContainer.state.chunkSize);
+        });
+
+        this.headerContainer?.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
+            this.updateScrollThrottle(count * this.verticalScrollContainer.state.chunkSize);
         });
 
         this.verticalScrollContainer.scrollbarVisibilityChanged.pipe(filter(() => !this._init), destructor).subscribe(() => {
@@ -3967,6 +3985,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected get mergedDataInView() {
         return this._mergedDataInView;
+    }
+
+    protected updateScrollThrottle(cells: number) {
+        // for less than 100 - throttle 0, 10ms more for every 100 cells upto max of 60ms
+        const currentThrottle = cells <= 100 ? 0 : Math.floor(cells / 100) * this.THROTTLE_TIME_MULTIPLIER;
+        this.throttleTime$.next(Math.min(currentThrottle, this.MAX_SCROLL_THROTTLE));
     }
 
     /**
@@ -5575,7 +5599,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.hasCellsToMerge) {
             return this.rowHeight;
         }
-        return this.rowHeight + 1;
+        return this.rowHeight + this._borderSize;
     }
 
     /**
@@ -6773,15 +6797,26 @@ export abstract class IgxGridBaseDirective implements GridType,
             const possibleWidth = this.getPossibleColumnWidth();
             if (possibleWidth === "0px") {
                 // all columns - hidden
-                this._columnWidth = possibleWidth;
+                // Do not update _columnWidth to preserve valid column widths for when columns are unhidden
+                // Only update column defaultWidth if _columnWidth is already set and not '0px'
+                if (this._columnWidth && this._columnWidth !== '0px') {
+                    this._updateColumnDefaultWidths();
+                }
+                this.resetCachedWidths();
+                return;
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
                 this._columnWidth =  this.minColumnWidth + 'px';
             }
         }
+        this._updateColumnDefaultWidths();
+        this.resetCachedWidths();
+    }
+
+    private _updateColumnDefaultWidths() {
         this._columns.forEach((column: IgxColumnComponent) => {
-            if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
+            if (this.hasColumnLayouts) {
                 const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
@@ -6789,7 +6824,6 @@ export abstract class IgxGridBaseDirective implements GridType,
                 column.resetCaches();
             }
         });
-        this.resetCachedWidths();
     }
 
     protected resetNotifyChanges() {
@@ -7793,12 +7827,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected get renderedActualRowHeight() {
-        let border = 1;
-        if (this.rowList.toArray().length > 0) {
-            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
-            border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
-        }
-        return this.rowHeight + border;
+        return this.rowHeight + this._borderSize;
     }
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: (args: any) => void = null) {
@@ -8066,11 +8095,23 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected updateDefaultRowHeight() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
-            const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            const targetCell = this.dataRowList.first.cells.toArray().find((x: IgxGridCellComponent) => !x.isMerged);
+            if (!targetCell) {
+                this._shouldRecalcRowHeight = true;
+                return;
+            }
+            const height = parseFloat(this.document.defaultView.getComputedStyle(targetCell.nativeElement)?.getPropertyValue('height'));
             if (height) {
                 this._defaultRowHeight = height;
             } else {
                 this._shouldRecalcRowHeight = true;
+            }
+
+            const rowStyles = this.document.defaultView.getComputedStyle(this.dataRowList.first.nativeElement);
+
+            const border = rowStyles.borderBottomWidth ? parseFloat(rowStyles.borderBottomWidth) : 1;
+            if (border) {
+                this._borderSize = border;
             }
         }
     }
