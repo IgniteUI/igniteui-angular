@@ -184,7 +184,8 @@
                 "migrations",
                 "schematics"
             ],
-            "coverage": true
+            "coverage": true,
+            "runnerConfig": "projects/igniteui-angular/vitest.config.ts"
           }
         },
         "lint": {
