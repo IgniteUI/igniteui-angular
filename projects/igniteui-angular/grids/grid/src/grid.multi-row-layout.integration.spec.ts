@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -26,8 +26,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let grid: IgxGridComponent;
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnLayoutPinningTestComponent,
@@ -40,7 +40,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Hiding ', () => {
         beforeEach(() => {
@@ -319,7 +319,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
         });
 
-        it('UI - hidden columns count and drop-down items text in hiding toolbar should be correct when group is hidden/shown. ', waitForAsync(async () => {
+        it('UI - hidden columns count and drop-down items text in hiding toolbar should be correct when group is hidden/shown. ', async () => {
             // enable toolbar for hiding
             fixture.componentInstance.showToolbar = true;
             fixture.detectChanges();
@@ -341,9 +341,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             // verify checked state
             expect(checkboxes[0].componentInstance.checked).toBe(false);
             expect(checkboxes[1].componentInstance.checked).toBe(true);
-        }));
+        });
 
-        it(`UI - toggling column checkbox checked state successfully changes the column's hidden state. `, waitForAsync(async () => {
+        it(`UI - toggling column checkbox checked state successfully changes the column's hidden state. `, async () => {
             // enable toolbar for hiding
             fixture.componentInstance.showToolbar = true;
             fixture.detectChanges();
@@ -383,7 +383,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             expect(checkbox.checked).toBe(false);
             expect(column.hidden).toBe(true);
-        }));
+        });
 
     });
 
@@ -635,7 +635,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 .toBeLessThanOrEqual(2);
         });
 
-        it('UI - pinned columns count and drop-down items text in pinning toolbar should be correct when group is pinned. ', waitForAsync(async () => {
+        it('UI - pinned columns count and drop-down items text in pinning toolbar should be correct when group is pinned. ', async () => {
             // enable toolbar for pinning
             fixture.componentInstance.showToolbar = true;
             fixture.detectChanges();
@@ -658,9 +658,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             // verify checked state
             expect(checkboxes[0].componentInstance.checked).toBeTruthy();
             expect(checkboxes[1].componentInstance.checked).toBeFalsy();
-        }));
+        });
 
-        it(`UI - toggling column checkbox checked state successfully changes the column's pinned state. `, waitForAsync(async () => {
+        it(`UI - toggling column checkbox checked state successfully changes the column's pinned state. `, async () => {
             const uniqueGroups = [
                 {
                     group: 'group1',
@@ -734,7 +734,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             expect(checkbox.checked).toBe(false);
             expect(column.pinned).toBeFalsy();
-        }));
+        });
 
         it('should work when pinning group with columns that do not have and the unpinned group has width in percentages.', async () => {
             const uniqueGroups = [

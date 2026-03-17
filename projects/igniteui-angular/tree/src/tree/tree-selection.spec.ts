@@ -621,12 +621,12 @@ describe('IgxTree - Selection #treeView', () => {
         const treeService = new IgxTreeService();
         const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = {
             emit: vi.fn().mockName("emitter.emit")
-        };
+        } as unknown as EventEmitter<ITreeNodeSelectionEvent>;
         const mockTree: IgxTree = {
             selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: {
                 find: () => true
             }
-        };
+        } as unknown as IgxTree;
         const mockCdr = {
             markForCheck: vi.fn().mockName("ChangeDetectorRef.markForCheck"),
             detectChanges: vi.fn().mockName("ChangeDetectorRef.detectChanges")

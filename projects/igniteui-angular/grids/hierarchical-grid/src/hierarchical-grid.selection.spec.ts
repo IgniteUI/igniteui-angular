@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -19,8 +19,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     let rowIsland2;
     const gridData = SampleTestData.generateHGridData(5, 3);
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
@@ -34,7 +34,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Cell selection', () => {
         beforeEach(() => {
@@ -259,7 +259,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(startCell.active).toBe(true);
         });
 
-        it('should be able to select range with shift + arrow keys in the parent grid', fakeAsync(() => {
+        it('should be able to select range with shift + arrow keys in the parent grid', async () => {
             setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
@@ -269,26 +269,26 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true, false);
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             cell = hierarchicalGrid.gridAPI.get_cell_by_index(1, 'ProductName');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             cell = hierarchicalGrid.gridAPI.get_cell_by_index(2, 'ProductName');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell, true);
             expect(cell.active).toBe(false);
             GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 3, 1, 2);
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 3, 1, 2);
-        }));
+        });
 
-        it('should be able to select range with shift + arrow keys in the child grid', fakeAsync(() => {
+        it('should be able to select range with shift + arrow keys in the child grid', async () => {
             setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
@@ -304,24 +304,24 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true, false);
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             cell = childGridLevel1.gridAPI.get_cell_by_index(1, 'ProductName');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             cell = childGridLevel1.gridAPI.get_cell_by_index(2, 'ProductName');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell, true);
             expect(cell.active).toBe(false);
             GridSelectionFunctions.verifyCellsRegionSelected(childGridLevel1, 1, 3, 1, 2);
             GridSelectionFunctions.verifySelectedRange(childGridLevel1, 1, 3, 1, 2);
-        }));
+        });
 
         it('should be able to select range with shift + mouse click and skip the child grid', () => {
             setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
@@ -419,7 +419,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 0, 0, 2, 2);
         });
 
-        it('should clear the selection in parent grid when continue navigation in the child grid', fakeAsync(() => {
+        it('should clear the selection in parent grid when continue navigation in the child grid', async () => {
             setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
@@ -444,13 +444,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 4, 1, 1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
-            tick(30);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(hierarchicalGrid.getSelectedRanges().length).toBe(0);
-        }));
+        });
 
-        it('should NOT be able to create range selection between parent and child grid on mouse click + shift key', fakeAsync(() => {
+        it('should NOT be able to create range selection between parent and child grid on mouse click + shift key', async () => {
             setElementSize(hierarchicalGrid.nativeElement, ɵSize.Small);
             fix.detectChanges();
 
@@ -466,7 +466,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 2, 2, 1, 1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
-            tick(30);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(hierarchicalGrid.getSelectedRanges().length).toBe(0);
@@ -477,7 +477,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 0, 0, 2, 2);
-        }));
+        });
 
         it('Should not trigger range selection when CellTemplate is used and the user clicks on element inside it', () => {
             fix = TestBed.createComponent(IgxHierGridExternalAdvancedFilteringComponent);
@@ -514,12 +514,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         });
 
-        it('should have checkboxes on each row', fakeAsync(() => {
+        it('should have checkboxes on each row', async () => {
             hierarchicalGrid.expandChildren = true;
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
             rowIsland1.expandChildren = true;
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(hierarchicalGrid.rowSelection).toEqual(GridSelectionMode.multiple);
@@ -546,7 +546,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             for (const r of childGrid.dataRowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(r.nativeElement, false, false);
             }
-        }));
+        });
 
         it('should able to change rowSelection at runtime', async () => {
             hierarchicalGrid.width = '1000px';
@@ -1168,7 +1168,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(childGrid.dataRowList.toArray());
         });
 
-        it('should not be able to select deleted row', fakeAsync(() => {
+        it('should not be able to select deleted row', async () => {
             // Expand first row
             const firstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             fix.detectChanges();
@@ -1177,7 +1177,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             firstRow.onClick(UIInteractions.getMouseEvent('click'));
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -1193,7 +1193,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             // Click on deleted row
             firstRow.onClick(UIInteractions.getMouseEvent('click'));
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
@@ -1222,14 +1222,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             const childGridFirstRow = childGrid.gridAPI.get_row_by_index(0);
             childGridFirstRow.onClick(UIInteractions.getMouseEvent('click', false, false, true));
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             expect(hierarchicalGrid.selectedRows).toEqual(['1', '2', '3', '4']);
             expect(childGrid.selectedRows).toEqual(['00']);
-        }));
+        });
 
         it('should be able to select added row', () => {
             // Set multiple selection to first row island
@@ -1539,10 +1539,10 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             });
         });
 
-        it('Should have correct indices on all pages', fakeAsync(() => {
+        it('Should have correct indices on all pages', async () => {
             // root grid
             hGrid.paginator.nextPage();
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
             expect(hGrid.gridAPI.get_row_by_index(0).nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
 
@@ -1551,15 +1551,15 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             const childGrid = hGrid.gridAPI.getChildGrids(false)[0];
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             childGrid.paginator.nextPage();
             fix.detectChanges();
-            tick(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(childGrid.gridAPI.get_row_by_index(2).nativeElement.querySelector('.rowNumberChild').textContent).toEqual('17');
-        }));
+        });
     });
 });

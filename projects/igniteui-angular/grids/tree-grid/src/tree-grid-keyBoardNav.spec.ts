@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../../test-utils/tree-grid-components.spec';
@@ -15,15 +15,15 @@ import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.dire
 const DEBOUNCETIME = 60;
 
 describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridWithNoScrollsComponent,
                 IgxTreeGridWithScrollsComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Navigation with no scroll', () => {
         let fix;
@@ -397,8 +397,8 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         let gridContent: DebugElement;
         const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);

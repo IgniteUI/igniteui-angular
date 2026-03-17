@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -23,8 +23,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
     let baseHGridContent: DebugElement;
     const defaultTimeout = 5000;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
@@ -37,20 +37,20 @@ describe('IgxHierarchicalGrid Navigation', () => {
             ]
         }).compileComponents();
         vi.setConfig({ testTimeout: defaultTimeout * 2 });
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
         });
-    }));
+    });
 
     afterAll(() => vi.setConfig({ testTimeout: defaultTimeout }));
 
     describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
@@ -59,7 +59,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -651,14 +651,14 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
     describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComplexComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
             setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -766,14 +766,14 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
     describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
             setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -887,14 +887,14 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
     describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridSmallerChildComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
             setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -964,8 +964,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
     });
 
     describe('IgxHierarchicalGrid Navigation API #hGrid', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
@@ -974,7 +974,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();

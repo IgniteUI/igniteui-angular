@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridSummariesComponent, IgxTreeGridSummariesKeyComponent, IgxTreeGridCustomSummariesComponent, IgxTreeGridSummariesTransactionsComponent, IgxTreeGridSummariesScrollingComponent, IgxTreeGridSummariesKeyScroliingComponent } from '../../../test-utils/tree-grid-components.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
@@ -14,8 +14,8 @@ import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.dire
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     const DEBOUNCETIME = 30;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSummariesComponent,
@@ -26,13 +26,13 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 IgxTreeGridSummariesKeyScroliingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
         });
-    }));
+    });
 
     describe('', () => {
         let fix;

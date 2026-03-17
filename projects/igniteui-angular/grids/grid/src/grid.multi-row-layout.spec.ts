@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,8 +19,8 @@ const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
 describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCE_TIME = 60;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnLayoutTestComponent,
@@ -30,9 +30,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    it('should initialize a grid with 1 column group', fakeAsync(() => {
+    it('should initialize a grid with 1 column group', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -52,9 +52,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const lastCellWidth = firstRowCellsArr[3].nativeElement.getBoundingClientRect().width;
         expect(2 * firstRowCellsArr[0].nativeElement.offsetHeight).toEqual(firstRowCellsArr[3].nativeElement.offsetHeight);
         expect(firstThreeCellsWidth).toEqual(lastCellWidth);
-    }));
+    });
 
-    it('should initialize grid with 2 column groups', fakeAsync(() => {
+    it('should initialize grid with 2 column groups', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
         fixture.componentInstance.colGroups.push({
@@ -73,9 +73,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
-    }));
+    });
 
-    it('should not throw error when layout is incomplete and should render valid mrl block styles', fakeAsync(() => {
+    it('should not throw error when layout is incomplete and should render valid mrl block styles', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
         // creating an incomplete layout
@@ -122,8 +122,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(sizes).toBe('200.33px 200.33px 200.33px');
         expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
 
-    }));
-    it('should initialize correctly when no column widths are set.', fakeAsync(() => {
+    });
+    it('should initialize correctly when no column widths are set.', async () => {
         // test with single group
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
@@ -220,9 +220,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         gridFirstRow = grid.rowList.first;
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
-    }));
+    });
 
-    it('should initialize correctly when widths are set in px.', fakeAsync(() => {
+    it('should initialize correctly when widths are set in px.', async () => {
         // test with single group - all cols with colspan 1 have width
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
@@ -313,9 +313,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         gridFirstRow = grid.rowList.first;
         // headerCells = grid.theadRow._groups.last.children;
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
-    }));
+    });
 
-    it('should correctly autofit column without width when there are other set with width in pixels', fakeAsync(() => {
+    it('should correctly autofit column without width when there are other set with width in pixels', async () => {
         // In this case it would be for City column and 3rd template column.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
@@ -346,9 +346,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns)
             .toEqual('200px 200px ' + autoSizedColumnWidth + 'px 100px 100px 200px');
-    }));
+    });
 
-    it('should correctly size column without width when it overlaps partially with bigger column that has width above it', fakeAsync(() => {
+    it('should correctly size column without width when it overlaps partially with bigger column that has width above it', async () => {
         // In this case it would be for City column and 3rd template column overlapping width ContactName.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // creating an incomplete layout
@@ -376,9 +376,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 100px 200px');
-    }));
+    });
 
-    it('should correctly size column without width when it overlaps partially with bigger column that has width bellow it', fakeAsync(() => {
+    it('should correctly size column without width when it overlaps partially with bigger column that has width bellow it', async () => {
         // In this case it would be for City column and 3rd template column overlapping width ContactName.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // creating an incomplete layout
@@ -406,9 +406,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 200px 150px');
-    }));
+    });
 
-    it('should correctly set column width when there is bigger column at the bottom where there is not width yet', fakeAsync(() => {
+    it('should correctly set column width when there is bigger column at the bottom where there is not width yet', async () => {
         // In this case it would be for City column and 3rd template column.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // creating an incomplete layout
@@ -436,9 +436,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 100px 200px');
-    }));
+    });
 
-    it('should correctly set column width of column without width when there are two bigger columns that overlap with it', fakeAsync(() => {
+    it('should correctly set column width of column without width when there are two bigger columns that overlap with it', async () => {
         // In this case it would be for City column and 3rd template column overlapping with ContactName and Fax.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // creating an incomplete layout
@@ -466,9 +466,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 120px 100px 100px 200px');
-    }));
+    });
 
-    it('should correctly autofit column without width when grid width is not enough and other cols are set in pixels', fakeAsync(() => {
+    it('should correctly autofit column without width when grid width is not enough and other cols are set in pixels', async () => {
         // In this case it would be for City column and 3rd template column.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // creating an incomplete layout
@@ -496,9 +496,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 136px 100px 100px 200px');
-    }));
+    });
 
-    it('should autofit a column with span 1 that does not have width set and is under a col with span 2 with width set', fakeAsync(() => {
+    it('should autofit a column with span 1 that does not have width set and is under a col with span 2 with width set', async () => {
         // In this case it would be for Phone, CompanyName  and PostalCode columns and first 2 template columns.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // creating an incomplete layout
@@ -526,9 +526,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 136px 136px 100px 100px 200px');
-    }));
+    });
 
-    it('should use column width of a column with span 2 that has width when there are no columns with span 1 to take width from', fakeAsync(() => {
+    it('should use column width of a column with span 2 that has width when there are no columns with span 1 to take width from', async () => {
         // In this case it would be for Phone, CompanyName  and PostalCode columns and first 2 template columns.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // creating an incomplete layout
@@ -556,9 +556,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('100px 100px 136px 100px 100px 200px');
-    }));
+    });
 
-    it('should use divided column width when there is stairway type of defined columns and they have widths set', fakeAsync(() => {
+    it('should use divided column width when there is stairway type of defined columns and they have widths set', async () => {
         // In this case it would be for Country and Address columns  and last 3 template columns.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // creating an incomplete layout
@@ -586,9 +586,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('100px 100px 136px 100px 100px 100px 100px');
-    }));
+    });
 
-    it('should initialize correctly when widths are set in %.', fakeAsync(() => {
+    it('should initialize correctly when widths are set in %.', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
 
@@ -680,9 +680,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         gridFirstRow = grid.rowList.first;
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
-    }));
+    });
 
-    it('should initialize correctly when grid width is in % and no widths are set for columns.', fakeAsync(() => {
+    it('should initialize correctly when grid width is in % and no widths are set for columns.', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
@@ -705,9 +705,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const gridFirstRow = grid.rowList.first;
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
-    }));
+    });
 
-    it('should use columns with the smallest col spans when determining the column group’s column widths.', fakeAsync(() => {
+    it('should use columns with the smallest col spans when determining the column group’s column widths.', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
@@ -740,9 +740,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         groupHeaderBlocks = grid.theadRow.nativeElement.querySelectorAll(GRID_MRL_BLOCK_CLASS);
         expect(groupHeaderBlocks[0].clientWidth).toBe(400);
         expect((groupHeaderBlocks[0] as HTMLElement).style.gridTemplateColumns).toBe('100px 200px 100px');
-    }));
+    });
 
-    it('should disregard column groups if multi-column layouts are also defined.', fakeAsync(() => {
+    it('should disregard column groups if multi-column layouts are also defined.', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutAndGroupsTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -758,9 +758,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // check header
         expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(5);
         expect(document.querySelectorAll(GRID_COL_THEAD_CLASS).length).toEqual(4);
-    }));
+    });
 
-    it('should render correct heights when groups have different total row span', fakeAsync(() => {
+    it('should render correct heights when groups have different total row span', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutAndGroupsTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [
@@ -799,7 +799,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // check cell height in row. By default should span 1 row
         const firstCell = grid.gridAPI.get_cell_by_index(0, 'Fax').nativeElement;
         expect(firstCell.offsetHeight).toEqual(grid.gridAPI.get_cell_by_index(0, 'ContactName').nativeElement.offsetHeight);
-    }));
+    });
 
     // Virtualization
 
@@ -893,7 +893,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
     });
 
-    it('should apply horizontal virtualization correctly for widths in px, % and no-width columns.', fakeAsync(() => {
+    it('should apply horizontal virtualization correctly for widths in px, % and no-width columns.', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // test with px
         fixture.componentInstance.colGroups = [{
@@ -908,7 +908,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
             }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
-        tick(); // Required to render scrollbars
+        await fixture.whenStable(); // Required to render scrollbars
         const grid = fixture.componentInstance.grid;
 
         const horizontalVirtualization = grid.rowList.first.virtDirRow;
@@ -975,7 +975,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // headerCells = grid.theadRow._groups.last.children;
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
-    }));
+    });
 
     it('vertical virtualization should work as expected when there are multi-row layouts.', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
@@ -1027,7 +1027,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, lastRow, fixture.componentInstance.colGroups);
     });
 
-    it('should correctly size columns without widths when default column width is set to percentages', fakeAsync(() => {
+    it('should correctly size columns without widths when default column width is set to percentages', async () => {
         // In this case it would be for City column and 3rd template column overlapping width ContactName.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
@@ -1058,9 +1058,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('118.4px 118.4px 118.4px 118.4px 118.4px 118.4px');
-    }));
+    });
 
-    it('should disregard hideGroupedColumns option and not hide columns when grouping when having column layouts.', fakeAsync(() => {
+    it('should disregard hideGroupedColumns option and not hide columns when grouping when having column layouts.', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.componentInstance.colGroups = [{
                 group: 'group1',
@@ -1090,9 +1090,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const col = grid.getColumnByName('ContactTitle');
         expect(col.hidden).toBe(false);
         expect(col.parent.hidden).toBe(false);
-    }));
+    });
 
-    it('should get the correct next and previous cell when in MRL scenario', fakeAsync(() => {
+    it('should get the correct next and previous cell when in MRL scenario', async () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.componentInstance.colGroups = [{
                 group: 'group1',
@@ -1117,9 +1117,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         pos = grid.getPreviousCell(1, 2, col => col.editable === true);
         expect(pos.rowIndex).toEqual(0);
         expect(pos.visibleColumnIndex).toEqual(2);
-    }));
+    });
 
-    it('should navigate to the proper row in MRL scenario', (async () => {
+    it('should navigate to the proper row in MRL scenario', async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fix.componentInstance.grid;
         const NAVIGATE = 20;
@@ -1137,7 +1137,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const row = grid.gridAPI.get_row_by_index(NAVIGATE);
         expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
-    }));
+    });
 });
 
 @Component({

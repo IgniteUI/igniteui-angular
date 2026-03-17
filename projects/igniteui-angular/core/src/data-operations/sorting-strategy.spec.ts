@@ -32,16 +32,16 @@ describe('Unit testing SortingStrategy', () => {
         const strategy = DefaultSortingStrategy.instance();
         expect(strategy.compareValues(1, 0) === 1 &&
             strategy.compareValues(true, false) === 1 &&
-            strategy.compareValues('bc', 'adfc') === 1)
-            .toBeTruthy('compare first argument greater than second');
+            strategy.compareValues('bc', 'adfc') === 1, 'compare first argument greater than second')
+            .toBeTruthy();
         expect(strategy.compareValues(1, 2) === -1 &&
             strategy.compareValues('a', 'b') === -1 &&
-            strategy.compareValues(false, true) === -1)
-            .toBeTruthy('compare 0, 1');
+            strategy.compareValues(false, true) === -1, 'compare first argument less than second')
+            .toBeTruthy();
         expect(strategy.compareValues(0, 0) === 0 &&
             strategy.compareValues(true, true) === 0 &&
-            strategy.compareValues('test', 'test') === 0)
-            .toBeTruthy('Comare equal variables');
+            strategy.compareValues('test', 'test') === 0, 'compare equal variables')
+            .toBeTruthy();
     });
     it('tests default settings', () => {
         (data[4] as {

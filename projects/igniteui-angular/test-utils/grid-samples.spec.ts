@@ -277,16 +277,16 @@ export class PinningComponent extends GridWithSizeComponent implements IGridSele
 
     public column: IgxColumnComponent;
     public columns = [
-        { field: 'ID', width: 100 },
-        { field: 'CompanyName', width: 300 },
-        { field: 'ContactName', width: 200 },
-        { field: 'ContactTitle', width: 200 },
-        { field: 'Address', width: 300 },
-        { field: 'City', width: 100 },
-        { field: 'Region', width: 100 },
-        { field: 'PostalCode', width: 100 },
-        { field: 'Phone', width: 150 },
-        { field: 'Fax', width: 150 }
+        { field: 'ID', width: "100px" },
+        { field: 'CompanyName', width: "300px" },
+        { field: 'ContactName', width: "200px" },
+        { field: 'ContactTitle', width: "200px" },
+        { field: 'Address', width: "300px" },
+        { field: 'City', width: "100px" },
+        { field: 'Region', width: "100px" },
+        { field: 'PostalCode', width: "100px" },
+        { field: 'Phone', width: "150px" },
+        { field: 'Fax', width: "150px" }
     ];
 
     public override data = SampleTestData.contactMariaAndersData();
@@ -335,7 +335,7 @@ export class GroupableGridSearchComponent extends ScrollableGridSearchComponent 
 })
 export class GridAllFeaturesComponent extends GridWithSizeComponent {
     @Input()
-    public columnWidth = 200;
+    public columnWidth = "200px";
 }
 
 @Component({
@@ -567,10 +567,10 @@ export class VirtualGridComponent extends BasicGridComponent {
     public gridHeight = '300px';
     public defaultWidth = '200px';
     public columns = [
-        { field: 'index' },
-        { field: 'value' },
-        { field: 'other' },
-        { field: 'another' }
+        { field: 'index', width: '100px' },
+        { field: 'value', width: '200px' },
+        { field: 'other', width: '200px' },
+        { field: 'another', width: '200px' }
     ];
     public selectedCell: CellType;
     constructor() {
@@ -582,7 +582,7 @@ export class VirtualGridComponent extends BasicGridComponent {
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: defaultColWidth || (j % 8 < 2 ? 100 : (j % 6) * 125)
+                width: defaultColWidth || (j % 8 < 2 ? "100px" : `${(j % 6) * 125}px`)
             });
         }
         return cols;
@@ -1264,13 +1264,13 @@ export class IgxGridClipboardComponent extends BasicGridComponent {
 })
 export class DynamicColumnsComponent extends GridWithSizeComponent {
     public columns = [
-        { field: 'ID', width: 100, dataType: 'string' },
-        { field: 'CompanyName', width: 300, dataType: 'string' },
-        { field: 'ContactName', width: 200, dataType: 'string' },
-        { field: 'ContactTitle', width: 200, dataType: 'string' },
-        { field: 'Address', width: 300, dataType: 'string' },
-        { field: 'City', width: 100, dataType: 'string' },
-        { field: 'Region', width: 100, dataType: 'string' }
+        { field: 'ID', width: "100px", dataType: GridColumnDataType.Number },
+        { field: 'CompanyName', width: "300px", dataType: GridColumnDataType.String },
+        { field: 'ContactName', width: "200px", dataType: GridColumnDataType.String },
+        { field: 'ContactTitle', width: "200px", dataType: GridColumnDataType.String },
+        { field: 'Address', width: "300px", dataType: GridColumnDataType.String },
+        { field: 'City', width: "100px", dataType: GridColumnDataType.String },
+        { field: 'Region', width: "100px", dataType: GridColumnDataType.String }
     ];
 
     public override data = SampleTestData.contactInfoDataFull();

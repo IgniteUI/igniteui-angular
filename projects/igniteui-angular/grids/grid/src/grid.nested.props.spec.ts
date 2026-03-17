@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, DebugElement, ViewChild } from '@angular/core';
@@ -203,19 +203,19 @@ describe('Grid - nested data source properties #grid', () => {
             fixture.detectChanges();
         };
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule, NestedPropertiesGridComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(NestedPropertiesGridComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should support column API with complex field', () => {
             setupData(DATA);
@@ -319,7 +319,7 @@ describe('Grid - nested data source properties #grid', () => {
             expect(first(copiedData).user.name.first).toMatch('Updated!');
         });
 
-        it('should correctly filter with ESF', fakeAsync(() => {
+        it('should correctly filter with ESF', async () => {
             setupData(DATA);
             grid.getColumnByName('user').field = 'user.name.first';
             fixture.detectChanges();
@@ -329,18 +329,18 @@ describe('Grid - nested data source properties #grid', () => {
 
             GridFunctions.clickExcelFilterIcon(fixture, 'user.name.first');
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fixture, 'igx-grid');
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-grid'));
             checkboxes[1].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             GridFunctions.clickApplyExcelStyleFiltering(fixture, null, 'igx-grid');
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(grid.filteredSortedData.length).toBeGreaterThan(0);
-        }));
+        });
     });
 });
 
@@ -360,13 +360,13 @@ describe('Grid nested data advanced editing #grid', () => {
         fixture.detectChanges();
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, NestedPropertiesGrid2Component
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(NestedPropertiesGrid2Component);
@@ -405,9 +405,9 @@ describe('Grid nested data advanced editing #grid', () => {
 
         expect(cell3.editMode).toBe(false);
 
-        expect(cell1.value).toBeDefined(true);
-        expect(cell2.value).toBeDefined(true);
-        expect(cell3.value).toBeDefined(true);
+        expect(cell1.value).toBeDefined();
+        expect(cell2.value).toBeDefined();
+        expect(cell3.value).toBeDefined();
         // related to issue #0000, comment out the below line after fixing the issue
         expect(first(copiedData).user.name.first).toMatch('John');
         expect(first(copiedData).user.name.last).toMatch('Doe');
@@ -431,7 +431,7 @@ describe('Grid nested data advanced editing #grid', () => {
 
         expect(cell2.editMode).toBe(false);
         expect(cell3.editMode).toBe(true);
-        expect(cell1.value).toBeDefined(true);
+        expect(cell1.value).toBeDefined();
     });
 
     it('updating values of multiple cells in a row should update the data correctly', () => {
@@ -464,9 +464,9 @@ describe('Grid nested data advanced editing #grid', () => {
         UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
         fixture.detectChanges();
 
-        expect(cell1.value).toBeDefined(true);
-        expect(cell2.value).toBeDefined(true);
-        expect(cell3.value).toBeDefined(true);
+        expect(cell1.value).toBeDefined();
+        expect(cell2.value).toBeDefined();
+        expect(cell3.value).toBeDefined();
         expect(first(copiedData).user.name.last).toMatch('Petrov');
     });
 
@@ -520,20 +520,20 @@ describe('Edit cell with data of type Array #grid', () => {
         fixture.detectChanges();
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, NestedPropertyGridComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(NestedPropertyGridComponent);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid;
         gridContent = GridFunctions.getGridContent(fixture);
-    }));
+    });
 
     it('igxGrid should emit the correct args when cell editing is cancelled', async () => {
         const copiedData = cloneArray(DATA2, true);

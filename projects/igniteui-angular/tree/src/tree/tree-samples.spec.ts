@@ -29,7 +29,10 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 export class IgxTreeSimpleComponent {
     @ViewChild(IgxTreeComponent, { static: true })
     public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    public data;
+    constructor () {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+    }
 }
 
 @Component({
@@ -131,9 +134,13 @@ export class IgxTreeSelectionSampleComponent {
 export class IgxTreeNavigationComponent {
     @ViewChild(IgxTreeComponent, { static: true })
     public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    public data;
     public showNodesWithDirective = false;
     public isDisabled = false;
+
+    constructor() {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+    }
 }
 @Component({
     template: `
@@ -163,5 +170,9 @@ export class IgxTreeNavigationComponent {
 export class IgxTreeScrollComponent {
     @ViewChild(IgxTreeComponent, { static: true })
     public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    public data;
+
+    constructor() {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+    }
 }

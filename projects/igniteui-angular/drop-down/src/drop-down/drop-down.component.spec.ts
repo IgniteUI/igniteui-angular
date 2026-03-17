@@ -1307,8 +1307,8 @@ describe('IgxDropDown ', () => {
 
 @Component({
     template: `
-    <button (click)="toggleDropDown()">Toggle</button>
-    <igx-drop-down id="test-id" igxDropDownItemNavigation [maxHeight]="maxHeight"
+    <button (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown">Toggle</button>
+    <igx-drop-down #dropdown id="test-id" [maxHeight]="maxHeight"
         [allowItemsFocus]="true" style="--ig-size: var(--ig-size-medium);">
         @for (item of items; track item.field) {
             <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
@@ -1376,6 +1376,10 @@ class DoubleIgxDropDownComponent implements OnInit {
 
     public items: any[] = [];
 
+    public selectItem5() {
+        this.dropdown1.setSelectedItem(5);
+    }
+
     public ngOnInit() {
         for (let index = 1; index < 100; index++) {
             this.items.push({ field: 'Item ' + index });
@@ -1384,9 +1388,9 @@ class DoubleIgxDropDownComponent implements OnInit {
 }
 @Component({
     template: `
-    <input (click)="toggleDropDown()">
+    <input (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown">
     <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
-    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="justify">
+    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="'justify'">
         <igx-tab-item>
             <igx-tab-header>
                 Tab111111111111111111111111
@@ -1412,7 +1416,7 @@ class DoubleIgxDropDownComponent implements OnInit {
             </igx-tab-content>
         </igx-tab-item>
     </igx-tabs>
-    <igx-drop-down igxDropDownItemNavigation (selectionChanging)="selectionChanging($event)"
+    <igx-drop-down #dropdown (selectionChanging)="selectionChanging($event)"
         (opening)="onToggleOpening()" (opened)="onToggleOpened()"
         (closing)="onToggleClosing()" (closed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
         @for (item of items; track item.field) {

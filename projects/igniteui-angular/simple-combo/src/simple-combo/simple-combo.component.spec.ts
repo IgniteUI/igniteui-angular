@@ -1,5 +1,5 @@
 import type { Mock } from "vitest";
-import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -2988,7 +2988,7 @@ class IgxSimpleComboSampleComponent {
         this.initData = this.items;
     }
 
-    public selectionChanging() {
+    public selectionChanging(event: ISimpleComboSelectionChangingEventArgs) {
     }
 }
 
@@ -3119,7 +3119,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
         <igx-simple-combo #testCombo class="input-container" [placeholder]="'Locations'"
             name="anyName" required [(ngModel)]="values" [data]="items"
             [displayKey]="'field'" [valueKey]="'field'"
-            [groupKey]="'field' ? 'region' : ''" [width]="'100%'">
+            [groupKey]="'region'" [width]="'100%'">
             <label igxLabel>Combo Label</label>
         </igx-simple-combo>
     </form>

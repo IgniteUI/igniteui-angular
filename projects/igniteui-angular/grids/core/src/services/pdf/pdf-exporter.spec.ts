@@ -4,6 +4,7 @@ import { IgxPdfExporterService } from './pdf-exporter';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
+import { lastValueFrom } from 'rxjs';
 import { ExportRecordType, ExportHeaderType, DEFAULT_OWNER, IExportRecord, IColumnInfo, IColumnList, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
@@ -259,310 +260,275 @@ describe('PDF Exporter', () => {
 
     describe('Custom Font Support', () => {
         beforeEach(() => {
-            spyOn(console, 'warn');
+            vi.spyOn(console, 'warn');
         });
 
-        it('should export without custom font when customFont is not set', (done) => {
+        it('should export without custom font when customFont is not set', async () => {
             expect(options.customFont).toBeUndefined();
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
         });
 
-        it('should handle custom font being set to null', (done) => {
+        it('should handle custom font being set to null', async () => {
             options.customFont = null as any;
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
         });
 
-        it('should handle custom font being set to undefined', (done) => {
+        it('should handle custom font being set to undefined', async () => {
             options.customFont = undefined;
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
         });
 
-        it('should fall back to helvetica when custom font with empty name is provided', (done) => {
+        it('should fall back to helvetica when custom font with empty name is provided', async () => {
             options.customFont = {
                 name: '',
                 data: 'someBase64Data'
             };
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
+            expect(console.warn).toHaveBeenCalled();
         });
 
-        it('should fall back to helvetica when custom font with empty data is provided', (done) => {
+        it('should fall back to helvetica when custom font with empty data is provided', async () => {
             options.customFont = {
                 name: 'TestFont',
                 data: ''
             };
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
+            expect(console.warn).toHaveBeenCalled();
         });
 
-        it('should fall back to helvetica when custom font with both empty name and data is provided', (done) => {
+        it('should fall back to helvetica when custom font with both empty name and data is provided', async () => {
             options.customFont = {
                 name: '',
                 data: ''
             };
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
+            expect(console.warn).toHaveBeenCalled();
         });
 
-        it('should export with custom font and portrait orientation when font config is incomplete', (done) => {
+        it('should export with custom font and portrait orientation when font config is incomplete', async () => {
             options.customFont = {
                 name: '',
                 data: ''
             };
             options.pageOrientation = 'portrait';
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
         });
 
-        it('should export with incomplete custom font and different page sizes', (done) => {
+        it('should export with incomplete custom font and different page sizes', async () => {
             const pageSizes = ['a3', 'letter'];
-            let completed = 0;
 
-            const exportNext = (index: number) => {
-                if (index >= pageSizes.length) {
-                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(pageSizes.length);
-                    done();
-                    return;
-                }
-
+            for (const pageSize of pageSizes) {
                 const opts = new IgxPdfExporterOptions('Test');
-                opts.pageSize = pageSizes[index];
+                opts.pageSize = pageSize;
                 opts.customFont = {
                     name: '',
                     data: ''
                 };
 
-                exporter.exportEnded.pipe(first()).subscribe(() => {
-                    completed++;
-                    exportNext(completed);
-                });
-
+                const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
                 exporter.exportData(SampleTestData.contactsData(), opts);
-            };
+                await exportEndedPromise;
+            }
 
-            exportNext(0);
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(pageSizes.length);
         });
 
-        it('should export with incomplete custom font and table borders disabled', (done) => {
+        it('should export with incomplete custom font and table borders disabled', async () => {
             options.customFont = {
                 name: '',
                 data: ''
             };
             options.showTableBorders = false;
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
         });
 
-        it('should handle customFont object with only name property', (done) => {
+        it('should handle customFont object with only name property', async () => {
             options.customFont = {
                 name: 'TestFont'
             } as any;
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
+            expect(console.warn).toHaveBeenCalled();
         });
 
-        it('should handle customFont object with only data property', (done) => {
+        it('should handle customFont object with only data property', async () => {
             options.customFont = {
                 data: 'someData'
             } as any;
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
+            expect(console.warn).toHaveBeenCalled();
         });
 
-        it('should handle customFont as empty object', (done) => {
+        it('should handle customFont as empty object', async () => {
             options.customFont = {} as any;
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
+            expect(console.warn).toHaveBeenCalled();
         });
 
-        it('should handle customFont with whitespace-only name', (done) => {
+        it('should handle customFont with whitespace-only name', async () => {
             options.customFont = {
                 name: '   ',
                 data: 'someData'
             };
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
+            expect(console.warn).toHaveBeenCalled();
         });
 
-        it('should handle customFont with whitespace-only data', (done) => {
+        it('should handle customFont with whitespace-only data', async () => {
             options.customFont = {
                 name: 'TestFont',
                 data: '   '
             };
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                expect(console.warn).toHaveBeenCalled();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
+            expect(console.warn).toHaveBeenCalled();
         });
 
-        it('should handle customFont with bold variant set to null', (done) => {
+        it('should handle customFont with bold variant set to null', async () => {
             options.customFont = {
                 name: '',
                 data: '',
                 bold: null as any
             };
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
         });
 
-        it('should handle customFont with bold variant set to undefined', (done) => {
+        it('should handle customFont with bold variant set to undefined', async () => {
             options.customFont = {
                 name: '',
                 data: '',
                 bold: undefined
             };
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
         });
 
-        it('should handle customFont with bold as empty object', (done) => {
+        it('should handle customFont with bold as empty object', async () => {
             options.customFont = {
                 name: '',
                 data: '',
                 bold: {} as any
             };
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
-                done();
-            });
-
+            const exportEndedPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const args = await exportEndedPromise;
+
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(args.pdf).toBeDefined();
         });
 
-        it('should reset font configuration when exporting again without customFont', (done) => {
-            let exportCallCount = 0;
-
+        it('should reset font configuration when exporting again without customFont', async () => {
             // First export uses a custom font
             options.customFont = {
                 name: 'CustomFont',
                 data: ''
             } as any;
 
-            const subscription = exporter.exportEnded.subscribe((args) => {
-                exportCallCount++;
-
-                if (exportCallCount === 1) {
-                    // After the first export with custom font
-                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                    expect(args.pdf).toBeDefined();
-
-                    // Clear customFont and export again
-                    options.customFont = undefined as any;
-                    exporter.exportData(SampleTestData.contactsData(), options);
-                    return;
-                }
-
-                if (exportCallCount === 2) {
-                    // Second export should succeed and not reuse previous custom font settings
-                    expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(2);
-                    expect(args.pdf).toBeDefined();
-                    subscription.unsubscribe();
-                    done();
-                }
-            });
-
+            const firstExportPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
             exporter.exportData(SampleTestData.contactsData(), options);
+            const firstArgs = await firstExportPromise;
+
+            // After the first export with custom font
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+            expect(firstArgs.pdf).toBeDefined();
+
+            // Clear customFont and export again
+            options.customFont = undefined as any;
+            const secondExportPromise = lastValueFrom(exporter.exportEnded.pipe(first()));
+            exporter.exportData(SampleTestData.contactsData(), options);
+            const secondArgs = await secondExportPromise;
+
+            // Second export should succeed and not reuse previous custom font settings
+            expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(2);
+            expect(secondArgs.pdf).toBeDefined();
         });
     });
 

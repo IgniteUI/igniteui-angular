@@ -1,4 +1,4 @@
-import {, TestBed, ComponentFixture, } from '@angular/core/testing';
+import { TestBed, ComponentFixture, } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToastComponent } from './toast.component';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';

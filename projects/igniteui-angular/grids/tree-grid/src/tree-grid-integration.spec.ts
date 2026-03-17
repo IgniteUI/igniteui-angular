@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent, IgxTreeGridRowEditingComponent, IgxTreeGridMultiColHeadersComponent, IgxTreeGridRowEditingTransactionComponent, IgxTreeGridRowEditingHierarchicalDSTransactionComponent, IgxTreeGridRowPinningComponent } from '../../../test-utils/tree-grid-components.spec';
@@ -20,8 +20,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     let fix: ComponentFixture<any>;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
@@ -39,7 +39,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 { provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should have tree-column with a \'string\' dataType', () => {
         // Init test
@@ -579,8 +579,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const cancelBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[0] as DebugElement;
             const doneBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[1];
             vi.spyOn(cancelBtn.nativeElement, 'focus');
-            vi.spyOn(grid.rowEditTabs.first, 'move');
-            vi.spyOn(grid.rowEditTabs.last, 'move');
+            vi.spyOn(grid.rowEditTabs.first as any, 'move');
+            vi.spyOn(grid.rowEditTabs.last as any, 'move');
 
             await TreeGridFunctions.moveGridCellWithTab(fix, grid.gridAPI.get_cell_by_index(2, 'Age'));
             expect(cancelBtn.nativeElement.focus).toHaveBeenCalled();
@@ -657,7 +657,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(editedParentCell.value).toEqual(80);
         });
 
-        it('should select the text when the first cell (tree grid cell) enters edit mode', fakeAsync(() => {
+        it('should select the text when the first cell (tree grid cell) enters edit mode', async () => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
             grid.expandAll();
             fix.detectChanges();
@@ -667,19 +667,19 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const colHireDate = grid.getColumnByName('HireDate');
             grid.moveColumn(colName, colHireDate, DropPosition.BeforeDropTarget);
             fix.detectChanges();
-            tick(100);
+            await fix.whenStable();
 
             const cell = grid.gridAPI.get_cell_by_index(0, 'Name');
             cell.setEditMode(true);
             fix.detectChanges();
-            tick(100);
+            await fix.whenStable();
 
             expect(cell.editMode).toBe(true);
             expect(document.activeElement.nodeName).toEqual('INPUT');
             expect((document.activeElement as HTMLInputElement).value).toBe('John Winchester');
             expect((document.activeElement as HTMLInputElement).selectionStart).toEqual(0);
             expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(15);
-        }));
+        });
     });
 
     describe('Batch Editing', () => {
@@ -1223,9 +1223,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('Should not add child row to deleted parent row - Hierarchical DS', () => {
-            const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
-            const grid = fixture.componentInstance.treeGrid;
-            fixture.detectChanges();
+            const fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            const grid = fix.componentInstance.treeGrid;
+            fix.detectChanges();
 
             grid.deleteRowById(147);
             expect(grid.transactions.getTransactionLog().length).toBe(1);
@@ -1235,10 +1235,10 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('Should not add child row to deleted parent row - Flat DS', () => {
-            const fixture = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
-            const grid = (fixture as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
+            const fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            const grid = (fix as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
             grid.cascadeOnDelete = false;
-            fixture.detectChanges();
+            fix.detectChanges();
 
             grid.deleteRowById(1);
             expect(grid.transactions.getTransactionLog().length).toBe(1);
@@ -1248,44 +1248,44 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('should return correctly the rowData', () => {
-            const fixture = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
-            const grid = (fixture as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
+            const fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            const grid = (fix as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
             grid.cascadeOnDelete = false;
-            fixture.detectChanges();
+            fix.detectChanges();
 
             const row = { ID: 2, ParentID: 1, Name: 'Gilberto Todd', JobTitle: 'Director', Age: 41 };
             expect(grid.getRowData(2)).toEqual(row);
 
             grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true });
-            fixture.detectChanges();
+            fix.detectChanges();
 
             expect(grid.getRowData(2)).toEqual(row);
             expect(grid.getRowData(11)).toEqual({});
 
             grid.filter('Age', 43, IgxNumberFilteringOperand.instance().condition('greaterThan'));
-            fixture.detectChanges();
+            fix.detectChanges();
 
             expect(grid.getRowData(2)).toEqual(row);
             expect(grid.getRowData(11)).toEqual({});
 
             const newRow = { ID: 11, ParentID: 1, Name: 'Joe Peterson', JobTitle: 'Manager', Age: 37 };
             grid.addRow(newRow);
-            fixture.detectChanges();
+            fix.detectChanges();
 
             grid.clearFilter();
-            fixture.detectChanges();
+            fix.detectChanges();
 
             expect(grid.transactions.getTransactionLog().length).toEqual(1);
             expect(grid.getRowData(11)).toEqual(newRow);
         });
 
         it('Should have transactions enabled when batchEditing === false and service is provider', () => {
-            const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
-            const grid = fixture.componentInstance.treeGrid;
-            fixture.detectChanges();
+            const fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            const grid = fix.componentInstance.treeGrid;
+            fix.detectChanges();
 
             grid.batchEditing = false;
-            fixture.detectChanges();
+            fix.detectChanges();
 
             expect(grid.batchEditing).toBeFalsy();
             expect(grid.transactions.enabled).toBeTruthy();

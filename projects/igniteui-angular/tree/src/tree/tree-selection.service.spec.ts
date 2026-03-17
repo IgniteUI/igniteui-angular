@@ -58,10 +58,10 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         beforeEach(() => {
             mockEmitter = {
                 emit: vi.fn().mockName("emitter.emit")
-            };
+            } as unknown as EventEmitter<ITreeNodeSelectionEvent>;
             mockTree = {
                 selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: mockQuery1
-            };
+            } as unknown as IgxTree;
             selectionService.register(mockTree);
         });
 
@@ -103,7 +103,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         it('Should handle selection based on tree.selection', () => {
             const mockSelectedChangeEmitter: EventEmitter<boolean> = {
                 emit: vi.fn().mockName("emitter.emit")
-            };
+            } as unknown as EventEmitter<boolean>;
             const mockNode = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
             // None
@@ -154,7 +154,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         it('Should deselect nodes', () => {
             const mockSelectedChangeEmitter: EventEmitter<boolean> = {
                 emit: vi.fn().mockName("emitter.emit")
-            };
+            } as unknown as EventEmitter<boolean>;
             const mockNode1 = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
             const mockNode2 = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
@@ -375,10 +375,10 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         beforeEach(() => {
             mockEmitter = {
                 emit: vi.fn().mockName("emitter.emit")
-            };
+            } as unknown as EventEmitter<ITreeNodeSelectionEvent>;
             mockTree = {
                 selection: IgxTreeSelectionType.Cascading, nodeSelection: mockEmitter, nodes: mockQuery1
-            };
+            } as unknown as IgxTree;
             selectionService.register(mockTree);
         });
 

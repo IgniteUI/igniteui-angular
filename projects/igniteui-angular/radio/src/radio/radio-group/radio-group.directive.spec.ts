@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { IgxRadioGroupDirective } from './radio-group.directive';
+import { IgxRadioGroupDirective, RadioGroupAlignment } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -844,7 +844,7 @@ class RadioGroupTestComponent implements OnInit {
     @ViewChild('radioContainer', { read: ViewContainerRef, static: true })
     public container!: ViewContainerRef;
 
-    public alignment = 'horizontal';
+    public alignment = RadioGroupAlignment.horizontal;
     public required = false;
     public value: any;
 

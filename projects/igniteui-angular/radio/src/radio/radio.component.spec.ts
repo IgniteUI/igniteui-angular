@@ -314,7 +314,7 @@ class DisabledRadioComponent {
     @for (item of ['Foo', 'Bar']; track item) {
         <igx-radio #radios
             [value]="item"
-            [(ngModel)]="Foo"
+            [(ngModel)]="selected"
             required>
             {{item}}
         </igx-radio>
@@ -324,6 +324,7 @@ class DisabledRadioComponent {
 class RequiredRadioComponent {
     @ViewChildren(IgxRadioComponent)
     public radios;
+    public selected = 'Foo';
 }
 
 @Component({

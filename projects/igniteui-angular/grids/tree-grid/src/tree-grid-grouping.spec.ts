@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } from '../../../test-utils/tree-grid-components.spec';
@@ -10,15 +10,15 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('IgxTreeGrid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridGroupingComponent,
                 IgxTreeGridGroupByAreaTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -35,7 +35,7 @@ describe('IgxTreeGrid', () => {
             treeGrid = fix.componentInstance.treeGrid;
         });
 
-        it('loads successfully', fakeAsync(() => {
+        it('loads successfully', async () => {
             const groupByAreaElement = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
             const chipsAreaElement = groupByAreaElement.querySelector('igx-chips-area');
 
@@ -52,9 +52,9 @@ describe('IgxTreeGrid', () => {
             const spanElement = dropAreaElement.querySelector('span');
             expect(spanElement).toBeDefined();
             expect(spanElement.innerText).toEqual(DROP_AREA_MSG);
-        }));
+        });
 
-        it('has the expected default properties\' values', fakeAsync(() => {
+        it('has the expected default properties\' values', async () => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.grid).toEqual(treeGrid);
             expect(groupByArea.expressions).toEqual([]);
@@ -62,25 +62,25 @@ describe('IgxTreeGrid', () => {
             expect(groupByArea.dropAreaMessage).toMatch(DROP_AREA_MSG);
             expect(groupByArea.dropAreaTemplate).toBeUndefined();
             expect(groupByArea.dropAreaVisible).toBe(true);
-        }));
+        });
 
-        it('allows changing the drop area message', fakeAsync(() => {
+        it('allows changing the drop area message', async () => {
             const dropMsg = 'New drop message';
             groupByArea.dropAreaMessage = dropMsg;
             fix.detectChanges();
-            tick();
+            await fix.whenStable();
 
             expect(groupByArea.dropAreaMessage).toEqual(dropMsg);
             expect(fix.debugElement.nativeElement.querySelector('.igx-drop-area__text').innerText).toEqual(dropMsg);
-        }));
+        });
 
-        it('allows setting the `hideGroupedColumns` property', fakeAsync(() => {
+        it('allows setting the `hideGroupedColumns` property', async () => {
             groupByArea.hideGroupedColumns = true;
             fix.detectChanges();
-            tick();
+            await fix.whenStable();
 
             expect(groupByArea.hideGroupedColumns).toBe(true);
-        }));
+        });
     });
 
     describe('', () => {
@@ -98,7 +98,7 @@ describe('IgxTreeGrid', () => {
             clearGridSubs();
         });
 
-        it('GroupByArea has the expected properties\' values set', fakeAsync(() => {
+        it('GroupByArea has the expected properties\' values set', async () => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.expressions.length).toEqual(2);
             expect(groupByArea.grid).toEqual(treeGrid);
@@ -106,9 +106,9 @@ describe('IgxTreeGrid', () => {
             expect(groupByArea.dropAreaMessage).toMatch(DROP_AREA_MSG);
             expect(groupByArea.dropAreaTemplate).toBeUndefined();
             expect(groupByArea.dropAreaVisible).toBe(false);
-        }));
+        });
 
-        it('is loaded grouped by two fields.', fakeAsync(() => {
+        it('is loaded grouped by two fields.', async () => {
             const groupArea = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
             expect(groupArea).toBeDefined();
             const chips = fix.debugElement.nativeElement.querySelectorAll('igx-chip');
@@ -119,13 +119,13 @@ describe('IgxTreeGrid', () => {
 
             treeGrid.expandAll();
             fix.detectChanges();
-            tick();
+            await fix.whenStable();
 
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(treeGrid.rowList.length);
-        }));
+        });
 
-        it('shows a new group chip when adding a grouping expression', fakeAsync(() => {
+        it('shows a new group chip when adding a grouping expression', async () => {
             expect(groupByArea.expressions).toEqual(groupingExpressions);
             let chips = getChips(fix);
 
@@ -135,40 +135,40 @@ describe('IgxTreeGrid', () => {
 
             groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
-            tick();
+            await fix.whenStable();
 
             chips = getChips(fix);
             expect(chips.length).toEqual(3);
             expect(chips[2].id).toEqual('JobTitle');
-        }));
+        });
 
-        it('removes a group chip when removing a grouping expression', fakeAsync(() => {
+        it('removes a group chip when removing a grouping expression', async () => {
             groupingExpressions.pop();
             fix.detectChanges();
 
             expect(groupByArea.expressions.length).toEqual(1);
             expect(getChips(fix).length).toEqual(1);
             expect(getChips(fix)[0].id).toEqual('OnPTO');
-        }));
+        });
 
-        it('group columns stay visible by default', fakeAsync(() => {
+        it('group columns stay visible by default', async () => {
             expect(treeGrid.getColumnByName('OnPTO').hidden).toBe(false);
             expect(treeGrid.getColumnByName('HireDate').hidden).toBe(false);
 
-        }));
+        });
 
-        it('keeps the group columns visible by default', fakeAsync(() => {
+        it('keeps the group columns visible by default', async () => {
             expect(treeGrid.getColumnByName('HireDate').hidden).toBe(false);
 
             groupingExpressions.pop();
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
-            tick();
+            await fix.whenStable();
 
             expect(treeGrid.getColumnByName('HireDate').hidden).toBe(false);
-        }));
+        });
 
-        it('hides/shows the grouped by column when hideGroupedColumns=true', fakeAsync(() => {
+        it('hides/shows the grouped by column when hideGroupedColumns=true', async () => {
             groupByArea.hideGroupedColumns = true;
             fix.detectChanges();
 
@@ -177,19 +177,19 @@ describe('IgxTreeGrid', () => {
             groupingExpressions.pop();
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
-            tick();
+            await fix.whenStable();
 
             expect(treeGrid.getColumnByName('HireDate').hidden).toBe(false);
 
             groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
-            tick();
+            await fix.whenStable();
 
             expect(treeGrid.getColumnByName('JobTitle').hidden).toBe(true);
-        }));
+        });
 
-        it('shows aggregated values in parent records properly', fakeAsync(() => {
+        it('shows aggregated values in parent records properly', async () => {
             expect(treeGrid.getCellByColumn(0, 'HireDate').value).toBeUndefined();
             expect(treeGrid.getCellByColumn(1, 'HireDate').value).toBeUndefined();
 
@@ -201,16 +201,16 @@ describe('IgxTreeGrid', () => {
 
             fix.componentInstance.aggregations = aggregations;
             fix.detectChanges();
-            tick();
+            await fix.whenStable();
 
             expect(treeGrid.rowList.length).toEqual(2);
             expect(treeGrid.getCellByColumn(0, 'HireDate').value).toEqual(new Date(2009, 6, 19));
             expect(treeGrid.getCellByColumn(1, 'HireDate').value).toEqual(new Date(2007, 11, 18));
-        }));
+        });
     });
 
-    const getChips = (fixture) => {
-        const chipsAreaElement = fixture.debugElement.nativeElement.querySelector('igx-chips-area');
+    const getChips = (fix) => {
+        const chipsAreaElement = fix.debugElement.nativeElement.querySelector('igx-chips-area');
         return chipsAreaElement.querySelectorAll('igx-chip');
     };
 });

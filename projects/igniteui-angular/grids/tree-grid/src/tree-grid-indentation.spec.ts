@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../../../test-utils/tree-grid-functions.spec';
@@ -15,11 +15,11 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent]
         }).compileComponents();
-    }));
+    });
 
     describe('Child Collection', () => {
 
@@ -69,7 +69,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(9), rows[9], 0);
         });
 
-        it('should persist the indentation after filtering', fakeAsync(() => {
+        it('should persist the indentation after filtering', async () => {
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
 
@@ -83,15 +83,15 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 2);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 0);
-        }));
+        });
 
-        it('should persist the indentation on all pages when using paging', fakeAsync(() => {
+        it('should persist the indentation on all pages when using paging', async () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
 
             treeGrid.paginator.perPage = 4;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             // Verify page 1
             let rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -103,7 +103,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             // Verify page 2
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -115,16 +115,16 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             treeGrid.page = 2;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             // Verify page 3
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
             expect(rows.length, 'Incorrect number of rows on page 3.').toBe(2);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
-        }));
+        });
 
-        it('should persist the indentation after resizing the tree-column', fakeAsync(() => {
+        it('should persist the indentation after resizing the tree-column', async () => {
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
             fix.detectChanges();
@@ -138,11 +138,11 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Resize the tree column
             UIInteractions.simulateMouseEvent('mousedown', resizer, 225, 5);
-            tick(200);
+            await fix.whenStable();
             fix.detectChanges();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
-            tick(200);
+            await fix.whenStable();
             fix.detectChanges();
 
             // Verify after resizing width and row indentation
@@ -158,9 +158,9 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(8), rows[8], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(9), rows[9], 1);
-        }));
+        });
 
-        it('should change cell content alignment of tree-column with number dataType when it is no longer tree-column', fakeAsync(() => {
+        it('should change cell content alignment of tree-column with number dataType when it is no longer tree-column', async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
 
@@ -168,7 +168,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             let targetColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
@@ -177,12 +177,12 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             // Moving 'ID' column
             targetColumn = treeGrid.columnList.filter(c => c.field === 'Name')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
-        }));
+        });
     });
 
     describe('Primary/Foreign key', () => {
@@ -229,7 +229,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 1);
         });
 
-        it('should persist the indentation after filtering', fakeAsync(() => {
+        it('should persist the indentation after filtering', async () => {
 
             treeGrid.filter('Age', 35, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
@@ -244,15 +244,15 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 1);
-        }));
+        });
 
-        it('should persist the indentation on all pages when using paging', fakeAsync(() => {
+        it('should persist the indentation on all pages when using paging', async () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
 
             treeGrid.paginator.perPage = 3;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             // Verify page 1
             let rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -263,7 +263,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             treeGrid.paginator.page = 1;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             // Verify page 2
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -274,21 +274,21 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             treeGrid.paginator.page = 2;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             // Verify page 3
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
             expect(rows.length, 'Incorrect number of rows on page 3.').toBe(2);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
-        }));
+        });
 
-        it('should persist the indentation after resizing the tree-column', fakeAsync(() => {
+        it('should persist the indentation after resizing the tree-column', async () => {
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
             fix.detectChanges();
             treeGrid.cdr.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
             const resizer = header.parent.query(By.css(GRID_RESIZE_CLASS)).nativeElement;
@@ -298,11 +298,11 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Resize the tree column
             UIInteractions.simulateMouseEvent('mousedown', resizer, 180, 5);
-            tick(200);
+            await fix.whenStable();
             fix.detectChanges();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
-            tick(200);
+            await fix.whenStable();
             fix.detectChanges();
 
             // Verify after resizing width and row indentation
@@ -316,9 +316,9 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(5), rows[5], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(6), rows[6], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 1);
-        }));
+        });
 
-        it('should change cell content alignment of tree-column with number dataType when it is no longer tree-column', fakeAsync(() => {
+        it('should change cell content alignment of tree-column with number dataType when it is no longer tree-column', async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
 
@@ -326,7 +326,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             let targetColumn = treeGrid.columnList.filter(c => c.field === 'Age')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
             verifyCellsContentAlignment(fix, 'ID', false); // Verify cells of 'ID' are right-aligned.
@@ -334,11 +334,11 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             // Moving 'ID' column
             targetColumn = treeGrid.columnList.filter(c => c.field === 'ParentID')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
-        }));
+        });
     });
 });
 

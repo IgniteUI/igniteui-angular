@@ -111,7 +111,7 @@ export class TreeTestFunctions {
             toArray: vi.fn(),
             filter: vi.fn(),
             forEach: vi.fn()
-        };
+        } as unknown as MockedObject<QueryList<IgxTreeNodeComponent<any>>>;
         Object.defineProperty(mockQuery, 'first', { value: nodes[0], enumerable: true });
         Object.defineProperty(mockQuery, 'last', { value: nodes[nodes.length - 1], enumerable: true });
         Object.defineProperty(mockQuery, 'length', { value: nodes.length, enumerable: true });

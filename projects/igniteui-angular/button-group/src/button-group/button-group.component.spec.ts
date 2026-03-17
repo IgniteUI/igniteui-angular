@@ -642,7 +642,7 @@ class ButtonGroupSelectionBoundToAnotherComponent {
     public selectedValue = 'Bar';
 
     public onRadioChange(event: {
-        value: string;
+        value?: string;
     }) {
         this.selectedValue = event.value;
     }

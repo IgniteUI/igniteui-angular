@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CollapsibleColumnGroupTestComponent, CollapsibleGroupsTemplatesTestComponent, CollapsibleGroupsDynamicColComponent } from '../../../test-utils/grid-samples.spec';
@@ -19,8 +19,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
     let countryCol;
     let emptyCol;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
@@ -28,7 +28,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 CollapsibleGroupsDynamicColComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests', () => {
         let fixture;
@@ -280,7 +280,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, generalInf, true, false, ['remove', 'add']);
         });
 
-        it('verify setting templates by property', fakeAsync(() => {
+        it('verify setting templates by property', async () => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf);
 
             // Set template
@@ -297,11 +297,11 @@ describe('IgxGrid - multi-column headers #grid', () => {
             // remove template
             addressInf.collapsibleIndicatorTemplate = null;
             // Changing the template back takes an async cycle, so tick is needed
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf, true, false);
-        }));
+        });
     });
 
     describe('Dynamic Columns Tests', () => {
@@ -309,7 +309,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         let grid: IgxGridComponent;
 
         beforeEach(() => {
-            pending('The test will work when use Angular 9');
+            // pending('The test will work when use Angular 9');
             fixture = TestBed.createComponent(CollapsibleGroupsDynamicColComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -399,7 +399,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         let fixture;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -409,7 +409,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             addressInf = GridFunctions.getColGroup(grid, 'Address Information');
             phoneCol = grid.getColumnByName('Phone');
             countryCol = grid.getColumnByName('Country');
-        }));
+        });
 
         it('Hiding: Verify that expanded state is preserved when hide column group', () => {
             addressInf.expanded = false;
@@ -553,7 +553,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf, true, true);
         });
 
-        it('Moving: Verify that expanded state is preserved when move column group', fakeAsync(() => {
+        it('Moving: Verify that expanded state is preserved when move column group', async () => {
             const generalInf = GridFunctions.getColGroup(grid, 'General Information');
 
             expect(addressInf.expanded).toBeTruthy();
@@ -561,25 +561,25 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(generalInf.visibleIndex).toBe(1);
 
             grid.moveColumn(generalInf, addressInf, DropPosition.AfterDropTarget);
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(addressInf.expanded).toBeTruthy();
             expect(generalInf.collapsible).toBeFalsy();
             expect(generalInf.visibleIndex).toBe(3);
             addressInf.expanded = false;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(addressInf.expanded).toBeFalsy();
             grid.moveColumn(generalInf, addressInf, DropPosition.BeforeDropTarget);
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(addressInf.expanded).toBeFalsy();
             expect(generalInf.collapsible).toBeFalsy();
             expect(generalInf.visibleIndex).toBe(1);
-        }));
+        });
 
         it('Moving: Verify moving column inside the group', () => {
             const postalCode = grid.getColumnByName('PostalCode');

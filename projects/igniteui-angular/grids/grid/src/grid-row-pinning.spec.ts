@@ -1,5 +1,5 @@
 import { ViewChild, Component, DebugElement, OnInit, QueryList } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -23,8 +23,8 @@ describe('Row Pinning #grid', () => {
 
     let fix;
     let grid: IgxGridComponent;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 GridRowConditionalStylingComponent,
@@ -38,7 +38,7 @@ describe('Row Pinning #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('', () => {
         beforeEach(() => {
@@ -406,8 +406,8 @@ describe('Row Pinning #grid', () => {
             const rowType = grid.getRowByIndex(1);
 
             expect(renderedRow).toBeDefined();
-            expect(renderedRow.disabled).toBeTrue();
-            expect(rowType.disabled).toBeTrue();
+            expect(renderedRow.disabled).toBeTruthy();
+            expect(rowType.disabled).toBeTruthy();
         });
 
         it('should search in both pinned and unpinned rows.', () => {

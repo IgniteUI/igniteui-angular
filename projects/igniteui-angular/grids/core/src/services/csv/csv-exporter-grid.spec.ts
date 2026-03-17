@@ -553,12 +553,12 @@ describe('CSV Grid Exporter', () => {
     describe('Pivot Grid CSV export', () => {
         let fix;
         let pivotGrid: IgxPivotGridComponent;
-        beforeEach(() => {
+        beforeEach(async () => {
             await TestBed.configureTestingModule({
                 providers: [
                     IgxGridNavigationService
                 ]
-            });
+            }).compileComponents();
 
             fix = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fix.detectChanges();

@@ -2798,6 +2798,7 @@ class IgxSelectSimpleComponent {
 class IgxSelectGroupsComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
+    public value = null;
     public locations: {
         continent: string;
         capitals: string[];
@@ -2826,6 +2827,7 @@ class IgxSelectGroupsComponent {
 class IgxSelectMiddleComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
+    public value = null;
     public items: string[] = [
         'Option 1',
         'Option 2',
@@ -2848,6 +2850,7 @@ class IgxSelectMiddleComponent {
 class IgxSelectTopComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
+    public value = null;
     public items: string[] = [
         'Option 1',
         'Option 2',
@@ -2877,6 +2880,7 @@ class IgxSelectTopComponent {
 class IgxSelectBottomComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
+    public value = null;
     public items: string[] = [
         'Option 1',
         'Option 2',
@@ -2914,6 +2918,7 @@ class IgxSelectBottomComponent {
 class IgxSelectAffixComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
+    public value = null;
     public items: string[] = [
         'Option 1',
         'Option 2',
@@ -3102,13 +3107,16 @@ class IgxSelectTemplateFormComponent {
 class IgxSelectHeaderFooterComponent implements OnInit {
     @ViewChild('headerFooterSelect', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
-
+    public value = null;
     public items: any[] = [];
     public ngOnInit() {
         for (let i = 1; i < 10; i++) {
             const item = { field: 'opt' + i };
             this.items.push(item);
         }
+    }
+    public btnClick() {
+        alert('Button in footer clicked!');
     }
 }
 

@@ -5,6 +5,7 @@ import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ElementRef } from 'node_modules/@angular/core/types/_discovery-chunk';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
 }
@@ -27,10 +28,10 @@ describe('Toggle animation component', () => {
     describe('Unit tests', () => {
         it('Should initialize player with give settings', () => {
             const player = TestBed.inject(MockTogglePlayer);
-            const startPlayerSpy = vi.spyOn(player, 'startPlayer');
+            const startPlayerSpy = vi.spyOn(player as any, 'startPlayer');
             const mockEl = {
                 focus: vi.fn().mockName("mockRef.focus")
-            };
+            } as unknown as ElementRef<any>;
             player.playOpenAnimation(mockEl);
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.OPEN, mockEl, noop);
             player.playCloseAnimation(mockEl);

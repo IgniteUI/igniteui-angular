@@ -718,7 +718,7 @@ describe('igxCombo', () => {
                 };
                 combo.ngOnInit();
                 combo.data = data;
-                combo.dropdown = dropdown;
+                combo.dropdown = dropdown as unknown as IgxComboDropDownComponent;
                 vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo.selectionChanging, 'emit');
 
@@ -762,7 +762,7 @@ describe('igxCombo', () => {
                 };
                 combo.ngOnInit();
                 combo.data = data;
-                combo.dropdown = dropdown;
+                combo.dropdown = dropdown as unknown as IgxComboDropDownComponent;
                 vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
                 vi.spyOn(combo.selectionChanging, 'emit').mockImplementation((event: IComboSelectionChangingEventArgs) => event.newValue = []);
                 // No items are initially selected
@@ -781,13 +781,13 @@ describe('igxCombo', () => {
                 };
                 combo.ngOnInit();
                 combo.data = data;
-                combo.dropdown = dropdown;
+                combo.dropdown = dropdown as unknown as IgxComboDropDownComponent;
                 combo.disabled = true;
                 vi.spyOn(combo as any, 'totalItemCount').mockReturnValue(combo.data.length);
 
                 const item = combo.data.slice(0, 1);
                 combo.select(item, true);
-                combo.handleClearItems(spyObj);
+                combo.handleClearItems(spyObj as unknown as Event);
                 expect(combo.displayValue).toEqual(item[0]);
             });
             it('should allow canceling and overwriting of item addition', async () => {
@@ -823,8 +823,8 @@ describe('igxCombo', () => {
 
                 combo.ngOnInit();
                 combo.data = ['Item 1', 'Item 2', 'Item 3'];
-                combo.dropdown = dropdown;
-                combo.searchInput = mockInput;
+                combo.dropdown = dropdown as unknown as IgxComboDropDownComponent;
+                combo.searchInput = mockInput as unknown as ElementRef;
                 (combo as any).virtDir = mockVirtDir;
                 let mockAddParams: IComboItemAdditionEvent = {
                     cancel: false,
@@ -1439,7 +1439,7 @@ describe('igxCombo', () => {
                 expect(combo.selection).toEqual([selectedItems[0], selectedItems[1]]);
                 expect(combo.value).toEqual([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
                 // Clear items while they are in view
-                combo.handleClearItems(spyObj);
+                combo.handleClearItems(spyObj as unknown as Event);
                 expect(combo.selection).toEqual([]);
                 expect(combo.displayValue).toEqual('');
                 expect(combo.value).toEqual([]);
@@ -1451,7 +1451,7 @@ describe('igxCombo', () => {
                 combo.virtualScrollContainer.scrollTo(40);
                 await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
-                combo.handleClearItems(spyObj);
+                combo.handleClearItems(spyObj as unknown as Event);
                 expect(combo.selection).toEqual([]);
                 expect(combo.value).toEqual([]);
                 expect(combo.displayValue).toEqual('');
@@ -3602,7 +3602,7 @@ describe('igxCombo', () => {
     template: `
     <igx-combo #combo [placeholder]="'Location'" [data]='items'
         [disableFiltering]='false' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
-        (selectionChanging)="selectionChanging($event)" [style.--ig-size]="'var(--ig-size-' + size + ')'">
+        (selectionChanging)="selectionChanging()" [style.--ig-size]="'var(--ig-size-' + size + ')'">
         <ng-template igxComboItem let-display let-key="valueKey">
             <div class="state-card--simple">
                 <span class="small-red-circle"></span>
@@ -3761,7 +3761,7 @@ class IgxComboFormComponent {
             name="anyName" required [(ngModel)]="values"
             [data]="items" [disableFiltering]="disableFilteringFlag"
             [displayKey]="'field'" [valueKey]="'field'"
-            [groupKey]="'field' ? 'region' : ''" [width]="'100%'">
+            [groupKey]="'region'" [width]="'100%'">
             <label igxLabel>Combo Label</label>
         </igx-combo>
     </form>
@@ -3775,6 +3775,7 @@ class IgxComboInTemplatedFormComponent {
     public form: NgForm;
     public items: any[] = [];
     public values: Array<any>;
+    protected disableFilteringFlag = false;
 
     constructor() {
         const division = {
