@@ -16,11 +16,12 @@ describe('Chat wrapper', () => {
         }).compileComponents();
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(IgxChatComponent);
+        await fixture.whenStable();
+
         chatComponent = fixture.componentInstance;
         chatElement = getChatElement(fixture);
-        fixture.detectChanges();
     });
 
     it('is created', () => {
@@ -37,8 +38,6 @@ describe('Chat wrapper', () => {
 
     it('correct bindings for messages', async () => {
         fixture.componentRef.setInput('messages', [{ id: '1', sender: 'user', text: 'Hello' }]);
-
-        fixture.detectChanges();
         await fixture.whenStable();
 
 
@@ -49,8 +48,6 @@ describe('Chat wrapper', () => {
 
     it('correct bindings for draft message', async () => {
         fixture.componentRef.setInput('draftMessage', { text: 'Hello world' });
-
-        fixture.detectChanges();
         await fixture.whenStable();
 
         const textarea = getChatInput(chatElement);
@@ -68,20 +65,15 @@ describe('Chat templates', () => {
         }).compileComponents();
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(ChatTemplatesBed);
-        fixture.detectChanges();
+        await fixture.whenStable();
+
         chatElement = getChatElement(fixture);
     });
 
     it('has correct initially bound template', async () => {
         await fixture.whenStable();
-
-        // NOTE: This is invoked since in the test bed there is no app ref so fresh embedded view
-        // has no change detection ran on it. In an application scenario this is not the case.
-        // This is so we don't explicitly invoke `viewRef.detectChanges()` inside the returned closure
-        // from the wrapper's `_createTemplateRenderer` call.
-        fixture.detectChanges();
         expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
             .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`);
     });
@@ -97,18 +89,16 @@ describe('Chat dynamic templates binding', () => {
         }).compileComponents();
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(ChatDynamicTemplatesBed);
-        fixture.detectChanges();
+        await fixture.whenStable();
+
         chatElement = getChatElement(fixture);
     });
 
     it('supports late binding', async () => {
         fixture.componentInstance.bindTemplates();
-        fixture.detectChanges();
-
         await fixture.whenStable();
-        fixture.detectChanges();
 
         expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
             .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`);
