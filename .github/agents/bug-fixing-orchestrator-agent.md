@@ -168,11 +168,32 @@ Use agents in this order:
 4. **`migration-agent`** — only if the fix introduces a breaking change
 5. **`changelog-agent`** — updates CHANGELOG.md
 
+**After each agent finishes, read its output before proceeding to the next step.** If it reports a problem, follow the backtracking rules in Step 3a before continuing forward.
+
+### Step 3a — Backtracking
+
+The workflow is a **loop, not a strict pipeline**. Any agent can surface a problem with earlier work. When that happens, stop forward progress, correct the earlier work, and re-run from the corrected step.
+
+| Agent reports | Backtrack action |
+|---|---|
+| Test passes immediately / doesn't reproduce the bug | Re-invoke `tdd-test-writer-agent` with the implementer's finding. Do not proceed until a properly failing test exists. |
+| Root cause was wrong or fix is in the wrong place | Re-run root-cause analysis yourself (Step 1), update the scope summary, then re-invoke `tdd-test-writer-agent` and `bug-fixing-implementer-agent` in order. |
+| Existing tests broke after the fix | Re-invoke `bug-fixing-implementer-agent` with the regression details. The fix must not break existing tests. |
+| README agent finds fix is incomplete or inconsistent | Re-invoke `bug-fixing-implementer-agent` with the gap identified, then re-run `component-readme-agent`. |
+| Migration agent finds breaking change was not handled | Re-invoke `bug-fixing-implementer-agent` to decide whether to avoid the break or accept it, then proceed with `migration-agent`. |
+| Changelog agent finds the fix description is inconsistent with the code | Re-invoke `bug-fixing-implementer-agent` if the code needs adjustment, otherwise clarify scope and re-run `changelog-agent`. |
+
+When re-invoking an agent, tell it explicitly:
+- what the previous attempt produced
+- what was found to be wrong
+- what it needs to correct
+
 ### Step 4 — Verify Completeness
 
-After all agents finish, check:
+After all agents finish **without any outstanding backtrack signals**, check:
 
-- Does the failing test now pass?
+- Does the reproduction test now pass?
+- Do all previously passing tests still pass?
 - Were all affected areas covered?
 - Were public exports preserved or updated?
 - Was the component README updated (if needed)?
