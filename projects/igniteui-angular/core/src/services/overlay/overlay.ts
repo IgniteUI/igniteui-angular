@@ -137,13 +137,13 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
-     * @deprecated The outlet parameter is deprecated. Please provide the container or outlet element through the
-     * `createAbsoluteOverlaySettings` method when calling `attach` method.
-     * Creates overlay settings with global or container position strategy and preset position settings
-     *
      * @param position Preset position settings. Default position is 'center'
      * @param outlet The outlet container to attach the overlay to
      * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
+    *
+     * @deprecated The outlet parameter is deprecated. Please provide the container or outlet element through the
+     * `createAbsoluteOverlaySettings` method when calling `attach` method.
+     * Creates overlay settings with global or container position strategy and preset position settings
      */
     public static createAbsoluteOverlaySettings(
         position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings;

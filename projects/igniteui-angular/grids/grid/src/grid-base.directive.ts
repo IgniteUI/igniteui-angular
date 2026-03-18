@@ -4487,14 +4487,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
-     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
-     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
-     * DOM tree position instead or use `container` property instead.
-     *
      * Gets/Sets the outlet used to attach the grid's overlays to.
      *
      * @remarks
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
      */
     @Input()
     public get outlet() {
