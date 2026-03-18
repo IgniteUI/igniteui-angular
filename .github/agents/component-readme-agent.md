@@ -72,6 +72,19 @@ Component documentation is located at:
 
 ---
 
+## Surfacing Problems
+
+If you find that the code changes are inconsistent, incomplete, or contradictory to what was described in the handoff:
+1. Do **not** document behavior that does not exist in the code.
+2. State clearly in your output what the inconsistency is.
+3. Stop. The orchestrator will decide whether to re-invoke an earlier agent before you proceed.
+
+## Re-invocation
+
+If you are re-invoked because a previous README update was incomplete or incorrect, read the orchestrator's correction note carefully. Do not repeat the same approach — address the specific gap or inconsistency identified and confirm the README now accurately reflects the actual code.
+
+---
+
 ## Final Self-Validation
 
 Before finishing:

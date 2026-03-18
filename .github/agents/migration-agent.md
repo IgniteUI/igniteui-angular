@@ -105,7 +105,18 @@ Create `index.spec.ts` in the migration folder:
 - Assert the output contains the migrated API
 - Test edge cases: files without the pattern, already-migrated files
 
-### 6. Final Self-Validation
+### 6. Surfacing Problems
+
+If you find that the breaking change is ambiguous, the old or new API is unclear, or the fix does not actually require a migration:
+1. Do **not** create a migration for a non-breaking change.
+2. State clearly in your output what the inconsistency or uncertainty is.
+3. Stop. The orchestrator will decide whether to re-invoke an earlier agent to clarify before you proceed.
+
+### 7. Re-invocation
+
+If you are re-invoked because a previous migration was incorrect or incomplete, read the orchestrator's correction note carefully. Do not repeat the same approach — address the specific issue identified, re-run `npm run test:schematics` and `npm run build:migrations`, and confirm the migration is correct.
+
+### 8. Final Self-Validation
 
 Before finishing:
 
@@ -116,7 +127,7 @@ Before finishing:
    - `npm run build:migrations`
 4. Confirm the migration updates the old API and leaves unrelated code unchanged.
 
-### 7. Commit
+### 9. Commit
 
 Use the conventional commit format with `BREAKING CHANGE:` footer:
 
