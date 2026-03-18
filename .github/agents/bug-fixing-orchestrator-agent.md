@@ -31,7 +31,7 @@ handoffs:
     send: false
   - label: "5. Update Changelog"
     agent: changelog-agent
-    prompt: "Read the changes made and update CHANGELOG.md to reflect the bug fix, breaking change, or behavioral change."
+    prompt: "Read the changes made and update CHANGELOG.md only if the fix belongs under an existing CHANGELOG section. Otherwise leave CHANGELOG.md unchanged."
     send: false
 ---
 
@@ -166,7 +166,7 @@ Use agents in this order:
 2. **`bug-fixing-implementer-agent`** — implements the minimum fix
 3. **`component-readme-agent`** — only if public API or documented behavior changed
 4. **`migration-agent`** — only if the fix introduces a breaking change
-5. **`changelog-agent`** — updates CHANGELOG.md
+5. **`changelog-agent`** — only if the fix warrants an entry under an existing CHANGELOG sections; otherwise leave `CHANGELOG.md` unchanged
 
 ### Step 4 — Verify Completeness
 
