@@ -60,7 +60,7 @@ If you are **re-invoked** because a previous test was found to be wrong, read th
 
 ## Test File Location
 
-Tests go in `projects/igniteui-angular/<component>/src/*.spec.ts`.
+ Tests go in `projects/igniteui-angular/<component>/src/**/*.spec.ts` (for example, `projects/igniteui-angular/radio/src/radio/radio.component.spec.ts`).
 
 **Always read the existing spec file first.**
 

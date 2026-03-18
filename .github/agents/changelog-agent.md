@@ -52,11 +52,21 @@ If the needed subsection exists, append to it. If not, create that subsection on
 
 #### General
 
-Use `### General` for changelog-worthy bug fixes.
+Use `### General` for deprecations, behavioral changes, and changelog-worthy bug fixes.
 
 ```markdown
 - `IgxComponentName`
     - Fixed an issue where <description of what was broken>.
+```
+
+```markdown
+- `IgxComponentName`
+    - **Deprecation** - `oldName` has been deprecated and will be removed in a future version. Use `newName` instead.
+```
+
+```markdown
+- `IgxComponentName`
+    - **Behavioral Change** - description of the behavioral change.
 ```
 
 #### Breaking Changes
@@ -64,20 +74,6 @@ Use `### General` for changelog-worthy bug fixes.
 ```markdown
 - `IgxComponentName`
     - **Breaking Change** - `oldName` has been renamed to `newName`. Automatic migration is available and will be applied on `ng update`.
-```
-
-#### Deprecations
-
-```markdown
-- `IgxComponentName`
-    - **Deprecation** - `oldName` has been deprecated and will be removed in a future version. Use `newName` instead.
-```
-
-#### Behavioral Changes
-
-```markdown
-- `IgxComponentName`
-    - **Behavioral Change** - Description of what changed.
 ```
 
 ### 4. Placement Rules
