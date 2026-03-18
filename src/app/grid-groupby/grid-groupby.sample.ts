@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition, GroupMemberCountSortingStrategy, IRowSelectionEventArgs, ISortingExpression, ISortingOptions, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxSwitchComponent, IgxToggleActionDirective, SortingDirection } from 'igniteui-angular';
+import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition, GroupMemberCountSortingStrategy, IRowSelectionEventArgs, ISortingExpression, ISortingOptions, IgxButtonDirective, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxSwitchComponent, IgxToggleActionDirective, SortingDirection } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-sample',
@@ -14,7 +14,6 @@ import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition
         IgxDropDownItemNavigationDirective,
         IgxDropDownComponent,
         IgxDropDownItemComponent,
-        IgxButtonGroupComponent,
         IgxGridComponent,
         IgxColumnComponent,
         IgxGridToolbarComponent,

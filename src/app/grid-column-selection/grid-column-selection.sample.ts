@@ -151,10 +151,6 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
         console.log('company name', this.grid2.getColumnByName('CompanyName').selected);
     }
 
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
-    }
-
     public selected(event) {
         const selectedItem = event.newSelection.element.nativeElement.textContent.trim();
 

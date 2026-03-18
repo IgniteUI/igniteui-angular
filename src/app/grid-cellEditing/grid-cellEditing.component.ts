@@ -4,7 +4,6 @@ import {
     GridSelectionMode,
     IGX_SELECT_DIRECTIVES,
     IgxButtonDirective,
-    IgxButtonGroupComponent,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnComponent,
@@ -26,7 +25,6 @@ import { data, dataWithoutPK } from '../shared/data';
         FormsModule,
         IGX_SELECT_DIRECTIVES,
         IgxButtonDirective,
-        IgxButtonGroupComponent,
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxColumnComponent,
@@ -224,10 +222,6 @@ export class GridCellEditingComponent {
             Discontinued: false,
             OrderDate: new Date('2005-03-17')
         }, 1);
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public customKeydown(args) {

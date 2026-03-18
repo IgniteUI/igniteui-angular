@@ -5,7 +5,6 @@ import {
     IgxHintDirective,
     IgxLabelDirective,
     SortingDirection,
-    IgSizeDirective
 } from 'igniteui-angular';
 import { defineComponents, IgcComboComponent } from 'igniteui-webcomponents';
 import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
@@ -23,7 +22,6 @@ defineComponents(IgcComboComponent);
         IgxLabelDirective,
         IgxHintDirective,
         IGX_COMBO_DIRECTIVES,
-        IgSizeDirective
     ]
 })
 export class ComboShowcaseSampleComponent {
@@ -32,13 +30,6 @@ export class ComboShowcaseSampleComponent {
     public angularComboVal: any[] = [];
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium'
-            }
-        },
         placeholderSearch: {
             label: 'Search Placeholder',
             control: {

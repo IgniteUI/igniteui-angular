@@ -154,10 +154,6 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
 
     public testApis() {}
 
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
-    }
-
     public cellClick($evt: IGridCellEventArgs) {
         console.log('Cell Click', $evt);
     }

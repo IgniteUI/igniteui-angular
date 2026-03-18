@@ -51,10 +51,6 @@ export class GridAutoSizeSampleComponent implements OnInit {
         this.selectionMode = GridSelectionMode.multiple;
     }
 
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
-    }
-
     @HostBinding('style.--ig-size')
     protected get sizeStyle() {
         return `var(--ig-size-${this.size})`;

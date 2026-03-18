@@ -49,7 +49,6 @@ defineComponents(IgcCalendarComponent);
         IgxCalendarComponent,
         IgxButtonGroupComponent,
         FormsModule,
-        IgSizeDirective,
     ],
 })
 export class CalendarSampleComponent implements OnInit {
@@ -72,13 +71,6 @@ export class CalendarSampleComponent implements OnInit {
     };
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium',
-            }
-        },
         locale: {
             label: 'Change Locale',
             control: {

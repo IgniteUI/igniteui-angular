@@ -52,10 +52,6 @@ export class GridSearchComponent implements OnInit {
         this.data = SAMPLE_DATA;
     }
 
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
-    }
-
     public toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
         col.pinned = !col.pinned;

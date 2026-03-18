@@ -1,17 +1,19 @@
-<div class="main">
-  <igx-nav-drawer
+<app-page-header class="demos-header" (toggleDirection)="onDirectionToggle($event)" (sizeChange)="onSizeChange($event)"></app-page-header>
+
+<igx-nav-drawer
     #navdrawer
     [enableGestures]="drawerState.enableGestures"
     id="navdrawer"
     [(isOpen)]="drawerState.open"
     [(pin)]="drawerState.pin"
     [position]="drawerState.position"
-  >
-    <ng-template igxDrawer>
-      <div class="nav-header"></div>
+    class="demos-main-nav"
+    >
 
-            <!-- Filter Input -->
-            <igx-input-group type="search" style="margin: 8px;">
+    <ng-template igxDrawer>
+        <!-- Filter Input -->
+        <div class="demos-filter">
+            <igx-input-group type="search">
                 <igx-prefix>
                     <igx-icon>filter_alt</igx-icon>
                 </igx-prefix>
@@ -22,41 +24,42 @@
                     </igx-suffix>
                 }
             </igx-input-group>
+        </div>
 
-            <!-- Components -->
-            <span igxDrawerItem [isHeader]="true">Components</span>
+        <!-- Components -->
+        <span igxDrawerItem [isHeader]="true">Components</span>
 
-            @for (item of filteredComponentLinks(); track item) {
-                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
-                    <igx-icon>{{item.icon}}</igx-icon>
-                    <span class="navdrawer-ellipsis">{{item.name}}</span>
-                </span>
-            }
-
-            <span igxDrawerItem [disabled]="true">
-                <igx-icon>web</igx-icon>
-                <span class="navdrawer-ellipsis">Disabled Item</span>
+        @for (item of filteredComponentLinks(); track item) {
+            <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
+                <igx-icon>{{item.icon}}</igx-icon>
+                <span class="navdrawer-ellipsis">{{item.name}}</span>
             </span>
+        }
 
-      <!--Directives-->
-      <span igxDrawerItem [isHeader]="true">Directives</span>
+        <span igxDrawerItem [disabled]="true">
+            <igx-icon>web</igx-icon>
+            <span class="navdrawer-ellipsis">Disabled Item</span>
+        </span>
 
-            @for (item of filteredDirectiveLinks(); track item) {
-                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
-                    <igx-icon>{{item.icon}}</igx-icon>
-                    <span class="navdrawer-ellipsis">{{item.name}}</span>
-                </span>
-            }
+        <!--Directives-->
+        <span igxDrawerItem [isHeader]="true">Directives</span>
 
-      <span igxDrawerItem [isHeader]="true">Style</span>
+        @for (item of filteredDirectiveLinks(); track item) {
+            <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
+                <igx-icon>{{item.icon}}</igx-icon>
+                <span class="navdrawer-ellipsis">{{item.name}}</span>
+            </span>
+        }
 
-            @for (item of filteredStyleLinks(); track item) {
-                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
-                    <igx-icon>{{item.icon}}</igx-icon>
-                    <span class="navdrawer-ellipsis">{{item.name}}</span>
-                </span>
-            }
-        </ng-template>
+        <span igxDrawerItem [isHeader]="true">Style</span>
+
+        @for (item of filteredStyleLinks(); track item) {
+            <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
+                <igx-icon>{{item.icon}}</igx-icon>
+                <span class="navdrawer-ellipsis">{{item.name}}</span>
+            </span>
+        }
+    </ng-template>
 
     @if (drawerState.miniVariant) {
       <ng-template igxDrawerMini>
@@ -104,37 +107,37 @@
         }
       </ng-template>
     }
-  </igx-nav-drawer>
+</igx-nav-drawer>
 
-  @let config =
-    (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
+@let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
 
-  @if (config) {
-    <igx-nav-drawer
-      #paneldrawer
-      [pin]="true"
-      position="right"
-      [isOpen]="config"
-      id="paneldrawer"
-    >
-      <ng-template igxDrawer>
-        <app-properties-panel></app-properties-panel>
-      </ng-template>
-    </igx-nav-drawer>
-  }
+<main #dirTarget>
+    <div class="demos-title" [attr.dir]="dirMode()">
+        <h3>
+            <igx-icon>{{urlIcon}}</igx-icon>{{urlString}}
+        </h3>
 
-  <div
-    [style.paddingLeft]="
-      drawerState.miniVariant && !drawerState.pin ? '60px' : null
-    "
-    class="content"
-  >
-    <app-page-header
-      [title]="urlString"
-      (toggleDirection)="onDirectionToggle($event)"
-    ></app-page-header>
-    <div #dirTarget class="sample-wrapper" [attr.dir]="dirMode()">
-      <router-outlet></router-outlet>
+<!--        TODO: pull this for each component -->
+<!--        <a href="https://github.com/IgniteUI/igniteui-angular/wiki/Avatar-specification" target="_blank">Specification</a>-->
     </div>
-  </div>
-</div>
+    <igx-divider></igx-divider>
+
+    <section class="demos-wrapper" [attr.dir]="dirMode()" [igSize]="igSize()">
+        <router-outlet></router-outlet>
+    </section>
+</main>
+
+@if (config) {
+    <igx-nav-drawer
+        #paneldrawer
+        [pin]="true"
+        position="right"
+        [isOpen]="config"
+        id="paneldrawer"
+        class="demos-settings-nav"
+    >
+        <ng-template igxDrawer>
+            <app-properties-panel></app-properties-panel>
+        </ng-template>
+    </igx-nav-drawer>
+}

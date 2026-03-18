@@ -13,7 +13,6 @@ import {
     IgxCheckboxComponent,
     IgxIconComponent,
     IgxButtonModule,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -82,7 +81,6 @@ interface Employee {
         IgxButtonModule,
         IgxButtonModule,
         IgxButtonDirective,
-        IgSizeDirective,
         HammerModule
     ],
     providers: [

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { RemoteService } from '../shared/remote.service';
-import { IgxButtonGroupComponent, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxIconComponent, IgxSwitchComponent, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective, IgxDropDirective, IgxGridEmptyTemplateDirective, IgxRowDragDirective } from 'igniteui-angular';
+import { IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxIconComponent, IgxSwitchComponent, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective, IgxDropDirective, IgxGridEmptyTemplateDirective, IgxRowDragDirective } from 'igniteui-angular';
 
 
 enum DragIcon {
@@ -19,7 +19,7 @@ enum DragIcon {
     templateUrl: 'grid-row-draggable.sample.html',
     styleUrls: ['grid-row-draggable.sample.scss'],
     providers: [RemoteService],
-    imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, IgxGridEmptyTemplateDirective, AsyncPipe]
+    imports: [IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, IgxGridEmptyTemplateDirective, AsyncPipe]
 })
 export class GridRowDraggableComponent implements AfterViewInit {
     @HostBinding('style.--ig-size')
@@ -53,9 +53,6 @@ export class GridRowDraggableComponent implements AfterViewInit {
         this.cdr.detectChanges();
     }
 
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
-    }
 
     public handleRowDrag() {
 

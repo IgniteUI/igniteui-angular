@@ -245,7 +245,7 @@ $z-grid-loading: 10003;
         grid-template-rows: auto auto auto 1fr auto auto;
         grid-template-columns: 100%;
         overflow: hidden;
-        box-shadow: var-get($theme, 'grid-elevation');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'grid-border-color'), var-get($theme, 'grid-elevation');
         outline-style: none;
         z-index: $z-grid-base;
 

@@ -1,6 +1,4 @@
-<div class="density-chooser" style="margin-bottom: 16px">
-    <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)" style="width: 500px"></igx-buttongroup>
-</div>
+
 <igx-switch [(ngModel)]="dragdrop">Toggle Row Drag/Drop</igx-switch>
 <div class="sample-container">
     <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'" [width]="'500px'" [height]="'600px'"

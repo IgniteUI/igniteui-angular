@@ -1,7 +1,104 @@
-.test {
-    color: red;
+::ng-deep {
+    app-root {
+        --demo-navbar-size: 3.5rem;
+        --header-row: 1;
+        --content-row: 2;
+        --content-spacing: 2rem;
+
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+
+        main {
+            grid-column: 2;
+            grid-row: var(--content-row);
+            background: var(--ig-gray-200);
+            padding: var(--content-spacing);
+            overflow-x: clip;
+            overflow-y: auto;
+            height: 100dvh;
+        }
+
+        .igx-navbar__title {
+            display: none;
+        }
+
+        igx-divider {
+            margin-block: .5rem 1rem;
+        }
+
+        igx-input-group {
+            display: block;
+        }
+
+    }
 }
 
-#paneldrawer {
-    --ig-nav-drawer-size: 27rem;
+.demos-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > h3 {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0;
+
+        igx-icon {
+            --color : var(--ig-primary-500);
+        }
+    }
+}
+
+.demos-main-nav {
+    .igx-navbar__left:not(:empty) {
+        margin-inline-end: 0;
+    }
+
+    .igx-nav-drawer__aside {
+        padding-top: 0;
+    }
+}
+
+.demos-wrapper {
+    height: 100%;
+}
+
+.demos-filter {
+    padding-block: var(--item-padding);
+    padding-inline: var(--item-padding);
+    padding-block-end: 1rem;
+    background: var(--background);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    &::after {
+        content: '';
+        height: 8px;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: linear-gradient(360deg,rgba(255, 255, 255, 0) 0%, var(--background) 70%);
+    }
+}
+
+.demos-main-nav {
+    grid-column: 1;
+}
+
+.demos-settings-nav {
+    --ig-nav-drawer-size: 24rem;
+
+    grid-column: 3;
+}
+
+.demos-main-nav,
+.demos-settings-nav {
+    height: calc(100dvh - var(--demo-navbar-size));
+    grid-row: var(--content-row);
 }

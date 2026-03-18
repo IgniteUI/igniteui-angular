@@ -1,5 +1,9 @@
 <div class="properties-panel" [formGroup]="form">
-    <h5 class="properties-panel__title">Properties Panel</h5>
+    <h5 class="properties-panel__title">
+        <igx-icon>settings</igx-icon>
+        <span>Properties Panel</span>
+    </h5>
+    <igx-divider></igx-divider>
     @for( key of getConfigKeys(); track key ) {
         <div>
             @if (getControlType(key) !== 'boolean') {

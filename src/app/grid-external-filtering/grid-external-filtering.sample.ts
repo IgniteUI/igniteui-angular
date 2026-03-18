@@ -540,10 +540,6 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
         this.selectionMode = GridSelectionMode.multiple;
     }
 
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
-    }
-
     public selectFilterMode(event) {
         const filterMode = this.filterModes[event.index].value as FilterMode;
         if (filterMode !== this.grid1.filterMode) {

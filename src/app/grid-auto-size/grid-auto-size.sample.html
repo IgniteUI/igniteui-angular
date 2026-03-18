@@ -1,9 +1,6 @@
 <div class="wrapper" style="width:100%; height:100%;">
     <div class="sample-content" style="width:100%; height:100%;">
         <div class="sample-column" style="width:100%; height:100%;">
-            <div class="density-chooser">
-                <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
-            </div>
             <div>
                 <button igxButton="contained" (click)="gridContainer.style.display = 'contents'">Set container display: contents</button>
                 <button igxButton="contained" (click)="gridContainer.style.display = 'block'">Set container display: block</button>

@@ -30,7 +30,6 @@ defineComponents(IgcDateRangePickerComponent, IgcButtonComponent, IgcIconCompone
         IgxInputDirective,
         IgxDateTimeEditorDirective,
         IgxIconComponent,
-        IgSizeDirective
     ]
 })
 export class DateRangeSampleComponent {
@@ -96,13 +95,6 @@ export class DateRangeSampleComponent {
     }];
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium',
-            }
-        },
         mode: {
             control: {
                 type: 'button-group',

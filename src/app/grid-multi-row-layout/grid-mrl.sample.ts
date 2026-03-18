@@ -1,11 +1,11 @@
 import { Component, HostBinding, ViewChild } from '@angular/core';
-import { ColumnPinningPosition, GridSelectionMode, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxColumnLayoutComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
+import { ColumnPinningPosition, GridSelectionMode, IgxActionStripComponent, IgxButtonDirective, IgxColumnComponent, IgxColumnLayoutComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
 
 
 @Component({
     selector: 'app-grid-mrl-sample',
     templateUrl: 'grid-mrl.sample.html',
-    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective]
 })
 export class GridMRLSampleComponent {
     @HostBinding('style.--ig-size')
@@ -71,10 +71,6 @@ export class GridMRLSampleComponent {
             { label: 'large', selected: this.size === 'large', togglable: true }
         ];
         this.selectionMode = GridSelectionMode.none;
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public hideGroup() {

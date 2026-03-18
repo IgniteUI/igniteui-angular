@@ -71,7 +71,6 @@ icons.forEach((icon) => {
         IgxSwitchComponent,
         FormsModule,
         IgxAvatarComponent,
-        IgSizeDirective
     ]
 })
 export class ChipsSampleComponent implements OnInit {
@@ -90,13 +89,6 @@ export class ChipsSampleComponent implements OnInit {
                     'warning',
                     'danger'
                 ]
-            }
-        },
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'large'
             }
         },
         disabled: {

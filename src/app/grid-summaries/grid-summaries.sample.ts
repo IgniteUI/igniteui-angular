@@ -6,7 +6,6 @@ import {
     IgxSummaryResult,
     ColumnPinningPosition,
     IPinningConfig,
-    IgxButtonGroupComponent,
     IgxGridToolbarComponent,
     IgxGridToolbarTitleComponent,
     IgxGridToolbarActionsComponent,
@@ -45,7 +44,7 @@ class MySummary extends IgxNumberSummaryOperand {
     selector: 'app-grid-summaries-sample',
     styleUrls: ['./grid-summaries.component.scss'],
     templateUrl: 'grid-summaries.sample.html',
-    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent]
 })
 export class GridSummaryComponent implements OnInit {
     @HostBinding('style.--ig-size')
@@ -735,12 +734,10 @@ export class GridSummaryComponent implements OnInit {
         this.sizes = [
             { label: 'small', selected: this.size === 'small', togglable: true },
             { label: 'medium', selected: this.size === 'medium', togglable: true },
-            { label: 'large', selected: this.size === 'large', togglable: true }];
-        }
-
-    public selectDensity(event) {
-         this.size = this.sizes[event.index].label;
+            { label: 'large', selected: this.size === 'large', togglable: true }
+        ];
     }
+
 
     public updateData() {
         const d = [].concat(this.data).concat(this.data2);

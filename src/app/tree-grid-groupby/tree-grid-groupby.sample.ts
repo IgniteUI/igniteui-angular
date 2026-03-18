@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { IgxButtonGroupComponent, IgxSwitchComponent, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe, IGroupingExpression, DefaultSortingStrategy, IgxGroupedTreeGridSorting, TreeGridFilteringStrategy, ITreeGridAggregation, ITreeGridRecord, GridSelectionMode } from 'igniteui-angular';
+import { IgxSwitchComponent, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe, IGroupingExpression, DefaultSortingStrategy, IgxGroupedTreeGridSorting, TreeGridFilteringStrategy, ITreeGridAggregation, ITreeGridRecord, GridSelectionMode } from 'igniteui-angular';
 
 
 @Component({
@@ -10,7 +10,7 @@ import { IgxButtonGroupComponent, IgxSwitchComponent, IgxTreeGridComponent, IgxT
     selector: 'app-tree-grid-groupby-sample',
     styleUrls: ['tree-grid-groupby.sample.scss'],
     templateUrl: 'tree-grid-groupby.sample.html',
-    imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe]
+    imports: [IgxSwitchComponent, FormsModule, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe]
 })
 
 export class TreeGridGroupBySampleComponent implements OnInit {
@@ -65,9 +65,6 @@ export class TreeGridGroupBySampleComponent implements OnInit {
     public print() {
         console.log('Sorting: ', this.grid1.sortingExpressions);
         console.log('Grouping: ', this.grid1.treeGroupArea, this.groupingExpressions);
-    }
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public cellEditDone() {

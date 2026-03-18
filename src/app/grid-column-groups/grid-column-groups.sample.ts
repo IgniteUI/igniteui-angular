@@ -1,5 +1,5 @@
 import { Component, HostBinding, ViewChild } from '@angular/core';
-import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
+import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
@@ -18,7 +18,6 @@ import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButton
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxButtonDirective,
-        IgxButtonGroupComponent
     ]
 })
 export class GridColumnGroupsSampleComponent {
@@ -119,9 +118,5 @@ export class GridColumnGroupsSampleComponent {
         }
 
         this.columnGroupStates.set(columnGroup, !this.columnGroupStates.get(columnGroup));
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 }

@@ -106,10 +106,6 @@ export class GridFilteringComponent implements OnInit {
         this.advancedFilteringTree = tree;
     }
 
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
-    }
-
     public selectFilterMode(event) {
         const filterMode = this.filterModes[event.index].value as FilterMode;
         if (filterMode !== this.grid1.filterMode) {

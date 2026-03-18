@@ -1,9 +1,7 @@
 
     <div class="sample-header">
         <button igxButton="contained" (click)="log()">Layout</button>
-        <div class="density-chooser">
-            <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
-        </div>
+
         <button igxButton="contained" (click)="getState()">Get state</button>
     </div>
     <igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" class="hgrid"

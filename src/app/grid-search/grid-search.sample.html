@@ -1,9 +1,7 @@
 <div class="wrapper">
     <div class="sample-content">
         <div class="sample-column">
-            <div class="density-chooser">
-                <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
-            </div>
+
 
             <igx-grid #grid1 [moving]="true" [data]="data"  [allowFiltering]="true" [moving]="true"
                 [allowAdvancedFiltering]="true" [rowSelection]="selectionMode" [width]="'980px'" [height]="'600px'">

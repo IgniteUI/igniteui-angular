@@ -1,5 +1,5 @@
 <section class="sample-content">
-    <div class="sample-wrapper">
+    <div>
         <strong>Angular DropDown</strong>
         <button
             igxButton="contained"
@@ -11,7 +11,6 @@
         </button>
         <igx-drop-down
             #dropdown1
-            [igSize]="properties.size"
             [closeOnOutsideClick]="!properties.keepOpenOnOutsideClick"
         >
             @for(item of items; track item) {
@@ -30,11 +29,10 @@
         </igx-drop-down>
     </div>
 
-    <div class="sample-wrapper">
+    <div>
         <strong>WC DropDown</strong>
         <igc-dropdown
             id="dropdownWC"
-            [igSize]="properties.size"
             [placement]="properties.placement"
             [scrollStrategy]="properties.scrollStrategy"
             [keepOpenOnOutsideClick]="properties.keepOpenOnOutsideClick"

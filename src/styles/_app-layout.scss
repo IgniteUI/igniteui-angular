@@ -34,36 +34,16 @@
         min-height: 56.666px;
     }
 
-    .main {
-        position: absolute;
-        display: flex;
-        flex-flow: row nowrap;
-        inset: 0;
-        overflow: hidden;
-    }
-
     .content {
         position: relative;
         overflow-y: auto;
         perspective: 5000px;
-        padding-top: 90px;
         flex: 1;
-    }
-
-    .nav-header {
-        display: flex;
-        align-items: center;
-        padding: 24px 16px;
-        height: 90px;
-        margin: -8px -8px 0;
     }
 
     .sample {
         &-wrapper {
-            width: inherit;
             position: relative;
-            height: 100%;
-            margin: 0 auto;
             padding: rem(16px);
         }
 
