@@ -9,6 +9,7 @@ tools:
 agents:
   - tdd-test-writer-agent
   - feature-implementer-agent
+  - component-readme-agent
   - migration-agent
   - changelog-agent
 handoffs:
