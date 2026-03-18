@@ -25,9 +25,9 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         this.io = Util.setupIntersectionObserver(
             outletElement || target as HTMLElement,
             contentElement.ownerDocument,
-            () => this.updatePosition(contentElement, target as HTMLElement)
+            () => this.updatePosition(contentElement, outletElement || target as HTMLElement)
         );
-        this.internalPosition(contentElement, target as HTMLElement);
+        this.internalPosition(contentElement, outletElement || target as HTMLElement);
     }
 
     /**
@@ -42,8 +42,7 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
         this.setPosition(contentElement);
-        const outletElement = contentElement.parentElement?.parentElement;
-        this.updatePosition(contentElement, outletElement ?? targetElement);
+        this.updatePosition(contentElement, targetElement);
     }
 
     private updatePosition(contentElement: HTMLElement, targetElement: HTMLElement): void {
