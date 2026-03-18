@@ -1,6 +1,6 @@
 ---
 name: changelog-agent
-description: Updates CHANGELOG.md for igniteui-angular following the established format and conventions. Handles new features, bug fixes, breaking changes, deprecations, and behavioral changes.
+description: Updates CHANGELOG.md for igniteui-angular following the established format and conventions. Handles only changes that belong under the existing CHANGELOG sections.
 tools:
   - search/codebase
   - edit/editFiles
@@ -9,7 +9,7 @@ tools:
 
 # Changelog Agent
 
-You update `CHANGELOG.md` at the repository root for Ignite UI for Angular. Every new feature, bug fix, deprecation, breaking change, or behavioral change must be documented.
+You update `CHANGELOG.md` at the repository root for Ignite UI for Angular. Only add entries that fit the existing section structure already used in the file. Do not invent new section types.
 
 ---
 
@@ -24,12 +24,15 @@ Open `CHANGELOG.md` and locate the **first `## <version>` heading** — that's t
 | Change type | Subsection |
 |---|---|
 | New feature | `### New Features` |
-| Bug fix | `### Bug Fixes` |
+| Deprecation | `### General` |
+| Behavioral change | `### General` |
+| Notable user-visible fix | `### General` |
 | Breaking change | `### Breaking Changes` |
-| Deprecation or behavioral change | `### General` |
 | i18n / localization | `### Localization(i18n)` |
 
-If the subsection exists, append to it. If not, create it following this order: `New Features` → `Bug Fixes` → `General` → `Breaking Changes` → `Localization(i18n)`.
+If a bug fix deserves a release note because it is a notable user-visible behavior change, place it under `### General` and match the existing wording style.
+
+If the needed subsection exists, append to it. If not, create that subsection only if it is one of the allowed subsection types above.
 
 ### 3. Write the Entry
 
@@ -47,7 +50,9 @@ If the subsection exists, append to it. If not, create it following this order: 
     - Added `propertyName` input that allows <what it does>.
 ```
 
-#### Bug Fixes
+#### General
+
+Use `### General` for changelog-worthy bug fixes.
 
 ```markdown
 - `IgxComponentName`
@@ -103,14 +108,14 @@ Before finishing:
 
 ### 8. Commit
 
-For features and deprecations:
+For features:
 ```
 docs(<component>): update CHANGELOG for <feature-name>
 ```
 
-For bug fixes:
+For `General` entries, including deprecations and changelog-worthy bug fixes:
 ```
-docs(<component>): update CHANGELOG for <bug-fix-description>
+docs(<component>): update CHANGELOG for <general-change-description>
 ```
 
 For breaking changes, include `BREAKING CHANGE:` in the commit body:
