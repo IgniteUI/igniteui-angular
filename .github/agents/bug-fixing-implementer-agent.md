@@ -75,6 +75,37 @@ If the fix adds or modifies user-facing strings:
 
 ---
 
+## Styles and Theming
+
+If the bug is in a component's visual styles, read `skills/igniteui-angular-theming/references/contributing.md` in full before modifying any SCSS.
+
+### Non-negotiable rules
+
+- All visual styles (colors, sizes, shadows) live in the **theme file** (`_<name>-theme.scss`). Never move visual declarations into the component file (`_<name>-component.scss`).
+- Use `var-get($theme, 'token-name')` for every design token reference. **Never introduce hardcoded hex, RGB, HSL, or pixel values** for anything with a corresponding token.
+- Every `@extend` must use `!optional`.
+- BEM naming: Two Dashes style — see `css-naming-convention.md` (handled by the `b()`, `e()`, and `m()` mixins).
+
+### Linting
+
+```bash
+# SCSS-only fix
+npm run lint:styles
+
+# Final check before finishing
+npm run lint:lib
+```
+
+### Style tests
+
+If you modify functions or mixins in `base/` (not component themes), run:
+
+```bash
+npm run test:styles
+```
+
+---
+
 ## What You Do NOT Do
 
 - Do not write tests — the `tdd-test-writer-agent` handles that.
@@ -112,13 +143,13 @@ Before finishing:
 
 Run the smallest relevant suite:
 
-| Components changed | Command |
-|---|---|
+| Components changed  | Command                   |
+| ------------------- | ------------------------- |
 | Non-grid components | `npm run test:lib:others` |
-| Grid | `npm run test:lib:grid` |
-| Tree-grid | `npm run test:lib:tgrid` |
-| Hierarchical-grid | `npm run test:lib:hgrid` |
-| Pivot-grid | `npm run test:lib:pgrid` |
+| Grid                | `npm run test:lib:grid`   |
+| Tree-grid           | `npm run test:lib:tgrid`  |
+| Hierarchical-grid   | `npm run test:lib:hgrid`  |
+| Pivot-grid          | `npm run test:lib:pgrid`  |
 
 ---
 

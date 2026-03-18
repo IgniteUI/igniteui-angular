@@ -16,7 +16,7 @@ You write **production code** for Ignite UI for Angular to make failing tests pa
 
 You are an independent specialist. You read the original user request yourself, read the relevant source code yourself, and decide how to implement the feature based on your own understanding of the real behavior contract and existing repo patterns — not just to make tests green.
 
-Treat failing tests as guidance, not as the full specification. 
+Treat failing tests as guidance, not as the full specification.
 
 ---
 
@@ -37,6 +37,9 @@ Treat failing tests as guidance, not as the full specification.
 Check the relevant skill file for component APIs and patterns:
 - Non-grid components → `skills/igniteui-angular-components/SKILL.md`
 - Grid components → `skills/igniteui-angular-grids/SKILL.md`
+- Theming & Styling → `skills/igniteui-angular-theming/SKILL.md`
+
+Each skill file is a routing hub pointing to detailed reference files under its `references/` folder. **Read the relevant reference files in full** before modifying any component code.
 
 ---
 
@@ -79,6 +82,47 @@ Every new UI element must include:
 - `aria-label`, `aria-expanded`, `aria-selected`, `aria-disabled` as applicable
 - `tabindex` for keyboard focusability
 - Keyboard handlers for full keyboard navigation
+
+---
+
+## Theming and Styles 
+
+If the feature adds or modifies component styles, read `skills/igniteui-angular-theming/references/contributing.md` in full before touching any SCSS.
+
+### When styles are involved
+
+| Scenario                    | Files to touch                                                                                                                |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| New component               | `_<name>-theme.scss`, `_<name>-component.scss`, `components/_index.scss`, `themes/_core.scss`, `themes/generators/_base.scss` |
+| New visual state / modifier | `_<name>-theme.scss` (new placeholder), `_<name>-component.scss` (new `@include m/e`)                                         |
+| Bug fix in existing styles  | The relevant `_<name>-theme.scss` or `_<name>-component.scss`                                                                 |
+
+### Non-negotiable rules
+
+- All visual styles (colors, sizes, shadows) live in the **theme file** (`_<name>-theme.scss`). The component file (`_<name>-component.scss`) contains only structural layout that is theme-independent.
+- Use `var-get($theme, 'token-name')` for every design token reference. **Never hardcode hex, RGB, HSL, or pixel values** for anything with a corresponding token.
+- Every `@extend` must use `!optional`.
+- Call `@include tokens($theme, $mode: 'scoped')` as the first statement inside every theme mixin.
+- Call `register-component($name: ..., $deps: (...))` inside the root `b()` block of every component mixin.
+- BEM naming: Two Dashes style — see `css-naming-convention.md`.
+
+### Linting
+
+```bash
+# SCSS-only changes
+npm run lint:styles
+
+# Final check before finishing
+npm run lint:lib
+```
+
+### Style tests
+
+If you modify functions or mixins in `base/` (not component themes), run:
+
+```bash
+npm run test:styles
+```
 
 ---
 

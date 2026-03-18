@@ -101,6 +101,7 @@ projects/igniteui-angular/test-utils/             ← shared test helpers
 projects/igniteui-angular/migrations/             ← migration schematics
 CHANGELOG.md                                      ← root changelog
 src/app/<component>/                              ← demo pages
+projects/igniteui-angular/core/src/core/styles/   ← component SCSS themes
 ```
 
 ---
@@ -116,6 +117,7 @@ src/app/<component>/                              ← demo pages
    - Whether this replaces, renames, or deprecates any existing API
    - Whether a migration schematic is needed
    - Whether i18n strings are affected
+   - Whether styles or component themes are affected
    - Which test suite to use (grid vs non-grid)
 
 ### Step 2 — Present a Scope Summary
@@ -124,7 +126,7 @@ Present a brief scope summary to the user:
 
 - **What**: one sentence describing the feature
 - **Where**: affected components and main files
-- **Impact**: breaking change, deprecation, i18n, accessibility, or docs/demo follow-through if relevant
+- **Impact**: breaking change, deprecation, i18n, accessibility, styles/theming, or docs/demo follow-through if relevant
 - **Agents needed**: which specialist agents will be used
 - **Test suite**: the smallest likely suite
 
@@ -139,8 +141,8 @@ Delegate work only through isolated subagent execution when available. If isolat
 For each subagent call, send only this minimal context:
 - the original user request
 - affected component(s) and file path(s)
-- whether breaking-change, i18n, accessibility, changelog, or README follow-through may apply
-- the likely test suite
+  - whether breaking-change, i18n, accessibility, styles/theming, changelog, or README follow-through may apply
+  - the likely test suite
 
 Do not send:
 - detailed feature requirements
