@@ -43,27 +43,6 @@ Each skill file is a routing hub pointing to detailed reference files under its 
 
 ---
 
-## Handling a Wrong or Incomplete Test
-
-If the reproduction test is wrong, **do not fix it yourself and do not proceed**. Stop and report the problem back — test code is the responsibility of `tdd-test-writer-agent`.
-
-A test is wrong if it:
-- Passes immediately without any code change (not reproducing the bug)
-- Fails for the wrong reason (unrelated setup error, missing import, wrong assertion)
-- Tests a different code path than the one identified as the root cause
-
-In those cases:
-1. Do **not** modify the test.
-2. State clearly in your output what is wrong with the test and why it does not correctly reproduce the bug.
-3. Stop. The orchestrator will re-invoke `tdd-test-writer-agent` to fix it before you proceed.
-
-If you discover the root cause is in a **different place** than the orchestrator identified:
-1. Do **not** silently fix a different location.
-2. State clearly in your output that the root cause differs from the scope summary.
-3. Fix the actual root cause, explain the discrepancy, and let the orchestrator decide whether re-investigation is needed.
-
----
-
 ## GREEN Phase — Fix the Bug
 
 1. Write the **minimum code** to make the failing reproduction test pass.
