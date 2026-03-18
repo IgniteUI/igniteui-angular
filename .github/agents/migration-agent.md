@@ -40,12 +40,12 @@ Read `projects/igniteui-angular/migrations/migration-collection.json`:
 ### 2. Create Migration Folder
 
 ```
-projects/igniteui-angular/migrations/update-<version>/
+projects/igniteui-angular/migrations/update-<version>_<short-name>/
   index.ts
   index.spec.ts
 ```
 
-Use underscores for version separators: `update-21_2_0`.
+Use underscores for version separators: `update-21_2_0_my-migration`. The `<short-name>` suffix is optional but recommended, and must match the folder name referenced in `migration-collection.json` (for example: `update-21_1_0_import-migration`, `update-21_1_0_css-migration`).
 
 ### 3. Write the Migration
 

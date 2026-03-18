@@ -58,7 +58,7 @@ Do not add extra scenarios or extra tests unless they are explicitly requested, 
 
 ## Test File Location
 
-Tests go in `projects/igniteui-angular/<component>/src/*.spec.ts`.
+ Tests go in `projects/igniteui-angular/<component>/src/**/*.spec.ts` (for example, `projects/igniteui-angular/radio/src/radio/radio.component.spec.ts`).
 
 **Always read the existing spec file first.**
 
