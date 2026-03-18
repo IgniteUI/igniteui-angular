@@ -81,18 +81,18 @@ If the subsection exists, append to it. If not, create it following this order: 
 - If the component already has entries in the same subsection, add sub-bullets under the same component heading.
 - Include short code examples only if they clarify usage.
 
-## 5. Surfacing Problems
+### 5. Surfacing Problems
 
 If the changes handed off to you are inconsistent with what appears in the code — for example, the described change does not match the actual diff, or a breaking change lacks a matching migration:
 1. Do **not** document behavior that does not exist or was not actually implemented.
 2. State clearly in your output what the inconsistency is.
 3. Stop. The orchestrator will decide whether to re-invoke an earlier agent before you proceed.
 
-## 6. Re-invocation
+### 6. Re-invocation
 
 If you are re-invoked because a previous CHANGELOG entry was incorrect, misplaced, or inconsistent, read the orchestrator's correction note carefully. Do not repeat the same approach — fix the specific issue identified and confirm the entry is accurate and correctly formatted.
 
-## 7. Final Self-Validation
+### 7. Final Self-Validation
 
 Before finishing:
 
