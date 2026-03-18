@@ -154,8 +154,8 @@ Use agents in this order:
 1. **`tdd-test-writer-agent`** — decides what tests to write
 2. **`feature-implementer-agent`** — independently implements the real feature contract
 3. **`component-readme-agent`** — updates affected component `README.md` files
-3. **`migration-agent`** — only if breaking changes exist
-4. **`changelog-agent`** — updates CHANGELOG.md
+4. **`migration-agent`** — only if breaking changes exist
+5. **`changelog-agent`** — updates CHANGELOG.md
 
 ### Step 4 — Verify Completeness
 
