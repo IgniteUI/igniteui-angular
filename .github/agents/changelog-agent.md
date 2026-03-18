@@ -1,6 +1,6 @@
 ---
 name: changelog-agent
-description: Updates CHANGELOG.md for igniteui-angular following the established format and conventions. Handles new features, breaking changes, deprecations, and behavioral changes.
+description: Updates CHANGELOG.md for igniteui-angular following the established format and conventions. Handles new features, bug fixes, breaking changes, deprecations, and behavioral changes.
 tools:
   - search/codebase
   - edit/editFiles
@@ -9,7 +9,7 @@ tools:
 
 # Changelog Agent
 
-You update `CHANGELOG.md` at the repository root for Ignite UI for Angular. Every new feature, deprecation, breaking change, or behavioral change must be documented.
+You update `CHANGELOG.md` at the repository root for Ignite UI for Angular. Every new feature, bug fix, deprecation, breaking change, or behavioral change must be documented.
 
 ---
 
@@ -24,11 +24,12 @@ Open `CHANGELOG.md` and locate the **first `## <version>` heading** — that's t
 | Change type | Subsection |
 |---|---|
 | New feature | `### New Features` |
+| Bug fix | `### Bug Fixes` |
 | Breaking change | `### Breaking Changes` |
 | Deprecation or behavioral change | `### General` |
 | i18n / localization | `### Localization(i18n)` |
 
-If the subsection exists, append to it. If not, create it following this order: `New Features` → `General` → `Breaking Changes` → `Localization(i18n)`.
+If the subsection exists, append to it. If not, create it following this order: `New Features` → `Bug Fixes` → `General` → `Breaking Changes` → `Localization(i18n)`.
 
 ### 3. Write the Entry
 
@@ -44,6 +45,13 @@ If the subsection exists, append to it. If not, create it following this order: 
 ```markdown
 - `IgxComponentName`
     - Added `propertyName` input that allows <what it does>.
+```
+
+#### Bug Fixes
+
+```markdown
+- `IgxComponentName`
+    - Fixed an issue where <description of what was broken>.
 ```
 
 #### Breaking Changes
@@ -87,6 +95,11 @@ Before finishing:
 For features and deprecations:
 ```
 docs(<component>): update CHANGELOG for <feature-name>
+```
+
+For bug fixes:
+```
+docs(<component>): update CHANGELOG for <bug-fix-description>
 ```
 
 For breaking changes, include `BREAKING CHANGE:` in the commit body:
