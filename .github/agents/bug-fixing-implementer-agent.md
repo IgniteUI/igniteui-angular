@@ -1,6 +1,6 @@
 ---
 name: bug-fixing-implementer-agent
-description: Implements the minimum fix (GREEN phase) for bugs in igniteui-angular. Preserves the public API, accessibility, and localization. Does not write tests, README, migrations, or changelog.
+description: Implements the minimum fix (GREEN phase) for bugs in igniteui-angular. Preserves the public API, accessibility, and localization. Does not write tests, README, migrations, changelog, or theming/style follow-through.
 tools:
   - search/codebase
   - edit/editFiles
@@ -75,40 +75,16 @@ If the fix adds or modifies user-facing strings:
 
 ---
 
-## Styles and Theming
+## Theming and Styles Follow-Through
 
-If the bug is in a component's visual styles, read `skills/igniteui-angular-theming/references/contributing.md` in full before modifying any SCSS.
-
-### Non-negotiable rules
-
-- All visual styles (colors, sizes, shadows) live in the **theme file** (`_<name>-theme.scss`). Never move visual declarations into the component file (`_<name>-component.scss`).
-- Use `var-get($theme, 'token-name')` for every design token reference. **Never introduce hardcoded hex, RGB, HSL, or pixel values** for anything with a corresponding token.
-- Every `@extend` must use `!optional`.
-- BEM naming: Two Dashes style — see `css-naming-convention.md` (handled by the `b()`, `e()`, and `m()` mixins).
-
-### Linting
-
-```bash
-# SCSS-only fix
-npm run lint:styles
-
-# Final check before finishing
-npm run lint:lib
-```
-
-### Style tests
-
-If you modify functions or mixins in `base/` (not component themes), run:
-
-```bash
-npm run test:styles
-```
+If the bug requires SCSS, theme wiring, or style-test changes, do not implement that work here. Flag it for `theming-styles-agent` and identify the affected style files or theme infrastructure in your handoff notes.
 
 ---
 
 ## What You Do NOT Do
 
 - Do not write tests — the `tdd-test-writer-agent` handles that.
+- Do not modify component SCSS or theme infrastructure — the `theming-styles-agent` handles that.
 - Do not update `README.md` — the `component-readme-agent` handles that.
 - Do not create migration schematics — the `migration-agent` handles that.
 - Do not update `CHANGELOG.md` — the `changelog-agent` handles that.

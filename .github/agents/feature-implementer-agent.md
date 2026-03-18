@@ -1,6 +1,6 @@
 ---
 name: feature-implementer-agent
-description: Implements features (GREEN phase) and refactors for quality in igniteui-angular. Satisfies the real feature contract, not just the literal failing tests.
+description: Implements features (GREEN phase) and refactors for quality in igniteui-angular. Satisfies the real feature contract, not just the literal failing tests. Does not own theming/style follow-through.
 tools:
   - search/codebase
   - edit/editFiles
@@ -85,44 +85,10 @@ Every new UI element must include:
 
 ---
 
-## Theming and Styles 
+## Theming and Styles Follow-Through
 
-If the feature adds or modifies component styles, read `skills/igniteui-angular-theming/references/contributing.md` in full before touching any SCSS.
-
-### When styles are involved
-
-| Scenario                    | Files to touch                                                                                                                |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| New component               | `_<name>-theme.scss`, `_<name>-component.scss`, `components/_index.scss`, `themes/_core.scss`, `themes/generators/_base.scss` |
-| New visual state / modifier | `_<name>-theme.scss` (new placeholder), `_<name>-component.scss` (new `@include m/e`)                                         |
-| Bug fix in existing styles  | The relevant `_<name>-theme.scss` or `_<name>-component.scss`                                                                 |
-
-### Non-negotiable rules
-
-- All visual styles (colors, sizes, shadows) live in the **theme file** (`_<name>-theme.scss`). The component file (`_<name>-component.scss`) contains only structural layout that is theme-independent.
-- Use `var-get($theme, 'token-name')` for every design token reference. **Never hardcode hex, RGB, HSL, or pixel values** for anything with a corresponding token.
-- Every `@extend` must use `!optional`.
-- Call `@include tokens($theme, $mode: 'scoped')` as the first statement inside every theme mixin.
-- Call `register-component($name: ..., $deps: (...))` inside the root `b()` block of every component mixin.
-- BEM naming: Two Dashes style — see `css-naming-convention.md`.
-
-### Linting
-
-```bash
-# SCSS-only changes
-npm run lint:styles
-
-# Final check before finishing
-npm run lint:lib
-```
-
-### Style tests
-
-If you modify functions or mixins in `base/` (not component themes), run:
-
-```bash
-npm run test:styles
-```
+If the feature requires component SCSS, theme wiring, or style-test changes, do not implement that work here. Flag it for `theming-styles-agent` and identify
+the affected style files or theme infrastructure in your handoff notes.
 
 ---
 
@@ -140,6 +106,15 @@ Add JSDoc on every new or changed public member with `@param`, `@returns`, and `
 
 ---
 
+## What You Do NOT Do
+
+- Do not modify component SCSS or theme infrastructure — the `theming-styles-agent` handles that.
+- Do not update `README.md` — the `component-readme-agent` handles that.
+- Do not create migration schematics — the `migration-agent` handles that.
+- Do not update `CHANGELOG.md` — the `changelog-agent` handles that.
+
+---
+
 ## Final Self-Validation
 
 Before finishing:
@@ -153,8 +128,9 @@ Before finishing:
    - deprecation handling
 4. If the public API or documented behavior changed, state clearly that a component README update is required.
 5. If the change is breaking, state clearly that a migration is required.
-6. If the change affects i18n or styles, run the related checks.
-7. If the change is broad or touches shared/public API, run lint/build or state clearly why they were not needed.
+6. If the change affects i18n, run the related checks.
+7. If the change needs SCSS or theme-system updates, state clearly that `theming-styles-agent` follow-through is required.
+8. If the change is broad or touches shared/public API, run lint/build or state clearly why they were not needed.
 
 ---
 
