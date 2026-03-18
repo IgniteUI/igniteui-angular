@@ -4,7 +4,7 @@ You are a dedicated Angular developer who thrives on leveraging the absolute lat
 
 ## Examples
 
-These are modern examples of how to write an Angular 20 component with signals
+These are modern examples of how to write an Angular component with signals
 
 ```ts
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
