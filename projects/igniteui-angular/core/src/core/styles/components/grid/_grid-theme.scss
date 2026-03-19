@@ -43,6 +43,89 @@
 
     igx-grid {
         @include tokens(
+            action-strip-theme(
+                $schema: $schema,
+                $background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, transparent),
+                $actions-background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, var(--ig-grid-background))
+            )
+        );
+
+        @include tokens(
+            banner-theme(
+                $schema: $schema,
+                $banner-background: var(--ig-grid-background),
+                $banner-message-color: var(--ig-grid-foreground),
+                $banner-illustration-color: var(--ig-grid-foreground),
+                $banner-border-color: color-mix(in srgb, var(--ig-grid-foreground) 20%, var(--ig-grid-background))
+            )
+        );
+        
+        @include tokens(
+            button-group-theme(
+                $schema: $schema,
+                $item-background: transparent,
+                $item-text-color: var(--ig-grid-foreground),
+                $item-selected-text-color: var(--ig-grid-accent-color),
+                $shadow: none
+            ),
+        );
+
+        @include tokens(contained-button-theme($schema: $schema, $background: var(--ig-grid-accent-color)));
+
+        @include tokens(flat-button-theme($schema: $schema, $foreground: var(--ig-grid-accent-color)));
+
+        @include tokens(outlined-button-theme($schema: $schema, $foreground: var(--ig-grid-accent-color)));
+
+        @include tokens(
+            checkbox-theme(
+                $schema: $schema,
+                $empty-color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background)),
+                $empty-fill-color: var(--ig-grid-background),
+                $tick-color-hover: color-mix(in srgb, var(--ig-grid-foreground) 40%, var(--ig-grid-background)),
+                $fill-color: var(--ig-grid-accent-color),
+                $label-color: var(--ig-grid-foreground),
+            )
+        );
+
+        @include tokens(
+            chip-theme(
+                $schema: $schema,
+                $background: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                $text-color: var(--ig-grid-foreground)
+            )
+        );
+
+        @include tokens(
+            column-actions-theme(
+                $schema: $schema,
+                $background-color: var(--ig-grid-background),
+                $title-color: var(--ig-grid-accent-color)
+            )
+        );
+
+        .igx-drop-down__list {
+            @include tokens(
+                drop-down-theme(
+                    $schema: $schema,
+                    $background-color: var(--ig-grid-background),
+                    $border-color: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                    $selected-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, var(--ig-grid-background)),
+                    $selected-hover-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 16%, var(--ig-grid-background)),
+                    $selected-focus-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 24%, var(--ig-grid-background)),
+                )
+            );
+        }
+
+        @include tokens(
+            grid-summary-theme(
+                $schema: $schema,
+                $background-color: var(--ig-grid-background),
+                $label-color: var(--ig-grid-accent-color),
+                $result-color: var(--ig-grid-foreground)
+            )
+        );
+
+        @include tokens(
             grid-toolbar-theme(
                 $schema: $schema,
                 $background-color: var(--ig-grid-background),
@@ -58,96 +141,10 @@
         );
 
         @include tokens(
-            grid-summary-theme(
-                $schema: $schema,
-                $background-color: var(--ig-grid-background),
-                $label-color: var(--ig-grid-accent-color),
-                $result-color: var(--ig-grid-foreground)
-            )
-        );
-
-        @include tokens(
-            column-actions-theme(
-                $schema: $schema,
-                $background-color: var(--ig-grid-background),
-                $title-color: var(--ig-grid-accent-color)
-            )
-        );
-
-        @include tokens(
-            list-theme(
-                $schema: $schema,
-                $background: var(--ig-grid-background)
-            )
-        );
-
-        .igx-excel-filter__menu,
-        .igx-excel-filter__menu .igx-button-group {
-            @include tokens(
-                button-group-theme(
-                    $schema: $schema,
-                    $item-background: transparent,
-                    $item-text-color: var(--ig-grid-foreground),
-                    $item-selected-text-color: var(--ig-grid-accent-color),
-                    $shadow: none
-                ),
-                $mode: 'scoped'
-            );
-        }
-
-        igx-paginator {
-            @include tokens(
-                paginator-theme(
-                    $schema: $schema,
-                    $background-color: var(--ig-grid-background),
-                    $text-color: var(--ig-grid-foreground)
-                )
-            );
-        }
-
-        .igx-drop-down__list {
-            @include tokens(
-                drop-down-theme(
-                    $schema: $schema,
-                    $background-color: var(--ig-grid-background),
-                    $selected-item-background: var(--ig-grid-accent-color),
-                )
-            );
-        }
-
-        @include tokens(
-            checkbox-theme(
-                $schema: $schema,
-                $empty-color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background)),
-                $fill-color: var(--ig-grid-accent-color),
-                $label-color: var(--ig-grid-foreground),
-            )
-        );
-
-        @include tokens(
-            chip-theme(
-                $schema: $schema,
-                $background: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
-                $text-color: var(--ig-grid-foreground)
-            )
-        );
-
-        @include tokens(outlined-button-theme($schema: $schema, $foreground: var(--ig-grid-accent-color)));
-        @include tokens(flat-button-theme($schema: $schema, $foreground: var(--ig-grid-accent-color)));
-        @include tokens(contained-button-theme($schema: $schema, $background: var(--ig-grid-accent-color)));
-
-        @include tokens(
-            select-theme(
-                $schema: $schema,
-                $toggle-button-background: var(--ig-grid-accent-color),
-                $toggle-button-background-disabled: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
-            )
-        );
-
-        @include tokens(
             flat-icon-button-theme(
                 $schema: $schema,
-                $foreground: var(--ig-grid-accent-color)
+                $foreground: var(--ig-grid-accent-color),
+                $disabled-background: color-mix(in srgb, var(--ig-grid-foreground) 10%, var(--ig-grid-background))
             )
         );
 
@@ -158,7 +155,7 @@
             )
         );
 
-        @if $variant == 'material' {
+        @if $variant == 'material' or $variant == 'indigo' {
             @include tokens(
                 input-group-theme(
                     $schema: $schema,
@@ -176,11 +173,60 @@
                     $border-color: var(--ig-grid-accent-color),
                     $idle-text-color: var(--ig-grid-foreground),
                     $placeholder-color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background)),
+                    $input-prefix-background: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                )
+            );
+        }
+
+        @include tokens(
+            list-theme(
+                $schema: $schema,
+                $background: var(--ig-grid-background)
+            )
+        );
+
+        igx-paginator {
+            @include tokens(
+                paginator-theme(
+                    $schema: $schema,
+                    $background-color: var(--ig-grid-background),
+                    $text-color: var(--ig-grid-foreground),
+                    $border-color: color-mix(in srgb, var(--ig-grid-foreground) 16%, var(--ig-grid-background)),
                 )
             );
         }
 
         @include tokens(query-builder-theme($schema: $schema, $background: var(--ig-grid-background)));
+
+        @include tokens(
+            scrollbar-theme(
+                $schema: $schema,
+                $sb-track-bg-color: var(--ig-grid-background),
+                $sb-thumb-bg-color: color-mix(in srgb, var(--ig-grid-foreground) 50%, var(--ig-grid-background)),
+                $sb-track-border-color: color-mix(in srgb, var(--ig-grid-foreground) 16%, var(--ig-grid-background)),
+            ),
+            $mode: 'scoped'
+        );
+
+        @if $variant == 'indigo' {
+            @include tokens(
+                select-theme(
+                    $schema: $schema,
+                    $toggle-button-foreground: var(--ig-grid-accent-color),
+                    $toggle-button-foreground-disabled: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
+                )
+            );
+        } @else {
+            @include tokens(
+                select-theme(
+                    $schema: $schema,
+                    $toggle-button-background: var(--ig-grid-accent-color),
+                    $toggle-button-background-disabled: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
+                )
+            );
+        }
+
+        @include tokens(tree-theme($background: var(--ig-grid-background)), $mode: 'scoped');
     }
 
     $cbx-size: map.get((
@@ -1971,7 +2017,7 @@
     }
 
     %grid-summaries--body {
-        --summaries-patch-background: var(--ig-gray-100);
+        // --summaries-patch-background: var(--ig-gray-100);
 
         border-bottom: rem(1px) dashed var-get($theme, 'row-border-color');
         background-color: var-get($theme, 'summaries-patch-background');
@@ -2869,14 +2915,7 @@
     @include excel-filtering($theme);
 
     %advanced-filtering-dialog {
-	    @if $variant == 'indigo' {
-		    $light-variant: contrast-color($color: 'gray', $variant: 900);
-		    $dark-variant: color($color: 'gray', $variant: 50);
-		    background: if($theme-variant == 'light', $light-variant,  $dark-variant);
-	    } @else {
-		    background: color($color: 'surface', $variant: 500);
-	    }
-
+	    background: var-get($theme, 'filtering-row-background');
         box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
 
         @if $variant == 'material' or $variant == 'bootstrap' {
