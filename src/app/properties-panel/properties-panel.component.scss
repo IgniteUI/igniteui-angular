@@ -3,7 +3,6 @@
 @include b(properties-panel) {
     isolation: isolate;
     contain: layout paint content;
-    padding: 1rem;
     min-width: fit-content;
 
     igx-input-group {
@@ -35,13 +34,17 @@
         display: flex;
         align-items: center;
         font-weight: 600;
-        font-size: 1.2rem;
-        padding-block: .4rem;
+        font-size: 1rem;
         gap: .5rem;
 
         igx-icon {
-            --size: 2.2rem;
+            --size: 2rem;
             --color: var(--ig-gray-400);
         }
     }
+}
+
+.custom-controls {
+    display: grid;
+    gap: 1rem;
 }

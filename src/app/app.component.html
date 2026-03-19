@@ -112,14 +112,14 @@
 @let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
 
 <main #dirTarget>
-    <div class="demos-title" [attr.dir]="dirMode()">
+    <header class="demos-title">
         <h3>
             <igx-icon>{{urlIcon}}</igx-icon>{{urlString}}
         </h3>
 
 <!--        TODO: pull this for each component -->
 <!--        <a href="https://github.com/IgniteUI/igniteui-angular/wiki/Avatar-specification" target="_blank">Specification</a>-->
-    </div>
+    </header>
     <igx-divider></igx-divider>
 
     <section class="demos-wrapper" [attr.dir]="dirMode()" [igSize]="igSize()">

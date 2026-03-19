@@ -1,5 +1,15 @@
 @use '../../../projects/igniteui-angular/core/src/core/styles/base' as *;
 
+.demos-navbar {
+    .igx-navbar__title {
+        display: none !important;
+    }
+
+    igx-input-group {
+        display: block !important;
+    }
+}
+
 .header-actions {
     display: flex;
     align-items: center;

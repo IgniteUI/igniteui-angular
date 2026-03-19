@@ -1,7 +1,5 @@
-<article>
-    <strong>Angular</strong>
-
-    <igx-chip
+<strong class="framework-tittle">Angular</strong>
+<igx-chip
         #me
         [variant]="properties.variant"
         [disabled]="properties.disabled"
@@ -32,12 +30,8 @@
         ></igx-circular-bar>
         } Chip component
     </igx-chip>
-</article>
-
-<article>
-    <strong>Web component</strong>
-
-    <igc-chip
+<strong class="framework-tittle framework-tittle--wc">Web component</strong>
+<igc-chip
         #wc
         [variant]="properties.variant"
         [disabled]="properties.disabled"
@@ -70,7 +64,6 @@
         ></igc-circular-progress>
         } Chip component
     </igc-chip>
-</article>
 
 <ng-template #mySelectIcon>
     <igx-icon>check_circle</igx-icon>
@@ -82,6 +75,8 @@
 
 <ng-template #customControls>
     <div class="custom-controls">
+        <span igxLabel>Custom controls</span>
+
         @if (properties.removable) {
             <igx-switch id="customIcons" [(ngModel)]="customIcons">
                 <label for="customIcons">Custom Icons</label>

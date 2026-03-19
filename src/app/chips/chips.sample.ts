@@ -15,7 +15,7 @@ import {
     IgxSuffixDirective,
     IgxSwitchComponent,
     IgxCircularProgressBarComponent,
-    IgSizeDirective,
+    IgSizeDirective, IgxLabelDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -71,6 +71,7 @@ icons.forEach((icon) => {
         IgxSwitchComponent,
         FormsModule,
         IgxAvatarComponent,
+        IgxLabelDirective,
     ]
 })
 export class ChipsSampleComponent implements OnInit {

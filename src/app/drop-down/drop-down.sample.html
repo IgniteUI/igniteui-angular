@@ -1,6 +1,6 @@
-<section class="sample-content">
+<section class="dropdown-demo-container">
     <div>
-        <strong>Angular DropDown</strong>
+        <strong>Angular</strong>
         <button
             igxButton="contained"
             #button
@@ -9,6 +9,7 @@
         >
             Toggle
         </button>
+
         <igx-drop-down
             #dropdown1
             [closeOnOutsideClick]="!properties.keepOpenOnOutsideClick"
@@ -30,7 +31,7 @@
     </div>
 
     <div>
-        <strong>WC DropDown</strong>
+        <strong>Web component</strong>
         <igc-dropdown
             id="dropdownWC"
             [placement]="properties.placement"
@@ -58,9 +59,10 @@
     </div>
 </section>
 
-<section class="sample-content">
+<section class="dropdown-demo-container">
     <div class="sample-button-group">
-        <h5>Angular Dropdown With Action directive</h5>
+        <h6>Angular dropdown with action directive</h6>
+
         <igx-buttongroup>
             <button
                 igxButton
@@ -93,54 +95,14 @@
         </igx-buttongroup>
     </div>
 
-    <igx-drop-down
-        #dropdown2
-        (selectionChanging)="onSelection($event)"
-        (opening)="onOpening()"
-        height="400px"
-    >
-        @for(item of items; track item) {
-        <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header">
-            {{ item.field }}
-        </igx-drop-down-item>
-        }
-    </igx-drop-down>
-
     <div igxToggle #toggle="toggle" style="height: 300px; overflow: auto">
         @for(item of items; track item.field) {
             <div>{{ item.field }}</div>
         }
     </div>
-
-    <igx-drop-down
-        #menu
-        (selectionChanging)="onSelectionMenu($event)"
-        height="400px"
-    >
-        @for(item of items; track item) {
-        <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header">
-            {{ item.field }}
-        </igx-drop-down-item>
-        }
-    </igx-drop-down>
-
-    <igx-drop-down
-        #group
-        (selectionChanging)="onSelection($event)"
-        height="400px"
-    >
-        @for(foodGroup of foods; track foodGroup) {
-        <igx-drop-down-item-group [label]="foodGroup.name">
-            @for(food of foodGroup.entries; track food) {
-            <igx-drop-down-item [value]="food.refNo">
-                {{ food.name }}
-            </igx-drop-down-item>
-            }
-        </igx-drop-down-item-group>
-        }
-    </igx-drop-down>
 </section>
-<section class="sample-content">
+
+<section class="dropdown-demo-container">
     <igx-input-group class="input-group">
         <input
             type="text"
@@ -151,22 +113,6 @@
             [value]="dropdown3.selectedItem?.value.field"
         />
     </igx-input-group>
-    <igx-drop-down
-        #dropdown3
-        (opening)="onOpening()"
-        (selectionChanging)="onSelectionLogger($event)"
-        height="400px"
-    >
-        @for(item of items; track item) {
-        <igx-drop-down-item
-            [value]="item"
-            [disabled]="item.disabled"
-            [isHeader]="item.header"
-        >
-            {{ item.field }}
-        </igx-drop-down-item>
-        }
-    </igx-drop-down>
     <button
         igxButton="contained"
         igxRipple
@@ -176,4 +122,67 @@
         Clear selection
     </button>
 </section>
+
+<igx-drop-down
+    #dropdown2
+    (selectionChanging)="onSelection($event)"
+    (opening)="onOpening()"
+    height="400px"
+    width="200px"
+>
+    @for(item of items; track item) {
+        <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header">
+            {{ item.field }}
+        </igx-drop-down-item>
+    }
+</igx-drop-down>
+
+<igx-drop-down
+    #menu
+    (selectionChanging)="onSelectionMenu($event)"
+    height="400px"
+    width="200px"
+>
+    @for(item of items; track item) {
+        <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header">
+            {{ item.field }}
+        </igx-drop-down-item>
+    }
+</igx-drop-down>
+
+<igx-drop-down
+    #group
+    (selectionChanging)="onSelection($event)"
+    height="400px"
+    width="200px"
+>
+    @for(foodGroup of foods; track foodGroup) {
+        <igx-drop-down-item-group [label]="foodGroup.name">
+            @for(food of foodGroup.entries; track food) {
+                <igx-drop-down-item [value]="food.refNo">
+                    {{ food.name }}
+                </igx-drop-down-item>
+            }
+        </igx-drop-down-item-group>
+    }
+</igx-drop-down>
+
+<igx-drop-down
+    #dropdown3
+    (opening)="onOpening()"
+    (selectionChanging)="onSelectionLogger($event)"
+    height="400px"
+    width="200px"
+>
+    @for(item of items; track item) {
+        <igx-drop-down-item
+                [value]="item"
+                [disabled]="item.disabled"
+                [isHeader]="item.header"
+        >
+            {{ item.field }}
+        </igx-drop-down-item>
+    }
+</igx-drop-down>
+
 <div igxOverlayOutlet #outlet="overlay-outlet"></div>

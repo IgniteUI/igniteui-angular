@@ -1,27 +1,17 @@
 :host {
-    display: flex;
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+    gap: var(--demos-gap);
 
-    > article {
-        display: grid;
-        place-items: center;
-        flex-grow: 1;
-
-        > * {
-            grid-row: 1;
-            grid-column: 1;
-        }
+    .framework-tittle {
+        grid-column: 1;
+        grid-row: 1;
     }
-}
 
-
-.custom-controls {
-   igx-switch {
-        display: flex;
-        align-items: center;
-        margin-bottom: 16px;
-
-        label {
-            margin: 0;
-        }
-   }
+    .framework-tittle--wc {
+        grid-column: 2;
+    }
 }

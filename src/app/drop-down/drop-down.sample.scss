@@ -1,29 +1,38 @@
-.sample-button-group {
-    display: flex;
-    flex-direction: column;
-    width: 700px;
+:host {
+    display: grid;
+    row-gap: calc(var(--demos-gap) * 3);
+}
 
-    >* {
-        margin-bottom: 16px;
+.dropdown-demo-container {
+    display: flex;
+    justify-content: center;
+    gap: var(--demos-gap);
+    background: var(--ig-surface-500);
+    color: var(--ig-gray-800);
+    padding: var(--demos-gap);
+    border-radius: .2rem;
+    border: 1px solid var(--ig-gray-400);
+
+    > div {
+        flex-grow: 1;
+        display: grid;
+        place-items: center;
+        gap: calc(var(--demos-gap) / 2);
+    }
+
+    // TODO: investigate if this need to be fixed on component level
+    .igx-button-group .igx-button {
+        min-width: fit-content;
+    }
+
+    igx-input-group {
+        display: flex;
     }
 }
 
+// TODO WHY WE NEED THIS?
 igc-dropdown::part(base) {
     height: 400px;
     width: 180px;
     overflow: auto;
 }
-
-// Import the IgniteUI themes library first
-// @import '../../../projects/igniteui-angular/src/lib/core/styles/themes/index';
-
-//:host {
-//    // Change theme palette to purple.
-//    $new-drop-down-theme: igx-drop-down-theme(
-//        $palette: igx-palette(#09f, purple)
-//    );
-//
-//    // Pass the theme to a to the `igx-drop-down` mixin
-//    @include igx-drop-down($new-drop-down-theme);
-//
-//}
