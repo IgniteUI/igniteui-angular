@@ -283,7 +283,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     }
 
     public should_apply_number_style(column: ColumnType): boolean {
-        return column.dataType === GridColumnDataType.Number;
+        return column.dataType === GridColumnDataType.Number
+            || column.dataType === GridColumnDataType.Currency
+            || column.dataType === GridColumnDataType.Percent;
     }
 
     public get_data(): any[] {
