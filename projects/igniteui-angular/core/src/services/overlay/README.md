@@ -73,7 +73,7 @@ this.overlay.show(component, overlaySettings);
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| target              | Point | HTMLElement                     | Attaching target for the component to show. When set to an `HTMLElement` in combination with `ContainerPositionStrategy`, the element serves as the container in which the overlay is rendered. |
+| target              | Point | HTMLElement                     | Attaching target for the component to show.         |
 | positionStrategy    | IPositionStrategy                       | Position strategy to use with this settings         | 
 | scrollStrategy      | IScrollStrategy                         | Scroll strategy to use with this settings           |
 | modal               | boolean                                 | Set if the overlay should be in modal mode          |
@@ -135,8 +135,8 @@ this.overlay.show(component, overlaySettings);
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
 |getPointFromPositionsSettings| Calculates the point from which the overlay should start showing    |settings    |
-|createAbsoluteOverlaySettings| Creates overlay settings with global or container position strategy based on a preset position settings    |position?, container?|
-|createRelativeOverlaySettings| Creates overlay settings with auto, connected or elastic position strategy based on a preset position settings    |target, strategy?, position?|
+|createAbsoluteOverlaySettings| Creates overlay settings with global or container position strategy based on a preset position settings |position?, useContainerStrategy?|
+|createRelativeOverlaySettings| Creates overlay settings with auto, connected or elastic position strategy based on a preset position settings |target, strategy?, position?|
 
 
 ##### Events

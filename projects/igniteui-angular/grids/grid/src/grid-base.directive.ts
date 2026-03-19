@@ -6209,7 +6209,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public showSnackbarFor(index: number) {
         this.addRowSnackbar.actionText = index === -1 ? '' : this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
-        this.addRowSnackbar.container = this.tbodyContainer.nativeElement;
+        this.addRowSnackbar.useContainer = true;
         this.lastAddedRowIndex = index;
         this.addRowSnackbar.open();
     }
@@ -6747,7 +6747,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.shouldOverlayLoading) {
             // a new overlay should be shown
             const overlaySettings: OverlaySettings = {
-                target: this.loadingOutlet.nativeElement,
+                outlet: this.loadingOutlet,
                 closeOnOutsideClick: false,
                 positionStrategy: new ContainerPositionStrategy()
             };

@@ -9,7 +9,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayService`
     - The overlay service now integrates the HTML Popover API and prefers rendering content in place / in the top layer, significantly reducing the need for outlet containers. When configured, `OverlaySettings.outlet` is still honored, and overlays may also fall back to being appended to `document.body` when required.
 
-    - `IgxOverlayService.createAbsoluteOverlaySettings` - Added a new overload accepting `container?: HTMLElement` as the second parameter. When a container element is provided, a `ContainerPositionStrategy` is used and the `target` in the returned overlay settings is set to the container element. The previous overload accepting `outlet?: IgxOverlayOutletDirective | ElementRef` is still supported but deprecated.
+    - `IgxOverlayService.createAbsoluteOverlaySettings` - Added a new overload accepting `useContainerStrategy?: boolean` as the second parameter. When `true`, uses `ContainerPositionStrategy`; otherwise defaults to `GlobalPositionStrategy`. The previous overload accepting `outlet?: IgxOverlayOutletDirective | ElementRef` is still supported but deprecated.
 
 - `IgxNotificationsDirective`, `IgxSnackbarComponent`, `IgxToastComponent`
     - Added a new `container` input property of type `HTMLElement`. When set, overlay content is rendered inside the given container using `ContainerPositionStrategy`. The deprecated `outlet` property now points users to `container` as its replacement.
