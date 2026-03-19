@@ -3,6 +3,7 @@ import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CollapsibleColumnGroupTestComponent,
+    CollapsibleGroupFirstColumnWidthComponent,
     CollapsibleGroupsTemplatesTestComponent,
     CollapsibleGroupsDynamicColComponent
 } from '../../../test-utils/grid-samples.spec';
@@ -28,7 +29,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
-                CollapsibleGroupsDynamicColComponent
+                CollapsibleGroupsDynamicColComponent,
+                CollapsibleGroupFirstColumnWidthComponent
             ]
         }).compileComponents();
     }));
@@ -635,5 +637,29 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, countryInf, true, true);
             GridFunctions.verifyColumnIsHidden(countryCol, true, 12);
         });
+    });
+
+    describe('Regression Tests', () => {
+        it('collapsed column group with explicit child widths should not constrain group calcPixelWidth to minColumnWidth (#17042)', fakeAsync(() => {
+            const fixture = TestBed.createComponent(CollapsibleGroupFirstColumnWidthComponent);
+            fixture.detectChanges();
+            tick(16);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const colGroup = GridFunctions.getColGroup(grid, 'Customer Information');
+            const companyNameCol = grid.getColumnByName('CompanyName');
+
+            // Group is collapsed: CompanyName (100px) visible, ContactName and ContactTitle hidden
+            expect(companyNameCol.hidden).toBe(false);
+            expect(grid.getColumnByName('ContactName').hidden).toBe(true);
+            expect(grid.getColumnByName('ContactTitle').hidden).toBe(true);
+
+            // The group's calcPixelWidth must equal the sum of visible child widths (100px),
+            // not be constrained to the grid's minColumnWidth (136px).
+            // A mismatch here causes header/cell misalignment after horizontal scrolling.
+            expect(colGroup.calcPixelWidth).toBe(companyNameCol.calcPixelWidth);
+            expect(colGroup.calcPixelWidth).toBe(100);
+        }));
     });
 });

@@ -4,6 +4,11 @@ All notable changes for each version of this project will be documented in this 
 
 ## 21.2.0
 
+### Bug Fixes
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Fixed a regression introduced in 20.1.13 where headers and cells became misaligned after horizontal scrolling when a collapsible column group was collapsed and its child columns had explicit widths set. The column group's calculated width is now always derived from the sum of its visible children's widths and is no longer incorrectly constrained to `minColumnWidth`.
+
 ### New Features
 
 - `IgxCombo`, `IgxSimpleCombo`
