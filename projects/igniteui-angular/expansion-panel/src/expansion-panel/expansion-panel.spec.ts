@@ -1,6 +1,6 @@
 
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
@@ -11,6 +11,7 @@ import { IgxListComponent } from 'igniteui-angular/list';
 import { IgxListItemComponent } from 'igniteui-angular/list';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from './public_api';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
@@ -28,12 +29,12 @@ const CSS_CLASS_GRID = 'igx-grid';
 const enum IconPositionClass {
     LEFT = 'igx-expansion-panel__header-icon--start',
     RIGHT = 'igx-expansion-panel__header-icon--end',
-    NONE = 'igx-expansion-panel__header-icon--none',
+    NONE = 'igx-expansion-panel__header-icon--none'
 }
 
 describe('igxExpansionPanel', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxExpansionPanelGridComponent,
@@ -43,7 +44,7 @@ describe('igxExpansionPanel', () => {
                 IgxExpansionPanelTooltipComponent
             ]
         }).compileComponents();
-    }));
+    });
 
 
     describe('General tests: ', () => {
@@ -91,7 +92,7 @@ describe('igxExpansionPanel', () => {
             expect(panelClass.length).toEqual(1);
         });
 
-        it('Should properly emit events', fakeAsync(() => {
+        it('Should properly emit events', async () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
@@ -103,17 +104,17 @@ describe('igxExpansionPanel', () => {
             expect(header.panel).toEqual(panel);
             expect(header.interaction).toBeDefined();
 
-            spyOn(panel.contentCollapsed, 'emit');
-            spyOn(panel.contentExpanded, 'emit');
-            spyOn(panel.contentCollapsing, 'emit');
-            spyOn(panel.contentExpanding, 'emit');
-            spyOn(header.interaction, 'emit').and.callThrough();
-            spyOn(panel, 'toggle').and.callThrough();
-            spyOn(panel, 'expand').and.callThrough();
-            spyOn(panel, 'collapse').and.callThrough();
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
+            vi.spyOn(panel.contentCollapsing, 'emit');
+            vi.spyOn(panel.contentExpanding, 'emit');
+            vi.spyOn(header.interaction, 'emit');
+            vi.spyOn(panel, 'toggle');
+            vi.spyOn(panel, 'expand');
+            vi.spyOn(panel, 'collapse');
 
             header.onAction(mockEvent);
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(0); // Initially collapsed
             expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(0);
@@ -130,7 +131,7 @@ describe('igxExpansionPanel', () => {
             });
 
             header.onAction(mockEvent);
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1); // First Collapse
             expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(1);
@@ -143,7 +144,7 @@ describe('igxExpansionPanel', () => {
 
             header.disabled = true;
             header.onAction(mockEvent);
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             // No additional calls, because panel.disabled === true
@@ -162,7 +163,7 @@ describe('igxExpansionPanel', () => {
             // currently collapsed
             expect(panel.collapsed).toBeTruthy();
             header.onAction(mockEvent);
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             // still collapsed, no additional contentExpanded calls
@@ -173,13 +174,13 @@ describe('igxExpansionPanel', () => {
 
             // expand via API
             panel.expand();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             // currently expanded
             expect(panel.collapsed).toBeFalsy();
             header.onAction(mockEvent);
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             // still expanded, no additional contentCollapsed calls
@@ -191,82 +192,82 @@ describe('igxExpansionPanel', () => {
             // collapse when the panel has already started collapsing
             header.onAction(mockEvent);
             header.onAction(mockEvent);
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(panel.collapsed).toBeTruthy();
             expect(header.interaction.emit).toHaveBeenCalledTimes(6);
             expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(2);
-        }));
+        });
 
-        it('Should expand/collapse without animation when animationSettings === null', fakeAsync(() => {
+        it('Should expand/collapse without animation when animationSettings === null', async () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
             panel.animationSettings = null;
             expect(panel).toBeTruthy();
 
-            spyOn(panel.contentCollapsed, 'emit');
-            spyOn(panel.contentExpanded, 'emit');
-            spyOn(panel.contentCollapsing, 'emit');
-            spyOn(panel.contentExpanding, 'emit');
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
+            vi.spyOn(panel.contentCollapsing, 'emit');
+            vi.spyOn(panel.contentExpanding, 'emit');
 
             panel.toggle();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(0); // Initially collapsed
             expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(0);
             expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
             expect(panel.contentExpanding.emit).toHaveBeenCalledTimes(1);
-            expect(panel.contentExpanding.emit).toHaveBeenCalledBefore(panel.contentExpanded.emit);
+            expect(Math.min(...vi.mocked(panel.contentExpanding.emit).mock.invocationCallOrder)).toBeLessThan(Math.min(...vi.mocked(panel.contentExpanded.emit).mock.invocationCallOrder));
             expect(panel.collapsed).toBeFalsy();
 
             panel.toggle();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
             expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(1);
             expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
             expect(panel.contentExpanding.emit).toHaveBeenCalledTimes(1);
-            expect(panel.contentCollapsing.emit).toHaveBeenCalledBefore(panel.contentCollapsed.emit);
+            expect(Math.min(...vi.mocked(panel.contentCollapsing.emit).mock.invocationCallOrder)).toBeLessThan(Math.min(...vi.mocked(panel.contentCollapsed.emit).mock.invocationCallOrder));
             expect(panel.collapsed).toBeTruthy();
-        }));
+        });
 
-        it('Should allow expanding and collapsing events to be cancelled', fakeAsync(() => {
+        it('Should allow expanding and collapsing events to be cancelled', async () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
+            vi.spyOn(panel.contentExpanded, 'emit');
+            vi.spyOn(panel.contentCollapsed, 'emit');
             expect(panel).toBeDefined();
             expect(panel.collapsed).toBeTruthy();
             expect(panel.contentExpanded.emit).not.toHaveBeenCalled();
             expect(panel.contentCollapsed.emit).not.toHaveBeenCalled();
             let sub = panel.contentExpanding.subscribe((e) => e.cancel = true);
             panel.expand();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panel.collapsed).toBeTruthy();
             expect(panel.contentExpanded.emit).not.toHaveBeenCalled();
             sub.unsubscribe();
             panel.expand();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panel.collapsed).toBeFalsy();
             expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
             sub = panel.contentCollapsing.subscribe((e) => e.cancel = true);
             panel.collapse();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panel.collapsed).toBeFalsy();
             expect(panel.contentCollapsed.emit).not.toHaveBeenCalled();
             sub.unsubscribe();
             panel.collapse();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panel.collapsed).toBeTruthy();
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
-        }));
+        });
 
         it('Should NOT assign tabIndex to header when disabled', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
@@ -291,14 +292,7 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Expansion tests: ', () => {
-        const verifyPanelExpansionState = (
-            collapsed: boolean,
-            panel: IgxExpansionPanelComponent,
-            panelContainer: any,
-            panelHeader: HTMLElement,
-            button: DebugElement,
-            timesCollapsed = 0,
-            timesExpanded = 0) => {
+        const verifyPanelExpansionState = (collapsed: boolean, panel: IgxExpansionPanelComponent, panelContainer: any, panelHeader: HTMLElement, button: DebugElement, timesCollapsed = 0, timesExpanded = 0) => {
             expect(panel.collapsed).toEqual(collapsed);
             const ariaExpanded = collapsed ? 'false' : 'true';
             expect(panelHeader.querySelector('div [role = \'button\']').getAttribute('aria-expanded')).toMatch(ariaExpanded);
@@ -319,7 +313,7 @@ describe('igxExpansionPanel', () => {
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(timesCollapsed);
         };
 
-        it('Should change panel expansion state on header interaction', fakeAsync(() => {
+        it('Should change panel expansion state on header interaction', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -330,57 +324,50 @@ describe('igxExpansionPanel', () => {
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
-            spyOn(header.interaction, 'emit');
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
+            vi.spyOn(header.interaction, 'emit');
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
             panelHeader.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
             panelHeader.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(3);
 
             // Remove expand/collapse button
             header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
-            tick();
             fixture.detectChanges();
-            tick();
-            panelHeader.click();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
             panelHeader.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(5);
-        }));
-        it('Should change panel expansion state on button clicking', fakeAsync(() => {
+        });
+        it('Should change panel expansion state on button clicking', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -391,96 +378,86 @@ describe('igxExpansionPanel', () => {
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
-            spyOn(header.interaction, 'emit');
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
+            vi.spyOn(header.interaction, 'emit');
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
-            button.nativeElement.click()
-            tick();
+            button.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
-            button.nativeElement.click()
-            tick();
+            button.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
-            button.nativeElement.click()
-            tick();
+            button.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(3);
 
             // Change expand/collapse button position
             header.iconPosition = ExpansionPanelHeaderIconPosition.RIGHT;
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
-            button.nativeElement.click()
-            tick();
+            button.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
-            button.nativeElement.click()
-            tick();
+            button.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(5);
 
-            button.nativeElement.click()
-            tick();
+            button.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(6);
-        }));
-        it('Should change panel expansion state on collapsed property setting', fakeAsync(() => {
+        });
+        it('Should change panel expansion state on collapsed property setting', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
             const button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
 
             panel.collapsed = false;
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
 
             panel.collapsed = true;
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
 
             panel.collapsed = false;
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
-        }));
-        it('Should change panel expansion state using API methods', fakeAsync(() => {
+        });
+        it('Should change panel expansion state using API methods', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -490,39 +467,35 @@ describe('igxExpansionPanel', () => {
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.expand();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.collapse();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.expand();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.collapse();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
-        }));
-        it('Should change panel expansion state using toggle method', fakeAsync(() => {
+        });
+        it('Should change panel expansion state using toggle method', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -532,39 +505,35 @@ describe('igxExpansionPanel', () => {
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
-        }));
-        it('Should change panel expansion state on key interaction', fakeAsync(() => {
+        });
+        it('Should change panel expansion state on key interaction', async () => {
             const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
             const spaceEvent = new KeyboardEvent('keydown', { key: 'Space' });
             const arrowUpEvent = new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true });
@@ -579,69 +548,63 @@ describe('igxExpansionPanel', () => {
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
-            spyOn(header.interaction, 'emit').and.callThrough();
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
+            vi.spyOn(header.interaction, 'emit');
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.dispatchEvent(enterEvent);
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
             panelHeader.dispatchEvent(spaceEvent);
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
             panelHeader.dispatchEvent(enterEvent);
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
+
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(3);
 
             panelHeader.dispatchEvent(spaceEvent);
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
             panelHeader.dispatchEvent(arrowUpEvent);
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(5);
 
             panelHeader.dispatchEvent(arrowDownEvent);
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(6);
 
             panelHeader.dispatchEvent(arrowDownEvent);
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
+
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(7);
 
             panelHeader.dispatchEvent(arrowUpEvent);
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(8);
@@ -657,7 +620,7 @@ describe('igxExpansionPanel', () => {
             // cancel openening
             panelHeader.dispatchEvent(arrowDownEvent);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             // do not iterate timesExpanded
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(9);
@@ -665,23 +628,24 @@ describe('igxExpansionPanel', () => {
             // open through API
             panel.expand();
             timesExpanded++;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
-             // currently expanded
-             expect(panel.collapsed).toEqual(false);
+            // currently expanded
+            expect(panel.collapsed).toEqual(false);
 
-             // cancel closing
+            // cancel closing
             panelHeader.dispatchEvent(arrowUpEvent);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
+
             // do not iterate timesCollapsed
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(10);
 
             headerSub.unsubscribe();
-        }));
-        it('Should change panel expansion when using different methods', fakeAsync(() => {
+        });
+        it('Should change panel expansion when using different methods', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -692,71 +656,64 @@ describe('igxExpansionPanel', () => {
 
             let timesCollapsed = 0;
             let timesExpanded = 0;
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
-            spyOn(header.interaction, 'emit');
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
+            vi.spyOn(header.interaction, 'emit');
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.expand();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
-            button.nativeElement.click()
-            tick();
+            button.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
             panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(3);
 
             panel.collapsed = false;
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
             panel.collapse();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
+
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
-        }));
-        it('Should not be interactable when disabled', fakeAsync(() => {
+        });
+        it('Should not be interactable when disabled', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -768,79 +725,70 @@ describe('igxExpansionPanel', () => {
 
             let timesCollapsed = 0;
             const timesExpanded = 1;
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
-            spyOn(header.interaction, 'emit');
+            vi.spyOn(panel.contentCollapsed, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
+            vi.spyOn(header.interaction, 'emit');
 
             panel.expand();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('false');
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             header.disabled = true;
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('true');
 
             panelHeader.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
+
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
-            button.nativeElement.click()
-            tick();
+            button.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             panel.toggle();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('true');
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
-            button.nativeElement.click()
-            tick();
+            button.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             header.disabled = false;
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('false');
-        }));
+        });
         it('Should display expand/collapse button according to its position', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -946,7 +894,7 @@ describe('igxExpansionPanel', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
-            const animationSpy = spyOn<any>(panel, 'playCloseAnimation');
+            const animationSpy = vi.spyOn(panel, 'playCloseAnimation');
             panel.collapse();
             expect(animationSpy).not.toHaveBeenCalled();
         });
@@ -955,14 +903,14 @@ describe('igxExpansionPanel', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
-            const animationSpy = spyOn<any>(panel, 'playOpenAnimation');
+            const animationSpy = vi.spyOn(panel, 'playOpenAnimation');
             panel.collapse();
             expect(animationSpy).not.toHaveBeenCalled();
         });
     });
 
     describe('Aria tests', () => {
-        it('Should properly apply default aria properties', fakeAsync(() => {
+        it('Should properly apply default aria properties', async () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -978,9 +926,8 @@ describe('igxExpansionPanel', () => {
 
             // Body of IgxExpansionPanelComponent
             panel.expand();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
 
@@ -992,10 +939,12 @@ describe('igxExpansionPanel', () => {
 
             // Disabled
             header.disabled = true;
-            expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('false');
-        }));
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('true');
+        });
 
-        it('Should properly apply aria properties if no header is shown', fakeAsync(() => {
+        it('Should properly apply aria properties if no header is shown', async () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             fixture.componentInstance.showBody = true;
@@ -1009,20 +958,19 @@ describe('igxExpansionPanel', () => {
             const title = fixture.componentInstance.title;
             expect(title).toBeFalsy();
             panel.expand();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             // Body of IgxExpansionPanelComponent
             expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual('');
             expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panelElement.id}-region`);
             panel.expand();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
-        it('Should update aria properties recording to external change', fakeAsync(() => {
+        it('Should update aria properties recording to external change', async () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -1031,9 +979,7 @@ describe('igxExpansionPanel', () => {
             const headerElement = header.elementRef.nativeElement;
             const title = panel.header;
             panel.expand();
-            tick();
             fixture.detectChanges();
-            tick();
 
             // Body of IgxExpansionPanelComponent
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
@@ -1041,27 +987,25 @@ describe('igxExpansionPanel', () => {
             // Button of IgxExpansionPanelHeaderComponent
             expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual(panel.id);
             panel.id = 'example-test-panel-id';
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual('example-test-panel-id');
             // title.id = 'example-title-id'; // not probable
             // tick();
             // fixture.detectChanges();
             // tick();
             // expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual('example-title-id');
-        }));
+        });
 
-        it('Should properly label the control region', fakeAsync(() => {
+        it('Should properly label the control region', async () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
             const panelElement = fixture.debugElement.query(By.css('igx-expansion-panel')).nativeElement;
             const title = fixture.componentInstance.expansionPanel.header;
             panel.expand();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
             expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
             // fixture.componentInstance.showTitle = false;
@@ -1071,20 +1015,20 @@ describe('igxExpansionPanel', () => {
             // expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual('');
             // expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
             panel.body.label = 'custom-test-label';
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
             expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`custom-test-label`);
             panel.body.label = '';
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
             expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
-        }));
+        });
     });
 
     describe('Rendering tests: ', () => {
-        it('Should apply all appropriate classes on combo initialization', fakeAsync(() => {
+        it('Should apply all appropriate classes on combo initialization', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelSampleComponent> = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
@@ -1126,16 +1070,15 @@ describe('igxExpansionPanel', () => {
             expect(panelContainer.childElementCount).toEqual(1);
 
             header.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             const bodyWrapper = panelContainer.children[1];
             expect(bodyWrapper.attributes.getNamedItem('role').nodeValue).toEqual('region');
             expect(bodyWrapper.attributes.getNamedItem('aria-label').nodeValue).toEqual(panel.id + '-region');
             expect(bodyWrapper.childElementCount).toEqual(0);
             expect(bodyWrapper.textContent.trim()).toEqual('Example body');
-        }));
-        it('Should apply all appropriate classes on initialization_grid content', fakeAsync(() => {
+        });
+        it('Should apply all appropriate classes on initialization_grid content', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelGridComponent> = TestBed.createComponent(IgxExpansionPanelGridComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -1177,9 +1120,8 @@ describe('igxExpansionPanel', () => {
             expect(panelContainer.childElementCount).toEqual(1);
 
             header.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             const bodyWrapper = panelContainer.children[1];
             expect(bodyWrapper.attributes.getNamedItem('role').nodeValue).toEqual('region');
             expect(bodyWrapper.attributes.getNamedItem('aria-label').nodeValue).toEqual(panel.id + '-region');
@@ -1190,8 +1132,8 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('id').nodeValue).toEqual(fixture.componentInstance.grid1.id);
             expect(grid.attributes.getNamedItem('tabindex').nodeValue).toEqual('0');
             expect(grid.childElementCount).toEqual(6);
-        }));
-        it('Should apply all appropriate classes on combo initialization_image + text content', fakeAsync(() => {
+        });
+        it('Should apply all appropriate classes on combo initialization_image + text content', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelImageComponent> = TestBed.createComponent(IgxExpansionPanelImageComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
@@ -1232,9 +1174,8 @@ describe('igxExpansionPanel', () => {
             expect(panelContainer.childElementCount).toEqual(1);
 
             header.click();
-            tick();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             const bodyWrapper = panelContainer.children[1];
             expect(bodyWrapper.attributes.getNamedItem('role').nodeValue).toEqual('region');
             expect(bodyWrapper.attributes.getNamedItem('aria-label').nodeValue).toEqual(panel.id + '-region');
@@ -1244,8 +1185,8 @@ describe('igxExpansionPanel', () => {
             expect(textWrapper.childElementCount).toEqual(1);
             const image = textWrapper.children[0] as HTMLElement;
             expect(image.tagName).toEqual('IMG');
-            expect (textWrapper.textContent.trim()).toEqual(fixture.componentInstance.text);
-        }));
+            expect(textWrapper.textContent.trim()).toEqual(fixture.componentInstance.text);
+        });
         it('Should display tooltip with the title and description text content', () => {
             const fixture: ComponentFixture<IgxExpansionPanelTooltipComponent> = TestBed.createComponent(IgxExpansionPanelTooltipComponent);
             fixture.detectChanges();

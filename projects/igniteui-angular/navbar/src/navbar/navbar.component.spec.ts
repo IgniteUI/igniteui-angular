@@ -1,16 +1,17 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxNavbarComponent, IgxNavbarTitleDirective, IgxNavbarActionDirective } from './navbar.component';
 
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
 describe('IgxNavbar', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NavbarIntializeTestComponent,
                 NavbarCustomActionIconTestComponent,
@@ -20,9 +21,11 @@ describe('IgxNavbar', () => {
                 NavbarCustomIgxIconDirectiveTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    let fixture; let component; let domNavbar;
+    let fixture;
+    let component;
+    let domNavbar;
 
     describe('Default Action Icon', () => {
         beforeEach(() => {
@@ -66,7 +69,7 @@ describe('IgxNavbar', () => {
             component.actionButtonIcon = 'home';
             fixture.detectChanges();
 
-            spyOn(component.navbar.action, 'emit');
+            vi.spyOn(component.navbar.action, 'emit');
             fixture.debugElement.nativeElement.querySelector('igx-icon').click();
             fixture.detectChanges();
 
@@ -84,14 +87,14 @@ describe('IgxNavbar', () => {
 
             // Verify there is no custom content on the left
             const customContent = leftArea.query(By.css('igx-navbar-action'));
-            expect(customContent).toBeNull('Custom action icon content is found on the left.');
+            expect(customContent, 'Custom action icon content is found on the left.').toBeNull();
 
             // Verify there is a default icon on the left.
             const defaultIcon = leftArea.query(By.css('igx-icon'));
-            expect(defaultIcon).not.toBeNull('Default icon is not found on the left.');
+            expect(defaultIcon, 'Default icon is not found on the left.').not.toBeNull();
             const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
             const defaultIconLeft = defaultIcon.nativeElement.getBoundingClientRect().left;
-            expect(leftAreaLeft).toBe(defaultIconLeft, 'Default icon is not first on the left.');
+            expect(leftAreaLeft, 'Default icon is not first on the left.').toBe(defaultIconLeft);
         });
     });
 
@@ -104,17 +107,17 @@ describe('IgxNavbar', () => {
 
             // Verify there is no default icon on the left.
             const defaultIcon = leftArea.query(By.css('igx-icon'));
-            expect(defaultIcon).toBeNull('Default icon is found on the left.');
+            expect(defaultIcon, 'Default icon is found on the left.').toBeNull();
 
             // Verify there is a custom content on the left.
             const customContent = leftArea.query(By.css('igx-navbar-action'));
-            expect(customContent).not.toBeNull('Custom action icon content is not found on the left.');
+            expect(customContent, 'Custom action icon content is not found on the left.').not.toBeNull();
             const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
             const customContentLeft = customContent.nativeElement.getBoundingClientRect().left;
-            expect(leftAreaLeft).toBe(customContentLeft, 'Custom action icon content is not first on the left.');
+            expect(leftAreaLeft, 'Custom action icon content is not first on the left.').toBe(customContentLeft);
         });
 
-        it('should have vertically-centered custom action icon content', (async () => {
+        it('should have vertically-centered custom action icon content', async () => {
             fixture = TestBed.createComponent(NavbarCustomIgxIconTestComponent);
             fixture.detectChanges();
 
@@ -130,21 +133,21 @@ describe('IgxNavbar', () => {
             const navbarMidpoint = Math.round(navbarRect.top + (navbarRect.height / 2));
             const iconMidpoint = Math.round(iconRect.top + (iconRect.height / 2));
 
-            expect(navbarMidpoint).toBe(iconMidpoint, 'Custom icon is not exactly vertically centered within the navbar.');
-        }));
+            expect(navbarMidpoint, 'Custom icon is not exactly vertically centered within the navbar.').toBe(iconMidpoint);
+        });
 
-        it('action icon via directive', (async () => {
+        it('action icon via directive', async () => {
             fixture = TestBed.createComponent(NavbarCustomIgxIconDirectiveTestComponent);
             fixture.detectChanges();
 
             const leftArea = fixture.debugElement.query(By.css(LEFT_AREA_CSS_CLAS));
             const customContent = leftArea.query(By.directive(IgxNavbarActionDirective));
-            expect(customContent).not.toBeNull('Custom action icon content is not found on the left.');
+            expect(customContent, 'Custom action icon content is not found on the left.').not.toBeNull();
 
             const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
             const customContentLeft = customContent.nativeElement.getBoundingClientRect().left;
-            expect(leftAreaLeft).toBe(customContentLeft, 'Custom action icon content is not first on the left.');
-        }));
+            expect(leftAreaLeft, 'Custom action icon content is not first on the left.').toBe(customContentLeft);
+        });
     });
 
     describe('Custom title content', () => {
@@ -163,10 +166,10 @@ describe('IgxNavbar', () => {
 
             // Verify there is no default icon on the left.
             const customTitle = midArea.query(By.css('igx-navbar-title'));
-            expect(customTitle.nativeElement.textContent).toBe('Custom Title', 'Custom title is missing');
+            expect(customTitle.nativeElement.textContent, 'Custom title is missing').toBe('Custom Title');
 
             const defaultTitle = midArea.query(By.css('igx-navbar__title'));
-            expect(defaultTitle).toBeNull('Default title should not be present');
+            expect(defaultTitle, 'Default title should not be present').toBeNull();
         });
 
         it('Custom content should override the default title property', () => {
@@ -177,11 +180,11 @@ describe('IgxNavbar', () => {
 
             // Verify there is no default icon on the left.
             const customTitle = midArea.query(By.directive(IgxNavbarTitleDirective));
-            expect(customTitle.nativeElement.children[0].textContent).toBe('Custom', 'Custom title is missing');
-            expect(customTitle.nativeElement.children[1].textContent).toBe('Title', 'Custom title is missing');
+            expect(customTitle.nativeElement.children[0].textContent, 'Custom title is missing').toBe('Custom');
+            expect(customTitle.nativeElement.children[1].textContent, 'Custom title is missing').toBe('Title');
 
             const defaultTitle = midArea.query(By.css('igx-navbar__title'));
-            expect(defaultTitle).toBeNull('Default title should not be present');
+            expect(defaultTitle, 'Default title should not be present').toBeNull();
         });
     });
 });
@@ -195,7 +198,8 @@ describe('IgxNavbar', () => {
     imports: [IgxNavbarComponent]
 })
 class NavbarIntializeTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
     public title: string;
     public actionButtonIcon: string;
     public isActionButtonVisible: boolean;
@@ -214,7 +218,8 @@ class NavbarIntializeTestComponent {
     imports: [IgxNavbarComponent, IgxNavbarActionDirective]
 })
 class NavbarCustomActionIconTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -230,7 +235,8 @@ class NavbarCustomActionIconTestComponent {
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxIconComponent]
 })
 class NavbarCustomIgxIconTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -244,7 +250,8 @@ class NavbarCustomIgxIconTestComponent {
     imports: [IgxNavbarComponent, IgxIconComponent, IgxNavbarActionDirective]
 })
 class NavbarCustomIgxIconDirectiveTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -261,7 +268,8 @@ class NavbarCustomIgxIconDirectiveTestComponent {
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective, IgxIconComponent]
 })
 class NavbarCustomTitleTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -281,5 +289,6 @@ class NavbarCustomTitleTestComponent {
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective, IgxIconComponent]
 })
 class NavbarCustomTitleDirectiveTestComponent {
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true })
+    public navbar: IgxNavbarComponent;
 }

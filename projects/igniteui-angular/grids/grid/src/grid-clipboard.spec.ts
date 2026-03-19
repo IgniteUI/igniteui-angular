@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
@@ -8,18 +8,19 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
 import { CancelableEventArgs } from 'igniteui-angular/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Clipboard #grid', () => {
 
     let fix: ComponentFixture<IgxGridClipboardComponent>;
     let grid: IgxGridComponent;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 IgxGridClipboardComponent, NoopAnimationsModule
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(IgxGridClipboardComponent);
@@ -28,7 +29,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Copy data with default settings', () => {
-        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+        const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         const range = { rowStart: 0, rowEnd: 1, columnStart: 1, columnEnd: 3 };
         grid.selectRange(range);
         fix.detectChanges();
@@ -41,7 +42,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Copy data when there are no selected cells', () => {
-        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+        const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         const eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(1);
         expect(copySpy).toHaveBeenCalledWith({
@@ -52,7 +53,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Copy data with different separator', () => {
-        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+        const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         grid.clipboardOptions.separator = ';';
         grid.selectRange({ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 });
         grid.selectRange({ rowStart: 1, rowEnd: 1, columnStart: 1, columnEnd: 1 });
@@ -71,7 +72,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Copy data without headers', () => {
-        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+        const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         grid.clipboardOptions.copyHeaders = false;
         grid.selectRange({ rowStart: 1, rowEnd: 2, columnStart: 2, columnEnd: 3 });
         fix.detectChanges();
@@ -96,7 +97,7 @@ describe('IgxGrid - Clipboard #grid', () => {
 
         grid.paginator.page = 1;
         fix.detectChanges();
-        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+        const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         grid.clipboardOptions.copyHeaders = false;
         grid.selectRange({ rowStart: 1, rowEnd: 2, columnStart: 2, columnEnd: 3 });
         fix.detectChanges();
@@ -107,7 +108,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Disable clipboardOptions', () => {
-        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+        const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         grid.clipboardOptions.enabled = false;
         grid.selectRange({ rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 3 });
         fix.detectChanges();
@@ -118,7 +119,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Disable copyFormatters', () => {
-        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+        const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         grid.clipboardOptions.copyFormatters = false;
         grid.selectRange({ rowStart: 1, rowEnd: 3, columnStart: 1, columnEnd: 1 });
         fix.detectChanges();
@@ -135,7 +136,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Cancel gridCopy event ', () => {
-        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+        const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         grid.gridCopy.pipe(take(1)).subscribe((e: CancelableEventArgs) => e.cancel = true);
         grid.selectRange({ rowStart: 1, rowEnd: 3, columnStart: 0, columnEnd: 3 });
         fix.detectChanges();
@@ -149,16 +150,16 @@ describe('IgxGrid - Clipboard #grid', () => {
         expect(eventData).toEqual('undefined');
     });
 
-    it('Copy when there is a cell in edit mode', fakeAsync(() => {
-        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+    it('Copy when there is a cell in edit mode', async () => {
+        const copySpy = vi.spyOn(grid.gridCopy, 'emit');
         const cell = grid.getCellByColumn(0, 'ProductName');
-        grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.dispatchEvent( new Event('dblclick'));
-        tick(16);
+        grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.dispatchEvent(new Event('dblclick'));
+        await fix.whenStable();
         fix.detectChanges();
         expect(cell.editMode).toBe(true);
 
         grid.selectRange({ rowStart: 1, rowEnd: 3, columnStart: 0, columnEnd: 3 });
-        tick(16);
+        await fix.whenStable();
         fix.detectChanges();
 
         expect(cell.editMode).toBe(true);
@@ -166,14 +167,14 @@ describe('IgxGrid - Clipboard #grid', () => {
         const eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(0);
         expect(eventData).toEqual('');
-    }));
+    });
 
-    it('Should be able to copy from quick filtering input', fakeAsync(() => {
+    it('Should be able to copy from quick filtering input', async () => {
         fix.componentInstance.allowFiltering = true;
         fix.detectChanges();
         const productNameFilterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[0];
         productNameFilterCellChip.nativeElement.click();
-        tick(100);
+        await fix.whenStable();
         fix.detectChanges();
 
         const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -181,19 +182,19 @@ describe('IgxGrid - Clipboard #grid', () => {
         const input = inputDebugElement.nativeElement;
         const searchVal = 'aaa';
 
-        const ev = new ClipboardEvent('copy', {bubbles: true, clipboardData: new DataTransfer()});
+        const ev = new ClipboardEvent('copy', { bubbles: true, clipboardData: new DataTransfer() });
         ev.clipboardData.setData('text/plain', searchVal);
         input.dispatchEvent(ev);
         fix.detectChanges();
         const eventData = ev.clipboardData.getData('text/plain');
         expect(eventData).toEqual(searchVal);
-    }));
+    });
 });
 
-const dispatchCopyEventOnGridBody = (fixture) => {
-    const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody')).nativeElement;
-    const ev = new ClipboardEvent('copy', {clipboardData: new DataTransfer()});
+const dispatchCopyEventOnGridBody = (fix) => {
+    const gridBody = fix.debugElement.query(By.css('.igx-grid__tbody')).nativeElement;
+    const ev = new ClipboardEvent('copy', { clipboardData: new DataTransfer() });
     gridBody.dispatchEvent(ev);
-    fixture.detectChanges();
-    return  ev.clipboardData.getData('text/plain');
+    fix.detectChanges();
+    return ev.clipboardData.getData('text/plain');
 };

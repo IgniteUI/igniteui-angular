@@ -1,4 +1,6 @@
-import { waitForAsync, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import type { Mock } from "vitest";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { TestBed } from '@angular/core/testing';
 import { IgxTreeNavigationComponent, IgxTreeScrollComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -16,8 +18,8 @@ describe('IgxTree - Navigation #treeView', () => {
     describe('Navigation - UI Tests', () => {
         let fix;
         let tree: IgxTreeComponent;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxTreeNavigationComponent,
@@ -25,19 +27,19 @@ describe('IgxTree - Navigation #treeView', () => {
                     IgxTreeSimpleComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeNavigationComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
-        }));
+        });
 
         describe('UI Interaction tests - None', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 tree.selection = IgxTreeSelectionType.None;
                 fix.detectChanges();
-            }));
+            });
 
             it('Initial tab index without focus SHOULD be 0 for all nodes and active input should be set correctly', () => {
                 const visibleNodes = (tree as any).navService.visibleChildren;
@@ -61,7 +63,7 @@ describe('IgxTree - Navigation #treeView', () => {
             });
 
             it('Should focus/activate correct node on ArrowDown/ArrowUp (+ Ctrl) key pressed', () => {
-                spyOn(tree.activeNodeChanged, 'emit').and.callThrough();
+                vi.spyOn(tree.activeNodeChanged, 'emit');
                 tree.nodes.first.header.nativeElement.dispatchEvent(new Event('pointerdown'));
                 fix.detectChanges();
 
@@ -101,7 +103,7 @@ describe('IgxTree - Navigation #treeView', () => {
             });
 
             it('Should focus and activate the first/last visible node on Home/End key press', () => {
-                spyOn(tree.activeNodeChanged, 'emit').and.callThrough();
+                vi.spyOn(tree.activeNodeChanged, 'emit');
                 tree.nodes.first.expand();
                 fix.detectChanges();
                 tree.nodes.toArray()[2].header.nativeElement.dispatchEvent(new Event('pointerdown'));
@@ -122,15 +124,13 @@ describe('IgxTree - Navigation #treeView', () => {
                 expect(tree.activeNodeChanged.emit).toHaveBeenCalledWith(tree.nodes.last);
             });
 
-            it('Should collapse/navigate to correct node on Arrow left key press', fakeAsync(() => {
-                spyOn(tree.activeNodeChanged, 'emit').and.callThrough();
+            it('Should collapse/navigate to correct node on Arrow left key press', async () => {
+                vi.spyOn(tree.activeNodeChanged, 'emit');
                 // If node is collapsed and has no parents the focus and activation should not be moved on Arrow left key press
                 tree.nodes.first.header.nativeElement.dispatchEvent(new Event('pointerdown'));
-                tick();
                 fix.detectChanges();
 
                 UIInteractions.triggerKeyDownEvtUponElem('arrowleft', tree.nodes.first.nativeElement);
-                tick();
                 fix.detectChanges();
 
                 expect((tree as any).navService.focusedNode).toEqual(tree.nodes.first);
@@ -139,14 +139,11 @@ describe('IgxTree - Navigation #treeView', () => {
 
                 // If node is collapsed and has parent the focus and activation should be moved to the parent node on Arrow left key press
                 tree.nodes.first.expand();
-                tick();
                 fix.detectChanges();
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', tree.nodes.first.nativeElement);
-                tick();
                 fix.detectChanges();
 
                 UIInteractions.triggerKeyDownEvtUponElem('arrowleft', tree.nodes.first.nativeElement);
-                tick();
                 fix.detectChanges();
 
                 expect((tree as any).navService.focusedNode).toEqual(tree.nodes.first);
@@ -155,16 +152,15 @@ describe('IgxTree - Navigation #treeView', () => {
 
                 // If node is expanded the node should collapse on Arrow left key press
                 UIInteractions.triggerKeyDownEvtUponElem('arrowleft', tree.nodes.first.nativeElement);
-                tick();
                 fix.detectChanges();
 
                 expect((tree as any).navService.focusedNode).toEqual(tree.nodes.first);
                 expect((tree as any).navService.activeNode).toEqual(tree.nodes.first);
                 expect(tree.nodes.first.expanded).toBeFalsy();
-            }));
+            });
 
             it('Should expand/navigate to correct node on Arrow right key press', () => {
-                spyOn(tree.activeNodeChanged, 'emit').and.callThrough();
+                vi.spyOn(tree.activeNodeChanged, 'emit');
                 // If node has no children the focus and activation should not be moved on Arrow right key press
                 tree.nodes.last.header.nativeElement.dispatchEvent(new Event('pointerdown'));
                 fix.detectChanges();
@@ -215,7 +211,7 @@ describe('IgxTree - Navigation #treeView', () => {
             });
 
             it('Pressing Enter should activate the focused node and not prevent the keydown event`s deafault behavior', () => {
-                spyOn(tree.activeNodeChanged, 'emit').and.callThrough();
+                vi.spyOn(tree.activeNodeChanged, 'emit');
                 tree.nodes.first.header.nativeElement.dispatchEvent(new Event('pointerdown'));
                 fix.detectChanges();
 
@@ -223,7 +219,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 fix.detectChanges();
 
                 const mockEvent = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
-                spyOn(mockEvent, 'preventDefault');
+                vi.spyOn(mockEvent, 'preventDefault');
                 tree.nodes.toArray()[17].nativeElement.dispatchEvent(mockEvent);
                 expect(mockEvent.preventDefault).not.toHaveBeenCalled();
 
@@ -233,7 +229,7 @@ describe('IgxTree - Navigation #treeView', () => {
             });
 
             it('Should correctly set node`s selection state on Space key press', () => {
-                spyOn(tree.activeNodeChanged, 'emit').and.callThrough();
+                vi.spyOn(tree.activeNodeChanged, 'emit');
                 // Space on None Selection Mode
                 tree.selection = 'None';
                 tree.nodes.first.header.nativeElement.dispatchEvent(new Event('pointerdown'));
@@ -242,9 +238,9 @@ describe('IgxTree - Navigation #treeView', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', tree.nodes.first.nativeElement, true, false, false, true);
                 fix.detectChanges();
 
-                spyOn((tree as any).selectionService, 'selectNode').and.callThrough();
-                spyOn((tree as any).selectionService, 'deselectNode').and.callThrough();
-                spyOn((tree as any).selectionService, 'selectMultipleNodes').and.callThrough();
+                vi.spyOn((tree as any).selectionService, 'selectNode');
+                vi.spyOn((tree as any).selectionService, 'deselectNode');
+                vi.spyOn((tree as any).selectionService, 'selectMultipleNodes');
 
                 UIInteractions.triggerKeyDownEvtUponElem('space', tree.nodes.toArray()[17].nativeElement);
                 fix.detectChanges();
@@ -301,13 +297,13 @@ describe('IgxTree - Navigation #treeView', () => {
         });
 
         describe('UI Interaction tests - Expand/Collapse nodes', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fix = TestBed.createComponent(IgxTreeSimpleComponent);
                 fix.detectChanges();
                 tree = fix.componentInstance.tree;
                 tree.selection = IgxTreeSelectionType.BiState;
                 fix.detectChanges();
-            }));
+            });
 
             it('Should be able to expand/collapse nodes only through clicking on the expand indicator if `toggleNodeOnClick` is set to `false`', () => {
                 const firstNode = tree.nodes.toArray()[0];
@@ -365,21 +361,20 @@ describe('IgxTree - Navigation #treeView', () => {
         });
 
         describe('UI Interaction tests - Scroll to focused node', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fix = TestBed.createComponent(IgxTreeScrollComponent);
                 fix.detectChanges();
                 tree = fix.componentInstance.tree;
                 tree.selection = IgxTreeSelectionType.None;
                 fix.detectChanges();
-            }));
+            });
 
             it('The tree should have custome expand indicator templates', () => {
                 expect(tree.nodes.first.nativeElement.querySelector('.igx-icon').textContent).toBe('close_fullscreen');
             });
 
-            it('The tree container should be scrolled so that the focused node is in view', fakeAsync(() => {
-                // set another node as active element, expect node to be in view
-                tick();
+            it('The tree container should be scrolled so that the focused node is in view', async () => {
+                // set another node as active element, expect node to be in view();
                 const treeElement = tree.nativeElement;
                 let targetNode = tree.nodes.last;
                 let nodeElement = targetNode.nativeElement;
@@ -390,7 +385,6 @@ describe('IgxTree - Navigation #treeView', () => {
                 targetNode = tree.nodes.first;
                 nodeElement = targetNode?.header.nativeElement;
                 targetNode.active = true;
-                tick();
                 fix.detectChanges();
                 nodeRect = nodeElement.getBoundingClientRect();
                 treeRect = treeElement.getBoundingClientRect();
@@ -406,25 +400,23 @@ describe('IgxTree - Navigation #treeView', () => {
                     targetNode = tree.nodes.toArray()[nodeIndex];
                     nodeElement = targetNode.header.nativeElement;
                     targetNode.active = true;
-                    tick();
                     fix.detectChanges();
-                    tick();
                     fix.detectChanges();
                     // recalculate rectangles
                     treeRect = treeElement.getBoundingClientRect();
                     nodeRect = targetNode.header.nativeElement.getBoundingClientRect();
                     expect((treeRect.top <= nodeRect.top) && (treeRect.bottom >= nodeRect.bottom)).toBeTruthy();
                 }
-            }));
+            });
         });
 
         describe('UI Interaction tests - Disabled Nodes', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 tree.selection = IgxTreeSelectionType.None;
                 fix.detectChanges();
                 fix.componentInstance.isDisabled = true;
                 fix.detectChanges();
-            }));
+            });
 
             it('TabIndex on disabled node should be -1', () => {
                 expect(tree.nodes.last.header.nativeElement.tabIndex).toEqual(-1);
@@ -532,25 +524,24 @@ describe('IgxTree - Navigation #treeView', () => {
         });
 
         describe('UI Interaction tests - igxTreeNodeLink', () => {
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 tree.selection = IgxTreeSelectionType.None;
                 fix.detectChanges();
                 fix.componentInstance.showNodesWithDirective = true;
                 fix.detectChanges();
-            }));
+            });
 
             it('Nodes with igxTreeNodeLink should have tabIndex -1', () => {
                 expect(tree.nodes.toArray()[41].header.nativeElement.tabIndex).toEqual(-1);
                 expect(tree.nodes.last.header.nativeElement.tabIndex).toEqual(-1);
             });
 
-            it('When focus falls on link with directive, document.activeElement should be link with directive', fakeAsync(() => {
+            it('When focus falls on link with directive, document.activeElement should be link with directive', async () => {
                 tree.nodes.toArray()[40].header.nativeElement.dispatchEvent(new Event('pointerdown'));
                 fix.detectChanges();
 
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', tree.nodes.toArray()[40].nativeElement);
                 fix.detectChanges();
-                tick();
                 fix.detectChanges();
 
                 const linkNode = tree.nodes.toArray()[41].linkChildren.first.nativeElement;
@@ -559,7 +550,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 // When focus falls on link with directive, parent has focused class (nav.service.focusedNode === link.parent)
                 expect((tree as any).navService.focusedNode).toEqual(tree.nodes.toArray()[41]);
                 expect(document.activeElement).toEqual(linkNode);
-            }));
+            });
 
             it('Link with passed parent in ng-template outisde of node parent has proper ref to parent', () => {
                 tree.nodes.toArray()[40].header.nativeElement.dispatchEvent(new Event('pointerdown'));
@@ -602,8 +593,7 @@ describe('IgxTree - Navigation #treeView', () => {
             navService?.ngOnDestroy();
             //navService = new IgxTreeNavigationService();
             mockNodesLevel1 = TreeTestFunctions.createNodeSpies(0, 3, null, [mockQuery2, mockQuery3, []], [mockQuery6, mockQuery3, []]);
-            mockNodesLevel2_1 = TreeTestFunctions.createNodeSpies(1, 2,
-                mockNodesLevel1[0], [mockQuery4, mockQuery5], [mockQuery4, mockQuery5]);
+            mockNodesLevel2_1 = TreeTestFunctions.createNodeSpies(1, 2, mockNodesLevel1[0], [mockQuery4, mockQuery5], [mockQuery4, mockQuery5]);
             mockNodesLevel2_2 = TreeTestFunctions.createNodeSpies(1, 1, mockNodesLevel1[1], [[]]);
             mockNodesLevel3_1 = TreeTestFunctions.createNodeSpies(2, 2, mockNodesLevel2_1[0], [[], []]);
             mockNodesLevel3_2 = TreeTestFunctions.createNodeSpies(2, 2, mockNodesLevel2_1[1], [[], []]);
@@ -634,19 +624,24 @@ describe('IgxTree - Navigation #treeView', () => {
         });
 
         describe('IgxNavigationService', () => {
-            beforeEach(() => {
-                mockEmitter = jasmine.createSpyObj('emitter', ['emit']);
-                mockTree = jasmine.createSpyObj('tree', [''],
-                    { selection: IgxTreeSelectionType.BiState, activeNodeChanged: mockEmitter, nodes: mockQuery1 });
+            beforeEach(async () => {
+                mockEmitter = {
+                    emit: vi.fn()
+                } as unknown as EventEmitter<IgxTreeNode<any>>;
+                mockTree = {
+                    selection: IgxTreeSelectionType.BiState,
+                    activeNodeChanged: mockEmitter,
+                    nodes: mockQuery1
+                } as unknown as IgxTree;
 
-                TestBed.configureTestingModule({
+                await TestBed.configureTestingModule({
                     providers: [
                         { provide: IgxTreeComponent, useValue: mockTree },
                         { provide: IgxTreeService, useValue: treeService },
                         { provide: IgxTreeSelectionService, useValue: selectionService },
                         IgxTreeNavigationService
                     ]
-                });
+                }).compileComponents();
 
                 navService = TestBed.inject(IgxTreeNavigationService);
             });
@@ -663,18 +658,15 @@ describe('IgxTree - Navigation #treeView', () => {
                 navService.init_invisible_cache();
                 expect(navService.visibleChildren.length).toEqual(3);
 
-                (Object.getOwnPropertyDescriptor(allNodes[0], 'expanded').get as jasmine.Spy<any>)
-                    .and.returnValue(true);
+                (Object.getOwnPropertyDescriptor(allNodes[0], 'expanded').get as Mock).mockReturnValue(true);
                 navService.init_invisible_cache();
                 expect(navService.visibleChildren.length).toEqual(5);
 
-                (Object.getOwnPropertyDescriptor(allNodes[0], 'disabled').get as jasmine.Spy<any>)
-                    .and.returnValue(true);
+                (Object.getOwnPropertyDescriptor(allNodes[0], 'disabled').get as Mock).mockReturnValue(true);
                 navService.update_disabled_cache(allNodes[0]);
                 expect(navService.visibleChildren.length).toEqual(4);
                 allNodes.forEach(e => {
-                    (Object.getOwnPropertyDescriptor(e, 'disabled').get as jasmine.Spy<any>)
-                        .and.returnValue(true);
+                    (Object.getOwnPropertyDescriptor(e, 'disabled').get as Mock).mockReturnValue(true);
                     navService.update_disabled_cache(e);
                 });
                 expect(navService.visibleChildren.length).toEqual(0);
@@ -687,14 +679,18 @@ describe('IgxTree - Navigation #treeView', () => {
                 const someNode = {
                     tabIndex: null,
                     header: {
-                        nativeElement: jasmine.createSpyObj('nativeElement', ['focus'])
+                        nativeElement: {
+                            focus: vi.fn().mockName("nativeElement.focus")
+                        }
                     }
                 } as any;
 
                 const someNode2 = {
                     tabIndex: null,
                     header: {
-                        nativeElement: jasmine.createSpyObj('nativeElement', ['focus'])
+                        nativeElement: {
+                            focus: vi.fn().mockName("nativeElement.focus")
+                        }
                     }
                 } as any;
 
@@ -726,8 +722,8 @@ describe('IgxTree - Navigation #treeView', () => {
                 navService.register(mockTree);
                 navService.init_invisible_cache();
                 const mockEvent1 = new KeyboardEvent('keydown', { key: 'arrowdown', bubbles: true });
-                spyOn(mockEvent1, 'preventDefault');
-                spyOn(navService, 'handleKeydown').and.callThrough();
+                vi.spyOn(mockEvent1, 'preventDefault');
+                vi.spyOn(navService, 'handleKeydown');
                 navService.focusedNode = mockNodesLevel1[0];
 
                 navService.handleKeydown(mockEvent1);
@@ -737,7 +733,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 expect(navService.focusedNode).toEqual(mockNodesLevel1[1]);
 
                 const mockEvent2 = new KeyboardEvent('keydown', { key: 'arrowup', bubbles: true });
-                spyOn(mockEvent2, 'preventDefault');
+                vi.spyOn(mockEvent2, 'preventDefault');
                 navService.handleKeydown(mockEvent2);
 
                 expect(mockEvent2.preventDefault).toHaveBeenCalled();
@@ -745,7 +741,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 expect(navService.focusedNode).toEqual(mockNodesLevel1[0]);
 
                 const mockEvent3 = new KeyboardEvent('keydown', { key: 'arrowdown', bubbles: true, repeat: true });
-                spyOn(mockEvent3, 'preventDefault');
+                vi.spyOn(mockEvent3, 'preventDefault');
                 // when event is repeated, prevent default and wait
                 navService.handleKeydown(mockEvent3);
                 expect(navService.handleKeydown).toHaveBeenCalledTimes(3);
@@ -758,7 +754,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 // does nothing if there is no focused node
                 navService.focusedNode = null;
                 const mockEvent4 = new KeyboardEvent('keydown', { key: 'arrowdown', bubbles: true, repeat: false });
-                spyOn(mockEvent4, 'preventDefault');
+                vi.spyOn(mockEvent4, 'preventDefault');
                 navService.handleKeydown(mockEvent4);
                 expect(mockEvent4.preventDefault).not.toHaveBeenCalled();
 
@@ -768,26 +764,38 @@ describe('IgxTree - Navigation #treeView', () => {
                 expect(navService.focusedNode).toEqual(allNodes[allNodes.length - 1]);
             });
 
-            it('Should update visible children on all relevant tree events', () => {
-                const mockTreeService = jasmine.createSpyObj<IgxTreeService>('mockSelection',
-                    ['register', 'collapse', 'expand', 'collapsing'], {
-                    collapsingNodes: jasmine.createSpyObj<Set<IgxTreeNodeComponent<any>>>('mockCollpasingSet',
-                        ['add', 'delete', 'has'], {
+            it('Should update visible children on all relevant tree events', async () => {
+                const mockTreeService = {
+                    register: vi.fn().mockName("mockSelection.register"),
+                    collapse: vi.fn().mockName("mockSelection.collapse"),
+                    expand: vi.fn().mockName("mockSelection.expand"),
+                    collapsing: vi.fn().mockName("mockSelection.collapsing"),
+                    collapsingNodes: {
+                        add: vi.fn().mockName("mockCollpasingSet.add"),
+                        delete: vi.fn().mockName("mockCollpasingSet.delete"),
+                        has: vi.fn().mockName("mockCollpasingSet.has"),
                         size: 0
-                    }),
-                    expandedNodes: jasmine.createSpyObj<Set<IgxTreeNodeComponent<any>>>('mockExpandedSet',
-                        ['add', 'delete', 'has'], {
+                    },
+                    expandedNodes: {
+                        add: vi.fn().mockName("mockExpandedSet.add"),
+                        delete: vi.fn().mockName("mockExpandedSet.delete"),
+                        has: vi.fn().mockName("mockExpandedSet.has"),
                         size: 0
-                    }),
-                });
-                const mockElementRef = jasmine.createSpyObj<ElementRef>('mockElement', ['nativeElement'], {
-                    nativeElement: document.createElement('div')
-                });
-                const mockSelectionService = jasmine.createSpyObj<IgxTreeSelectionService>('mockSelection',
-                    ['selectNodesWithNoEvent', 'selectMultipleNodes', 'deselectNode', 'selectNode', 'register']);
+                    }
+                };
+                const mockElementRef = {
+                    nativeElement: vi.fn().mockName("mockElement.nativeElement").mockReturnValue(document.createElement('div'))
+                };
+                const mockSelectionService = {
+                    selectNodesWithNoEvent: vi.fn().mockName("mockSelection.selectNodesWithNoEvent"),
+                    selectMultipleNodes: vi.fn().mockName("mockSelection.selectMultipleNodes"),
+                    deselectNode: vi.fn().mockName("mockSelection.deselectNode"),
+                    selectNode: vi.fn().mockName("mockSelection.selectNode"),
+                    register: vi.fn().mockName("mockSelection.register")
+                };
 
                 TestBed.resetTestingModule();
-                TestBed.configureTestingModule({
+                await TestBed.configureTestingModule({
                     providers: [
                         { provide: IgxTreeService, useValue: mockTreeService },
                         { provide: ElementRef, useValue: mockElementRef },
@@ -795,19 +803,22 @@ describe('IgxTree - Navigation #treeView', () => {
                         IgxTreeNavigationService,
                         IgxTreeComponent
                     ]
-                });
+                }).compileComponents();
 
                 const nav = TestBed.inject(IgxTreeNavigationService);
 
                 const lvl1Nodes = TreeTestFunctions.createNodeSpies(0, 5);
                 const mockQuery = TreeTestFunctions.createQueryListSpy(lvl1Nodes);
                 Object.assign(mockQuery, { changes: new EventEmitter<any>() });
-                spyOn(nav, 'init_invisible_cache');
-                spyOn(nav, 'update_disabled_cache');
-                spyOn(nav, 'update_visible_cache');
-                spyOn(nav, 'register');
-                const mockPlatform = jasmine.createSpyObj('platform', ['isBrowser', 'isServer']);
-                const tree = TestBed.inject(IgxTreeComponent, mockPlatform);
+                vi.spyOn(nav, 'init_invisible_cache');
+                vi.spyOn(nav, 'update_disabled_cache');
+                vi.spyOn(nav, 'update_visible_cache');
+                vi.spyOn(nav, 'register');
+                const mockPlatform = {
+                    isBrowser: vi.fn().mockName("platform.isBrowser"),
+                    isServer: vi.fn().mockName("platform.isServer")
+                };
+                const tree = TestBed.inject(IgxTreeComponent, mockPlatform as any);
                 tree.nodes = mockQuery;
                 expect(nav.register).toHaveBeenCalledWith(tree);
                 expect(nav.init_invisible_cache).not.toHaveBeenCalled();
@@ -861,6 +872,3 @@ describe('IgxTree - Navigation #treeView', () => {
         });
     });
 });
-
-
-

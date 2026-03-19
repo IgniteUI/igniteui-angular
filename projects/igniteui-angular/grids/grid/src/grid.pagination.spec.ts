@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { GridWithUndefinedDataComponent } from '../../../test-utils/grid-samples.spec';
 import { PagingComponent, RemotePagingComponent } from '../../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,12 +7,13 @@ import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, PAGER_CLASS } from '../../../test-utils/grid-functions.spec';
 import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../../test-utils/controls-functions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const grid = fix.componentInstance.grid;
 
     expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
-    expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
+    expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(rowsCount);
 
     if (pagerText != null) {
         expect(grid.nativeElement.querySelector(PAGER_CLASS)).toBeDefined();
@@ -31,8 +32,8 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 
 describe('IgxGrid - Grid Paging #grid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 PagingComponent,
@@ -40,7 +41,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
                 RemotePagingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fix;
     let grid;
@@ -48,12 +49,12 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
     describe('General', () => {
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(PagingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             paginator = grid.paginator;
-        }));
+        });
 
         it('should paginate data UI', () => {
             fix.detectChanges();
@@ -86,7 +87,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             // Goto page 3 through API and listen for event
-            spyOn(paginator.pagingDone, 'emit');
+            vi.spyOn(paginator.pagingDone, 'emit');
             paginator.paginate(2);
 
             fix.detectChanges();
@@ -148,14 +149,14 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(5, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(5);
             expect(grid.totalRecords).toBe(10);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA02', []);
 
             grid.totalRecords = 4;
             fix.detectChanges();
 
-            expect(paginator.perPage).toEqual(5, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(5);
             expect(grid.totalRecords).toBe(4);
             verifyGridPager(fix, 4, '1', '1\xA0of\xA01', []);
         });
@@ -164,7 +165,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         it('change paging settings UI', () => {
             fix.detectChanges();
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(3, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(3);
 
             verifyGridPager(fix, 3, '1', '1\xA0of\xA04', []);
 
@@ -174,7 +175,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             ControlsFunction.clickDropDownItem(fix, 2);
 
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(10, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(10);
             verifyGridPager(fix, 10, '1', '1\xA0of\xA01', []);
         });
 
@@ -185,7 +186,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             expect(paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(2, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(2);
             verifyGridPager(fix, 2, '1', '1\xA0of\xA05', []);
 
             // Turn off paging
@@ -199,7 +200,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
 
 
-        it('change paging pages per page API', (async () => {
+        it('change paging pages per page API', async () => {
             fix.detectChanges();
             grid.height = '300px';
             paginator.perPage = 2;
@@ -211,7 +212,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             expect(grid.paginator).toBeDefined();
-            expect(paginator.perPage).toEqual(2, 'Invalid page size');
+            expect(paginator.perPage, 'Invalid page size').toEqual(2);
             verifyGridPager(fix, 2, '3', '2\xA0of\xA05', []);
 
             // Change page size to be 5
@@ -244,7 +245,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
-        }));
+        });
 
         it('activate/deactivate paging', () => {
             let paginatorEl = GridFunctions.getGridPaginator(grid);
@@ -263,7 +264,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(paginatorEl).not.toBeNull();
         });
 
-        it('should change not leave prev page data after scorlling', (async () => {
+        it('should change not leave prev page data after scorlling', async () => {
             fix.componentInstance.perPage = 5;
             fix.componentInstance.data = fix.componentInstance.data.slice(0, 7);
             grid.height = '300px';
@@ -282,7 +283,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
             await wait(100);
             expect(grid.rowList.first._data).toEqual(grid.data[0]);
-        }));
+        });
 
         it('should work correct with filtering', () => {
             grid.getColumnByName('ID').filterable = true;
@@ -435,7 +436,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
     });
 
-    it('should not throw error when data is undefined', fakeAsync(() => {
+    it('should not throw error when data is undefined', async () => {
         let errorMessage = '';
         fix = TestBed.createComponent(GridWithUndefinedDataComponent);
         try {
@@ -446,25 +447,25 @@ describe('IgxGrid - Grid Paging #grid', () => {
         expect(errorMessage).toBe('');
         grid = fix.componentInstance.grid;
         expect(grid.rowList.length).toBe(0);
-        tick(16);
+        await fix.whenStable();
         fix.detectChanges();
 
         expect(grid.rowList.length).toBe(5);
-    }));
+    });
 
-    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', fakeAsync(() => {
+    it('paginator should show the exact number of pages when "totalRecords" is not set and "pagingMode" is remote', async () => {
         fix = TestBed.createComponent(RemotePagingComponent);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
 
         grid = fix.componentInstance.grid;
         expect(grid.paginator.totalPages).toBe(4);
-    }));
+    });
 
-    it('should get correct rowIndex in remote paging', fakeAsync(() => {
+    it('should get correct rowIndex in remote paging', async () => {
         fix = TestBed.createComponent(RemotePagingComponent);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
 
         grid = fix.componentInstance.grid;
         expect(grid.paginator.totalPages).toBe(4);
@@ -472,11 +473,11 @@ describe('IgxGrid - Grid Paging #grid', () => {
         const desiredPageIndex = 2;
         page(2);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
         expect(grid.page).toBe(desiredPageIndex);
 
-        expect(grid.getRowByIndex(0).cells[1].value).toBe('Debra Morton')
+        expect(grid.getRowByIndex(0).cells[1].value).toBe('Debra Morton');
         expect(grid.getRowByIndex(0).viewIndex).toBe(6);
-    }));
+    });
 });
 

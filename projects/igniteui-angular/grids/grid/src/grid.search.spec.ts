@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './public_api';
 import { BasicGridSearchComponent } from '../../../test-utils/grid-base-components.spec';
@@ -12,16 +12,19 @@ import { IgxTextHighlightDirective } from 'igniteui-angular/directives';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { firstValueFrom } from 'rxjs';
 import { DefaultSortingStrategy, GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('IgxGrid - search API #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const HIGHLIGHT_CSS_CLASS = '.igx-highlight';
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
     let fix: ComponentFixture<any>;
-    let component; let grid: IgxGridComponent; let fixNativeElement;
+    let component;
+    let grid: IgxGridComponent;
+    let fixNativeElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 BasicGridSearchComponent,
@@ -30,7 +33,7 @@ describe('IgxGrid - search API #grid', () => {
                 ScrollableGridSearchComponent
             ]
         }).compileComponents();
-    }))
+    });
 
     describe('BasicGrid - ', () => {
         beforeEach(() => {
@@ -232,9 +235,9 @@ describe('IgxGrid - search API #grid', () => {
             fix.detectChanges();
         });
 
-        it('Should update exact match highlights when clearing filter.', fakeAsync(() => {
+        it('Should update exact match highlights when clearing filter.', async () => {
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
-            tick(16);
+            await wait(16);
             fix.detectChanges();
 
             grid.findNext('Software Developer', false, true);
@@ -244,13 +247,13 @@ describe('IgxGrid - search API #grid', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('JobTitle');
-            tick(16);
+            await wait(16);
             fix.detectChanges();
             activeHighlight = getActiveHighlight();
             highlights = getHighlights();
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
-        }));
+        });
 
         it('Should update the active highlight when sorting', () => {
             const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -280,7 +283,7 @@ describe('IgxGrid - search API #grid', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        xit('Should scroll properly when using paging', () => {
+        it.skip('Should scroll properly when using paging', () => {
             fix.componentInstance.paging = true;
             grid.height = '240px';
             grid.paginator.perPage = 7;
@@ -940,16 +943,16 @@ describe('IgxGrid - search API #grid', () => {
             expect(highlight !== null).toBeTruthy();
 
             grid.groupBy([{
-                fieldName: 'JobTitle',
-                dir: SortingDirection.Asc,
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }, {
-                fieldName: 'Company',
-                dir: SortingDirection.Desc,
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }]);
+                    fieldName: 'JobTitle',
+                    dir: SortingDirection.Asc,
+                    ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }, {
+                    fieldName: 'Company',
+                    dir: SortingDirection.Desc,
+                    ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }]);
             fix.detectChanges();
             cell = grid.gridAPI.get_cell_by_index(4, 'JobTitle');
             highlight = cell.nativeElement.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);

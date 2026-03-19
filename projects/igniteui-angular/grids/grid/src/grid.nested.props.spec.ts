@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, DebugElement, ViewChild } from '@angular/core';
@@ -8,6 +8,7 @@ import { IGridEditEventArgs, IgxCellEditorTemplateDirective, IgxCellTemplateDire
 import { FormsModule } from '@angular/forms';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { cloneArray, columnFieldPath, IgxStringFilteringOperand, resolveNestedPath, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const first = <T>(array: T[]): T => array[0];
 
@@ -170,7 +171,10 @@ class NestedPropertyGridComponent {
     public combo: IgxComboComponent;
 
     public locations = LOCATIONS;
-    public parseArray(arr: { id: number; shop: string }[]): string {
+    public parseArray(arr: {
+        id: number;
+        shop: string;
+    }[]): string {
         return (arr || []).map((e) => e.shop).join(', ');
     }
 }
@@ -183,12 +187,8 @@ describe('Grid - nested data source properties #grid', () => {
     describe('API', () => {
 
         it('should correctly resolve key paths in nested data', () => {
-            expect(
-                DATA.map(record => resolveNestedPath(record, columnFieldPath("user.name.first")))
-            ).toEqual(NAMES);
-            expect(
-                DATA.map(record => resolveNestedPath(record, columnFieldPath("user.age")))
-            ).toEqual(AGES);
+            expect(DATA.map(record => resolveNestedPath(record, columnFieldPath("user.name.first")))).toEqual(NAMES);
+            expect(DATA.map(record => resolveNestedPath(record, columnFieldPath("user.age")))).toEqual(AGES);
         });
     });
 
@@ -203,19 +203,19 @@ describe('Grid - nested data source properties #grid', () => {
             fixture.detectChanges();
         };
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule, NestedPropertiesGridComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(NestedPropertiesGridComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should support column API with complex field', () => {
             setupData(DATA);
@@ -319,7 +319,7 @@ describe('Grid - nested data source properties #grid', () => {
             expect(first(copiedData).user.name.first).toMatch('Updated!');
         });
 
-        it('should correctly filter with ESF', fakeAsync(() => {
+        it('should correctly filter with ESF', async () => {
             setupData(DATA);
             grid.getColumnByName('user').field = 'user.name.first';
             fixture.detectChanges();
@@ -329,18 +329,18 @@ describe('Grid - nested data source properties #grid', () => {
 
             GridFunctions.clickExcelFilterIcon(fixture, 'user.name.first');
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fixture, 'igx-grid');
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-grid'));
             checkboxes[1].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             GridFunctions.clickApplyExcelStyleFiltering(fixture, null, 'igx-grid');
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(grid.filteredSortedData.length).toBeGreaterThan(0);
-        }));
+        });
     });
 });
 
@@ -360,13 +360,13 @@ describe('Grid nested data advanced editing #grid', () => {
         fixture.detectChanges();
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, NestedPropertiesGrid2Component
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(NestedPropertiesGrid2Component);
@@ -405,9 +405,9 @@ describe('Grid nested data advanced editing #grid', () => {
 
         expect(cell3.editMode).toBe(false);
 
-        expect(cell1.value).toBeDefined(true);
-        expect(cell2.value).toBeDefined(true);
-        expect(cell3.value).toBeDefined(true);
+        expect(cell1.value).toBeDefined();
+        expect(cell2.value).toBeDefined();
+        expect(cell3.value).toBeDefined();
         // related to issue #0000, comment out the below line after fixing the issue
         expect(first(copiedData).user.name.first).toMatch('John');
         expect(first(copiedData).user.name.last).toMatch('Doe');
@@ -431,7 +431,7 @@ describe('Grid nested data advanced editing #grid', () => {
 
         expect(cell2.editMode).toBe(false);
         expect(cell3.editMode).toBe(true);
-        expect(cell1.value).toBeDefined(true);
+        expect(cell1.value).toBeDefined();
     });
 
     it('updating values of multiple cells in a row should update the data correctly', () => {
@@ -464,9 +464,9 @@ describe('Grid nested data advanced editing #grid', () => {
         UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
         fixture.detectChanges();
 
-        expect(cell1.value).toBeDefined(true);
-        expect(cell2.value).toBeDefined(true);
-        expect(cell3.value).toBeDefined(true);
+        expect(cell1.value).toBeDefined();
+        expect(cell2.value).toBeDefined();
+        expect(cell3.value).toBeDefined();
         expect(first(copiedData).user.name.last).toMatch('Petrov');
     });
 
@@ -520,27 +520,27 @@ describe('Edit cell with data of type Array #grid', () => {
         fixture.detectChanges();
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, NestedPropertyGridComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(NestedPropertyGridComponent);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid;
         gridContent = GridFunctions.getGridContent(fixture);
-    }));
+    });
 
     it('igxGrid should emit the correct args when cell editing is cancelled', async () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData);
 
-        spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-        spyOn(grid.cellEditExit, 'emit').and.callThrough();
+        vi.spyOn(grid.cellEditEnter, 'emit');
+        vi.spyOn(grid.cellEditExit, 'emit');
 
         const cell = grid.getCellByColumn(2, 'locations');
         let initialRowData = { ...cell.row.data };
@@ -561,7 +561,7 @@ describe('Edit cell with data of type Array #grid', () => {
             cancel: false,
             column: cell.column,
             owner: grid,
-            event: jasmine.anything() as any,
+            event: expect.anything() as any,
             valid: true
         };
 
@@ -602,10 +602,10 @@ describe('Edit cell with data of type Array #grid', () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData);
 
-        spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-        spyOn(grid.cellEdit, 'emit').and.callThrough();
-        spyOn(grid.cellEditDone, 'emit').and.callThrough();
-        spyOn(grid.cellEditExit, 'emit').and.callThrough();
+        vi.spyOn(grid.cellEditEnter, 'emit');
+        vi.spyOn(grid.cellEdit, 'emit');
+        vi.spyOn(grid.cellEditDone, 'emit');
+        vi.spyOn(grid.cellEditExit, 'emit');
 
         const cell = grid.getCellByColumn(2, 'locations');
         let initialRowData = { ...cell.row.data };
@@ -626,7 +626,7 @@ describe('Edit cell with data of type Array #grid', () => {
             cancel: false,
             column: cell.column,
             owner: grid,
-            event: jasmine.anything() as any,
+            event: expect.anything() as any,
             valid: true
         };
 
@@ -673,8 +673,8 @@ describe('Edit cell with data of type Array #grid', () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData, true);
 
-        spyOn(grid.rowEditEnter, 'emit').and.callThrough();
-        spyOn(grid.rowEditExit, 'emit').and.callThrough();
+        vi.spyOn(grid.rowEditEnter, 'emit');
+        vi.spyOn(grid.rowEditExit, 'emit');
 
         const cell = grid.getCellByColumn(2, 'locations');
         const row = grid.gridAPI.get_row_by_index(2);
@@ -696,7 +696,7 @@ describe('Edit cell with data of type Array #grid', () => {
             owner: grid,
             isAddRow: row.addRowUI,
             cancel: false,
-            event: jasmine.anything() as any,
+            event: expect.anything() as any,
             valid: true
         };
 
@@ -737,10 +737,10 @@ describe('Edit cell with data of type Array #grid', () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData, true);
 
-        spyOn(grid.rowEditEnter, 'emit').and.callThrough();
-        spyOn(grid.rowEdit, 'emit').and.callThrough();
-        spyOn(grid.rowEditDone, 'emit').and.callThrough();
-        spyOn(grid.rowEditExit, 'emit').and.callThrough();
+        vi.spyOn(grid.rowEditEnter, 'emit');
+        vi.spyOn(grid.rowEdit, 'emit');
+        vi.spyOn(grid.rowEditDone, 'emit');
+        vi.spyOn(grid.rowEditExit, 'emit');
 
         const cell = grid.getCellByColumn(2, 'locations');
         const row = grid.gridAPI.get_row_by_index(2);
@@ -762,7 +762,7 @@ describe('Edit cell with data of type Array #grid', () => {
             owner: grid,
             isAddRow: row.addRowUI,
             cancel: false,
-            event: jasmine.anything() as any,
+            event: expect.anything() as any,
             valid: true
         };
 

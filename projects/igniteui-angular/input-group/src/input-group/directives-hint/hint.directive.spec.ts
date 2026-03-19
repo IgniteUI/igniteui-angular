@@ -1,23 +1,24 @@
 import { Component } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxHintDirective } from './hint.directive';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxHint', () => {
     const HINT_START_CSS_CLASS = 'igx-input-group__hint-item--start';
     const HINT_END_CSS_CLASS = 'igx-input-group__hint-item--end';
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 HintComponent,
                 StartHintComponent,
                 EndHintComponent
             ]
         })
-        .compileComponents();
-    }));
+            .compileComponents();
+    });
 
     it('Initializes a hint.', () => {
         const fixture = TestBed.createComponent(HintComponent);

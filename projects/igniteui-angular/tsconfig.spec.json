@@ -3,10 +3,16 @@
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "types": [
-      "jasmine",
       "node",
       "hammerjs"
     ]
+  },
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "controlFlowPreventingContentProjection": "suppress"
+      }
+    }
   },
   "exclude": [
     "migrations/**/*.spec.ts",

@@ -1,12 +1,13 @@
-﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
+import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective } from './for_of.directive';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -23,11 +24,11 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('empty virtual component', () => {
-        beforeEach(waitForAsync(() => {
-            return TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [EmptyVirtualComponent]
             }).compileComponents();
-        }));
+        });
 
         it('should initialize empty directive', () => {
             const fix = TestBed.createComponent(EmptyVirtualComponent);
@@ -40,11 +41,11 @@ describe('IgxForOf directive -', () => {
     describe('horizontal virtual component', () => {
         let fix: ComponentFixture<HorizontalVirtualComponent>;
 
-        beforeEach(waitForAsync(() => {
-            return TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [HorizontalVirtualComponent]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(HorizontalVirtualComponent);
@@ -203,13 +204,13 @@ describe('IgxForOf directive -', () => {
 
     describe('vertical virtual component', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VerticalVirtualNoDataComponent, VerticalVirtualComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualComponent);
@@ -253,7 +254,7 @@ describe('IgxForOf directive -', () => {
 
             expect(parseInt(transform.slice(transform.indexOf('(') + 1, transform.indexOf(')')), 10)).toEqual(-5);
 
-            spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
+            vi.spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             fix.componentInstance.data = [{ 1: 1, 2: 2, 3: 3, 4: 4 }];
             fix.detectChanges();
@@ -371,13 +372,13 @@ describe('IgxForOf directive -', () => {
 
     describe('vertical virtual component no data', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VerticalVirtualNoDataComponent, VerticalVirtualComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
@@ -409,13 +410,13 @@ describe('IgxForOf directive -', () => {
     describe('vertical and horizontal virtual component', () => {
         let fix: ComponentFixture<VirtualComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VirtualComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VirtualComponent);
@@ -488,7 +489,7 @@ describe('IgxForOf directive -', () => {
         it('should scroll to wheel event correctly', async () => {
             fix.componentInstance.parentVirtDir.dc.instance._scrollInertia.smoothingDuration = 0;
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
-            await UIInteractions.simulateWheelEvent(displayContainer, 0, - 1 * 2 * 120);
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, -1 * 2 * 120);
             fix.detectChanges();
             await wait();
 
@@ -775,14 +776,10 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        xit('should apply inertia when swiping via touch interaction.', async () => {
+        it.skip('should apply inertia when swiping via touch interaction.', async () => {
             const dcElem = fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
             // spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
-            await UIInteractions.simulateTouchStartEvent(
-                dcElem,
-                0,
-                -150
-            );
+            await UIInteractions.simulateTouchStartEvent(dcElem, 0, -150);
             await wait(1);
             await UIInteractions.simulateTouchMoveEvent(dcElem, 0, -180);
             await UIInteractions.simulateTouchEndEvent(dcElem, 0, -200);
@@ -925,7 +922,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should correctly scroll to the last element when using the scrollTo method', () => {
-            spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
+            vi.spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             /**  Scroll to the last 49999 row. */
             fix.componentInstance.parentVirtDir.scrollTo(49999);
@@ -957,8 +954,8 @@ describe('IgxForOf directive -', () => {
 
         it('should emit the chunkPreload/chunkLoad only when startIndex or chunkSize have changed.', async () => {
             const verticalDir = fix.componentInstance.parentVirtDir;
-            const chunkLoadSpy = spyOn<any>(verticalDir.chunkLoad, 'emit').and.callThrough();
-            const chunkPreLoadSpy = spyOn<any>(verticalDir.chunkPreload, 'emit').and.callThrough();
+            const chunkLoadSpy = vi.spyOn(verticalDir.chunkLoad, 'emit');
+            const chunkPreLoadSpy = vi.spyOn(verticalDir.chunkPreload, 'emit');
             // scroll so that start index does not change.
             fix.componentInstance.scrollTop(1);
             fix.detectChanges();
@@ -991,13 +988,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('variable size component', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VirtualVariableSizeComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should update display container classes when content state changes from virtualized to non-virtualized.', () => {
             const fix = TestBed.createComponent(VirtualVariableSizeComponent);
@@ -1034,13 +1031,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     RemoteVirtualizationComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should allow remote virtualization', async () => {
             const fix = TestBed.createComponent(RemoteVirtualizationComponent);
@@ -1073,13 +1070,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component with specified igxForTotalItemCount', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     RemoteVirtCountComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should apply remote virtualization correctly', async () => {
             const fix = TestBed.createComponent(RemoteVirtCountComponent);
@@ -1112,13 +1109,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('no width and height component', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoWidthAndHeightComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should use itemSize when no width or height are provided', () => {
             const fix = TestBed.createComponent(NoWidthAndHeightComponent);
@@ -1133,13 +1130,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('even odd first last functions', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     LocalVariablesComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should differentiate even odd items', () => {
             const fix = TestBed.createComponent(LocalVariablesComponent);
@@ -1163,13 +1160,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('`as` syntax', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     LocalVariablesAsComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should get correct data using `as` syntax', () => {
             const fix = TestBed.createComponent(LocalVariablesAsComponent);
@@ -1186,13 +1183,13 @@ describe('IgxForOf directive -', () => {
     describe('on destroy', () => {
         let fix: ComponentFixture<VerticalVirtualDestroyComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VerticalVirtualDestroyComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualDestroyComponent);
@@ -1233,13 +1230,13 @@ describe('IgxForOf directive -', () => {
     describe('on create new instance', () => {
         let fix: ComponentFixture<VerticalVirtualCreateComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VerticalVirtualCreateComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualCreateComponent);
@@ -1399,7 +1396,8 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 })
 export class EmptyVirtualComponent {
 
-    @ViewChild('container', { static: true }) public container;
+    @ViewChild('container', { static: true })
+    public container;
     public data = [];
 }
 

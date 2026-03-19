@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -8,14 +8,15 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, FormattedValuesSortingStrategy, NoopSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { By } from '@angular/platform-browser';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 
     let fixture;
     let grid: IgxGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await await TestBed.configureTestingModule({
             imports: [
                 GridDeclaredColumnsComponent,
                 SortByParityComponent,
@@ -24,7 +25,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
                 IgxGridFormattedValuesSortingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
@@ -35,14 +36,14 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
     describe('API tests', () => {
 
-        it('Should sort grid ascending by column name', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit').and.callThrough();
-            spyOn(grid.sortingDone, 'emit').and.callThrough();
+        it('Should sort grid ascending by column name', async () => {
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
             const currentColumn = 'Name';
             const lastNameColumn = 'LastName';
             const nameHeaderCell = GridFunctions.getColumnHeader(currentColumn, fixture);
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(grid.sorting.emit).toHaveBeenCalledWith({
@@ -59,7 +60,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             // Ignore case on sorting set to true
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true });
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(grid.sorting.emit).toHaveBeenCalledWith({
                 cancel: false,
@@ -69,7 +70,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual('ALex');
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
-        }));
+        });
 
         it('Should sort grid descending by column name', () => {
             const currentColumn = 'Name';
@@ -225,9 +226,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         it('Should sort grid by current column by expression (Ascending)', () => {
             const currentColumn = 'ID';
             grid.sortingExpressions = [{
-                fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }];
+                    fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }];
 
             fixture.detectChanges();
 
@@ -238,9 +239,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const currentColumn = 'Name';
 
             grid.sortingExpressions = [{
-                fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }];
+                    fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }];
 
             fixture.detectChanges();
 
@@ -358,11 +359,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         it(`Should allow sorting using a custom Sorting Strategy.`, () => {
             fixture = TestBed.createComponent(SortByParityComponent);
             grid = fixture.componentInstance.grid;
-            fixture.componentInstance.data.push(
-                { ID: 8, Name: 'Brad', LastName: 'Walker', Region: 'DD' },
-                { ID: 9, Name: 'Mary', LastName: 'Smith', Region: 'OC' },
-                { ID: 10, Name: 'Brad', LastName: 'Smith', Region: 'BD' },
-            );
+            fixture.componentInstance.data.push({ ID: 8, Name: 'Brad', LastName: 'Walker', Region: 'DD' }, { ID: 9, Name: 'Mary', LastName: 'Smith', Region: 'OC' }, { ID: 10, Name: 'Brad', LastName: 'Smith', Region: 'BD' });
             fixture.detectChanges();
             grid.sort({
                 fieldName: 'ID',
@@ -390,7 +387,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             column.groupingComparer = (a: any, b: any, currRec: any, groupRec: any) => {
                 return currRec.Name === groupRec.Name ? 0 : -1;
-            }
+            };
 
             fixture.detectChanges();
             grid.sortingExpressions = [
@@ -410,13 +407,13 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByKey(4, 'LastName').row.index).toBeGreaterThan(grid.getCellByKey(5, 'LastName').row.index);
         });
 
-        it('Should sort grid by formatted values using FormattedValuesSortingStrategy', fakeAsync(() => {
+        it('Should sort grid by formatted values using FormattedValuesSortingStrategy', async () => {
             fixture = TestBed.createComponent(IgxGridFormattedValuesSortingComponent);
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             grid = fixture.componentInstance.grid;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const productNameColumn = grid.getColumnByName("ProductName");
@@ -428,50 +425,50 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const productNameHeaderCell = GridFunctions.getColumnHeader('ProductName', fixture);
 
             GridFunctions.clickHeaderSortIcon(productNameHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const firstProductNameCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[1];
             expect(firstProductNameCell.nativeElement.textContent.trim()).toBe("a-Alice Mutton");
 
             GridFunctions.clickHeaderSortIcon(productNameHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const lastProductNameCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[1];
             expect(lastProductNameCell.nativeElement.textContent.trim()).toBe("b-Tofu");
 
             grid.clearSort();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const quantityPerUnitHeaderCell = GridFunctions.getColumnHeader('QuantityPerUnit', fixture);
 
             GridFunctions.clickHeaderSortIcon(quantityPerUnitHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const firstQuantityCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[2];
             expect(firstQuantityCell.nativeElement.textContent.trim()).toBe("c");
 
             GridFunctions.clickHeaderSortIcon(quantityPerUnitHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const lastQuantityCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[2];
             expect(lastQuantityCell.nativeElement.textContent.trim()).toBe("d-36 boxes");
-        }));
+        });
     });
 
     describe('UI tests', () => {
 
-        it('Should sort grid ascending by clicking once on first header cell UI', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit');
-            spyOn(grid.sortingDone, 'emit');
+        it('Should sort grid ascending by clicking once on first header cell UI', async () => {
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(grid.sorting.emit).toHaveBeenCalledWith({
@@ -493,16 +490,16 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             expect(grid.sorting.emit).toHaveBeenCalledTimes(1);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('Should sort grid descending by clicking twice on sort icon UI', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit').and.callThrough();
-            spyOn(grid.sortingDone, 'emit').and.callThrough();
+        it('Should sort grid descending by clicking twice on sort icon UI', async () => {
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
 
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(grid.sorting.emit).toHaveBeenCalledWith({
@@ -513,7 +510,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(firstHeaderCell.attributes['aria-sort']).toEqual('ascending');
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(grid.sorting.emit).toHaveBeenCalledWith({
@@ -535,22 +532,22 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
-        }));
+        });
 
-        it('Should sort grid none when we click three time on header sort icon UI', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit');
-            spyOn(grid.sortingDone, 'emit');
+        it('Should sort grid none when we click three time on header sort icon UI', async () => {
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader('ID', fixture))).toEqual(1);
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(grid.sorting.emit).toHaveBeenCalledWith({
@@ -569,7 +566,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.sorting.emit).toHaveBeenCalledTimes(3);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(3);
             expect(firstHeaderCell.attributes['aria-sort']).toEqual(undefined);
-        }));
+        });
 
         it('Should have a valid sorting icon when sorting using the API.', () => {
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
@@ -588,7 +585,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, false);
         });
 
-        it('Should sort grid on sorting icon click when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
+        it('Should sort grid on sorting icon click when FilterRow is visible.', async () => {
             grid.allowFiltering = true;
             fixture.detectChanges();
 
@@ -614,18 +611,18 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             expect(grid.headerGroupsList[1].isFiltered).toBeTruthy();
-        }));
+        });
 
-        it('Should disable sorting feature when using NoopSortingStrategy.', fakeAsync(() => {
-            spyOn(grid.sorting, 'emit');
-            spyOn(grid.sortingDone, 'emit');
+        it('Should disable sorting feature when using NoopSortingStrategy.', async () => {
+            vi.spyOn(grid.sorting, 'emit');
+            vi.spyOn(grid.sortingDone, 'emit');
             grid.sortStrategy = NoopSortingStrategy.instance();
             fixture.detectChanges();
 
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(grid.sorting.emit).toHaveBeenCalledWith({
@@ -642,7 +639,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(grid.sorting.emit).toHaveBeenCalledWith({
@@ -659,7 +656,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
-        }));
+        });
 
         it('Should allow setting custom templates for header sorting none/ascending/descending icons.', () => {
             fixture = TestBed.createComponent(SortByParityComponent);
@@ -705,7 +702,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_drop_down');
         });
 
-        it('Should be able to set single sorting mode and sort one column at a time', fakeAsync(() => {
+        it('Should be able to set single sorting mode and sort one column at a time', async () => {
             fixture = TestBed.createComponent(SortByParityComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -721,24 +718,24 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('unfold_more');
 
             GridFunctions.clickHeaderSortIcon(header);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             icon = GridFunctions.getHeaderSortIcon(header);
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('expand_less');
 
             GridFunctions.clickHeaderSortIcon(headerLastName);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             icon = GridFunctions.getHeaderSortIcon(header);
             const iconLastName = GridFunctions.getHeaderSortIcon(headerLastName);
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('unfold_more');
             expect(iconLastName.nativeElement.textContent.toLowerCase().trim()).toBe('expand_less');
-        }));
+        });
 
 
-        it('should not display sorting index when sorting mode is set to "single"', fakeAsync(() => {
+        it('should not display sorting index when sorting mode is set to "single"', async () => {
             fixture = TestBed.createComponent(SortByParityComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -751,24 +748,24 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.clickHeaderSortIcon(header);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(GridFunctions.getColumnSortingIndex(header)).toBeNull();
             expect(grid.sortingExpressions.length).toBe(1);
 
             GridFunctions.clickHeaderSortIcon(headerLastName);
-            tick(30);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(GridFunctions.getColumnSortingIndex(headerLastName)).toBeNull();
             expect(grid.sortingExpressions.length).toBe(1);
-        }));
+        });
 
-        it('should not clear sortingExpressions when setting sortingOptions on init. ', fakeAsync(() => {
+        it('should not clear sortingExpressions when setting sortingOptions on init. ', async () => {
             fixture = TestBed.createComponent(SortOnInitComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             expect(grid.sortingExpressions.length).toBe(1);
-        }));
+        });
     });
 });

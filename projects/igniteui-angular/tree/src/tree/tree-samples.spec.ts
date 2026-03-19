@@ -27,8 +27,12 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
     imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 export class IgxTreeSimpleComponent {
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    @ViewChild(IgxTreeComponent, { static: true })
+    public tree: IgxTreeComponent;
+    public data;
+    constructor () {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+    }
 }
 
 @Component({
@@ -56,7 +60,8 @@ export class IgxTreeSimpleComponent {
 export class IgxTreeSelectionSampleComponent {
     public cdr = inject(ChangeDetectorRef);
 
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
+    @ViewChild(IgxTreeComponent, { static: true })
+    public tree: IgxTreeComponent;
     public data;
     constructor() {
         this.data = HIERARCHICAL_SAMPLE_DATA;
@@ -127,10 +132,15 @@ export class IgxTreeSelectionSampleComponent {
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective, NgTemplateOutlet]
 })
 export class IgxTreeNavigationComponent {
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    @ViewChild(IgxTreeComponent, { static: true })
+    public tree: IgxTreeComponent;
+    public data;
     public showNodesWithDirective = false;
     public isDisabled = false;
+
+    constructor() {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+    }
 }
 @Component({
     template: `
@@ -158,6 +168,11 @@ export class IgxTreeNavigationComponent {
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeExpandIndicatorDirective, IgxIconComponent]
 })
 export class IgxTreeScrollComponent {
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    @ViewChild(IgxTreeComponent, { static: true })
+    public tree: IgxTreeComponent;
+    public data;
+
+    constructor() {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+    }
 }

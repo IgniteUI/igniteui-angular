@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseProgressDirective } from './progressbar.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 @Component({
     template: ``,
 })
-class TestComponent extends BaseProgressDirective {}
+class TestComponent extends BaseProgressDirective {
+}
 
 describe('BaseProgressDirective', () => {
     let fixture: ComponentFixture<TestComponent>;
@@ -13,8 +15,8 @@ describe('BaseProgressDirective', () => {
     let nativeElement: HTMLElement;
 
     beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [TestComponent],  // Declare the test component
+        await await TestBed.configureTestingModule({
+            imports: [TestComponent], // Declare the test component
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestComponent);
@@ -148,10 +150,8 @@ describe('BaseProgressDirective', () => {
         expect(component.animate).toBe(true);
     });
 
-    it('should correctly update host styles', fakeAsync(() => {
+    it('should correctly update host styles', async () => {
         component.value = 50;
-
-        tick(50);
 
         fixture.detectChanges();
 
@@ -159,21 +159,19 @@ describe('BaseProgressDirective', () => {
         expect(nativeElement.style.getPropertyValue('--_progress-fraction')).toBe('0');
         expect(nativeElement.style.getPropertyValue('--_progress-whole')).toBe('50.00');
         expect(nativeElement.style.getPropertyValue('--_transition-duration')).toBe('2000ms');
-    }));
+    });
 
-    it('should correctly calculate fraction and integer values for progress', fakeAsync(() => {
+    it('should correctly calculate fraction and integer values for progress', async () => {
         component.value = 75.25;
-
-        tick(50);
         fixture.detectChanges();
 
         expect(nativeElement.style.getPropertyValue('--_progress-integer')).toBe('75');
         expect(nativeElement.style.getPropertyValue('--_progress-fraction')).toBe('25');
         expect(nativeElement.style.getPropertyValue('--_progress-whole')).toBe('75.25');
-    }));
+    });
 
     it('should trigger progressChanged event when value changes', () => {
-        spyOn(component.progressChanged, 'emit');
+        vi.spyOn(component.progressChanged, 'emit');
 
         component.value = 30;
         expect(component.progressChanged.emit).toHaveBeenCalledWith({
@@ -189,14 +187,14 @@ describe('BaseProgressDirective', () => {
     });
 
     it('should not trigger progressChanged event when value remains the same', () => {
-        spyOn(component.progressChanged, 'emit');
+        vi.spyOn(component.progressChanged, 'emit');
 
         component.value = 0; // Default value is already 0
         expect(component.progressChanged.emit).not.toHaveBeenCalled();
     });
 
     it('should trigger progressChanged event when indeterminate is true', () => {
-        spyOn(component.progressChanged, 'emit');
+        vi.spyOn(component.progressChanged, 'emit');
 
         component.indeterminate = true;
         component.value = 30;

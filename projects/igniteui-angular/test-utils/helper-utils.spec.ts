@@ -3,27 +3,24 @@ import { ComponentFixture } from '@angular/core/testing';
 import { GridType } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { Subscription } from 'rxjs';
+import { expect, beforeEach, afterEach, vi } from 'vitest';
 
 /**
  * Global beforeEach and afterEach checks to ensure test fails on specific warnings
- * Use direct env because karma-parallel's wrap ignores these in secondary shards
- * https://github.com/joeljeske/karma-parallel/issues/64
+ * Note: Vitest doesn't support global hooks like Jasmine's getEnv().
+ * These checks should be implemented in individual test suites as needed.
  */
-(jasmine.getEnv() as any).beforeEach(() => {
-    spyOn(console, 'warn').and.callThrough();
+beforeEach(() => {
+    vi.spyOn(console, 'warn');
 });
 
-(jasmine.getEnv() as any).afterEach(() => {
-    expect(console.warn)
-        .withContext('Components & tests should be free of @for track duplicated keys warnings')
-        .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0955'));
-    expect(console.warn)
-        .withContext('Components & tests should be free of @for track DOM re-creation warnings')
-        .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0956'));
+afterEach(() => {
+    expect(console.warn, 'Components & tests should be free of @for track duplicated keys warnings').not.toHaveBeenCalledWith(expect.stringContaining('NG0955'));
+    expect(console.warn, 'Components & tests should be free of @for track DOM re-creation warnings').not.toHaveBeenCalledWith(expect.stringContaining('NG0956'));
 });
 
 
-export let gridsubscriptions: Subscription [] = [];
+export let gridsubscriptions: Subscription[] = [];
 
 export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: GridType) => {
     gridsubscriptions.push(grid.verticalScrollContainer.chunkLoad.subscribe(() => fixture.detectChanges()));
@@ -49,7 +46,7 @@ export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<a
 export const clearGridSubs = () => {
     gridsubscriptions.forEach(sub => sub.unsubscribe());
     gridsubscriptions = [];
-}
+};
 
 /**
  * Sets element size as a inline style
@@ -86,7 +83,7 @@ export class TestNgZone extends NgZone {
     public override onStable: EventEmitter<any> = new EventEmitter(false);
 
     constructor() {
-        super({enableLongStackTrace: false, shouldCoalesceEventChangeDetection: false});
+        super({ enableLongStackTrace: false, shouldCoalesceEventChangeDetection: false });
     }
 
     public override run(fn: () => void): any {
@@ -105,25 +102,9 @@ export class TestNgZone extends NgZone {
 /* eslint-disable no-console */
 // TODO: enable on re-run by selecting enable debug logging
 // https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/troubleshooting-workflows/enabling-debug-logging
+// Note: Vitest uses a different reporter system. Custom reporters should be configured in vitest.config.ts
 const shardLogging = false;
 if (shardLogging) {
-    const myReporter = {
-        suiteStarted: function(result) {
-            const id = new URLSearchParams(window.parent.location.search).get('id');
-            console.log(`[${id}] Suite started: ${result.fullName}`);
-        },
-        suiteDone: function(result) {
-            const id = new URLSearchParams(window.parent.location.search).get('id');
-            console.log(`[${id}] Suite: ${result.fullName} has ${result.status}`);
-            for (const expectation of result.failedExpectations) {
-                console.log('Suite ' + expectation.message);
-                console.log(expectation.stack);
-            }
-            var memory = (performance as any).memory;
-            console.log(`[${id}] totalJSHeapSize: ${memory['totalJSHeapSize']} usedJSHeapSize: ${memory['usedJSHeapSize']} jsHeapSizeLimit: ${memory['jsHeapSizeLimit']}`);
-            if (memory['totalJSHeapSize'] >= memory['jsHeapSizeLimit'] )
-                console.log( '--------------------Heap Size limit reached!!!-------------------');
-        },
-    };
-    jasmine.getEnv().addReporter(myReporter);
+    // Vitest reporter configuration should be done in vitest.config.ts, not at runtime
+    console.log('Shard logging is enabled. Configure custom reporters in vitest.config.ts');
 }

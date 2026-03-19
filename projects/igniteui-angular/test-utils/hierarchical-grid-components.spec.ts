@@ -184,9 +184,12 @@ export class IgxHierarchicalGridWithTransactionProviderComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
     public data;
     public selectedRows = [];
 
@@ -216,9 +219,12 @@ export class IgxHierarchicalGridRowSelectionComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
     public data;
     public selectedRows = [];
 
@@ -249,9 +255,12 @@ export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
     public data;
 
     constructor() {
@@ -358,7 +367,8 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     </igx-hierarchical-grid>`,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
-export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
+export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent {
+}
 
 @Component({
     template: `
@@ -380,7 +390,8 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
     </igx-hierarchical-grid>`,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxRowIslandComponent, IgxButtonDirective]
 })
-export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
+export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchicalGridTestBaseComponent {
+}
 
 @Component({
     template: `
@@ -403,7 +414,8 @@ export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchica
     </igx-hierarchical-grid>`,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
-export class IgxHierarchicalGridTestInputPaginatorComponent extends IgxHierarchicalGridTestBaseComponent { }
+export class IgxHierarchicalGridTestInputPaginatorComponent extends IgxHierarchicalGridTestBaseComponent {
+}
 
 @Component({
     template: `
@@ -513,7 +525,8 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridExportComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
     public data = SampleTestData.hierarchicalGridExportData();
     public shouldDisplayArtist = false;
 }
@@ -569,7 +582,8 @@ export class IgxHierarchicalGridExportComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
     public data = HIERARCHICAL_SAMPLE_DATA;
 }
 
@@ -595,7 +609,8 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMCHCollapsibleComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
     public data = HIERARCHICAL_SAMPLE_DATA;
 }
 
@@ -630,7 +645,8 @@ export class IgxHierarchicalGridMCHCollapsibleComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
     public data = HIERARCHICAL_SAMPLE_DATA_SHORT;
 }
 
@@ -661,7 +677,8 @@ export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridSummariesExportComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
     public data = SampleTestData.hierarchicalGridExportData();
 
     public mySummary = MySummary;
@@ -669,25 +686,22 @@ export class IgxHierarchicalGridSummariesExportComponent {
 }
 
 
-class MySummary  {
+class MySummary {
 
     public operate(data?: any[]): IgxSummaryResult[] {
         const result = [];
-        result.push(
-        {
+        result.push({
             key: 'min',
             label: 'Min',
             summaryResult: IgxNumberSummaryOperand.min(data)
-        },
-        {
+        }, {
             key: 'max',
             label: 'Max',
             summaryResult: IgxNumberSummaryOperand.max(data)
-        },
-        {
-          key: 'avg',
-          label: 'Avg',
-          summaryResult: IgxNumberSummaryOperand.average(data)
+        }, {
+            key: 'avg',
+            label: 'Avg',
+            summaryResult: IgxNumberSummaryOperand.average(data)
         });
         return result;
     }
@@ -696,8 +710,7 @@ class MyChildSummary {
 
     public operate(data?: any[]): IgxSummaryResult[] {
         const result = [];
-        result.push(
-        {
+        result.push({
             key: 'count',
             label: 'Count',
             summaryResult: IgxNumberSummaryOperand.count(data)
@@ -764,7 +777,8 @@ export class IgxHierarchicalGridDefaultComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridEmptyDataExportComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
     public data = [];
 }
 
@@ -783,7 +797,8 @@ export class IgxHierarchicalGridEmptyDataExportComponent {
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMissingChildDataExportComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
     // Data without the 'Albums' key that the row island expects
     public data = [
         { Artist: 'Artist1', Debut: 2000, GrammyNominations: 5, GrammyAwards: 2 }

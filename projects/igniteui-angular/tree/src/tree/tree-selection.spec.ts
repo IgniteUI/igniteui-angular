@@ -1,4 +1,6 @@
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import type { MockedObject } from "vitest";
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangeDetectorRef, ElementRef, EventEmitter, QueryList } from '@angular/core';
 import { IgxTreeComponent } from './tree.component';
@@ -12,27 +14,27 @@ import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeSelectionSampleComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 
 describe('IgxTree - Selection #treeView', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeSimpleComponent,
                 IgxTreeSelectionSampleComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('UI Interaction tests - None & BiState', () => {
         let fix;
         let tree: IgxTreeComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeSimpleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
             tree.selection = IgxTreeSelectionType.BiState;
             fix.detectChanges();
-        }));
+        });
 
         it('Should have checkbox on each node if selection mode is BiState', () => {
             const nodes = TreeTestFunctions.getAllNodes(fix);
@@ -80,7 +82,7 @@ describe('IgxTree - Selection #treeView', () => {
 
         it('Click on checkbox should call node`s onSelectorClick method', () => {
             const firstNode = tree.nodes.toArray()[0];
-            spyOn(firstNode, 'onSelectorClick').and.callThrough();
+            vi.spyOn(firstNode, 'onSelectorClick');
 
             const ev = TreeTestFunctions.clickNodeCheckbox(firstNode);
             fix.detectChanges();
@@ -174,13 +176,13 @@ describe('IgxTree - Selection #treeView', () => {
         let fix;
         let tree: IgxTreeComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeSimpleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
             tree.selection = IgxTreeSelectionType.Cascading;
             fix.detectChanges();
-        }));
+        });
 
         it('Should have checkbox on each node if selection mode is Cascading', () => {
             const nodes = TreeTestFunctions.getAllNodes(fix);
@@ -307,13 +309,13 @@ describe('IgxTree - Selection #treeView', () => {
         let fix;
         let tree: IgxTreeComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeSelectionSampleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
             tree.selection = IgxTreeSelectionType.BiState;
             fix.detectChanges();
-        }));
+        });
 
         it('Should correctly represent the node`s selection state on click', () => {
             const firstNode = tree.nodes.toArray()[0];
@@ -548,12 +550,14 @@ describe('IgxTree - Selection #treeView', () => {
 
     describe('IgxTree - API Tests', () => {
         let mockNodes: IgxTreeNodeComponent<any>[];
-        let mockQuery: jasmine.SpyObj<QueryList<any>>;
+        let mockQuery: MockedObject<QueryList<any>>;
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
         const elementRef = { nativeElement: null };
-        const mockPlatform = jasmine.createSpyObj('platform', ['isBrowser', 'isServer']);
-        mockPlatform.isBrowser = true;
+        const mockPlatform = {
+            isBrowser: vi.fn().mockName("platform.isBrowser").mockReturnValue(true),
+            isServer: vi.fn().mockName("platform.isServer")
+        };
         let navService: IgxTreeNavigationService;
         let tree: IgxTreeComponent;
 
@@ -574,8 +578,8 @@ describe('IgxTree - Selection #treeView', () => {
 
             mockNodes = TreeTestFunctions.createNodeSpies(0, 5);
             mockQuery = TreeTestFunctions.createQueryListSpy(mockNodes);
-            mockQuery.toArray.and.returnValue(mockNodes);
-            mockQuery.forEach.and.callFake((cb) => mockNodes.forEach(cb));
+            mockQuery.toArray.mockReturnValue(mockNodes);
+            mockQuery.forEach.mockImplementation((cb) => mockNodes.forEach(cb));
 
             tree.selection = IgxTreeSelectionType.BiState;
             (tree.nodes as any) = mockQuery;
@@ -587,7 +591,7 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should be able to deselect all nodes', () => {
-            spyOn(selectionService, 'deselectNodesWithNoEvent').and.callThrough();
+            vi.spyOn(selectionService, 'deselectNodesWithNoEvent');
 
             tree.nodes.forEach(node => node.selected = true);
 
@@ -597,7 +601,7 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should be able to deselect multiple nodes', () => {
-            spyOn(selectionService, 'deselectNodesWithNoEvent').and.callThrough();
+            vi.spyOn(selectionService, 'deselectNodesWithNoEvent');
 
             tree.nodes.toArray()[0].selected = true;
             tree.nodes.toArray()[1].selected = true;
@@ -615,14 +619,18 @@ describe('IgxTree - Selection #treeView', () => {
         const elementRef = { nativeElement: null };
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
-        const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = jasmine.createSpyObj('emitter', ['emit']);
-        const mockTree: IgxTree = jasmine.createSpyObj('tree', [''],
-            {
-                selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: {
-                    find: () => true
-                }
-            });
-        const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
+        const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = {
+            emit: vi.fn().mockName("emitter.emit")
+        } as unknown as EventEmitter<ITreeNodeSelectionEvent>;
+        const mockTree: IgxTree = {
+            selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: {
+                find: () => true
+            }
+        } as unknown as IgxTree;
+        const mockCdr = {
+            markForCheck: vi.fn().mockName("ChangeDetectorRef.markForCheck"),
+            detectChanges: vi.fn().mockName("ChangeDetectorRef.detectChanges")
+        };
 
         selectionService.register(mockTree);
 
@@ -648,7 +656,7 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should call selectNodesWithNoEvent when setting node`s selected property to true', () => {
-            spyOn(selectionService, 'selectNodesWithNoEvent').and.callThrough();
+            vi.spyOn(selectionService, 'selectNodesWithNoEvent');
             node.selected = true;
 
             expect((node as any).selectionService.selectNodesWithNoEvent).toHaveBeenCalled();
@@ -656,7 +664,7 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should call deselectNodesWithNoEvent when seting node`s selected property to false', () => {
-            spyOn(selectionService, 'deselectNodesWithNoEvent').and.callThrough();
+            vi.spyOn(selectionService, 'deselectNodesWithNoEvent');
 
             if (!node.selected) {
                 node.selected = true;
@@ -669,22 +677,21 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should call isNodeSelected when node`s selected getter is invoked', () => {
-            spyOn(selectionService, 'isNodeSelected').and.callThrough();
+            vi.spyOn(selectionService, 'isNodeSelected');
             const isSelected = node.selected;
 
-            expect(isSelected).toBeFalse();
+            expect(isSelected).toBe(false);
             expect((node as any).selectionService.isNodeSelected).toHaveBeenCalled();
             expect((node as any).selectionService.isNodeSelected).toHaveBeenCalledWith(node);
         });
 
         it('Should call isNodeIndeterminate when node`s indeterminate getter is invoked', () => {
-            spyOn(selectionService, 'isNodeIndeterminate').and.callThrough();
+            vi.spyOn(selectionService, 'isNodeIndeterminate');
             const isIndeterminate = node.indeterminate;
 
-            expect(isIndeterminate).toBeFalse();
+            expect(isIndeterminate).toBe(false);
             expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalled();
             expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalledWith(node);
         });
     });
 });
-

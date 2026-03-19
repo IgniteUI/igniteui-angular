@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { IgxRadioGroupDirective } from './radio-group.directive';
+import { TestBed } from '@angular/core/testing';
+import { IgxRadioGroupDirective, RadioGroupAlignment } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from '../../radio/radio.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxRadioGroupDirective', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 FormsModule,
                 ReactiveFormsModule,
@@ -26,15 +27,14 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupVerticalComponent
             ]
         })
-        .compileComponents();
-    }));
+            .compileComponents();
+    });
 
-    it('Properly initialize the radio group buttons\' properties.', fakeAsync(() => {
+    it('Properly initialize the radio group buttons\' properties.', () => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
-        tick();
 
         expect(radioInstance.radioButtons).toBeDefined();
         expect(radioInstance.radioButtons.length).toEqual(3);
@@ -48,31 +48,28 @@ describe('IgxRadioGroupDirective', () => {
         const buttonWithGroupValue = radioInstance.radioButtons.find((btn) => btn.value === radioInstance.value);
         expect(buttonWithGroupValue).toBeDefined();
         expect(buttonWithGroupValue).toEqual(radioInstance.selected);
-    }));
+    });
 
-    it('Properly initializes FormControlValue with OnPush change detection strategy', fakeAsync(() => {
+    it('Properly initializes FormControlValue with OnPush change detection strategy', async () => {
         const fixture = TestBed.createComponent(RadioGroupOnPushComponent);
         const radioInstance = fixture.componentInstance.radio;
 
         fixture.detectChanges();
-        tick();
 
-        expect(radioInstance.checked).toBeTrue();
-    }));
+        expect(radioInstance.checked).toBe(true);
+    });
 
-    it('Setting radioGroup\'s properties should affect all radio buttons.', fakeAsync(() => {
+    it('Setting radioGroup\'s properties should affect all radio buttons.', () => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
-        tick();
 
         expect(radioInstance.radioButtons).toBeDefined();
 
         // name
         radioInstance.name = 'newGroupName';
         fixture.detectChanges();
-        tick();
 
         const allButtonsWithNewName = radioInstance.radioButtons.filter((btn) => btn.name === 'newGroupName');
         expect(allButtonsWithNewName.length).toEqual(radioInstance.radioButtons.length);
@@ -80,7 +77,6 @@ describe('IgxRadioGroupDirective', () => {
         // required
         radioInstance.required = true;
         fixture.detectChanges();
-        tick();
 
         const allRequiredButtons = radioInstance.radioButtons.filter((btn) => btn.required);
         expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons.length);
@@ -91,14 +87,13 @@ describe('IgxRadioGroupDirective', () => {
 
         const allInvalidButtons = radioInstance.radioButtons.filter((btn) => btn.invalid);
         expect(allInvalidButtons.length).toEqual(radioInstance.radioButtons.length);
-    }));
+    });
 
-    it('Set value should change selected property', fakeAsync(() => {
+    it('Set value should change selected property', async () => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
-        tick();
 
         expect(radioInstance.value).toBeDefined();
         expect(radioInstance.value).toEqual('Baz');
@@ -106,7 +101,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toBeDefined();
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
 
-        spyOn(radioInstance.change, 'emit');
+        vi.spyOn(radioInstance.change, 'emit');
 
         radioInstance.value = 'Foo';
         fixture.detectChanges();
@@ -114,14 +109,13 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.value).toEqual('Foo');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
         expect(radioInstance.change.emit).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('Set selected property should change value', fakeAsync(() => {
+    it('Set selected property should change value', async () => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
-        tick();
 
         expect(radioInstance.value).toBeDefined();
         expect(radioInstance.value).toEqual('Baz');
@@ -129,7 +123,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toBeDefined();
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
 
-        spyOn(radioInstance.change, 'emit');
+        vi.spyOn(radioInstance.change, 'emit');
 
         radioInstance.selected = radioInstance.radioButtons.first;
         fixture.detectChanges();
@@ -137,43 +131,38 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.value).toEqual('Foo');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
         expect(radioInstance.change.emit).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('Clicking on a radio button should update the model.', fakeAsync(() => {
+    it('Clicking on a radio button should update the model.', async () => {
         const fixture = TestBed.createComponent(RadioGroupWithModelComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
-        tick();
 
         radioInstance.radioButtons.first.nativeLabel.nativeElement.click();
         fixture.detectChanges();
-        tick();
 
         expect(radioInstance.value).toEqual('Winter');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
-    }));
+    });
 
-    it('Updating the model should select a radio button.', fakeAsync(() => {
+    it('Updating the model should select a radio button.', async () => {
         const fixture = TestBed.createComponent(RadioGroupWithModelComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
-        tick();
 
         fixture.componentInstance.personBob.favoriteSeason = 'Winter';
         fixture.detectChanges();
-        tick();
 
         expect(radioInstance.value).toEqual('Winter');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
-    }));
+    });
 
-    it('Properly update the model when radio group is hosted in Reactive forms.', fakeAsync(() => {
+    it('Properly update the model when radio group is hosted in Reactive forms.', async () => {
         const fixture = TestBed.createComponent(RadioGroupReactiveFormsComponent);
 
         fixture.detectChanges();
-        tick();
 
         expect(fixture.componentInstance.personForm).toBeDefined();
         expect(fixture.componentInstance.model).toBeDefined();
@@ -182,45 +171,39 @@ describe('IgxRadioGroupDirective', () => {
         fixture.componentInstance.personForm.patchValue({ favoriteSeason: fixture.componentInstance.seasons[0] });
         fixture.componentInstance.updateModel();
         fixture.detectChanges();
-        tick();
 
         expect(fixture.componentInstance.newModel).toBeDefined();
         expect(fixture.componentInstance.newModel.name).toEqual(fixture.componentInstance.model.name);
         expect(fixture.componentInstance.newModel.favoriteSeason).toEqual(fixture.componentInstance.seasons[0]);
-    }));
+    });
 
-    it('Properly initialize selection when value is falsy in deep content projection', fakeAsync(() => {
+    it('Properly initialize selection when value is falsy in deep content projection', async () => {
         const fixture = TestBed.createComponent(RadioGroupDeepProjectionComponent);
         fixture.detectChanges();
-        tick();
 
         const radioGroup = fixture.componentInstance.radioGroup;
         expect(radioGroup.value).toEqual(0);
         expect(radioGroup.radioButtons.first.checked).toEqual(true);
-    }));
+    });
 
-    it('Properly rebind dynamically added components', fakeAsync(() => {
+    it('Properly rebind dynamically added components', async () => {
         const fixture = TestBed.createComponent(RadioGroupDeepProjectionComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
         fixture.detectChanges();
-        tick();
 
-        fixture.componentInstance.choices = [ 0, 1, 4, 7 ];
+        fixture.componentInstance.choices = [0, 1, 4, 7];
         fixture.detectChanges();
-        tick();
 
         radioInstance.radioButtons.last.nativeLabel.nativeElement.click();
         fixture.detectChanges();
-        tick();
 
         expect(radioInstance.value).toEqual(7);
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
-    }));
+    });
 
-    it('Updates checked radio button correctly', fakeAsync(() => {
+    it('Updates checked radio button correctly', async () => {
         const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
         fixture.detectChanges();
-        tick();
 
         const radioGroup = fixture.componentInstance.radioGroup;
         expect(radioGroup.radioButtons.first.checked).toEqual(true);
@@ -228,17 +211,15 @@ describe('IgxRadioGroupDirective', () => {
 
         radioGroup.radioButtons.last.select();
         fixture.detectChanges();
-        tick();
 
         expect(radioGroup.radioButtons.first.checked).toEqual(false);
         expect(radioGroup.radioButtons.last.checked).toEqual(true);
-    }));
+    });
 
-    it('Should update styles correctly when required radio group\'s value is set.', fakeAsync(() => {
+    it('Should update styles correctly when required radio group\'s value is set.', async () => {
         const fixture = TestBed.createComponent(RadioGroupRequiredComponent);
         const radioGroup = fixture.componentInstance.radioGroup;
         fixture.detectChanges();
-        tick();
 
         const domRadio = fixture.debugElement.query(By.css('igx-radio')).nativeElement;
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
@@ -249,7 +230,6 @@ describe('IgxRadioGroupDirective', () => {
         expect(domRadio.classList.contains('igx-radio--focused')).toBe(true);
         dispatchRadioEvent('blur', domRadio, fixture);
         fixture.detectChanges();
-        tick();
 
         expect(radioGroup.invalid).toBe(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(true);
@@ -259,15 +239,14 @@ describe('IgxRadioGroupDirective', () => {
 
         radioGroup.radioButtons.first.select();
         fixture.detectChanges();
-        tick();
 
         expect(domRadio.classList.contains('igx-radio--checked')).toBe(true);
         expect(radioGroup.invalid).toBe(false);
         expect(radioGroup.radioButtons.first.checked).toEqual(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
-    }));
+    });
 
-    it('Should select radio button when added programmatically after group value is set', (() => {
+    it('Should select radio button when added programmatically after group value is set', () => {
         const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
         const component = fixture.componentInstance;
         const radioGroup = component.radioGroup;
@@ -297,14 +276,13 @@ describe('IgxRadioGroupDirective', () => {
         const checkedButtons = radioGroup.radioButtons.filter(btn => btn.checked);
         expect(checkedButtons.length).toBe(1);
         expect(checkedButtons[0].value).toBe('option2');
-    }));
+    });
 
     describe('Required input', () => {
-        it('Should propagate required property to all child radio buttons when set to true', fakeAsync(() => {
+        it('Should propagate required property to all child radio buttons when set to true', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             // RadioGroupComponent already has required="true"
             expect(radioGroup.required).toBe(true);
@@ -312,26 +290,24 @@ describe('IgxRadioGroupDirective', () => {
             radioGroup.radioButtons.forEach(button => {
                 expect(button.required).toBe(true);
             });
-        }));
+        });
 
-        it('Should propagate required property to all child radio buttons when set to false', fakeAsync(() => {
+        it('Should propagate required property to all child radio buttons when set to false', async () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.required).toBe(false);
 
             radioGroup.radioButtons.forEach(button => {
                 expect(button.required).toBe(false);
             });
-        }));
+        });
 
-        it('Should update all child radio buttons when required property changes', fakeAsync(() => {
+        it('Should update all child radio buttons when required property changes', async () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             // Initially not required
             expect(radioGroup.required).toBe(false);
@@ -342,7 +318,6 @@ describe('IgxRadioGroupDirective', () => {
             // Set to required
             radioGroup.required = true;
             fixture.detectChanges();
-            tick();
 
             radioGroup.radioButtons.forEach(button => {
                 expect(button.required).toBe(true);
@@ -351,44 +326,39 @@ describe('IgxRadioGroupDirective', () => {
             // Set back to not required
             radioGroup.required = false;
             fixture.detectChanges();
-            tick();
 
             radioGroup.radioButtons.forEach(button => {
                 expect(button.required).toBe(false);
             });
-        }));
+        });
 
-        it('Should propagate required to dynamically added radio buttons', fakeAsync(() => {
+        it('Should propagate required to dynamically added radio buttons', async () => {
             const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
             const component = fixture.componentInstance;
             const radioGroup = component.radioGroup;
 
             radioGroup.required = true;
             fixture.detectChanges();
-            tick();
 
             component.addRadioButton('option1', 'Option 1');
             component.addRadioButton('option2', 'Option 2');
             fixture.detectChanges();
-            tick();
 
             radioGroup.radioButtons.forEach(button => {
                 expect(button.required).toBe(true);
             });
-        }));
+        });
     });
 
     describe('Keyboard navigation', () => {
-        it('Should navigate to next radio button with ArrowDown key', fakeAsync(() => {
+        it('Should navigate to next radio button with ArrowDown key', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.selected).toBe(firstButton);
 
@@ -396,22 +366,19 @@ describe('IgxRadioGroupDirective', () => {
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.toArray()[1]);
             expect(radioGroup.radioButtons.toArray()[1].checked).toBe(true);
-        }));
+        });
 
-        it('Should navigate to previous radio button with ArrowUp key', fakeAsync(() => {
+        it('Should navigate to previous radio button with ArrowUp key', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const secondButton = radioGroup.radioButtons.toArray()[1];
             secondButton.select();
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.selected).toBe(secondButton);
 
@@ -419,292 +386,254 @@ describe('IgxRadioGroupDirective', () => {
             const event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.first);
             expect(radioGroup.radioButtons.first.checked).toBe(true);
-        }));
+        });
 
-        it('Should navigate to next radio button with ArrowRight key in LTR', fakeAsync(() => {
+        it('Should navigate to next radio button with ArrowRight key in LTR', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             fixture.detectChanges();
-            tick();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.toArray()[1]);
             expect(radioGroup.radioButtons.toArray()[1].checked).toBe(true);
-        }));
+        });
 
-        it('Should navigate to previous radio button with ArrowLeft key in LTR', fakeAsync(() => {
+        it('Should navigate to previous radio button with ArrowLeft key in LTR', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const secondButton = radioGroup.radioButtons.toArray()[1];
             secondButton.select();
             fixture.detectChanges();
-            tick();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.first);
             expect(radioGroup.radioButtons.first.checked).toBe(true);
-        }));
+        });
 
-        it('Should wrap around to last button when pressing ArrowUp on first button', fakeAsync(() => {
+        it('Should wrap around to last button when pressing ArrowUp on first button', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             fixture.detectChanges();
-            tick();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.last);
             expect(radioGroup.radioButtons.last.checked).toBe(true);
-        }));
+        });
 
-        it('Should wrap around to first button when pressing ArrowDown on last button', fakeAsync(() => {
+        it('Should wrap around to first button when pressing ArrowDown on last button', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const lastButton = radioGroup.radioButtons.last;
             lastButton.select();
             fixture.detectChanges();
-            tick();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.first);
             expect(radioGroup.radioButtons.first.checked).toBe(true);
-        }));
+        });
 
-        it('Should skip disabled buttons when navigating with arrow keys', fakeAsync(() => {
+        it('Should skip disabled buttons when navigating with arrow keys', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             // Disable the second button
             const buttons = radioGroup.radioButtons.toArray();
             buttons[1].disabled = true;
             fixture.detectChanges();
-            tick();
 
             // Select first button and navigate down
             buttons[0].select();
             fixture.detectChanges();
-            tick();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             // Should skip the disabled second button and select the third
             expect(radioGroup.selected).toBe(buttons[2]);
             expect(buttons[2].checked).toBe(true);
-        }));
+        });
 
-        it('Should set focus on selected radio button during keyboard navigation', fakeAsync(() => {
+        it('Should set focus on selected radio button during keyboard navigation', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             fixture.detectChanges();
-            tick();
 
-            spyOn(radioGroup.radioButtons.toArray()[1].nativeElement, 'focus');
+            vi.spyOn(radioGroup.radioButtons.toArray()[1].nativeElement, 'focus');
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.radioButtons.toArray()[1].nativeElement.focus).toHaveBeenCalled();
-        }));
+        });
 
-        it('Should deselect previous button and blur it when navigating', fakeAsync(() => {
+        it('Should deselect previous button and blur it when navigating', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             firstButton.focused = true;
             fixture.detectChanges();
-            tick();
 
-            spyOn(firstButton.nativeElement, 'blur');
+            vi.spyOn(firstButton.nativeElement, 'blur');
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             expect(firstButton.checked).toBe(false);
             expect(firstButton.nativeElement.blur).toHaveBeenCalled();
-        }));
+        });
 
-        it('Should prevent default behavior when navigating with arrow keys', fakeAsync(() => {
+        it('Should prevent default behavior when navigating with arrow keys', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             radioGroup.radioButtons.first.select();
             fixture.detectChanges();
-            tick();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown', cancelable: true });
-            spyOn(event, 'preventDefault');
+            vi.spyOn(event, 'preventDefault');
 
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
-            tick();
 
             expect(event.preventDefault).toHaveBeenCalled();
-        }));
+        });
 
-        it('Should update tab index to 0 on checked button and -1 on others', fakeAsync(() => {
+        it('Should update tab index to 0 on checked button and -1 on others', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const buttons = radioGroup.radioButtons.toArray();
             buttons[1].select();
             fixture.detectChanges();
-            tick();
 
             expect(buttons[1].nativeElement.tabIndex).toBe(0);
             expect(buttons[0].nativeElement.tabIndex).toBe(-1);
             expect(buttons[2].nativeElement.tabIndex).toBe(-1);
-        }));
+        });
     });
 
     describe('Alignment', () => {
-        it('Should have horizontal alignment by default', fakeAsync(() => {
+        it('Should have horizontal alignment by default', async () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
 
             expect(radioGroup.alignment).toBe('horizontal');
             expect(groupElement.classList.contains('igx-radio-group--vertical')).toBe(false);
-        }));
+        });
 
-        it('Should apply vertical CSS class when alignment is set to vertical', fakeAsync(() => {
+        it('Should apply vertical CSS class when alignment is set to vertical', async () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             radioGroup.alignment = 'vertical';
             fixture.detectChanges();
-            tick();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
 
             expect(radioGroup.alignment).toBe('vertical');
             expect(groupElement.classList.contains('igx-radio-group--vertical')).toBe(true);
-        }));
+        });
 
-        it('Should remove vertical CSS class when alignment is changed back to horizontal', fakeAsync(() => {
+        it('Should remove vertical CSS class when alignment is changed back to horizontal', async () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             radioGroup.alignment = 'vertical';
             fixture.detectChanges();
-            tick();
 
             let groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             expect(groupElement.classList.contains('igx-radio-group--vertical')).toBe(true);
 
             radioGroup.alignment = 'horizontal';
             fixture.detectChanges();
-            tick();
 
             groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             expect(radioGroup.alignment).toBe('horizontal');
             expect(groupElement.classList.contains('igx-radio-group--vertical')).toBe(false);
-        }));
+        });
 
-        it('Should initialize with vertical alignment when set in template', fakeAsync(() => {
+        it('Should initialize with vertical alignment when set in template', async () => {
             const fixture = TestBed.createComponent(RadioGroupVerticalComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
 
             expect(radioGroup.alignment).toBe('vertical');
             expect(groupElement.classList.contains('igx-radio-group--vertical')).toBe(true);
-        }));
+        });
 
-        it('Should accept RadioGroupAlignment enum values', fakeAsync(() => {
+        it('Should accept RadioGroupAlignment enum values', async () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
-            tick();
 
             // Import RadioGroupAlignment from the directive
-            const RadioGroupAlignment = { horizontal: 'horizontal', vertical: 'vertical' } as const;
+            // const RadioGroupAlignment = { horizontal: 'horizontal', vertical: 'vertical' } as const;
 
             radioGroup.alignment = RadioGroupAlignment.vertical as any;
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.alignment).toBe('vertical');
 
             radioGroup.alignment = RadioGroupAlignment.horizontal as any;
             fixture.detectChanges();
-            tick();
 
             expect(radioGroup.alignment).toBe('horizontal');
-        }));
+        });
     });
 });
 
@@ -718,7 +647,8 @@ describe('IgxRadioGroupDirective', () => {
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupSimpleComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 }
 
 @Component({
@@ -733,7 +663,8 @@ class RadioGroupSimpleComponent {
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 }
 
 @Component({
@@ -748,7 +679,8 @@ class RadioGroupComponent {
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupRequiredComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 }
 
 interface Person {
@@ -790,7 +722,8 @@ class RadioGroupOnPushComponent {
     imports: [IgxRadioComponent, IgxRadioGroupDirective, FormsModule]
 })
 class RadioGroupWithModelComponent {
-    @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 
     public seasons = [
         'Winter',
@@ -894,7 +827,7 @@ class RadioGroupDeepProjectionComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <igx-radio-group
         [alignment]="alignment"
         [required]="required"
@@ -904,18 +837,21 @@ class RadioGroupDeepProjectionComponent {
         <ng-container #radioContainer></ng-container>
     </igx-radio-group>
   `,
-  imports: [IgxRadioComponent, IgxRadioGroupDirective]
+    imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 
 class RadioGroupTestComponent implements OnInit {
     @ViewChild('radioContainer', { read: ViewContainerRef, static: true })
     public container!: ViewContainerRef;
 
-    public alignment = 'horizontal';
+    public alignment = RadioGroupAlignment.horizontal;
     public required = false;
     public value: any;
 
-    public radios: { label: string; value: any }[] = [];
+    public radios: {
+        label: string;
+        value: any;
+    }[] = [];
 
     public handleChange(args: any) {
         this.value = args.value;
@@ -924,11 +860,10 @@ class RadioGroupTestComponent implements OnInit {
     public ngOnInit(): void {
         this.container.clear();
         this.radios.forEach((option) => {
-            const componentRef: ComponentRef<IgxRadioComponent> =
-            this.container.createComponent(IgxRadioComponent);
+            const componentRef: ComponentRef<IgxRadioComponent> = this.container.createComponent(IgxRadioComponent);
 
             componentRef.instance.placeholderLabel.nativeElement.textContent =
-            option.label;
+                option.label;
             componentRef.instance.value = option.value;
         });
     }
@@ -972,7 +907,8 @@ class DynamicRadioGroupComponent {
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupVerticalComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
+    public radioGroup: IgxRadioGroupDirective;
 }
 
 const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {

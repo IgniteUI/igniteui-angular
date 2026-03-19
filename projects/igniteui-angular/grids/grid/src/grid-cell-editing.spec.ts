@@ -1,20 +1,16 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
-import {
-    CellEditingTestComponent, CellEditingScrollTestComponent,
-    SelectionWithTransactionsComponent,
-    ColumnEditablePropertyTestComponent,
-    CellEditingCustomEditorTestComponent
-} from '../../../test-utils/grid-samples.spec';
+import { CellEditingTestComponent, CellEditingScrollTestComponent, SelectionWithTransactionsComponent, ColumnEditablePropertyTestComponent, CellEditingCustomEditorTestComponent } from '../../../test-utils/grid-samples.spec';
 import { DebugElement } from '@angular/core';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject, fromEvent } from 'rxjs';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const DEBOUNCE_TIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -24,8 +20,8 @@ const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell Editing #grid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CellEditingTestComponent,
@@ -34,7 +30,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 SelectionWithTransactionsComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests', () => {
         let fixture;
@@ -151,13 +147,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(parseFloat(cell.value)).toBe(expectedValue);
         });
 
-        it('edit template should be according column data type -- boolean', fakeAsync(() => {
+        it('edit template should be according column data type -- boolean', async () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'isActive');
             const cellDomBoolean = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(cell.editMode).toBe(true);
 
@@ -176,7 +172,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe(false);
             expect(grid.gridAPI.get_cell_by_index(0, 'isActive').nativeElement.querySelector('.igx-checkbox--checked')).toBeNull();
-        }));
+        });
 
         it('edit template should be according column data type -- date', () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'birthday');
@@ -250,7 +246,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBeNull();
         });
 
-        it('Should not revert cell\' value when doubleClick while in editMode', fakeAsync(() => {
+        it('Should not revert cell\' value when doubleClick while in editMode', async () => {
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
             const firstCell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
@@ -259,7 +255,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
             fixture.detectChanges();
-            tick(100);
+            await fixture.whenStable();
 
             const editCell = cellElem.query(By.css('input'));
             expect(editCell.nativeElement.value).toBe('John Brown');
@@ -271,9 +267,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
             expect(editCell.nativeElement.value).toBe('test');
             expect(firstCell.editMode).toBeTruthy();
-        }));
+        });
 
-        it('should end cell editing when clearing or applying advanced filter', fakeAsync(() => {
+        it('should end cell editing when clearing or applying advanced filter', async () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
             // Enter cell edit mode
@@ -309,27 +305,27 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(false);
-        }));
+        });
 
-        it('should focus the first cell when editing mode is cell', fakeAsync(() => {
+        it('should focus the first cell when editing mode is cell', async () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             expect(cell.editMode).toBe(false);
-            expect(document.activeElement.nodeName).toEqual('BODY')
+            expect(document.activeElement.nodeName).toEqual('BODY');
 
             // Enter cell edit mode
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
-            tick(100);
+            await fixture.whenStable();
 
             // Check focused element and selection
             expect(cell.editMode).toBe(true);
-            expect(document.activeElement.nodeName).toEqual('INPUT')
+            expect(document.activeElement.nodeName).toEqual('INPUT');
             expect((document.activeElement as HTMLInputElement).value).toBe('John Brown');
-            expect((document.activeElement as HTMLInputElement).selectionStart).toEqual(0)
-            expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(10)
-        }));
+            expect((document.activeElement as HTMLInputElement).selectionStart).toEqual(0);
+            expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(10);
+        });
 
-        it('should work correct when not using ngModel but value and change event', fakeAsync(() => {
+        it('should work correct when not using ngModel but value and change event', async () => {
             fixture = TestBed.createComponent(CellEditingCustomEditorTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -341,7 +337,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
-            tick(16); // trigger igxFocus
+            await fixture.whenStable(); // trigger igxFocus
 
             expect(cell.editMode).toBe(true);
             const newValue = 'new value';
@@ -359,9 +355,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe(newValue);
-        }));
+        });
 
-        it('should preserve the navigation when cancel cellEdit and async set cell.editMode=false', fakeAsync(() => {
+        it('should preserve the navigation when cancel cellEdit and async set cell.editMode=false', async () => {
             grid.cellEdit.subscribe((evt: IGridEditEventArgs) => {
                 evt.cancel = true;
                 const rowIndex = evt.cellID.rowIndex;
@@ -376,8 +372,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
-            tick(16);
-            expect(cell.editMode).toBeTrue();
+            await fixture.whenStable();
+            expect(cell.editMode).toBe(true);
 
             const editInput = fixture.debugElement.query(By.css('igx-grid-cell input'));
             if (editInput) {
@@ -388,9 +384,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            tick(100);
+            await fixture.whenStable();
             fixture.detectChanges();
-            expect(cell.editMode).toBeFalse();
+            expect(cell.editMode).toBe(false);
 
             expect(document.activeElement).toBe(grid.tbody.nativeElement);
 
@@ -401,7 +397,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const active = (grid as any).navigation.activeNode;
             expect(active.row).toBe(0);
             expect(active.column).toBe(nextCell.column.visibleIndex);
-        }));
+        });
     });
 
     describe('Scroll, pin and blur', () => {
@@ -518,7 +514,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(verticalScroll.scrollTop).toBe(0);
         });
 
-        it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', (async () => {
+        it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', async () => {
             const verticalScroll = grid.verticalScrollContainer.getScroll();
             GridFunctions.scrollTop(grid, 1000);
             await wait(500);
@@ -546,9 +542,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBeTruthy();
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
             expect(verticalScroll.scrollTop).toBe(expectedScroll);
-        }));
+        });
 
-        it('When cell in editMode and try to navigate with `ArrowRight` - focus should remain over the input.', (async () => {
+        it('When cell in editMode and try to navigate with `ArrowRight` - focus should remain over the input.', async () => {
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
             const virtRow = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
@@ -571,9 +567,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBeTruthy();
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
             expect(displayContainer).toBe(0);
-        }));
+        });
 
-        it('When cell in editMode and try to navigate with `ArrowLeft` - focus should remain over the input.', (async () => {
+        it('When cell in editMode and try to navigate with `ArrowLeft` - focus should remain over the input.', async () => {
             const virtRow = grid.gridAPI.get_row_by_index(0).virtDirRow;
 
             GridFunctions.scrollLeft(grid, 800);
@@ -599,9 +595,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
             expect(parseInt(virtRow.dc.instance._viewContainer.element.nativeElement.style.left, 10))
                 .toBe(virtRowStyle);
-        }));
+        });
 
-        it('edit mode - should close calendar when scroll', (async () => {
+        it('edit mode - should close calendar when scroll', async () => {
             GridFunctions.scrollLeft(grid, 800);
             await wait(100);
             fixture.detectChanges();
@@ -635,7 +631,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const editCellID = grid.gridAPI.crudService.cell.id;
             expect(4).toBe(editCellID.columnID);
             expect(1).toBe(editCellID.rowIndex);
-        }));
+        });
     });
 
     describe('Events', () => {
@@ -652,12 +648,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
             grid.ngAfterViewInit();
         });
 
-        afterEach(fakeAsync(() => {
+        afterEach(async () => {
             $destroyer.next(true);
-        }));
+        });
 
         it(`Should properly emit 'cellEditEnter' event`, () => {
-            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
+            vi.spyOn(grid.cellEditEnter, 'emit');
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             let initialRowData = { ...cell.row.data };
             expect(cell.editMode).toBeFalsy();
@@ -676,7 +672,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 valid: true,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: expect.anything() as any
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
@@ -700,7 +696,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: false,
                 column: cell2.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: expect.anything() as any
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
@@ -708,7 +704,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
 
         it(`Should be able to cancel 'cellEditEnter' event`, () => {
-            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
+            vi.spyOn(grid.cellEditEnter, 'emit');
             grid.cellEditEnter.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
@@ -730,7 +726,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 valid: true,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: expect.anything() as any
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
@@ -755,7 +751,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: true,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 valid: true
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(2);
@@ -764,7 +760,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
 
         it(`Should properly emit 'cellEditExit' event`, () => {
-            spyOn(grid.cellEditExit, 'emit').and.callThrough();
+            vi.spyOn(grid.cellEditExit, 'emit');
             let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             let initialRowData = { ...cell.row.data };
             expect(cell.editMode).toBeFalsy();
@@ -787,7 +783,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 'John Brown',
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: expect.anything() as any
             };
 
             expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
@@ -811,14 +807,14 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 valid: true,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: expect.anything() as any
             };
             expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
         });
 
         it(`Should properly emit 'cellEdit' event`, () => {
-            spyOn(grid.cellEdit, 'emit').and.callThrough();
+            vi.spyOn(grid.cellEdit, 'emit');
             let cellArgs: IGridEditEventArgs;
             let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
@@ -846,7 +842,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: false,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 valid: true
             };
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
@@ -874,15 +870,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: false,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 valid: true
             };
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        it(`Should be able to cancel 'cellEdit' event`, fakeAsync(() => {
-            const emitSpy = spyOn(grid.cellEdit, 'emit').and.callThrough();
+        it(`Should be able to cancel 'cellEdit' event`, async () => {
+            const emitSpy = vi.spyOn(grid.cellEdit, 'emit');
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
@@ -891,7 +887,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
-            tick(16); // trigger igxFocus rAF
+            await fixture.whenStable(); // trigger igxFocus rAF
             const editInput = fixture.debugElement.query(By.css('igx-grid-cell input')).nativeElement;
 
             expect(cell.editMode).toBe(true);
@@ -921,11 +917,11 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
-            emitSpy.calls.reset();
+            emitSpy.mockClear();
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            cellArgs.event = jasmine.anything() as any;
+            cellArgs.event = expect.anything() as any;
             expect(cell.editMode).toBe(true);
             expect(cell.value).toBe(cellValue);
             expect(document.activeElement).toBe(editInput);
@@ -936,7 +932,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(nextCell.editMode).toBe(false);
 
             // activate the new cell
-            emitSpy.calls.reset();
+            emitSpy.mockClear();
             grid.gridAPI.get_cell_by_index(0, 'age').activate(new FocusEvent('focus'));
             fixture.detectChanges();
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
@@ -946,7 +942,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(true);
             expect(document.activeElement).toBe(editInput);
 
-            emitSpy.calls.reset();
+            emitSpy.mockClear();
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
@@ -954,13 +950,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(document.activeElement).toBe(editInput);
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
-        }));
+        });
 
-        it(`Should be able to update other cell in 'cellEdit' event`, fakeAsync(() => {
+        it(`Should be able to update other cell in 'cellEdit' event`, async () => {
             grid.primaryKey = 'personNumber';
             fixture.detectChanges();
 
-            spyOn(grid.cellEdit, 'emit').and.callThrough();
+            vi.spyOn(grid.cellEdit, 'emit');
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 if (e.cellID.columnID === 0) {
                     grid.updateCell(1, e.rowID, 'age');
@@ -980,7 +976,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // press tab on edited cell
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             cell = grid.getCellByColumn(0, 'age');
@@ -992,7 +988,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             cell = grid.getCellByColumn(0, 'fullName');
             expect(cell.value).toEqual('New Name');
-        }));
+        });
 
         it(`Should not update data in grid with transactions, when row is updated in cellEdit and cellEdit is canceled`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
@@ -1032,7 +1028,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe(initialValue);
         });
 
-        xit(`Should emit the committed/new rowData cellEditDone`, () => {
+        it.skip(`Should emit the committed/new rowData cellEditDone`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -1042,7 +1038,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const newValue = 'New Name';
             const updatedRowData = Object.assign({}, cell.row.data, { Name: newValue });
 
-            spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            vi.spyOn(grid.cellEditDone, 'emit');
 
             cell.update(newValue);
             fixture.detectChanges();
@@ -1065,7 +1061,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
 
         it(`Should properly emit 'cellEditExit' event`, () => {
-            spyOn(grid.cellEditExit, 'emit').and.callThrough();
+            vi.spyOn(grid.cellEditExit, 'emit');
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             const initialRowData = { ...cell.row.data };
 
@@ -1091,7 +1087,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: 'New Name',
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 valid: true
             };
             expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
@@ -1101,7 +1097,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
 
         it(`Should properly emit 'cellEditDone' event`, () => {
-            const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            const doneSpy = vi.spyOn(grid.cellEditDone, 'emit');
 
             let cellArgs: IGridEditDoneEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
@@ -1131,7 +1127,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: firstNewValue,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 valid: true
             };
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
@@ -1158,13 +1154,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: secondNewValue,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any,
+                event: expect.anything() as any,
                 valid: true
             };
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
 
-            const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
+            const spyDoneArgs = vi.mocked(doneSpy).mock.lastCall[0] as IGridEditDoneEventArgs;
             expect(spyDoneArgs.rowData).toBe(grid.data[0]);
         });
 
@@ -1372,7 +1368,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
     });
 
-    it('Cell editing (when rowEditable=false) - default column editable value is false', fakeAsync(() => {
+    it('Cell editing (when rowEditable=false) - default column editable value is false', async () => {
         const fixture = TestBed.createComponent(ColumnEditablePropertyTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1383,10 +1379,10 @@ describe('IgxGrid - Cell Editing #grid', () => {
         expect(columns[3].editable).toBeTruthy();
         expect(columns[4].editable).toBeFalsy();
         expect(columns[5].editable).toBeFalsy();
-    }));
+    });
 
     // Bug #5855
-    it('should apply proper style on cell editing when new value equals zero or false', fakeAsync(() => {
+    it('should apply proper style on cell editing when new value equals zero or false', async () => {
         const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
         fixture.detectChanges();
 
@@ -1421,7 +1417,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(1, 'OnPTO'));
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         expect(cell.editMode).toBe(true);
 
@@ -1434,5 +1430,5 @@ describe('IgxGrid - Cell Editing #grid', () => {
         expect(cell.editMode).toBe(false);
         expect(cell.value).toBe(false);
         expect(grid.gridAPI.get_cell_by_index(1, 'OnPTO').nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
-    }));
+    });
 });

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent } from './snackbar.component';
@@ -7,17 +7,19 @@ import { useAnimation } from '@angular/animations';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 describe('IgxSnackbar', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 SnackbarInitializeTestComponent,
                 SnackbarCustomContentComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fixture: ComponentFixture<SnackbarInitializeTestComponent>;
     let snackbar: IgxSnackbarComponent;
@@ -44,8 +46,8 @@ describe('IgxSnackbar', () => {
         expect(domSnackbar.id).toBe('customId');
     });
 
-    it('should auto hide 1 second after is open', fakeAsync(() => {
-        spyOn(snackbar.closing, 'emit');
+    it('should auto hide 1 second after is open', async () => {
+        vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         fixture.detectChanges();
@@ -54,15 +56,13 @@ describe('IgxSnackbar', () => {
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
         expect(snackbar.autoHide).toBeTruthy();
-
-        tick(1000);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeFalsy();
         expect(snackbar.closing.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should not auto hide 1 second after is open', fakeAsync(() => {
-        spyOn(snackbar.closing, 'emit');
+    it('should not auto hide 1 second after is open', async () => {
+        vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         snackbar.autoHide = false;
@@ -71,98 +71,94 @@ describe('IgxSnackbar', () => {
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
         expect(snackbar.autoHide).toBeFalsy();
-
-        tick(1000);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
         expect(snackbar.closing.emit).not.toHaveBeenCalled();
         snackbar.close();
-    }));
+    });
 
-    it('should trigger on action', fakeAsync(() => {
+    it('should trigger on action', async () => {
         snackbar.actionText = 'undo';
         snackbar.displayTime = 100;
-        spyOn(snackbar.clicked, 'emit');
+        vi.spyOn(snackbar.clicked, 'emit');
 
         snackbar.open();
-        tick(100);
         fixture.detectChanges();
 
         fixture.debugElement.query(By.css('button')).nativeElement.click();
         fixture.detectChanges();
 
         expect(snackbar.clicked.emit).toHaveBeenCalledWith(snackbar);
-    }));
+    });
 
-    it('should emit opening when snackbar is shown', fakeAsync(() => {
-        spyOn(snackbar.opening, 'emit');
+    it('should emit opening when snackbar is shown', async () => {
+        vi.spyOn(snackbar.opening, 'emit');
         snackbar.open();
-        tick(100);
         expect(snackbar.opening.emit).toHaveBeenCalled();
         snackbar.close();
-    }));
+    });
 
-    it('should emit onOpened when snackbar is opened', fakeAsync(() => {
+    it('should emit onOpened when snackbar is opened', async () => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
-        spyOn(snackbar.opened, 'emit');
+        vi.spyOn(snackbar.opened, 'emit');
         snackbar.open();
-        tick(100);
+        await wait(100);
         fixture.detectChanges();
         expect(snackbar.opened.emit).toHaveBeenCalled();
         snackbar.close();
-    }));
+    });
 
     it('should emit closing when snackbar is hidden', () => {
-        spyOn(snackbar.closing, 'emit');
+        vi.spyOn(snackbar.closing, 'emit');
         snackbar.open();
         snackbar.close();
         expect(snackbar.closing.emit).toHaveBeenCalled();
     });
 
-    it('should emit onClosed when snackbar is closed', fakeAsync(() => {
+    it('should emit onClosed when snackbar is closed', async () => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
-        spyOn(snackbar.closed, 'emit');
+        vi.spyOn(snackbar.closed, 'emit');
         snackbar.open();
         snackbar.close();
-        tick(100);
+        await wait(100);
         fixture.detectChanges();
         expect(snackbar.closed.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should be opened and closed by the toggle method', fakeAsync(() => {
+    it('should be opened and closed by the toggle method', async () => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
 
         snackbar.toggle();
-        tick(100);
-        expect(snackbar.isVisible).toBeTrue();
-        expect(snackbar.collapsed).toBeFalse();
+        await wait(100);
+        expect(snackbar.isVisible).toBe(true);
+        expect(snackbar.collapsed).toBe(false);
 
         snackbar.toggle();
-        tick(100);
-        expect(snackbar.isVisible).toBeFalse();
-        expect(snackbar.collapsed).toBeTrue();
-    }));
+        await wait(100);
+        expect(snackbar.isVisible).toBe(false);
+        expect(snackbar.collapsed).toBe(true);
+    });
 
-    it('can set snackbar message through open method', fakeAsync(() => {
+    it('can set snackbar message through open method', async () => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
 
         snackbar.open('Custom Message');
-        tick(100);
+        await wait(100);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
 
         expect(snackbar.autoHide).toBeFalsy();
         expect(snackbar.textMessage).toBe('Custom Message');
         snackbar.close();
-    }));
+    });
     it('should be able to set custom positionSettings', () => {
         const defaultPositionSettings = snackbar.positionSettings;
-        const defaulOpenAnimationParams = {duration: '.35s', easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
-         fromPosition: 'translateY(100%)', toPosition: 'translateY(0)'};
+        const defaulOpenAnimationParams = { duration: '.35s', easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+            fromPosition: 'translateY(100%)', toPosition: 'translateY(0)' };
         expect(defaultPositionSettings.horizontalDirection).toBe(-0.5);
         expect(defaultPositionSettings.verticalDirection).toBe(0);
         expect(defaultPositionSettings.openAnimation.options.params).toEqual(defaulOpenAnimationParams);
@@ -180,28 +176,28 @@ describe('IgxSnackbar', () => {
         const customPositionSettings = snackbar.positionSettings;
         expect(customPositionSettings.horizontalDirection).toBe(-0.5);
         expect(customPositionSettings.verticalDirection).toBe(-0.5);
-        expect(customPositionSettings.openAnimation.options.params).toEqual({duration: '1000ms'});
-        expect(customPositionSettings.minSize).toEqual({height: 100, width: 100});
+        expect(customPositionSettings.openAnimation.options.params).toEqual({ duration: '1000ms' });
+        expect(customPositionSettings.minSize).toEqual({ height: 100, width: 100 });
     });
 });
 
 describe('IgxSnackbar with custom content', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 SnackbarCustomContentComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     let fixture: ComponentFixture<SnackbarCustomContentComponent>;
     let snackbar: IgxSnackbarComponent;
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SnackbarCustomContentComponent);
         fixture.detectChanges();
         snackbar = fixture.componentInstance.snackbar;
-    }));
+    });
 
     it('should display a message, a custom content element and a button', () => {
         fixture.componentInstance.text = 'Undo';
@@ -212,7 +208,7 @@ describe('IgxSnackbar with custom content', () => {
         expect(messageEl.nativeElement.innerText).toContain('Item shown');
 
         const customContent = fixture.debugElement.query(By.css('.igx-snackbar__content'));
-        expect(customContent).toBeTruthy('Custom content is not found');
+        expect(customContent, 'Custom content is not found').toBeTruthy();
 
         // Verify the custom button is displayed instead of the snackbar actionText
         const button = fixture.debugElement.query(By.css('.igx-button'));
@@ -222,12 +218,12 @@ describe('IgxSnackbar with custom content', () => {
         // Verify the message is displayed on the left side of the custom content
         const messageElRect = messageEl.nativeElement.getBoundingClientRect();
         const customContentRect = customContent.nativeElement.getBoundingClientRect();
-        expect(messageElRect.left <= customContentRect.left).toBe(true, 'The message is not on the left of the custom content');
+        expect(messageElRect.left <= customContentRect.left, 'The message is not on the left of the custom content').toBe(true);
 
         // Verify the custom content element is on the left side of the button
         const buttonRect = button.nativeElement.getBoundingClientRect();
-        expect(customContentRect.right <= buttonRect.left).toBe(true, 'The custom element is not on the left of the button');
-        expect(messageElRect.right <= buttonRect.left).toBe(true, 'The button is not on the right side of the snackbar content');
+        expect(customContentRect.right <= buttonRect.left, 'The custom element is not on the left of the button').toBe(true);
+        expect(messageElRect.right <= buttonRect.left, 'The button is not on the right side of the snackbar content').toBe(true);
         snackbar.close();
     });
 
@@ -258,7 +254,8 @@ describe('IgxSnackbar with custom content', () => {
     imports: [IgxSnackbarComponent]
 })
 class SnackbarInitializeTestComponent {
-    @ViewChild(IgxSnackbarComponent, { static: true }) public snackbar: IgxSnackbarComponent;
+    @ViewChild(IgxSnackbarComponent, { static: true })
+    public snackbar: IgxSnackbarComponent;
     public text: string;
 }
 
@@ -270,6 +267,7 @@ class SnackbarInitializeTestComponent {
     imports: [IgxSnackbarComponent, IgxButtonDirective]
 })
 class SnackbarCustomContentComponent {
-    @ViewChild(IgxSnackbarComponent, { static: true }) public snackbar: IgxSnackbarComponent;
+    @ViewChild(IgxSnackbarComponent, { static: true })
+    public snackbar: IgxSnackbarComponent;
     public text: string;
 }

@@ -2,7 +2,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
 import { IgxChatMarkdownService } from './markdown-service';
 import { MarkdownPipe } from './markdown-pipe';
-import Spy = jasmine.Spy;
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 
 // Mock the Service: We trust the service to provide safe HTML from Shiki.
 const mockSafeHtml = `
@@ -19,7 +19,7 @@ class MockChatMarkdownService {
 describe('MarkdownPipe', () => {
     let pipe: MarkdownPipe;
     let sanitizer: DomSanitizer;
-    let bypassSpy: Spy;
+    let bypassSpy: ReturnType<typeof vi.spyOn>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -31,7 +31,11 @@ describe('MarkdownPipe', () => {
 
         pipe = TestBed.inject(MarkdownPipe);
         sanitizer = TestBed.inject(DomSanitizer);
-        bypassSpy = spyOn(sanitizer, 'bypassSecurityTrustHtml').and.callThrough();
+        bypassSpy = vi.spyOn(sanitizer, 'bypassSecurityTrustHtml');
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     it('should be created', () => {
@@ -43,7 +47,7 @@ describe('MarkdownPipe', () => {
 
         expect(bypassSpy).toHaveBeenCalledTimes(1);
 
-        const htmlString = bypassSpy.calls.mostRecent().args[0];
+        const htmlString = bypassSpy.mock.calls[0][0] as string;
 
         expect(htmlString).toContain('style="color: var(--shiki-fg);"');
         expect(htmlString).toContain('<pre class="shiki"');
@@ -58,6 +62,6 @@ describe('MarkdownPipe', () => {
 
     it('should handle undefined input text', async () => {
         await pipe.transform(undefined);
-        expect(sanitizer.bypassSecurityTrustHtml).toHaveBeenCalled();
+        expect(bypassSpy).toHaveBeenCalled();
     });
 });

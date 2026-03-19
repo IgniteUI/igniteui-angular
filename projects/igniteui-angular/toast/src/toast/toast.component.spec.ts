@@ -1,15 +1,9 @@
-import {
-    waitForAsync,
-    TestBed,
-    ComponentFixture,
-    flushMicrotasks,
-    fakeAsync,
-} from '@angular/core/testing';
+import { TestBed, ComponentFixture, } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxToastComponent
-} from './toast.component';
-import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';;
+import { IgxToastComponent } from './toast.component';
+import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+;
 
 describe('IgxToast', () => {
     let fixture: ComponentFixture<IgxToastComponent>;
@@ -27,11 +21,11 @@ describe('IgxToast', () => {
         verticalStartPoint: VerticalAlignment.Middle
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxToastComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxToastComponent);
@@ -52,21 +46,20 @@ describe('IgxToast', () => {
         fixture.detectChanges();
     });
 
-    it('should properly toggle and emit isVisibleChange', fakeAsync(() => {
-        spyOn(toast.isVisibleChange, 'emit').and.callThrough();
+    it('should properly toggle and emit isVisibleChange', async () => {
+        vi.spyOn(toast.isVisibleChange, 'emit');
         expect(toast.isVisible).toBe(false);
         expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(0);
 
         toast.toggle();
         expect(toast.isVisible).toBe(true);
-        flushMicrotasks();
-        expect(toast.isVisibleChange.emit).toHaveBeenCalledOnceWith({ owner: toast, id: '0' });
+        expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(1);
+        expect(toast.isVisibleChange.emit).toHaveBeenCalledWith({ owner: toast, id: '0' });
 
         toast.toggle();
-        flushMicrotasks();
         expect(toast.isVisible).toBe(false);
         expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(2);
-    }));
+    });
 
     it('should be able to change positionSettings', () => {
         toast.positionSettings = firstPositionSettings;

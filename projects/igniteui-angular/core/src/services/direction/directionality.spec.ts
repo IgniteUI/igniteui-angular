@@ -1,37 +1,42 @@
-import { TestBed, inject, waitForAsync } from '@angular/core/testing';
-import { Component, DOCUMENT, inject as inject_1 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { Component, DOCUMENT, inject } from '@angular/core';
 import { IgxDirectionality, DIR_DOCUMENT } from './directionality';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 interface FakeDoc {
-    body: { dir?: string };
-    documentElement: { dir?: string };
+    body: {
+        dir?: string;
+    };
+    documentElement: {
+        dir?: string;
+    };
 }
 
 describe('IgxDirectionality', () => {
     describe('DI', () => {
-        beforeEach(waitForAsync(() =>
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [InjectsIgxDirectionalityComponent]
-            }).compileComponents()
-        ));
+            }).compileComponents();
+        });
 
         it('should inject the document through the injectionToken properly', () => {
             const injectionToken = TestBed.inject(DIR_DOCUMENT);
             const document = TestBed.inject(DOCUMENT);
 
             expect(injectionToken).toEqual(document);
-            expect(injectionToken).toEqual(jasmine.any(Document));
-            expect(document).toBeTruthy(jasmine.any(Document));
+            expect(injectionToken).toBeInstanceOf(Document);
+            expect(document).toBeInstanceOf(Document);
         });
 
-        it('should read dir from html if not specified on the body', inject([DOCUMENT], () => {
+        it('should read dir from html if not specified on the body', () => {
             const fixture = TestBed.createComponent(InjectsIgxDirectionalityComponent);
             const component = fixture.debugElement.componentInstance;
 
             expect(component.dir.document).not.toBeNull();
             expect(component.dir.document).not.toBeUndefined();
-            expect(component.dir.document).toEqual(jasmine.any(Document));
-        }));
+            expect(component.dir.document).toBeInstanceOf(Document);
+        });
 
     });
 
@@ -41,15 +46,15 @@ describe('IgxDirectionality', () => {
         let expectedRes: string;
         let dirInstance: IgxDirectionality;
 
-        beforeEach(() => {
+        beforeEach(async () => {
             fakeDoc = { body: {}, documentElement: {} };
 
-            TestBed.configureTestingModule({
+            await TestBed.configureTestingModule({
                 providers: [
                     { provide: DOCUMENT, useValue: fakeDoc },
                     IgxDirectionality
                 ]
-            });
+            }).compileComponents();
         });
         it('should read dir from html if not specified on the body', () => {
             expectedRes = 'rtl';
@@ -92,5 +97,5 @@ describe('IgxDirectionality', () => {
     standalone: true
 })
 class InjectsIgxDirectionalityComponent {
-    public dir = inject_1(IgxDirectionality);
+    public dir = inject(IgxDirectionality);
 }
