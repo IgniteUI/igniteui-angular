@@ -54,10 +54,10 @@ css-naming-convention.md           ← CSS naming rules
 - Keep accessibility intact: ARIA, keyboard navigation, focus behavior, and screen reader semantics.
 - Keep i18n intact when user-facing text changes.
 - Add JSDoc with `@param`, `@returns`, and `@example` on every new public member.
-- Add or update ng update migrations for breaking changes.
+- Add or update `ng update` migrations for true breaking changes such as removals, renames, moved entry points, selector changes, or incompatible default-behavior changes.
 - Update the component `README.md` when the public API surface changes.
 - Consider demo/sample updates in `src/app/` for user-visible changes.
-- Update `CHANGELOG.md` for every new feature, deprecation, or breaking change.
+- Update `CHANGELOG.md` for new features, deprecations, breaking changes, and notable user-visible fixes when they fit the existing changelog section structure.
 
 ### Never
 
@@ -117,6 +117,9 @@ Feature implementation is handled by a set of specialized agents in `.github/age
 | `component-readme-agent` | `component-readme-agent.md` | Updates affected component `README.md` files for public API and documented behavior changes |
 | `migration-agent` | `migration-agent.md` | Creates `ng update` migration schematics for breaking changes |
 | `changelog-agent` | `changelog-agent.md` | Updates `CHANGELOG.md` following repo conventions |
+
+Feature and bug orchestrators route work in this order:
+TDD → implementer → README (if needed) → migration (if breaking) → changelog (if needed).
 
 ## Commit Message Conventions
 

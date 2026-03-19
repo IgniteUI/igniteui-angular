@@ -134,7 +134,13 @@ src/app/<component>/                              ← demo pages
 
 Run `npm start` if the bug involves UI behavior or user interaction to visually confirm the issue.
 
-### Step 2 — Present a Scope Summary
+### Step 2 — Request Missing Context
+
+If the report is missing information needed to reproduce or scope the bug safely, pause and ask for the missing context before routing any work.
+
+Keep the follow-up short and specific.
+
+### Step 3 — Present a Scope Summary
 
 Present a brief scope summary to the user:
 
@@ -149,7 +155,7 @@ Keep it short and high-level. Confirm scope, not solution details.
 
 Wait for user confirmation.
 
-### Step 3 — Route Work
+### Step 4 — Route Work
 
 Delegate work only through isolated subagent execution when available. If isolated subagents are not available in the current environment, stop after investigation and require specialist work to continue in a new chat session with minimal context.
 
@@ -168,11 +174,11 @@ Use agents in this order:
 4. **`migration-agent`** — only if the fix introduces a breaking change
 5. **`changelog-agent`** — only if the fix warrants an entry under an existing CHANGELOG sections; otherwise leave `CHANGELOG.md` unchanged
 
-### Step 4 — Verify Completeness
+### Step 5 — Verify Completeness
 
 After all agents finish, check:
 
-- Does the failing test now pass?
+- Does the newly added failing test now pass?
 - Were all affected areas covered?
 - Were public exports preserved or updated?
 - Was the component README updated (if needed)?
@@ -199,7 +205,7 @@ Report what was done and any remaining items.
 
 ## Multi-branch Fixes
 
-When a bug exists in multiple release branches:
+When a bug exists in multiple supported release branches:
 1. Target the fix at the **oldest affected branch** first.
 2. Cherry-pick the commit to each newer branch up to and including `master`.
 3. Create separate PRs for each cherry-pick.

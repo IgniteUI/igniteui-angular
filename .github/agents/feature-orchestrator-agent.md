@@ -119,7 +119,13 @@ src/app/<component>/                              ← demo pages
    - Whether i18n strings are affected
    - Which test suite to use (grid vs non-grid)
 
-### Step 2 — Present a Scope Summary
+### Step 2 — Request Missing Context
+
+If the request is missing information needed to discover scope safely, pause and ask for the missing context before routing any work.
+
+Keep the follow-up short and specific.
+
+### Step 3 — Present a Scope Summary
 
 Present a brief scope summary to the user:
 
@@ -133,7 +139,7 @@ Keep it short and high-level. Confirm scope, not solution details.
 
 Wait for user confirmation.
 
-### Step 3 — Route Work
+### Step 4 — Route Work
 
 Delegate work only through isolated subagent execution when available. If isolated subagents are not available in the current environment, stop after scope discovery and require specialist work to continue in a new chat session with minimal context.
 
@@ -158,7 +164,7 @@ Use agents in this order:
 4. **`migration-agent`** — only if breaking changes exist
 5. **`changelog-agent`** — updates CHANGELOG.md
 
-### Step 4 — Verify Completeness
+### Step 5 — Verify Completeness
 
 After all agents finish, check:
 

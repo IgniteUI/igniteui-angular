@@ -39,8 +39,6 @@ Check the relevant skill file for component APIs and patterns:
 - Grid components → `skills/igniteui-angular-grids/SKILL.md`
 - Theming & styling → `skills/igniteui-angular-theming/SKILL.md`
 
-Each skill file is a routing hub pointing to detailed reference files under its `references/` folder. **Read the relevant reference files in full** before modifying any component code.
-
 ---
 
 ## GREEN Phase — Fix the Bug
