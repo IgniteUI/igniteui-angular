@@ -829,10 +829,16 @@ export class AppComponent implements OnInit {
             for (const component of this.componentLinks) {
                 if (component.link === router.url) {
                     this.urlString = component.name;
-                    this.urlIcon = component.icon
-                    ;
+                    this.urlIcon = component.icon;
                 }
             }
+
+            // Scroll the active drawer item into view
+            requestAnimationFrame(() => {
+                const activeItem = this.navdrawer.drawer
+                    ?.querySelector('.igx-nav-drawer-item--active');
+                activeItem?.scrollIntoView({ block: 'nearest' });
+            });
         });
     }
 
