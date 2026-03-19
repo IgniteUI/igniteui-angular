@@ -59,16 +59,20 @@
                 $banner-border-color: color-mix(in srgb, var(--ig-grid-foreground) 20%, var(--ig-grid-background))
             )
         );
-        
-        @include tokens(
-            button-group-theme(
-                $schema: $schema,
-                $item-background: transparent,
-                $item-text-color: var(--ig-grid-foreground),
-                $item-selected-text-color: var(--ig-grid-accent-color),
-                $shadow: none
-            ),
-        );
+
+        .igx-excel-filter__menu .igx-button-group,
+        .igx-button-group {
+            @include tokens(
+                button-group-theme(
+                    $schema: $schema,
+                    $item-background: transparent,
+                    $item-text-color: var(--ig-grid-foreground),
+                    $item-selected-text-color: var(--ig-grid-accent-color),
+                    $shadow: none
+                ),
+                $mode: 'scoped'
+            );
+        }
 
         @include tokens(contained-button-theme($schema: $schema, $background: var(--ig-grid-accent-color)));
 
