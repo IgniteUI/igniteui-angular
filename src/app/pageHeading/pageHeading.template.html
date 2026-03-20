@@ -1,63 +1,99 @@
 @let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
 
-<div class="sample-header">
-    <div class="wrapper">
-        <button igxIconButton="flat"
-            igxRipple
-            [igxRippleCentered]="true"
-            igxToggleAction="navdrawer"
-            class="hamburger">
-        <igx-icon>menu</igx-icon>
-        </button>
-        <h5 class="title">
-            {{ title }}
-        </h5>
+<igx-navbar class="demos-navbar">
+    <igx-navbar-action>
+        <igx-icon
+                igxNavbarAction
+                igxToggleAction="navdrawer"
+                class="hamburger">
+            menu
+        </igx-icon>
+    </igx-navbar-action>
+
+    <div igxNavbarTitle class="nav-header">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 459 132.3">
+            <style>
+                .st0{ fill: var(--logo-fill) }
+                .st1{ fill:#fff }
+                .st2{ fill:#09f }
+            </style>
+            <path d="M131.1 16.1h9.3V87h-9.3zM155.1 96.6c4.6 3 9.9 5 15.3 5 9.2 0 15.4-5.5 15.4-14.6v-3.5l-.2-.1c-3.3 2.3-8 3.7-13.1 3.7-13.1 0-23.6-9.9-23.6-24.1 0-13.6 9.3-25.2 25-25.2 5 0 9 1.2 12.2 2.7l8.5-1.5v47.8c0 14.1-9.4 22.8-24.2 22.8-5.9 0-11.3-1.6-15.3-3.6zm18.6-17.2c4.4 0 9.1-1.6 12-3.9V48.9c-3-1.9-7.7-3.3-12.1-3.3-9.7 0-15.9 7.4-15.9 16.8.1 9.7 6.5 17 16 17M203.3 38.9h8.8V45l.2.1c4.2-4.2 10.1-7.2 16.8-7.2 5.3 0 9.8 1.9 12.8 5.3 2.6 3 4 6.8 4 14.2V87h-8.8V58.9c0-5-.7-7.9-2.3-9.8-2-2.3-5.1-3.1-7.7-3.1-5.5 0-11.6 3.4-15.1 8v33h-8.8V38.9zM259.1 16.1c3.4 0 6.2 2.7 6.2 6.2s-2.7 6.2-6.2 6.2c-3.4 0-6.2-2.7-6.2-6.2s2.8-6.2 6.2-6.2m-4.4 22.8h8.8V87h-8.8zM280.8 70.3V46.8h-8.9v-7.9h8.9V25.7l8.8-1.5v14.6h14.5v7.9h-14.5v21.8c0 6 .9 11.5 7.2 11.5 2.5 0 5.4-.9 7.2-2.1v8.3c-2 1-5.4 1.8-8.7 1.8-3.5 0-7.8-.9-11-4.5-2.3-2.6-3.5-6.5-3.5-13.2M320.7 65.5c1.3 9.5 8.3 14.7 17.8 14.7 6.7 0 12.2-2.6 16.6-6v9.4c-4.3 2.7-11 4.5-17.2 4.5-14.9 0-26-10-26-25.2s11.1-25.2 24-25.2c11.7 0 21.9 8.2 21.9 23.3 0 1.5-.1 3.2-.3 4.4h-36.8zm.2-7h28.4c-.8-9.6-7.8-12.8-13.6-12.8-6.4 0-13.2 3.9-14.8 12.8M378.9 53.6V16.1h9.3v36.5c0 8.7.6 14.2 2.7 18.3 2.4 4.6 7.5 8.5 16.8 8.5 8.6 0 13.9-3.3 16.6-8.5 2.3-4.2 2.6-9.9 2.6-17.9V16.1h9v36.4c0 10.3-.6 18.2-4.7 24.5-4.5 6.9-13 11.1-24 11.1-11.1 0-19.4-4.3-23.8-11.1-3.9-6.3-4.5-14.6-4.5-23.4M444.6 16.1h9.3V87h-9.3z" class="st0"/>
+            <circle cx="57.8" cy="61.5" r="52.6" class="st0"/>
+            <path d="M59.7 3.6c-.8-.4-1.7-.6-2.5-.4-2.1.5-4.6 4.2-6 5.8-1.9 2.2-3.5 4.6-4.9 7.1-7.1 12.6-6.8 27.5-3.8 41.3 1.9 8.9 4.9 17.5 8.2 25.8l14 .1c.6 0 2.8-7.2 3.1-8 .9-2.6 1.8-5.2 2.6-7.8 1.4-4.6 2.6-9.3 3.5-14 1.4-7.4 1.9-15.1.7-22.6-.9-5.8-2.9-11.4-6-16.5-1.5-2.4-5.2-9.1-8.9-10.8m-1.8 38.3c-4.4 0-7.9-3.6-7.9-8s3.6-7.9 8-7.9 7.9 3.6 7.9 8-3.6 7.9-8 7.9M68.3 84.4c2.6-6.1 4.6-11.9 6.1-17.3 2.2 1.3 5.3 7.5 6.8 11.3.6 1.6.8 4.3.6 6-.5 3.5-1.7 9.7-4.9 14.1-.3.4-1 .2-1-.3.1-1.4.1-2.9 0-4.1-.1-2.3-1.2-4.5-2.9-6.1-1.5-1.6-3.4-3.1-4.7-3.6" class="st1"/>
+            <path d="M39.5 93.8c-.1 1.3-.1 2.7 0 4.1 0 .5-.7.8-1 .3-3.2-4.4-4.4-10.6-4.8-14.1-.2-1.7 0-4.4.6-5.9 1.5-3.7 4.6-9.9 6.9-11.2 1.4 5.4 3.4 11.2 5.9 17.3-1.3.5-3.2 2-4.7 3.4-1.6 1.6-2.7 3.8-2.9 6.1M55.9 3.8s-21.5 23 1 79.5h-6.1S22.9 30 55.9 3.8" class="st2"/>
+            <path d="M58.6 104.2"/>
+            <path fill="#f49021" d="M45.1 111.8c-.5-.9-.7-1.9-.5-3 .4-1.9 1.9-3.3 3.8-3.5 2.7-.3 4.9 1.8 4.9 4.4 0 1.3-.7 2.2-1.2 3.3-.7 1.5-1.1 2.9-1.2 4.4v1c0 4.8 2.9 9 7.1 10.8.2.1.4-.1.3-.3-.3-.8-.4-1.6-.4-2.4 0-2.4 1.2-4.3 3-5.8 1.9-1.6 3.8-3.1 5.5-4.8 1.8-1.7 3.7-3.3 4.9-5.4 1.4-2.4 2.2-5.1 2.2-8.1 0-6.2-3.7-12-9.4-14.6-2.8-1.3-5.9-1.7-9-1.2-6.4 1-11.7 6.1-13.1 12.4-.5 2.3-.4 4.7.1 7 .3 1.1.6 2.1 1.1 3.1.7 1 1.4 1.8 1.9 2.7"/>
+            <defs>
+                <path id="SVGID_15_" d="M45.1 111.8c-.5-.9-.7-1.9-.5-3 .4-1.9 1.9-3.3 3.8-3.5 2.7-.3 4.9 1.8 4.9 4.4 0 1.3-.7 2.2-1.2 3.3-.7 1.5-1.1 2.9-1.2 4.4v1c0 4.8 2.9 9 7.1 10.8.2.1.4-.1.3-.3-.3-.8-.4-1.6-.4-2.4 0-2.4 1.2-4.3 3-5.8 1.9-1.6 3.8-3.1 5.5-4.8 1.8-1.7 3.7-3.3 4.9-5.4 1.4-2.4 2.2-5.1 2.2-8.1 0-6.2-3.7-12-9.4-14.6-2.8-1.3-5.9-1.7-9-1.2-6.4 1-11.7 6.1-13.1 12.4-.5 2.3-.4 4.7.1 7 .3 1.1.6 2.1 1.1 3.1.7 1 1.4 1.8 1.9 2.7"/>
+            </defs>
+            <clipPath id="SVGID_2_">
+                <use xlink:href="#SVGID_15_" overflow="visible"/>
+            </clipPath>
+            <path fill="#f05a2b" d="M52.9 111.6s15.5-11.3 6-25.2l18.9 1.1-.2 44.8-26.5-.1s-6.2-16.5 1.8-20.6" clip-path="url(#SVGID_2_)"/>
+            <defs>
+                <path id="SVGID_17_" d="M45.1 111.8c-.5-.9-.7-1.9-.5-3 .4-1.9 1.9-3.3 3.8-3.5 2.7-.3 4.9 1.8 4.9 4.4 0 1.3-.7 2.2-1.2 3.3-.7 1.5-1.1 2.9-1.2 4.4v1c0 4.8 2.9 9 7.1 10.8.2.1.4-.1.3-.3-.3-.8-.4-1.6-.4-2.4 0-2.4 1.2-4.3 3-5.8 1.9-1.6 3.8-3.1 5.5-4.8 1.8-1.7 3.7-3.3 4.9-5.4 1.4-2.4 2.2-5.1 2.2-8.1 0-6.2-3.7-12-9.4-14.6-2.8-1.3-5.9-1.7-9-1.2-6.4 1-11.7 6.1-13.1 12.4-.5 2.3-.4 4.7.1 7 .3 1.1.6 2.1 1.1 3.1.7 1 1.4 1.8 1.9 2.7"/>
+            </defs>
+            <clipPath id="SVGID_4_">
+                <use xlink:href="#SVGID_17_" overflow="visible"/>
+            </clipPath>
+        </svg>
+
+        <strong>{{ title() }}</strong>
     </div>
 
     <div class="header-actions">
-        <small class="header-actions__title">Localization: </small>
-        <igx-input-group class="locale-select">
-            <input
-                type="text"
-                [igxToggleAction]="dropdown3"
-                [igxDropDownItemNavigation]="dropdown3"
-                igxInput
-                readonly="true"
-                [(ngModel)]="locale"
-            />
-        </igx-input-group>
-        <igx-drop-down
-            #dropdown3
-            (selectionChanging)="updateLocale($event)"
-        >
-            @for(item of selectLocales; track item) {
-                <igx-drop-down-item
-                    [value]="item"
-                >
-                    {{ item }}
-                </igx-drop-down-item>
-            }
-        </igx-drop-down>
+        <igx-select
+            class="locale-select"
+            variant="outlined"
+            [(ngModel)]="locale"
+            (selectionChanging)="updateLocale($event)">
 
-        <small class="header-actions__title">Direction: </small>
+            @for(item of selectLocales; track item) {
+                <igx-select-item [value]="item">
+                    {{ item }}
+                </igx-select-item>
+            }
+        </igx-select>
+
+        <igx-select
+            class="size-select"
+            variant="outlined"
+            [ngModel]="selectedSize()"
+            (selectionChanging)="updateSize($event)">
+
+            @for(size of sizeOptions; track size) {
+                <igx-select-item [value]="size">
+                    {{ size }}
+                </igx-select-item>
+            }
+        </igx-select>
+
         <button
-                (click)="onToggleDirectionClick()"
-                igxIconButton="flat"
-                igxRipple
-                [igxRippleCentered]="true"
-                class="toggle-button">
-                {{ dirMode }}
+            (click)="onToggleDirectionClick()"
+            igxIconButton="flat"
+            igxRipple
+            [igxRippleCentered]="true"
+            class="toggle-button">
+
+            @if(dirMode() === 'ltr') {
+                <igx-icon>format_textdirection_l_to_r</igx-icon>
+            } @else {
+                <igx-icon>format_textdirection_r_to_l</igx-icon>
+            }
         </button>
 
         @if(config) {
             <button
-                    igxIconButton="flat"
-                    igxRipple
-                    [igxRippleCentered]="true"
-                    igxToggleAction="paneldrawer"
-                    class="toggle-button">
+                igxIconButton="flat"
+                igxRipple
+                [igxRippleCentered]="true"
+                igxToggleAction="paneldrawer"
+                class="toggle-button">
                 <igx-icon>settings</igx-icon>
             </button>
         }
     </div>
-</div>
+</igx-navbar>

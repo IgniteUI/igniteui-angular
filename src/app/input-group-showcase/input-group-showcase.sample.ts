@@ -59,13 +59,6 @@ export class InputGroupShowcaseSampleComponent {
     private pcs = inject(PropertyChangeService);
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium'
-            }
-        },
         inputType: {
             label: 'Input Group Type (Only Material theme has border/box and line types)',
             control: {

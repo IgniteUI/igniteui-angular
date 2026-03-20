@@ -1,0 +1,26 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-grid, fluent) {
+    box-shadow: 0 0 0 rem(1px) var-get($_theme, 'grid-border-color');
+}
+
+@include themed-block(igx-grid-th, fluent) {
+    @include e(title) {
+      font-weight: 800;
+    }
+
+    @include e(icons) {
+        .sort-icon igx-icon {
+            --size: var(--ig-icon-size, #{rem(15px)});
+        }
+    }
+}
+
+@include themed-block(igx-advanced-filter, bootstrap) {
+    border-radius: rem(2px);
+}

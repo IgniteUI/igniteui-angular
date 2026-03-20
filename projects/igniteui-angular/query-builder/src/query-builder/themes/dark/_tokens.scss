@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes/index' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/query-builder' as *;
+
+$base: digest-schema($dark-query-builder);
+$material: digest-schema($dark-material-query-builder);
+$bootstrap: digest-schema($dark-bootstrap-query-builder);
+$fluent: digest-schema($dark-fluent-query-builder);
+$indigo: digest-schema($dark-indigo-query-builder);

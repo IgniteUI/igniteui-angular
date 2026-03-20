@@ -1,6 +1,29 @@
-.sample-wrapper {
+:host {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--demos-gap);
+
+    .section-title {
+        grid-row: 1;
+    }
+
+    .section-title:first-of-type {
+        grid-column: 1;
+    }
+
+    .section-title:last-of-type {
+        grid-column: 2;
+    }
+
     igx-carousel {
-        margin-bottom: 64px;
+        grid-row: 2;
+        grid-column: 1;
+    }
+
+    igc-carousel {
+        grid-row: 2;
+        grid-column: 2;
     }
 }
 
