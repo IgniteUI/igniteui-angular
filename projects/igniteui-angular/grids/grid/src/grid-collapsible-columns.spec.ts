@@ -4,7 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
-    CollapsibleGroupsDynamicColComponent
+    CollapsibleGroupsDynamicColComponent,
+    CollapsibleGroupWithExplicitChildWidthsComponent
 } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -28,7 +29,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
-                CollapsibleGroupsDynamicColComponent
+                CollapsibleGroupsDynamicColComponent,
+                CollapsibleGroupWithExplicitChildWidthsComponent
             ]
         }).compileComponents();
     }));
@@ -615,6 +617,28 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             spans = fixture.nativeElement.querySelectorAll(highlightClass);
             expect(spans.length).toBe(2);
+        });
+
+        fit('should not constrain collapsed column group width by default min width when children have explicit widths (#17042)', () => {
+            const fix = TestBed.createComponent(CollapsibleGroupWithExplicitChildWidthsComponent);
+            fix.detectChanges();
+            const g: IgxGridComponent = fix.componentInstance.grid;
+
+            const customerInfoGroup = GridFunctions.getColGroup(g, 'Customer Information');
+            expect(customerInfoGroup.expanded).toBe(false);
+            expect(customerInfoGroup.collapsible).toBe(true);
+
+            // The only visible child when collapsed is CompanyName with width 100px.
+            const visibleChildren = customerInfoGroup.children
+                .filter(c => !c.hidden);
+            expect(visibleChildren.length).toBe(1);
+
+            const visibleChildWidth = visibleChildren
+                .reduce((sum, c) => sum + c.calcPixelWidth, 0);
+
+            const groupWidth = customerInfoGroup.calcPixelWidth;
+            expect(groupWidth).toBe(visibleChildWidth);
+            expect(groupWidth).toBe(100);
         });
 
         it('Group By: test when group by a column', () => {
