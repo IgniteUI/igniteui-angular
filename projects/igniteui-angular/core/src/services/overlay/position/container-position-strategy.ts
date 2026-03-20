@@ -1,4 +1,4 @@
-import { Point, PositionSettings, Size, Util } from '../utilities';
+import { PositionSettings, Util } from '../utilities';
 import { GlobalPositionStrategy } from './global-position-strategy';
 
 /**
