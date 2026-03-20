@@ -35,9 +35,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * @param document reference to the Document object
      * @param initialCall should be true if this is the initial call to the method
      * @param target attaching target for the component to show
-     * ```typescript
-     * settings.positionStrategy.position(content, size, document, true);
-     * ```
      */
     public override position(contentElement: HTMLElement,
                     size: Size,

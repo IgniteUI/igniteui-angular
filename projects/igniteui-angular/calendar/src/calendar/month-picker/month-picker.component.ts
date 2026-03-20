@@ -240,9 +240,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 
     /**
      * Selects a date.
-     * ```typescript
-     *  this.monthPicker.selectDate(new Date(`2018-06-12`));
-     * ```
      */
     public override selectDate(value: Date) {
         if (!value) {

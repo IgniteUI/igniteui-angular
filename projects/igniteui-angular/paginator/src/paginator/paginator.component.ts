@@ -37,7 +37,6 @@ export class IgxPaginatorContentDirective {
 /* jsonAPIManageCollectionInMarkup */
 /**
  * Paginator component description
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
  */
 @Component({
     selector: 'igx-paginator',
@@ -62,32 +61,12 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.
-     *
-     * @example
-     * ```html
-     * <igx-paginator (perPageChange)="onPerPageChange($event)"></igx-paginator>
-     * ```
-     * ```typescript
-     * public onPerPageChange(perPage: number) {
-     *   this.perPage = perPage;
-     * }
-     * ```
      */
     @Output()
     public perPageChange = new EventEmitter<number>();
 
     /**
      * Emitted after the current page is changed.
-     *
-     * @example
-     * ```html
-     * <igx-paginator (pageChange)="onPageChange($event)"></igx-paginator>
-     * ```
-     * ```typescript
-     * public onPageChange(page: number) {
-     *   this.currentPage = page;
-     * }
-     * ```
      */
     @Output()
     public pageChange = new EventEmitter<number>();
@@ -97,10 +76,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      *
      * @remarks
      * Returns an object consisting of the current and next pages.
-     * @example
-     * ```html
-     * <igx-paginator (paging)="pagingHandler($event)"></igx-paginator>
-     * ```
      */
     @Output()
     public paging = new EventEmitter<IPageCancellableEventArgs>();
@@ -110,10 +85,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      *
      * @remarks
      * Returns an object consisting of the previous and current pages.
-     * @example
-     * ```html
-     * <igx-paginator (pagingDone)="pagingDone($event)"></igx-paginator>
-     * ```
      */
     @Output()
     public pagingDone = new EventEmitter<IPageEventArgs>();
@@ -139,9 +110,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     /**
      * Gets/Sets the current page of the paginator.
      * The default is 0.
-     * ```typescript
-     * let page = this.paginator.page;
-     * ```
      *
      * @memberof IgxPaginatorComponent
      */
@@ -170,9 +138,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     /**
      * Gets/Sets the number of visible items per page in the paginator.
      * The default is 15.
-     * ```typescript
-     * let itemsPerPage = this.paginator.perPage;
-     * ```
      *
      * @memberof IgxPaginatorComponent
      */
@@ -196,9 +161,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Sets the total records.
-     * ```typescript
-     * let totalRecords = this.paginator.totalRecords;
-     * ```
      *
      * @memberof IgxPaginatorComponent
      */
@@ -218,9 +180,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Sets custom options in the select of the paginator
-     * ```typescript
-     * let options = this.paginator.selectOptions;
-     * ```
      *
      * @memberof IgxPaginatorComponent
      */
@@ -236,9 +195,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Sets custom OverlaySettings.
-     * ```html
-     * <igx-paginator [overlaySettings] = "customOverlaySettings"></igx-paginator>
-     * ```
      */
     @Input()
     public get overlaySettings(): OverlaySettings {
@@ -274,9 +230,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Returns if the current page is the last page.
-     * ```typescript
-     * const lastPage = this.paginator.isLastPage;
-     * ```
      */
     public get isLastPage(): boolean {
         return this.page + 1 >= this.totalPages;
@@ -284,9 +237,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Returns if the current page is the first page.
-     * ```typescript
-     * const lastPage = this.paginator.isFirstPage;
-     * ```
      */
     public get isFirstPage(): boolean {
         return this.page === 0;
@@ -317,9 +267,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 
     /**
      * Goes to the next page of the `IgxPaginatorComponent`, if the paginator is not already at the last page.
-     * ```typescript
-     * this.paginator.nextPage();
-     * ```
      *
      * @memberof IgxPaginatorComponent
      */
@@ -330,9 +277,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     }
     /**
      * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
-     * ```typescript
-     * this.paginator.previousPage();
-     * ```
      *
      * @memberof IgxPaginatorComponent
      */
@@ -343,9 +287,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     }
     /**
      * Goes to the desired page index.
-     * ```typescript
-     * this.paginator.paginate(1);
-     * ```
      *
      * @param val
      * @memberof IgxPaginatorComponent

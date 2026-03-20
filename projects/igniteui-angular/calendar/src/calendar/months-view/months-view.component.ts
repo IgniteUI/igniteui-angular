@@ -43,12 +43,6 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
     /**
      * Sets/gets the `id` of the months view.
      * If not set, the `id` will have value `"igx-months-view-0"`.
-     * ```html
-     * <igx-months-view id="my-months-view"></igx-months-view>
-     * ```
-     * ```typescript
-     * let monthsViewId =  this.monthsView.id;
-     * ```
      *
      * @memberof IgxMonthsViewComponent
      */
@@ -79,9 +73,6 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
 
     /**
      * Gets the month format option of the months view.
-     * ```typescript
-     * let monthFormat = this.monthsView.monthFormat.
-     * ```
      */
     @Input()
     public get monthFormat(): any {
@@ -90,9 +81,6 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
 
     /**
      * Sets the month format option of the months view.
-     * ```html
-     * <igx-months-view> [monthFormat]="short'"</igx-months-view>
-     * ```
      *
      * @memberof IgxMonthsViewComponent
      */

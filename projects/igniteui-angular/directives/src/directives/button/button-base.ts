@@ -36,12 +36,6 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy
 
     /**
      * Sets/gets the `role` attribute.
-     *
-     * @example
-     * ```typescript
-     * this.button.role = 'navbutton';
-     * let buttonRole = this.button.role;
-     * ```
      */
     @HostBinding('attr.role')
     public role = 'button';
@@ -68,23 +62,12 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy
     /**
      * Sets/gets whether the button component is on focus.
      * Default value is `false`.
-     * ```typescript
-     * this.button.focus = true;
-     * ```
-     * ```typescript
-     * let isFocused =  this.button.focused;
-     * ```
      */
     @HostBinding('class.igx-button--focused')
     protected focused = false;
 
     /**
       * Enables/disables the button.
-      *
-      * @example
-      * ```html
-      * <button igxButton="fab" disabled></button>
-      * ```
       */
     @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-button--disabled')

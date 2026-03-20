@@ -197,10 +197,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * The default value is false. When set to true, it will override all columns declared through code or in markup.
-     * @example
-     * ```html
-     * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public autoGenerate = false;
@@ -211,37 +207,18 @@ export abstract class IgxGridBaseDirective implements GridType,
      * The collection is only used during initialization and changing it will not cause any changes in the generated columns at runtime
      * unless the grid is destroyed and recreated. To modify the columns visible in the UI at runtime, please use their
      * [hidden](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/IgxColumnComponent.html#hidden) property.
-     * @example
-     * ```html
-     * <igx-grid data=[Data] [autoGenerate]="true" [autoGenerateExclude]="['ProductName', 'Count']"></igx-grid>
-     * ```
-     * ```typescript
-     * const Data = [{ 'Id': '1', 'ProductName': 'name1', 'Description': 'description1', 'Count': 5 }]
-     * ```
      */
     @Input()
     public autoGenerateExclude: string[] = [];
 
     /**
      * Controls whether columns moving is enabled in the grid.
-     *
      */
     @Input({ transform: booleanAttribute })
     public moving = false;
 
     /**
      * Gets/Sets a custom template when empty.
-     *
-     * @example
-     * ```html
-     * <ng-template igxGridEmpty>
-     *   <!-- content to show when the grid is empty -->
-     * </ng-template>
-     * ```
-     * Or
-     * ```html
-     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [emptyGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input()
     public get emptyGridTemplate(): TemplateRef<IgxGridTemplateContext> {
@@ -253,28 +230,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets a custom template for adding row UI when grid is empty.
-     *
-     * @example
-     * ```html
-     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [addRowEmptyTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input()
     public addRowEmptyTemplate: TemplateRef<void>;
 
     /**
      * Gets/Sets a custom template when loading.
-     *
-     * @example
-     * ```html
-     * <ng-template igxGridLoading>
-     *   <!-- content to show when the grid is loading -->
-     * </ng-template>
-     * ```
-     * Or
-     * ```html
-     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [loadingGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input()
     public get loadingGridTemplate(): TemplateRef<IgxGridTemplateContext> {
@@ -310,11 +271,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the data clone strategy of the grid when in edit mode.
-     *
-     * @example
-     * ```html
-     *  <igx-grid #grid [data]="localData" [dataCloneStrategy]="customCloneStrategy"></igx-grid>
-     * ```
      */
     @Input()
     public get dataCloneStrategy(): IDataCloneStrategy {
@@ -356,11 +312,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the filtering expressions tree of the column for which filtering was performed.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
-     *              (filteringExpressionsTreeChange)="filteringExprTreeChange($event)"></igx-grid>
-     * ```
      */
     @Output()
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
@@ -370,23 +321,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the advanced filtering expressions tree.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
-     *           (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange($event)"></igx-grid>
-     * ```
      */
     @Output()
     public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
      * Emitted when grid is scrolled horizontally/vertically.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
-     *              (gridScroll)="onScroll($event)"></igx-grid>
-     * ```
      */
     @Output()
     public gridScroll = new EventEmitter<IGridScrollEventArgs>();
@@ -397,13 +337,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Accepts an object literal, containing key-value pairs,
      * where the key is the name of the CSS class and the value is
      * either a callback function that returns a boolean, or boolean, like so:
-     * ```typescript
-     * callback = (row: RowType) => { return row.selected > 6; }
-     * rowClasses = { 'className' : this.callback };
-     * ```
-     * ```html
-     * <igx-grid #grid [data]="Data" [rowClasses] = "rowClasses" [autoGenerate]="true"></igx-grid>
-     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -415,15 +348,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Sets conditional style properties on the grid row element.
      * It accepts an object literal where the keys are
      * the style properties and the value is an expression to be evaluated.
-     * ```typescript
-     * styles = {
-     *  background: 'yellow',
-     *  color: (row: RowType) => row.selected : 'red': 'white'
-     * }
-     * ```
-     * ```html
-     * <igx-grid #grid [data]="Data" [rowStyles]="styles" [autoGenerate]="true"></igx-grid>
-     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -432,11 +356,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the primary key.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [primaryKey]="'ProductID'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @WatchChanges()
     @Input()
@@ -456,10 +375,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * Provides a callback for loading unique column values on demand.
      * If this property is provided, the unique values it generates will be used by the Excel Style Filtering.
-     * @example
-     * ```html
-     * <igx-grid [data]="localData" [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy"></igx-grid>
-     * ```
      */
     @Input()
     public uniqueColumnValuesStrategy: (column: ColumnType,
@@ -485,10 +400,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the `IgxGridCell`.
-     * @example
-     * ```html
-     * <igx-grid #grid (cellClick)="cellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public cellClick = new EventEmitter<IGridCellEventArgs>();
@@ -498,10 +409,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the `IgxGridRow`.
-     * @example
-     * ```html
-     * <igx-grid #grid (rowClick)="rowClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public rowClick = new EventEmitter<IGridRowEventArgs>();
@@ -509,22 +416,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Emitted when formGroup is created on edit of row/cell.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid (formGroupCreated)="formGroupCreated($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public formGroupCreated = new EventEmitter<IGridFormGroupCreatedEventArgs>();
 
     /**
      * Emitted when grid's validation status changes.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid (validationStatusChange)="validationStatusChange($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public validationStatusChange = new EventEmitter<IGridValidationStatusEventArgs>();
@@ -534,32 +431,18 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      *  Returns the `IgxGridCell`.
-     * @example
-     * ```html
-     * <igx-grid #grid (selected)="onCellSelect($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public selected = new EventEmitter<IGridCellEventArgs>();
 
     /**
      *  Emitted when `IgxGridRowComponent` is selected.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid (rowSelectionChanging)="rowSelectionChanging($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public rowSelectionChanging = new EventEmitter<IRowSelectionEventArgs>();
 
     /**
      *  Emitted when `IgxColumnComponent` is selected.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid (columnSelectionChanging)="columnSelectionChanging($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public columnSelectionChanging = new EventEmitter<IColumnSelectionEventArgs>();
@@ -569,14 +452,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * The index at which to insert the column may be changed through the `insertAtIndex` property.
-     * @example
-     * ```typescript
-     * public columnPinning(event) {
-     *     if (event.column.field === "Name") {
-     *       event.insertAtIndex = 0;
-     *     }
-     * }
-     * ```
      */
     @Output()
     public columnPin = new EventEmitter<IPinColumnCancellableEventArgs>();
@@ -586,14 +461,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * The index that the column is inserted at may be changed through the `insertAtIndex` property.
-     * @example
-     * ```typescript
-     * public columnPinning(event) {
-     *     if (event.column.field === "Name") {
-     *       event.insertAtIndex = 0;
-     *     }
-     * }
-     * ```
      */
     @Output()
     public columnPinned = new EventEmitter<IPinColumnEventArgs>();
@@ -603,23 +470,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * This event is cancelable.
-     * @example
-     * ```html
-     * <igx-grid #grid3 (cellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
-     * </igx-grid>
-     * ```
      */
     @Output()
     public cellEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when cell exits edit mode.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid3 (cellEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'">
-     * </igx-grid>
-     * ```
      */
     @Output()
     public cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
@@ -630,11 +486,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * Event is fired after editing is completed, when the cell is exiting edit mode.
      * This event is cancelable.
-     * @example
-     * ```html
-     * <igx-grid #grid3 (cellEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
-     * </igx-grid>
-     * ```
      */
     @Output()
     public cellEdit = new EventEmitter<IGridEditEventArgs>();
@@ -642,12 +493,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorCSSuppress */
     /**
      * Emitted after cell has been edited and editing has been committed.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid3 (cellEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
-     * </igx-grid>
-     * ```
      */
     @Output()
     public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
@@ -658,11 +503,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * Emitted when [rowEditable]="true".
      * This event is cancelable.
-     * @example
-     * ```html
-     * <igx-grid #grid3 (rowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
-     * </igx-grid>
-     * ```
      */
     @Output()
     public rowEditEnter = new EventEmitter<IGridEditEventArgs>();
@@ -676,11 +516,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * performing paging operation, column resizing, pinning, moving or hitting `Done`
      * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
      * This event is cancelable.
-     * @example
-     * ```html
-     * <igx-grid #grid3 (rowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
-     * </igx-grid>
-     * ```
      */
     @Output()
     public rowEdit = new EventEmitter<IGridEditEventArgs>();
@@ -693,11 +528,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
      * performing paging operation, column resizing, pinning, moving or hitting `Done`
      * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
-     * @example
-     * ```html
-     * <igx-grid #grid3 (rowEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
-     * </igx-grid>
-     * ```
      */
     @Output()
     public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
@@ -709,11 +539,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Emits when [rowEditable]="true" & `endEdit(false)` is called.
      * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
-     * @example
-     * ```html
-     * <igx-grid #grid3 (rowEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
-     * </igx-grid>
-     * ```
      */
     @Output()
     public rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
@@ -723,10 +548,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the column object.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (columnInit)="initColumns($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public columnInit = new EventEmitter<IgxColumnComponent>();
@@ -743,10 +564,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns an `ISortingEventArgs` object. `sortingExpressions` key holds the sorting expressions.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sorting)="sorting($event)"></igx-grid>
-     * ```
      */
     @Output()
     public sorting = new EventEmitter<ISortingEventArgs>();
@@ -756,10 +573,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the sorting expression.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sortingDone)="sortingDone($event)"></igx-grid>
-     * ```
      */
     @Output()
     public sortingDone = new EventEmitter<ISortingExpression | ISortingExpression[]>();
@@ -769,10 +582,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns an `IFilteringEventArgs` object. `filteringExpressions` key holds the filtering expressions for the column.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (filtering)="filtering($event)"></igx-grid>
-     * ```
      */
     @Output()
     public filtering = new EventEmitter<IFilteringEventArgs>();
@@ -782,10 +591,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the filtering expressions tree of the column for which filtering was performed.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (filteringDone)="filteringDone($event)"></igx-grid>
-     * ```
      */
     @Output()
     public filteringDone = new EventEmitter<IFilteringExpressionsTree>();
@@ -796,10 +601,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the data for the new `IgxGridRowComponent` object.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (rowAdded)="rowAdded($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public rowAdded = new EventEmitter<IRowDataEventArgs>();
@@ -810,10 +611,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns an `IRowDataEventArgs` object.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (rowDeleted)="rowDeleted($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public rowDeleted = new EventEmitter<IRowDataEventArgs>();
@@ -824,10 +621,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * This event is cancelable.
      * Returns an IRowDataCancellableEventArgs` object.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (rowDelete)="rowDelete($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public rowDelete = new EventEmitter<IRowDataCancelableEventArgs>();
@@ -838,10 +631,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * This event is cancelable.
      * Returns an IRowDataCancellableEventArgs` object.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public rowAdd = new EventEmitter<IRowDataCancelableEventArgs>();
@@ -851,10 +640,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the `IgxColumnComponent` object's old and new width.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (columnResized)="resizing($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public columnResized = new EventEmitter<IColumnResizeEventArgs>();
@@ -864,9 +649,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the `IgxGridCell` object if the immediate context menu target is a cell or an `IgxGridRow` otherwise.
-     * ```html
-     * <igx-grid #grid [data]="localData" (contextMenu)="contextMenu($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public contextMenu = new EventEmitter<IGridContextMenuEventArgs>();
@@ -876,10 +658,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the `IgxGridCell` object.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (doubleClick)="dblClick($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public doubleClick = new EventEmitter<IGridCellEventArgs>();
@@ -889,10 +667,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Args: { column: any, newValue: boolean }
-     * @example
-     * ```html
-     * <igx-grid (columnVisibilityChanging)="visibilityChanging($event)"></igx-grid>
-     * ```
      */
     @Output()
     public columnVisibilityChanging = new EventEmitter<IColumnVisibilityChangingEventArgs>();
@@ -902,10 +676,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Args: { column: IgxColumnComponent, newValue: boolean }
-     * @example
-     * ```html
-     * <igx-grid (columnVisibilityChanged)="visibilityChanged($event)"></igx-grid>
-     * ```
      */
     @Output()
     public columnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
@@ -915,10 +685,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the moved `IgxColumnComponent` object.
-     * @example
-     * ```html
-     * <igx-grid (columnMovingStart)="movingStart($event)"></igx-grid>
-     * ```
      */
     @Output()
     public columnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
@@ -928,10 +694,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the source and target `IgxColumnComponent` objects. This event is cancelable.
-     * @example
-     * ```html
-     * <igx-grid (columnMoving)="moving($event)"></igx-grid>
-     * ```
      */
     @Output()
     public columnMoving = new EventEmitter<IColumnMovingEventArgs>();
@@ -941,10 +703,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the source and target `IgxColumnComponent` objects.
-     * @example
-     * ```html
-     * <igx-grid (columnMovingEnd)="movingEnds($event)"></igx-grid>
-     * ```
      */
     @Output()
     public columnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
@@ -955,10 +713,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * This event is fired only if the key combination is supported in the grid.
      * Return the target type, target object and the original event. This event is cancelable.
-     * @example
-     * ```html
-     *  <igx-grid (gridKeydown)="customKeydown($event)"></igx-grid>
-     * ```
      */
     @Output()
     public gridKeydown = new EventEmitter<IGridKeydownEventArgs>();
@@ -993,11 +747,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorCSSuppress */
     /**
      * Emitted when the rows are expanded or collapsed.
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="employeeData" (expansionStatesChange)="expansionStatesChange($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
@@ -1005,55 +754,30 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorInclude */
     /**
      * Emitted when the rows are selected or deselected.
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="employeeData" (selectedRowsChange)="selectedRowsChange($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public selectedRowsChange = new EventEmitter<any[]>();
 
     /**
      * Emitted when the expanded state of a row gets changed.
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="employeeData" (rowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public rowToggle = new EventEmitter<IRowToggleEventArgs>();
 
     /**
      * Emitted when the pinned state of a row is changed.
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="employeeData" (rowPinning)="rowPin($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public rowPinning = new EventEmitter<IPinRowEventArgs>();
 
     /**
      * Emitted when the pinned state of a row is changed.
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="employeeData" (rowPinned)="rowPin($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public rowPinned = new EventEmitter<IPinRowEventArgs>();
 
     /**
      * Emitted when the active node is changed.
-     *
-     * @example
-     * ```
-     * <igx-grid [data]="data" [autoGenerate]="true" (activeNodeChange)="activeNodeChange($event)"></igx-grid>
-     * ```
      */
     @Output()
     public activeNodeChange = new EventEmitter<IActiveNodeChangeEventArgs>();
@@ -1063,10 +787,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns the sorting expressions.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sortingExpressionsChange)="sortingExprChange($event)"></igx-grid>
-     * ```
      */
     @Output()
     public sortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
@@ -1074,13 +794,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Emitted when an export process is initiated by the user.
-     *
-     * @example
-     * ```typescript
-     * toolbarExporting(event: IGridToolbarExportEventArgs){
-     *     const toolbarExporting = event;
-     * }
-     * ```
      */
     @Output()
     public toolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
@@ -1108,22 +821,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Emitted before the grid's data view is changed because of a data operation, rebinding, etc.
-     *
-     * @example
-     * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanging)='handleDataChangingEvent()'></igx-grid>
-     * ```
      */
     @Output()
     public dataChanging = new EventEmitter<IForOfDataChangeEventArgs>();
 
     /**
      * Emitted after the grid's data view is changed because of a data operation, rebinding, etc.
-     *
-     * @example
-     * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataChanged)='handleDataChangedEvent()'></igx-grid>
-     * ```
      */
     @Output()
     public dataChanged = new EventEmitter<IForOfDataChangeEventArgs>();
@@ -1237,16 +940,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets a custom template for the row drag ghost.
-     *```html
-     * <ng-template #template igxRowDragGhost>
-     *    <igx-icon>menu</igx-icon>
-     * </ng-template>
-     * ```
-     * ```typescript
-     * @ViewChild("'template'", {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.dragGhostCustomTemplate = this.template;
-     * ```
      */
     public set dragGhostCustomTemplate(template: TemplateRef<IgxGridRowDragGhostContext>) {
         this._dragGhostCustomTemplate = template;
@@ -1375,16 +1068,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
     /**
      * Sets the row edit text template.
-     *```html
-     * <ng-template #template igxRowEditText let-rowChangesCount>
-     * Changes: {{rowChangesCount}}
-     * </ng-template>
-     * ```
-     *```typescript
-     * @ViewChild('template', {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.rowEditTextTemplate = this.template;
-     * ```
      */
     public set rowEditTextTemplate(template: TemplateRef<IgxGridRowEditTextTemplateContext>) {
         this._rowEditTextTemplate = template;
@@ -1405,16 +1088,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
     /**
      * Sets the row add text template.
-     *```html
-     * <ng-template #template igxRowAddText>
-     * Adding Row
-     * </ng-template>
-     * ```
-     *```typescript
-     * @ViewChild('template', {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.rowAddTextTemplate = this.template;
-     * ```
      */
     public set rowAddTextTemplate(template: TemplateRef<IgxGridEmptyTemplateContext>) {
         this._rowAddTextTemplate = template;
@@ -1435,17 +1108,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
     /**
      * Sets the row edit actions template.
-     *```html
-     * <ng-template #template igxRowEditActions let-endRowEdit>
-     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
-     *     <button type="button" igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
-     * </ng-template>
-     * ```
-     *```typescript
-     * @ViewChild('template', {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.rowEditActionsTemplate = this.template;
-     * ```
      */
     public set rowEditActionsTemplate(template: TemplateRef<IgxGridRowEditActionsTemplateContext>) {
         this._rowEditActionsTemplate = template;
@@ -1467,16 +1129,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets the row expand indicator template.
-     *```html
-     *<ng-template igxRowExpandedIndicator>
-     *  <igx-icon role="button">remove</igx-icon>
-     *</ng-template>
-     * ```
-     *```typescript
-     * @ViewChild('template', {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.rowExpandedIndicatorTemplate = this.template;
-     * ```
     */
     public set rowExpandedIndicatorTemplate(template: TemplateRef<IgxGridRowTemplateContext>) {
         this._rowExpandedIndicatorTemplate = template;
@@ -1498,16 +1150,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets the row collapse indicator template.
-     *```html
-     *<ng-template igxRowCollapsedIndicator>
-     *  <igx-icon role="button">add</igx-icon>
-     *</ng-template>
-     * ```
-     *```typescript
-     * @ViewChild('template', {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.rowCollapsedIndicatorTemplate = this.template;
-     * ```
     */
     public set rowCollapsedIndicatorTemplate(template: TemplateRef<IgxGridRowTemplateContext>) {
         this._rowCollapsedIndicatorTemplate = template;
@@ -1529,16 +1171,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets the header expand indicator template.
-     *```html
-     *<ng-template igxHeaderExpandedIndicator>
-     *  <igx-icon role="button">remove</igx-icon>
-     *</ng-template>
-     * ```
-     *```typescript
-     * @ViewChild('template', {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.headerExpandedIndicatorTemplate = this.template;
-     * ```
     */
     public set headerExpandedIndicatorTemplate(template: TemplateRef<IgxGridTemplateContext>) {
         this._headerExpandIndicatorTemplate = template;
@@ -1560,16 +1192,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets the row collapse indicator template.
-     *```html
-     *<ng-template igxHeaderCollapsedIndicator>
-     *  <igx-icon role="button">add</igx-icon>
-     *</ng-template>
-     * ```
-     *```typescript
-     * @ViewChild('template', {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.headerCollapsedIndicatorTemplate = this.template;
-     * ```
     */
     public set headerCollapsedIndicatorTemplate(template: TemplateRef<IgxGridTemplateContext>) {
         this._headerCollapseIndicatorTemplate = template;
@@ -1589,16 +1211,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets the excel style header icon.
-     *```html
-     *<ng-template #template igxExcelStyleHeaderIcon>
-     * <igx-icon>filter_alt</igx-icon>
-     *</ng-template>
-     * ```
-     *```typescript
-     * @ViewChild('template', {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.excelStyleHeaderIconTemplate = this.template;
-     * ```
     */
     public set excelStyleHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
         this._excelStyleHeaderIconTemplate = template;
@@ -1622,16 +1234,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in asc order.
-     *```html
-     * <ng-template #template igxSortAscendingHeaderIcon>
-     *    <igx-icon>expand_less</igx-icon>
-     * </ng-template>
-     * ```
-     * ```typescript
-     * @ViewChild("'template'", {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.sortAscendingHeaderIconTemplate = this.template;
-     * ```
      */
     public set sortAscendingHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
         this._sortAscendingHeaderIconTemplate = template;
@@ -1651,16 +1253,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in desc order.
-     *```html
-     * <ng-template #template igxSortDescendingHeaderIcon>
-     *    <igx-icon>expand_more</igx-icon>
-     * </ng-template>
-     * ```
-     * ```typescript
-     * @ViewChild("'template'", {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.sortDescendingHeaderIconTemplate = this.template;
-     * ```
      */
     public set sortDescendingHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
         this._sortDescendingHeaderIconTemplate = template;
@@ -1683,16 +1275,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets a custom template that should be used when rendering a header sorting indicator when columns are not sorted.
-     *```html
-     * <ng-template #template igxSortHeaderIcon>
-     *    <igx-icon>unfold_more</igx-icon>
-     * </ng-template>
-     * ```
-     * ```typescript
-     * @ViewChild("'template'", {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.sortHeaderIconTemplate = this.template;
-     * ```
      */
     public set sortHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
         this._sortHeaderIconTemplate = template;
@@ -1768,7 +1350,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * @hidden @internal
-     * @igxElementsAnchor
      */
     @ViewChild('sink', { read: ViewContainerRef, static: true })
     public anchor: ViewContainerRef;
@@ -1843,10 +1424,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * The default is AND.
-     * @example
-     * ```html
-     * <igx-grid [data]="Data" [autoGenerate]="true" [filteringLogic]="filtering"></igx-grid>
-     * ```
      */
     @WatchChanges()
     @Input()
@@ -1862,10 +1439,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Gets/Sets the filtering state.
      *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(filteringExpressionsTree)]="model.filteringExpressions"></igx-grid>
-     * ```
      * @remarks
      * Supports two-way binding.
      */
@@ -1908,12 +1481,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the advanced filtering state.
-     *
-     * @example
-     * ```typescript
-     * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
-     * this.grid.advancedFilteringExpressionsTree = logic;
-     * ```
      */
     @WatchChanges()
     @Input()
@@ -2035,11 +1602,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets whether rows can be moved.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [rowDraggable]="true"></igx-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get rowDraggable(): boolean {
@@ -2053,11 +1615,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the trigger for validators used when editing the grid.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid validationTrigger='blur'></igx-grid>
-     * ```
      */
     @Input()
     public validationTrigger: GridValidationTrigger = 'change';
@@ -2076,10 +1633,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * By default it is set to false.
-     * @example
-     * ```html
-     * <igx-grid #grid [rowEditable]="true" [primaryKey]="'ProductID'" ></igx-grid>
-     * ```
      */
     @WatchChanges()
     @Input({ transform: booleanAttribute })
@@ -2097,11 +1650,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the height.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @WatchChanges()
     @HostBinding('style.height')
@@ -2128,11 +1676,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the width of the grid.
-     *
-     * @example
-     * ```typescript
-     * let gridWidth = this.grid.width;
-     * ```
      */
     @WatchChanges()
     @Input()
@@ -2155,11 +1698,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the row height.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [rowHeight]="100" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @WatchChanges()
     @Input()
@@ -2176,11 +1714,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the default width of the columns.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [columnWidth]="100" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @WatchChanges()
     @Input()
@@ -2195,11 +1728,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Get/Sets the message displayed when there are no records.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input()
     public set emptyGridMessage(value: string) {
@@ -2211,11 +1739,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets whether the grid is going to show a loading indicator.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [isLoading]="true" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @WatchChanges()
     @Input({ transform: booleanAttribute })
@@ -2243,10 +1766,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * This will allow to bind the grid to remote data and having auto-generated columns at the same time.
      * Note that after generating the columns, this property would be disabled to avoid re-creating
      * columns each time a new data is assigned.
-     * @example
-     * ```typescript
-     *  this.grid.shouldGenerate = true;
-     * ```
      * @deprecated in version 18.2.0. Column re-creation now relies on `autoGenerate` instead.
      */
     public get shouldGenerate(): boolean {
@@ -2259,11 +1778,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the message displayed when there are no records and the grid is filtered.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input()
     public set emptyFilteredGridMessage(value: string) {
@@ -2281,10 +1795,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * Allows to apply pinning the columns to the start or the end.
      * Note that pinning to both sides at a time is not allowed.
-     * @example
-     * ```html
-     * <igx-grid [pinning]="pinningConfig"></igx-grid>
-     * ```
      */
     @Input()
     public get pinning() {
@@ -2300,11 +1810,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets if the filtering is enabled.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [allowFiltering]="true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get allowFiltering() {
@@ -2326,11 +1831,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets a value indicating whether the advanced filtering is enabled.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get allowAdvancedFiltering() {
@@ -2351,10 +1851,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Gets/Sets the filter mode.
      *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [filterMode]="'quickFilter'" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
      * @remarks
      * By default it's set to FilterMode.quickFilter.
      */
@@ -2382,10 +1878,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Gets/Sets the summary position.
      *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" summaryPosition="top" [autoGenerate]="true"></igx-grid>
-     * ```
      * @remarks
      * By default it is bottom.
      */
@@ -2402,10 +1894,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Gets/Sets the summary calculation mode.
      *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" summaryCalculationMode="rootLevelOnly" [autoGenerate]="true"></igx-grid>
-     * ```
      * @remarks
      * By default it is rootAndChildLevels which means the summaries are calculated for the root level and each child level.
      */
@@ -2426,10 +1914,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Controls whether the summary row is visible when groupBy/parent row is collapsed.
      *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [showSummaryOnCollapse]="true" [autoGenerate]="true"></igx-grid>
-     * ```
      * @remarks
      * By default showSummaryOnCollapse is set to 'false' which means that the summary row is not visible
      * when the groupBy/parent row is collapsed.
@@ -2446,11 +1930,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the filtering strategy of the grid.
-     *
-     * @example
-     * ```html
-     *  <igx-grid #grid [data]="localData" [filterStrategy]="filterStrategy"></igx-grid>
-     * ```
      */
     @Input()
     public get filterStrategy(): IFilteringStrategy {
@@ -2463,11 +1942,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets the sorting strategy of the grid.
-     *
-     * @example
-     * ```html
-     *  <igx-grid #grid [data]="localData" [sortStrategy]="sortStrategy"></igx-grid>
-     * ```
      */
     @Input()
     public get sortStrategy(): IGridSortingStrategy {
@@ -2481,11 +1955,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* csSuppress */
     /**
      * Gets/Sets the merge strategy of the grid.
-     *
-     * @example
-     * ```html
-     *  <igx-grid #grid [data]="localData" [mergeStrategy]="mergeStrategy"></igx-grid>
-     * ```
      */
     @Input()
     public get mergeStrategy() {
@@ -2498,15 +1967,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Gets/Sets the sorting options - single or multiple sorting.
      * Accepts an `ISortingOptions` object with any of the `mode` properties.
-     *
-     * @example
-     * ```typescript
-     * const _sortingOptions: ISortingOptions = {
-     *      mode: 'single'
-     * }
-     * ```html
-     * <igx-grid [sortingOptions]="sortingOptions"><igx-grid>
-     * ```
      */
     @Input()
     public set sortingOptions(value: ISortingOptions) {
@@ -2530,10 +1990,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Represents the selected rows' IDs (primary key or rowData)
-     * @example
-     * ```html
-     * <igx-grid [data]="localData" primaryKey="ID" rowSelection="multiple" [selectedRows]="[0, 1, 2]"><igx-grid>
-     * ```
      */
     @Input()
     public set selectedRows(rowIDs: any[]) {
@@ -2576,11 +2032,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* csSuppress */
     /**
      * A list of `IgxGridRowComponent`.
-     *
-     * @example
-     * ```typescript
-     * const rowList = this.grid.rowList;
-     * ```
      */
     public get rowList() {
         const res = new QueryList<IgxRowDirective>();
@@ -2597,11 +2048,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* csSuppress */
     /**
      * A list of currently rendered `IgxGridRowComponent`'s.
-     *
-     * @example
-     * ```typescript
-     * const dataList = this.grid.dataRowList;
-     * ```
      */
     public get dataRowList(): QueryList<IgxRowDirective> {
         const res = new QueryList<IgxRowDirective>();
@@ -2623,16 +2069,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets the header row selector template.
-     * ```html
-     * <ng-template #template igxHeadSelector let-headContext>
-     * {{ headContext.selectedCount }} / {{ headContext.totalCount  }}
-     * </ng-template>
-     * ```
-     * ```typescript
-     * @ViewChild("'template'", {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.headSelectorTemplate = this.template;
-     * ```
      */
     public set headSelectorTemplate(template: TemplateRef<IgxHeadSelectorTemplateContext>) {
         this._headSelectorTemplate = template;
@@ -2656,16 +2092,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
          * Sets a custom template for the row selectors.
-         * ```html
-         * <ng-template #template igxRowSelector let-rowContext>
-         *    <igx-checkbox [checked]="rowContext.selected"></igx-checkbox>
-         * </ng-template>
-         * ```
-         * ```typescript
-         * @ViewChild("'template'", {read: TemplateRef })
-         * public template: TemplateRef<any>;
-         * this.grid.rowSelectorTemplate = this.template;
-         * ```
          */
     public set rowSelectorTemplate(template: TemplateRef<IgxRowSelectorTemplateContext>) {
         this._rowSelectorTemplate = template;
@@ -2714,16 +2140,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Sets a custom template that should be used when rendering the row drag indicator icon.
-     *```html
-     * <ng-template #template igxDragIndicatorIcon>
-     *    <igx-icon>expand_less</igx-icon>
-     * </ng-template>
-     * ```
-     * ```typescript
-     * @ViewChild("'template'", {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.dragIndicatorIconTemplate = this.template;
-     * ```
      */
     public set dragIndicatorIconTemplate(val: TemplateRef<IgxGridEmptyTemplateContext>) {
         this._customDragIndicatorIconTemplate = val;
@@ -2777,10 +2193,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Supports two-way data binding.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(sortingExpressions)]="model.sortingExpressions"></igx-grid>
-     * ```
      */
     @WatchChanges()
     @Input()
@@ -2799,11 +2211,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets the number of hidden columns.
-     *
-     * @example
-     * ```typescript
-     * const hiddenCol = this.grid.hiddenColumnsCount;
-     * ``
      */
     public get hiddenColumnsCount() {
         return this._columns.filter((col) => col.columnGroup === false && col.hidden === true).length;
@@ -2820,12 +2227,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Gets/Sets whether the grid has batch editing enabled.
      * When batch editing is enabled, changes are not made directly to the underlying data.
      * Instead, they are stored as transactions, which can later be committed w/ the `commit` method.
-     *
-     * @example
-     * ```html
-     * <igx-grid [batchEditing]="true" [data]="someData">
-     * </igx-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get batchEditing(): boolean {
@@ -2894,7 +2295,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets/Sets cell merge mode.
-     *
      */
     @WatchChanges()
     @Input()
@@ -3350,11 +2750,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Returns an array of objects containing the filtered data.
-     *
-     * @example
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * ```
      */
     public get filteredData() {
         return this._filteredData;
@@ -3362,11 +2757,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Returns an array containing the filtered sorted data.
-     *
-     * @example
-     * ```typescript
-     * const filteredSortedData = this.grid1.filteredSortedData;
-     * ```
      */
     public get filteredSortedData(): any[] | null {
         return this._filteredSortedData;
@@ -3588,10 +2978,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Includes the start index and how many records are rendered.
-     * @example
-     * ```typescript
-     * const gridVirtState = this.grid1.virtualizationState;
-     * ```
      */
     public get virtualizationState() {
         return this.verticalScrollContainer.state;
@@ -4346,14 +3732,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Toggles the specified column's visibility.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.toggleColumnVisibility({
-     *       column: this.grid1.columns[0],
-     *       newValue: true
-     * });
-     * ```
      */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
         const col = args.column ? this._columns.find((c) => c === args.column) : undefined;
@@ -4371,11 +3749,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * Includes only states that differ from the default one.
      * Supports two-way binding.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="data" [(expansionStates)]="model.expansionStates">
-     * </igx-grid>
-     * ```
      */
     @Input()
     public get expansionStates() {
@@ -4394,11 +3767,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Expands all rows.
-     *
-     * @example
-     * ```typescript
-     * this.grid.expandAll();
-     * ```
      */
     public expandAll() {
         this._defaultExpandState = true;
@@ -4407,11 +3775,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Collapses all rows.
-     *
-     * @example
-     * ```typescript
-     * this.grid.collapseAll();
-     * ```
      */
     public collapseAll() {
         this._defaultExpandState = false;
@@ -4423,10 +3786,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
-     * @example
-     * ```typescript
-     * this.grid.expandRow(rowID);
-     * ```
      * @param rowID The row id - primaryKey value or the data record instance.
      */
     public expandRow(rowID: any) {
@@ -4438,10 +3797,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
-     * @example
-     * ```typescript
-     * this.grid.collapseRow(rowID);
-     * ```
      * @param rowID The row id - primaryKey value or the data record instance.
      */
     public collapseRow(rowID: any) {
@@ -4454,10 +3809,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
-     * @example
-     * ```typescript
-     * this.grid.toggleRow(rowID);
-     * ```
      * @param rowID The row id - primaryKey value or the data record instance.
      */
     public toggleRow(rowID: any) {
@@ -4476,11 +3827,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets the native element.
-     *
-     * @example
-     * ```typescript
-     * const nativeEl = this.grid.nativeElement.
-     * ```
      */
     public get nativeElement() {
         return this.elementRef.nativeElement;
@@ -4504,11 +3850,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets the default row height.
-     *
-     * @example
-     * ```typescript
-     * const rowHeigh = this.grid.defaultRowHeight;
-     * ```
      */
     public get defaultRowHeight(): number {
         return this._defaultRowHeight;
@@ -4604,11 +3945,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets an array of `IgxColumnComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const colums = this.grid.columns.
-     * ```
      */
     public get columns(): IgxColumnComponent[] {
         return this._columns || [];
@@ -4616,11 +3952,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets an array of the pinned `IgxColumnComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const pinnedColumns = this.grid.pinnedColumns.
-     * ```
      */
     public get pinnedColumns(): IgxColumnComponent[] {
         if (this._pinnedVisible.length) {
@@ -4632,11 +3963,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets an array of the pinned to the left `IgxColumnComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const pinnedColumns = this.grid.pinnedStartColumns.
-     * ```
      */
     public get pinnedStartColumns(): IgxColumnComponent[] {
         return this._pinnedStartColumns.filter(col => !col.hidden);
@@ -4644,11 +3970,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets an array of the pinned to the right `IgxColumnComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const pinnedColumns = this.grid.pinnedEndColumns.
-     * ```
      */
     public get pinnedEndColumns(): IgxColumnComponent[] {
         return this._pinnedEndColumns.filter(col => !col.hidden);
@@ -4657,11 +3978,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* csSuppress */
     /**
      * Gets an array of the pinned `IgxRowComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const pinnedRow = this.grid.pinnedRows;
-     * ```
      */
     public get pinnedRows(): IgxGridRowComponent[] {
         return this._pinnedRowList.toArray().sort((a, b) => a.index - b.index);
@@ -4669,11 +3985,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Gets an array of unpinned `IgxColumnComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const unpinnedColumns = this.grid.unpinnedColumns.
-     * ```
      */
     public get unpinnedColumns(): IgxColumnComponent[] {
         if (this._unpinnedVisible.length) {
@@ -4695,10 +4006,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Returns the `IgxColumnComponent` by field name.
      *
-     * @example
-     * ```typescript
-     * const myCol = this.grid1.getColumnByName("ID");
-     * ```
      * @param name
      */
     public getColumnByName(name: string): IgxColumnComponent {
@@ -4714,11 +4021,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Recalculates all widths of columns that have size set to `auto`.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.recalculateAutoSizes();
-     * ```
      */
     public recalculateAutoSizes() {
         // reset auto-size and calculate it again.
@@ -4732,11 +4034,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Returns an array of visible `IgxColumnComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const visibleColumns = this.grid.visibleColumns.
-     * ```
      */
     public get visibleColumns(): IgxColumnComponent[] {
         if (this._visibleColumns.length) {
@@ -4751,10 +4048,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Only functions when paging is enabled.
-     * @example
-     * ```typescript
-     * const totalRecords = this.grid.totalRecords;
-     * ```
      */
     @Input()
     public get totalRecords(): number {
@@ -4840,11 +4133,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Places a column before or after the specified target column.
-     *
-     * @example
-     * ```typescript
-     * grid.moveColumn(column, target);
-     * ```
      */
     public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
         // M.A. May 11th, 2021 #9508 Make the event cancelable
@@ -4901,27 +4189,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Triggers change detection for the `IgxGridComponent`.
      * Calling markForCheck also triggers the grid pipes explicitly, resulting in all updates being processed.
      * May degrade performance if used when not needed, or if misused:
-     * ```typescript
-     * // DON'Ts:
-     * // don't call markForCheck from inside a loop
-     * // don't call markForCheck when a primitive has changed
-     * grid.data.forEach(rec => {
-     *  rec = newValue;
-     *  grid.markForCheck();
-     * });
-     *
-     * // DOs
-     * // call markForCheck after updating a nested property
-     * grid.data.forEach(rec => {
-     *  rec.nestedProp1.nestedProp2 = newValue;
-     * });
-     * grid.markForCheck();
-     * ```
-     *
-     * @example
-     * ```typescript
-     * grid.markForCheck();
-     * ```
      */
     public markForCheck() {
         this.pipeTrigger++;
@@ -4932,10 +4199,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Creates a new `IgxGridRowComponent` and adds the data record to the end of the data source.
      *
-     * @example
-     * ```typescript
-     * this.grid1.addRow(record);
-     * ```
      * @param data
      */
     public addRow(data: any): void {
@@ -4955,10 +4218,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * Requires that the `primaryKey` property is set.
      * The method accept rowSelector as a parameter, which is the rowID.
-     * @example
-     * ```typescript
-     * this.grid1.deleteRow(0);
-     * ```
      * @param rowSelector
      */
     public deleteRow(rowSelector: any): any {
@@ -5005,10 +4264,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Requires that the `primaryKey` property is set.
-     * @example
-     * ```typescript
-     * this.gridWithPK.updateCell('Updated', 1, 'ProductName');
-     * ```
      * @param value the new value which is to be set.
      * @param rowSelector corresponds to rowID.
      * @param column corresponds to column field.
@@ -5048,12 +4303,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * The row is specified by
      * rowSelector parameter and the data source record with the passed value.
      * This method will apply requested update only if primary key is specified in the grid.
-     * @example
-     * ```typescript
-     * grid.updateRow({
-     *       ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 1, OrderDate: new Date('2005-03-21')
-     *   }, 1);
-     * ```
      * @param value–
      * @param rowSelector correspond to rowID
      */
@@ -5081,10 +4330,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * If the primary key is not specified the row selector match the row data.
-     * @example
-     * ```typescript
-     * const data = grid.getRowData(94741);
-     * ```
      * @param rowSelector correspond to rowID
      */
     public getRowData(rowSelector: any): any {
@@ -5101,10 +4346,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Sort the `IgxGridComponent`'s `IgxColumnComponent` based on the provided array of sorting expressions.
-     * @example
-     * ```typescript
-     * this.grid.sort({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
-     * ```
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         const sortingState = cloneArray(this.sortingExpressions);
@@ -5143,12 +4384,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Filters a single `IgxColumnComponent`.
      *
-     * @example
-     * ```typescript
-     * public filter(term) {
-     *      this.grid.filter("ProductName", term, IgxStringFilteringOperand.instance().condition("contains"));
-     * }
-     * ```
      * @param name
      * @param value
      * @param conditionOrExpressionTree
@@ -5162,10 +4397,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
      *
-     * @example
-     * ```typescript
-     * grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
-     * ```
      * @param value
      * @param condition
      * @param ignoreCase
@@ -5180,15 +4411,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * If you do not provide the customSummary, then the default summary for the column data type will be applied.
-     * @example
-     * ```typescript
-     * grid.enableSummaries([{ fieldName: 'ProductName' }, { fieldName: 'ID' }]);
-     * ```
-     * Enable summaries for the listed columns.
-     * @example
-     * ```typescript
-     * grid.enableSummaries('ProductName');
-     * ```
      * @param rest
      */
     public enableSummaries(...rest) {
@@ -5202,16 +4424,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Disable summaries for the specified column.
      *
-     * @example
-     * ```typescript
-     * grid.disableSummaries('ProductName');
-     * ```
      * @remarks
      * Disable summaries for the listed columns.
-     * @example
-     * ```typescript
-     * grid.disableSummaries([{ fieldName: 'ProductName' }]);
-     * ```
      */
     public disableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
@@ -5226,10 +4440,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Otherwise clears the filtering state of all `IgxColumnComponent`s.
-     * @example
-     * ```typescript
-     * this.grid.clearFilter();
-     * ```
      * @param name
      */
     public clearFilter(name?: string) {
@@ -5241,10 +4451,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * otherwise clears the sorting state of all `IgxColumnComponent`.
-     * @example
-     * ```typescript
-     * this.grid.clearSort();
-     * ```
      * @param name
      */
     public clearSort(name?: string) {
@@ -5276,10 +4482,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns whether the operation is successful.
-     * @example
-     * ```typescript
-     * this.grid.pinColumn("ID");
-     * ```
      * @param columnName
      * @param index
      * @param pinningPosition
@@ -5292,10 +4494,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Unpins a column by field name. Returns whether the operation is successful.
      *
-     * @example
-     * ```typescript
-     * this.grid.pinColumn("ID");
-     * ```
      * @param columnName
      * @param index
      */
@@ -5310,10 +4508,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
-     * @example
-     * ```typescript
-     * this.grid.pinRow(rowID);
-     * ```
      * @param rowID The row id - primaryKey value or the data record instance.
      * @param index The index at which to insert the row in the pinned collection.
      */
@@ -5346,10 +4540,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
-     * @example
-     * ```typescript
-     * this.grid.unpinRow(rowID);
-     * ```
      * @param rowID The row id - primaryKey value or the data record instance.
      */
     public unpinRow(rowID: any, row?: RowType): boolean {
@@ -5393,10 +4583,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Should be run when changing DOM elements dimentions manually that affect the grid's size.
-     * @example
-     * ```typescript
-     * this.grid.reflow();
-     * ```
      */
     public reflow() {
         this.calculateGridSizes();
@@ -5407,10 +4593,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns how many times the grid contains the string.
-     * @example
-     * ```typescript
-     * this.grid.findNext("financial");
-     * ```
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value  (defaults to false).
@@ -5424,10 +4606,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns how many times the grid contains the string.
-     * @example
-     * ```typescript
-     * this.grid.findPrev("financial");
-     * ```
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value (defaults to false).
@@ -5441,10 +4619,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Returns how many times the grid contains the last search.
-     * @example
-     * ```typescript
-     * this.grid.refreshSearch();
-     * ```
      * @param updateActiveInfo
      */
     public refreshSearch(updateActiveInfo?: boolean, endEdit = true): number {
@@ -5476,11 +4650,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Removes all the highlights in the cell.
-     *
-     * @example
-     * ```typescript
-     * this.grid.clearSearch();
-     * ```
      */
     public clearSearch() {
         this._lastSearchInfo = {
@@ -5703,10 +4872,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Gets calculated width of the pinned areas.
      *
-     * @example
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedStartWidth();
-     * ```
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
      */
     public getPinnedStartWidth(takeHidden = false) {
@@ -5726,10 +4891,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
  * Gets calculated width of the pinned areas.
  *
- * @example
- * ```typescript
- * const pinnedWidth = this.grid.getPinnedEndWidth();
- * ```
  * @param takeHidden If we should take into account the hidden columns in the pinned area.
  */
     public getPinnedEndWidth(takeHidden = false) {
@@ -5800,11 +4961,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Returns the currently transformed paged/filtered/sorted/grouped/pinned/unpinned row data, displayed in the grid.
-     *
-     * @example
-     * ```typescript
-     *      const dataView = this.grid.dataView;
-     * ```
      */
     public get dataView() {
         return this._dataView;
@@ -5830,10 +4986,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Select specified rows by ID.
      *
-     * @example
-     * ```typescript
-     * this.grid.selectRows([1,2,5], true);
-     * ```
      * @param rowIDs
      * @param clearCurrentSelection if true clears the current selection
      */
@@ -5845,10 +4997,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Deselect specified rows by ID.
      *
-     * @example
-     * ```typescript
-     * this.grid.deselectRows([1,2,5]);
-     * ```
      * @param rowIDs
      */
     public deselectRows(rowIDs: any[]) {
@@ -5862,11 +5010,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
-     * @example
-     * ```typescript
-     * this.grid.selectAllRows();
-     * this.grid.selectAllRows(false);
-     * ```
      * @param onlyFilterData
      */
     public selectAllRows(onlyFilterData = true) {
@@ -5881,10 +5024,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      * If you set the parameter onlyFilterData to false that will deselect all rows in the grid exept deleted rows.
-     * @example
-     * ```typescript
-     * this.grid.deselectAllRows();
-     * ```
      * @param onlyFilterData
      */
     public deselectAllRows(onlyFilterData = true) {
@@ -5898,10 +5037,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Deselect selected cells.
-     * @example
-     * ```typescript
-     * this.grid.clearCellSelection();
-     * ```
      */
     public clearCellSelection(): void {
         this.selectionService.clear(true);
@@ -5990,12 +5125,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Get current selected columns.
-     *
-     * @example
-     * Returns an array with selected columns
-     * ```typescript
-     * const selectedColumns = this.grid.selectedColumns();
-     * ```
      */
     public selectedColumns(): ColumnType[] {
         const fields = this.selectionService.getSelectedColumns();
@@ -6005,10 +5134,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Select specified columns.
      *
-     * @example
-     * ```typescript
-     * this.grid.selectColumns(['ID','Name'], true);
-     * ```
      * @param columns
      * @param clearCurrentSelection if true clears the current selection
      */
@@ -6034,10 +5159,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Deselect specified columns by field.
      *
-     * @example
-     * ```typescript
-     * this.grid.deselectColumns(['ID','Name']);
-     * ```
      * @param columns
      */
     public deselectColumns(columns: string[] | ColumnType[]) {
@@ -6060,11 +5181,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Deselects all columns
-     *
-     * @example
-     * ```typescript
-     * this.grid.deselectAllColumns();
-     * ```
      */
     public deselectAllColumns() {
         this.selectionService.clearAllSelectedColumns();
@@ -6073,11 +5189,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * Selects all columns
-     *
-     * @example
-     * ```typescript
-     * this.grid.deselectAllColumns();
-     * ```
      */
     public selectAllColumns() {
         this.selectColumns(this._columns.filter(c => !c.columnGroup));
@@ -6216,10 +5327,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * Also can execute a custom logic over the target element,
      * through a callback function that accepts { targetType: GridKeydownTargetType, target: Object }
-     * @example
-     * ```typescript
-     *  this.grid.navigateTo(10, 3, (args) => { args.target.nativeElement.focus(); });
-     * ```
      */
     public navigateTo(rowIndex: number, visibleColIndex = -1, cb: (args: any) => void = null) {
         const totalItems = (this as any).totalItemCount ?? this.dataView.length - 1;
@@ -6264,10 +5371,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * You can pass callback function as a third parameter of `getPreviousCell` method.
      * The callback function accepts IgxColumnComponent as a param
-     * @example
-     * ```typescript
-     *  const nextEditableCellPosition = this.grid.getNextCell(0, 3, (column) => column.editable);
-     * ```
      */
     public getNextCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
@@ -6300,10 +5403,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @remarks
      * You can pass callback function as a third parameter of `getPreviousCell` method.
      * The callback function accepts IgxColumnComponent as a param
-     * @example
-     * ```typescript
-     *  const previousEditableCellPosition = this.grid.getPreviousCell(0, 3, (column) => column.editable);
-     * ```
      */
     public getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
@@ -6522,10 +5621,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
-     * @example
-     * ```html
-     * <button type="button" igxButton (click)="grid.endEdit(true)">Commit Row</button>
-     * ```
      * @param commit
      */
     // TODO: Facade for crud service refactoring. To be removed
@@ -6558,12 +5653,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If null is passed as rowID, the row adding UI is spawned as the first record in the data view
      * @remarks
      * Spawning the UI to add a child for a record only works if you provide a rowID
-     * @example
-     * ```typescript
-     * this.grid.beginAddRowById('ALFKI');
-     * this.grid.beginAddRowById('ALFKI', true);
-     * this.grid.beginAddRowById(null);
-     * ```
      * @param rowID - The rowID to spawn the add row UI for, or null to spawn it as the first record in the data view
      * @param asChild - Whether the record should be added as a child. Only applicable to igxTreeGrid.
      */
@@ -6619,10 +5708,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * Accepted values for index are integers from 0 to this.grid.dataView.length
-     * @example
-     * ```typescript
-     * this.grid.beginAddRowByIndex(0);
-     * ```
      * @param index - The index to spawn the UI at. Accepts integers from 0 to this.grid.dataView.length
      */
     public beginAddRowByIndex(index: number): void {
@@ -7915,7 +7000,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If record is group rec, summary rec, child rec, ghost rec. etc. it is not editable.
      *
      * @param dataViewIndex The index of that record in the data view.
-     *
      */
     // TODO: Consider moving it into CRUD
     private isEditableDataRecordAtIndex(dataViewIndex) {

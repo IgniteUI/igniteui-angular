@@ -13,15 +13,6 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 /* jsonAPIManageItemInMarkup */
 /**
  * Provides a pre-configured column pinning component for the grid.
- *
- *
- * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridToolbarComponent, IgxGridToolbarActionsComponent
- *
- * @example
- * ```html
- *  <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
- * ```
  */
 @Component({
     selector: 'igx-grid-toolbar-pinning',

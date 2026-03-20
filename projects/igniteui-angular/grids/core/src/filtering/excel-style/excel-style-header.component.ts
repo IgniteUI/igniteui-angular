@@ -18,11 +18,6 @@ export class IgxExcelStyleHeaderComponent {
     /**
      * Sets whether the column pinning icon should be shown in the header.
      * Default value is `false`.
-     *
-     * @example
-     * ```html
-     * <igx-excel-style-header [showPinning]="true"></igx-excel-style-header>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public showPinning: boolean;
@@ -30,11 +25,6 @@ export class IgxExcelStyleHeaderComponent {
     /**
      * Sets whether the column selecting icon should be shown in the header.
      * Default value is `false`.
-     *
-     * @example
-     * ```html
-     * <igx-excel-style-header [showSelecting]="true"></igx-excel-style-header>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public showSelecting: boolean;
@@ -42,11 +32,6 @@ export class IgxExcelStyleHeaderComponent {
     /**
      * Sets whether the column hiding icon should be shown in the header.
      * Default value is `false`.
-     *
-     * @example
-     * ```html
-     * <igx-excel-style-header [showHiding]="true"></igx-excel-style-header>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public showHiding: boolean;

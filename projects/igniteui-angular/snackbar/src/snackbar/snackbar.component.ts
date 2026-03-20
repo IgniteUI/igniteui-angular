@@ -22,14 +22,6 @@ let NEXT_ID = 0;
  * include a link to an action such as Undo.
  *
  * Example:
- * ```html
- * <button type="button" igxButton (click)="snackbar.show()">Send message</button>
- * <div>
- *   <igx-snackbar #snackbar>
- *      Message sent
- *   </igx-snackbar>
- * </div>
- * ```
  */
 @Component({
     selector: 'igx-snackbar',
@@ -41,12 +33,6 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
     /**
      * Sets/gets the `id` of the snackbar.
      * If not set, the `id` of the first snackbar component  will be `"igx-snackbar-0"`;
-     * ```html
-     * <igx-snackbar id = "Snackbar1"></igx-snackbar>
-     * ```
-     * ```typescript
-     * let snackbarId = this.snackbar.id;
-     * ```
      *
      * @memberof IgxSnackbarComponent
      */
@@ -65,18 +51,12 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
 
     /**
      * Sets/gets the `actionText` attribute.
-     * ```html
-     * <igx-snackbar [actionText] = "'Action Text'"></igx-snackbar>
-     * ```
      */
     @Input() public actionText?: string;
 
     /**
      * An event that will be emitted when the action button is clicked.
      * Provides reference to the `IgxSnackbarComponent` as an argument.
-     * ```html
-     * <igx-snackbar (clicked)="clickedHandler($event)"></igx-snackbar>
-     * ```
      */
     @Output()
     public clicked = new EventEmitter<IgxSnackbarComponent>();
@@ -84,27 +64,17 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
     /**
      * An event that will be emitted when the snackbar animation starts.
      * Provides reference to the `ToggleViewEventArgs` interface as an argument.
-     * ```html
-     * <igx-snackbar (animationStarted) = "animationStarted($event)"></igx-snackbar>
-     * ```
      */
     @Output() public animationStarted = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * An event that will be emitted when the snackbar animation ends.
      * Provides reference to the `ToggleViewEventArgs` interface as an argument.
-     * ```html
-     * <igx-snackbar (animationDone) = "animationDone($event)"></igx-snackbar>
-     * ```
      */
     @Output() public animationDone = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * Get the position and animation settings used by the snackbar.
-     * ```typescript
-     * @ViewChild('snackbar', { static: true }) public snackbar: IgxSnackbarComponent;
-     * let currentPosition: PositionSettings = this.snackbar.positionSettings
-     * ```
      */
     @Input()
     public get positionSettings(): PositionSettings {
@@ -113,24 +83,6 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
 
     /**
      * Set the position and animation settings used by the snackbar.
-     * ```html
-     * <igx-snackbar [positionSettings]="newPositionSettings"></igx-snackbar>
-     * ```
-     * ```typescript
-     * import { slideInTop, slideOutBottom } from 'igniteui-angular';
-     * ...
-     * @ViewChild('snackbar', { static: true }) public snackbar: IgxSnackbarComponent;
-     *  public newPositionSettings: PositionSettings = {
-     *      openAnimation: useAnimation(slideInTop, { params: { duration: '1000ms', fromPosition: 'translateY(100%)'}}),
-     *      closeAnimation: useAnimation(slideOutBottom, { params: { duration: '1000ms', fromPosition: 'translateY(0)'}}),
-     *      horizontalDirection: HorizontalAlignment.Left,
-     *      verticalDirection: VerticalAlignment.Middle,
-     *      horizontalStartPoint: HorizontalAlignment.Left,
-     *      verticalStartPoint: VerticalAlignment.Middle,
-     *      minSize: { height: 100, width: 100 }
-     *  };
-     * this.snackbar.positionSettings = this.newPositionSettings;
-     * ```
      */
     public set positionSettings(settings: PositionSettings) {
         this._positionSettings = settings;
@@ -147,9 +99,6 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
 
     /**
      * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
-     * ```typescript
-     * this.snackbar.open();
-     * ```
      */
     public override open(message?: string) {
         if (message !== undefined) {
@@ -163,10 +112,6 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
 
     /**
      * Opens or closes the snackbar, depending on its current state.
-     *
-     * ```typescript
-     * this.snackbar.toggle();
-     * ```
      */
      public override toggle() {
         if (this.collapsed || this.isClosing) {

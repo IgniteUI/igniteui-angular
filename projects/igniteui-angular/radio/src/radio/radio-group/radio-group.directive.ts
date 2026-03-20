@@ -33,25 +33,8 @@ let nextId = 0;
 /**
  * Radio group directive renders set of radio buttons.
  *
- * @igxModule IgxRadioModule
- *
- * @igxTheme igx-radio-theme
- *
- * @igxKeywords radiogroup, radio, button, input
- *
- * @igxGroup Data Entry & Display
- *
  * @remarks
  * The Ignite UI Radio Group allows the user to select a single option from an available set of options that are listed side by side.
- *
- * @example:
- * ```html
- * <igx-radio-group name="radioGroup">
- *   <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
- *      {{item}}
- *   </igx-radio>
- * </igx-radio-group>
- * ```
  */
 @Directive({
     exportAs: 'igxRadioGroup',
@@ -68,11 +51,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
     /**
      * Returns reference to the child radio buttons.
-     *
-     * @example
-     * ```typescript
-     * let radioButtons =  this.radioGroup.radioButtons;
-     * ```
      */
     public get radioButtons(): QueryList<IgxRadioComponent> {
         this._radioButtonsList.reset(this._radioButtons());
@@ -81,11 +59,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
     /**
      * Sets/gets the `value` attribute.
-     *
-     * @example
-     * ```html
-     * <igx-radio-group [value] = "'radioButtonValue'"></igx-radio-group>
-     * ```
      */
     @Input()
     public get value(): any {
@@ -101,11 +74,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
     /**
      * Sets/gets the `name` attribute of the radio group component. All child radio buttons inherits this name.
-     *
-     * @example
-     * ```html
-     * <igx-radio-group name = "Radio1"></igx-radio-group>
-     *  ```
      */
     @Input()
     public get name(): string {
@@ -123,11 +91,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      *
      * @remarks
      * If not set, `required` will have value `false`.
-     *
-     * @example
-     * ```html
-     * <igx-radio-group [required] = "true"></igx-radio-group>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get required(): boolean {
@@ -141,12 +104,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
     /**
      * Sets/gets the selected child radio button.
-     *
-     * @example
-     * ```typescript
-     * let selectedButton = this.radioGroup.selected;
-     * this.radioGroup.selected = selectedButton;
-     * ```
      */
     @Input()
     public get selected() {
@@ -165,11 +122,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      *
      * @remarks
      * If not set, `invalid` will have value `false`.
-     *
-     * @example
-     * ```html
-     * <igx-radio-group [invalid] = "true"></igx-radio-group>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get invalid(): boolean {
@@ -186,11 +138,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      *
      * @remarks
      * Provides references to the selected `IgxRadioComponent` and the `value` property as event arguments.
-     *
-     * @example
-     * ```html
-     * <igx-radio-group (change)="handler($event)"></igx-radio-group>
-     * ```
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
@@ -209,11 +156,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      * Sets vertical alignment to the radio group, if `alignment` is set to `vertical`.
      * By default the alignment is horizontal.
-     *
-     * @example
-     * ```html
-     * <igx-radio-group alignment="vertical"></igx-radio-group>
-     * ```
      */
     @HostBinding('class.igx-radio-group--vertical')
     protected vertical = false;
@@ -300,13 +242,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
     /**
      * Returns the alignment of the `igx-radio-group`.
-     * ```typescript
-     * @ViewChild("MyRadioGroup")
-     * public radioGroup: IgxRadioGroupDirective;
-     * ngAfterViewInit(){
-     *    let radioAlignment = this.radioGroup.alignment;
-     * }
-     * ```
      */
     @Input()
     public get alignment(): RadioGroupAlignment {
@@ -315,13 +250,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     /**
      * Allows you to set the radio group alignment.
      * Available options are `RadioGroupAlignment.horizontal` (default) and `RadioGroupAlignment.vertical`.
-     * ```typescript
-     * public alignment = RadioGroupAlignment.vertical;
-     * //..
-     * ```
-     * ```html
-     * <igx-radio-group [alignment]="alignment"></igx-radio-group>
-     * ```
      */
     public set alignment(value: RadioGroupAlignment) {
         this.vertical = value === RadioGroupAlignment.vertical;
@@ -440,11 +368,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @remarks
      * Checks whether the provided value is consistent to the current radio button.
      * If it is, the checked attribute will have value `true` and selected property will contain the selected `IgxRadioComponent`.
-     *
-     * @example
-     * ```typescript
-     * this.radioGroup.writeValue('radioButtonValue');
-     * ```
      */
     public writeValue(value: any) {
         this.value = value;

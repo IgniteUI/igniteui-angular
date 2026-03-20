@@ -86,15 +86,6 @@ export class IgxTicksComponent {
      * Returns the template context corresponding to
      * {@link IgxTickLabelTemplateDirective}
      *
-     * ```typescript
-     * return {
-     *  $implicit //returns the value per each tick label.
-     *  isPrimery //returns if the tick is primary.
-     *  labels // returns the {@link labels} collection.
-     *  index // returns the index per each tick of the whole sequence.
-     * }
-     * ```
-     *
      * @param idx the index per each tick label.
      */
     public context(idx: number): any {

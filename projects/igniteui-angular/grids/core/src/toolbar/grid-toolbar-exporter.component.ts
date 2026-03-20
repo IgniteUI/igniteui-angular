@@ -37,10 +37,6 @@ export interface IgxExporterEvent {
  * @remarks
  * This component still needs the actual exporter service(s) provided in the DI chain
  * in order to export something.
- *
- * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridToolbarComponent, IgxGridToolbarActionsComponent
- *
  */
 @Component({
     selector: 'igx-grid-toolbar-exporter',

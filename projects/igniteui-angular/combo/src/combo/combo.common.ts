@@ -121,16 +121,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Defines whether the caseSensitive icon should be shown in the search input
-     *
-     * ```typescript
-     * // get
-     * let myComboShowSearchCaseIcon = this.combo.showSearchCaseIcon;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [showSearchCaseIcon]='true'></igx-combo>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public showSearchCaseIcon = false;
@@ -149,34 +139,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /**
      * Set custom overlay settings that control how the combo's list of items is displayed.
      * Set:
-     * ```html
-     * <igx-combo [overlaySettings]="customOverlaySettings"></igx-combo>
-     * ```
      *
-     * ```typescript
-     *  const customSettings = { positionStrategy: { settings: { target: myTarget } } };
-     *  combo.overlaySettings = customSettings;
-     * ```
      * Get any custom overlay settings used by the combo:
-     * ```typescript
-     *  const comboOverlaySettings: OverlaySettings = myCombo.overlaySettings;
-     * ```
      */
     @Input()
     public overlaySettings: OverlaySettings = null;
 
     /**
      * Gets/gets combo id.
-     *
-     * ```typescript
-     * // get
-     * let id = this.combo.id;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [id]='combo1'></igx-combo>
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -198,16 +168,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Sets the style width of the element
-     *
-     * ```typescript
-     * // get
-     * let myComboWidth = this.combo.width;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [width]='250px'></igx-combo>
-     * ```
      */
     @HostBinding('style.width')
     @Input()
@@ -215,32 +175,12 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Controls whether custom values can be added to the collection
-     *
-     * ```typescript
-     * // get
-     * let comboAllowsCustomValues = this.combo.allowCustomValues;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [allowCustomValues]='true'></igx-combo>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public allowCustomValues = false;
 
     /**
      * Configures the drop down list height
-     *
-     * ```typescript
-     * // get
-     * let myComboItemsMaxHeight = this.combo.itemsMaxHeight;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [itemsMaxHeight]='320'></igx-combo>
-     * ```
      */
     @Input()
     public get itemsMaxHeight(): number {
@@ -263,16 +203,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Configures the drop down list item height
-     *
-     * ```typescript
-     * // get
-     * let myComboItemHeight = this.combo.itemHeight;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [itemHeight]='32'></igx-combo>
-     * ```
      */
     @Input()
     public get itemHeight(): number {
@@ -285,43 +215,18 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Configures the drop down list width
-     *
-     * ```typescript
-     * // get
-     * let myComboItemsWidth = this.combo.itemsWidth;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [itemsWidth] = '"180px"'></igx-combo>
-     * ```
      */
     @Input()
     public itemsWidth: string;
 
     /**
      * Defines the placeholder value for the combo value field
-     *
-     * ```typescript
-     * // get
-     * let myComboPlaceholder = this.combo.placeholder;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [placeholder]='newPlaceHolder'></igx-combo>
-     * ```
      */
     @Input()
     public placeholder: string;
 
     /**
      * Combo data source.
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [data]='items'></igx-combo>
-     * ```
      */
     @Input()
     public get data(): any[] | null {
@@ -339,16 +244,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Determines which column in the data source is used to determine the value.
-     *
-     * ```typescript
-     * // get
-     * let myComboValueKey = this.combo.valueKey;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [valueKey]='myKey'></igx-combo>
-     * ```
      */
     @Input()
     public valueKey: string = null;
@@ -360,20 +255,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Determines which column in the data source is used to determine the display value.
-     *
-     * ```typescript
-     * // get
-     * let myComboDisplayKey = this.combo.displayKey;
-     *
-     * // set
-     * this.combo.displayKey = 'val';
-     *
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [displayKey]='myDisplayKey'></igx-combo>
-     * ```
      */
     public get displayKey() {
         return this._displayKey ? this._displayKey : this.valueKey;
@@ -381,11 +262,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * The item property by which items should be grouped inside the items list. Not usable if data is not of type Object[].
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [groupKey]='newGroupKey'></igx-combo>
-     * ```
      */
     @Input()
     public set groupKey(val: string) {
@@ -394,11 +270,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * The item property by which items should be grouped inside the items list. Not usable if data is not of type Object[].
-     *
-     * ```typescript
-     * // get
-     * let currentGroupKey = this.combo.groupKey;
-     * ```
      */
     public get groupKey(): string {
         return this._groupKey;
@@ -406,14 +277,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Sets groups sorting order.
-     *
-     * @example
-     * ```html
-     * <igx-combo [groupSortingDirection]="groupSortingDirection"></igx-combo>
-     * ```
-     * ```typescript
-     * public groupSortingDirection = SortingDirection.Asc;
-     * ```
      */
     @Input()
     public get groupSortingDirection(): SortingDirection {
@@ -425,20 +288,12 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Gets/Sets the custom filtering function of the combo.
-     *
-     * @example
-     * ```html
-     *  <igx-comb #combo [data]="localData" [filterFunction]="filterFunction"></igx-combo>
-     * ```
      */
     @Input()
     public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
 
     /**
      * Sets aria-labelledby attribute value.
-     * ```html
-     * <igx-combo [ariaLabelledBy]="'label1'">
-     * ```
      */
     @Input()
     public ariaLabelledBy: string;
@@ -449,9 +304,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Disables the combo. The default is `false`.
-     * ```html
-     * <igx-combo [disabled]="'true'">
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public disabled = false;
@@ -459,9 +311,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /**
      * Sets the visual combo type.
      * The allowed values are `line`, `box`, `border` and `search`. The default is `box`.
-     * ```html
-     * <igx-combo [type]="'line'">
-     * ```
      */
     @Input()
     public get type(): IgxInputGroupType {
@@ -488,249 +337,90 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Emitted before the dropdown is opened
-     *
-     * ```html
-     * <igx-combo opening='handleOpening($event)'></igx-combo>
-     * ```
      */
     @Output()
     public opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
-     *
-     * ```html
-     * <igx-combo (opened)='handleOpened($event)'></igx-combo>
-     * ```
      */
     @Output()
     public opened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted before the dropdown is closed
-     *
-     * ```html
-     * <igx-combo (closing)='handleClosing($event)'></igx-combo>
-     * ```
      */
     @Output()
     public closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
-     *
-     * ```html
-     * <igx-combo (closed)='handleClosed($event)'></igx-combo>
-     * ```
      */
     @Output()
     public closed = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted when an item is being added to the data collection
-     *
-     * ```html
-     * <igx-combo (addition)='handleAdditionEvent($event)'></igx-combo>
-     * ```
      */
     @Output()
     public addition = new EventEmitter<IComboItemAdditionEvent>();
 
     /**
      * Emitted when the value of the search input changes (e.g. typing, pasting, clear, etc.)
-     *
-     * ```html
-     * <igx-combo (searchInputUpdate)='handleSearchInputEvent($event)'></igx-combo>
-     * ```
      */
     @Output()
     public searchInputUpdate = new EventEmitter<IComboSearchInputEventArgs>();
 
     /**
      * Emitted when new chunk of data is loaded from the virtualization
-     *
-     * ```html
-     * <igx-combo (dataPreLoad)='handleDataPreloadEvent($event)'></igx-combo>
-     * ```
      */
     @Output()
     public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * The custom template, if any, that should be used when rendering ITEMS in the combo list
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.combo.itemTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-combo #combo>
-     *      ...
-     *      <ng-template igxComboItem let-item let-key="valueKey">
-     *          <div class="custom-item">
-     *              <div class="custom-item__name">{{ item[key] }}</div>
-     *              <div class="custom-item__cost">{{ item.cost }}</div>
-     *          </div>
-     *      </ng-template>
-     *  </igx-combo>
-     * ```
      */
     @ContentChild(IgxComboItemDirective, { read: TemplateRef })
     public itemTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering the HEADER for the combo items list
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.combo.headerTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-combo #combo>
-     *      ...
-     *      <ng-template igxComboHeader>
-     *          <div class="combo__header">
-     *              This is a custom header
-     *          </div>
-     *      </ng-template>
-     *  </igx-combo>
-     * ```
      */
     @ContentChild(IgxComboHeaderDirective, { read: TemplateRef })
     public headerTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering the FOOTER for the combo items list
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.combo.footerTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-combo #combo>
-     *      ...
-     *      <ng-template igxComboFooter>
-     *          <div class="combo__footer">
-     *              This is a custom footer
-     *          </div>
-     *      </ng-template>
-     *  </igx-combo>
-     * ```
      */
     @ContentChild(IgxComboFooterDirective, { read: TemplateRef })
     public footerTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering HEADER ITEMS for groups in the combo list
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.combo.headerItemTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-combo #combo>
-     *      ...
-     *      <ng-template igxComboHeaderItem let-item let-key="groupKey">
-     *          <div class="custom-item--group">Group header for {{ item[key] }}</div>
-     *      </ng-template>
-     *  </igx-combo>
-     * ```
      */
     @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef })
     public headerItemTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.combo.addItemTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-combo #combo>
-     *      ...
-     *      <ng-template igxComboAddItem>
-     *          <button type="button" igxButton="contained" class="combo__add-button">
-     *              Click to add item
-     *          </button>
-     *      </ng-template>
-     *  </igx-combo>
-     * ```
      */
     @ContentChild(IgxComboAddItemDirective, { read: TemplateRef })
     public addItemTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.combo.emptyTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-combo #combo>
-     *      ...
-     *      <ng-template igxComboEmpty>
-     *          <div class="combo--empty">
-     *              There are no items to display
-     *          </div>
-     *      </ng-template>
-     *  </igx-combo>
-     * ```
      */
     @ContentChild(IgxComboEmptyDirective, { read: TemplateRef })
     public emptyTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering the combo TOGGLE(open/close) button
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.combo.toggleIconTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-combo #combo>
-     *      ...
-     *      <ng-template igxComboToggleIcon let-collapsed>
-     *          <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
-     *      </ng-template>
-     *  </igx-combo>
-     * ```
      */
     @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering the combo CLEAR button
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.combo.clearIconTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-combo #combo>
-     *      ...
-     *      <ng-template igxComboClearIcon>
-     *          <igx-icon>clear</igx-icon>
-     *      </ng-template>
-     *  </igx-combo>
-     * ```
      */
     @ContentChild(IgxComboClearIconDirective, { read: TemplateRef })
     public clearIconTemplate: TemplateRef<any> = null;
@@ -801,11 +491,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Gets if control is valid, when used in a form
-     *
-     * ```typescript
-     * // get
-     * let valid = this.combo.valid;
-     * ```
      */
     public get valid(): IgxInputState {
         return this._valid;
@@ -813,11 +498,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Sets if control is valid, when used in a form
-     *
-     * ```typescript
-     * // set
-     * this.combo.valid = IgxInputState.INVALID;
-     * ```
      */
     public set valid(valid: IgxInputState) {
         this._valid = valid;
@@ -826,11 +506,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * The value of the combo
-     *
-     * ```typescript
-     * // get
-     * let comboValue = this.combo.value;
-     * ```
      */
     public get value(): any[] {
         return this._value;
@@ -838,11 +513,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * The text displayed in the combo input
-     *
-     * ```typescript
-     * // get
-     * let comboDisplayValue = this.combo.displayValue;
-     * ```
      */
     public get displayValue(): string {
         return this._displayValue;
@@ -850,22 +520,12 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`
-     *
-     * ```typescript
-     * // get
-     * let state = this.combo.virtualizationState;
-     * ```
      */
     public get virtualizationState(): IForOfState {
         return this.virtDir.state;
     }
     /**
      * Sets the current state of the virtualized data.
-     *
-     * ```typescript
-     * // set
-     * this.combo.virtualizationState(state);
-     * ```
      */
     public set virtualizationState(state: IForOfState) {
         this.virtDir.state = state;
@@ -873,10 +533,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Gets drop down state.
-     *
-     * ```typescript
-     * let state = this.combo.collapsed;
-     * ```
      */
     public get collapsed(): boolean {
         return this.dropdown.collapsed;
@@ -884,22 +540,12 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Gets total count of the virtual data items, when using remote service.
-     *
-     * ```typescript
-     * // get
-     * let count = this.combo.totalItemCount;
-     * ```
      */
     public get totalItemCount(): number {
         return this.virtDir.totalItemCount;
     }
     /**
      * Sets total count of the virtual data items, when using remote service.
-     *
-     * ```typescript
-     * // set
-     * this.combo.totalItemCount(remoteService.count);
-     * ```
      */
     public set totalItemCount(count: number) {
         this.virtDir.totalItemCount = count;
@@ -928,16 +574,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Configures the way combo items will be filtered.
-     *
-     * ```typescript
-     * // get
-     * let myFilteringOptions = this.combo.filteringOptions;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [filteringOptions]='myFilteringOptions'></igx-combo>
-     * ```
      */
 
     @Input()
@@ -1063,11 +699,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * A method that opens/closes the combo.
-     *
-     * ```html
-     * <button type="button" (click)="combo.toggle()">Toggle Combo</button>
-     * <igx-combo #combo></igx-combo>
-     * ```
      */
     public toggle(): void {
         if (this.collapsed && this._displayValue.length !== 0) {
@@ -1083,11 +714,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * A method that opens the combo.
-     *
-     * ```html
-     * <button type="button" (click)="combo.open()">Open Combo</button>
-     * <igx-combo #combo></igx-combo>
-     * ```
      */
     public open(): void {
         if (this.collapsed && this._displayValue.length !== 0) {
@@ -1101,11 +727,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * A method that closes the combo.
-     *
-     * ```html
-     * <button type="button" (click)="combo.close()">Close Combo</button>
-     * <igx-combo #combo></igx-combo>
-     * ```
      */
     public close(): void {
         this.dropdown.close();
@@ -1122,9 +743,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * Get current selection state
      *
      * @returns Array of selected items
-     * ```typescript
-     * let mySelection = this.combo.selection;
-     * ```
      */
     public get selection(): any[] {
         const serviceRef = this.selectionService.get(this.id);

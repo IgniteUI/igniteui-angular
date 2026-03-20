@@ -28,10 +28,6 @@ export interface IgxIconLoadedEvent {
  * In addition it could be used to associate a custom class to be applied on IgxIconComponent according to given font-family.
  *
  * Example:
- * ```typescript
- * this.iconService.setFamily('material', { className: 'material-icons', type: 'font' });
- * this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
- * ```
  */
 @Injectable({
     providedIn: "root",
@@ -47,11 +43,6 @@ export class IgxIconService {
     /**
      * Observable that emits when an icon is successfully loaded
      * through a HTTP request.
-     *
-     * @example
-     * ```typescript
-     * this.service.iconLoaded.subscribe((ev: IgxIconLoadedEvent) => ...);
-     * ```
      */
     public iconLoaded: Observable<IgxIconLoadedEvent>;
 
@@ -87,9 +78,6 @@ export class IgxIconService {
 
     /**
      *  Returns the default font-family.
-     * ```typescript
-     *   const defaultFamily = this.iconService.defaultFamily;
-     * ```
      */
     public get defaultFamily(): IconFamily {
         return this._defaultFamily;
@@ -97,9 +85,6 @@ export class IgxIconService {
 
     /**
      *  Sets the default font-family.
-     * ```typescript
-     *   this.iconService.defaultFamily = 'svg-flags';
-     * ```
      */
     public set defaultFamily(family: IconFamily) {
         this._defaultFamily = family;
@@ -108,9 +93,6 @@ export class IgxIconService {
 
     /**
      *  Registers a custom class to be applied to IgxIconComponent for a given font-family.
-     * ```typescript
-     *   this.iconService.registerFamilyAlias('material', 'material-icons');
-     * ```
      * @deprecated in version 18.1.0. Use `setFamily` instead.
      */
     public registerFamilyAlias(
@@ -124,9 +106,6 @@ export class IgxIconService {
 
     /**
      *  Returns the custom class, if any, associated to a given font-family.
-     * ```typescript
-     *   const familyClass = this.iconService.familyClassName('material');
-     * ```
      */
     public familyClassName(alias: string): string {
         return this._families.get(alias)?.className || alias;
@@ -160,9 +139,6 @@ export class IgxIconService {
     /**
      *  Creates a family to className relationship that is applied to the IgxIconComponent
      *   whenever that family name is used.
-     * ```typescript
-     *   this.iconService.setFamily('material', { className: 'material-icons', type: 'liga' });
-     * ```
      */
     public setFamily(name: string, meta: FamilyMeta) {
         this._families.set(name, meta);
@@ -171,9 +147,6 @@ export class IgxIconService {
     /**
      *  Adds an icon reference meta for an icon in a meta family.
      *  Executes only if no icon reference is found.
-     * ```typescript
-     *   this.iconService.addIconRef('aruba', 'default', { name: 'aruba', family: 'svg-flags' });
-     * ```
      */
     public addIconRef(name: string, family: string, icon: IconMeta) {
         const iconRef = this._iconRefs.get(family)?.get(name);
@@ -194,9 +167,6 @@ export class IgxIconService {
 
     /**
      *  Similar to addIconRef, but always sets the icon reference meta for an icon in a meta family.
-     * ```typescript
-     *   this.iconService.setIconRef('aruba', 'default', { name: 'aruba', family: 'svg-flags' });
-     * ```
      */
     public setIconRef(name: string, family: string, icon: IconMeta) {
         let familyRef = this._iconRefs.get(family);
@@ -215,9 +185,6 @@ export class IgxIconService {
 
     /**
      *  Returns the icon reference meta for an icon in a given family.
-     * ```typescript
-     *   const iconRef = this.iconService.getIconRef('aruba', 'default');
-     * ```
      */
     public getIconRef(name: string, family: string): IconReference {
         const icon = this._iconRefs.get(family)?.get(name);
@@ -254,9 +221,6 @@ export class IgxIconService {
     }
     /**
      *  Adds an SVG image to the cache. SVG source is an url.
-     * ```typescript
-     *   this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
-     * ```
      */
     public addSvgIcon(
         name: string,
@@ -300,10 +264,6 @@ export class IgxIconService {
 
     /**
      *  Adds an SVG image to the cache. SVG source is its text.
-     * ```typescript
-     *   this.iconService.addSvgIconFromText('simple', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-     *   <path d="M74 74h54v54H74" /></svg>', 'svg-flags');
-     * ```
      */
     public addSvgIconFromText(
         name: string,
@@ -327,9 +287,6 @@ export class IgxIconService {
 
     /**
      *  Returns whether a given SVG image is present in the cache.
-     * ```typescript
-     *   const isSvgCached = this.iconService.isSvgIconCached('aruba', 'svg-flags');
-     * ```
      */
     public isSvgIconCached(name: string, family: string): boolean {
         if (this._cachedIcons.has(family)) {
@@ -345,9 +302,6 @@ export class IgxIconService {
 
     /**
      *  Returns the cached SVG image as string.
-     * ```typescript
-     *   const svgIcon = this.iconService.getSvgIcon('aruba', 'svg-flags');
-     * ```
      */
     public getSvgIcon(name: string, family: string) {
         return this._cachedIcons.get(family)?.get(name);

@@ -38,10 +38,6 @@ export class IgxPivotGridRow implements RowType {
      * A row in the grid is identified either by:
      * - primaryKey data value,
      * - the whole rowData, if the primaryKey is omitted.
-     *
-     * ```typescript
-     * let rowKey = row.key;
-     * ```
      */
     public get key(): any {
         const dimension = this.grid.visibleRowDimensions[this.grid.visibleRowDimensions.length - 1];
@@ -52,9 +48,6 @@ export class IgxPivotGridRow implements RowType {
     /**
      * Gets whether the row is selected.
      * Default value is `false`.
-     * ```typescript
-     * row.selected = true;
-     * ```
      */
     public get selected(): boolean {
         return this.grid.selectionService.isRowSelected(this.key);

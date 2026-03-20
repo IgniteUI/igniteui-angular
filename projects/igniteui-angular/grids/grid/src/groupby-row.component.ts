@@ -66,36 +66,24 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /**
      * Sets the index of the row.
-     * ```html
-     * <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row></igx-grid-groupby-row>
-     * ```
      */
     @Input()
     public index: number;
 
     /**
      * Sets the id of the grid the row belongs to.
-     * ```html
-     * <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row></igx-grid-groupby-row>
-     * ```
      */
     @Input()
     public gridID: string;
 
     /**
      * The group record the component renders for.
-     * ```typescript
-     * <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row></igx-grid-groupby-row>
-     * ```
      */
     @Input()
     public groupRow: IGroupByRecord;
 
     /**
      * Returns a reference of the content of the group.
-     * ```typescript
-     * const groupRowContent = this.grid1.rowList.first.groupContent;
-     * ```
      */
     @ViewChild('groupContent', { static: true })
     public groupContent: ElementRef;
@@ -135,9 +123,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /**
      * Returns whether the row is focused.
-     * ```
-     * let gridRowFocused = this.grid1.rowList.first.focused;
-     * ```
      */
     public get focused(): boolean {
         return this.isActive();
@@ -179,9 +164,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /**
      * Returns whether the group row is expanded.
-     * ```typescript
-     * const groupRowExpanded = this.grid1.rowList.first.expanded;
-     * ```
      */
     @HostBinding('attr.aria-expanded')
     public get expanded(): boolean {
@@ -204,9 +186,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /**
      * Returns a reference to the underlying HTML element.
-     * ```typescript
-     * const groupRowElement = this.nativeElement;
-     * ```
      */
     public get nativeElement(): any {
         return this.element.nativeElement;
@@ -219,9 +198,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /**
      * Returns the style classes applied to the group rows.
-     * ```typescript
-     * const groupCssStyles = this.grid1.rowList.first.styleClasses;
-     * ```
      */
     @HostBinding('class')
     public get styleClasses(): string {
@@ -257,9 +233,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /**
      * Toggles the group row.
-     * ```typescript
-     * this.grid1.rowList.first.toggle()
-     * ```
      */
     public toggle() {
         this.grid.toggleGroup(this.groupRow);

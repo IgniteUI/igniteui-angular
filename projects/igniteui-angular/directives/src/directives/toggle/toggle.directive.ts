@@ -49,95 +49,30 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Emits an event after the toggle container is opened.
-     *
-     * ```typescript
-     * onToggleOpened(event) {
-     *    alert("Toggle opened!");
-     * }
-     * ```
-     *
-     * ```html
-     * <div
-     *   igxToggle
-     *   (opened)='onToggleOpened($event)'>
-     * </div>
-     * ```
      */
     @Output()
     public opened = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * Emits an event before the toggle container is opened.
-     *
-     * ```typescript
-     * onToggleOpening(event) {
-     *  alert("Toggle opening!");
-     * }
-     * ```
-     *
-     * ```html
-     * <div
-     *   igxToggle
-     *   (opening)='onToggleOpening($event)'>
-     * </div>
-     * ```
      */
     @Output()
     public opening = new EventEmitter<ToggleViewCancelableEventArgs>();
 
     /**
      * Emits an event after the toggle container is closed.
-     *
-     * ```typescript
-     * onToggleClosed(event) {
-     *  alert("Toggle closed!");
-     * }
-     * ```
-     *
-     * ```html
-     * <div
-     *   igxToggle
-     *   (closed)='onToggleClosed($event)'>
-     * </div>
-     * ```
      */
     @Output()
     public closed = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * Emits an event before the toggle container is closed.
-     *
-     * ```typescript
-     * onToggleClosing(event) {
-     *  alert("Toggle closing!");
-     * }
-     * ```
-     *
-     * ```html
-     * <div
-     *  igxToggle
-     *  (closing)='onToggleClosing($event)'>
-     * </div>
-     * ```
      */
     @Output()
     public closing = new EventEmitter<ToggleViewCancelableEventArgs>();
 
     /**
      * Emits an event after the toggle element is appended to the overlay container.
-     *
-     * ```typescript
-     * onAppended() {
-     *  alert("Content appended!");
-     * }
-     * ```
-     *
-     * ```html
-     * <div
-     *   igxToggle
-     *   (appended)='onToggleAppended()'>
-     * </div>
-     * ```
      */
     @Output()
     public appended = new EventEmitter<ToggleViewEventArgs>();
@@ -151,10 +86,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Identifier which is registered into `IgxNavigationService`
-     *
-     * ```typescript
-     * let myToggleId = this.toggle.id;
-     * ```
      */
     @Input()
     public id: string;
@@ -205,10 +136,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Opens the toggle.
-     *
-     * ```typescript
-     * this.myToggle.open();
-     * ```
      */
     public open(overlaySettings?: OverlaySettings) {
         //  if there is open animation do nothing
@@ -254,10 +181,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Closes the toggle.
-     *
-     * ```typescript
-     * this.myToggle.close();
-     * ```
      */
     public close(event?: Event) {
         //  if toggle is collapsed do nothing
@@ -273,10 +196,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Opens or closes the toggle, depending on its current state.
-     *
-     * ```typescript
-     * this.myToggle.toggle();
-     * ```
      */
     public toggle(overlaySettings?: OverlaySettings) {
         //  if toggle is collapsed call open
@@ -296,9 +215,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Returns the id of the overlay the content is rendered in.
-     * ```typescript
-     * this.myToggle.overlayId;
-     * ```
      */
     public get overlayId() {
         return this._overlayId;
@@ -306,9 +222,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Repositions the toggle.
-     * ```typescript
-     * this.myToggle.reposition();
-     * ```
      */
     public reposition() {
         this.overlayService.reposition(this._overlayId);
@@ -421,17 +334,7 @@ export class IgxToggleActionDirective implements OnInit {
 
     /**
      * Provide settings that control the toggle overlay positioning, interaction and scroll behavior.
-     * ```typescript
-     * const settings: OverlaySettings = {
-     *      closeOnOutsideClick: false,
-     *      modal: false
-     *  }
-     * ```
      * ---
-     * ```html
-     * <!--set-->
-     * <div igxToggleAction [overlaySettings]="settings"></div>
-     * ```
      */
     @Input()
     public overlaySettings: OverlaySettings;
@@ -439,10 +342,6 @@ export class IgxToggleActionDirective implements OnInit {
     /**
      * Determines where the toggle element overlay should be attached.
      *
-     * ```html
-     * <!--set-->
-     * <div igxToggleAction [igxToggleOutlet]="outlet"></div>
-     * ```
      * Where `outlet` in an instance of `IgxOverlayOutletDirective` or an `ElementRef`
      */
     @Input('igxToggleOutlet')

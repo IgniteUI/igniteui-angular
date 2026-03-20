@@ -130,11 +130,6 @@ export class IgxPivotRowComponent extends IgxRowDirective {
 
     /**
     *  The pivot record data passed to the row component.
-    *
-    * ```typescript
-    * // get the pivot row data for the first selected row
-    * let selectedRowData = this.grid.selectedRows[0].data;
-    * ```
     */
     @Input()
     public override get data(): IPivotGridRecord {

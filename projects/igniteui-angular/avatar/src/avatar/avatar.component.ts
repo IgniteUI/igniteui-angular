@@ -23,24 +23,10 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 /**
  * Avatar provides a way to display an image, icon or initials to the user.
  *
- * @igxModule IgxAvatarModule
- *
- * @igxTheme igx-avatar-theme, igx-icon-theme
- *
- * @igxKeywords avatar, profile, picture, initials
- *
- * @igxGroup Layouts
- *
  * @remarks
  *
  * The Ignite UI Avatar provides an easy way to add an avatar icon to your application.  This icon can be an
  * image, someone's initials or a material icon from the Google Material icon set.
- *
- * @example
- * ```html
- * <igx-avatar initials="MS" shape="rounded" size="large">
- * </igx-avatar>
- * ```
  */
 @Component({
     selector: 'igx-avatar',
@@ -52,23 +38,12 @@ export class IgxAvatarComponent implements OnInit {
 
     /**
      * Returns the `aria-label` attribute of the avatar.
-     *
-     * @example
-     * ```typescript
-     * let ariaLabel = this.avatar.ariaLabel;
-     * ```
-     *
      */
     @HostBinding('attr.aria-label')
     public ariaLabel = 'avatar';
 
     /**
      * Returns the `role` attribute of the avatar.
-     *
-     * @example
-     * ```typescript
-     * let avatarRole = this.avatar.role;
-     * ```
      */
     @HostBinding('attr.role')
     public role = 'img';
@@ -89,22 +64,12 @@ export class IgxAvatarComponent implements OnInit {
      * - `"icon type avatar"`
      * - `"image type avatar"`.
      * - `"custom type avatar"`.
-     *
-     * @example
-     * ```typescript
-     * let avatarDescription = this.avatar.roleDescription;
-     * ```
      */
     @HostBinding('attr.aria-roledescription')
     public roleDescription: string;
 
     /**
      * Sets the `id` of the avatar. If not set, the first avatar component will have `id` = `"igx-avatar-0"`.
-     *
-     * @example
-     * ```html
-     * <igx-avatar id="my-first-avatar"></igx-avatar>
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -113,11 +78,6 @@ export class IgxAvatarComponent implements OnInit {
     /**
      * Sets square, rounded or circular shape to the avatar.
      * By default the shape of the avatar is square.
-     *
-     * @example
-     * ```html
-     * <igx-avatar shape="rounded"></igx-avatar>
-     * ```
      */
     @Input()
     public shape: 'square' | 'rounded' | 'circle' = 'square';
@@ -137,10 +97,6 @@ export class IgxAvatarComponent implements OnInit {
     /**
      * Sets the color of the avatar's initials or icon.
      *
-     * @example
-     * ```html
-     * <igx-avatar color="blue"></igx-avatar>
-     * ```
      * @deprecated in version 17.2.0.
      */
 
@@ -151,11 +107,6 @@ export class IgxAvatarComponent implements OnInit {
     /**
      * Sets the background color of the avatar.
      *
-     * @example
-     * ```html
-     * <igx-avatar bgColor="yellow"></igx-avatar>
-     * ```
-     * @igxFriendlyName Background color
      * @deprecated in version 17.2.0.
      */
 
@@ -165,34 +116,18 @@ export class IgxAvatarComponent implements OnInit {
 
     /**
      * Sets initials to the avatar.
-     *
-     * @example
-     * ```html
-     * <igx-avatar initials="MN"></igx-avatar>
-     * ```
      */
     @Input()
     public initials: string;
 
     /**
      * Sets an icon to the avatar. All icons from the material icon set are supported.
-     *
-     * @example
-     * ```html
-     * <igx-avatar icon="phone"></igx-avatar>
-     * ```
      */
     @Input()
     public icon: string;
 
     /**
      * Sets the image source of the avatar.
-     *
-     * @example
-     * ```html
-     * <igx-avatar src="images/picture.jpg"></igx-avatar>
-     * ```
-     * @igxFriendlyName Image URL
      */
     @Input()
     public set src(value: string) {
@@ -228,11 +163,6 @@ export class IgxAvatarComponent implements OnInit {
 
     /**
      * Returns the size of the avatar.
-     *
-     * @example
-     * ```typescript
-     * let avatarSize = this.avatar.size;
-     * ```
      */
     @Input()
     public get size(): string | IgxAvatarSize {
@@ -242,11 +172,6 @@ export class IgxAvatarComponent implements OnInit {
     /**
      * Sets the size  of the avatar.
      * By default, the size is `"small"`. It can be set to `"medium"` or `"large"`.
-     *
-     * @example
-     * ```html
-     * <igx-avatar size="large"></igx-avatar>
-     * ```
      */
     public set size(value: string | IgxAvatarSize) {
         switch (value) {
@@ -262,11 +187,6 @@ export class IgxAvatarComponent implements OnInit {
 
     /**
      * Returns the type of the avatar.
-     *
-     * @example
-     * ```typescript
-     * let avatarType = this.avatar.type;
-     * ```
      */
     public get type(): IgxAvatarType {
         if (this.src) {

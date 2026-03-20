@@ -27,55 +27,24 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     
     /**
      * Emitted when item selection is changing, before the selection completes
-     *
-     * ```html
-     * <igx-drop-down (selectionChanging)='handleSelection()'></igx-drop-down>
-     * ```
      */
     @Output()
     public selectionChanging = new EventEmitter<ISelectionEventArgs>();
 
     /**
      *  Gets/Sets the width of the drop down
-     *
-     * ```typescript
-     * // get
-     * let myDropDownCurrentWidth = this.dropdown.width;
-     * ```
-     * ```html
-     * <!--set-->
-     * <igx-drop-down [width]='160px'></igx-drop-down>
-     * ```
      */
     @Input()
     public width: string;
 
     /**
      * Gets/Sets the height of the drop down
-     *
-     * ```typescript
-     * // get
-     * let myDropDownCurrentHeight = this.dropdown.height;
-     * ```
-     * ```html
-     * <!--set-->
-     * <igx-drop-down [height]='400px'></igx-drop-down>
-     * ```
      */
     @Input()
     public height: string;
 
     /**
      * Gets/Sets the drop down's id
-     *
-     * ```typescript
-     * // get
-     * let myDropDownCurrentId = this.dropdown.id;
-     * ```
-     * ```html
-     * <!--set-->
-     * <igx-drop-down [id]='newDropDownId'></igx-drop-down>
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -88,15 +57,6 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
 
     /**
      * Gets/Sets the drop down's container max height.
-     *
-     * ```typescript
-     * // get
-     * let maxHeight = this.dropdown.maxHeight;
-     * ```
-     * ```html
-     * <!--set-->
-     * <igx-drop-down [maxHeight]='200px'></igx-drop-down>
-     * ```
      */
     @Input()
     @HostBinding('style.maxHeight')
@@ -110,10 +70,6 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
 
     /**
      * Get all non-header items
-     *
-     * ```typescript
-     * let myDropDownItems = this.dropdown.items;
-     * ```
      */
     public get items(): IgxDropDownItemBaseDirective[] {
         const items: IgxDropDownItemBaseDirective[] = [];
@@ -130,10 +86,6 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
 
     /**
      * Get all header items
-     *
-     * ```typescript
-     * let myDropDownHeaderItems = this.dropdown.headers;
-     * ```
      */
     public get headers(): IgxDropDownItemBaseDirective[] {
         const headers: IgxDropDownItemBaseDirective[] = [];
@@ -150,10 +102,6 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
 
     /**
      * Get dropdown html element
-     *
-     * ```typescript
-     * let myDropDownElement = this.dropdown.element;
-     * ```
      */
     public get element() {
         return this.elementRef.nativeElement;

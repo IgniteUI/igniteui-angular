@@ -3,14 +3,6 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, boolea
 /**
  * Represents individual resizable/collapsible panes.
  *
- * @igxModule IgxSplitterModule
- *
- * @igxParent IgxSplitterComponent
- *
- * @igxKeywords pane
- *
- * @igxGroup presentation
- *
  * @remarks
  *  Users can control the resize behavior via the min and max size properties.
  */
@@ -35,13 +27,6 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Sets the minimum allowed size of the current pane.
-     *
-     * @example
-     * ```html
-     * <igx-splitter>
-     *  <igx-splitter-pane [minSize]='minSize'>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
      */
     @Input()
     public get minSize(): string {
@@ -56,13 +41,6 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Set the maximum allowed size of the current pane.
-     *
-     * @example
-     * ```html
-     * <igx-splitter>
-     *  <igx-splitter-pane [maxSize]='maxSize'>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
      */
     @Input()
     public get maxSize(): string {
@@ -78,12 +56,6 @@ export class IgxSplitterPaneComponent {
     /**
      * Gets/Sets whether pane is resizable.
      *
-     * @example
-     * ```html
-     * <igx-splitter>
-     *  <igx-splitter-pane [resizable]='false'>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
      * @remarks
      * If pane is not resizable its related splitter bar cannot be dragged.
      */
@@ -92,13 +64,6 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Event fired when collapsed state of pane is changed.
-     *
-     * @example
-     * ```html
-     * <igx-splitter>
-     *  <igx-splitter-pane (collapsedChange)='paneCollapsedChange($event)'>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
      */
     @Output()
     public collapsedChange = new EventEmitter<boolean>();
@@ -152,12 +117,6 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Sets the size of the current pane.
-     *  * @example
-     * ```html
-     * <igx-splitter>
-     *  <igx-splitter-pane [size]='size'>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
      */
     @Input()
     public get size() {
@@ -205,11 +164,6 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Sets whether current pane is collapsed.
-     *
-     * @example
-     * ```typescript
-     * const isCollapsed = pane.collapsed;
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public set collapsed(value) {
@@ -235,11 +189,6 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Toggles the collapsed state of the pane.
-     *
-     * @example
-     * ```typescript
-     * pane.toggle();
-     * ```
      */
     public toggle() {
         this.collapsed = !this.collapsed;

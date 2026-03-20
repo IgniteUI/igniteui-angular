@@ -23,11 +23,6 @@ import {
  * It is used internally in the Grid, but could also be hosted in a container outside of it.
  *
  * Example:
- * ```html
- * <igx-advanced-filtering-dialog
- *     [grid]="grid1">
- * </igx-advanced-filtering-dialog>
- * ```
  */
 @Component({
     selector: 'igx-advanced-filtering-dialog',

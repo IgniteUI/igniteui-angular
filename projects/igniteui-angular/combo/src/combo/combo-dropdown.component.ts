@@ -56,10 +56,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
 
     /**
      * Get all non-header items
-     *
-     * ```typescript
-     * let myDropDownItems = this.dropdown.items;
-     * ```
      */
     public override get items(): IgxComboItemComponent[] {
         const items: IgxComboItemComponent[] = [];

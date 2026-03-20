@@ -36,10 +36,6 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
  * target's selector property.
  *
  * Example:
- * ```html
- * <button type="button" igxButton [igxTooltipTarget]="tooltipRef">Hover me</button>
- * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
- * ```
  */
 @Directive({
     exportAs: 'tooltipTarget',
@@ -49,34 +45,12 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
-     *
-     * ```typescript
-     * // get
-     * let tooltipShowDelay = this.tooltipTarget.showDelay;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" [showDelay]="1500">Hover me</button>
-     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-     * ```
      */
     @Input()
     public showDelay = 200;
 
     /**
      * Gets/sets the amount of milliseconds that should pass before hiding the tooltip.
-     *
-     * ```typescript
-     * // get
-     * let tooltipHideDelay = this.tooltipTarget.hideDelay;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" [hideDelay]="1500">Hover me</button>
-     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-     * ```
      */
     @Input()
     public hideDelay = 300;
@@ -84,21 +58,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * Controls whether to display an arrow indicator for the tooltip.
      * Set to true to show the arrow. Default value is `false`.
-     *
-     * ```typescript
-     * // get
-     * let isArrowDisabled = this.tooltip.hasArrow;
-     * ```
-     *
-     * ```typescript
-     * // set
-     * this.tooltip.hasArrow = true;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-icon igxTooltipTarget [hasArrow]="true" [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
-     * ```
      */
     @Input()
     public set hasArrow(value: boolean) {
@@ -114,21 +73,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Specifies if the tooltip remains visible until the user closes it via the close button or Esc key.
-     *
-     * ```typescript
-     * // get
-     * let isSticky = this.tooltip.sticky;
-     * ```
-     *
-     * ```typescript
-     * // set
-     * this.tooltip.sticky = true;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-icon igxTooltipTarget [sticky]="true" [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
-     * ```
      */
     @Input()
     public set sticky (value: boolean) {
@@ -148,24 +92,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      *  Allows full control over the appearance of the close button inside the tooltip.
-     *
-     * ```typescript
-     * // get
-     * let customCloseTemplate = this.tooltip.customCloseTemplate;
-     * ```
-     *
-     * ```typescript
-     * // set
-     * this.tooltip.customCloseTemplate = TemplateRef<any>;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-icon igxTooltipTarget [closeButtonTemplate]="customClose" [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
-     * <ng-template #customClose>
-     *      <button class="my-close-btn">Close Me</button>
-     * </ng-template>
-     * ```
      */
     @Input('closeButtonTemplate')
     public set closeTemplate(value: TemplateRef<any>) {
@@ -179,9 +105,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Get the position and animation settings used by the tooltip.
-     * ```typescript
-     * let positionSettings = this.tooltipTarget.positionSettings;
-     * ```
      */
     @Input()
     public get positionSettings(): PositionSettings {
@@ -190,21 +113,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Set the position and animation settings used by the tooltip.
-     * ```html
-     * <igx-icon [igxTooltipTarget]="tooltipRef" [positionSettings]="newPositionSettings">info</igx-icon>
-     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-     * ```
-     * ```typescript
-     *
-     * import { PositionSettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular';
-     * ...
-     * public newPositionSettings: PositionSettings = {
-     *     horizontalDirection: HorizontalAlignment.Right,
-     *     horizontalStartPoint: HorizontalAlignment.Left,
-     *     verticalDirection: VerticalAlignment.Top,
-     *     verticalStartPoint: VerticalAlignment.Top,
-     * };
-     * ```
      */
     public set positionSettings(settings: PositionSettings) {
         this._positionSettings = settings;
@@ -217,17 +125,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * Specifies if the tooltip should not show when hovering its target with the mouse. (defaults to false)
      * While setting this property to 'true' will disable the user interactions that shows/hides the tooltip,
      * the developer will still be able to show/hide the tooltip through the API.
-     *
-     * ```typescript
-     * // get
-     * let tooltipDisabledValue = this.tooltipTarget.tooltipDisabled;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" [tooltipDisabled]="true">Hover me</button>
-     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public tooltipDisabled = false;
@@ -236,10 +133,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * Which event triggers will show the tooltip.
      * Expects a comma-separated string of different event triggers.
      * Defaults to `pointerenter`.
-     * ```html
-     * <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'">info</igx-icon>
-     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-     * ```
      */
     @Input()
     public get showTriggers(): string {
@@ -256,10 +149,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * Which event triggers will hide the tooltip.
      * Expects a comma-separated string of different event triggers.
      * Defaults to `pointerleave` and `click`.
-     * ```html
-     * <igx-icon [igxTooltipTarget]="tooltipRef" [hideTriggers]="'keypress,blur'">info</igx-icon>
-     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-     * ```
      */
     @Input()
     public get hideTriggers(): string {
@@ -294,9 +183,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Specifies a plain text as tooltip content.
-     * ```html
-     * <igx-icon igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
-     * ```
      */
     @Input()
     public set tooltip(content: any) {
@@ -310,10 +196,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Gets the respective native element of the directive.
-     *
-     * ```typescript
-     * let tooltipTargetElement = this.tooltipTarget.nativeElement;
-     * ```
      */
     public get nativeElement() {
         return this.element.nativeElement;
@@ -321,10 +203,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Indicates if the tooltip that is is associated with this target is currently hidden.
-     *
-     * ```typescript
-     * let tooltipHiddenValue = this.tooltipTarget.tooltipHidden;
-     * ```
      */
     public get tooltipHidden(): boolean {
         return !this.target || this.target.collapsed;
@@ -333,17 +211,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * Emits an event when the tooltip that is associated with this target starts showing.
      * This event is fired before the start of the countdown to showing the tooltip.
-     *
-     * ```typescript
-     * tooltipShowing(args: ITooltipShowEventArgs) {
-     *    alert("Tooltip started showing!");
-     * }
-     * ```
-     *
-     * ```html
-     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" (tooltipShow)='tooltipShowing($event)'>Hover me</button>
-     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-     * ```
      */
     @Output()
     public tooltipShow = new EventEmitter<ITooltipShowEventArgs>();
@@ -351,17 +218,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * Emits an event when the tooltip that is associated with this target starts hiding.
      * This event is fired before the start of the countdown to hiding the tooltip.
-     *
-     * ```typescript
-     * tooltipHiding(args: ITooltipHideEventArgs) {
-     *    alert("Tooltip started hiding!");
-     * }
-     * ```
-     *
-     * ```html
-     * <button type="button" igxButton [igxTooltipTarget]="tooltipRef" (tooltipHide)='tooltipHiding($event)'>Hover me</button>
-     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
-     * ```
      */
     @Output()
     public tooltipHide = new EventEmitter<ITooltipHideEventArgs>();
@@ -465,10 +321,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Shows the tooltip if not already shown.
-     *
-     * ```typescript
-     * this.tooltipTarget.showTooltip();
-     * ```
      */
     public showTooltip() {
         this._checksBeforeShowing(() => this._showTooltip(false, true));
@@ -476,10 +328,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Hides the tooltip if not already hidden.
-     *
-     * ```typescript
-     * this.tooltipTarget.hideTooltip();
-     * ```
      */
     public hideTooltip() {
         this._hideTooltip(false);

@@ -8,9 +8,6 @@ import { DateTimeUtil } from '../date-common/public_api';
 export class ExpressionsTreeUtil {
     /**
      * Returns the filtering expression for a column with the provided tree and fieldName.
-     * ```typescript
-     * let filteringExpression = ExpressionsTreeUtil.find(gridExpressionTree, 'Column Field');
-     * ```
      */
     public static find(tree: IFilteringExpressionsTree, fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
         const index = this.findIndex(tree, fieldName);
@@ -24,9 +21,6 @@ export class ExpressionsTreeUtil {
 
     /**
      * Returns the index of the filtering expression for a column with the provided tree and fieldName.
-     * ```typescript
-     * let filteringExpressionIndex = ExpressionsTreeUtil.findIndex(gridExpressionTree, 'Column Field');
-     * ```
      */
     public static findIndex(tree: IFilteringExpressionsTree, fieldName: string): number {
         for (let i = 0; i < tree.filteringOperands.length; i++) {

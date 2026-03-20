@@ -19,17 +19,6 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
 
     /**
      * Gets the target of the navigation directive;
-     *
-     * ```typescript
-     * // Get
-     * export class MyComponent {
-     *  ...
-     *  @ContentChild(IgxDropDownNavigationDirective)
-     *  navDirective: IgxDropDownNavigationDirective = null
-     *  ...
-     *  const navTarget: IgxDropDownBaseDirective = navDirective.navTarget
-     * }
-     * ```
      */
      public get target(): IgxDropDownBaseDirective {
         return this._target;
@@ -38,15 +27,6 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
     /**
      * Sets the target of the navigation directive;
      * If no valid target is passed, it falls back to the drop down context
-     *
-     * ```html
-     * <!-- Set -->
-     * <input [igxDropDownItemNavigation]="dropdown" />
-     * ...
-     * <igx-drop-down #dropdown>
-     * ...
-     * </igx-drop-down>
-     * ```
      */
     @Input('igxDropDownItemNavigation')
     public set target(target: IgxDropDownBaseDirective) {

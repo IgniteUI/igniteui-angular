@@ -17,19 +17,6 @@ export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
  * both raw data (array) or from an `IgxGrid`.
  *
  * Example:
- * ```typescript
- * public localData = [
- *   { Name: "Eric Ridley", Age: "26" },
- *   { Name: "Alanis Brook", Age: "22" },
- *   { Name: "Jonathan Morris", Age: "23" }
- * ];
- *
- * constructor(private csvExportService: IgxCsvExporterService) {
- * }
- *
- * const opt: IgxCsvExporterOptions = new IgxCsvExporterOptions("FileName", CsvFileTypes.CSV);
- * this.csvExportService.exportData(this.localData, opt);
- * ```
  */
 @Injectable({
     providedIn: 'root',
@@ -37,11 +24,6 @@ export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
 export class IgxCsvExporterService extends IgxBaseExporter {
     /**
      * This event is emitted when the export process finishes.
-     * ```typescript
-     * this.exporterService.exportEnded.subscribe((args: ICsvExportEndedEventArgs) => {
-     * // put event handler code here
-     * });
-     * ```
      *
      * @memberof IgxCsvExporterService
      */

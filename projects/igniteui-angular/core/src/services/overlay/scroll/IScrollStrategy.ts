@@ -11,25 +11,16 @@ export interface IScrollStrategy {
      * @param document reference to Document object.
      * @param overlayService IgxOverlay service to use in this strategy.
      * @param id Unique id for this strategy.
-     * ```typescript
-     * settings.scrollStrategy.initialize(document, overlay, id);
-     * ```
      */
      initialize(document: Document, overlayService: IgxOverlayService, id: string);
 
     /**
      * Attaches the strategy
-     * ```typescript
-     * settings.scrollStrategy.attach();
-     * ```
      */
     attach(): void;
 
     /**
      * Detaches the strategy
-     * ```typescript
-     * settings.scrollStrategy.detach();
-     * ```
      */
     detach(): void;
 }

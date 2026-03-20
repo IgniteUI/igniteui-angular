@@ -26,24 +26,6 @@ export enum IgxInputState {
 
 /**
  * The `igxInput` directive creates single- or multiline text elements, covering common scenarios when dealing with form inputs.
- *
- * @igxModule IgxInputGroupModule
- *
- * @igxParent Data Entry & Display
- *
- * @igxTheme igx-input-group-theme
- *
- * @igxKeywords input, input group, form, field, validation
- *
- * @igxGroup presentation
- *
- * @example
- * ```html
- * <input-group>
- *  <label for="address">Address</label>
- *  <input igxInput name="address" type="text" [(ngModel)]="customer.address">
- * </input-group>
- * ```
  */
 @Directive({
     selector: '[igxInput]',
@@ -61,32 +43,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
-     *
-     * @example
-     * ```typescript
-     * this.igxInput.isInput = true;
-     * ```
-     *
-     * @example
-     * ```typescript
-     * let isCLassAdded = this.igxInput.isInput;
-     * ```
      */
     @HostBinding('class.igx-input-group__input')
     public isInput = false;
     /**
      * Sets/gets whether the `"class.igx-input-group__textarea"` class is added to the host element.
      * Default value is `false`.
-     *
-     * @example
-     * ```typescript
-     * this.igxInput.isTextArea = true;
-     * ```
-     *
-     * @example
-     * ```typescript
-     * let isCLassAdded = this.igxInput.isTextArea;
-     * ```
      */
     @HostBinding('class.igx-input-group__textarea')
     public isTextArea = false;
@@ -104,13 +66,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Sets the `value` property.
-     *
-     * @example
-     * ```html
-     * <input-group>
-     *  <input igxInput #igxInput [value]="'IgxInput Value'">
-     * </input-group>
-     * ```
      */
     @Input()
     public set value(value: any) {
@@ -120,25 +75,15 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     /**
      * Gets the `value` property.
      *
-     * @example
-     * ```typescript
      * @ViewChild('igxInput', {read: IgxInputDirective})
      *  public igxInput: IgxInputDirective;
      * let inputValue = this.igxInput.value;
-     * ```
      */
     public get value() {
         return this.nativeElement.value;
     }
     /**
      * Sets the `disabled` property.
-     *
-     * @example
-     * ```html
-     * <input-group>
-     *  <input igxInput #igxInput [disabled]="true">
-     * </input-group>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     @HostBinding('disabled')
@@ -152,12 +97,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     /**
      * Gets the `disabled` property
      *
-     * @example
-     * ```typescript
      * @ViewChild('igxInput', {read: IgxInputDirective})
      *  public igxInput: IgxInputDirective;
      * let isDisabled = this.igxInput.disabled;
-     * ```
      */
     public get disabled() {
         return this._disabled;
@@ -165,13 +107,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Sets the `required` property.
-     *
-     * @example
-     * ```html
-     * <input-group>
-     *  <input igxInput #igxInput required>
-     * </input-group>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public set required(value: boolean) {
@@ -180,11 +115,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the igxInput is required.
-     *
-     * @example
-     * ```typescript
-     * let isRequired = this.igxInput.required;
-     * ```
      */
     public get required() {
         let validation;
@@ -328,22 +258,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Sets a focus on the igxInput.
-     *
-     * @example
-     * ```typescript
-     * this.igxInput.focus();
-     * ```
      */
     public focus() {
         this.nativeElement.focus();
     }
     /**
      * Gets the `nativeElement` of the igxInput.
-     *
-     * @example
-     * ```typescript
-     * let igxInputNativeElement = this.igxInput.nativeElement;
-     * ```
      */
     public get nativeElement() {
         return this.element.nativeElement;
@@ -406,22 +326,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the igxInput has a placeholder.
-     *
-     * @example
-     * ```typescript
-     * let hasPlaceholder = this.igxInput.hasPlaceholder;
-     * ```
      */
     public get hasPlaceholder() {
         return this.nativeElement.hasAttribute('placeholder');
     }
     /**
      * Gets the placeholder element of the igxInput.
-     *
-     * @example
-     * ```typescript
-     * let igxInputPlaceholder = this.igxInput.placeholder;
-     * ```
      */
     public get placeholder() {
         return this.nativeElement.placeholder;
@@ -444,22 +354,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the igxInput is focused.
-     *
-     * @example
-     * ```typescript
-     * let isFocused = this.igxInput.focused;
-     * ```
      */
     public get focused() {
         return this.inputGroup.isFocused;
     }
     /**
      * Gets the state of the igxInput.
-     *
-     * @example
-     * ```typescript
-     * let igxInputState = this.igxInput.valid;
-     * ```
      */
     public get valid(): IgxInputState {
         return this._valid;
@@ -467,11 +367,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Sets the state of the igxInput.
-     *
-     * @example
-     * ```typescript
-     * this.igxInput.valid = IgxInputState.INVALID;
-     * ```
      */
     public set valid(value: IgxInputState) {
         this._valid = value;
@@ -479,11 +374,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the igxInput is valid.
-     *
-     * @example
-     * ```typescript
-     * let valid = this.igxInput.isValid;
-     * ```
      */
     public get isValid(): boolean {
         return this.valid !== IgxInputState.INVALID;

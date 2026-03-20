@@ -55,7 +55,6 @@ export class IgxQueryBuilderDragService {
      * @param sourceDragElement The HTML element of the chip that's been dragged
      * @param sourceExpressionItem The expressionItem of the chip that's been dragged
      * @param isKeyboardDrag If it's a mouse drag or keyboard reorder
-     *
     */
     public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean): void {
         this.resetDragAndDrop(true);
@@ -236,7 +235,6 @@ export class IgxQueryBuilderDragService {
      *
      * @param sourceDragElement The HTML element of the chip that's been dragged
      * @param sourceExpressionItem The expressionItem of the chip that's been dragged
-     *
     */
     public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
         //if drag is not underway, already

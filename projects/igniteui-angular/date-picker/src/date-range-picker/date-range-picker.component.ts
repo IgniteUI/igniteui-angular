@@ -68,24 +68,11 @@ const SingleInputDatesConcatenationString = ' - ';
 /**
  * Provides the ability to select a range of dates from a calendar UI or editable inputs.
  *
- * @igxModule IgxDateRangeModule
- *
- * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-picker-theme
- *
- * @igxKeywords date, range, date range, date picker
- *
- * @igxGroup scheduling
- *
  * @remarks
  * It displays the range selection in a single or two input fields.
  * The default template displays a single *readonly* input field
  * while projecting `igx-date-range-start` and `igx-date-range-end`
  * displays two *editable* input fields.
- *
- * @example
- * ```html
- * <igx-date-range-picker mode="dropdown"></igx-date-range-picker>
- * ```
  */
 @Component({
     selector: 'igx-date-range-picker',
@@ -118,11 +105,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * Default is `2`.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker [displayMonthsCount]="3"></igx-date-range-picker>
-     * ```
      */
     @Input()
     public get displayMonthsCount(): number {
@@ -135,9 +117,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Gets/Sets the orientation of the multiple months displayed in the picker's calendar's days view.
-     *
-     * @example
-     * <igx-date-range-picker orientation="vertical"></igx-date-range-picker>
      */
     @Input()
     public orientation: PickerCalendarOrientation = PickerCalendarOrientation.Horizontal;
@@ -147,30 +126,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * Default value is `false`.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker [hideOutsideDays]="true"></igx-date-range-picker>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public hideOutsideDays: boolean;
 
     /**
      * A custom formatter function, applied on the selected or passed in date.
-     *
-     * @example
-     * ```typescript
-     * private dayFormatter = new Intl.DateTimeFormat("en", { weekday: "long" });
-     * private monthFormatter = new Intl.DateTimeFormat("en", { month: "long" });
-     *
-     * public formatter(date: Date): string {
-     *  return `${this.dayFormatter.format(date)} - ${this.monthFormatter.format(date)} - ${date.getFullYear()}`;
-     * }
-     * ```
-     * ```html
-     * <igx-date-range-picker [formatter]="formatter"></igx-date-range-picker>
-     * ```
      */
     @Input()
     public formatter: (val: DateRange) => string;
@@ -181,11 +142,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * @remarks
      * Defaults to the value from resource strings, `"Done"` for the built-in EN.
      * The button will only show up in `dialog` mode.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker doneButtonText="完了"></igx-date-range-picker>
-     * ```
      */
     @Input()
     public set doneButtonText(value: string) {
@@ -204,11 +160,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * @remarks
      * Defaults to the value from resource strings, `"Cancel"` for the built-in EN.
      * The button will only show up in `dialog` mode.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker cancelButtonText="取消"></igx-date-range-picker>
-     * ```
      */
     @Input()
     public set cancelButtonText(value: string) {
@@ -223,11 +174,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
     /**
      * Custom overlay settings that should be used to display the calendar.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker [overlaySettings]="customOverlaySettings"></igx-date-range-picker>
-     * ```
      */
     @Input()
     public override overlaySettings: OverlaySettings;
@@ -237,12 +183,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * Uses Angular's DatePipe.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker displayFormat="EE/M/yy"></igx-date-range-picker>
-     * ```
-     *
      */
     @Input()
     public override set displayFormat(value: string) {
@@ -255,11 +195,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * The expected user input format and placeholder.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker inputFormat="dd/MM/yy"></igx-date-range-picker>
-     * ```
      */
     @Input()
     public override set inputFormat(value: string) {
@@ -273,9 +208,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * The minimum value in a valid range.
-     *
-     * @example
-     * <igx-date-range-picker [minValue]="minDate"></igx-date-range-picker>
      */
     @Input()
     public set minValue(value: Date | string) {
@@ -289,9 +221,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * The maximum value in a valid range.
-     *
-     * @example
-     * <igx-date-range-picker [maxValue]="maxDate"></igx-date-range-picker>
      */
     @Input()
     public set maxValue(value: Date | string) {
@@ -305,12 +234,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Gets/Sets the disabled dates descriptors.
-     *
-     * @example
-     * ```typescript
-     * let disabledDates = this.dateRangePicker.disabledDates;
-     * this.dateRangePicker.disabledDates = [ {type: DateRangeType.Weekends}, ...];
-     * ```
      */
     @Input()
     public get disabledDates(): DateRangeDescriptor[] {
@@ -323,12 +246,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Gets/Sets the special dates descriptors.
-     *
-     * @example
-     * ```typescript
-     * let specialDates = this.dateRangePicker.specialDates;
-     * this.dateRangePicker.specialDates = [ {type: DateRangeType.Weekends}, ... ];
-     * ```
      */
     @Input()
     public get specialDates(): DateRangeDescriptor[] {
@@ -356,11 +273,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
-     *
-     *   @example
-     * ```html
-     * <igx-date-range-picker [placeholder]="'Choose your dates'"></igx-date-range-picker>
-     * ```
      */
     @Input()
     public override placeholder = '';
@@ -370,13 +282,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      * @remarks
      *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-date-range-picker [outlet]="outlet"></igx-date-range-picker>
-     * //..
-     * ```
      */
     @Input()
     public override outlet: IgxOverlayOutletDirective | ElementRef<any>;
@@ -386,11 +291,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * Default is `false`.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker [showWeekNumbers]="true"></igx-date-range-picker>
-     * ``
      */
     @Input({ transform: booleanAttribute })
     public showWeekNumbers = false;
@@ -401,30 +301,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Emitted when the picker's value changes. Used for two-way binding.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker [(value)]="date"></igx-date-range-picker>
-     * ```
      */
 
      /**
       * Whether to render built-in predefined ranges.
-      *
-      * @example
-      * ```html
-      * <igx-date-range-picker [(usePredefinedRanges)]="true"></igx-date-range-picker>
-      * ``
       *  */
     @Input() public usePredefinedRanges = false;
 
     /**
      *  Custom ranges rendered as chips.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker [(usePredefinedRanges)]="true"></igx-date-range-picker>
-     * ``
     */
     @Input() public customRanges: CustomDateRange[] = [];
 
@@ -502,10 +387,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * @example
-     * ```html
-     * <igx-date-range-picker locale="jp"></igx-date-range-picker>
-     * ```
      */
     /**
      * Gets the `locale` of the date-range-picker.
@@ -541,10 +422,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Gets calendar state.
-     *
-     * ```typescript
-     * let state = this.dateRange.collapsed;
-     * ```
      */
     public override get collapsed(): boolean {
         return this._collapsed;
@@ -555,12 +432,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * The current value is of type `DateRange`
-     *
-     * @example
-     * ```typescript
-     * const newValue: DateRange = { start: new Date("2/2/2012"), end: new Date("3/3/2013")};
-     * this.dateRangePicker.value = newValue;
-     * ```
      */
     public get value(): DateRange | null {
         return this._value;
@@ -680,13 +551,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Opens the date range picker's dropdown or dialog.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker #dateRange></igx-date-range-picker>
-     *
-     * <button type="button" igxButton (click)="dateRange.open()">Open Dialog</button
-     * ```
      */
     public open(overlaySettings?: OverlaySettings): void {
         if (!this.collapsed || this.disabled || this.readOnly) {
@@ -710,13 +574,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Closes the date range picker's dropdown or dialog.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker #dateRange></igx-date-range-picker>
-     *
-     * <button type="button" igxButton (click)="dateRange.close()">Close Dialog</button>
-     * ```
      */
     public close(): void {
         if (!this.collapsed) {
@@ -726,13 +583,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Toggles the date range picker's dropdown or dialog
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker #dateRange></igx-date-range-picker>
-     *
-     * <button type="button" igxButton (click)="dateRange.toggle()">Toggle Dialog</button>
-     * ```
      */
     public toggle(overlaySettings?: OverlaySettings): void {
         if (!this.collapsed) {
@@ -744,15 +594,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Selects a range of dates. If no `endDate` is passed, range is 1 day (only `startDate`)
-     *
-     * @example
-     * ```typescript
-     * public selectFiveDayRange() {
-     *  const today = new Date();
-     *  const inFiveDays = new Date(new Date().setDate(today.getDate() + 5));
-     *  this.dateRange.select(today, inFiveDays);
-     * }
-     * ```
      */
     public select(startDate: Date, endDate?: Date): void {
         endDate = endDate ?? startDate;
@@ -762,11 +603,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /**
      * Clears the input field(s) and the picker's value.
-     *
-     * @example
-     * ```typescript
-     * this.dateRangePicker.clear();
-     * ```
      */
     public clear(): void {
         if (this.disabled) {

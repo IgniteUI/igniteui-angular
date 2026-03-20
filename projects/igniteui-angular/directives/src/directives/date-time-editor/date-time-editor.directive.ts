@@ -11,16 +11,6 @@ import { noop } from 'rxjs';
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.
  *
- * @igxModule IgxDateTimeEditorModule
- *
- * @igxParent IgxInputGroup
- *
- * @igxTheme igx-input-theme
- *
- * @igxKeywords date, time, editor
- *
- * @igxGroup Scheduling
- *
  * @remarks
  *
  * The Ignite UI Date Time Editor Directive makes it easy for developers to manipulate date/time user input.
@@ -32,13 +22,6 @@ import { noop } from 'rxjs';
  * **Note:** This directive uses the Mask Directive internally and requires `type="text"` on the input element.
  * Input elements with `type="date"` or other date/time types are not supported, as they do not allow
  * programmatic cursor positioning and text selection required for mask functionality.
- *
- * @example
- * ```html
- * <igx-input-group>
- *   <input type="text" igxInput [igxDateTimeEditor]="'dd/MM/yyyy'" [displayFormat]="'shortDate'" [(ngModel)]="date"/>
- * </igx-input-group>
- * ```
  */
 @Directive({
     selector: '[igxDateTimeEditor]',
@@ -62,11 +45,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      * If a `locale` is set, it must be registered via `registerLocaleData`.
      * Please refer to https://angular.io/guide/i18n#i18n-pipes.
      * If it is not registered, `Intl` will be used for formatting.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor [locale]="'en'">
-     * ```
      */
     @Input()
     public locale: string;
@@ -76,11 +54,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      *
      * @remarks
      * If a `string` value is passed, it must be in the defined input format.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor [minValue]="minDate">
-     * ```
      */
     public get minValue(): string | Date {
         return this._minValue;
@@ -97,11 +70,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      *
      * @remarks
      * If a `string` value is passed in, it must be in the defined input format.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor [maxValue]="maxDate">
-     * ```
      */
     public get maxValue(): string | Date {
         return this._maxValue;
@@ -115,11 +83,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /**
      * Specify if the currently spun date segment should loop over.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor [spinLoop]="false">
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public spinLoop = true;
@@ -127,11 +90,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     /**
      * Set both pre-defined format options such as `shortDate` and `longDate`,
      * as well as constructed format string using characters supported by `DatePipe`, e.g. `EE/MM/yyyy`.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor [displayFormat]="'shortDate'">
-     * ```
      */
     @Input()
     public set displayFormat(value: string) {
@@ -145,11 +103,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /**
      * Expected user input format (and placeholder).
-     *
-     * @example
-     * ```html
-     * <input [igxDateTimeEditor]="'dd/MM/yyyy'">
-     * ```
      */
     @Input(`igxDateTimeEditor`)
     public set inputFormat(value: string) {
@@ -165,11 +118,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /**
      * Editor value.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor [value]="date">
-     * ```
      */
     @Input()
     public set value(value: Date | string | undefined | null) {
@@ -186,11 +134,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     /**
      * Specify the default input format type. Defaults to `date`, which includes
      * only date parts for editing. Other valid options are `time` and `dateTime`.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor [defaultFormatType]="'dateTime'">
-     * ```
      */
     @Input()
     public defaultFormatType: 'date' | 'time' | 'dateTime' = 'date';
@@ -198,33 +141,18 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     /**
      * Delta values used to increment or decrement each editor date part on spin actions.
      * All values default to `1`.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor [spinDelta]="{date: 5, minute: 30}">
-     * ```
      */
     @Input()
     public spinDelta: DatePartDeltas;
 
     /**
      * Emitted when the editor's value has changed.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor (valueChange)="valueChange($event)"/>
-     * ```
      */
     @Output()
     public valueChange = new EventEmitter<Date | string>();
 
     /**
      * Emitted when the editor is not within a specified range or when the editor's value is in an invalid state.
-     *
-     * @example
-     * ```html
-     * <input igxDateTimeEditor [minValue]="minDate" [maxValue]="maxDate" (validationFailed)="onValidationFailed($event)"/>
-     * ```
      */
     @Output()
     public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();

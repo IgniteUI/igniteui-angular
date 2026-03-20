@@ -14,17 +14,11 @@ export class NoOpScrollStrategy extends ScrollStrategy {
 
     /**
      * Detaches the strategy
-     * ```typescript
-     * settings.scrollStrategy.detach();
-     * ```
      */
     public attach(): void { }
 
     /**
      * Detaches the strategy
-     * ```typescript
-     * settings.scrollStrategy.detach();
-     * ```
      */
     public detach(): void { }
 }

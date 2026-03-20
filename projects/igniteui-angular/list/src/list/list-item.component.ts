@@ -14,15 +14,6 @@ import { NgTemplateOutlet } from '@angular/common';
  * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
  *
  * Example:
- * ```html
- * <igx-list>
- *   <igx-list-item isHeader="true">Contacts</igx-list-item>
- *   <igx-list-item *ngFor="let contact of contacts">
- *     <span class="name">{{ contact.name }}</span>
- *     <span class="phone">{{ contact.phone }}</span>
- *   </igx-list-item>
- * </igx-list>
- * ```
  */
 @Component({
     providers: [HammerGesturesManager],
@@ -38,30 +29,18 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
-     * ```typescript
-     * const leftPanTmpl = this.listItem.leftPanningTemplateElement;
-     * ```
      */
     @ViewChild('leftPanningTmpl')
     public leftPanningTemplateElement;
 
     /**
      * Provides a reference to the template's base element shown when right panning a list item.
-     * ```typescript
-     * const rightPanTmpl = this.listItem.rightPanningTemplateElement;
-     * ```
      */
     @ViewChild('rightPanningTmpl')
     public rightPanningTemplateElement;
 
     /**
      * Sets/gets whether the `list item` is a header.
-     * ```html
-     * <igx-list-item [isHeader] = "true">Header</igx-list-item>
-     * ```
-     * ```typescript
-     * let isHeader =  this.listItem.isHeader;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -71,12 +50,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * Sets/gets whether the `list item` is hidden.
      * By default the `hidden` value is `false`.
-     * ```html
-     * <igx-list-item [hidden] = "true">Hidden Item</igx-list-item>
-     * ```
-     * ```typescript
-     * let isHidden =  this.listItem.hidden;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -85,12 +58,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Sets/gets the `aria-label` attribute of the `list item`.
-     * ```typescript
-     * this.listItem.ariaLabel = "Item1";
-     * ```
-     * ```typescript
-     * let itemAriaLabel = this.listItem.ariaLabel;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -99,9 +66,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Gets the `touch-action` style of the `list item`.
-     * ```typescript
-     * let touchAction = this.listItem.touchAction;
-     * ```
      */
     @HostBinding('style.touch-action')
     public touchAction = 'pan-y';
@@ -131,9 +95,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Gets the `panState` of a `list item`.
-     * ```typescript
-     * let itemPanState =  this.listItem.panState;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -143,9 +104,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Gets the `index` of a `list item`.
-     * ```typescript
-     * let itemIndex =  this.listItem.index;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -156,9 +114,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Sets the `index` of the `list item`.
-     * ```typescript
-     * this.listItem.index = index;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -168,9 +123,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Returns an element reference to the list item.
-     * ```typescript
-     * let listItemElement =  this.listItem.element.
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -180,9 +132,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Returns a reference container which contains the list item's content.
-     * ```typescript
-     * let listItemContainer =  this.listItem.contentElement.
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -194,9 +143,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * Returns the `context` object which represents the `template context` binding into the `list item container`
      * by providing the `$implicit` declaration which is the `IgxListItemComponent` itself.
-     * ```typescript
-     * let listItemComponent = this.listItem.context;
-     * ```
      */
     public get context(): any {
         return {
@@ -206,9 +152,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Gets the width of a `list item`.
-     * ```typescript
-     * let itemWidth = this.listItem.width;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -220,9 +163,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Gets the maximum left position of the `list item`.
-     * ```typescript
-     * let maxLeft = this.listItem.maxLeft;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -232,9 +172,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Gets the maximum right position of the `list item`.
-     * ```typescript
-     * let maxRight = this.listItem.maxRight;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -254,9 +191,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Gets/Sets the `role` attribute of the `list item`.
-     * ```typescript
-     * let itemRole =  this.listItem.role;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -274,13 +208,6 @@ export class IgxListItemComponent implements IListChild {
      * Sets/gets whether the `list item` is selected.
      * Selection is only applied to non-header items.
      * When selected, the CSS class 'igx-list__item-base--selected' is added to the item.
-     * ```html
-     * <igx-list-item [selected]="true">Selected Item</igx-list-item>
-     * ```
-     * ```typescript
-     * let isSelected = this.listItem.selected;
-     * this.listItem.selected = true;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -296,9 +223,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Indicates whether `list item` should have header style.
-     * ```typescript
-     * let headerStyle =  this.listItem.headerStyle;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -309,9 +233,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Applies the inner style of the `list item` if the item is not counted as header.
-     * ```typescript
-     * let innerStyle =  this.listItem.innerStyle;
-     * ```
      *
      * @memberof IgxListItemComponent
      */
@@ -322,9 +243,6 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Returns string value which describes the display mode of the `list item`.
-     * ```typescript
-     * let isHidden = this.listItem.display;
-     * ```
      *
      * @memberof IgxListItemComponent
      */

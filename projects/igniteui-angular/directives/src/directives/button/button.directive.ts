@@ -25,21 +25,8 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
 /**
  * The Button directive provides the Ignite UI Button functionality to every component that's intended to be used as a button.
  *
- * @igxModule IgxButtonModule
- *
- * @igxParent Data Entry & Display
- *
- * @igxTheme igx-button-theme
- *
- * @igxKeywords button, span, div, click
- *
  * @remarks
  * The Ignite UI Button directive is intended to be used by any button, span or div and turn it into a fully functional button.
- *
- * @example
- * ```html
- * <button type="button" igxButton="outlined">A Button</button>
- * ```
  */
 @Directive({
     selector: '[igxButton]',
@@ -103,11 +90,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     /**
      * Gets or sets whether the button is selected.
      * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
-     *
-     * @example
-     * ```html
-     * <button type="button" igxButton="flat" [selected]="button.selected"></button>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public set selected(value: boolean) {
@@ -127,11 +109,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
 
     /**
      * Sets the type of the button.
-     *
-     * @example
-     * ```html
-     * <button type="button" igxButton="outlined"></button>
-     * ```
      */
     @Input('igxButton')
     public set type(type: IgxButtonType) {
@@ -143,11 +120,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
 
     /**
      * Sets the `aria-label` attribute.
-     *
-     * @example
-     *  ```html
-     * <button type="button" igxButton="flat" igxLabel="Label"></button>
-     * ```
      */
     @Input('igxLabel')
     public set label(value: string) {

@@ -32,17 +32,6 @@ export class CarouselHammerConfig extends HammerGestureConfig {
  * It can be used as a separate fullscreen element or inside another component.
  *
  * Example:
- * ```html
- * <igx-carousel>
- *   <igx-slide>
- *     <h3>First Slide Header</h3>
- *     <p>First slide Content</p>
- *   <igx-slide>
- *   <igx-slide>
- *     <h3>Second Slide Header</h3>
- *     <p>Second Slide Content</p>
- * </igx-carousel>
- * ```
  */
 @Component({
     providers: [
@@ -71,9 +60,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Sets the `id` of the carousel.
      * If not set, the `id` of the first carousel component will be `"igx-carousel-0"`.
-     * ```html
-     * <igx-carousel id="my-first-carousel"></igx-carousel>
-     * ```
      *
      * @memberof IgxCarouselComponent
      */
@@ -82,9 +68,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public id = `igx-carousel-${NEXT_ID++}`;
     /**
      * Returns the `role` attribute of the carousel.
-     * ```typescript
-     * let carouselRole =  this.carousel.role;
-     * ```
      *
      * @memberof IgxCarouselComponent
      */
@@ -108,9 +91,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Returns the class of the carousel component.
-     * ```typescript
-     * let class =  this.carousel.cssClass;
-     * ```
      *
      * @memberof IgxCarouselComponent
      */
@@ -119,9 +99,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Gets the `touch-action` style of the `list item`.
-     * ```typescript
-     * let touchAction = this.listItem.touchAction;
-     * ```
      */
     @HostBinding('style.touch-action')
     public get touchAction() {
@@ -131,9 +108,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
      * Default value is `true`.
-     * ```html
-     * <igx-carousel [loop]="false"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -142,9 +116,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Sets whether the carousel will `pause` the slide transitions on user interactions.
      * Default value is `true`.
-     * ```html
-     *  <igx-carousel [pause]="false"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -153,9 +124,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Controls whether the carousel should render the left/right `navigation` buttons.
      * Default value is `true`.
-     * ```html
-     * <igx-carousel [navigation]="false"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -164,9 +132,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Controls whether the carousel should render the indicators.
      * Default value is `true`.
-     * ```html
-     * <igx-carousel [indicators]="false"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -176,9 +141,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Controls whether the carousel has vertical alignment.
      * Default value is `false`.
-     * ```html
-     * <igx-carousel [vertical]="true"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -187,9 +149,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Controls whether the carousel should support gestures.
      * Default value is `true`.
-     * ```html
-     * <igx-carousel [gesturesSupport]="false"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -198,9 +157,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Controls the maximum indexes that can be shown.
      * Default value is `10`.
-     * ```html
-     * <igx-carousel [maximumIndicatorsCount]="5"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -209,10 +165,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Gets/sets the display mode of carousel indicators. It can be `start` or `end`.
      * Default value is `end`.
-     * ```html
-     * <igx-carousel indicatorsOrientation="start">
-     * <igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -221,10 +173,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Gets/sets the animation type of carousel.
      * Default value is `slide`.
-     * ```html
-     * <igx-carousel animationType="none">
-     * <igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -232,77 +180,24 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.carousel.indicatorTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-carousel #carousel>
-     *      ...
-     *      <ng-template igxCarouselIndicator let-slide>
-     *         <igx-icon *ngIf="slide.active">brightness_7</igx-icon>
-     *         <igx-icon *ngIf="!slide.active">brightness_5</igx-icon>
-     *      </ng-template>
-     *  </igx-carousel>
-     * ```
      */
     @ContentChild(IgxCarouselIndicatorDirective, { read: TemplateRef, static: false })
     public indicatorTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering carousel next button
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.carousel.nextButtonTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-carousel #carousel>
-     *      ...
-     *      <ng-template igxCarouselNextButton let-disabled>
-     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *              <igx-icon name="add"></igx-icon>
-     *          </button>
-     *      </ng-template>
-     *  </igx-carousel>
-     * ```
      */
     @ContentChild(IgxCarouselNextButtonDirective, { read: TemplateRef, static: false })
     public nextButtonTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering carousel previous button
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.carousel.prevButtonTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-carousel #carousel>
-     *      ...
-     *      <ng-template igxCarouselPrevButton let-disabled>
-     *          <button type="button" igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *              <igx-icon name="remove"></igx-icon>
-     *          </button>
-     *      </ng-template>
-     *  </igx-carousel>
-     * ```
      */
     @ContentChild(IgxCarouselPrevButtonDirective, { read: TemplateRef, static: false })
     public prevButtonTemplate: TemplateRef<any> = null;
 
     /**
      * The collection of `slides` currently in the carousel.
-     * ```typescript
-     * let slides: QueryList<IgxSlideComponent> = this.carousel.slides;
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -312,9 +207,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * An event that is emitted after a slide transition has happened.
      * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
-     * ```html
-     * <igx-carousel (slideChanged)="slideChanged($event)"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -323,9 +215,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * An event that is emitted after a slide has been added to the carousel.
      * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
-     * ```html
-     * <igx-carousel (slideAdded)="slideAdded($event)"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -334,9 +223,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * An event that is emitted after a slide has been removed from the carousel.
      * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
-     * ```html
-     * <igx-carousel (slideRemoved)="slideRemoved($event)"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -345,9 +231,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * An event that is emitted after the carousel has been paused.
      * Provides a reference to the `IgxCarouselComponent` as an event argument.
-     * ```html
-     * <igx-carousel (carouselPaused)="carouselPaused($event)"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -356,9 +239,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * An event that is emitted after the carousel has resumed transitioning between `slides`.
      * Provides a reference to the `IgxCarouselComponent` as an event argument.
-     * ```html
-     * <igx-carousel (carouselPlaying)="carouselPlaying($event)"></igx-carousel>
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -461,9 +341,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Returns the total number of `slides` in the carousel.
-     * ```typescript
-     * let slideCount =  this.carousel.total;
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -473,9 +350,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * The index of the slide being currently shown.
-     * ```typescript
-     * let currentSlideNumber =  this.carousel.current;
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -485,9 +359,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Returns a boolean indicating if the carousel is playing.
-     * ```typescript
-     * let isPlaying =  this.carousel.isPlaying;
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -497,9 +368,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Returns а boolean indicating if the carousel is destroyed.
-     * ```typescript
-     * let isDestroyed =  this.carousel.isDestroyed;
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -508,9 +376,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
     /**
      * Returns a reference to the carousel element in the DOM.
-     * ```typescript
-     * let nativeElement =  this.carousel.nativeElement;
-     * ```
      *
      * @memberof IgxCarouselComponent
      */
@@ -520,9 +385,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Returns the time `interval` in milliseconds before the slide changes.
-     * ```typescript
-     * let timeInterval = this.carousel.interval;
-     * ```
      *
      * @memberof IgxCarouselComponent
      */
@@ -534,9 +396,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Sets the time `interval` in milliseconds before the slide changes.
      * If not set, the carousel will not change `slides` automatically.
-     * ```html
-     * <igx-carousel [interval]="1000"></igx-carousel>
-     * ```
      *
      * @memberof IgxCarouselComponent
      */
@@ -748,9 +607,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Returns the slide corresponding to the provided `index` or null.
-     * ```typescript
-     * let slide1 =  this.carousel.get(1);
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -760,9 +616,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Adds a new slide to the carousel.
-     * ```typescript
-     * this.carousel.add(newSlide);
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -775,9 +628,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Removes a slide from the carousel.
-     * ```typescript
-     * this.carousel.remove(slide);
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -792,19 +642,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Switches to the passed-in slide with a given `direction`.
-     * ```typescript
-     * const slide = this.carousel.get(2);
-     * this.carousel.select(slide, CarouselAnimationDirection.NEXT);
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
     public select(slide: IgxSlideComponent, direction?: CarouselAnimationDirection): void;
     /**
      * Switches to slide by index with a given `direction`.
-     * ```typescript
-     * this.carousel.select(2, CarouselAnimationDirection.NEXT);
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -822,9 +665,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Transitions to the next slide in the carousel.
-     * ```typescript
-     * this.carousel.next();
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -840,9 +680,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Transitions to the previous slide in the carousel.
-     * ```typescript
-     * this.carousel.prev();
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -859,10 +696,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Resumes playing of the carousel if in paused state.
      * No operation otherwise.
-     * ```typescript
-     * this.carousel.play();
-     * }
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */
@@ -878,10 +711,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * Stops slide transitions if the `pause` option is set to `true`.
      * No operation otherwise.
-     * ```typescript
-     *  this.carousel.stop();
-     * }
-     * ```
      *
      * @memberOf IgxCarouselComponent
      */

@@ -17,8 +17,6 @@ import { IgxColumnGroupComponent } from './column-group.component';
 /* jsonAPIManageCollectionInMarkup */
 /**
  * Column layout for declaration of Multi-row Layout
- *
- * @igxParent IgxGridComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,9 +33,6 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     public childrenVisibleIndexes = [];
     /**
      * Gets the width of the column layout.
-     * ```typescript
-     * let columnGroupWidth = this.columnGroup.width;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -70,9 +65,6 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     /**
      * Gets the column visible index.
      * If the column is not visible, returns `-1`.
-     * ```typescript
-     * let visibleColumnIndex =  this.column.visibleIndex;
-     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -105,9 +97,6 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      /* blazorSuppress */
     /**
      * Sets the column layout hidden property.
-     * ```typescript
-     * <igx-column-layout [hidden] = "true"></igx-column->
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */

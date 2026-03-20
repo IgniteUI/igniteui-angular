@@ -19,28 +19,6 @@ export declare interface ISplitterBarResizeEventArgs {
 /**
  * Provides a framework for a simple layout, splitting the view horizontally or vertically
  * into multiple smaller resizable and collapsible areas.
- *
- * @igxModule IgxSplitterModule
- *
- * @igxParent Layouts
- *
- * @igxTheme igx-splitter-theme
- *
- * @igxKeywords splitter panes layout
- *
- * @igxGroup presentation
- *
- * @example
- * ```html
- * <igx-splitter>
- *  <igx-splitter-pane>
- *      ...
- *  </igx-splitter-pane>
- *  <igx-splitter-pane>
- *      ...
- *  </igx-splitter-pane>
- * </igx-splitter>
- * ```
  */
 @Component({
     selector: 'igx-splitter',
@@ -54,11 +32,6 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * Gets the list of splitter panes.
-     *
-     * @example
-     * ```typescript
-     * const panes = this.splitter.panes;
-     * ```
      */
     @ContentChildren(IgxSplitterPaneComponent, { read: IgxSplitterPaneComponent })
     public panes!: QueryList<IgxSplitterPaneComponent>;
@@ -95,26 +68,12 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * Event fired when resizing of panes starts.
-     *
-     * @example
-     * ```html
-     * <igx-splitter (resizeStart)='resizeStart($event)'>
-     *  <igx-splitter-pane>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
      */
     @Output()
     public resizeStart = new EventEmitter<ISplitterBarResizeEventArgs>();
 
     /**
      * Event fired when resizing of panes is in progress.
-     *
-     * @example
-     * ```html
-     * <igx-splitter (resizing)='resizing($event)'>
-     *  <igx-splitter-pane>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
      */
     @Output()
     public resizing = new EventEmitter<ISplitterBarResizeEventArgs>();
@@ -122,13 +81,6 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * Event fired when resizing of panes ends.
-     *
-     * @example
-     * ```html
-     * <igx-splitter (resizeEnd)='resizeEnd($event)'>
-     *  <igx-splitter-pane>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
      */
     @Output()
     public resizeEnd = new EventEmitter<ISplitterBarResizeEventArgs>();
@@ -160,11 +112,6 @@ export class IgxSplitterComponent implements AfterContentInit {
     private sibling!: IgxSplitterPaneComponent;
     /**
      * Gets/Sets the splitter orientation.
-     *
-     * @example
-     * ```html
-     * <igx-splitter [type]="type">...</igx-splitter>
-     * ```
      */
     @Input()
     public get type() {
@@ -179,12 +126,6 @@ export class IgxSplitterComponent implements AfterContentInit {
     /**
      * Sets the visibility of the handle and expanders in the splitter bar.
      * False by default
-     *
-     * @example
-     * ```html
-     * <igx-splitter [nonCollapsible]='true'>
-     * </igx-splitter>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public nonCollapsible = false; // Input to toggle showing/hiding expanders

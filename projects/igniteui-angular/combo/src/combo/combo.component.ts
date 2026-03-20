@@ -75,21 +75,9 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
 /**
  *  Represents a drop-down list that provides editable functionalities, allowing users to choose an option from a predefined list.
  *
- * @igxModule IgxComboModule
- * @igxTheme igx-combo-theme
- * @igxKeywords combobox, combo selection
- * @igxGroup Grids & Lists
- *
  * @remarks
  * It provides the ability to filter items as well as perform selection with the provided data.
  * Additionally, it exposes keyboard navigation and custom styling capabilities.
- * @example
- * ```html
- * <igx-combo [itemsMaxHeight]="250" [data]="locationData"
- *  [displayKey]="'field'" [valueKey]="'field'"
- *  placeholder="Location(s)" searchPlaceholder="Search...">
- * </igx-combo>
- * ```
  */
 @Component({
     selector: 'igx-combo',
@@ -132,36 +120,18 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * Defines the placeholder value for the combo dropdown search field
      *
      * @deprecated in version 18.2.0. Replaced with values in the localization resource strings.
-     *
-     * ```typescript
-     * // get
-     * let myComboSearchPlaceholder = this.combo.searchPlaceholder;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [searchPlaceholder]='newPlaceHolder'></igx-combo>
-     * ```
      */
     @Input()
     public searchPlaceholder: string;
 
     /**
      * Emitted when item selection is changing, before the selection completes
-     *
-     * ```html
-     * <igx-combo (selectionChanging)='handleSelection()'></igx-combo>
-     * ```
      */
     @Output()
     public selectionChanging = new EventEmitter<IComboSelectionChangingEventArgs>();
 
     /**
      * Emitted when item selection is changed, after the selection completes
-     *
-     * ```html
-     * <igx-combo (selectionChanged)='handleSelection()'></igx-combo>
-     * ```
      */
     @Output()
     public selectionChanged = new EventEmitter<IComboSelectionChangedEventArgs>();
@@ -290,9 +260,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      *
      * @param newItems new items to be selected
      * @param clearCurrentSelection if true clear previous selected items
-     * ```typescript
-     * this.combo.select(["New York", "New Jersey"]);
-     * ```
      */
     public select(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
         if (newItems) {
@@ -305,9 +272,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * Deselect defined items
      *
      * @param items items to deselected
-     * ```typescript
-     * this.combo.deselect(["New York", "New Jersey"]);
-     * ```
      */
     public deselect(items: Array<any>, event?: Event) {
         if (items) {
@@ -320,9 +284,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * Select all (filtered) items
      *
      * @param ignoreFilter if set to true, selects all items, otherwise selects only the filtered ones.
-     * ```typescript
-     * this.combo.selectAllItems();
-     * ```
      */
     public selectAllItems(ignoreFilter?: boolean, event?: Event) {
         const allVisible = this.selectionService.get_all_ids(ignoreFilter ? this.data : this.filteredData, this.valueKey);
@@ -334,9 +295,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * Deselect all (filtered) items
      *
      * @param ignoreFilter if set to true, deselects all items, otherwise deselects only the filtered ones.
-     * ```typescript
-     * this.combo.deselectAllItems();
-     * ```
      */
     public deselectAllItems(ignoreFilter?: boolean, event?: Event): void {
         let newSelection = this.selectionService.get_empty();
@@ -353,17 +311,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * @param select If the item should be selected (true) or deselected (false)
      *
      * Without specified valueKey;
-     * ```typescript
-     * this.combo.valueKey = null;
-     * const items: { field: string, region: string}[] = data;
-     * this.combo.setSelectedItem(items[0], true);
-     * ```
      * With specified valueKey;
-     * ```typescript
-     * this.combo.valueKey = 'field';
-     * const items: { field: string, region: string}[] = data;
-     * this.combo.setSelectedItem('Connecticut', true);
-     * ```
      */
     public setSelectedItem(itemID: any, select = true, event?: Event): void {
         if (itemID === undefined) {

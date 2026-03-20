@@ -58,14 +58,6 @@ type ChatTemplatesContextMap = {
 /**
  * Template references for customizing chat component rendering.
  * Each property corresponds to a specific part of the chat UI that can be customized.
- *
- * @example
- * ```typescript
- * templates = {
- *   messageContent: this.customMessageTemplate,
- *   attachment: this.customAttachmentTemplate
- * }
- * ```
  */
 export type IgxChatTemplates = {
     [K in keyof Omit<ChatRenderers, 'typingIndicator'>]?: TemplateRef<ChatTemplatesContextMap[K]>;
@@ -85,17 +77,6 @@ export type IgxChatOptions = Omit<IgcChatOptions, 'renderers'>;
  *
  * Uses OnPush change detection strategy for optimal performance. All inputs are signals,
  * so changes are automatically tracked and propagated to the underlying web component.
- *
- * @example
- * ```typescript
- * <igx-chat
- *   [messages]="messages"
- *   [draftMessage]="draft"
- *   [options]="chatOptions"
- *   [templates]="chatTemplates"
- *   (messageCreated)="onMessageCreated($event)"
- * />
- * ```
  */
 @Component({
     selector: 'igx-chat',
@@ -274,13 +255,6 @@ export interface ChatInputContext {
 /**
  * Directive providing type information for chat message template contexts.
  * Use this directive on ng-template elements that render chat messages.
- *
- * @example
- * ```html
- * <ng-template igxChatMessageContext let-message>
- *   <div>{{ message.text }}</div>
- * </ng-template>
- * ```
  */
 @Directive({ selector: '[igxChatMessageContext]', standalone: true })
 export class IgxChatMessageContextDirective {
@@ -293,13 +267,6 @@ export class IgxChatMessageContextDirective {
 /**
  * Directive providing type information for chat attachment template contexts.
  * Use this directive on ng-template elements that render message attachments.
- *
- * @example
- * ```html
- * <ng-template igxChatAttachmentContext let-attachment>
- *   <img [src]="attachment.url" />
- * </ng-template>
- * ```
  */
 @Directive({ selector: '[igxChatAttachmentContext]', standalone: true })
 export class IgxChatAttachmentContextDirective {
@@ -312,13 +279,6 @@ export class IgxChatAttachmentContextDirective {
 /**
  * Directive providing type information for chat input template contexts.
  * Use this directive on ng-template elements that render the chat input.
- *
- * @example
- * ```html
- * <ng-template igxChatInputContext let-value let-attachments="attachments">
- *   <input [value]="value" />
- * </ng-template>
- * ```
  */
 @Directive({ selector: '[igxChatInputContext]', standalone: true })
 export class IgxChatInputContextDirective {

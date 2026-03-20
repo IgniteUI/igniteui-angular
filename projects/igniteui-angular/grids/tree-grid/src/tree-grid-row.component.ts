@@ -29,11 +29,6 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
 
     /**
      * The `ITreeGridRecord` passed to the row component.
-     *
-     * ```typescript
-     * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;
-     * const treeRow = row.treeRow;
-     * ```
      */
     @Input()
     public get treeRow(): ITreeGridRecord {
@@ -50,9 +45,6 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
     /**
      * Sets whether the row is pinned.
      * Default value is `false`.
-     * ```typescript
-     * this.grid.selectedRows[0].pinned = true;
-     * ```
      */
     public override set pinned(value: boolean) {
         if (value) {
@@ -64,9 +56,6 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
 
     /**
      * Gets whether the row is pinned.
-     * ```typescript
-     * let isPinned = row.pinned;
-     * ```
      */
     public override get pinned() {
         return this.grid.isRecordPinned(this._treeRow);
@@ -93,11 +82,6 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
 
     /**
      * Returns a value indicating whether the row component is expanded.
-     *
-     * ```typescript
-     * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;
-     * const expanded = row.expanded;
-     * ```
      */
     @HostBinding('attr.aria-expanded')
     public override get expanded(): boolean {
@@ -106,11 +90,6 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
 
     /**
      * Sets a value indicating whether the row component is expanded.
-     *
-     * ```typescript
-     * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;
-     * row.expanded = true;
-     * ```
      */
     public override set expanded(value: boolean) {
         this.grid.gridAPI.set_row_expansion_state(this._treeRow.key, value);
@@ -155,11 +134,6 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
     /**
      * Spawns the add child row UI for the specific row.
      *
-     * @example
-     * ```typescript
-     * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;
-     * row.beginAddChild();
-     * ```
      * @param rowID
      */
     public beginAddChild() {

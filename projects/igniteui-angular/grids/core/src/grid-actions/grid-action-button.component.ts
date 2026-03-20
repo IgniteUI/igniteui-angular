@@ -20,11 +20,6 @@ export class IgxGridActionButtonComponent {
     /* blazorSuppress */
     /**
      * Event emitted when action button is clicked.
-     *
-     * @example
-     * ```html
-     *  <igx-grid-action-button (actionClick)="startEdit($event)"></igx-grid-action-button>
-     * ```
      */
     @Output()
     public actionClick = new EventEmitter<Event>();

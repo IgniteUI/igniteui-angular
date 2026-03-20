@@ -61,25 +61,10 @@ let CHIP_ID = 0;
 /**
  * Chip is compact visual component that displays information in an obround.
  *
- * @igxModule IgxChipsModule
- *
- * @igxTheme igx-chip-theme
- *
- * @igxKeywords chip
- *
- * @igxGroup display
- *
  * @remarks
  * The Ignite UI Chip can be templated, deleted, and selected.
  * Multiple chips can be reordered and visually connected to each other.
  * Chips reside in a container called chips area which is responsible for managing the interactions between the chips.
- *
- * @example
- * ```html
- * <igx-chip class="chipStyle" [id]="901" [draggable]="true" [removable]="true" (remove)="chipRemoved($event)">
- *    <igx-avatar class="chip-avatar-resized" igxPrefix></igx-avatar>
- * </igx-chip>
- * ```
  */
 @Component({
     selector: 'igx-chip',
@@ -99,21 +84,11 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * @remarks
      * Allowed values are `primary`, `info`, `success`, `warning`, `danger`.
      * Providing no/nullish value leaves the chip in its default state.
-     *
-     * @example
-     * ```html
-     * <igx-chip variant="success"></igx-chip>
-     * ```
      */
     @Input()
     public variant?: IgxChipTypeVariant | null;
     /**
      * Sets the value of `id` attribute. If not provided it will be automatically generated.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="'igx-chip-1'"></igx-chip>
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -121,22 +96,12 @@ export class IgxChipComponent implements OnInit, OnDestroy {
 
     /**
      * Returns the `role` attribute of the chip.
-     *
-     * @example
-     * ```typescript
-     * let chipRole = this.chip.role;
-     * ```
      */
     @HostBinding('attr.role')
     public role = 'option';
 
     /**
      * Sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="'igx-chip-1'" [tabIndex]="1"></igx-chip>
-     * ```
      */
     @HostBinding('attr.tabIndex')
     @Input()
@@ -153,11 +118,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
 
     /**
      * Stores data related to the chip.
-     *
-     * @example
-     * ```html
-     * <igx-chip [data]="{ value: 'Country' }"></igx-chip>
-     * ```
      */
     @Input()
     public data: any;
@@ -165,11 +125,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Defines if the `IgxChipComponent` can be dragged in order to change it's position.
      * By default it is set to false.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="'igx-chip-1'" [draggable]="true"></igx-chip>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public draggable = false;
@@ -177,11 +132,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Enables/disables the draggable element animation when the element is released.
      * By default it's set to true.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [animateOnRelease]="false"></igx-chip>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public animateOnRelease = true;
@@ -189,11 +139,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Enables/disables the hiding of the base element that has been dragged.
      * By default it's set to true.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [hideBaseOnDrag]="false"></igx-chip>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public hideBaseOnDrag = true;
@@ -201,23 +146,12 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Defines if the `IgxChipComponent` should render remove button and throw remove events.
      * By default it is set to false.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [removable]="true"></igx-chip>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public removable = false;
 
     /**
      * Overrides the default icon that the chip applies to the remove button.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="chip.id" [removable]="true" [removeIcon]="iconTemplate"></igx-chip>
-     * <ng-template #iconTemplate><igx-icon>delete</igx-icon></ng-template>
-     * ```
      */
     @Input()
     public removeIcon: TemplateRef<any>;
@@ -225,23 +159,12 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Defines if the `IgxChipComponent` can be selected on click or through navigation,
      * By default it is set to false.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true"></igx-chip>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public selectable = false;
 
     /**
      * Overrides the default icon that the chip applies when it is selected.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="chip.id" [selectable]="true" [selectIcon]="iconTemplate"></igx-chip>
-     * <ng-template #iconTemplate><igx-icon>done_outline</igx-icon></ng-template>
-     * ```
      */
     @Input()
     public selectIcon: TemplateRef<any>;
@@ -257,11 +180,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * Disables the `IgxChipComponent`. When disabled it restricts user interactions
      * like focusing on click or tab, selection on click or Space, dragging.
      * By default it is set to false.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="chip.id" [disabled]="true"></igx-chip>
-     * ```
      */
     @HostBinding('class.igx-chip--disabled')
     @Input({ transform: booleanAttribute })
@@ -269,16 +187,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
 
     /**
      * Sets the `IgxChipComponent` selected state.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
-     * ```
-     *
-     * Two-way data binding:
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [(selected)]="model.isSelected">
-     * ```
      */
     @HostBinding('attr.aria-selected')
     @Input({ transform: booleanAttribute })
@@ -289,14 +197,11 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Returns if the `IgxChipComponent` is selected.
      *
-     * @example
-     * ```typescript
      * @ViewChild('myChip')
      * public chip: IgxChipComponent;
      * selectedChip(){
      *     let selectedChip = this.chip.selected;
      * }
-     * ```
      */
     public get selected() {
         return this._selected;
@@ -312,11 +217,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Sets the `IgxChipComponent` background color.
      * The `color` property supports string, rgb, hex.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [color]="'#ff0000'"></igx-chip>
-     * ```
      */
     @Input()
     public set color(newColor) {
@@ -326,14 +226,11 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Returns the background color of the `IgxChipComponent`.
      *
-     * @example
-     * ```typescript
      * @ViewChild('myChip')
      * public chip: IgxChipComponent;
      * ngAfterViewInit(){
      *     let chipColor = this.chip.color;
      * }
-     * ```
      */
     public get color() {
         return this.chipArea.nativeElement.style.backgroundColor;
@@ -358,11 +255,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Emits an event when the `IgxChipComponent` moving starts.
      * Returns the moving `IgxChipComponent`.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (moveStart)="moveStarted($event)">
-     * ```
      */
     @Output()
     public moveStart = new EventEmitter<IBaseChipEventArgs>();
@@ -370,11 +262,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Emits an event when the `IgxChipComponent` moving ends.
      * Returns the moved `IgxChipComponent`.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (moveEnd)="moveEnded($event)">
-     * ```
      */
     @Output()
     public moveEnd = new EventEmitter<IBaseChipEventArgs>();
@@ -382,11 +269,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Emits an event when the `IgxChipComponent` is removed.
      * Returns the removed `IgxChipComponent`.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (remove)="remove($event)">
-     * ```
      */
     @Output()
     public remove = new EventEmitter<IBaseChipEventArgs>();
@@ -394,11 +276,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * Emits an event when the `IgxChipComponent` is clicked.
      * Returns the clicked `IgxChipComponent`, whether the event should be canceled.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (click)="chipClick($event)">
-     * ```
      */
     @Output()
     public chipClick = new EventEmitter<IChipClickEventArgs>();
@@ -407,22 +284,12 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * Emits event when the `IgxChipComponent` is selected/deselected.
      * Returns the selected chip reference, whether the event should be canceled, what is the next selection state and
      * when the event is triggered by interaction `originalEvent` is provided, otherwise `originalEvent` is `null`.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" (selectedChanging)="chipSelect($event)">
-     * ```
      */
     @Output()
     public selectedChanging = new EventEmitter<IChipSelectEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` is selected/deselected and any related animations and transitions also end.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" (selectedChanged)="chipSelectEnd($event)">
-     * ```
      */
     @Output()
     public selectedChanged = new EventEmitter<IBaseChipEventArgs>();
@@ -431,11 +298,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * Emits an event when the `IgxChipComponent` keyboard navigation is being used.
      * Returns the focused/selected `IgxChipComponent`, whether the event should be canceled,
      * if the `alt`, `shift` or `control` key is pressed and the pressed key name.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (keyDown)="chipKeyDown($event)">
-     * ```
      */
     @Output()
     public keyDown = new EventEmitter<IChipKeyDownEventArgs>();
@@ -444,11 +306,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * Emits an event when the `IgxChipComponent` has entered the `IgxChipsAreaComponent`.
      * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
      * the original drop event arguments.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragEnter)="chipEnter($event)">
-     * ```
      */
     @Output()
     public dragEnter = new EventEmitter<IChipEnterDragAreaEventArgs>();
@@ -457,11 +314,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * Emits an event when the `IgxChipComponent` has left the `IgxChipsAreaComponent`.
      * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
      * the original drop event arguments.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragLeave)="chipLeave($event)">
-     * ```
      */
     @Output()
     public dragLeave = new EventEmitter<IChipEnterDragAreaEventArgs>();
@@ -470,11 +322,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * Emits an event when the `IgxChipComponent` is over the `IgxChipsAreaComponent`.
      * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
      * the original drop event arguments.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragOver)="chipOver($event)">
-     * ```
      */
     @Output()
     public dragOver = new EventEmitter<IChipEnterDragAreaEventArgs>();
@@ -483,11 +330,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * Emits an event when the `IgxChipComponent` has been dropped in the `IgxChipsAreaComponent`.
      * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
      * the original drop event arguments.
-     *
-     * @example
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (dragDrop)="chipLeave($event)">
-     * ```
      */
     @Output()
     public dragDrop = new EventEmitter<IChipEnterDragAreaEventArgs>();
@@ -522,16 +364,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
 
     /**
      * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
-     *
-     * @example
-     * ```html
-     * <igx-chip [id]="chip.id" [draggable]="true"></igx-chip>
-     * ```
-     * ```typescript
-     * onMoveStart(event: IBaseChipEventArgs){
-     *     let dragDirective = event.owner.dragDirective;
-     * }
-     * ```
      */
     @ViewChild('chipArea', { read: IgxDragDirective, static: true })
     public dragDirective: IgxDragDirective;

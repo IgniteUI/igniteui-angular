@@ -33,21 +33,9 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
 /**
  * Represents a drop-down list that provides filtering functionality, allowing users to choose a single option from a predefined list.
  *
- * @igxModule IgxSimpleComboModule
- * @igxTheme igx-combo-theme
- * @igxKeywords combobox, single combo selection
- * @igxGroup Grids & Lists
- *
  * @remarks
  * It provides the ability to filter items as well as perform single selection on the provided data.
  * Additionally, it exposes keyboard navigation and custom styling capabilities.
- * @example
- * ```html
- * <igx-simple-combo [itemsMaxHeight]="250" [data]="locationData"
- *  [displayKey]="'field'" [valueKey]="'field'"
- *  placeholder="Location" searchPlaceholder="Search...">
- * </igx-simple-combo>
- * ```
  */
 @Component({
     selector: 'igx-simple-combo',
@@ -73,20 +61,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /**
      * Emitted when item selection is changing, before the selection completes
-     *
-     * ```html
-     * <igx-simple-combo (selectionChanging)='handleSelection()'></igx-simple-combo>
-     * ```
      */
     @Output()
     public selectionChanging = new EventEmitter<ISimpleComboSelectionChangingEventArgs>();
 
     /**
      * Emitted when item selection is changed, after the selection completes
-     *
-     * ```html
-     * <igx-simple-combo (selectionChanged)='handleSelection()'></igx-simple-combo>
-     * ```
      */
     @Output()
     public selectionChanged = new EventEmitter<ISimpleComboSelectionChangedEventArgs>();
@@ -102,9 +82,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      * Get current selection state
      *
      * @returns The selected item, if any
-     * ```typescript
-     * let mySelection = this.combo.selection;
-     * ```
      */
     public override get selection(): any {
         return super.selection[0];
@@ -170,9 +147,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      * Select a defined item
      *
      * @param item the item to be selected
-     * ```typescript
-     * this.combo.select("New York");
-     * ```
      */
     public select(item: any): void {
         if (item !== undefined) {
@@ -185,9 +159,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      * Deselect the currently selected item
      *
      * @param item the items to be deselected
-     * ```typescript
-     * this.combo.deselect("New York");
-     * ```
      */
     public deselect(): void {
         this.clearSelection();

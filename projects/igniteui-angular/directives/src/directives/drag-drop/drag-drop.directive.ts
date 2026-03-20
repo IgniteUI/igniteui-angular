@@ -189,9 +189,6 @@ export class IgxDragIgnoreDirective {
 export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
-     * ```html
-     * <div [igxDrag]="{ source: myElement }"></div>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -207,11 +204,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * Sets the tolerance in pixels before drag starts.
      * By default the drag starts after the draggable element is moved by 5px.
-     * ```html
-     * <div igxDrag [dragTolerance]="100">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -221,14 +213,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * Sets the directions that the element can be dragged.
      * By default it is set to both horizontal and vertical directions.
-     * ```html
-     * <div igxDrag [dragDirection]="dragDir">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * public dragDir = DragDirection.HORIZONTAL;
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -238,14 +222,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * A property that provides a way for igxDrag and igxDrop to be linked through channels.
      * It accepts single value or an array of values and evaluates then using strict equality.
-     * ```html
-     * <div igxDrag [dragChannel]="'odd'">
-     *         <span>95</span>
-     * </div>
-     * <div igxDrop [dropChannel]="['odd', 'irrational']">
-     *         <span>Numbers drop area!</span>
-     * </div>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -256,11 +232,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * Sets whether the base element should be moved, or a ghost element should be rendered that represents it instead.
      * By default it is set to `true`.
      * If it is set to `false` when dragging the base element is moved instead and no ghost elements are rendered.
-     * ```html
-     * <div igxDrag [ghost]="false">
-     *      <span>Drag Me!</span>
-     * </div>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -269,11 +240,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Sets a custom class that will be added to the `ghostElement` element.
-     * ```html
-     * <div igxDrag [ghostClass]="'ghostElement'">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -282,11 +248,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Set styles that will be added to the `ghostElement` element.
-     * ```html
-     * <div igxDrag [ghostStyle]="{'--ig-size': 'var(--ig-size-small)'}">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -296,16 +257,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * Specifies a template for the ghost element created when dragging starts and `ghost` is true.
      * By default a clone of the base element the igxDrag is instanced is created.
-     * ```html
-     * <div igxDrag [ghostTemplate]="customGhost">
-     *         <span>Drag Me!</span>
-     * </div>
-     * <ng-template #customGhost>
-     *      <div class="customGhostStyle">
-     *          <span>I am being dragged!</span>
-     *      </div>
-     * </ng-template>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -315,12 +266,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * Sets the element to which the dragged element will be appended.
      * By default it's set to null and the dragged element is appended to the body.
-     * ```html
-     * <div #hostDiv></div>
-     * <div igxDrag [ghostHost]="hostDiv">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -335,16 +280,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Event triggered when the draggable element drag starts.
-     * ```html
-     * <div igxDrag (dragStart)="onDragStart()">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * public onDragStart(){
-     *      alert("The drag has stared!");
-     * }
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -353,16 +288,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Event triggered when the draggable element has been moved.
-     * ```html
-     * <div igxDrag  (dragMove)="onDragMove()">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * public onDragMove(){
-     *      alert("The element has moved!");
-     * }
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -371,16 +296,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Event triggered when the draggable element is released.
-     * ```html
-     * <div igxDrag (dragEnd)="onDragEnd()">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * public onDragEnd(){
-     *      alert("The drag has ended!");
-     * }
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -389,16 +304,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Event triggered when the draggable element is clicked.
-     * ```html
-     * <div igxDrag (dragClick)="onDragClick()">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * public onDragClick(){
-     *      alert("The element has been clicked!");
-     * }
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -407,16 +312,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Event triggered when the drag ghost element is created.
-     * ```html
-     * <div igxDrag (ghostCreate)="ghostCreated()">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * public ghostCreated(){
-     *      alert("The ghost has been created!");
-     * }
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -425,16 +320,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Event triggered when the drag ghost element is created.
-     * ```html
-     * <div igxDrag (ghostDestroy)="ghostDestroyed()">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * public ghostDestroyed(){
-     *      alert("The ghost has been destroyed!");
-     * }
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -443,16 +328,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Event triggered after the draggable element is released and after its animation has finished.
-     * ```html
-     * <div igxDrag (transitioned)="onMoveEnd()">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * public onMoveEnd(){
-     *      alert("The move has ended!");
-     * }
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -646,12 +521,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * Sets the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
-     * ```html
-     * <div #hostDiv></div>
-     * <div igxDrag [ghostOffsetX]="0">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -667,12 +536,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * Sets the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
-     * ```html
-     * <div #hostDiv></div>
-     * <div igxDrag [ghostOffsetY]="0">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
      *
      * @memberof IgxDragDirective
      */
@@ -1613,9 +1476,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 export class IgxDropDirective implements OnInit, OnDestroy {
     /**
      * - Save data inside the `igxDrop` directive. This can be set when instancing `igxDrop` on an element.
-     * ```html
-     * <div [igxDrop]="{ source: myElement }"></div>
-     * ```
      *
      * @memberof IgxDropDirective
      */
@@ -1631,14 +1491,6 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     /**
      * A property that provides a way for igxDrag and igxDrop to be linked through channels.
      * It accepts single value or an array of values and evaluates then using strict equality.
-     * ```html
-     * <div igxDrag [dragChannel]="'odd'">
-     *         <span>95</span>
-     * </div>
-     * <div igxDrop [dropChannel]="['odd', 'irrational']">
-     *         <span>Numbers drop area!</span>
-     * </div>
-     * ```
      *
      * @memberof IgxDropDirective
      */
@@ -1653,21 +1505,6 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *  - IgxPrependDropStrategy - Prepends the dropped element to first position as a direct child to the `igxDrop`.
      *  - IgxInsertDropStrategy - If the dropped element is released above a child element of the `igxDrop`, it will be inserted
      *      at that position. Otherwise the dropped element will be appended if released outside any child of the `igxDrop`.
-     * ```html
-     * <div igxDrag>
-     *      <span>DragMe</span>
-     * </div>
-     * <div igxDrop [dropStrategy]="myDropStrategy">
-     *         <span>Numbers drop area!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * import { IgxAppendDropStrategy } from 'igniteui-angular';
-     *
-     * export class App {
-     *      public myDropStrategy = IgxAppendDropStrategy;
-     * }
-     * ```
      *
      * @memberof IgxDropDirective
      */
@@ -1682,15 +1519,6 @@ export class IgxDropDirective implements OnInit, OnDestroy {
 
     /**
      * Event triggered when dragged element enters the area of the element.
-     * ```html
-     * <div class="cageArea" igxDrop (enter)="dragEnter()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
-     * </div>
-     * ```
-     * ```typescript
-     * public dragEnter(){
-     *     alert("A draggable element has entered the chip area!");
-     * }
-     * ```
      *
      * @memberof IgxDropDirective
      */
@@ -1699,15 +1527,6 @@ export class IgxDropDirective implements OnInit, OnDestroy {
 
     /**
      * Event triggered when dragged element enters the area of the element.
-     * ```html
-     * <div class="cageArea" igxDrop (enter)="dragEnter()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
-     * </div>
-     * ```
-     * ```typescript
-     * public dragEnter(){
-     *     alert("A draggable element has entered the chip area!");
-     * }
-     * ```
      *
      * @memberof IgxDropDirective
      */
@@ -1716,15 +1535,6 @@ export class IgxDropDirective implements OnInit, OnDestroy {
 
     /**
      * Event triggered when dragged element leaves the area of the element.
-     * ```html
-     * <div class="cageArea" igxDrop (leave)="dragLeave()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
-     * </div>
-     * ```
-     * ```typescript
-     * public dragLeave(){
-     *     alert("A draggable element has left the chip area!");
-     * }
-     * ```
      *
      * @memberof IgxDropDirective
      */
@@ -1735,15 +1545,6 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * Event triggered when dragged element is dropped in the area of the element.
      * Since the `igxDrop` has default logic that appends the dropped element as a child, it can be canceled here.
      * To cancel the default logic the `cancel` property of the event needs to be set to true.
-     * ```html
-     * <div class="cageArea" igxDrop (dropped)="dragDrop()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
-     * </div>
-     * ```
-     * ```typescript
-     * public dragDrop(){
-     *     alert("A draggable element has been dropped in the chip area!");
-     * }
-     * ```
      *
      * @memberof IgxDropDirective
      */

@@ -730,10 +730,6 @@ export class UpdateChanges {
 
     /**
      * Safe split by `','`, considering possible inner function calls. E.g.:
-     * ```
-     * prop: inner-func(),
-     * prop2: inner2(inner-param: 3, inner-param: inner-func(..))
-     * ```
      */
     private splitFunctionProps(body: string): string[] {
         const parts = [];

@@ -88,21 +88,9 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
 /**
  * Grid provides a way to present and manipulate tabular data.
  *
- * @igxModule IgxGridModule
- * @igxGroup Grids & Lists
- * @igxKeywords grid, table
- * @igxTheme igx-grid-theme
  * @remarks
  * The Ignite UI Grid is used for presenting and manipulating tabular data in the simplest way possible.  Once data
  * has been bound, it can be manipulated through filtering, sorting & editing operations.
- * @example
- * ```html
- * <igx-grid [data]="employeeData" [autoGenerate]="false">
- *   <igx-column field="first" header="First Name"></igx-column>
- *   <igx-column field="last" header="Last Name"></igx-column>
- *   <igx-column field="role" header="Role"></igx-column>
- * </igx-grid>
- * ```
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -169,33 +157,18 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
 export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
-     *
-     * @example
-     * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataPreLoad)='handleDataPreloadEvent()'></igx-grid>
-     * ```
      */
     @Output()
     public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Emitted when grouping is performed.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (groupingExpressionsChange)="groupingExpressionsChange($event)"></igx-grid>
-     * ```
      */
     @Output()
     public groupingExpressionsChange = new EventEmitter<IGroupingExpression[]>();
 
     /**
      * Emitted when groups are expanded/collapsed.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (groupingExpansionStateChange)="groupingExpansionStateChange($event)"></igx-grid>
-     * ```
      */
     @Output()
     public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();
@@ -211,10 +184,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Please note that `groupedColumns` and `ungroupedColumns` show only the **newly** changed columns (affected by the **last**
      * grouping/ungrouping operation), not all columns which are currently grouped/ungrouped.
      * columns.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (groupingDone)="groupingDone($event)" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Output()
     public groupingDone = new EventEmitter<IGroupingDoneEventArgs>();
@@ -224,10 +193,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @remarks
      * The default rendered state is expanded.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [groupsExpanded]="false" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public groupsExpanded = true;
@@ -237,14 +202,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @remarks
      * The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * @example
-     * ```html
-     * <igx-grid [dropAreaTemplate]="dropAreaRef">
-     * </igx-grid>
-     * <ng-template #myDropArea>
-     *      <span> Custom drop area! </span>
-     * </ng-template>
-     * ```
      */
     @Input()
     public dropAreaTemplate: TemplateRef<void>;
@@ -258,9 +215,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Returns a reference to the master-detail template.
-     * ```typescript
-     * let detailTemplate = this.grid.detailTemplate;
-     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -270,19 +224,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
     /**
      * Sets the master-detail template.
-     * ```html
-     * <ng-template #detailTemplate igxGridDetail let-dataItem>
-     *    <div>
-     *       <div><span class='categoryStyle'>City:</span> {{dataItem.City}}</div>
-     *       <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
-     *    </div>
-     * </ng-template>
-     * ```
-     * ```typescript
-     * @ViewChild("'detailTemplate'", {read: TemplateRef })
-     * public detailTemplate: TemplateRef<any>;
-     * this.grid.detailTemplate = this.detailTemplate;
-     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -301,10 +242,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @remarks
      * If not provided it will be automatically generated.
-     * @example
-     * ```html
-     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -344,11 +281,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _groupsRecords: IGroupByRecord[] = [];
     /**
      * Gets the hierarchical representation of the group by records.
-     *
-     * @example
-     * ```typescript
-     * let groupRecords = this.grid.groupsRecords;
-     * ```
      */
     public get groupsRecords(): IGroupByRecord[] {
         return this._groupsRecords;
@@ -401,11 +333,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Gets/Sets the array of data that populates the component.
-     *
-     * @example
-     * ```html
-     * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     /* treatAsRef */
     @Input()
@@ -442,11 +369,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @remarks
      * This property is required for remote grid virtualization to function when it is bound to remote data.
-     * @example
-     * ```typescript
-     * const itemCount = this.grid1.totalItemCount;
-     * this.grid1.totalItemCount = 55;
-     * ```
      */
     @Input()
     public set totalItemCount(count) {
@@ -477,17 +399,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * Gets/Sets the group by state.
      *
-     * @example
-     * ```typescript
-     * let groupByState = this.grid.groupingExpressions;
-     * this.grid.groupingExpressions = [...];
-     * ```
      * @remarks
      * Supports two-way data binding.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpressions)]="model.groupingExpressions"></igx-grid>
-     * ```
      */
     @Input()
     public get groupingExpressions(): IGroupingExpression[] {
@@ -540,10 +453,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Includes only states that differ from the default one (controlled through groupsExpanded and states that the user has changed.
      * Contains the expansion state (expanded: boolean) and the unique identifier for the group row (Array).
      * Supports two-way data binding.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpansionState)]="model.groupingExpansionState"></igx-grid>
-     * ```
      */
     @Input()
     public get groupingExpansionState() {
@@ -565,10 +474,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @remarks
      * The default value is "false"
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [hideGroupedColumns]="true" [autoGenerate]="true"></igx-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get hideGroupedColumns() {
@@ -592,11 +497,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Gets/Sets the grouping strategy of the grid.
      *
      * @remarks The default IgxGrouping extends from IgxSorting and a custom one can be used as a `sortStrategy` as well.
-     *
-     * @example
-     * ```html
-     *  <igx-grid #grid [data]="localData" [groupStrategy]="groupStrategy"></igx-grid>
-     * ```
      */
     @Input()
     public get groupStrategy(): IGridGroupingStrategy {
@@ -612,12 +512,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @remarks
      * The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * @example
-     * ```html
-     * <igx-grid dropAreaMessage="Drop here to group!">
-     *      <igx-column [groupable]="true" field="ID"></igx-column>
-     * </igx-grid>
-     * ```
      */
     @Input()
     public set dropAreaMessage(value: string) {
@@ -653,16 +547,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Sets the group by row selector template.
-     * ```html
-     * <ng-template #template igxGroupByRowSelector let-groupByRowContext>
-     * {{ groupByRowContext.selectedCount }} / {{ groupByRowContext.totalCount  }}
-     * </ng-template>
-     * ```
-     * ```typescript
-     * @ViewChild("'template'", {read: TemplateRef })
-     * public template: TemplateRef<any>;
-     * this.grid.groupByRowSelectorTemplate = this.template;
-     * ```
      */
     public set groupByRowSelectorTemplate(template: TemplateRef<IgxGroupByRowSelectorTemplateContext>) {
         this._groupByRowSelectorTemplate = template;
@@ -723,12 +607,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Gets/Sets the template reference for the group row.
-     *
-     * @example
-     * ```
-     * const groupRowTemplate = this.grid.groupRowTemplate;
-     * this.grid.groupRowTemplate = myRowTemplate;
-     * ```
      */
     @Input()
     public get groupRowTemplate(): TemplateRef<IgxGroupByRowTemplateContext> {
@@ -749,15 +627,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @remarks
      * Also allows for multiple columns to be grouped at once if an array of `ISortingExpression` is passed.
      * The `groupingDone` event would get raised only **once** if this method gets called multiple times with the same arguments.
-     * @example
-     * ```typescript
-     * this.grid.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
-     * this.grid.groupBy([
-     *     { fieldName: name1, dir: SortingDirection.Asc, ignoreCase: false },
-     *     { fieldName: name2, dir: SortingDirection.Desc, ignoreCase: true },
-     *     { fieldName: name3, dir: SortingDirection.Desc, ignoreCase: false }
-     * ]);
-     * ```
      */
     public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
         if (this.checkIfNoColumnField(expression)) {
@@ -778,12 +647,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @remarks
      * Clears all grouping in the grid, if no parameter is passed.
      * If a parameter is provided, clears grouping for a particular column or an array of columns.
-     * @example
-     * ```typescript
-     * this.grid.clearGrouping(); //clears all grouping
-     * this.grid.clearGrouping("ID"); //ungroups a single column
-     * this.grid.clearGrouping(["ID", "Column1", "Column2"]); //ungroups multiple columns
-     * ```
      * @param name Name of column or array of column names to be ungrouped.
      */
     public clearGrouping(name?: string | Array<string>): void {
@@ -797,11 +660,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Returns if a group is expanded or not.
      *
      * @param group The group record.
-     * @example
-     * ```typescript
-     * public groupRow: IGroupByRecord;
-     * const expandedGroup = this.grid.isExpandedGroup(this.groupRow);
-     * ```
      */
     public override isExpandedGroup(group: IGroupByRecord): boolean {
         const state: IGroupByExpandState = this._getStateForGroupRow(group);
@@ -812,11 +670,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Toggles the expansion state of a group.
      *
      * @param groupRow The group record to toggle.
-     * @example
-     * ```typescript
-     * public groupRow: IGroupByRecord;
-     * const toggleExpGroup = this.grid.toggleGroup(this.groupRow);
-     * ```
      */
     public toggleGroup(groupRow: IGroupByRecord) {
         this._toggleGroup(groupRow);
@@ -828,10 +681,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @param groupRow: The group record which rows would be selected.
      * @param clearCurrentSelection if true clears the current selection
-     * @example
-     * ```typescript
-     * this.grid.selectRowsInGroup(this.groupRow, true);
-     * ```
      */
     public selectRowsInGroup(groupRow: IGroupByRecord, clearPrevSelection?: boolean) {
         this._gridAPI.groupBy_select_all_rows_in_group(groupRow, clearPrevSelection);
@@ -842,11 +691,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Deselect all rows within a group.
      *
      * @param groupRow The group record which rows would be deselected.
-     * @example
-     * ```typescript
-     * public groupRow: IGroupByRecord;
-     * this.grid.deselectRowsInGroup(this.groupRow);
-     * ```
      */
     public deselectRowsInGroup(groupRow: IGroupByRecord) {
         this._gridAPI.groupBy_deselect_all_rows_in_group(groupRow);
@@ -857,11 +701,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Expands the specified group and all of its parent groups.
      *
      * @param groupRow The group record to fully expand.
-     * @example
-     * ```typescript
-     * public groupRow: IGroupByRecord;
-     * this.grid.fullyExpandGroup(this.groupRow);
-     * ```
      */
     public fullyExpandGroup(groupRow: IGroupByRecord) {
         this._fullyExpandGroup(groupRow);
@@ -879,11 +718,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Toggles the expansion state of all group rows recursively.
-     *
-     * @example
-     * ```typescript
-     * this.grid.toggleAllGroupRows;
-     * ```
      */
     public toggleAllGroupRows() {
         this.groupingExpansionState = [];
@@ -898,16 +732,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Returns whether the `IgxGridComponent` has group area.
-     *
-     * @example
-     * ```typescript
-     * let isGroupAreaVisible = this.grid.showGroupArea;
-     * ```
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [showGroupArea]="false"></igx-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get showGroupArea(): boolean {
@@ -1128,10 +952,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * Returns the `IgxGridRow` by index.
      *
-     * @example
-     * ```typescript
-     * const myRow = grid.getRowByIndex(1);
-     * ```
      * @param index
      */
     public getRowByIndex(index: number): RowType {
@@ -1158,10 +978,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @remarks
      * Requires that the `primaryKey` property is set.
-     * @example
-     * ```typescript
-     * const myRow = this.grid1.getRowByKey("cell5");
-     * ```
      * @param keyValue
      */
     public getRowByKey(key: any): RowType {
@@ -1198,11 +1014,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Returns an array of the selected `IgxGridCell`s.
-     *
-     * @example
-     * ```typescript
-     * const selectedCells = this.grid.selectedCells;
-     * ```
      */
     public get selectedCells(): CellType[] {
         return this.dataRows().map((row) => row.cells.filter((cell) => cell.selected))
@@ -1212,10 +1023,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * Returns a `CellType` object that matches the conditions.
      *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumn(2, "UnitPrice");
-     * ```
      * @param rowIndex
      * @param columnField
      */
@@ -1235,10 +1042,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @remarks
      * Requires that the primaryKey property is set.
-     * @example
-     * ```typescript
-     * grid.getCellByKey(1, 'index');
-     * ```
      * @param rowSelector match any rowID
      * @param columnField
      */

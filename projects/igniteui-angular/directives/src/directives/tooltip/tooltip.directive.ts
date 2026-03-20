@@ -18,10 +18,6 @@ let NEXT_ID = 0;
  * respective target's selector property.
  *
  * Example:
- * ```html
- * <button type="button" igxButton [igxTooltipTarget]="tooltipRef">Hover me</button>
- * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
- * ```
  */
 @Directive({
     exportAs: 'tooltip',
@@ -49,16 +45,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
      * Gets/sets any tooltip related data.
      * The 'context' can be used for storing any information that is necessary
      * to access when working with the tooltip.
-     *
-     * ```typescript
-     * // get
-     * let tooltipContext = this.tooltip.context;
-     * ```
-     *
-     * ```typescript
-     * // set
-     * this.tooltip.context = "Tooltip's context";
-     * ```
      */
     @Input()
     public context;
@@ -66,10 +52,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     /**
      * Identifier for the tooltip.
      * If this is property is not explicitly set, it will be automatically generated.
-     *
-     * ```typescript
-     * let tooltipId = this.tooltip.id;
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -77,10 +59,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
 
     /**
      * Get the role attribute of the tooltip.
-     *
-     * ```typescript
-     * let tooltipRole = this.tooltip.role;
-     * ```
      */
     @HostBinding('attr.role')
     @Input()
@@ -93,10 +71,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
 
     /**
      * Get the arrow element of the tooltip.
-     *
-     * ```typescript
-     * let tooltipArrow = this.tooltip.arrow;
-     * ```
      */
     public get arrow(): HTMLElement {
         return this._arrowEl;
