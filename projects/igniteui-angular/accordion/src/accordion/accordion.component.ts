@@ -30,25 +30,10 @@ let NEXT_ID = 0;
 /**
  * IgxAccordion is a container-based component that contains that can house multiple expansion panels.
  *
- * @igxModule IgxAccordionModule
- *
- * @igxKeywords accordion
- *
- * @igxGroup Layouts
- *
  * @remarks
  * The Ignite UI for Angular Accordion component enables the user to navigate among multiple collapsing panels
  * displayed in a single container.
  * The accordion offers keyboard navigation and API to control the underlying panels' expansion state.
- *
- * @example
- * ```html
- * <igx-accordion>
- *   <igx-expansion-panel *ngFor="let panel of panels">
- *       ...
- *   </igx-expansion-panel>
- * </igx-accordion>
- * ```
  */
 @Component({
     selector: 'igx-accordion',
@@ -61,12 +46,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     /**
      * Get/Set the `id` of the accordion component.
      * Default value is `"igx-accordion-0"`;
-     * ```html
-     * <igx-accordion id="my-first-accordion"></igx-accordion>
-     * ```
-     * ```typescript
-     * const accordionId = this.accordion.id;
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -82,19 +61,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
 
     /**
      * Get/Set the animation settings that panels should use when expanding/collpasing.
-     *
-     * ```html
-     * <igx-accordion [animationSettings]="customAnimationSettings"></igx-accordion>
-     * ```
-     *
-     * ```typescript
-     * const customAnimationSettings: ToggleAnimationSettings = {
-     *      openAnimation: growVerIn,
-     *      closeAnimation: growVerOut
-     * };
-     *
-     * this.accordion.animationSettings = customAnimationSettings;
-     * ```
      */
     @Input()
     public get animationSettings(): ToggleAnimationSettings {
@@ -109,16 +75,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     /**
      * Get/Set how the accordion handles the expansion of the projected expansion panels.
      * If set to `true`, only a single panel can be expanded at a time, collapsing all others
-     *
-     * ```html
-     * <igx-accordion [singleBranchExpand]="true">
-     * ...
-     * </igx-accordion>
-     * ```
-     *
-     * ```typescript
-     * this.accordion.singleBranchExpand = false;
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get singleBranchExpand(): boolean {
@@ -137,38 +93,12 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      *
      * @remarks
      * This event is cancelable.
-     *
-     * ```html
-     * <igx-accordion (panelExpanding)="handlePanelExpanding($event)">
-     * </igx-accordion>
-     * ```
-     *
-     *```typescript
-     * public handlePanelExpanding(event: IExpansionPanelCancelableEventArgs){
-     *  const expandedPanel: IgxExpansionPanelComponent = event.panel;
-     *  if (expandedPanel.disabled) {
-     *      event.cancel = true;
-     *  }
-     * }
-     *```
      */
     @Output()
     public panelExpanding = new EventEmitter<IAccordionCancelableEventArgs>();
 
     /**
      * Emitted after a panel has been expanded.
-     *
-     * ```html
-     * <igx-accordion (panelExpanded)="handlePanelExpanded($event)">
-     * </igx-accordion>
-     * ```
-     *
-     *```typescript
-     * public handlePanelExpanded(event: IExpansionPanelCancelableEventArgs) {
-     *  const expandedPanel: IgxExpansionPanelComponent = event.panel;
-     *  console.log("Panel is expanded: ", expandedPanel.id);
-     * }
-     *```
      */
     @Output()
     public panelExpanded = new EventEmitter<IAccordionEventArgs>();
@@ -178,32 +108,18 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      *
      * @remarks
      * This event is cancelable.
-     *
-     * ```html
-     * <igx-accordion (panelCollapsing)="handlePanelCollapsing($event)">
-     * </igx-accordion>
-     * ```
      */
     @Output()
     public panelCollapsing = new EventEmitter<IAccordionCancelableEventArgs>();
 
     /**
      * Emitted after a panel has been collapsed.
-     *
-     * ```html
-     * <igx-accordion (panelCollapsed)="handlePanelCollapsed($event)">
-     * </igx-accordion>
-     * ```
      */
     @Output()
     public panelCollapsed = new EventEmitter<IAccordionEventArgs>();
 
     /**
      * Get all panels.
-     *
-     * ```typescript
-     * const panels: IgxExpansionPanelComponent[] = this.accordion.panels;
-     * ```
      */
     public get panels(): IgxExpansionPanelComponent[] {
         return this._panels?.toArray();
@@ -247,10 +163,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
 
     /**
      * Expands all collapsed expansion panels.
-     *
-     * ```typescript
-     * accordion.expandAll();
-     * ```
      */
     public expandAll(): void {
         if (this.singleBranchExpand) {
@@ -266,10 +178,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
 
     /**
      * Collapses all expanded expansion panels.
-     *
-     * ```typescript
-     * accordion.collapseAll();
-     * ```
      */
     public collapseAll(): void {
         this.panels.forEach(panel => panel.collapse());

@@ -23,12 +23,6 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
 
     /**
      * Gets/Sets if the action buttons will be rendered as menu items. When in menu, items will be rendered with text label.
-     *
-     * @example
-     * ```html
-     *  <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
-     *  <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public asMenuItems = false;

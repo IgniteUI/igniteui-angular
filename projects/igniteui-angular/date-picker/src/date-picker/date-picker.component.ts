@@ -76,15 +76,6 @@ let NEXT_ID = 0;
 
 /**
  * Date Picker displays a popup calendar that lets users select a single date.
- *
- * @igxModule IgxDatePickerModule
- * @igxTheme igx-calendar-theme, igx-icon-theme
- * @igxGroup Scheduling
- * @igxKeywords datepicker, calendar, schedule, date
- * @example
- * ```html
- * <igx-date-picker [(ngModel)]="selectedDate"></igx-date-picker>
- * ```
  */
 @Component({
     providers: [
@@ -121,14 +112,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * @remarks
      * Applies to dates that are out of the current month.
      * Default value is `false`.
-     * @example
-     * ```html
-     * <igx-date-picker [hideOutsideDays]="true"></igx-date-picker>
-     * ```
-     * @example
-     * ```typescript
-     * let hideOutsideDays = this.datePicker.hideOutsideDays;
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public hideOutsideDays: boolean;
@@ -138,35 +121,18 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      *
      * @remarks
      * Default value is `1`.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [displayMonthsCount]="2"></igx-date-picker>
-     * ```
-     * @example
-     * ```typescript
-     * let monthViewsDisplayed = this.datePicker.displayMonthsCount;
-     * ```
      */
     @Input()
     public displayMonthsCount = 1;
 
     /**
     * Gets/Sets the orientation of the multiple months displayed in the picker's calendar's days view.
-    *
-    * @example
-    * <igx-date-picker orientation="vertical"></igx-date-picker>
     */
     @Input()
     public orientation: PickerCalendarOrientation = PickerCalendarOrientation.Horizontal;
 
     /**
      * Show/hide week numbers
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [showWeekNumbers]="true"></igx-date-picker>
-     * ``
      */
     @Input({ transform: booleanAttribute })
     public showWeekNumbers: boolean;
@@ -189,44 +155,24 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Gets/Sets a custom formatter function on the selected or passed date.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [value]="date" [formatter]="formatter"></igx-date-picker>
-     * ```
      */
     @Input()
     public formatter: (val: Date) => string;
 
     /**
      * Gets/Sets the today button's label.
-     *
-     *  @example
-     * ```html
-     * <igx-date-picker todayButtonLabel="Today"></igx-date-picker>
-     * ```
      */
     @Input()
     public todayButtonLabel: string;
 
     /**
      * Gets/Sets the cancel button's label.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker cancelButtonLabel="Cancel"></igx-date-picker>
-     * ```
      */
     @Input()
     public cancelButtonLabel: string;
 
     /**
      * Specify if the currently spun date segment should loop over.
-     *
-     *  @example
-     * ```html
-     * <igx-date-picker [spinLoop]="false"></igx-date-picker>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public spinLoop = true;
@@ -234,11 +180,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /**
      * Delta values used to increment or decrement each editor date part on spin actions.
      * All values default to `1`.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [spinDelta]="{ date: 5, month: 2 }"></igx-date-picker>
-     * ```
      */
     @Input()
     public spinDelta: Pick<DatePartDeltas, 'date' | 'month' | 'year'>;
@@ -248,13 +189,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      *
      * @remarks
      *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
-     * //..
-     * ```
      */
     @Input()
     public override outlet: IgxOverlayOutletDirective | ElementRef;
@@ -263,10 +197,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * Gets/Sets the value of `id` attribute.
      *
      * @remarks If not provided it will be automatically generated.
-     * @example
-     * ```html
-     * <igx-date-picker [id]="'igx-date-picker-3'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
-     * ```
      */
     @Input()
     @HostBinding('attr.id')
@@ -276,24 +206,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Gets/Sets the format views of the `IgxDatePickerComponent`.
-     *
-     * @example
-     * ```typescript
-     * let formatViews = this.datePicker.formatViews;
-     *  this.datePicker.formatViews = {day:false, month: false, year:false};
-     * ```
      */
     @Input()
     public formatViews: IFormattingViews;
 
     /**
      * Gets/Sets the disabled dates descriptors.
-     *
-     * @example
-     * ```typescript
-     * let disabledDates = this.datepicker.disabledDates;
-     * this.datePicker.disabledDates = [ {type: DateRangeType.Weekends}, ...];
-     * ```
      */
     @Input()
     public get disabledDates(): DateRangeDescriptor[] {
@@ -306,12 +224,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Gets/Sets the special dates descriptors.
-     *
-     * @example
-     * ```typescript
-     * let specialDates = this.datepicker.specialDates;
-     * this.datePicker.specialDates = [ {type: DateRangeType.Weekends}, ... ];
-     * ```
      */
     @Input()
     public get specialDates(): DateRangeDescriptor[] {
@@ -324,11 +236,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Gets/Sets the format options of the `IgxDatePickerComponent`.
-     *
-     * @example
-     * ```typescript
-     * this.datePicker.calendarFormat = {day: "numeric",  month: "long", weekday: "long", year: "numeric"};
-     * ```
      */
     @Input()
     public calendarFormat: IFormattingOptions;
@@ -337,11 +244,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Gets/Sets the selected date.
-     *
-     *  @example
-     * ```html
-     * <igx-date-picker [value]="date"></igx-date-picker>
-     * ```
      */
     @Input()
     public get value(): Date | string {
@@ -359,9 +261,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * The minimum value the picker will accept.
-     *
-     * @example
-     * <igx-date-picker [minValue]="minDate"></igx-date-picker>
      */
     @Input()
     public set minValue(value: Date | string) {
@@ -375,9 +274,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * The maximum value the picker will accept.
-     *
-     * @example
-     * <igx-date-picker [maxValue]="maxDate"></igx-date-picker>
      */
     @Input()
     public set maxValue(value: Date | string) {
@@ -405,22 +301,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      *
      * @remarks
      * Used for `two-way` bindings.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [(value)]="date"></igx-date-picker>
-     * ```
      */
     @Output()
     public valueChange = new EventEmitter<Date>();
 
     /**
      * Emitted when the user types/spins invalid date in the date-picker editor.
-     *
-     *  @example
-     * ```html
-     * <igx-date-picker (validationFailed)="onValidationFailed($event)"></igx-date-picker>
-     * ```
      */
     @Output()
     public validationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
@@ -576,13 +462,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Opens the picker's dropdown or dialog.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker #picker></igx-date-picker>
-     *
-     * <button type="button" igxButton (click)="picker.open()">Open Dialog</button>
-     * ```
      */
     public open(settings?: OverlaySettings): void {
         if (!this.collapsed || this.disabled || this.readOnly) {
@@ -607,13 +486,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Toggles the picker's dropdown or dialog
-     *
-     * @example
-     * ```html
-     * <igx-date-picker #picker></igx-date-picker>
-     *
-     * <button type="button" igxButton (click)="picker.toggle()">Toggle Dialog</button>
-     * ```
      */
     public toggle(settings?: OverlaySettings): void {
         if (this.collapsed) {
@@ -625,13 +497,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Closes the picker's dropdown or dialog.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker #picker></igx-date-picker>
-     *
-     * <button type="button" igxButton (click)="picker.close()">Close Dialog</button>
-     * ```
      */
     public close(): void {
         if (!this.collapsed) {
@@ -644,10 +509,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      *
      * @remarks Updates the value in the input field.
      *
-     * @example
-     * ```typescript
-     * this.datePicker.select(date);
-     * ```
      * @param date passed date that has to be set to the calendar.
      */
     public select(value: Date): void {
@@ -656,13 +517,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Selects today's date and closes the picker.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker #picker></igx-date-picker>
-     *
-     * <button type="button" igxButton (click)="picker.selectToday()">Select Today</button>
-     * ```
      * */
     public selectToday(): void {
         const today = new Date();
@@ -676,11 +530,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Clears the input field and the picker's value.
-     *
-     * @example
-     * ```typescript
-     * this.datePicker.clear();
-     * ```
      */
     public clear(): void {
         if (!this.disabled || !this.readOnly) {
@@ -694,10 +543,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      *
      * @param datePart The optional DatePart to increment. Defaults to Date.
      * @param delta The optional delta to increment by. Overrides `spinDelta`.
-     * @example
-     * ```typescript
-     * this.datePicker.increment(DatePart.Date);
-     * ```
      */
     public increment(datePart?: DatePart, delta?: number): void {
         this.dateTimeEditor.increment(datePart, delta);
@@ -708,10 +553,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      *
      * @param datePart The optional DatePart to decrement. Defaults to Date.
      * @param delta The optional delta to decrement by. Overrides `spinDelta`.
-     * @example
-     * ```typescript
-     * this.datePicker.decrement(DatePart.Date);
-     * ```
      */
     public decrement(datePart?: DatePart, delta?: number): void {
         this.dateTimeEditor.decrement(datePart, delta);

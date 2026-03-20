@@ -97,11 +97,6 @@ function groupBy<T>(data: T[], key: keyof T | ((item: T) => any)) {
 /**
  * Combo filter function which does not distinguish between accented letters and their base letters.
  * For example, when filtering for "resume", this function will match both "resume" and "résumé".
- *
- * @example
- * ```html
- * <igx-combo [filterFunction]="comboIgnoreDiacriticFilterFunction"></igx-combo>
- * ```
  */
 export function comboIgnoreDiacriticsFilter<T>(collection: T[], searchValue: string, filteringOptions: IComboFilteringOptions): T[] {
     if (!searchValue) {

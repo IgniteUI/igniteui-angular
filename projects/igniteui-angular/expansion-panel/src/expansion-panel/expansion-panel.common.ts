@@ -34,18 +34,7 @@ export abstract class HeaderContentBaseDirective {
     /**
      * Returns the `textContent` of an element
      *
-     * ```html
-     * <igx-expansion-panel-title>
-     *  Tooltip content
-     * </igx-expansion-panel-title>
-     * ```
-     *
      *  or the `title` content
-     *
-     * ```html
-     * <igx-expansion-panel-title [title]="'Tooltip content'">
-     * </igx-expansion-panel-title>
-     * ```
      *
      * If both are provided, returns the `title` content.
      *

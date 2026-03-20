@@ -21,12 +21,6 @@ let NEXT_ID = 0;
  * be dismissed by the user. Toasts can be displayed at the bottom, middle, or top of the page.
  *
  * Example:
- * ```html
- * <button type="button" igxButton (click)="toast.open()">Show notification</button>
- * <igx-toast #toast displayTime="1000">
- *      Notification displayed
- * </igx-toast>
- * ```
  */
 @Component({
     selector: 'igx-toast',
@@ -45,12 +39,6 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
     /**
      * Sets/gets the `id` of the toast.
      * If not set, the `id` will have value `"igx-toast-0"`.
-     * ```html
-     * <igx-toast id = "my-first-toast"></igx-toast>
-     * ```
-     * ```typescript
-     * let toastId = this.toast.id;
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -59,12 +47,6 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
     /**
      * Sets/gets the `role` attribute.
      * If not set, `role` will have value `"alert"`.
-     * ```html
-     * <igx-toast [role] = "'notify'"></igx-toast>
-     * ```
-     * ```typescript
-     * let toastRole = this.toast.role;
-     * ```
      *
      * @memberof IgxToastComponent
      */
@@ -80,10 +62,6 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
 
     /**
      * Get the position and animation settings used by the toast.
-     * ```typescript
-     * @ViewChild('toast', { static: true }) public toast: IgxToastComponent;
-     * let currentPosition: PositionSettings = this.toast.positionSettings
-     * ```
      */
      @Input()
      public get positionSettings(): PositionSettings {
@@ -92,23 +70,6 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
 
      /**
       * Set the position and animation settings used by the toast.
-      * ```html
-      * <igx-toast [positionSettings]="newPositionSettings"></igx-toast>
-      * ```
-      * ```typescript
-      * import { slideInTop, slideOutBottom } from 'igniteui-angular';
-      * ...
-      * @ViewChild('toast', { static: true }) public toast: IgxToastComponent;
-      *  public newPositionSettings: PositionSettings = {
-      *      openAnimation: useAnimation(slideInTop, { params: { duration: '1000ms', fromPosition: 'translateY(100%)'}}),
-      *      closeAnimation: useAnimation(slideOutBottom, { params: { duration: '1000ms', fromPosition: 'translateY(0)'}}),
-      *      horizontalDirection: HorizontalAlignment.Left,
-      *      verticalDirection: VerticalAlignment.Middle,
-      *      horizontalStartPoint: HorizontalAlignment.Left,
-      *      verticalStartPoint: VerticalAlignment.Middle
-      *  };
-      * this.toast.positionSettings = this.newPositionSettings;
-      * ```
       */
      public set positionSettings(settings: PositionSettings) {
          this._positionSettings = settings;
@@ -123,9 +84,6 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
 
     /**
      * Gets the nativeElement of the toast.
-     * ```typescript
-     * let nativeElement = this.toast.element;
-     * ```
      *
      * @memberof IgxToastComponent
      */
@@ -136,10 +94,6 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
     /**
      * Shows the toast.
      * If `autoHide` is enabled, the toast will hide after `displayTime` is over.
-     *
-     * ```typescript
-     * this.toast.open();
-     * ```
      */
     public override open(message?: string, settings?: PositionSettings) {
         if (message !== undefined) {
@@ -154,10 +108,6 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
 
     /**
      * Opens or closes the toast, depending on its current state.
-     *
-     * ```typescript
-     * this.toast.toggle();
-     * ```
      */
      public override toggle() {
         if (this.collapsed || this.isClosing) {

@@ -24,12 +24,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Sets/gets the `id` of the item.
-     * ```html
-     * <igx-drop-down-item [id] = 'igx-drop-down-item-0'></igx-drop-down-item>
-     * ```
-     * ```typescript
-     * let itemId =  this.item.id;
-     * ```
      *
      * @memberof IgxSelectItemComponent
      */
@@ -56,11 +50,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * The data index of the dropdown item.
-     *
-     * ```typescript
-     * // get the data index of the selected dropdown item
-     * let selectedItemIndex = this.dropdown.selectedItem.index
-     * ```
      */
     @Input()
     public get index(): number {
@@ -76,20 +65,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Gets/sets the value of the item if the item is databound
-     *
-     * ```typescript
-     * // usage in IgxDropDownItemComponent
-     * // get
-     * let mySelectedItemValue = this.dropdown.selectedItem.value;
-     *
-     * // set
-     * let mySelectedItem = this.dropdown.selectedItem;
-     * mySelectedItem.value = { id: 123, name: 'Example Name' }
-     *
-     * // usage in IgxComboItemComponent
-     * // get
-     * let myComboItemValue = this.combo.items[0].value;
-     * ```
      */
     @Input()
     public value: any;
@@ -105,15 +80,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     /**
      * Sets/Gets if the item is the currently selected one in the dropdown
      *
-     * ```typescript
-     *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemSelected = mySelectedItem.selected; // true
-     * ```
-     *
      * Two-way data binding
-     * ```html
-     * <igx-drop-down-item [(selected)]='model.isSelected'></igx-drop-down-item>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     @HostBinding('attr.aria-selected')
@@ -138,10 +105,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Sets/gets if the given item is focused
-     * ```typescript
-     *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemFocused = mySelectedItem.focused;
-     * ```
      */
     @HostBinding('class.igx-drop-down__item--focused')
     public get focused(): boolean {
@@ -149,13 +112,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     }
 
     /**
-     * ```html
-     *  <igx-drop-down-item *ngFor="let item of items" focused={{!item.focused}}>
-     *      <div>
-     *          {{item.field}}
-     *      </div>
-     *  </igx-drop-down-item>
-     * ```
      */
     public set focused(value: boolean) {
         this._focused = value;
@@ -163,20 +119,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Sets/gets if the given item is header
-     * ```typescript
-     *  // get
-     *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemHeader = mySelectedItem.isHeader;
-     * ```
-     *
-     * ```html
-     *  <!--set-->
-     *  <igx-drop-down-item *ngFor="let item of items">
-     *      <div *ngIf="items.indexOf(item) === 5; then item.isHeader = true">
-     *          {{item.field}}
-     *      </div>
-     *  </igx-drop-down-item>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-drop-down__header')
@@ -185,19 +127,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     /**
      * Sets/gets if the given item is disabled
      *
-     * ```typescript
-     *  // get
-     *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let myItemIsDisabled = mySelectedItem.disabled;
-     * ```
-     *
-     * ```html
-     *  <igx-drop-down-item *ngFor="let item of items" disabled={{!item.disabled}}>
-     *      <div>
-     *          {{item.field}}
-     *      </div>
-     *  </igx-drop-down-item>
-     * ```
      * **NOTE:** Drop-down items inside of a disabled `IgxDropDownGroup` will always count as disabled
      */
     @Input({ transform: booleanAttribute })
@@ -213,10 +142,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Gets/sets the `role` attribute of the item. Default is 'option'.
-     *
-     * ```html
-     *  <igx-drop-down-item [role]="customRole"></igx-drop-down-item>
-     * ```
      */
     @Input()
     @HostBinding('attr.role')

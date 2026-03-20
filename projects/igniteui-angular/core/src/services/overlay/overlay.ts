@@ -47,71 +47,36 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Emitted just before the overlay content starts to open.
-     * ```typescript
-     * opening(event: OverlayCancelableEventArgs){
-     *     const opening = event;
-     * }
-     * ```
      */
     public opening = new EventEmitter<OverlayCancelableEventArgs>();
 
     /**
      * Emitted after the overlay content is opened and all animations are finished.
-     * ```typescript
-     * opened(event: OverlayEventArgs){
-     *     const opened = event;
-     * }
-     * ```
      */
     public opened = new EventEmitter<OverlayEventArgs>();
 
     /**
      * Emitted just before the overlay content starts to close.
-     * ```typescript
-     * closing(event: OverlayCancelableEventArgs){
-     *     const closing = event;
-     * }
-     * ```
      */
     public closing = new EventEmitter<OverlayClosingEventArgs>();
 
     /**
      * Emitted after the overlay content is closed and all animations are finished.
-     * ```typescript
-     * closed(event: OverlayEventArgs){
-     *     const closed = event;
-     * }
-     * ```
      */
     public closed = new EventEmitter<OverlayEventArgs>();
 
     /**
      * Emitted before the content is appended to the overlay.
-     * ```typescript
-     * contentAppending(event: OverlayEventArgs){
-     *     const contentAppending = event;
-     * }
-     * ```
      */
     public contentAppending = new EventEmitter<OverlayEventArgs>();
 
     /**
      * Emitted after the content is appended to the overlay, and before animations are started.
-     * ```typescript
-     * contentAppended(event: OverlayEventArgs){
-     *     const contentAppended = event;
-     * }
-     * ```
      */
     public contentAppended = new EventEmitter<OverlayEventArgs>();
 
     /**
      * Emitted just before the overlay animation start.
-     * ```typescript
-     * animationStarting(event: OverlayAnimationEventArgs){
-     *     const animationStarting = event;
-     * }
-     * ```
      */
     public animationStarting = new EventEmitter<OverlayAnimationEventArgs>();
 
@@ -354,9 +319,6 @@ export class IgxOverlayService implements OnDestroy {
      * Remove overlay with the provided id.
      *
      * @param id Id of the overlay to remove
-     * ```typescript
-     * this.overlay.detach(id);
-     * ```
      */
     public detach(id: string) {
         const info: OverlayInfo = this.getOverlayById(id);
@@ -379,9 +341,6 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Remove all the overlays.
-     * ```typescript
-     * this.overlay.detachAll();
-     * ```
      */
     public detachAll() {
         for (let i = this._overlayInfos.length; i--;) {
@@ -458,9 +417,6 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Hides the component with the ID provided as a parameter.
-     * ```typescript
-     * this.overlay.hide(id);
-     * ```
      */
     public hide(id: string, event?: Event) {
         this._hide(id, event);
@@ -468,9 +424,6 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Hides all the components and the overlay.
-     * ```typescript
-     * this.overlay.hideAll();
-     * ```
      */
     public hideAll() {
         for (let i = this._overlayInfos.length; i--;) {
@@ -482,9 +435,6 @@ export class IgxOverlayService implements OnDestroy {
      * Repositions the component with ID provided as a parameter.
      *
      * @param id Id to reposition overlay for
-     * ```typescript
-     * this.overlay.reposition(id);
-     * ```
      */
     public reposition(id: string) {
         const overlayInfo = this.getOverlayById(id);
@@ -515,9 +465,6 @@ export class IgxOverlayService implements OnDestroy {
      * @param deltaX Amount of offset in horizontal direction
      * @param deltaY Amount of offset in vertical direction
      * @param offsetMode Determines whether to add (by default) or set the offset values with OffsetMode.Add and OffsetMode.Set
-     * ```typescript
-     * this.overlay.setOffset(id, deltaX, deltaY, offsetMode);
-     * ```
      */
     public setOffset(id: string, deltaX: number, deltaY: number, offsetMode?: OffsetMode) {
         const info: OverlayInfo = this.getOverlayById(id);

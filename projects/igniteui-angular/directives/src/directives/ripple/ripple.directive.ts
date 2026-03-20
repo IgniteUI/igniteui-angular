@@ -20,20 +20,7 @@ export class IgxRippleDirective {
 
     /**
      * Sets/gets the ripple target.
-     * ```html
-     * <div  #rippleContainer class="div-1" igxRipple [igxRippleTarget] = "'.div-1'"></div>
-     * ```
-     * ```typescript
-     * @ViewChild('rippleContainer', {read: IgxRippleDirective})
-     * public ripple: IgxRippleDirective;
-     * let rippleTarget = this.ripple.rippleTarget;
-     * ```
      * Can set the ripple to activate on a child element inside the parent where igxRipple is defined.
-     * ```html
-     * <div #rippleContainer [igxRippleTarget]="'#child"'>
-     *   <button type="button" igxButton id="child">Click</button>
-     * </div>
-     * ```
      *
      * @memberof IgxRippleDirective
      */
@@ -41,14 +28,6 @@ export class IgxRippleDirective {
     public rippleTarget = '';
     /**
      * Sets/gets the ripple color.
-     * ```html
-     * <button type="button" #rippleContainer igxButton [igxRipple]="'red'"></button>
-     * ```
-     * ```typescript
-     * @ViewChild('rippleContainer', {read: IgxRippleDirective})
-     * public ripple: IgxRippleDirective;
-     * let rippleColor = this.ripple.rippleColor;
-     * ```
      *
      * @memberof IgxRippleDirective
      */
@@ -57,14 +36,6 @@ export class IgxRippleDirective {
     /**
      * Sets/gets the ripple duration(in milliseconds).
      * Default value is `600`.
-     * ```html
-     * <button type="button" #rippleContainer igxButton igxRipple [igxRippleDuration]="800"></button>
-     * ```
-     * ```typescript
-     * @ViewChild('rippleContainer', {read: IgxRippleDirective})
-     * public ripple: IgxRippleDirective;
-     * let rippleDuration = this.ripple.rippleDuration;
-     * ```
      *
      * @memberof IgxRippleDirective
      */
@@ -72,9 +43,6 @@ export class IgxRippleDirective {
     public rippleDuration = 600;
     /**
      * Enables/disables the ripple to be centered.
-     * ```html
-     * <button type="button" #rippleContainer igxButton igxRipple [igxRippleCentered]="true"></button>
-     * ```
      *
      * @memberof IgxRippleDirective
      */
@@ -85,14 +53,6 @@ export class IgxRippleDirective {
     /**
      * Sets/gets whether the ripple is disabled.
      * Default value is `false`.
-     * ```html
-     * <button type="button" #rippleContainer igxRipple [igxRippleDisabled]="true"></button>
-     * ```
-     * ```typescript
-     * @ViewChild('rippleContainer', {read: IgxRippleDirective})
-     * public ripple: IgxRippleDirective;
-     * let isRippleDisabled = this.ripple.rippleDisabled;
-     * ```
      *
      * @memberof IgxRippleDirective
      */

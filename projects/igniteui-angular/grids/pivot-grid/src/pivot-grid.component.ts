@@ -80,18 +80,9 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 /**
  * Pivot Grid provides a way to present and manipulate data in a pivot table view.
  *
- * @igxModule IgxPivotGridModule
- * @igxGroup Grids & Lists
- * @igxKeywords pivot, grid, table
- * @igxTheme igx-grid-theme
  * @remarks
  * The Ignite UI Pivot Grid is used for grouping and aggregating simple flat data into a pivot table.  Once data
  * has been bound and the dimensions and values configured it can be manipulated via sorting and filtering.
- * @example
- * ```html
- * <igx-pivot-grid [data]="data" [pivotConfiguration]="configuration">
- * </igx-pivot-grid>
- * ```
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -164,23 +155,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      *
      * @remarks
      * Returns the new dimension collection and its type:
-     * @example
-     * ```html
-     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
-     *              (dimensionsChange)="dimensionsChange($event)"></igx-grid>
-     * ```
      */
     @Output()
     public dimensionsChange = new EventEmitter<IDimensionsChange>();
 
     /**
      * Emitted when any of the pivotConfiguration properties is changed via the grid chip area.
-     *
-     * @example
-     * ```html
-     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
-     *              (pivotConfigurationChanged)="configurationChanged($event)"></igx-grid>
-     * ```
      */
     @Output()
     public pivotConfigurationChange = new EventEmitter<IPivotConfigurationChangedEventArgs>();
@@ -190,11 +170,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * Emitted when the dimension is initialized.
      * @remarks
      * Emits the dimension that is about to be initialized.
-     * @example
-     * ```html
-     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
-     *              (dimensionInit)="dimensionInit($event)"></igx-pivot-grid>
-     * ```
      */
     @Output()
     public dimensionInit = new EventEmitter<IPivotDimension>();
@@ -203,11 +178,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * Emitted when the value is initialized.
      * @remarks
      * Emits the value that is about to be initialized.
-     * @example
-     * ```html
-     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
-     *              (valueInit)="valueInit($event)"></igx-pivot-grid>
-     * ```
      */
     @Output()
     public valueInit = new EventEmitter<IPivotValue>();
@@ -215,12 +185,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * Emitted when a dimension is sorted.
-     *
-     * @example
-     * ```html
-     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
-     *              (dimensionsSortingExpressionsChange)="dimensionsSortingExpressionsChange($event)"></igx-pivot-grid>
-     * ```
      */
     @Output()
     public dimensionsSortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
@@ -230,11 +194,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      *
      * @remarks
      * Returns the new dimension
-     * @example
-     * ```html
-     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
-     *              (valuesChange)="valuesChange($event)"></igx-grid>
-     * ```
     */
     @Output()
     public valuesChange = new EventEmitter<IValuesChange>();
@@ -242,11 +201,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * Gets the sorting expressions generated for the dimensions.
-     *
-     * @example
-     * ```typescript
-     * const expressions = this.grid.dimensionsSortingExpressions;
-     * ```
      */
     public get dimensionsSortingExpressions() {
         const allEnabledDimensions = this.rowDimensions.concat(this.columnDimensions);
@@ -272,11 +226,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * Gets/Sets a custom template for the value chips.
-     *
-     * @example
-     * ```html
-     * <igx-pivot-grid [valueChipTemplate]="myTemplate"><igx-pivot-grid>
-     * ```
      */
     @Input()
     public valueChipTemplate: TemplateRef<IgxPivotGridValueTemplateContext>;
@@ -288,11 +237,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /* @tsTwoWayProperty (true, "PivotConfigurationChange", "Detail.PivotConfiguration", false) */
     /**
      * Gets/Sets the pivot configuration with all related dimensions and values.
-     *
-     * @example
-     * ```html
-     * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
-     * ```
      */
     @Input()
     public set pivotConfiguration(value: IPivotConfiguration) {
@@ -315,10 +259,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      *
      * @remarks
      * The default value is false. When set to true, it will override all dimensions and values in the pivotConfiguration.
-     * @example
-     * ```html
-     * <igx-pivot-grid [data]="Data" [autoGenerateConfig]="true"></igx-pivot-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public autoGenerateConfig = false;
@@ -328,10 +268,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * Gets/Sets the pivot ui settings for the pivot grid - chips and their
      * corresponding containers for row, filter, column dimensions and values
      * as well as headers for the row dimensions values.
-     * @example
-     * ```html
-     * <igx-pivot-grid [pivotUI]="{ showRowHeaders: true }"></igx-pivot-grid>
-     * ```
      */
     public set pivotUI(value: IPivotUISettings) {
         this._pivotUI = Object.assign(this._pivotUI, value || {});
@@ -353,10 +289,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * Enables a super compact theme for the component.
      * @remarks
      * Overrides the grid size option if one is set.
-     * @example
-     * ```html
-     * <igx-pivot-grid [superCompactMode]="true"></igx-pivot-grid>
-     * ```
      */
     @HostBinding('class.igx-grid__pivot--super-compact')
     @Input()
@@ -380,10 +312,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * Gets/Sets the values clone strategy of the pivot grid when assigning them to different dimensions.
      *
-     * @example
-     * ```html
-     *  <igx-pivot-grid #grid [data]="localData" [pivotValueCloneStrategy]="customCloneStrategy"></igx-pivot-grid>
-     * ```
      * @hidden @internal
      */
     @Input()
@@ -1040,11 +968,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * Gets the full list of dimensions.
-     *
-     * @example
-     * ```typescript
-     * const dimensions = this.grid.allDimensions;
-     * ```
      */
     public get allDimensions() {
         const config = this._pivotConfiguration;
@@ -1102,10 +1025,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      *
      * @remarks
      * If not provided it will be automatically generated.
-     * @example
-     * ```html
-     * <igx-pivot-grid [id]="'igx-pivot-1'" [data]="Data"></igx-pivot-grid>
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -1121,9 +1040,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /* blazorAlternateType: object */
     /**
      * Gets/Sets the array of data that populates the component.
-     * ```html
-     * <igx-pivot-grid [data]="Data"></igx-pivot-grid>
-     * ```
      */
     @Input()
     public set data(value: any[] | null) {
@@ -1146,9 +1062,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /* blazorAlternateType: object */
     /**
      * Returns an array of data set to the component.
-     * ```typescript
-     * let data = this.grid.data;
-     * ```
      */
     public get data(): any[] | null {
         return this._data;
@@ -1586,10 +1499,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      *
      * @remarks
      * Only sizes based on the dimension cells in view.
-     * @example
-     * ```typescript
-     * this.grid.autoSizeRowDimension(dimension);
-     * ```
      * @param dimension The row dimension to size.
      */
     public autoSizeRowDimension(dimension: IPivotDimension) {
@@ -1616,10 +1525,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * Inserts dimension in target collection by type at specified index or at the collection's end.
      *
-     * @example
-     * ```typescript
-     * this.grid.insertDimensionAt(dimension, PivotDimensionType.Row, 1);
-     * ```
      * @param dimension The dimension that will be added.
      * @param targetCollectionType The target collection type to add to. Can be Row, Column or Filter.
      * @param index The index in the collection at which to add.
@@ -1647,10 +1552,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * Move dimension from its currently collection to the specified target collection by type at specified index or at the collection's end.
      *
-     * @example
-     * ```typescript
-     * this.grid.moveDimension(dimension, PivotDimensionType.Row, 1);
-     * ```
      * @param dimension The dimension that will be moved.
      * @param targetCollectionType The target collection type to move it to. Can be Row, Column or Filter.
      * @param index The index in the collection at which to add.
@@ -1674,10 +1575,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @remarks
      * This is different than toggleDimension that enabled/disables the dimension.
      * This completely removes the specified dimension from the collection.
-     * @example
-     * ```typescript
-     * this.grid.removeDimension(dimension);
-     * ```
      * @param dimension The dimension to be removed.
      */
     public removeDimension(dimension: IPivotDimension) {
@@ -1697,10 +1594,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * Toggles the dimension's enabled state on or off.
      * @remarks
      * The dimension remains in its current collection. This just changes its enabled state.
-     * @example
-     * ```typescript
-     * this.grid.toggleDimension(dimension);
-     * ```
      * @param dimension The dimension to be toggled.
      */
     public toggleDimension(dimension: IPivotDimension) {
@@ -1726,10 +1619,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * Inserts value at specified index or at the end.
      *
-     * @example
-     * ```typescript
-     * this.grid.insertValueAt(value, 1);
-     * ```
      * @param value The value definition that will be added.
      * @param index The index in the collection at which to add.
      * This parameter is optional. If not set it will add it to the end of the collection.
@@ -1754,10 +1643,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * Move value from its currently at specified index or at the end.
      *
-     * @example
-     * ```typescript
-     * this.grid.moveValue(value, 1);
-     * ```
      * @param value The value that will be moved.
      * @param index The index in the collection at which to add.
      * This parameter is optional. If not set it will add it to the end of the collection.
@@ -1775,10 +1660,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @remarks
      * This is different than toggleValue that enabled/disables the value.
      * This completely removes the specified value from the collection.
-     * @example
-     * ```typescript
-     * this.grid.removeValue(dimension);
-     * ```
      * @param value The value to be removed.
      */
     public removeValue(value: IPivotValue,) {
@@ -1797,10 +1678,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * Toggles the value's enabled state on or off.
      * @remarks
      * The value remains in its current collection. This just changes its enabled state.
-     * @example
-     * ```typescript
-     * this.grid.toggleValue(value);
-     * ```
      * @param value The value to be toggled.
      */
     public toggleValue(value: IPivotValue) {
@@ -1815,10 +1692,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * Sort the dimension and its children in the provided direction.
-     * @example
-     * ```typescript
-     * this.grid.sortDimension(dimension, SortingDirection.Asc);
-     * ```
      * @param value The value to be toggled.
      */
     public sortDimension(dimension: IPivotDimension, sortDirection: SortingDirection) {
@@ -1844,16 +1717,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * Filters a single `IPivotDimension`.
-     *
-     * @example
-     * ```typescript
-     * public filter() {
-     *      const set = new Set();
-     *      set.add('Value 1');
-     *      set.add('Value 2');
-     *      this.grid1.filterDimension(this.pivotConfigHierarchy.rows[0], set, IgxStringFilteringOperand.instance().condition('in'));
-     * }
-     * ```
      */
     public filterDimension(dimension: IPivotDimension, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree) {
         this.filteringService.filter(dimension.memberName, value, conditionOrExpressionTree);
@@ -2428,11 +2291,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * Gets/Sets a custom template when pivot grid is empty.
-     *
-     * @example
-     * ```html
-     * <igx-pivot-grid [emptyPivotGridTemplate]="myTemplate"><igx-pivot-grid>
-     * ```
      */
     @Input()
     public emptyPivotGridTemplate: TemplateRef<void>;

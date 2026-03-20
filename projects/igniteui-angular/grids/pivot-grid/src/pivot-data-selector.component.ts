@@ -33,20 +33,10 @@ interface IDataSelectorPanel {
 /**
  * Pivot Data Selector provides means to configure the pivot state of the Pivot Grid via a vertical panel UI
  *
- * @igxModule IgxPivotGridModule
- * @igxGroup Grids & Lists
- * @igxKeywords data selector, pivot, grid
- * @igxTheme pivot-data-selector-theme
  * @remarks
  * The Ignite UI Data Selector has a searchable list with the grid data columns,
  * there are also four expandable areas underneath for filters, rows, columns, and values
  * is used for grouping and aggregating simple flat data into a pivot table.
- * @example
- * ```html
- * <igx-pivot-grid #grid1 [data]="data" [pivotConfiguration]="configuration">
- * </igx-pivot-grid>
- * <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>
- * ```
  */
 @Component({
     selector: "igx-pivot-data-selector",
@@ -61,30 +51,15 @@ export class IgxPivotDataSelectorComponent {
     /**
      * Gets/sets whether the columns panel is expanded
      * Get
-     * ```typescript
-     *  const columnsPanelState: boolean = this.dataSelector.columnsExpanded;
-     * ```
      * Set
-     * ```html
-     * <igx-pivot-data-selector [grid]="grid1" [columnsExpanded]="columnsPanelState"></igx-pivot-data-selector>
-     * ```
      *
      * Two-way data binding:
-     * ```html
-     * <igx-pivot-data-selector [grid]="grid1" [(columnsExpanded)]="columnsPanelState"></igx-pivot-data-selector>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public columnsExpanded = true;
 
     /**
      * Emitted when the columns panel is expanded or collapsed.
-     *
-     * @example
-     * ```html
-     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
-     *              (columnsExpandedChange)="columnsExpandedChange($event)"></igx-pivot-data-selector>
-     * ```
     */
     @Output()
     public columnsExpandedChange = new EventEmitter<boolean>();
@@ -92,30 +67,15 @@ export class IgxPivotDataSelectorComponent {
     /**
      * Gets/sets whether the rows panel is expanded
      * Get
-     * ```typescript
-     *  const rowsPanelState: boolean = this.dataSelector.rowsExpanded;
-     * ```
      * Set
-     * ```html
-     * <igx-pivot-data-selector [grid]="grid1" [rowsExpanded]="rowsPanelState"></igx-pivot-data-selector>
-     * ```
      *
      * Two-way data binding:
-     * ```html
-     * <igx-pivot-data-selector [grid]="grid1" [(rowsExpanded)]="rowsPanelState"></igx-pivot-data-selector>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public rowsExpanded = true;
 
     /**
      * Emitted when the rows panel is expanded or collapsed.
-     *
-     * @example
-     * ```html
-     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
-     *              (rowsExpandedChange)="rowsExpandedChange($event)"></igx-pivot-data-selector>
-     * ```
     */
     @Output()
     public rowsExpandedChange = new EventEmitter<boolean>();
@@ -123,30 +83,15 @@ export class IgxPivotDataSelectorComponent {
     /**
      * Gets/sets whether the filters panel is expanded
      * Get
-     * ```typescript
-     *  const filtersPanelState: boolean = this.dataSelector.filtersExpanded;
-     * ```
      * Set
-     * ```html
-     * <igx-pivot-data-selector [grid]="grid1" [filtersExpanded]="filtersPanelState"></igx-pivot-data-selector>
-     * ```
      *
      * Two-way data binding:
-     * ```html
-     * <igx-pivot-data-selector [grid]="grid1" [(filtersExpanded)]="filtersPanelState"></igx-pivot-data-selector>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public filtersExpanded = true;
 
     /**
      * Emitted when the filters panel is expanded or collapsed.
-     *
-     * @example
-     * ```html
-     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
-     *              (filtersExpandedChange)="filtersExpandedChange($event)"></igx-pivot-data-selector>
-     * ```
     */
     @Output()
     public filtersExpandedChange = new EventEmitter<boolean>();
@@ -154,30 +99,15 @@ export class IgxPivotDataSelectorComponent {
     /**
      * Gets/sets whether the values panel is expanded
      * Get
-     * ```typescript
-     *  const valuesPanelState: boolean = this.dataSelector.valuesExpanded;
-     * ```
      * Set
-     * ```html
-     * <igx-pivot-data-selector [grid]="grid1" [valuesExpanded]="valuesPanelState"></igx-pivot-data-selector>
-     * ```
      *
      * Two-way data binding:
-     * ```html
-     * <igx-pivot-data-selector [grid]="grid1" [(valuesExpanded)]="valuesPanelState"></igx-pivot-data-selector>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public valuesExpanded = true;
 
     /**
      * Emitted when the values panel is expanded or collapsed.
-     *
-     * @example
-     * ```html
-     * <igx-pivot-data-selector #grid [data]="localData" [height]="'305px'"
-     *              (valuesExpandedChange)="valuesExpandedChange($event)"></igx-pivot-data-selector>
-     * ```
     */
     @Output()
     public valuesExpandedChange = new EventEmitter<boolean>();

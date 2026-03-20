@@ -10,8 +10,6 @@ import { IgxActionStripActionsToken } from 'igniteui-angular/core';
 /* singleInstanceIdentifier */
 /**
  * Grid Pinning Actions for the Action Strip
- *
- * @igxParent IgxActionStripComponent
  */
 @Component({
     selector: 'igx-grid-pinning-actions',
@@ -79,11 +77,6 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Pin the row according to the context.
-     *
-     * @example
-     * ```typescript
-     * this.gridPinningActions.pin();
-     * ```
      */
     public pin(event?): void {
         if (event) {
@@ -100,11 +93,6 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Unpin the row according to the context.
-     *
-     * @example
-     * ```typescript
-     * this.gridPinningActions.unpin();
-     * ```
      */
     public unpin(event?): void {
         if (event) {

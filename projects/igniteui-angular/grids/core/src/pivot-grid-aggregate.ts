@@ -5,9 +5,6 @@ import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxTimeSummaryOperand }
 export class IgxPivotAggregate {
     /**
      * Gets array with default aggregator function for base aggregation.
-     * ```typescript
-     * IgxPivotAggregate.aggregators();
-     * ```
      *
      * @memberof IgxPivotAggregate
      */
@@ -21,9 +18,6 @@ export class IgxPivotAggregate {
     /**
      * Counts all the records in the data source.
      * If filtering is applied, counts only the filtered records.
-     * ```typescript
-     * IgxSummaryOperand.count(dataSource);
-     * ```
      *
      * @memberof IgxPivotAggregate
      */
@@ -36,9 +30,6 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
 
     /**
      * Gets array with default aggregator function for numeric aggregation.
-     * ```typescript
-     * IgxPivotAggregate.aggregators();
-     * ```
      *
      * @memberof IgxPivotAggregate
      */
@@ -73,9 +64,6 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
     /**
      * Returns the minimum numeric value in the provided data records.
      * If filtering is applied, returns the minimum value in the filtered data records.
-     * ```typescript
-     * IgxPivotNumericAggregate.min(members, data);
-     * ```
      *
      * @memberof IgxPivotNumericAggregate
      */
@@ -86,9 +74,6 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
     /**
      * Returns the maximum numeric value in the provided data records.
      * If filtering is applied, returns the maximum value in the filtered data records.
-     * ```typescript
-     * IgxPivotNumericAggregate.max(data);
-     * ```
      *
      * @memberof IgxPivotNumericAggregate
      */
@@ -99,9 +84,6 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
     /**
      * Returns the sum of the numeric values in the provided data records.
      * If filtering is applied, returns the sum of the numeric values in the data records.
-     * ```typescript
-     * IgxPivotNumericAggregate.sum(data);
-     * ```
      *
      * @memberof IgxPivotNumericAggregate
      */
@@ -112,9 +94,6 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
     /**
      * Returns the average numeric value in the data provided data records.
      * If filtering is applied, returns the average numeric value in the filtered data records.
-     * ```typescript
-     * IgxPivotNumericAggregate.average(data);
-     * ```
      *
      * @memberof IgxPivotNumericAggregate
      */
@@ -126,9 +105,6 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
 export class IgxPivotDateAggregate extends IgxPivotAggregate {
     /**
      * Gets array with default aggregator function for date aggregation.
-     * ```typescript
-     * IgxPivotDateAggregate.aggregators();
-     * ```
      *
      * @memberof IgxPivotAggregate
      */
@@ -150,9 +126,6 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
     /**
      * Returns the latest date value in the data records.
      * If filtering is applied, returns the latest date value in the filtered data records.
-     * ```typescript
-     * IgxPivotDateAggregate.latest(data);
-     * ```
      *
      * @memberof IgxPivotDateAggregate
      */
@@ -163,9 +136,6 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
     /**
      * Returns the earliest date value in the data records.
      * If filtering is applied, returns the latest date value in the filtered data records.
-     * ```typescript
-     * IgxPivotDateAggregate.earliest(data);
-     * ```
      *
      * @memberof IgxPivotDateAggregate
      */
@@ -177,9 +147,6 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
 export class IgxPivotTimeAggregate extends IgxPivotAggregate {
     /**
      * Gets array with default aggregator function for time aggregation.
-     * ```typescript
-     * IgxPivotTimeAggregate.aggregators();
-     * ```
      *
      * @memberof IgxPivotAggregate
      */
@@ -202,9 +169,6 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
     /**
      * Returns the latest time value in the data records. Compare only the time part of the date.
      * If filtering is applied, returns the latest time value in the filtered data records.
-     * ```typescript
-     * IgxPivotTimeAggregate.latestTime(data);
-     * ```
      *
      * @memberof IgxPivotTimeAggregate
      */
@@ -215,9 +179,6 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
     /**
      * Returns the earliest time value in the data records. Compare only the time part of the date.
      * If filtering is applied, returns the earliest time value in the filtered data records.
-     * ```typescript
-     * IgxPivotTimeAggregate.earliestTime(data);
-     * ```
      *
      * @memberof IgxPivotTimeAggregate
      */

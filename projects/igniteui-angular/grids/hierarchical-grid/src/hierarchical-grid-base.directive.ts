@@ -40,12 +40,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     public override navigation = inject(IgxHierarchicalGridNavigationService);
     /**
      * Gets/Sets the key indicating whether a row has children. If row has no children it does not render an expand indicator.
-     *
-     * @example
-     * ```html
-     * <igx-hierarchical-grid #grid [data]="localData" [hasChildrenKey]="'hasEmployees'">
-     * </igx-hierarchical-grid>
-     * ```
      */
     @Input()
     public hasChildrenKey: string;
@@ -55,23 +49,12 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      *
      * @remarks
      * The default value is false.
-     * @example
-     * ```html
-     * <igx-hierarchical-grid #grid [data]="localData" [showExpandAll]="true">
-     * </igx-hierarchical-grid>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public showExpandAll = false;
 
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
-     *
-     * @example
-     * ```typescript
-     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (dataPreLoad)="handleEvent()">
-     *  </igx-hierarchical-grid>
-     * ```
      */
     @Output()
     public dataPreLoad = new EventEmitter<IForOfState>();

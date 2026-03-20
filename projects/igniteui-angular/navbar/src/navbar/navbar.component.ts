@@ -35,13 +35,6 @@ let NEXT_ID = 0;
  * state such as a "Go Back" button. It also supports other actions represented by icons.
  *
  * Example:
- * ```html
- * <igx-navbar title="Sample App" actionButtonIcon="menu">
- *   <igx-icon>search</igx-icon>
- *   <igx-icon>favorite</igx-icon>
- *   <igx-icon>more_vert</igx-icon>
- * </igx-navbar>
- * ```
  */
 
 @Component({
@@ -60,9 +53,6 @@ let NEXT_ID = 0;
 export class IgxNavbarComponent {
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
-     * ```html
-     * <igx-navbar [id]="'igx-navbar-12'" title="Sample App" actionButtonIcon="menu">
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -70,40 +60,22 @@ export class IgxNavbarComponent {
 
     /**
      * Sets the icon of the `IgxNavbarComponent`.
-     * ```html
-     * <igx-navbar [title]="currentView" actionButtonIcon="arrow_back"></igx-navbar>
-     * ```
      */
     @Input() public actionButtonIcon: string;
 
     /**
      * Sets the title of the `IgxNavbarComponent`.
-     * ```html
-     * <igx-navbar title="Sample App" actionButtonIcon="menu">
-     * ```
      */
     @Input() public title: string;
 
     /**
      * The event that will be thrown when the action is executed,
      * provides reference to the `IgxNavbar` component as argument
-     * ```typescript
-     * public actionExc(event){
-     *     alert("Action Execute!");
-     * }
-     *  //..
-     * ```
-     * ```html
-     * <igx-navbar (action)="actionExc($event)" title="Sample App" actionButtonIcon="menu">
-     * ```
      */
     @Output() public action = new EventEmitter<IgxNavbarComponent>();
 
     /**
      * Sets the titleId of the `IgxNavbarComponent`. If not set it will be automatically generated.
-     * ```html
-     * <igx-navbar [titleId]="'igx-navbar-7'" title="Sample App" actionButtonIcon="menu">
-     * ```
      */
     @Input()
     public titleId = `igx-navbar-title-${NEXT_ID++}`;
@@ -124,9 +96,6 @@ export class IgxNavbarComponent {
 
     /**
      * Sets whether the action button of the `IgxNavbarComponent` is visible.
-     * ```html
-     * <igx-navbar [title]="currentView" [isActionButtonVisible]="'false'"></igx-navbar>
-     * ```
      */
     public set isActionButtonVisible(value: boolean) {
         this.isVisible = value;
@@ -134,13 +103,6 @@ export class IgxNavbarComponent {
 
     /**
      * Returns whether the `IgxNavbarComponent` action button is visible, true/false.
-     * ```typescript
-     *  @ViewChild("MyChild")
-     * public navBar: IgxNavbarComponent;
-     * ngAfterViewInit(){
-     *     let actionButtonVisibile = this.navBar.isActionButtonVisible;
-     * }
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get isActionButtonVisible(): boolean {

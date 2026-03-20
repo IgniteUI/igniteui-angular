@@ -26,17 +26,7 @@ let NEXT_ID = 0;
  * single, multi and singleRequired selection.
  *
  * Example:
- * ```html
- * <igx-buttongroup selectionMode="multi" [values]="fontOptions">
- * </igx-buttongroup>
- * ```
  * The `fontOptions` value shown above is defined as:
- * ```typescript
- * this.fontOptions = [
- *   { icon: 'format_bold', selected: false },
- *   { icon: 'format_italic', selected: false },
- *   { icon: 'format_underlined', selected: false }];
- * ```
  */
 @Component({
     selector: 'igx-buttongroup',
@@ -57,9 +47,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Gets/Sets the value of the `id` attribute. If not set it will be automatically generated.
-     * ```html
-     *  <igx-buttongroup [id]="'igx-dialog-56'" [selectionMode]="'multi'" [values]="alignOptions">
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -74,13 +61,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     /**
      * Allows you to set a style using the `itemContentCssClass` input.
      * The value should be the CSS class name that will be applied to the button group.
-     * ```typescript
-     * public style1 = "styleClass";
-     *  //..
-     * ```
-     *  ```html
-     * <igx-buttongroup [itemContentCssClass]="style1" [selectionMode]="'multi'" [values]="alignOptions">
-     * ```
      */
     @Input()
     public set itemContentCssClass(value: string) {
@@ -89,13 +69,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Returns the CSS class of the item content of the `IgxButtonGroup`.
-     * ```typescript
-     *  @ViewChild("MyChild")
-     * public buttonG: IgxButtonGroupComponent;
-     * ngAfterViewInit(){
-     *    let buttonSelect = this.buttonG.itemContentCssClass;
-     * }
-     * ```
      */
     public get itemContentCssClass(): string {
         return this._itemContentCssClass;
@@ -124,9 +97,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Gets/Sets the selection mode to 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
-     * ```html
-     * <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment"></igx-buttongroup>
-     * ```
      */
     @Input()
     public get selectionMode() {
@@ -145,37 +115,11 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Property that configures the buttons in the button group using a collection of `Button` objects.
-     * ```typescript
-     *  public ngOnInit() {
-     *      this.cities = [
-     *        new Button({
-     *          label: "Sofia"
-     *      }),
-     *        new Button({
-     *          label: "London"
-     *      }),
-     *        new Button({
-     *          label: "New York",
-     *          selected: true
-     *      }),
-     *        new Button({
-     *          label: "Tokyo"
-     *      })
-     *  ];
-     *  }
-     *  //..
-     * ```
-     * ```html
-     *  <igx-buttongroup [selectionMode]="'single'" [values]="cities"></igx-buttongroup>
-     * ```
      */
     @Input() public values: any;
 
     /**
      * Disables the `igx-buttongroup` component. By default it's false.
-     * ```html
-     * <igx-buttongroup [disabled]="true" [selectionMode]="'multi'" [values]="fontOptions"></igx-buttongroup>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get disabled(): boolean {
@@ -194,13 +138,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     /**
      * Allows you to set the button group alignment.
      * Available options are `ButtonGroupAlignment.horizontal` (default) and `ButtonGroupAlignment.vertical`.
-     * ```typescript
-     * public alignment = ButtonGroupAlignment.vertical;
-     * //..
-     * ```
-     * ```html
-     * <igx-buttongroup [selectionMode]="'single'" [values]="cities" [alignment]="alignment"></igx-buttongroup>
-     * ```
      */
     @Input()
     public set alignment(value: ButtonGroupAlignment) {
@@ -208,13 +145,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
     /**
      * Returns the alignment of the `igx-buttongroup`.
-     * ```typescript
-     * @ViewChild("MyChild")
-     * public buttonG: IgxButtonGroupComponent;
-     * ngAfterViewInit(){
-     *    let buttonAlignment = this.buttonG.alignment;
-     * }
-     * ```
      */
     public get alignment(): ButtonGroupAlignment {
         return this._isVertical ? ButtonGroupAlignment.vertical : ButtonGroupAlignment.horizontal;
@@ -222,36 +152,12 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
 
     /**
      * An @Ouput property that emits an event when a button is selected.
-     * ```typescript
-     * @ViewChild("toast")
-     * private toast: IgxToastComponent;
-     * public selectedHandler(buttongroup) {
-     *     this.toast.open()
-     * }
-     *  //...
-     * ```
-     * ```html
-     * <igx-buttongroup #MyChild [selectionMode]="'multi'" (selected)="selectedHandler($event)"></igx-buttongroup>
-     * <igx-toast #toast>You have made a selection!</igx-toast>
-     * ```
      */
     @Output()
     public selected = new EventEmitter<IButtonGroupEventArgs>();
 
     /**
      * An @Ouput property that emits an event when a button is deselected.
-     * ```typescript
-     *  @ViewChild("toast")
-     *  private toast: IgxToastComponent;
-     *  public deselectedHandler(buttongroup){
-     *     this.toast.open()
-     * }
-     *  //...
-     * ```
-     * ```html
-     * <igx-buttongroup> #MyChild [selectionMode]="'multi'" (deselected)="deselectedHandler($event)"></igx-buttongroup>
-     * <igx-toast #toast>You have deselected a button!</igx-toast>
-     * ```
      */
     @Output()
     public deselected = new EventEmitter<IButtonGroupEventArgs>();
@@ -262,17 +168,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     /**
      * Returns true if the `igx-buttongroup` alignment is vertical.
      * Note that in order for the accessor to work correctly the property should be set explicitly.
-     * ```html
-     * <igx-buttongroup #MyChild [alignment]="alignment" [values]="alignOptions">
-     * ```
-     * ```typescript
-     * //...
-     * @ViewChild("MyChild")
-     * private buttonG: IgxButtonGroupComponent;
-     * ngAfterViewInit(){
-     *    let orientation = this.buttonG.isVertical;
-     * }
-     * ```
      */
     public get isVertical(): boolean {
         return this._isVertical;
@@ -300,13 +195,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Gets the selected button/buttons.
-     * ```typescript
-     * @ViewChild("MyChild")
-     * private buttonG: IgxButtonGroupComponent;
-     * ngAfterViewInit(){
-     *    let selectedButton = this.buttonG.selectedButtons;
-     * }
-     * ```
      */
     public get selectedButtons(): IgxButtonDirective[] {
         return this.buttons.filter((_, i) => this.selectedIndexes.indexOf(i) !== -1);
@@ -314,14 +202,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Selects a button by its index.
-     * ```typescript
-     * @ViewChild("MyChild")
-     * private buttonG: IgxButtonGroupComponent;
-     * ngAfterViewInit(){
-     *    this.buttonG.selectButton(2);
-     *    this.cdr.detectChanges();
-     * }
-     * ```
      *
      * @memberOf {@link IgxButtonGroupComponent}
      */
@@ -382,14 +262,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Deselects a button by its index.
-     * ```typescript
-     * @ViewChild("MyChild")
-     * private buttonG: IgxButtonGroupComponent;
-     * ngAfterViewInit(){
-     *    this.buttonG.deselectButton(2);
-     *    this.cdr.detectChanges();
-     * }
-     * ```
      *
      * @memberOf {@link IgxButtonGroupComponent}
      */

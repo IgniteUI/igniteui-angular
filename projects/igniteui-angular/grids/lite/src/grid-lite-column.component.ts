@@ -10,13 +10,6 @@ export type IgxGridLiteColumnSortConfiguration<T extends object = any> = ColumnS
 /**
  * Directive providing type information for header template contexts.
  * Use this directive on ng-template elements that render header templates.
- *
- * @example
- * ```html
- * <ng-template igxGridLiteHeader let-column>
- *   <div>{{column.header}}</div>
- * </ng-template>
- * ```
  */
 @Directive({ selector: '[igxGridLiteHeader]' })
 export class IgxGridLiteHeaderTemplateDirective<T extends object = any> {
@@ -30,13 +23,6 @@ export class IgxGridLiteHeaderTemplateDirective<T extends object = any> {
 /**
  * Directive providing type information for cell template contexts.
  * Use this directive on ng-template elements that render cell templates.
- *
- * @example
- * ```html
- * <ng-template igxGridLiteCell let-value let-column="column" let-rowIndex="rowIndex" let-data="data">
- *   <div>{{value}}</div>
- * </ng-template>
- * ```
  */
 @Directive({ selector: '[igxGridLiteCell]' })
 export class IgxGridLiteCellTemplateDirective<T extends object = any> {

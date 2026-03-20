@@ -17,12 +17,6 @@ export class IgxDividerDirective {
     /**
      * Sets/gets the `id` of the divider.
      * If not set, `id` will have value `"igx-divider-0"`;
-     * ```html
-     * <igx-divider id="my-divider"></igx-divider>
-     * ```
-     * ```typescript
-     * let dividerId =  this.divider.id;
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -39,9 +33,6 @@ export class IgxDividerDirective {
     /**
      * Sets the type of the divider. The default value
      * is `default`. The divider can also be `dashed`;
-     * ```html
-     * <igx-divider type="dashed"></igx-divider>
-     * ```
      */
     @HostBinding('class.igx-divider')
     @Input()
@@ -55,9 +46,6 @@ export class IgxDividerDirective {
     /**
      * If set to `true` and an `inset` value has been provided,
      * the divider will start shrinking from both ends.
-     * ```html
-     * <igx-divider [middle]="true"></igx-divider>
-     * ```
      */
     @HostBinding('class.igx-divider--inset')
     @Input({ transform: booleanAttribute })
@@ -65,9 +53,6 @@ export class IgxDividerDirective {
 
     /**
      * Sets the divider in vertical orientation.
-     * ```html
-     * <igx-divider [vertical]="true"></igx-divider>
-     * ```
      */
     @HostBinding('class.igx-divider--vertical')
     @Input({ transform: booleanAttribute })
@@ -77,9 +62,6 @@ export class IgxDividerDirective {
      * Sets the inset of the divider from the side(s).
      * If the divider attribute `middle` is set to `true`,
      * it will inset the divider on both sides.
-     * ```typescript
-     * this.divider.inset = '32px';
-     * ```
      */
     @HostBinding('style.--inset')
     @Input()
@@ -90,9 +72,6 @@ export class IgxDividerDirective {
     /**
      * Gets the current divider inset in terms of
      * inset-inline-start representation as applied to the divider.
-     * ```typescript
-     * const inset = this.divider.inset;
-     * ```
      */
     public get inset() {
         return this._inset;
@@ -101,17 +80,11 @@ export class IgxDividerDirective {
     /**
      * Sets the value of the `inset` attribute.
      * If not provided it will be set to `'0'`.
-     * ```html
-     * <igx-divider inset="16px"></igx-divider>
-     * ```
      */
     private _inset = '0';
 
     /**
      * A getter that returns `true` if the type of the divider is `default`;
-     * ```typescript
-     * const isDefault = this.divider.isDefault;
-     * ```
      */
     public get isSolid() {
         return this.type === IgxDividerType.SOLID;

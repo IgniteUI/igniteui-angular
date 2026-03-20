@@ -18,9 +18,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     /**
      * Sets the input mask.
-     * ```html
-     * <input [igxMask] = "'00/00/0000'">
-     * ```
      */
     @Input('igxMask')
     public get mask(): string {
@@ -40,36 +37,24 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /**
      * Sets the character representing a fillable spot in the input mask.
      * Default value is "'_'".
-     * ```html
-     * <input [promptChar] = "'/'">
-     * ```
      */
     @Input()
     public promptChar = '_';
 
     /**
      * Specifies if the bound value includes the formatting symbols.
-     * ```html
-     * <input [includeLiterals] = "true">
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public includeLiterals: boolean;
 
     /**
      * Specifies a pipe to be used on blur.
-     * ```html
-     * <input [displayValuePipe] = "displayFormatPipe">
-     * ```
      */
     @Input()
     public displayValuePipe: PipeTransform;
 
     /**
      * Specifies a pipe to be used on focus.
-     * ```html
-     * <input [focusedValuePipe] = "inputFormatPipe">
-     * ```
      */
     @Input()
     public focusedValuePipe: PipeTransform;
@@ -77,9 +62,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /**
      * Emits an event each time the value changes.
      * Provides `rawValue: string` and `formattedValue: string` as event arguments.
-     * ```html
-     * <input (valueChanged) = "valueChanged(rawValue: string, formattedValue: string)">
-     * ```
      */
     @Output()
     public valueChanged = new EventEmitter<IMaskEventArgs>();

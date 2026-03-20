@@ -44,14 +44,6 @@ export interface AutocompleteOverlaySettings {
  * by showing a drop down of suggested options, provided by the developer.
  *
  * Example:
- * ```html
- * <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
- * <igx-drop-down #townsPanel>
- *     <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
- *         {{town}}
- *     </igx-drop-down-item>
- * </igx-drop-down>
- * ```
  */
 @Directive({
     selector: '[igxAutocomplete]',
@@ -67,15 +59,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     /**
      * Sets the target of the autocomplete directive
-     *
-     * ```html
-     * <!-- Set -->
-     * <input [igxAutocomplete]="dropdown" />
-     * ...
-     * <igx-drop-down #dropdown>
-     * ...
-     * </igx-drop-down>
-     * ```
      */
     @Input('igxAutocomplete')
     public override get target(): IgxDropDownComponent {
@@ -87,24 +70,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     /**
      * Provide overlay settings for the autocomplete drop down
-     *
-     * ```typescript
-     * // get
-     * let settings = this.autocomplete.autocompleteSettings;
-     * ```
-     * ```html
-     * <!--set-->
-     * <input type="text" [igxAutocomplete]="townsPanel" [igxAutocompleteSettings]="settings"/>
-     * ```
-     * ```typescript
-     * // set
-     * this.settings = {
-     *  positionStrategy: new ConnectedPositioningStrategy({
-     *      closeAnimation: null,
-     *      openAnimation: null
-     *  })
-     * };
-     * ```
      */
     @Input('igxAutocompleteSettings')
     public autocompleteSettings: AutocompleteOverlaySettings;
@@ -119,29 +84,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     /**
      * Enables/disables autocomplete component
-     *
-     * ```typescript
-     * // get
-     * let disabled = this.autocomplete.disabled;
-     * ```
-     * ```html
-     * <!--set-->
-     * <input type="text" [igxAutocomplete]="townsPanel" [igxAutocompleteDisabled]="disabled"/>
-     * ```
-     * ```typescript
-     * // set
-     * public disabled = true;
-     * ```
      */
     @Input({ alias: 'igxAutocompleteDisabled', transform: booleanAttribute })
     public disabled = false;
 
     /**
      * Emitted after item from the drop down is selected
-     *
-     * ```html
-     * <input igxInput [igxAutocomplete]="townsPanel" (selectionChanging)='selectionChanging($event)' />
-     * ```
      */
     @Output()
     public selectionChanging = new EventEmitter<AutocompleteSelectionChangingEventArgs>();

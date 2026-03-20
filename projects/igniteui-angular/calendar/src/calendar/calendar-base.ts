@@ -59,12 +59,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Sets/gets whether the outside dates (dates that are out of the current month) will be hidden.
      * Default value is `false`.
-     * ```html
-     * <igx-calendar [hideOutsideDays]="true"></igx-calendar>
-     * ```
-     * ```typescript
-     * let hideOutsideDays = this.calendar.hideOutsideDays;
-     * ```
      */
 
     @Input({ transform: booleanAttribute })
@@ -79,28 +73,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Emits an event when the month in view is changed.
-     * ```html
-     * <igx-calendar (viewDateChanged)="viewDateChanged($event)"></igx-calendar>
-     * ```
-     * ```typescript
-     * public viewDateChanged(event: IViewDateChangeEventArgs) {
-     *  let viewDate = event.currentValue;
-     * }
-     * ```
      */
     @Output()
     public viewDateChanged = new EventEmitter<IViewDateChangeEventArgs>();
 
     /**
      * Emits an event when the active view is changed.
-     * ```html
-     * <igx-calendar (activeViewChanged)="activeViewChanged($event)"></igx-calendar>
-     * ```
-     * ```typescript
-     * public activeViewChanged(event: CalendarView) {
-     *  let activeView = event;
-     * }
-     * ```
      */
     @Output()
     public activeViewChanged = new EventEmitter<IgxCalendarView>();
@@ -366,9 +344,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Gets the current active view.
-     * ```typescript
-     * this.activeView = calendar.activeView;
-     * ```
      */
     @Input()
     public get activeView(): IgxCalendarView {
@@ -377,12 +352,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Sets the current active view.
-     * ```html
-     * <igx-calendar [activeView]="year" #calendar></igx-calendar>
-     * ```
-     * ```typescript
-     * calendar.activeView = IgxCalendarView.YEAR;
-     * ```
      */
     public set activeView(val: IgxCalendarView) {
         this._activeView = val;
@@ -570,15 +539,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Sets the disabled dates' descriptors.
-     * ```typescript
-     * @ViewChild("MyCalendar")
-     * public calendar: IgxCalendarComponent;
-     * ngOnInit(){
-     *    this.calendar.disabledDates = [
-     *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
-     *     {type: DateRangeType.Weekends}];
-     * }
-     * ```
      */
     public set disabledDates(value: DateRangeDescriptor[]) {
         this._disabledDates = value;
@@ -611,15 +571,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Sets the special dates' descriptors.
-     * ```typescript
-     * @ViewChild("MyCalendar")
-     * public calendar: IgxCalendarComponent;
-     * ngOnInit(){
-     *    this.calendar.specialDates = [
-     *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
-     *     {type: DateRangeType.Weekends}];
-     * }
-     * ```
      */
     public set specialDates(value: DateRangeDescriptor[]) {
         this._specialDates = value;

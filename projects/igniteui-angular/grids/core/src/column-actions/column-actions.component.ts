@@ -12,9 +12,6 @@ import { ColumnType } from 'igniteui-angular/core';
 let NEXT_ID = 0;
 /**
  * Providing reference to `IgxColumnActionsComponent`:
- * ```typescript
- *  @ViewChild('columnActions', { read: IgxColumnActionsComponent })
- *  public columnActions: IgxColumnActionsComponent;
  */
 @Component({
     selector: 'igx-column-actions',
@@ -27,33 +24,17 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     /**
      * Gets/Sets the grid to provide column actions for.
-     *
-     * @example
-     * ```typescript
-     * let grid = this.columnActions.grid;
-     * ```
      */
     @Input()
     public grid: GridType;
     /**
      * Gets/sets the indentation of columns in the column list based on their hierarchy level.
-     *
-     * @example
-     * ```
-     * <igx-column-actions [indentation]="15"></igx-column-actions>
-     * ```
      */
     @Input()
     public indentation = 30;
     /**
      * Sets/Gets the css class selector.
      * By default the value of the `class` attribute is `"igx-column-actions"`.
-     * ```typescript
-     * let cssCLass =  this.columnHidingUI.cssClass;
-     * ```
-     * ```typescript
-     * this.columnHidingUI.cssClass = 'column-chooser';
-     * ```
      */
     @HostBinding('class')
     public cssClass = 'igx-column-actions';
@@ -62,40 +43,21 @@ export class IgxColumnActionsComponent implements DoCheck {
      *
      * @remarks
      * The default max height is 100%.
-     * @example
-     * ```html
-     * <igx-column-actions [columnsAreaMaxHeight]="200px"></igx-column-actions>
-     * ```
      */
     @Input()
     public columnsAreaMaxHeight = '100%';
     /**
      * Shows/hides the columns filtering input from the UI.
-     *
-     * @example
-     * ```html
-     *  <igx-column-actions [hideFilter]="true"></igx-column-actions>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public hideFilter = false;
     /**
      * Gets the checkbox components representing column items currently present in the dropdown
-     *
-     * @example
-     * ```typescript
-     * let columnItems =  this.columnActions.columnItems;
-     * ```
      */
     @ViewChildren(IgxCheckboxComponent)
     public columnItems: QueryList<IgxCheckboxComponent>;
     /**
      * Gets/sets the title of the column actions component.
-     *
-     * @example
-     * ```html
-     * <igx-column-actions [title]="'Pin Columns'"></igx-column-actions>
-     * ```
      */
     @Input()
     public title = '';
@@ -103,9 +65,6 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * An event that is emitted after a column's checked state is changed.
      * Provides references to the `column` and the `checked` properties as event arguments.
-     * ```html
-     *  <igx-column-actions (columnToggled)="columnToggled($event)"></igx-column-actions>
-     * ```
      */
     @Output()
     public columnToggled = new EventEmitter<IColumnToggledEventArgs>();
@@ -168,11 +127,6 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     /**
      * Gets the prompt that is displayed in the filter input.
-     *
-     * @example
-     * ```typescript
-     * let filterColumnsPrompt = this.columnActions.filterColumnsPrompt;
-     * ```
      */
     @Input()
     public get filterColumnsPrompt(): string {
@@ -180,22 +134,12 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
     /**
      * Sets the prompt that is displayed in the filter input.
-     *
-     * @example
-     * ```html
-     * <igx-column-actions [filterColumnsPrompt]="'Type here to search'"></igx-column-actions>
-     * ```
      */
     public set filterColumnsPrompt(value: string) {
         this._filterColumnsPrompt = value || '';
     }
     /**
      * Gets the value which filters the columns list.
-     *
-     * @example
-     * ```typescript
-     * let filterCriteria =  this.columnActions.filterCriteria;
-     * ```
      */
     @Input()
     public get filterCriteria() {
@@ -203,11 +147,6 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
     /**
      * Sets the value which filters the columns list.
-     *
-     * @example
-     * ```html
-     *  <igx-column-actions [filterCriteria]="'ID'"></igx-column-actions>
-     * ```
      */
     public set filterCriteria(value: string) {
         value = value || '';
@@ -218,11 +157,6 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
     /**
      * Gets the display order of the columns.
-     *
-     * @example
-     * ```typescript
-     * let columnDisplayOrder = this.columnActions.columnDisplayOrder;
-     * ```
      */
     @Input()
     public get columnDisplayOrder() {
@@ -230,11 +164,6 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
     /**
      * Sets the display order of the columns.
-     *
-     * @example
-     * ```typescript
-     * this.columnActions.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
-     * ```
      */
     public set columnDisplayOrder(value: ColumnDisplayOrder) {
         if (value && value !== this._columnDisplayOrder) {
@@ -247,10 +176,6 @@ export class IgxColumnActionsComponent implements DoCheck {
      *
      * @remarks
      * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
-     * @example
-     * ```typescript
-     * let uncheckAllText = this.columnActions.uncheckAllText;
-     * ```
      */
     @Input()
     public get uncheckAllText() {
@@ -258,11 +183,6 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
     /**
      * Sets the text of the button that unchecks all columns.
-     *
-     * @example
-     * ```html
-     * <igx-column-actions [uncheckAllText]="'Show All'"></igx-column-actions>
-     * ```
      */
     public set uncheckAllText(value: string) {
         this._uncheckAllText = value;
@@ -272,10 +192,6 @@ export class IgxColumnActionsComponent implements DoCheck {
      *
      * @remarks
      * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
-     * @example
-     * ```typescript
-     * let uncheckAllText = this.columnActions.uncheckAllText;
-     * ```
      */
     @Input()
     public get checkAllText() {
@@ -286,10 +202,6 @@ export class IgxColumnActionsComponent implements DoCheck {
      *
      * @remarks
      * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
-     * @example
-     * ```html
-     * <igx-column-actions [checkAllText]="'Hide All'"></igx-column-actions>
-     * ```
      */
     public set checkAllText(value: string) {
         this._checkAllText = value;
@@ -314,10 +226,6 @@ export class IgxColumnActionsComponent implements DoCheck {
      *
      * @remarks
      * If not provided it will be automatically generated.
-     * @example
-     * ```html
-     * <igx-column-actions [id]="'igx-actions-1'"></igx-column-actions>
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -354,11 +262,6 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     /**
      * Unchecks all columns and performs the appropriate action.
-     *
-     * @example
-     * ```typescript
-     * this.columnActions.uncheckAllColumns();
-     * ```
      */
     public uncheckAllColumns() {
         this.actionsDirective.uncheckAll();
@@ -366,11 +269,6 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     /**
      * Checks all columns and performs the appropriate action.
-     *
-     * @example
-     * ```typescript
-     * this.columnActions.checkAllColumns();
-     * ```
      */
     public checkAllColumns() {
         this.actionsDirective.checkAll();

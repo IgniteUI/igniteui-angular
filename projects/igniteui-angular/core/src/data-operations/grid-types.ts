@@ -447,13 +447,6 @@ export interface IgxSummaryResult {
     summaryResult: any;
     /**
      * Apply default formatting based on the grid column type.
-     * ```typescript
-     * const result: IgxSummaryResult = {
-     *   key: 'key',
-     *   label: 'label',
-     *   defaultFormatting: true
-     * }
-     * ```
      *
      * @memberof IgxSummaryResult
      */

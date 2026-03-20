@@ -23,8 +23,6 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 /* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Column Group**
- *
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxColumnGroupComponent, IgxRowIslandComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,9 +51,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /**
      * Set if the column group is collapsible.
      * Default value is `false`
-     * ```html
-     *  <igx-column-group [collapsible] = "true"></igx-column-group>
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -79,10 +74,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * Set whether the group is expanded or collapsed initially.
      * Applied only if the collapsible property is set to `true`
      * Default value is `true`
-     * ```html
-     *  const state = false
-     *  <igx-column-group [(expand)] = "state"></igx-column-group>
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -103,9 +94,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     /**
      * Gets the column group `summaries`.
-     * ```typescript
-     * let columnGroupSummaries = this.columnGroup.summaries;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -117,9 +105,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      /* blazorSuppress */
     /**
      * Sets the column group `summaries`.
-     * ```typescript
-     * this.columnGroup.summaries = IgxNumberSummaryOperand;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -129,12 +114,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /**
      * Sets/gets whether the column group is `searchable`.
      * Default value is `true`.
-     * ```typescript
-     * let isSearchable =  this.columnGroup.searchable;
-     * ```
-     * ```html
-     *  <igx-column-group [searchable] = "false"></igx-column-group>
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -142,9 +121,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public override searchable = true;
     /**
      * Gets the column group `filters`.
-     * ```typescript
-     * let columnGroupFilters = this.columnGroup.filters;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -156,9 +132,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      /* blazorSuppress */
     /**
      * Sets the column group `filters`.
-     * ```typescript
-     * this.columnGroup.filters = IgxStringFilteringOperand;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -166,9 +139,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     /**
      * Returns if the column group is selectable
-     * ```typescript
-     * let columnGroupSelectable = this.columnGroup.selectable;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -218,9 +188,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
     /**
      * Gets whether the column group is hidden.
-     * ```typescript
-     * let isHidden = this.columnGroup.hidden;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -232,14 +199,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /* blazorSuppress */
     /**
      * Sets the column group hidden property.
-     * ```html
-     * <igx-column [hidden] = "true"></igx-column>
-     * ```
      *
      * Two-way data binding
-     * ```html
-     * <igx-column [(hidden)] = "model.columns[0].isHidden"></igx-column>
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -260,9 +221,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     /**
      * Returns if the column group is selected.
-     * ```typescript
-     * let isSelected = this.columnGroup.selected;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -274,9 +232,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      /* blazorSuppress */
     /**
      * Select/deselect the column group.
-     * ```typescript
-     * this.columnGroup.selected = true;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -354,9 +309,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
     /**
      * Returns a boolean indicating if the column is a `ColumnGroup`.
-     * ```typescript
-     * let isColumnGroup =  this.columnGroup.columnGroup
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */
@@ -365,9 +317,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
     /**
      * Returns a boolean indicating if the column is a `ColumnLayout` for multi-row layout.
-     * ```typescript
-     * let columnGroup =  this.column.columnGroup;
-     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -376,9 +325,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
     /**
      * Gets the width of the column group.
-     * ```typescript
-     * let columnGroupWidth = this.columnGroup.width;
-     * ```
      *
      * @memberof IgxColumnGroupComponent
      */

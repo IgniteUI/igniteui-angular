@@ -38,11 +38,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      *
      * @remarks
      * Also used as a placeholder when none is provided.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker inputFormat="dd/MM/yy"></igx-date-picker>
-     * ```
      */
     @Input()
     public set inputFormat(value: string) {
@@ -58,12 +53,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      *
      * @remarks
      * Uses Angular's DatePipe.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker displayFormat="EE/M/yy"></igx-date-picker>
-     * ```
-     *
      */
     @Input()
     public set displayFormat(value: string) {
@@ -76,11 +65,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     /**
      * Sets the `placeholder` of the picker's input.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [placeholder]="'Choose your date'"></igx-date-picker>
-     * ```
      */
     @Input()
     public placeholder = '';
@@ -90,64 +74,35 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      *
      * @remarks
      * Default mode is `dropdown`
-     *
-     * @example
-     * ```html
-     * <igx-date-picker mode="dialog"></igx-date-picker>
-     * ```
      */
     @Input()
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
 
     /**
      * Gets/Sets the orientation of the `IgxDatePickerComponent` header.
-     *
-     *  @example
-     * ```html
-     * <igx-date-picker headerOrientation="vertical"></igx-date-picker>
-     * ```
      */
     @Input()
     public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
     /**
      * Gets/Sets whether the header is hidden in dialog mode.
-     *
-     *  @example
-     * ```html
-     * <igx-date-picker mode="dialog" [hideHeader]="true"></igx-date-picker>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public hideHeader = false;
 
     /**
      * Overlay settings used to display the pop-up element.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [overlaySettings]="customOverlaySettings"></igx-date-picker>
-     * ```
      */
     @Input()
     public overlaySettings: OverlaySettings;
 
     /**
      * Enables or disables the picker.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [disabled]="'true'"></igx-date-picker>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public disabled = false;
 
     /**
-     * @example
-     * ```html
-     * <igx-date-picker locale="jp"></igx-date-picker>
-     * ```
      */
     /**
      * Gets the `locale` of the date-picker.
@@ -187,14 +142,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     /**
      * The container used for the pop-up element.
-     *
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * <!-- ... -->
-     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
-     * <!-- ... -->
-     * ```
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
@@ -204,11 +151,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      *
      * @remarks
      * Default is `box`.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [type]="'line'"></igx-date-picker>
-     * ```
      */
     @Input()
     public set type(val: IgxInputGroupType) {
@@ -220,55 +162,30 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     /**
      * Gets/Sets the default template editor's tabindex.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [tabIndex]="1"></igx-date-picker>
-     * ```
      */
     @Input()
     public tabIndex: number | string;
 
     /**
      * Emitted when the calendar has started opening, cancelable.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker (opening)="handleOpening($event)"></igx-date-picker>
-     * ```
      */
     @Output()
     public opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the calendar has opened.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker (opened)="handleOpened($event)"></igx-date-picker>
-     * ```
      */
     @Output()
     public opened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted when the calendar has started closing, cancelable.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker (closing)="handleClosing($event)"></igx-date-picker>
-     * ```
      */
     @Output()
     public closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the calendar has closed.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker (closed)="handleClosed($event)"></igx-date-picker>
-     * ```
      */
     @Output()
     public closed = new EventEmitter<IBaseEventArgs>();
@@ -303,11 +220,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     /**
      * Gets the picker's pop-up state.
-     *
-     * @example
-     * ```typescript
-     * const state = this.picker.collapsed;
-     * ```
      */
     public get collapsed(): boolean {
         return this._collapsed;

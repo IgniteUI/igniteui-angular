@@ -62,11 +62,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
      *  The data passed to the row component.
-     *
-     * ```typescript
-     * // get the row data for the first selected row
-     * let selectedRowData = this.grid.selectedRows[0].data;
-     * ```
      */
     @Input()
     public get data(): any {
@@ -86,11 +81,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     }
     /**
      * The index of the row.
-     *
-     * ```typescript
-     * // get the index of the second selected row
-     * let selectedRowIndex = this.grid.selectedRows[1].index;
-     * ```
      */
     @Input()
     public index: number;
@@ -98,9 +88,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * Sets whether this specific row has disabled functionality for editing and row selection.
      * Default value is `false`.
-     * ```typescript
-     * this.grid.selectedRows[0].pinned = true;
-     * ```
      */
     @Input({ transform: booleanAttribute })
     @HostBinding('attr.aria-disabled')
@@ -110,9 +97,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * Sets whether the row is pinned.
      * Default value is `false`.
-     * ```typescript
-     * this.grid.selectedRows[0].pinned = true;
-     * ```
      */
     public set pinned(value: boolean) {
         if (value) {
@@ -124,9 +108,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the row is pinned.
-     * ```typescript
-     * let isPinned = row.pinned;
-     * ```
      */
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.data);
@@ -138,9 +119,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
      * Gets the expanded state of the row.
-     * ```typescript
-     * let isExpanded = row.expanded;
-     * ```
      */
     public get expanded(): boolean {
         return this.grid.gridAPI.get_row_expansion_state(this.data);
@@ -148,10 +126,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
      * Expands/collapses the current row.
-     *
-     * ```typescript
-     * this.grid.selectedRows[2].expanded = true;
-     * ```
      */
     public set expanded(val: boolean) {
         this.grid.gridAPI.set_row_expansion_state(this.key, val);
@@ -201,11 +175,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
      * Gets the rendered cells in the row component.
-     *
-     * ```typescript
-     * // get the cells of the third selected row
-     * let selectedRowCells = this.grid.selectedRows[2].cells;
-     * ```
      */
     public get cells() {
         const res = new QueryList<CellType>();
@@ -362,10 +331,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * A row in the grid is identified either by:
      * - primaryKey data value,
      * - the whole data, if the primaryKey is omitted.
-     *
-     * ```typescript
-     * let rowID = this.grid.selectedRows[2].key;
-     * ```
      */
     public get key() {
         const primaryKey = this.grid.primaryKey;
@@ -378,11 +343,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
      * The native DOM element representing the row. Could be null in certain environments.
-     *
-     * ```typescript
-     * // get the nativeElement of the second selected row
-     * let selectedRowNativeElement = this.grid.selectedRows[1].nativeElement;
-     * ```
      */
     public get nativeElement() {
         return this.element.nativeElement;
@@ -521,12 +481,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
      * Updates the specified row object and the data source record with the passed value.
-     *
-     * ```typescript
-     * // update the second selected row's value
-     * let newValue = "Apple";
-     * this.grid.selectedRows[1].update(newValue);
-     * ```
      */
     public update(value: any) {
         const crudService = this.grid.crudService;
@@ -541,11 +495,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * Removes the specified row from the grid's data source.
      * This method emits `rowDeleted` event.
-     *
-     * ```typescript
-     * // delete the third selected row from the grid
-     * this.grid.selectedRows[2].delete();
-     * ```
      */
     public delete() {
         this.grid.deleteRowById(this.key);
@@ -565,11 +514,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * Pins the specified row.
      * This method emits `rowPinning`\`rowPinned` event.
-     *
-     * ```typescript
-     * // pin the selected row from the grid
-     * this.grid.selectedRows[0].pin();
-     * ```
      */
     public pin() {
         return this.grid.pinRow(this.key);
@@ -578,11 +522,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * Unpins the specified row.
      * This method emits `rowPinning`\`rowPinned` event.
-     *
-     * ```typescript
-     * // unpin the selected row from the grid
-     * this.grid.selectedRows[0].unpin();
-     * ```
      */
     public unpin() {
         return this.grid.unpinRow(this.key);
@@ -613,12 +552,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
      * Spawns the add row UI for the specific row.
-     *
-     * @example
-     * ```typescript
-     * const row = this.grid1.getRowByIndex(1);
-     * row.beginAddRow();
-     * ```
      */
     public beginAddRow() {
         this.grid.crudService.enterAddRowMode(this);

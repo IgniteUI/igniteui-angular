@@ -19,17 +19,11 @@ export interface IPositionStrategy {
      * @param document reference to the Document object
      * @param initialCall should be true if this is the initial call to the method
      * @param target attaching target for the component to show
-     * ```typescript
-     * settings.positionStrategy.position(content, size, document, true);
-     * ```
      */
      position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void;
 
     /**
      * Clone the strategy instance.
-     * ```typescript
-     * settings.positionStrategy.clone();
-     * ```
      */
      clone(): IPositionStrategy;
 }

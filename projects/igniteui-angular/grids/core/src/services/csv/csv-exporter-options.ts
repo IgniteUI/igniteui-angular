@@ -34,9 +34,6 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
     /**
      * Gets the value delimiter which will be used for the exporting operation.
-     * ```typescript
-     * let delimiter = this.exportOptions.valueDelimiter;
-     * ```
      *
      * @memberof IgxCsvExporterOptions
      */
@@ -46,9 +43,6 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
     /**
      * Sets a value delimiter which will overwrite the default delimiter of the selected export format.
-     * ```typescript
-     * this.exportOptions.valueDelimiter = '|';
-     * ```
      *
      * @memberof IgxCsvExporterOptions
      */
@@ -58,9 +52,6 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
     /**
      * Gets the CSV export format.
-     * ```typescript
-     * let filetype = this.exportOptions.fileType;
-     * ```
      *
      * @memberof IgxCsvExporterOptions
      */
@@ -70,9 +61,6 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
     /**
      * Sets the CSV export format.
-     * ```typescript
-     * this.exportOptions.fileType = CsvFileTypes.TAB;
-     * ```
      *
      * @memberof IgxCsvExporterOptions
      */

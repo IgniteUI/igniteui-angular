@@ -21,11 +21,6 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
  * The Ignite UI Radio Button allows the user to select a single option from an available set of options that are listed side by side.
  *
  * Example:
- * ```html
- * <igx-radio>
- *   Simple radio button
- * </igx-radio>
- * ```
  */
 @Component({
     selector: 'igx-radio',
@@ -47,9 +42,6 @@ export class IgxRadioComponent
 
     /**
      * Returns the class of the radio component.
-     * ```typescript
-     * let radioClass = this.radio.cssClass;
-     * ```
      *
      * @memberof IgxRadioComponent
      */
@@ -59,12 +51,6 @@ export class IgxRadioComponent
     /**
      * Sets/gets  the `checked` attribute.
      * Default value is `false`.
-     * ```html
-     * <igx-radio [checked]="true"></igx-radio>
-     * ```
-     * ```typescript
-     * let isChecked =  this.radio.checked;
-     * ```
      *
      * @memberof IgxRadioComponent
      */
@@ -80,12 +66,6 @@ export class IgxRadioComponent
     /**
      * Sets/gets  the `disabled` attribute.
      * Default value is `false`.
-     * ```html
-     * <igx-radio disabled></igx-radio>
-     * ```
-     * ```typescript
-     * let isDisabled =  this.radio.disabled;
-     * ```
      *
      * @memberof IgxRadioComponent
      */
@@ -96,12 +76,6 @@ export class IgxRadioComponent
     /**
      * Sets/gets whether the radio button is invalid.
      * Default value is `false`.
-     * ```html
-     * <igx-radio invalid></igx-radio>
-     * ```
-     * ```typescript
-     * let isInvalid =  this.radio.invalid;
-     * ```
      *
      * @memberof IgxRadioComponent
      */
@@ -112,12 +86,6 @@ export class IgxRadioComponent
     /**
      * Sets/gets whether the radio component is on focus.
      * Default value is `false`.
-     * ```typescript
-     * this.radio.focus = true;
-     * ```
-     * ```typescript
-     * let isFocused =  this.radio.focused;
-     * ```
      *
      * @memberof IgxRadioComponent
      */
@@ -145,9 +113,6 @@ export class IgxRadioComponent
 
     /**
      * Selects the current radio button.
-     * ```typescript
-     * this.radio.select();
-     * ```
      *
      * @memberof IgxRadioComponent
      */
@@ -165,9 +130,6 @@ export class IgxRadioComponent
 
     /**
      * Deselects the current radio button.
-     * ```typescript
-     * this.radio.deselect();
-     * ```
      *
      * @memberof IgxRadioComponent
      */
@@ -180,9 +142,6 @@ export class IgxRadioComponent
     /**
      * Checks whether the provided value is consistent to the current radio button.
      * If it is, the checked attribute will have value `true`;
-     * ```typescript
-     * this.radio.writeValue('radioButtonValue');
-     * ```
      */
     public override writeValue(value: any) {
         this.value = this.value ?? value;

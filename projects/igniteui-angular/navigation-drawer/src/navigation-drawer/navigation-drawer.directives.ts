@@ -10,33 +10,18 @@ export class IgxNavDrawerItemDirective {
     /**
      * Styles a navigation drawer item as selected.
      * If not set, `active` will have default value `false`.
-     *
-     * @example
-     * ```html
-     * <span igxDrawerItem [active]="true">Active Item</span>
-     * ```
      */
     @Input({ transform: booleanAttribute }) public active = false;
 
     /**
      * Disables a navigation drawer item.
      * If not set, `disabled` will have default value `false`.
-     *
-     * @example
-     * ```html
-     * <span igxDrawerItem [disabled]="true">Disabled Item</span>
-     * ```
      */
     @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
      * Styles a navigation drawer item as a group header.
      * If not set, `isHeader` will have default value `false`.
-     *
-     * @example
-     * ```html
-     * <span igxDrawerItem [isHeader]="true">Header</span>
-     * ```
      */
     @Input({ transform: booleanAttribute }) public isHeader = false;
 

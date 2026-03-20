@@ -43,21 +43,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**
      * Sets/gets the filtering operands.
-     * ```typescript
-     * const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
-     * const expression = [
-     * {
-     *   condition: IgxStringFilteringOperand.instance().condition('contains'),
-     *   fieldName: 'Column Field',
-     *   searchVal: 'Value',
-     *   ignoreCase: false
-     * }];
-     * gridExpressionsTree.filteringOperands.push(expression);
-     * this.grid.filteringExpressionsTree = gridExpressionsTree;
-     * ```
-     * ```typescript
-     * let filteringOperands = gridExpressionsTree.filteringOperands;
-     * ```
      *
      * @memberof FilteringExpressionsTree
      */
@@ -65,12 +50,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**
      * Sets/gets the operator.
-     * ```typescript
-     * gridExpressionsTree.operator = FilteringLogic.And;
-     * ```
-     * ```typescript
-     * let operator = gridExpressionsTree.operator;
-     * ```
      *
      * @memberof FilteringExpressionsTree
      */
@@ -78,12 +57,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**
      * Sets/gets the field name of the column where the filtering expression is placed.
-     * ```typescript
-     * gridExpressionTree.fieldName = 'Column Field';
-     * ```
-     * ```typescript
-     * let columnField = expressionTree.fieldName;
-     * ```
      *
      * @memberof FilteringExpressionsTree
      */
@@ -92,12 +65,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     /* alternateName: treeType */
     /**
      * Sets/gets the type of the filtering expressions tree.
-     * ```typescript
-     * gridExpressionTree.type = FilteringExpressionsTree.Advanced;
-     * ```
-     * ```typescript
-     * let type = expressionTree.type;
-     * ```
      *
      * @memberof FilteringExpressionsTree
      */
@@ -105,12 +72,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**
      * Sets/gets the entity.
-     * ```typescript
-     * gridExpressionsTree.entity = 'Entity A';
-     * ```
-     * ```typescript
-     * let entity = gridExpressionsTree.entity;
-     * ```
      *
      * @memberof FilteringExpressionsTree
      */
@@ -118,12 +79,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**
      * Sets/gets the return fields.
-     * ```typescript
-     * gridExpressionsTree.returnFields = ['Column Field 1', 'Column Field 2'];
-     * ```
-     * ```typescript
-     * let returnFields = gridExpressionsTree.returnFields;
-     * ```
      *
      * @memberof FilteringExpressionsTree
      */
@@ -148,9 +103,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     /* blazorSuppress */
     /**
      * Returns the filtering expression for a column with the provided fieldName.
-     * ```typescript
-     * let filteringExpression = gridExpressionTree.find('Column Field');
-     * ```
      *
      * @memberof FilteringExpressionsTree
      * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
@@ -162,9 +114,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     /* blazorSuppress */
     /**
      * Returns the index of the filtering expression for a column with the provided fieldName.
-     * ```typescript
-     * let filteringExpressionIndex = gridExpressionTree.findIndex('Column Field');
-     * ```
      *
      * @memberof FilteringExpressionsTree
      * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.

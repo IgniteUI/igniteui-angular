@@ -39,20 +39,6 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     /**
      * The node's parent. Should be used only when the link is defined
      * in `<ng-template>` tag outside of its parent, as Angular DI will not properly provide a reference
-     *
-     * ```html
-     * <igx-tree>
-     *     <igx-tree-node #myNode *ngFor="let node of data" [data]="node">
-     *         <ng-template *ngTemplateOutlet="nodeTemplate; context: { $implicit: data, parentNode: myNode }">
-     *         </ng-template>
-     *     </igx-tree-node>
-     *     ...
-     *     <!-- node template is defined under tree to access related services -->
-     *     <ng-template #nodeTemplate let-data let-node="parentNode">
-     *         <a [igxTreeNodeLink]="node">{{ data.label }}</a>
-     *     </ng-template>
-     * </igx-tree>
-     * ```
      */
     @Input('igxTreeNodeLink')
     public set parentNode(val: any) {
@@ -111,16 +97,6 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
  *
  * The tree node component represents a child node of the tree component or another tree node.
  * Usage:
- *
- * ```html
- *  <igx-tree>
- *  ...
- *    <igx-tree-node [data]="data" [selected]="service.isNodeSelected(data.Key)" [expanded]="service.isNodeExpanded(data.Key)">
- *      {{ data.FirstName }} {{ data.LastName }}
- *    </igx-tree-node>
- *  ...
- *  </igx-tree>
- * ```
  */
 @Component({
     selector: 'igx-tree-node',
@@ -144,17 +120,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      *
      * @remarks
      * Required for searching through nodes.
-     *
-     * @example
-     * ```html
-     *  <igx-tree>
-     *  ...
-     *    <igx-tree-node [data]="data">
-     *      {{ data.FirstName }} {{ data.LastName }}
-     *    </igx-tree-node>
-     *  ...
-     *  </igx-tree>
-     * ```
      */
     @Input()
     public data: T;
@@ -230,36 +195,12 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /**
      * Emitted when the node's `selected` property changes.
-     *
-     * ```html
-     * <igx-tree>
-     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
-     *      </igx-tree-node>
-     * </igx-tree>
-     * ```
-     *
-     * ```typescript
-     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * node.selectedChange.pipe(takeUntil(this.destroy$)).subscribe((e: boolean) => console.log("Node selection changed to ", e))
-     * ```
      */
     @Output()
     public selectedChange = new EventEmitter<boolean>();
 
     /**
      * Emitted when the node's `expanded` property changes.
-     *
-     * ```html
-     * <igx-tree>
-     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(expanded)]="node.expanded">
-     *      </igx-tree-node>
-     * </igx-tree>
-     * ```
-     *
-     * ```typescript
-     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * node.expandedChange.pipe(takeUntil(this.destroy$)).subscribe((e: boolean) => console.log("Node expansion state changed to ", e))
-     * ```
      */
     @Output()
     public expandedChange = new EventEmitter<boolean>();
@@ -272,11 +213,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /**
      * Retrieves the full path to the node incuding itself
-     *
-     * ```typescript
-     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * const path: IgxTreeNode<any>[] = node.path;
-     * ```
      */
     public get path(): IgxTreeNode<any>[] {
         return this.parentNode?.path ? [...this.parentNode.path, this] : [this];
@@ -328,12 +264,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      *
      * @remarks
      * Returns `null` if node does not have children
-     *
-     * @example
-     * ```typescript
-     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * const children: IgxTreeNode<any>[] = node.children;
-     * ```
      */
     public get children(): IgxTreeNode<any>[] {
         return this._children?.length ? this._children.toArray() : null;
@@ -387,41 +317,12 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     /** The depth of the node, relative to the root
-     *
-     * ```html
-     * <igx-tree>
-     *  ...
-     *  <igx-tree-node #node>
-     *      My level is {{ node.level }}
-     *  </igx-tree-node>
-     * </igx-tree>
-     * ```
-     *
-     * ```typescript
-     * const node: IgxTreeNode<any> = this.tree.findNodes(data[12])[0];
-     * const level: number = node.level;
-     * ```
      */
     public get level(): number {
         return this.parentNode ? this.parentNode.level + 1 : 0;
     }
 
     /** Get/set whether the node is selected. Supporst two-way binding.
-     *
-     * ```html
-     * <igx-tree>
-     *  ...
-     *  <igx-tree-node *ngFor="let node of data" [(selected)]="node.selected">
-     *      {{ node.label }}
-     *  </igx-tree-node>
-     * </igx-tree>
-     * ```
-     *
-     * ```typescript
-     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * const selected = node.selected;
-     * node.selected = true;
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get selected(): boolean {
@@ -442,21 +343,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     /** Get/set whether the node is expanded
-     *
-     * ```html
-     * <igx-tree>
-     *  ...
-     *  <igx-tree-node *ngFor="let node of data" [expanded]="node.name === this.expandedNode">
-     *      {{ node.label }}
-     *  </igx-tree-node>
-     * </igx-tree>
-     * ```
-     *
-     * ```typescript
-     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * const expanded = node.expanded;
-     * node.expanded = true;
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get expanded() {
@@ -478,12 +364,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /**
      * The native DOM element representing the node. Could be null in certain environments.
-     *
-     * ```typescript
-     * // get the nativeElement of the second node
-     * const node: IgxTreeNode = this.tree.nodes.first();
-     * const nodeElement: HTMLElement = node.nativeElement;
-     * ```
      */
     /** @hidden @internal */
     public get nativeElement() {
@@ -564,18 +444,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /**
      * Toggles the node expansion state, triggering animation
-     *
-     * ```html
-     * <igx-tree>
-     *      <igx-tree-node #node>My Node</igx-tree-node>
-     * </igx-tree>
-     * <button type="button" igxButton (click)="node.toggle()">Toggle Node</button>
-     * ```
-     *
-     * ```typescript
-     * const myNode: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * myNode.toggle();
-     * ```
      */
     public toggle() {
         if (this.expanded) {
@@ -614,18 +482,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /**
      * Expands the node, triggering animation
-     *
-     * ```html
-     * <igx-tree>
-     *      <igx-tree-node #node>My Node</igx-tree-node>
-     * </igx-tree>
-     * <button type="button" igxButton (click)="node.expand()">Expand Node</button>
-     * ```
-     *
-     * ```typescript
-     * const myNode: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * myNode.expand();
-     * ```
      */
     public expand() {
         if (this.expanded && !this.treeService.collapsingNodes.has(this)) {
@@ -649,18 +505,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /**
      * Collapses the node, triggering animation
-     *
-     * ```html
-     * <igx-tree>
-     *      <igx-tree-node #node>My Node</igx-tree-node>
-     * </igx-tree>
-     * <button type="button" igxButton (click)="node.collapse()">Collapse Node</button>
-     * ```
-     *
-     * ```typescript
-     * const myNode: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
-     * myNode.collapse();
-     * ```
      */
     public collapse() {
         if (!this.expanded || this.treeService.collapsingNodes.has(this)) {

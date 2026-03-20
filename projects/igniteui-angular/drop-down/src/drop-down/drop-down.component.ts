@@ -38,13 +38,6 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
  * supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down
  *
  * Example:
- * ```html
- * <igx-drop-down>
- *   <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
- *     {{ item.value }}
- *   </igx-drop-down-item>
- * </igx-drop-down>
- * ```
  */
 
 @Component({
@@ -65,40 +58,24 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Emitted before the dropdown is opened
-     *
-     * ```html
-     * <igx-drop-down (opening)='handleOpening($event)'></igx-drop-down>
-     * ```
      */
     @Output()
     public opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
-     *
-     * ```html
-     * <igx-drop-down (opened)='handleOpened($event)'></igx-drop-down>
-     * ```
      */
     @Output()
     public opened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted before the dropdown is closed
-     *
-     * ```html
-     * <igx-drop-down (closing)='handleClosing($event)'></igx-drop-down>
-     * ```
      */
     @Output()
     public closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
-     *
-     * ```html
-     * <igx-drop-down (closed)='handleClosed($event)'></igx-drop-down>
-     * ```
      */
     @Output()
     public closed = new EventEmitter<IBaseEventArgs>();
@@ -110,35 +87,18 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      *
      * Note: Keep that focus shift in mind when using the igxDropDownItemNavigation directive
      * and ensure it's placed either on each focusable item or a common ancestor to allow it to handle keyboard events.
-     *
-     * ```typescript
-     * // get
-     * let dropDownAllowsItemFocus = this.dropdown.allowItemsFocus;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-drop-down [allowItemsFocus]='true'></igx-drop-down>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public allowItemsFocus = false;
 
     /**
      * Sets aria-labelledby attribute value.
-     * ```html
-     * <igx-drop-down [labelledby]="labelId"></igx-drop-down>
-     * ```
      */
     @Input()
     public labelledBy: string;
 
     /**
      * Gets/sets the `role` attribute of the drop down. Default is 'listbox'.
-     *
-     * ```html
-     *  <igx-drop-down [role]="customRole"></igx-drop-down-item>
-     * ```
      */
     @Input()
     public role = 'listbox';
@@ -198,10 +158,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Get currently selected item
-     *
-     * ```typescript
-     * let currentItem = this.dropdown.selectedItem;
-     * ```
      */
     public get selectedItem(): IgxDropDownItemBaseDirective {
         const selectedItem = this.selection.first_item(this.id);
@@ -213,10 +169,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Gets if the dropdown is collapsed
-     *
-     * ```typescript
-     * let isCollapsed = this.dropdown.collapsed;
-     * ```
      */
     public get collapsed(): boolean {
         return this.toggleDirective.collapsed;
@@ -238,10 +190,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Opens the dropdown
-     *
-     * ```typescript
-     * this.dropdown.open();
-     * ```
      */
     public open(overlaySettings?: OverlaySettings) {
         const settings = { ... {}, ...this.getDefaultOverlaySettings(), ...overlaySettings };
@@ -262,10 +210,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Closes the dropdown
-     *
-     * ```typescript
-     * this.dropdown.close();
-     * ```
      */
     public close(event?: Event) {
         this.toggleDirective.close(event);
@@ -273,10 +217,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Toggles the dropdown
-     *
-     * ```typescript
-     * this.dropdown.toggle();
-     * ```
      */
     public toggle(overlaySettings?: OverlaySettings) {
         if (this.collapsed || this.toggleDirective.isClosing) {
@@ -567,9 +507,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Clears the selection of the dropdown
-     * ```typescript
-     * this.dropdown.clearSelection();
-     * ```
      */
     public clearSelection() {
         const oldSelection = this.selectedItem;

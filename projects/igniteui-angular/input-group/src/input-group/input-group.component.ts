@@ -63,12 +63,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     /**
      * Property that enables/disables the auto-generated class of the `IgxInputGroupComponent`.
      * By default applied the class is applied.
-     * ```typescript
-     *  @ViewChild("MyInputGroup")
-     *  public inputGroup: IgxInputGroupComponent;
-     *  ngAfterViewInit(){
-     *  this.inputGroup.defaultClass = false;
-     * ```
      * }
      */
     @HostBinding('class.igx-input-group')
@@ -90,9 +84,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * @hidden @internal
      * When truthy, disables the `IgxInputGroupComponent`.
      * Controlled by the underlying `IgxInputDirective`.
-     * ```html
-     * <igx-input-group [disabled]="true"></igx-input-group>
-     * ```
      */
     @HostBinding('class.igx-input-group--disabled')
     public disabled = false;
@@ -101,11 +92,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * Prevents automatically focusing the input when clicking on other elements in the input group (e.g. prefix or suffix).
      *
      * @remarks Automatic focus causes software keyboard to show on mobile devices.
-     *
-     * @example
-     * ```html
-     * <igx-input-group [suppressInputAutofocus]="true"></igx-input-group>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public suppressInputAutofocus = false;
@@ -174,9 +160,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     /**
      * Sets how the input will be styled.
      * Allowed values of type IgxInputGroupType.
-     * ```html
-     * <igx-input-group [type]="'search'">
-     * ```
      */
     @Input()
     public set type(value: IgxInputGroupType) {
@@ -186,13 +169,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     /**
      * Returns the type of the `IgxInputGroupComponent`. How the input is styled.
      * The default is `line`.
-     * ```typescript
-     * @ViewChild("MyInputGroup")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let inputType = this.inputGroup.type;
-     * }
-     * ```
      */
     public get type() {
         return this._type || this._inputGroupType || 'line';
@@ -201,12 +177,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     /**
      * Sets the theme of the input.
      * Allowed values of type IgxInputGroupTheme.
-     * ```typescript
-     * @ViewChild("MyInputGroup")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit() {
-     *  let inputTheme = 'fluent';
-     * }
      */
     @Input()
     public set theme(value: IgxTheme) {
@@ -216,12 +186,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     /**
      * Returns the theme of the input.
      * The returned value is of type IgxInputGroupType.
-     * ```typescript
-     * @ViewChild("MyInputGroup")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit() {
-     *  let inputTheme = this.inputGroup.theme;
-     * }
      */
     public get theme(): IgxTheme {
         return this._theme;
@@ -268,13 +232,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns whether the `IgxInputGroupComponent` has hints.
-     * ```typescript
-     * @ViewChild("MyInputGroup")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let inputHints = this.inputGroup.hasHints;
-     * }
-     * ```
      */
     public get hasHints() {
         return this.hints.length > 0;
@@ -304,13 +261,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns whether the `IgxInputGroupComponent` has border.
-     * ```typescript
-     * @ViewChild("MyInputGroup")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let inputBorder = this.inputGroup.hasBorder;
-     * }
-     * ```
      */
     public get hasBorder() {
         return (
@@ -321,13 +271,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns whether the `IgxInputGroupComponent` type is line.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeLine = this.inputGroup.isTypeLine;
-     * }
-     * ```
      */
     public get isTypeLine(): boolean {
         return this.type === 'line' && this._theme === 'material';
@@ -335,13 +278,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns whether the `IgxInputGroupComponent` type is box.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeBox = this.inputGroup.isTypeBox;
-     * }
-     * ```
      */
     @HostBinding('class.igx-input-group--box')
     public get isTypeBox() {
@@ -390,13 +326,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns whether the `IgxInputGroupComponent` type is border.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeBorder = this.inputGroup.isTypeBorder;
-     * }
-     * ```
      */
     @HostBinding('class.igx-input-group--border')
     public get isTypeBorder() {
@@ -405,13 +334,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns true if the `IgxInputGroupComponent` theme is Fluent.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeFluent = this.inputGroup.isTypeFluent;
-     * }
-     * ```
      */
     @HostBinding('class.igx-input-group--fluent')
     public get isTypeFluent() {
@@ -420,13 +342,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns true if the `IgxInputGroupComponent` theme is Bootstrap.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeBootstrap = this.inputGroup.isTypeBootstrap;
-     * }
-     * ```
      */
     @HostBinding('class.igx-input-group--bootstrap')
     public get isTypeBootstrap() {
@@ -435,13 +350,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns true if the `IgxInputGroupComponent` theme is Indigo.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeIndigo = this.inputGroup.isTypeIndigo;
-     * }
-     * ```
      */
     @HostBinding('class.igx-input-group--indigo')
     public get isTypeIndigo() {
@@ -450,13 +358,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns whether the `IgxInputGroupComponent` type is search.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeSearch = this.inputGroup.isTypeSearch;
-     * }
-     * ```
      */
     @HostBinding('class.igx-input-group--search')
     public get isTypeSearch() {

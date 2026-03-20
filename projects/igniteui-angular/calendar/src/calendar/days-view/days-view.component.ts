@@ -64,12 +64,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
     /**
      * Sets/gets the `id` of the days view.
      * If not set, the `id` will have value `"igx-days-view-0"`.
-     * ```html
-     * <igx-days-view id="my-days-view"></igx-days-view>
-     * ```
-     * ```typescript
-     * let daysViewId = this.daysView.id;
-     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -105,11 +99,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
 
     /**
      * Show/hide week numbers
-     *
-     * @example
-     * ```html
-     * <igx-days-view [showWeekNumbers]="true"></igx-days-view>
-     * ``
      */
     @Input({ transform: booleanAttribute })
     public showWeekNumbers: boolean;

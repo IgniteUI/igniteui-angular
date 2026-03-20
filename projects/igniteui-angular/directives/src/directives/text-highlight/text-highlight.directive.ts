@@ -46,13 +46,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * Determines the `CSS` class of the highlight elements.
      * This allows the developer to provide custom `CSS` to customize the highlight.
-     *
-     * ```html
-     * <div
-     *   igxTextHighlight
-     *   [cssClass]="myClass">
-     * </div>
-     * ```
      */
     @Input()
     public cssClass: string;
@@ -60,13 +53,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * Determines the `CSS` class of the active highlight element.
      * This allows the developer to provide custom `CSS` to customize the highlight.
-     *
-     * ```html
-     * <div
-     *   igxTextHighlight
-     *   [activeCssClass]="activeHighlightClass">
-     * </div>
-     * ```
      */
     @Input()
     public activeCssClass: string;
@@ -81,32 +67,12 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * Identifies the highlight within a unique group.
      * This allows it to have several different highlight groups,
      * with each of them having their own active highlight.
-     *
-     * ```html
-     * <div
-     *   igxTextHighlight
-     *   [groupName]="myGroupName">
-     * </div>
-     * ```
      */
     @Input()
     public groupName = '';
 
     /**
      * The underlying value of the element that will be highlighted.
-     *
-     * ```typescript
-     * // get
-     * const elementValue = this.textHighlight.value;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <div
-     *   igxTextHighlight
-     *   [value]="newValue">
-     * </div>
-     * ```
      */
     @Input('value')
     public get value(): any {
@@ -122,26 +88,12 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
     /**
      * The identifier of the row on which the directive is currently on.
-     *
-     * ```html
-     * <div
-     *   igxTextHighlight
-     *   [row]="0">
-     * </div>
-     * ```
      */
     @Input()
     public row: any;
 
     /**
      * The identifier of the column on which the directive is currently on.
-     *
-     * ```html
-     * <div
-     *   igxTextHighlight
-     *   [column]="0">
-     * </div>
-     * ```
      */
     @Input()
     public column: any;
@@ -150,19 +102,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * A map that contains all additional conditions, that you need to activate a highlighted
      * element. To activate the condition, you will have to add a new metadata key to
      * the `metadata` property of the IActiveHighlightInfo interface.
-     *
-     * @example
-     * ```typescript
-     *  // Set a property, which would disable the highlight for a given element on a certain condition
-     *  const metadata = new Map<string, any>();
-     *  metadata.set('highlightElement', false);
-     * ```
-     * ```html
-     * <div
-     *   igxTextHighlight
-     *   [metadata]="metadata">
-     * </div>
-     * ```
      */
     @Input()
     public metadata: Map<string, any>;

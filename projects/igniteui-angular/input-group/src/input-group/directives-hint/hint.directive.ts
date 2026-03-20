@@ -13,14 +13,6 @@ export class IgxHintDirective implements OnInit {
     /**
      * Sets/gets whether the hint position is at the start.
      * Default value is `false`.
-     * ```typescript
-     * @ViewChild('hint', {read: IgxHintDirective})
-     * public igxHint: IgxHintDirective;
-     * this.igxHint.isPositionStart = true;
-     * ```
-     * ```typescript
-     * let isHintPositionStart = this.igxHint.isPositionStart;
-     * ```
      *
      * @memberof IgxHintDirective
      */
@@ -29,14 +21,6 @@ export class IgxHintDirective implements OnInit {
     /**
      * Sets/gets whether the hint position is at the end.
      * Default value is `false`.
-     * ```typescript
-     * @ViewChild('hint', {read: IgxHintDirective})
-     * public igxHint: IgxHintDirective;
-     * this.igxHint.isPositionEnd = true;
-     * ```
-     * ```typescript
-     * let isHintPositionEnd = this.igxHint.isPositionEnd;
-     * ```
      *
      * @memberof IgxHintDirective
      */
@@ -46,12 +30,6 @@ export class IgxHintDirective implements OnInit {
     private _position: IgxHintPosition = IgxHintPosition.START;
     /**
      * Sets the position of the hint.
-     * ```html
-     * <igx-input-group>
-     *  <input igxInput type="text"/>
-     *  <igx-hint #hint [position]="'start'">IgxHint displayed at the start</igx-hint>
-     * </igx-input-group>
-     * ```
      *
      * @memberof IgxHintDirective
      */
@@ -65,11 +43,6 @@ export class IgxHintDirective implements OnInit {
     }
     /**
      * Gets the position of the hint.
-     * ```typescript
-     * @ViewChild('hint', {read: IgxHintDirective})
-     * public igxHint: IgxHintDirective;
-     * let hintPosition =  this.igxHint.position;
-     * ```
      *
      * @memberof IgxHintDirective
      */

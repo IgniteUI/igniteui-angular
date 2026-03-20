@@ -297,17 +297,6 @@ export class PlatformUtil {
     /**
      * @hidden @internal
      * Returns the actual size of the node content, using Range
-     * ```typescript
-     * let range = document.createRange();
-     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-     *
-     * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
-     *
-     * @remarks
-     * The last parameter is useful when the size of the element to measure is modified by a
-     * parent element that has explicit size. In such cases the calculated size is never lower
-     * and the function may instead remove the parent size while measuring to get the correct value.
-     * ```
      */
     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
@@ -536,12 +525,6 @@ export function resolveNestedPath<T extends object, U>(obj: unknown, pathParts: 
  * Given a property access path in the format `x.y.z` and a value
  * this functions builds and returns an object following the access path.
  *
- * @example
- * ```typescript
- * console.log('x.y.z.', 42);
- * >> { x: { y: { z: 42 } } }
- * ```
- *
  * @hidden
  * @internal
  */
@@ -601,16 +584,6 @@ export function modulo(n: number, d: number) {
  * Splits an array into chunks of length `size` and returns a generator
  * yielding each chunk.
  * The last chunk may contain less than `size` elements.
- *
- * @example
- * ```typescript
- * const arr = [0,1,2,3,4,5,6,7,8,9];
- *
- * Array.from(chunk(arr, 2)) // [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9]]
- * Array.from(chunk(arr, 3)) // [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
- * Array.from(chunk([], 3)) // []
- * Array.from(chunk(arr, -3)) // Error
- * ```
  */
 export function* intoChunks<T>(arr: T[], size: number) {
     if (size < 1) {

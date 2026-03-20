@@ -27,23 +27,6 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
 /**
  * The chip area allows you to perform more complex scenarios with chips that require interaction,
  * like dragging, selection, navigation, etc.
- *
- * @igxModule IgxChipsModule
- *
- * @igxTheme igx-chip-theme
- *
- * @igxKeywords chip area, chip
- *
- * @igxGroup display
- *
- * @example
- * ```html
- * <igx-chips-area>
- *    <igx-chip *ngFor="let chip of chipList" [id]="chip.id">
- *        <span>{{chip.text}}</span>
- *    </igx-chip>
- * </igx-chips-area>
- * ```
  */
 @Component({
     selector: 'igx-chips-area',
@@ -58,34 +41,18 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * Returns the `role` attribute of the chips area.
-     *
-     * @example
-     * ```typescript
-     * let chipsAreaRole = this.chipsArea.role;
-     * ```
      */
      @HostBinding('attr.role')
      public role = 'listbox';
 
     /**
      * Returns the `aria-label` attribute of the chips area.
-     *
-     * @example
-     * ```typescript
-     * let ariaLabel = this.chipsArea.ariaLabel;
-     * ```
-     *
      */
      @HostBinding('attr.aria-label')
      public ariaLabel = 'chip area';
 
     /**
      * Sets the width of the `IgxChipsAreaComponent`.
-     *
-     * @example
-     * ```html
-     * <igx-chips-area #chipsArea [width]="300" [height]="10" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
-     * ```
      */
     @Input()
     public width: number;
@@ -98,11 +65,6 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * Sets the height of the `IgxChipsAreaComponent`.
-     *
-     * @example
-     * ```html
-     * <igx-chips-area #chipsArea [width]="300" [height]="10" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
-     * ```
      */
     @Input()
     public height: number;
@@ -116,11 +78,6 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     /**
      * Emits an event when `IgxChipComponent`s in the `IgxChipsAreaComponent` should be reordered.
      * Returns an array of `IgxChipComponent`s.
-     *
-     * @example
-     * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder($event)"></igx-chips-area>
-     * ```
      */
     @Output()
     public reorder = new EventEmitter<IChipsAreaReorderEventArgs>();
@@ -129,46 +86,24 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected/deselected.
      * Fired after the chips area is initialized if there are initially selected chips as well.
      * Returns an array of selected `IgxChipComponent`s and the `IgxChipAreaComponent`.
-     *
-     * @example
-     * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (selectionChange)="selection($event)"></igx-chips-area>
-     * ```
      */
     @Output()
     public selectionChange = new EventEmitter<IChipsAreaSelectEventArgs>();
 
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
-     *
-     * @example
-     * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (moveStart)="moveStart($event)"></igx-chips-area>
-     * ```
      */
     @Output()
     public moveStart = new EventEmitter<IBaseChipsAreaEventArgs>();
 
     /**
      * Emits an event after an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
-     *
-     * @example
-     * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (moveEnd)="moveEnd($event)"></igx-chips-area>
-     * ```
      */
     @Output()
     public moveEnd = new EventEmitter<IBaseChipsAreaEventArgs>();
 
     /**
      * Holds the `IgxChipComponent` in the `IgxChipsAreaComponent`.
-     *
-     * @example
-     * ```typescript
-     * ngAfterViewInit(){
-     *    let chips = this.chipsArea.chipsList;
-     * }
-     * ```
      */
     @ContentChildren(IgxChipComponent, { descendants: true })
     public chipsList: QueryList<IgxChipComponent>;

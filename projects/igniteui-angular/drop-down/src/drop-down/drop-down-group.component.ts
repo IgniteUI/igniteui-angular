@@ -2,8 +2,8 @@ import { Component, Input, HostBinding, booleanAttribute } from '@angular/core';
 
 let NEXT_ID = 0;
 /**
- * The `<igx-drop-down-item>` is a container intended for row items in
- * a `<igx-drop-down>` container.
+ * The drop-down item group is a container intended for row items in
+ * a drop-down container.
  */
 @Component({
     selector: 'igx-drop-down-item-group',
@@ -38,26 +38,6 @@ export class IgxDropDownGroupComponent {
     /**
      * Sets/gets if the item group is disabled
      *
-     * ```typescript
-     * const myDropDownGroup: IgxDropDownGroupComponent = this.dropdownGroup;
-     * // get
-     * ...
-     * const groupState: boolean = myDropDownGroup.disabled;
-     * ...
-     * //set
-     * ...
-     * myDropDownGroup,disabled = false;
-     * ...
-     * ```
-     *
-     * ```html
-     * <igx-drop-down-item-group [label]="'My Items'" [disabled]="true">
-     *     <igx-drop-down-item *ngFor="let item of items[index]" [value]="item.value">
-     *         {{ item.text }}
-     *     </igx-drop-down-item>
-     * </igx-drop-down-item-group>
-     * ```
-     *
      * **NOTE:** All items inside of a disabled drop down group will be treated as disabled
      */
     @Input({ transform: booleanAttribute })
@@ -67,24 +47,6 @@ export class IgxDropDownGroupComponent {
 
     /**
      * Sets/gets the label of the item group
-     *
-     * ```typescript
-     * const myDropDownGroup: IgxDropDownGroupComponent = this.dropdownGroup;
-     * // get
-     * ...
-     * const myLabel: string = myDropDownGroup.label;
-     * ...
-     * // set
-     * ...
-     * myDropDownGroup.label = 'My New Label';
-     * ...
-     * ```
-     *
-     * ```html
-     * <igx-drop-down-item-group [label]="'My new Label'">
-     *      ...
-     * </igx-drop-down-item-group>
-     * ```
      */
     @Input()
     public label: string;

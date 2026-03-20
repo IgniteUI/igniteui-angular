@@ -17,24 +17,10 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
 /**
  * Badge provides visual notifications used to decorate avatars, menus, etc.
  *
- * @igxModule IgxBadgeModule
- *
- * @igxTheme igx-badge-theme
- *
- * @igxKeywords badge, icon, notification
- *
- * @igxGroup Data Entry & Display
- *
  * @remarks
  * The Ignite UI Badge is used to decorate avatars, navigation menus, or other components in the
  * application when visual notification is needed. They are usually designed as icons with a predefined
  * style to communicate information, success, warnings, or errors.
- *
- * @example
- * ```html
- * <igx-avatar>
- *   <igx-badge icon="check" type="success"></igx-badge>
- * </igx-avatar>
  */
 @Component({
     selector: 'igx-badge',
@@ -48,11 +34,6 @@ export class IgxBadgeComponent {
     *
     * @remarks
     * If not set, the `id` will have value `"igx-badge-0"`.
-    *
-    * @example
-    * ```html
-    * <igx-badge id="igx-badge-2"></igx-badge>
-    * ```
     */
     @HostBinding('attr.id')
     @Input()
@@ -64,11 +45,6 @@ export class IgxBadgeComponent {
     * @remarks
     * Allowed values are `primary`, `info`, `success`, `warning`, `error`.
     * Providing an invalid value won't display a badge.
-    *
-    * @example
-    * ```html
-    * <igx-badge type="success"></igx-badge>
-    * ```
     */
     @Input()
     public type: string | IgxBadgeType = IgxBadgeType.PRIMARY;
@@ -79,11 +55,6 @@ export class IgxBadgeComponent {
     * @remarks
     * If an `icon` property is already set the `icon` will be displayed.
     * If neither a `value` nor an `icon` is set the content of the badge will be empty.
-    *
-    * @example
-    * ```html
-    * <igx-badge value="11"></igx-badge>
-    * ```
     */
     @Input()
     public value: string | number = '';
@@ -95,11 +66,6 @@ export class IgxBadgeComponent {
      * Has priority over the `value` property.
      * If neither a `value` nor an `icon` is set the content of the badge will be empty.
      * Providing an invalid value won't display anything.
-     *
-     * @example
-     * ```html
-     * <igx-badge icon="check"></igx-badge>
-     * ```
      */
     @Input()
     public icon: string;
@@ -113,13 +79,10 @@ export class IgxBadgeComponent {
     /**
      * Sets/gets the role attribute value.
      *
-     * @example
-     * ```typescript
      * @ViewChild("MyBadge", { read: IgxBadgeComponent })
      * public badge: IgxBadgeComponent;
      *
      * badge.role = 'status';
-     * ```
      */
     @HostBinding('attr.role')
     public role = 'status';
@@ -127,13 +90,10 @@ export class IgxBadgeComponent {
     /**
      * Sets/gets the css class to use on the badge.
      *
-     * @example
-     * ```typescript
      * @ViewChild("MyBadge", { read: IgxBadgeComponent })
      * public badge: IgxBadgeComponent;
      *
      * badge.cssClass = 'my-badge-class';
-     * ```
      */
     @HostBinding('class.igx-badge')
     public cssClass = 'igx-badge';
@@ -141,11 +101,6 @@ export class IgxBadgeComponent {
     /**
      * Sets a square shape to the badge, if `shape` is set to `square`.
      * By default the shape of the badge is rounded.
-     *
-     * @example
-     * ```html
-     * <igx-badge shape="square"></igx-badge>
-     * ```
      */
     @Input()
     public shape: 'rounded' | 'square' = 'rounded';
@@ -161,13 +116,10 @@ export class IgxBadgeComponent {
     /**
      * Sets/gets the aria-label attribute value.
      *
-     * @example
-     * ```typescript
      * @ViewChild("MyBadge", { read: IgxBadgeComponent })
      * public badge: IgxBadgeComponent;
      *
      * badge.label = 'badge';
-     * ```
      */
     @HostBinding('attr.aria-label')
     public label = 'badge';
@@ -175,11 +127,6 @@ export class IgxBadgeComponent {
     /**
      * Sets/gets whether the badge is outlined.
      * Default value is `false`.
-     *
-     * @example
-     * ```html
-     * <igx-badge outlined></igx-badge>
-     * ```
      */
     @Input({transform: booleanAttribute})
     @HostBinding('class.igx-badge--outlined')
@@ -189,11 +136,6 @@ export class IgxBadgeComponent {
      * Sets/gets whether the badge is displayed as a dot.
      * When true, the badge will be rendered as a minimal 8px indicator without any content.
      * Default value is `false`.
-     *
-     * @example
-     * ```html
-     * <igx-badge dot type="success"></igx-badge>
-     * ```
      */
     @Input({transform: booleanAttribute})
     @HostBinding('class.igx-badge--dot')

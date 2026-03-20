@@ -730,10 +730,6 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
      *
      * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
-     * @example
-     * ```html
-     * <button type="button" igxButton (click)="grid.endEdit(true)">Commit Row</button>
-     * ```
      * @param commit
      */
     // TODO: Implement the same representation of the method without evt emission.

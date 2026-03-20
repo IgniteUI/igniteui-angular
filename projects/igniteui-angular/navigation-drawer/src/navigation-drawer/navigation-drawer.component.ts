@@ -16,18 +16,6 @@ let NEXT_ID = 0;
  * The Ignite UI Navigation Drawer is a collapsible side navigation container commonly used in combination with the Navbar.
  *
  * Example:
- * ```html
- * <igx-nav-drawer id="navigation" [isOpen]="true">
- *   <ng-template igxDrawer>
- *     <nav>
- *       <span igxDrawerItem [isHeader]="true">Email</span>
- *       <span igxDrawerItem igxRipple>Inbox</span>
- *       <span igxDrawerItem igxRipple>Deleted</span>
- *       <span igxDrawerItem igxRipple>Sent</span>
- *     </nav>
- *   </ng-template>
- * </igx-nav-drawer>
- * ```
  */
 @Component({
     providers: [HammerGesturesManager],
@@ -68,48 +56,18 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * ID of the component
-     *
-     * ```typescript
-     * // get
-     * let myNavDrawerId = this.navdrawer.id;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     *  <igx-nav-drawer id='navdrawer'></igx-nav-drawer>
-     * ```
      */
     @HostBinding('attr.id')
     @Input() public id = `igx-nav-drawer-${NEXT_ID++}`;
 
     /**
      * Position of the Navigation Drawer. Can be "left"(default) or "right".
-     *
-     * ```typescript
-     * // get
-     * let myNavDrawerPosition = this.navdrawer.position;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [position]="'left'"></igx-nav-drawer>
-     * ```
      */
     @Input() public position = 'left';
 
     /**
      * Enables the use of touch gestures to manipulate the drawer:
      * - swipe/pan from edge to open, swipe-toggle and pan-drag.
-     *
-     * ```typescript
-     * // get
-     * let gesturesEnabled = this.navdrawer.enableGestures;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [enableGestures]='true'></igx-nav-drawer>
-     * ```
      */
     @Input({ transform: booleanAttribute }) public enableGestures = true;
 
@@ -121,32 +79,12 @@ export class IgxNavigationDrawerComponent implements
     /**
      * Minimum device width required for automatic pin to be toggled.
      * Default is 1024, can be set to a falsy value to disable this behavior.
-     *
-     * ```typescript
-     * // get
-     * let navDrawerPinThreshold = this.navdrawer.pinThreshold;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [pinThreshold]='1024'></igx-nav-drawer>
-     * ```
      */
     @Input() public pinThreshold = 1024;
 
     /**
      * When pinned the drawer is relatively positioned instead of sitting above content.
      * May require additional layout styling.
-     *
-     * ```typescript
-     * // get
-     * let navDrawerIsPinned = this.navdrawer.pin;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [pin]="false"></igx-nav-drawer>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get pin(): boolean {
@@ -159,16 +97,6 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Width of the drawer in its open state.
-     *
-     * ```typescript
-     * // get
-     * let navDrawerWidth = this.navdrawer.width;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [width]="'228px'"></igx-nav-drawer>
-     * ```
      */
     private _width: string;
 
@@ -183,66 +111,33 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Enables/disables the animation, when toggling the drawer. Set to `false` by default.
-     * ````html
-     * <igx-nav-drawer [disableAnimation]="true"></igx-nav-drawer>
-     * ````
      */
     @HostBinding('class.igx-nav-drawer--disable-animation')
     @Input({ transform: booleanAttribute }) public disableAnimation = false;
 
     /**
      * Width of the drawer in its mini state.
-     *
-     * ```typescript
-     * // get
-     * let navDrawerMiniWidth = this.navdrawer.miniWidth;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
-     * ```
      */
     @Input() public miniWidth: string;
 
     /**
      * Pinned state change output for two-way binding.
-     *
-     * ```html
-     * <igx-nav-drawer [(pin)]='isPinned'></igx-nav-drawer>
-     * ```
      */
     @Output() public pinChange = new EventEmitter<boolean>(true);
     /**
      * Event fired as the Navigation Drawer is about to open.
-     *
-     * ```html
-     *  <igx-nav-drawer (opening)='onOpening()'></igx-nav-drawer>
-     * ```
      */
     @Output() public opening = new EventEmitter();
     /**
      * Event fired when the Navigation Drawer has opened.
-     *
-     * ```html
-     * <igx-nav-drawer (opened)='onOpened()'></igx-nav-drawer>
-     * ```
      */
     @Output() public opened = new EventEmitter();
     /**
      * Event fired as the Navigation Drawer is about to close.
-     *
-     * ```html
-     * <igx-nav-drawer (closing)='onClosing()'></igx-nav-drawer>
-     * ```
      */
     @Output() public closing = new EventEmitter();
     /**
      * Event fired when the Navigation Drawer has closed.
-     *
-     * ```html
-     * <igx-nav-drawer (closed)='onClosed()'></igx-nav-drawer>
-     * ```
      */
     @Output() public closed = new EventEmitter();
 
@@ -259,21 +154,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * State of the drawer.
      *
-     * ```typescript
-     * // get
-     * let navDrawerIsOpen = this.navdrawer.isOpen;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [isOpen]='false'></igx-nav-drawer>
-     * ```
-     *
      * Two-way data binding.
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [(isOpen)]='model.isOpen'></igx-nav-drawer>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public get isOpen() {
@@ -418,7 +299,6 @@ export class IgxNavigationDrawerComponent implements
      * Gets the Drawer width for specific state.
      * Will attempt to evaluate requested state and cache.
      *
-     *
      * @hidden
      */
     public get expectedWidth() {
@@ -528,10 +408,6 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Toggle the open state of the Navigation Drawer.
-     *
-     * ```typescript
-     * this.navdrawer.toggle();
-     * ```
      */
     public toggle() {
         if (this.isOpen) {
@@ -543,10 +419,6 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Open the Navigation Drawer. Has no effect if already opened.
-     *
-     * ```typescript
-     * this.navdrawer.open();
-     * ```
      */
     public open() {
         if (this._panning) {
@@ -574,10 +446,6 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Close the Navigation Drawer. Has no effect if already closed.
-     *
-     * ```typescript
-     * this.navdrawer.close();
-     * ```
      */
     public close() {
         if (this._panning) {

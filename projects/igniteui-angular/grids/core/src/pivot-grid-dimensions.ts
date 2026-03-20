@@ -116,11 +116,6 @@ export class IgxPivotDateDimension implements IPivotDimension {
      *
      * @param inDateDimension Base dimension that is used by this class to determine the other dimensions and their values.
      * @param inOptions Options for the predefined date dimensions whether to show quarter, years and etc.
-     * @example
-     * ```typescript
-     * // Displays only years as parent dimension to the base dimension provided.
-     * new IgxPivotDateDimension({ memberName: 'Date', enabled: true }, { total: false, months: false });
-     * ```
      */
     constructor(inBaseDimension: IPivotDimension = null, inOptions: IPivotDateDimensionOptions = {}) {
         this._baseDimension = inBaseDimension;

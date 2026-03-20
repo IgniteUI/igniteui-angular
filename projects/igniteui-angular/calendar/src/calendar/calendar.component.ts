@@ -39,22 +39,9 @@ let NEXT_ID = 0;
 /**
  * Calendar provides a way to display date information.
  *
- * @igxModule IgxCalendarModule
- *
- * @igxTheme igx-calendar-theme, igx-icon-theme
- *
- * @igxKeywords calendar, datepicker, schedule, date
- *
- * @igxGroup Scheduling
- *
  * @remarks
  * The Ignite UI Calendar provides an easy way to display a calendar and allow users to select dates using single, multiple
  * or range selection.
- *
- * @example:
- * ```html
- * <igx-calendar selection="range"></igx-calendar>
- * ```
  */
 @Component({
     providers: [
@@ -92,10 +79,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @remarks
 	 * If not set, the `id` will have value `"igx-calendar-0"`.
 	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar id="my-first-calendar"></igx-calendar>
-	 * ```
 	 * @memberof IgxCalendarComponent
 	 */
 	@HostBinding('attr.id')
@@ -105,11 +88,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     /**
      * Sets/gets whether the calendar has header.
      * Default value is `true`.
-     *
-     * @example
-     * ```html
-     * <igx-calendar [hasHeader]="false"></igx-calendar>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public hasHeader = true;
@@ -117,11 +95,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     /**
      * Sets/gets whether the calendar header will be in vertical position.
      * Default value is `false`.
-     *
-     * @example
-     * ```html
-     * <igx-calendar [vertical]="true"></igx-calendar>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public vertical = false;
@@ -135,11 +108,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	/**
 	 * Sets/gets the number of month views displayed.
 	 * Default value is `1`.
-	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar [monthsViewNumber]="2"></igx-calendar>
-	 * ```
 	 */
 	@Input()
 	public get monthsViewNumber() {
@@ -156,11 +124,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
     /**
      * Show/hide week numbers
-     *
-     * @example
-     * ```html
-     * <igx-calendar [showWeekNumbers]="true"></igx-calendar>
-     * ``
      */
     @Input({ transform: booleanAttribute })
     public showWeekNumbers = false;
@@ -261,10 +224,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	/**
 	 * Gets the header template.
 	 *
-	 * @example
-	 * ```typescript
-	 * let headerTitleTemplate = this.calendar.headerTitleTeamplate;
-	 * ```
 	 * @memberof IgxCalendarComponent
 	 */
 	public get headerTitleTemplate(): any {
@@ -277,10 +236,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	/**
 	 * Sets the header template.
 	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar headerTitleTemplateDirective="igxCalendarHeaderTitle"></igx-calendar>
-	 * ```
 	 * @memberof IgxCalendarComponent
 	 */
 	public set headerTitleTemplate(directive: any) {
@@ -290,10 +245,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	/**
 	 * Gets the header template.
 	 *
-	 * @example
-	 * ```typescript
-	 * let headerTemplate =  this.calendar.headerTeamplate;
-	 * ```
 	 * @memberof IgxCalendarComponent
 	 */
 	public get headerTemplate(): any {
@@ -306,10 +257,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	/**
 	 * Sets the header template.
 	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar headerTemplateDirective="igxCalendarHeader"></igx-calendar>
-	 * ```
 	 * @memberof IgxCalendarComponent
 	 */
 	public set headerTemplate(directive: any) {
@@ -318,11 +265,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
 	/**
 	 * Gets the subheader template.
-	 *
-	 * @example
-	 * ```typescript
-	 * let subheaderTemplate = this.calendar.subheaderTemplate;
-	 * ```
 	 */
 	public get subheaderTemplate(): any {
 		if (this.subheaderTemplateDirective) {
@@ -334,10 +276,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	/**
 	 * Sets the subheader template.
 	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar subheaderTemplate="igxCalendarSubheader"></igx-calendar>
-	 * ```
 	 * @memberof IgxCalendarComponent
 	 */
 	public set subheaderTemplate(directive: any) {
@@ -346,11 +284,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
 	/**
 	 * Gets the context for the template marked with the `igxCalendarHeader` directive.
-	 *
-	 * @example
-	 * ```typescript
-	 * let headerContext =  this.calendar.headerContext;
-	 * ```
 	 */
 	public get headerContext() {
 		return this.generateContext(this.headerDate);
@@ -359,11 +292,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	/**
 	 * Gets the context for the template marked with either `igxCalendarSubHeaderMonth`
 	 * or `igxCalendarSubHeaderYear` directive.
-	 *
-	 * @example
-	 * ```typescript
-	 * let context =  this.calendar.context;
-	 * ```
 	 */
 	public get context() {
 		const date: Date = this.viewDate;
@@ -1016,11 +944,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
 	/**
 	 * Deselects date(s) (based on the selection type).
-	 *
-	 * @example
-	 * ```typescript
-	 *  this.calendar.deselectDate(new Date(`2018-06-12`));
-	 * ````
 	 */
 	public override deselectDate(value?: Date | Date[] | string) {
 		super.deselectDate(value);

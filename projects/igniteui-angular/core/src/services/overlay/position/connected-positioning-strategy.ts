@@ -42,9 +42,6 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * @param document reference to the Document object
    * @param initialCall should be true if this is the initial call to the method
    * @param target attaching target for the component to show
-   * ```typescript
-   * settings.positionStrategy.position(content, size, document, true);
-   * ```
    */
   public position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
     const rects = this.calculateElementRectangles(contentElement, target);

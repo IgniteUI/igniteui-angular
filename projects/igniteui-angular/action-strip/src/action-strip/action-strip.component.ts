@@ -57,25 +57,9 @@ export class IgxActionStripMenuItemDirective {
 /**
  * Action Strip provides templatable area for one or more actions.
  *
- * @igxModule IgxActionStripModule
- *
- * @igxTheme igx-action-strip-theme
- *
- * @igxKeywords action, strip, actionStrip, pinning, editing
- *
- * @igxGroup Data Entry & Display
- *
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, *
- *
  * @remarks
  * The Ignite UI Action Strip is a container, overlaying its parent container,
  * and displaying action buttons with action applicable to the parent component the strip is instantiated or shown for.
- *
- * @example
- * ```html
- * <igx-action-strip #actionStrip>
- *     <igx-icon (click)="doSomeAction()"></igx-icon>
- * </igx-action-strip>
  */
 @Component({
     selector: 'igx-action-strip',
@@ -105,11 +89,6 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.
      * This element will be the placeholder of the action strip.
-     *
-     * @example
-     * ```html
-     * <igx-action-strip [context]="cell"></igx-action-strip>
-     * ```
      */
     @Input()
     public context: any;
@@ -140,11 +119,6 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
     /**
      * Gets/Sets the visibility of the Action Strip.
      * Could be used to set if the Action Strip will be initially hidden.
-     *
-     * @example
-     * ```html
-     *  <igx-action-strip [hidden]="false">
-     * ```
      */
     @Input({ transform: booleanAttribute })
     public hidden = true;
@@ -285,10 +259,6 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      * Showing the Action Strip and appending it the specified context element.
      *
      * @param context
-     * @example
-     * ```typescript
-     * this.actionStrip.show(row);
-     * ```
      */
     public show(context?: any): void {
         this.hidden = false;
@@ -308,11 +278,6 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
 
     /**
      * Hiding the Action Strip and removing it from its current context element.
-     *
-     * @example
-     * ```typescript
-     * this.actionStrip.hide();
-     * ```
      */
     public hide(): void {
         this.hidden = true;

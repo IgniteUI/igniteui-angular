@@ -29,14 +29,6 @@ export class IgxPdfTextDirective { }
 /* singleInstanceIdentifier */
 /**
  * Provides a way to template the title portion of the toolbar in the grid.
- *
- * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridToolbarComponent
- *
- * @example
- * ```html
- * <igx-grid-toolbar-title>My custom title</igx-grid-toolbar-title>
- * ```
  */
 @Component({
     selector: 'igx-grid-toolbar-title', template: '<ng-content></ng-content>',
@@ -60,16 +52,6 @@ export class IgxGridToolbarTitleComponent {
 /* singleInstanceIdentifier */
 /**
  * Provides a way to template the action portion of the toolbar in the grid.
- *
- * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridToolbarComponent
- *
- * @example
- * ```html
- * <igx-grid-toolbar-actions>
- *  <some-toolbar-action-here />
- * </igx-grid-toolbar-actions>
- * ```
  */
 @Component({
     selector: 'igx-grid-toolbar-actions', template: '<ng-content></ng-content>',

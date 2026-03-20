@@ -48,10 +48,6 @@ import { IForOfState } from 'igniteui-angular/directives';
 /* contentParent: HierarchicalGrid */
 /**
  * Row island
- *
- * @igxModule IgxHierarchicalGridModule
- * @igxParent IgxHierarchicalGridComponent, IgxRowIslandComponent
- *
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,13 +72,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /* blazorSuppress */
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
-     * ```html
-     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'">
-     *          <!-- ... -->
-     *      </igx-row-island>
-     * </igx-hierarchical-grid>
-     * ```
      *
      * @memberof IgxRowIslandComponent
      */
@@ -193,13 +182,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     /**
      * Event emitted when a grid is being created based on this row island.
-     * ```html
-     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'" (gridCreated)="gridCreated($event)" #rowIsland>
-     *          <!-- ... -->
-     *      </igx-row-island>
-     * </igx-hierarchical-grid>
-     * ```
      *
      * @memberof IgxRowIslandComponent
      */
@@ -209,13 +191,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * Emitted after a grid is being initialized for this row island.
      * The emitting is done in `ngAfterViewInit`.
-     * ```html
-     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'" (gridInitialized)="gridInitialized($event)" #rowIsland>
-     *          <!-- ... -->
-     *      </igx-row-island>
-     * </igx-hierarchical-grid>
-     * ```
      *
      * @memberof IgxRowIslandComponent
      */
@@ -320,13 +295,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     /**
      * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
-     * ```html
-     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'" [expandChildren]="true" #rowIsland>
-     *          <!-- ... -->
-     *      </igx-row-island>
-     * </igx-hierarchical-grid>
-     * ```
      *
      * @memberof IgxRowIslandComponent
      */
@@ -347,9 +315,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     /**
      * Gets if all immediate children of the grids for this `IgxRowIslandComponent` have been set to be expanded/collapsed.
-     * ```typescript
-     * const expanded = this.rowIsland.expandChildren;
-     * ```
      *
      * @memberof IgxRowIslandComponent
      */

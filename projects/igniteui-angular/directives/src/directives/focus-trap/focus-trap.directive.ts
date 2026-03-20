@@ -21,11 +21,6 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Sets whether the Tab key focus is trapped within the element.
-     *
-     * @example
-     * ```html
-     * <div igxFocusTrap="true"></div>
-     * ```
      */
     @Input({ alias: 'igxFocusTrap', transform: booleanAttribute })
     public set focusTrap(focusTrap: boolean) {

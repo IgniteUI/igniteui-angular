@@ -111,10 +111,6 @@ export class HammerGesturesManager {
      * @param element The DOM element used to create the manager on.
      *
      * ### Example
-     *
-     * ```ts
-     * manager.setManagerOption(myElem, "pan", { pointers: 1 });
-     * ```
      */
     public setManagerOption(element: EventTarget, event: string, options: any) {
         const manager = this.getManagerForElement(element);

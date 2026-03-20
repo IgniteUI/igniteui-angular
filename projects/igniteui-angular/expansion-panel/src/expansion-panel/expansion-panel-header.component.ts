@@ -51,16 +51,7 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * Gets/sets the `aria-level` attribute of the header
      * Get
-     * ```typescript
-     *  const currentAriaLevel = this.panel.header.lv;
-     * ```
      * Set
-     * ```typescript
-     *  this.panel.header.lv = '5';
-     * ```
-     * ```html
-     *  <igx-expansion-panel-header [lv]="myCustomLevel"></igx-expansion-panel-header>
-     * ```
      */
     @HostBinding('attr.aria-level')
     @Input()
@@ -69,16 +60,7 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * Gets/sets the `role` attribute of the header
      * Get
-     * ```typescript
-     *  const currentRole = this.panel.header.role;
-     * ```
      * Set
-     * ```typescript
-     *  this.panel.header.role = '5';
-     * ```
-     * ```html
-     *  <igx-expansion-panel-header [role]="'custom'"></igx-expansion-panel-header>
-     * ```
      */
     @HostBinding('attr.role')
     @Input()
@@ -101,32 +83,13 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * Gets/sets the position of the expansion-panel-header expand/collapse icon
      * Accepts `left`, `right` or `none`
-     * ```typescript
-     *  const currentIconPosition = this.panel.header.iconPosition;
-     * ```
      * Set
-     * ```typescript
-     *  this.panel.header.iconPosition = 'left';
-     * ```
-     * ```html
-     *  <igx-expansion-panel-header [iconPosition]="'right'"></igx-expansion-panel-header>
-     * ```
      */
     @Input()
     public iconPosition: ExpansionPanelHeaderIconPosition = ExpansionPanelHeaderIconPosition.LEFT;
 
     /**
      * Emitted whenever a user interacts with the header host
-     * ```typescript
-     *  handleInteraction(event: IExpansionPanelCancelableEventArgs) {
-     *  ...
-     * }
-     * ```
-     * ```html
-     *  <igx-expansion-panel-header (interaction)="handleInteraction($event)">
-     *      ...
-     *  </igx-expansion-panel-header>
-     * ```
      */
     @Output()
     public interaction = new EventEmitter<IExpansionPanelCancelableEventArgs>();
@@ -149,18 +112,7 @@ export class IgxExpansionPanelHeaderComponent {
      * Gets/sets the whether the header is disabled
      * When disabled, the header will not handle user events and will stop their propagation
      *
-     * ```typescript
-     *  const isDisabled = this.panel.header.disabled;
-     * ```
      * Set
-     * ```typescript
-     *  this.panel.header.disabled = true;
-     * ```
-     * ```html
-     *  <igx-expansion-panel-header [disabled]="true">
-     *     ...
-     *  </igx-expansion-panel-header>
-     * ```
      */
     @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-expansion-panel--disabled')
@@ -188,9 +140,6 @@ export class IgxExpansionPanelHeaderComponent {
 
     /**
      * Sets/gets the `id` of the expansion panel header.
-     * ```typescript
-     * let panelHeaderId =  this.panel.header.id;
-     * ```
      *
      * @memberof IgxExpansionPanelComponent
      */
