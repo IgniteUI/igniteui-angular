@@ -619,7 +619,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(spans.length).toBe(2);
         });
 
-        fit('should not constrain collapsed column group width by default min width when children have explicit widths (#17042)', () => {
+        it('should not constrain collapsed column group width by default min width when children have explicit widths (#17042)', () => {
             const fix = TestBed.createComponent(CollapsibleGroupWithExplicitChildWidthsComponent);
             fix.detectChanges();
             const g: IgxGridComponent = fix.componentInstance.grid;
