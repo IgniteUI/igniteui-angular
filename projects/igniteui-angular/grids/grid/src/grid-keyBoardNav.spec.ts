@@ -961,7 +961,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(cell.selected).toBe(true);
         }));
 
-        it('should keep selected cell when expand/collapse grouped row ', (async () => {
+        /* S.S. Behavioral change from 21.1 - selection is cleared when expand/collapsing due to indexes being unstable */
+        xit('should keep selected cell when expand/collapse grouped row ', (async () => {
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
 
