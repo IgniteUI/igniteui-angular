@@ -3,7 +3,6 @@ import {
     IgxPieChartInitializer,
     IgxDataChartInitializer,
     IgxStackedDataChartInitializer,
-    ChartInitializer,
     IChartComponentOptions
 } from './initializers';
 import {
