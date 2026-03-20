@@ -34,9 +34,23 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      *
      * @remarks
      *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef<HTMLElement>;
+
+    /**
+     * Gets/Sets the container used for the element.
+     *
+     * @remarks
+     *  `container` is an instance of `HTMLElement`.
+     */
+    @Input()
+    public useContainer: boolean;
+
 
     /**
      * Enables/Disables the visibility of the element.

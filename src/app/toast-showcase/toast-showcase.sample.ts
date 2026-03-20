@@ -1,7 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import {
     IgxButtonDirective,
-    IgxOverlayOutletDirective,
     IgxRippleDirective,
     IgxToastComponent,
 } from 'igniteui-angular';
@@ -22,7 +21,6 @@ defineComponents(IgcToastComponent);
     imports: [
         IgxButtonDirective,
         IgxRippleDirective,
-        IgxOverlayOutletDirective,
         IgxToastComponent,
     ],
 })

@@ -97,7 +97,7 @@ export class AutocompleteSampleComponent {
 > Note: When autocomplete is dynamically disabled, then it will be automatically closed.
 
 ### Drop Down settings
-The igx-autocomplete drop down positioning, scrolling strategy and outlet can be configured using, the `igxAutocompleteSettings` option. It allows values from type `AutocompleteOverlaySettings`.
+The igx-autocomplete drop down positioning and scrolling strategy can be configured using the `igxAutocompleteSettings` option. It allows values from type `AutocompleteOverlaySettings`.
 
 The following example displays that the positioning of the drop down can be set to be always above the input, where the directive is applied. It also disables opening and closing animations. For that purpose the `ConnectedPositioningStrategy` is used:
 

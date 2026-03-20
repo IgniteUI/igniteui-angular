@@ -131,7 +131,13 @@ export interface OverlaySettings {
     /** Set if the overlay should close when `Esc` key is pressed */
     closeOnEscape?: boolean;
     /* blazorSuppress */
-    /** Set the outlet container to attach the overlay to */
+    /**
+     * Set the outlet container to attach the overlay to
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead.
+     */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
      * @hidden @internal
@@ -200,7 +206,8 @@ export interface OverlayInfo {
     transformY?: number;
     event?: Event;
     wrapperElement?: HTMLElement;
-    size?: string
+    size?: string;
+    appendedToBody?: boolean
 }
 
 /** @hidden */
