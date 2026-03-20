@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { ConditionalFormattingType, IFormatColors, IgxConditionalFormattingDirective } from './conditional-formatting.directive';
@@ -126,6 +126,10 @@ describe('IgxConditionalFormattingDirective', () => {
             expect(directive.colorScale.backgroundColor(null, 0, 50, 1)).toBeUndefined();
         });
 
+        it('should return undefined for non-numeric cell values', () => {
+            expect(directive.colorScale.backgroundColor(null, 0, 'text', 0)).toBeUndefined();
+        });
+
         it('should return error color for values at or below the low threshold (33%)', () => {
             expect(directive.colorScale.backgroundColor(null, 0, 10, 0)).toBe(directive.formatColors.error);
         });
@@ -152,6 +156,10 @@ describe('IgxConditionalFormattingDirective', () => {
 
         it('should return undefined for values below the top 10% threshold', () => {
             expect(directive.top10Percent.backgroundColor(null, 0, 85, 0)).toBeUndefined();
+        });
+
+        it('should return undefined for non-numeric cell values', () => {
+            expect(directive.top10Percent.backgroundColor(null, 0, 'text', 0)).toBeUndefined();
         });
     });
 
@@ -180,12 +188,17 @@ describe('IgxConditionalFormattingDirective', () => {
             expect(directive.textContains.backgroundColor(null, 0, 'searchable text', 0)).toBe(directive.formatColors.info);
         });
 
+        it('should return text color when text contains the comparison value', () => {
+            expect(directive.textContains.color(null, 0, 'searchable', 0)).toBe(directive.formatColors.text);
+        });
+
         it('should match case-insensitively', () => {
             expect(directive.textContains.backgroundColor(null, 0, 'SEARCHABLE', 0)).toBe(directive.formatColors.info);
         });
 
         it('should return undefined when text does not contain the comparison value', () => {
             expect(directive.textContains.backgroundColor(null, 0, 'other text', 0)).toBeUndefined();
+            expect(directive.textContains.color(null, 0, 'other', 0)).toBeUndefined();
         });
 
         it('should return undefined for non-string values', () => {
@@ -207,6 +220,21 @@ describe('IgxConditionalFormattingDirective', () => {
             mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
             expect(directive.duplicates.backgroundColor(null, 0, 10, 0)).toBe('');
         });
+
+        it('should return text color for duplicate values', () => {
+            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
+            expect(directive.duplicates.color(null, 0, 10, 0)).toBe(directive.formatColors.text);
+        });
+
+        it('should return empty string color for unique values', () => {
+            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
+            expect(directive.duplicates.color(null, 0, 10, 0)).toBe('');
+        });
+
+        it('should return undefined when cell is outside the formatted range', () => {
+            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 10 }]);
+            expect(directive.duplicates.backgroundColor(null, 0, 10, 5)).toBeUndefined();
+        });
     });
 
     describe('uniques formatter', () => {
@@ -222,6 +250,21 @@ describe('IgxConditionalFormattingDirective', () => {
         it('should return empty string for duplicate values', () => {
             mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
             expect(directive.uniques.backgroundColor(null, 0, 10, 0)).toBe('');
+        });
+
+        it('should return text color for unique values', () => {
+            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
+            expect(directive.uniques.color(null, 0, 10, 0)).toBe(directive.formatColors.text);
+        });
+
+        it('should return empty string color for duplicate values', () => {
+            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
+            expect(directive.uniques.color(null, 0, 10, 0)).toBe('');
+        });
+
+        it('should return undefined when cell is outside the formatted range', () => {
+            mockGrid.getSelectedData.and.returnValue([{ val: 10 }]);
+            expect(directive.uniques.backgroundColor(null, 0, 10, 5)).toBeUndefined();
         });
     });
 
@@ -258,6 +301,22 @@ describe('IgxConditionalFormattingDirective', () => {
             directive.formatCells(ConditionalFormattingType.ColorScale);
             expect(mockGrid.notifyChanges).toHaveBeenCalled();
         });
+
+        it('should build range from selectedColumns when no cell ranges exist', () => {
+            mockGrid.getSelectedRanges.and.returnValue([]);
+            mockGrid.selectedColumns.and.returnValue([{ visibleIndex: 1 }, { visibleIndex: 3 }]);
+            mockGrid.getSelectedData.and.returnValue([]);
+            mockGrid.getSelectedColumnsData.and.returnValue([{ val: 5 }]);
+            mockGrid.data = [{ val: 5 }, { val: 10 }];
+            const colA = { visibleIndex: 1, cellStyles: undefined };
+            const colB = { visibleIndex: 3, cellStyles: undefined };
+            mockGrid.visibleColumns = [colA, colB];
+
+            directive.formatCells(ConditionalFormattingType.ColorScale);
+
+            expect(colA.cellStyles).toBeDefined();
+            expect(directive.formatter).toBe(ConditionalFormattingType.ColorScale);
+        });
     });
 
     describe('clearFormatting', () => {
@@ -276,6 +335,13 @@ describe('IgxConditionalFormattingDirective', () => {
             directive.formatter = ConditionalFormattingType.ColorScale;
             directive.clearFormatting();
             expect(directive.formatter).toBeUndefined();
+        });
+
+        it('should call cdr.detectChanges', () => {
+            const col0 = { visibleIndex: 0, cellStyles: { backgroundColor: () => 'red' } };
+            mockGrid.visibleColumns = [col0];
+            directive.clearFormatting();
+            expect(mockGrid.cdr.detectChanges).toHaveBeenCalled();
         });
     });
 
@@ -298,6 +364,25 @@ describe('IgxConditionalFormattingDirective', () => {
 
             expect((directive as any)._startColumn).toBe(2);
             expect((directive as any)._endColumn).toBe(4);
+        });
+
+        it('should set both _startColumn and _endColumn to the same index for a single column', () => {
+            mockGrid.getSelectedRanges.and.returnValue([]);
+            mockGrid.selectedColumns.and.returnValue([{ visibleIndex: 5 }]);
+
+            directive.recalcCachedValues(true);
+
+            expect((directive as any)._startColumn).toBe(5);
+            expect((directive as any)._endColumn).toBe(5);
+        });
+
+        it('should return early when no ranges and no columns are selected', () => {
+            mockGrid.getSelectedRanges.and.returnValue([]);
+            mockGrid.selectedColumns.and.returnValue([]);
+
+            directive.recalcCachedValues(true);
+
+            expect((directive as any)._startColumn).toBeUndefined();
         });
 
         it('should calculate _maxValue and _minValue from selected numeric data', () => {
@@ -342,6 +427,161 @@ describe('IgxConditionalFormattingDirective', () => {
 
         it('should return undefined for non-numeric values', () => {
             expect(directive.dataBars.backgroundImage(null, 0, 'text', 0)).toBeUndefined();
+        });
+
+        it('should return undefined when cell is not in the formatted range', () => {
+            expect(directive.dataBars.backgroundImage(null, 0, 50, 5)).toBeUndefined();
+        });
+    });
+
+    describe('greaterThan formatter', () => {
+        beforeEach(() => {
+            (directive as any).formatedRange = new Map([[0, new Set([0])]]);
+            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 30 }, { val: 50 }]);
+        });
+
+        it('should return info color for values above the average', () => {
+            // avg of [10,30,50] = 30, ceil => 30; 50 > 30
+            expect(directive.greaterThan.backgroundColor(null, 0, 50, 0)).toBe(directive.formatColors.info);
+            expect(directive.greaterThan.color(null, 0, 50, 0)).toBe(directive.formatColors.text);
+        });
+
+        it('should return undefined for values at or below the average', () => {
+            expect(directive.greaterThan.backgroundColor(null, 0, 10, 0)).toBeUndefined();
+            expect(directive.greaterThan.color(null, 0, 10, 0)).toBeUndefined();
+        });
+
+        it('should return undefined when cell is not in the formatted range', () => {
+            expect(directive.greaterThan.backgroundColor(null, 0, 50, 5)).toBeUndefined();
+        });
+    });
+
+
+
+    describe('ngAfterViewInit subscriptions', () => {
+        beforeEach(() => {
+            directive.ngAfterViewInit();
+        });
+
+        it('should call determineFormatters(false) when rangeSelected fires', () => {
+            mockGrid.getSelectedData.and.returnValue([{ val: 10 }]);
+            let emitted: string[];
+            directive.formattersReady.subscribe(f => emitted = f);
+
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 });
+
+            expect(emitted).toBeDefined();
+            expect(emitted.length).toBeGreaterThan(0);
+        });
+
+        it('should call determineFormatters(true) when columnSelectionChanging fires after debounce', fakeAsync(() => {
+            mockGrid.getSelectedColumnsData.and.returnValue([{ val: 10 }]);
+            let emitted: string[];
+            directive.formattersReady.subscribe(f => emitted = f);
+
+            mockGrid.columnSelectionChanging.next({ newSelection: ['col1'], oldSelection: [] });
+            tick(200);
+
+            expect(emitted).toBeDefined();
+            expect(emitted.length).toBeGreaterThan(0);
+        }));
+    });
+
+    describe('ngOnDestroy', () => {
+        it('should complete destroy$ and unsubscribe from grid events', () => {
+            directive.ngAfterViewInit();
+            directive.ngOnDestroy();
+
+            // After destroy, subscriptions should be cleaned up — emitting should not throw
+            expect(() => mockGrid.rangeSelected.next({})).not.toThrow();
+        });
+    });
+
+
+
+    describe('cellEdit handler', () => {
+        beforeEach(() => {
+            // Set up a formatted range and formatter so cellEdit handler processes edits
+            directive.ngAfterViewInit();
+            directive.formatter = ConditionalFormattingType.ColorScale;
+            (directive as any).formatedRange = new Map([[0, new Set([0])]]);
+            (directive as any)._startColumn = 0;
+            (directive as any)._endColumn = 0;
+            (directive as any)._maxValue = 100;
+            (directive as any)._minValue = 0;
+            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 }]);
+            mockGrid.getSelectedData.and.returnValue([{ val: 50 }]);
+
+            const col0 = { visibleIndex: 0, cellStyles: undefined };
+            mockGrid.visibleColumns = [col0];
+        });
+
+        it('should recalculate and reformat when a cell within the formatted range is edited', () => {
+            mockGrid.cellEdit.next({
+                newValue: 80,
+                oldValue: 50,
+                cellID: { rowIndex: 0, columnID: 1 }
+            });
+
+            expect(mockGrid.notifyChanges).toHaveBeenCalled();
+        });
+
+        it('should skip processing when newValue equals oldValue', () => {
+            mockGrid.notifyChanges.calls.reset();
+
+            mockGrid.cellEdit.next({
+                newValue: 50,
+                oldValue: 50,
+                cellID: { rowIndex: 0, columnID: 1 }
+            });
+
+            expect(mockGrid.notifyChanges).not.toHaveBeenCalled();
+        });
+
+        it('should skip processing when no formatter is active', () => {
+            directive.formatter = undefined;
+            mockGrid.notifyChanges.calls.reset();
+
+            mockGrid.cellEdit.next({
+                newValue: 80,
+                oldValue: 50,
+                cellID: { rowIndex: 0, columnID: 1 }
+            });
+
+            expect(mockGrid.notifyChanges).not.toHaveBeenCalled();
+        });
+
+        it('should skip processing when edited cell is outside the formatted range', () => {
+            mockGrid.notifyChanges.calls.reset();
+
+            mockGrid.cellEdit.next({
+                newValue: 80,
+                oldValue: 50,
+                cellID: { rowIndex: 5, columnID: 1 } // row 5 not in formatted range
+            });
+
+            expect(mockGrid.notifyChanges).not.toHaveBeenCalled();
+        });
+
+        it('should handle string newValue by adding it as text to selected data', () => {
+            mockGrid.cellEdit.next({
+                newValue: 'text',
+                oldValue: 50,
+                cellID: { rowIndex: 0, columnID: 1 }
+            });
+
+            // Should not throw and should still notify
+            expect(mockGrid.notifyChanges).toHaveBeenCalled();
+        });
+    });
+
+    describe('default formatColors', () => {
+        it('should have correct default color values', () => {
+            expect(directive.formatColors.success).toBe('#4EB862');
+            expect(directive.formatColors.error).toBe('#FF134A');
+            expect(directive.formatColors.warning).toBe('#FBB13C');
+            expect(directive.formatColors.info).toBe('#1377D5');
+            expect(directive.formatColors.text).toBe('#FFF');
         });
     });
 });

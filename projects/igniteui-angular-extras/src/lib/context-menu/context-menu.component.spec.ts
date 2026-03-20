@@ -198,4 +198,71 @@ describe('IgxContextMenuComponent', () => {
             expect(mockOverlay.detach).not.toHaveBeenCalled();
         });
     });
+
+    describe('hidePreview', () => {
+        it('should close the chart preview dialog', () => {
+            component.hidePreview();
+            expect(mockChartPreviewDialog.close).toHaveBeenCalled();
+        });
+    });
+
+    describe('overlayService.opening subscription', () => {
+        it('should set chart dialog instance properties when componentRef is present', () => {
+            const mockInstance = {
+                width: 0,
+                height: 0,
+                currentChartType: undefined,
+                allCharts: [],
+                chartDirective: undefined,
+                chartDialogResizeNotify: undefined,
+                closed: undefined
+            } as any;
+            const mockComponentRef = { instance: mockInstance };
+
+            (mockOverlay.opening as Subject<any>).next({ componentRef: mockComponentRef });
+
+            expect(mockInstance.width).toBe(800);
+            expect(mockInstance.height).toBe(600);
+            expect(mockInstance.allCharts).toEqual(['ColumnGrouped', 'Pie']);
+            expect(mockInstance.chartDirective).toBe(mockContextDirective.chartsDirective);
+        });
+
+        it('should subscribe to closed event and call closeDialog when emitted', () => {
+            const closedEmitter = new EventEmitter<any>();
+            const mockInstance = {
+                width: 0,
+                height: 0,
+                currentChartType: undefined,
+                allCharts: [],
+                chartDirective: undefined,
+                chartDialogResizeNotify: undefined,
+                closed: closedEmitter
+            } as any;
+            const mockComponentRef = { instance: mockInstance };
+
+            (mockOverlay.opening as Subject<any>).next({ componentRef: mockComponentRef });
+
+            // Open a dialog first so closeDialog has something to close
+            component.openDialog(CHART_TYPE.ColumnGrouped);
+            mockOverlay.getOverlayById.and.returnValue({ id: 'dialog-id' });
+
+            closedEmitter.emit();
+
+            expect(mockOverlay.hide).toHaveBeenCalled();
+            expect(mockOverlay.detach).toHaveBeenCalled();
+        });
+    });
+
+    describe('displayCreationTab', () => {
+        it('should reflect the contextDirective displayCreationTab value', () => {
+            expect(component.displayCreationTab).toBeTrue();
+        });
+
+        it('should be false when contextDirective disables it', () => {
+            mockContextDirective.displayCreationTab = false;
+            // Re-init to pick up the new value
+            component.ngAfterViewInit();
+            expect(component.displayCreationTab).toBeFalse();
+        });
+    });
 });

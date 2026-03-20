@@ -323,4 +323,135 @@ describe('IgxContextMenuDirective', () => {
             expect(mockOverlay.hide).not.toHaveBeenCalled();
         });
     });
+
+    describe('gridResizeNotify', () => {
+        it('should reposition the overlay button when resized with an active overlay', () => {
+            (directive as any)._collapsed = false;
+            (directive as any)._id = 'some-id';
+            (directive as any)._range = { rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 };
+            const mockCell = {
+                row: { key: 0 },
+                column: { index: 1 },
+                nativeElement: document.createElement('div')
+            };
+            mockGrid.gridAPI.get_cell_by_index.and.returnValue(mockCell);
+            mockOverlay.getOverlayById.and.returnValue({ settings: { positionStrategy: null } });
+
+            directive.gridResizeNotify.next();
+
+            expect(mockOverlay.reposition).toHaveBeenCalledWith('some-id');
+        });
+
+        it('should not render the button when collapsed', () => {
+            directive.gridResizeNotify.next();
+
+            expect(mockGrid.gridAPI.get_cell_by_index).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('show and close guards', () => {
+        it('should not re-attach or re-show when already visible', fakeAsync(() => {
+            const mockCell = {
+                row: { key: 0 },
+                column: { index: 1 },
+                nativeElement: document.createElement('div')
+            };
+            mockGrid.gridAPI.get_cell_by_index.and.returnValue(mockCell);
+            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 }]);
+
+            // First selection — triggers show()
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 });
+            tick(200);
+
+            expect(mockOverlay.attach).toHaveBeenCalledTimes(1);
+            expect(mockOverlay.show).toHaveBeenCalledTimes(1);
+
+            // Second selection — should reposition, not re-show
+            mockOverlay.getOverlayById.and.returnValue({ settings: { positionStrategy: null } });
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 });
+            tick(200);
+
+            expect(mockOverlay.attach).toHaveBeenCalledTimes(1);
+            expect(mockOverlay.show).toHaveBeenCalledTimes(1);
+            expect(mockOverlay.reposition).toHaveBeenCalledWith('overlay-id');
+        }));
+
+        it('should reset _id to undefined after close', fakeAsync(() => {
+            const mockCell = {
+                row: { key: 0 },
+                column: { index: 1 },
+                nativeElement: document.createElement('div')
+            };
+            mockGrid.gridAPI.get_cell_by_index.and.returnValue(mockCell);
+            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 }]);
+
+            // Show the overlay
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 });
+            tick(200);
+
+            expect((directive as any)._collapsed).toBeFalse();
+            expect((directive as any)._id).toBe('overlay-id');
+
+            // Destroy triggers close()
+            directive.ngOnDestroy();
+
+            expect((directive as any)._collapsed).toBeTrue();
+            expect((directive as any)._id).toBeUndefined();
+        }));
+    });
+
+    describe('renderButton edge cases', () => {
+        it('should not render when _range is null', fakeAsync(() => {
+            (directive as any)._range = null;
+            mockGrid.rangeSelected.next(null);
+            tick(200);
+
+            // renderButton early-returns if !this._range
+            expect(mockOverlay.attach).not.toHaveBeenCalled();
+        }));
+
+        it('should walk back column index when column is not fully visible', fakeAsync(() => {
+            mockGrid.navigation.isColumnFullyVisible.and.callFake((idx) => idx < 1);
+            const mockCell = {
+                row: { key: 0 },
+                column: { index: 1 },
+                nativeElement: document.createElement('div')
+            };
+            mockGrid.gridAPI.get_cell_by_index.and.returnValue(mockCell);
+            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 2 }]);
+
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 2 });
+            tick(200);
+
+            expect(mockGrid.navigation.isColumnFullyVisible).toHaveBeenCalled();
+        }));
+
+        it('should walk back row index when vertical scroll is needed', fakeAsync(() => {
+            mockGrid.navigation.shouldPerformVerticalScroll.and.callFake((idx) => idx > 0);
+            const mockCell = {
+                row: { key: 0 },
+                column: { index: 1 },
+                nativeElement: document.createElement('div')
+            };
+            mockGrid.gridAPI.get_cell_by_index.and.returnValue(mockCell);
+            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 0 }]);
+
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 0 });
+            tick(200);
+
+            expect(mockGrid.navigation.shouldPerformVerticalScroll).toHaveBeenCalled();
+        }));
+
+        it('should close when visibleColumns does not contain the column at the resolved index', fakeAsync(() => {
+            mockGrid.visibleColumns = []; // empty — no column at any index
+            (directive as any)._collapsed = false;
+            (directive as any)._id = 'some-id';
+
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 });
+            tick(200);
+
+            // get_cell_by_index called with empty field, returns null → close()
+            expect(mockOverlay.hide).toHaveBeenCalledWith('some-id');
+        }));
+    });
 });
