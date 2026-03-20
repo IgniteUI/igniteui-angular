@@ -73,7 +73,7 @@
         "fflate": "^0.8.2",
         "tslib": "^2.8.1",
         "igniteui-trial-watermark": "^3.1.0",
-        "jspdf": "^4.0.0",
+        "jspdf": "^4.2.1",
         "lodash-es": "^4.17.21",
         "igniteui-theming": "^25.0.2",
         "igniteui-i18n-core": "^1.0.2",
