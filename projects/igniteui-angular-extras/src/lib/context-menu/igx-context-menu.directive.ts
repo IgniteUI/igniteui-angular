@@ -75,6 +75,10 @@ export class IgxContextMenuDirective implements OnInit, AfterViewInit, OnDestroy
     public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
+        if (this.contentObserver) {
+            this.contentObserver.disconnect();
+            this.contentObserver = null;
+        }
         if (!this._collapsed) {
             this.close();
         }
@@ -84,13 +88,15 @@ export class IgxContextMenuDirective implements OnInit, AfterViewInit, OnDestroy
         this.contentObserver = new ResizeObserver(() => this.gridResizeNotify.next());
         this.contentObserver.observe(this.grid.nativeElement);
 
-        this.grid.columnSelectionChanging.pipe(debounceTime(100))
+        this.grid.columnSelectionChanging.pipe(debounceTime(100), takeUntil(this.destroy$))
             .subscribe((args: IColumnSelectionEventArgs) => {
                 if (args.newSelection && args.oldSelection && !this._collapsed) {
                     this.close();
                 }
                 this.grid.clearCellSelection();
-                this.chartsDirective.chartData = this.grid.getSelectedColumnsData();
+                if (this.chartsDirective) {
+                    this.chartsDirective.chartData = this.grid.getSelectedColumnsData();
+                }
                 if (!this._collapsed) {
                     this.buttonClose.emit();
                 }

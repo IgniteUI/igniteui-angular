@@ -43,8 +43,8 @@ export class GridDataAnalysisComponent implements OnInit, AfterViewInit {
     };
     this.chartDirective.setChartComponentOptions(CHART_TYPE.Pie, OPTIONS_TYPE.Chart, pieChartOptions);
     this.chartDirective.getAvailableCharts()
-      .filter(chart => chart.indexOf('Scatter') === -1 ||
-        chart.indexOf('Bar') === -1 ||
+      .filter(chart => chart.indexOf('Scatter') === -1 &&
+        chart.indexOf('Bar') === -1 &&
         chart !== CHART_TYPE.Pie)
       .forEach(chart => this.chartDirective.setChartComponentOptions(chart, OPTIONS_TYPE.XAxis, { labelAngle: 30 }));
   }

@@ -272,18 +272,21 @@ export class IgxChartIntegrationDirective {
     }
 
     private addPieChartDataOptions(chartComponentOptions: IChartComponentOptions) {
-        // tslint:disable-next-line: max-line-length
-        chartComponentOptions.chartOptions = Object.assign(this.pieChartOptions, this.customChartComponentOptions.get(CHART_TYPE.Pie).chartOptions);
+        const customPieOptions = this.customChartComponentOptions.get(CHART_TYPE.Pie) || {};
+        const customPieChartOptions = customPieOptions.chartOptions || {};
+        chartComponentOptions.chartOptions = { ...this.pieChartOptions, ...customPieChartOptions };
         return chartComponentOptions;
     }
 
     private addDataChartDataOptions(type: CHART_TYPE, chartComponentOptions: IChartComponentOptions, stacked: boolean) {
-        chartComponentOptions.chartOptions = Object.assign(this.dataChartOptions, this.customChartComponentOptions.get(type));
+        const customComponentOptions: IChartComponentOptions = this.customChartComponentOptions.get(type) || {};
+        const customChartOptions = customComponentOptions.chartOptions || {};
+        const customSeriesModel = customComponentOptions.seriesModel || {};
+        chartComponentOptions.chartOptions = { ...this.dataChartOptions, ...customChartOptions };
         if (type.indexOf('Scatter') !== -1) {
             this.addScatterChartDataOptions(type, chartComponentOptions);
         } else {
-            // tslint:disable-next-line: max-line-length
-            chartComponentOptions.seriesModel = Object.assign(this.dataChartSeriesOptionsModel, this.customChartComponentOptions.get(type).seriesModel);
+            chartComponentOptions.seriesModel = { ...this.dataChartSeriesOptionsModel, ...customSeriesModel };
             this.setAxisLabelOption(type, chartComponentOptions);
             const options: IOptions[] = [];
             this._valueMemberPaths.forEach(valueMemberPath => {
@@ -307,8 +310,9 @@ export class IgxChartIntegrationDirective {
     }
 
     private addScatterChartDataOptions(scatterChart: CHART_TYPE, chartComponentOptions: IChartComponentOptions) {
-        // tslint:disable-next-line: max-line-length
-        chartComponentOptions.seriesModel = Object.assign(this.scatterChartSeriesOptionsModel, this.customChartComponentOptions.get(scatterChart).seriesModel);
+        const scatterCustomOptions: IChartComponentOptions = this.customChartComponentOptions.get(scatterChart) || {};
+        const scatterCustomSeriesModel = scatterCustomOptions.seriesModel || {};
+        chartComponentOptions.seriesModel = { ...this.scatterChartSeriesOptionsModel, ...scatterCustomSeriesModel };
         chartComponentOptions.seriesModel['yMemberPath'] = this.scatterChartYAxisValueMemberPath;
         if (scatterChart === CHART_TYPE.ScatterBubble) {
             chartComponentOptions.seriesModel = Object.assign(chartComponentOptions.seriesModel, this.bubbleChartSeriesOptionsModel);
@@ -329,11 +333,11 @@ export class IgxChartIntegrationDirective {
         chartComponentOptions.xAxisOptions = Object.assign({
             labelExtent: NaN,
             labelTextColor: null,
-        });
+        }, scatterCustomOptions.xAxisOptions);
         chartComponentOptions.yAxisOptions = Object.assign({
             labelTextColor: null,
             labelExtent: NaN,
-        });
+        }, scatterCustomOptions.yAxisOptions);
         chartComponentOptions.seriesOptions = seriesOptions;
     }
 
@@ -343,26 +347,27 @@ export class IgxChartIntegrationDirective {
     }
 
     private setAxisLabelOption(type: CHART_TYPE, options: IChartComponentOptions) {
+        const customOptions = this.customChartComponentOptions.get(type) || {};
         if (type.indexOf('Bar') !== -1) {
             options.yAxisOptions = Object.assign({
                 label: this._labelMemberPath,
                 labelTextColor: null,
                 labelExtent: NaN,
-            }, this.customChartComponentOptions.get(type).yAxisOptions);
+            }, customOptions.yAxisOptions);
             options.xAxisOptions = Object.assign({
                 labelTextColor: null,
                 labelExtent: NaN,
-            });
+            }, customOptions.xAxisOptions);
         } else {
             options.xAxisOptions = Object.assign({
                 label: this._labelMemberPath,
                 labelTextColor: null,
                 labelExtent: NaN,
-            }, this.customChartComponentOptions.get(type).xAxisOptions);
+            }, customOptions.xAxisOptions);
             options.yAxisOptions = Object.assign({
                 labelTextColor: null,
                 labelExtent: NaN,
-            })
+            }, customOptions.yAxisOptions);
         }
     }
 

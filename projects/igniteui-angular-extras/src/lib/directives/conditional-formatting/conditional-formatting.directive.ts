@@ -242,20 +242,24 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
         }
         this.clearFormatting();
         this.formatter = formatterName;
+        let hasUpdatedColumn = false;
         this.grid.visibleColumns.forEach(c => {
             if (c.visibleIndex >= this._startColumn && c.visibleIndex <= this._endColumn) {
                 c.cellStyles = this._formattersData.get(this.formatter);
-                this.grid.notifyChanges();
+                hasUpdatedColumn = true;
             }
         });
+        if (hasUpdatedColumn) {
+            this.grid.notifyChanges();
+        }
     }
 
     public clearFormatting() {
         this.formatter = undefined;
         this.grid.visibleColumns.forEach(c => {
             c.cellStyles = undefined;
-            this.grid.cdr.detectChanges();
         });
+        this.grid.cdr.detectChanges();
     }
 
     public determineFormatters(fromColumn) {

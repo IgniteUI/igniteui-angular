@@ -16,11 +16,6 @@ export * from './lib/context-menu/context-menu.component';
 export * from './lib/context-menu/chart-dialog/chart-dialog.component';
 
 /**
- * Pipes
- */
-export * from './lib/pipes/svg.pipe';
-
-/**
  * Exporter classes, interfaces and enums
  */
 export * from './lib/directives/chart-integration/chart-types';

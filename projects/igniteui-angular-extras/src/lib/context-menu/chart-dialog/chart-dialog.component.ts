@@ -3,6 +3,7 @@ import {
     Component,
     EventEmitter,
     HostBinding,
+    OnDestroy,
     Output,
     ViewChild,
     ViewContainerRef,
@@ -26,7 +27,7 @@ import { SvgPipe } from '../../pipes/svg.pipe';
     imports: [CommonModule, IgxIconComponent, IgxIconButtonDirective, IgxRippleDirective, IgxDividerDirective, SvgPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class IgxChartMenuComponent implements AfterViewInit {
+export class IgxChartMenuComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('chartArea', { read: ViewContainerRef }) public chartArea: ViewContainerRef;
 
@@ -71,7 +72,16 @@ export class IgxChartMenuComponent implements AfterViewInit {
         this.contentObserver = new ResizeObserver((args) => this.chartDialogResizeNotify.next(args));
         this.contentObserver.observe(this.element.nativeElement);
 
-        this.createChart(this.currentChartType);
+        if (this.currentChartType && this.chartDirective) {
+            this.createChart(this.currentChartType);
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this.contentObserver) {
+            this.contentObserver.disconnect();
+        }
+        this.chartDialogResizeNotify.complete();
     }
 
     public toggleFullScreen() {
@@ -83,13 +93,12 @@ export class IgxChartMenuComponent implements AfterViewInit {
     }
 
     public createChart(chartType) {
+        if (!chartType || !this.chartDirective || !this.chartArea) {
+            return;
+        }
         this.currentChartType = chartType;
         this.title = chartType.split(/(?=[A-Z])/).toString().replace(',', ' ');
-        try {
-            this.chartArea.clear();
-        } catch {
-            console.warn('Failed to clear chart area - it may not be initialized yet');
-        }
+        this.chartArea.clear();
         this.chartDirective.chartFactory(chartType, this.chartArea);
     }
 }
