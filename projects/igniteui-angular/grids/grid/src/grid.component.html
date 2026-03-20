@@ -159,12 +159,6 @@
         <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
-    <div igxToggle #loadingOverlay>
-        @if (shouldOverlayLoading) {
-            <igx-circular-bar [indeterminate]="true">
-            </igx-circular-bar>
-        }
-    </div>
     @if (moving && columnInDrag) {
         <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
             id="right" class="igx-grid__scroll-on-drag-right"></span>
@@ -181,7 +175,14 @@
         <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
 
-    <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet></div>
+    <div class="igx-grid__loading-outlet">
+        <div igxToggle>
+            @if (shouldOverlayLoading) {
+                <igx-circular-bar [indeterminate]="true">
+                </igx-circular-bar>
+            }
+        </div>
+    </div>
 </div>
 
 
