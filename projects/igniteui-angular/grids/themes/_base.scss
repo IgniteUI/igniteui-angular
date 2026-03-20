@@ -471,7 +471,6 @@ $z-grid-loading: 10003;
             }
         }
 
-
         // Selected row state
         @include e(tr, $m: selected) {
             color: var-get($theme, 'row-selected-text-color');
@@ -1999,6 +1998,30 @@ $z-grid-loading: 10003;
             flex-wrap: wrap;
             align-self: flex-end;
             gap: 0.5rem;
+        }
+
+        .igx-grid__tr--selected .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
+            border-inline-end-color: var-get($theme, 'cell-selected-within-background');
+        }
+
+        .igx-grid__tr--selected {
+            &:hover {
+                .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
+                    border-inline-end-color: var-get($theme, 'cell-selected-within-background');
+                }
+            }
+        }
+
+        .igx-grid__tr {
+            &:hover {
+                .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
+                    border-inline-end-color: var-get($theme, 'cell-selected-background');
+                }
+            }
+        }
+
+        .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
+            border-inline-end-color: var-get($theme, 'cell-selected-background');
         }
     }
 
