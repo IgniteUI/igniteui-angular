@@ -41,7 +41,11 @@
         '#{$theme-variant}-#{$variant}'
     );
 
-    igx-grid {
+    igx-grid,
+    igx-tree-grid,
+    igx-hierarchical-grid,
+    igx-pivot-grid,
+    igx-grid-lite {
         @include tokens(
             action-strip-theme(
                 $schema: $schema,
@@ -104,6 +108,14 @@
         );
 
         @include tokens(
+            calendar-theme(
+                $header-background: var(--ig-grid-accent-color),
+                $content-background: var(--ig-grid-background),
+                $content-foreground: var(--ig-grid-foreground),
+            )
+        );
+
+        @include tokens(
             checkbox-theme(
                 $schema: $schema,
                 $empty-color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background)),
@@ -111,7 +123,7 @@
                 $tick-color-hover: color-mix(in srgb, var(--ig-grid-foreground) 40%, var(--ig-grid-background)),
                 $fill-color: var(--ig-grid-accent-color),
                 $label-color: var(--ig-grid-foreground),
-                $disabled-color: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background))
+                $disabled-color: color-mix(in srgb, var(--ig-grid-foreground) 50%, var(--ig-grid-background)),
             )
         );
 
@@ -141,6 +153,8 @@
                     $background-color: var(--ig-grid-background),
                     $item-text-color: var(--ig-grid-foreground),
                     $border-color: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                    $hover-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 8%, var(--ig-grid-background)),
+                    $focused-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, var(--ig-grid-background)),
                     $selected-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, var(--ig-grid-background)),
                     $selected-hover-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 16%, var(--ig-grid-background)),
                     $selected-focus-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 24%, var(--ig-grid-background)),
@@ -201,28 +215,19 @@
         );
 
         @if $variant == 'material' {
-            .igx-input-group--box {
-                @include tokens(
-                    input-group-theme(
-                        $schema: $schema,
-                        $box-background: var(--ig-grid-background),
-                        $idle-bottom-line-color: var(--ig-grid-accent-color),
-                        $border-color: var(--ig-grid-accent-color),
-                        $idle-text-color: var(--ig-grid-foreground),
-                        $placeholder-color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background)),
-                    )
-                );
-            }
-
-            .igx-input-group--search {
-                @include tokens(
-                    input-group-theme(
-                        $schema: $schema,
-                        $search-background: color-mix(in srgb, var(--ig-grid-foreground) 6%, var(--ig-grid-background)),
-                        $idle-text-color: var(--ig-grid-foreground),
-                    )
-                );
-            }
+            @include tokens(
+                input-group-theme(
+                    $schema: $schema,
+                    $box-background: var(--ig-grid-background),
+                    $search-background: color-mix(in srgb, var(--ig-grid-foreground) 6%, var(--ig-grid-background)),
+                    $idle-bottom-line-color: var(--ig-grid-accent-color),
+                    $idle-secondary-color: var(--ig-grid-foreground),
+                    $focused-secondary-color: var(--ig-grid-accent-color),
+                    $border-color: var(--ig-grid-accent-color),
+                    $idle-text-color: var(--ig-grid-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background)),
+                )
+            );
         } @else if $variant == 'indigo' {
             @include tokens(
                 input-group-theme(
@@ -305,9 +310,7 @@
             @include tokens(
                 select-theme(
                     $schema: $schema,
-                    $toggle-button-foreground: var(--ig-grid-foreground),
                     $toggle-button-background: var(--ig-grid-accent-color),
-                    $toggle-button-background-disabled: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
                 )
             );
         }
@@ -553,6 +556,7 @@
         igx-prefix,
         igx-suffix {
             background: transparent !important;
+            color: var(--ig-input-group-idle-text-color) !important;
             border-radius: 0 !important;
             padding-top: 0 !important;
             padding-bottom: 0 !important;

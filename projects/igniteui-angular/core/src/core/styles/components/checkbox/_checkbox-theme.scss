@@ -175,15 +175,8 @@
     }
 
     %cbx-composite--x--disabled {
-        @if $variant == 'material' or $variant == 'fluent' {
-            background: var-get($theme, 'disabled-color');
-            border-color: var-get($theme, 'disabled-color');
-        }
-
-        @if $variant == 'indigo' or $variant == 'bootstrap' {
-            background: var-get($theme, 'disabled-indeterminate-color');
-            border-color: transparent;
-        }
+        background: var-get($theme, 'disabled-fill-color');
+        border-color: transparent;
 
         @if $variant != 'indigo' {
             %cbx-composite-mark {
