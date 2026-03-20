@@ -1,7 +1,7 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component, ViewChild } from '@angular/core';
-import { IgxIconButtonDirective } from './icon-button.directive';
+import { Component, input, viewChild, ViewChild } from '@angular/core';
+import { IgxIconButtonDirective, IgxIconButtonType } from './icon-button.directive';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { By } from '@angular/platform-browser';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
@@ -9,12 +9,12 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxIconButton', () => {
 
-    const baseClass = 'igx-icon-button';
-    const classes = {
-        flat: `${baseClass}--flat`,
-        contained: `${baseClass}--contained`,
-        outlined: `${baseClass}--outlined`,
-    };
+    const CSS_CLASSES = {
+        flat: 'igx-icon-button--flat',
+        contained: 'igx-icon-button--contained',
+        outlined: 'igx-icon-button--outlined',
+        disabled: 'igx-button--disabled'
+    }
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -25,65 +25,66 @@ describe('IgxIconButton', () => {
         }).compileComponents();
     });
 
-    it('Should properly initialize an icon button', () => {
-        const fixture = TestBed.createComponent(IconButtonComponent);
+    let fixture: ComponentFixture<IconButtonComponent>;
+    let iconButton: IgxIconButtonDirective;
+    let element: HTMLElement;
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(IconButtonComponent);
         fixture.detectChanges();
 
-        expect(fixture.debugElement.query(By.css('button.igx-icon-button--contained'))).toBeTruthy();
-        expect(fixture.debugElement.query(By.css('igx-icon.material-icons'))).toBeTruthy();
+        iconButton = fixture.componentInstance.button();
+        element = iconButton.nativeElement;
     });
 
-    it('Should properly disabled/enable an icon button', () => {
-        const fixture = TestBed.createComponent(IconButtonComponent);
-        fixture.detectChanges();
 
-        const button = fixture.componentInstance.button;
-        expect(button.nativeElement.classList.contains('igx-button--disabled')).toBe(false);
-
-        button.disabled = true;
-        fixture.detectChanges();
-
-        expect(button.nativeElement.classList.contains('igx-button--disabled')).toBe(true);
-
-        button.disabled = false;
-        fixture.detectChanges();
-
-        expect(button.nativeElement.classList.contains('igx-button--disabled')).toBe(false);
+    it('should properly initialize an icon button', () => {
+        expect(element).toBeTruthy();
+        expect(fixture.debugElement.query(By.directive(IgxIconComponent))).toBeTruthy();
     });
 
-    it('Should properly set the correct CSS class on the element using the type input', () => {
-        const fixture = TestBed.createComponent(IconButtonComponent);
+    it('should properly disabled/enable an icon button', () => {
+        expect(hasClass(element, CSS_CLASSES.disabled)).toBe(false);
+
+        fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
-        const button = fixture.componentInstance.button;
-        const buttonNativeEl = button.nativeElement;
-        expect(buttonNativeEl.classList.length).toEqual(2);
-        expect(buttonNativeEl.classList).toContain(classes.contained);
+        expect(hasClass(element, CSS_CLASSES.disabled)).toBe(true);
 
-        button.type = 'flat';
+        fixture.componentRef.setInput('disabled', false);
         fixture.detectChanges();
-        expect(buttonNativeEl.classList.length).toEqual(2);
-        expect(buttonNativeEl.classList).toContain(classes.flat);
 
-        button.type = 'outlined';
-        fixture.detectChanges();
-        expect(buttonNativeEl.classList.length).toEqual(2);
-        expect(buttonNativeEl.classList).toContain(classes.outlined);
+        expect(hasClass(element, CSS_CLASSES.disabled)).toBe(false);
+    });
 
-        button.type = 'contained';
-        fixture.detectChanges();
-        expect(buttonNativeEl.classList.length).toEqual(2);
-        expect(buttonNativeEl.classList).toContain(classes.contained);
+    it('should properly set the correct CSS class on the element using the type input', () => {
+        expect(element.classList).lengthOf(2);
+        expect(hasClass(element, CSS_CLASSES.contained)).toBe(true);
+
+        for (const type of ['flat', 'outlined', 'contained'] as const) {
+            fixture.componentRef.setInput('type', type);
+            fixture.detectChanges();
+
+            expect(element.classList).lengthOf(2);
+            expect(hasClass(element, CSS_CLASSES[type])).toBe(true);
+        }
     });
 });
 
 @Component({
-    template: `<button igxIconButton igxRipple="white">
-        <igx-icon>search</igx-icon>
-    </button>`,
+    template: `
+        <button [igxIconButton]="type()" [disabled]="disabled()" igxRipple="white">
+            <igx-icon>search</igx-icon>
+        </button>
+    `,
     imports: [IgxIconButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 class IconButtonComponent {
-    @ViewChild(IgxIconButtonDirective, { read: IgxIconButtonDirective, static: true })
-    public button: IgxIconButtonDirective;
+    public button = viewChild.required(IgxIconButtonDirective);
+    public type = input<IgxIconButtonType>();
+    public disabled = input<boolean>(false);
+}
+
+function hasClass(element: HTMLElement, className: string): boolean {
+    return element.classList.contains(className);
 }

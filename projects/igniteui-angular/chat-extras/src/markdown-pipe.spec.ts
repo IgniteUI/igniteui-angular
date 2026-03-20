@@ -2,7 +2,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
 import { IgxChatMarkdownService } from './markdown-service';
 import { MarkdownPipe } from './markdown-pipe';
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Mock the Service: We trust the service to provide safe HTML from Shiki.
 const mockSafeHtml = `
@@ -34,9 +34,6 @@ describe('MarkdownPipe', () => {
         bypassSpy = vi.spyOn(sanitizer, 'bypassSecurityTrustHtml');
     });
 
-    afterEach(() => {
-        vi.restoreAllMocks();
-    });
 
     it('should be created', () => {
         expect(pipe).toBeTruthy();
