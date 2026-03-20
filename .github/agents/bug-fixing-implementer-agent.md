@@ -109,9 +109,10 @@ Before finishing:
 2. Confirm the reproduction test and all affected existing tests pass.
 3. Run `npm run lint:lib` — must pass.
 4. Confirm the fix is minimal and does not expand scope unnecessarily.
-5. If the public API or documented behavior changed, state clearly that a component README update is required.
-6. If the change is breaking, state clearly that a migration is required.
-7. If the change affects i18n strings, state clearly that localization follow-through is needed.
+5. If the change is user-visible, state clearly whether a demo/sample update is recommended.
+6. If the public API or documented behavior changed, state clearly that a component README update is required.
+7. If the change is breaking, state clearly that a migration is required.
+8. If the change affects i18n strings, state clearly that localization follow-through is needed.
 
 ---
 

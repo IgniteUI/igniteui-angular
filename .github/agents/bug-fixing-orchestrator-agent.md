@@ -10,6 +10,7 @@ agents:
   - tdd-test-writer-agent
   - bug-fixing-implementer-agent
   - theming-styles-agent
+  - demo-sample-agent
   - component-readme-agent
   - migration-agent
   - changelog-agent
@@ -25,16 +26,19 @@ handoffs:
   - label: "3. Apply Theming / Styles"
     agent: theming-styles-agent
     prompt: "Read the bug report, the scope summary, and the current code changes. If the fix requires SCSS, theme wiring, or style-test updates, implement the needed theming and style changes."
+  - label: "4. Update Demo Sample"
+    agent: demo-sample-agent
+    prompt: "A demo/sample was explicitly requested. Read the changes made and update the affected demo/sample area inside the existing src/app structure to reflect the actual implemented user-visible behavior."
     send: false
-  - label: "4. Update Component README"
+  - label: "5. Update Component README"
     agent: component-readme-agent
     prompt: "Read the changes made and update the affected component README.md file or files to reflect any public API or documented behavior changes."
     send: false
-  - label: "5. Create Migration"
+  - label: "6. Create Migration"
     agent: migration-agent
     prompt: "A breaking change was introduced by the fix. Read the changes made and create the appropriate migration schematic."
     send: false
-  - label: "6. Update Changelog"
+  - label: "7. Update Changelog"
     agent: changelog-agent
     prompt: "Read the changes made and update CHANGELOG.md only if the fix belongs under an existing CHANGELOG section. Otherwise leave CHANGELOG.md unchanged."
     send: false
@@ -153,10 +157,14 @@ Present a brief scope summary to the user:
 - **Impact**: breaking change, accessibility, i18n, styles/theming, multi-branch, or docs follow-through if relevant
 - **Agents needed**: which specialist agents will be used
 - **Test suite**: the smallest likely suite
+- **Demo/sample**: ask whether the existing demo/sample structure should be updated if the change is user-visible
 
 Keep it short and high-level. Confirm scope, not solution details.
 
 Wait for user confirmation.
+
+If a demo/sample is relevant, ask explicitly:
+`Do you want a demo/sample update for this change? Yes / No`
 
 ### Step 3 — Route Work
 
@@ -174,9 +182,13 @@ Use agents in this order:
 1. **`tdd-test-writer-agent`** — writes a failing test that reproduces the bug
 2. **`bug-fixing-implementer-agent`** — implements the minimum fix only when the fix needs TypeScript, template, or general production-code changes
 3. **`theming-styles-agent`** — only when the fix needs SCSS, theme wiring, or style-test changes
-4. **`component-readme-agent`** — only if public API or documented behavior changed
-5. **`migration-agent`** — only if the fix introduces a breaking change
-6. **`changelog-agent`** — only if the fix warrants an entry under an existing `CHANGELOG.md` section; otherwise leave `CHANGELOG.md` unchanged
+4. **`demo-sample-agent`** — only if the user explicitly wants a demo/sample update
+5. **`component-readme-agent`** — only if public API or documented behavior changed
+6. **`migration-agent`** — only if the fix introduces a breaking change
+7. **`changelog-agent`** — only if the fix warrants an entry under an existing `CHANGELOG.md` section; otherwise leave `CHANGELOG.md` unchanged
+
+Only invoke `demo-sample-agent` if the user explicitly requested a demo/sample update.
+If the user declined, skip that handoff and continue with the remaining agents.
 
 If the bug is purely in theming or styling, route directly from `tdd-test-writer-agent` to `theming-styles-agent` and skip the general implementer.
 
@@ -191,7 +203,8 @@ After all agents finish, check:
 - Was the component README updated if needed?
 - Was `CHANGELOG.md` updated?
 - Do migrations exist for any breaking changes?
-- Is there a demo page update needed?
+- If a demo/sample was requested, was the existing demo structure updated appropriately?
+- If a demo/sample was not requested, was it correctly skipped?
 - Is multi-branch cherry-picking needed?
 
 Report what was done and any remaining items.

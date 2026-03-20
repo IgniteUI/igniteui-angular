@@ -127,10 +127,11 @@ Before finishing:
    - accessibility
    - deprecation handling
 4. If the public API or documented behavior changed, state clearly that a component README update is required.
-5. If the change is breaking, state clearly that a migration is required.
-6. If the change affects i18n, run the related checks.
-7. If the change needs SCSS or theme-system updates, state clearly that `theming-styles-agent` follow-through is required.
-8. If the change is broad or touches shared/public API, run lint/build or state clearly why they were not needed.
+5. If the change is user-visible, state clearly whether a demo/sample update is recommended.
+6. If the change is breaking, state clearly that a migration is required.
+7. If the change affects i18n, run the related checks.
+8. If the change needs SCSS or theme-system updates, state clearly that `theming-styles-agent` follow-through is required.
+9. If the change is broad or touches shared/public API, run lint/build or state clearly why they were not needed.
 
 ---
 
