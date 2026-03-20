@@ -195,6 +195,10 @@ $_theme: $material;
             flex-flow: column;
 
             @include e(item) {
+                // in case the display of the group is set to inline-block and the group hase a width,
+                // the items need to have width 100% to fill the group container
+                width: 100%;
+
                 &:not(:nth-child(1)) {
                     margin-top: rem(-1px) !important;
                     margin-inline-start: 0;
