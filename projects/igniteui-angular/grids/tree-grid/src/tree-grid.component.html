@@ -15,7 +15,7 @@
 >
 </igx-grid-header-row>
 
-<div #gridBody igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
+<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)"
     (dragStop)="selectionService.dragMode = $event" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? null : 'row'"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
@@ -137,7 +137,7 @@
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
     </div>
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [container]="gridBody" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]='snackbarDisplayTime'>{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]='snackbarDisplayTime'>{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
 </div>
 

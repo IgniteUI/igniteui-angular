@@ -36,7 +36,7 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      *  `container` is an instance of `HTMLElement`.
      */
     @Input()
-    public container: HTMLElement;
+    public useContainer: boolean;
 
 
     /**
@@ -87,7 +87,6 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
             closeOnEscape: false,
             closeOnOutsideClick: false,
             modal: false,
-            target: this.container,
         };
 
         super.open(overlaySettings);

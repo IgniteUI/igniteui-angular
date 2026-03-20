@@ -7,7 +7,7 @@ Position strategies determine where to display the component in the provided Igx
 |:---------------------------|:-------------------------|
 | HorizontalAlignment.Center | VerticalAlignment.Middle |
 
-2) **Container** - Positions the element inside a target container element. The `target` property in `OverlaySettings` must be set to an `HTMLElement` that serves as the container. Directions are passed in through PositionSettings (Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection). Defaults to:
+2) **Container** - Positions the element relative to its nearest positioned ancestor. Directions are passed in through PositionSettings (Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection). Defaults to:
 
 | horizontalDirection        | verticalDirection        |
 |:---------------------------|:-------------------------|
@@ -35,10 +35,9 @@ Position strategies determine where to display the component in the provided Igx
 ## Usage
 
 ### Container positioning
-Position an element inside a container using `ContainerPositionStrategy`. Set the `target` in `OverlaySettings` to the container `HTMLElement`:
+Position an element relative to its nearest positioned ancestor using `ContainerPositionStrategy`:
 ```typescript
 const overlaySettings: OverlaySettings = {
-    target: containerElement,
     positionStrategy: new ContainerPositionStrategy({
         horizontalDirection: HorizontalAlignment.Center,
         verticalDirection: VerticalAlignment.Middle
@@ -81,7 +80,7 @@ import { AutoPositionStrategy, GlobalPositionStrategy, ContainerPositionStrategy
 | Position Strategy | Name                                                   | Description                                                                       |
 |:------------------|:-------------------------------------------------------|:----------------------------------------------------------------------------------|
 | Global            | `position(contentElement)`                             | Positions the element, based on the horizontal and vertical directions.           |
-| Container         | `position(contentElement, size, document, initialCall, target)` |Positions the element inside the target container element based on the directions passed in trough PositionSettings. |
+| Container         | `position(contentElement)`                             | Positions the element relative to its nearest positioned ancestor based on the directions passed in through PositionSettings.|
 | Connected         | `position(contentElement, size{})`                     | Positions the element, based on the position strategy used and the size passed in.|
 | Auto              | `position(contentElement, size{}, document?)`          | Positions the element, based on the position strategy used and the size passed in.|
 | Elastic           | `position(contentElement, size{}, document?, minSize?)`| Positions the element, based on the position strategy used and the size passed in.|

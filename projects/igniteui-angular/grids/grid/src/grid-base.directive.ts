@@ -4466,14 +4466,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
-     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
-     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
-     * DOM tree position instead or use `container` property instead.
-     *
      * Gets/Sets the outlet used to attach the grid's overlays to.
      *
      * @remarks
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
      */
     @Input()
     public get outlet() {
@@ -6188,6 +6188,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public showSnackbarFor(index: number) {
         this.addRowSnackbar.actionText = index === -1 ? '' : this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
+        this.addRowSnackbar.useContainer = true;
         this.lastAddedRowIndex = index;
         this.addRowSnackbar.open();
     }
@@ -6725,7 +6726,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.shouldOverlayLoading) {
             // a new overlay should be shown
             const overlaySettings: OverlaySettings = {
-                target: this.loadingOutlet.nativeElement,
+                outlet: this.loadingOutlet,
                 closeOnOutsideClick: false,
                 positionStrategy: new ContainerPositionStrategy()
             };

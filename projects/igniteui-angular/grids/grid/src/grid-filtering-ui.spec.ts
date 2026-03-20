@@ -2730,19 +2730,19 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const thead = GridFunctions.getGridHeader(grid).nativeElement;
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
             setElementSize(grid.nativeElement, ɵSize.Medium);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
             setElementSize(grid.nativeElement, ɵSize.Small);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
         });
 

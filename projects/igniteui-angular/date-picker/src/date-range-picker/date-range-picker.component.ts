@@ -110,8 +110,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _injector = inject(Injector);
     private _cdr = inject(ChangeDetectorRef);
     private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
-    private _hostViewContainerRef = inject(ViewContainerRef);
-
 
     /**
      * The number of displayed month views.
@@ -419,11 +417,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @HostBinding('class.igx-date-range-picker')
     public cssClass = 'igx-date-range-picker';
 
-    @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
-    private _inputGroupViewContainerRef: ViewContainerRef;
+    @ViewChild("container", { read: ViewContainerRef })
+    private _viewContainerRef: ViewContainerRef;
 
     private get viewContainerRef(): ViewContainerRef {
-        return this._inputGroupViewContainerRef ?? this._hostViewContainerRef;
+        return this._viewContainerRef;
     }
 
     /** @hidden @internal */

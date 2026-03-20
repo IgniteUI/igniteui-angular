@@ -1,4 +1,4 @@
-import { Point, PositionSettings, Size, Util } from '../utilities';
+import { PositionSettings, Util } from '../utilities';
 import { GlobalPositionStrategy } from './global-position-strategy';
 
 /**
@@ -14,20 +14,20 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
     /**
      * Position the element based on the PositionStrategy implementing this interface.
      */
-    public override position(contentElement: HTMLElement, _size?: Size, _document?: Document, _initialCall?: boolean, target?: Point | HTMLElement): void {
+    public override position(contentElement: HTMLElement): void {
         // Set up intersection observer
         this.io?.disconnect();
-        const outletElement = contentElement.parentElement.parentElement;
-        if (!target || target instanceof Point || !outletElement) {
-            super.position(contentElement, _size, _document, _initialCall, target);
+        const containerElement = contentElement.parentElement.parentElement;
+        if (!containerElement) {
+            super.position(contentElement);
             return;
         }
         this.io = Util.setupIntersectionObserver(
-            outletElement || target,
+            containerElement,
             contentElement.ownerDocument,
-            () => this.updatePosition(contentElement, target)
+            () => this.updatePosition(contentElement, containerElement)
         );
-        this.internalPosition(contentElement, target);
+        this.internalPosition(contentElement, containerElement);
     }
 
     /**
@@ -38,24 +38,23 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         this.io = null;
     }
 
-    private internalPosition(contentElement: HTMLElement, targetElement: HTMLElement): void {
+    private internalPosition(contentElement: HTMLElement, container: HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
         this.setPosition(contentElement);
-        const outletElement = contentElement.parentElement?.parentElement;
-        this.updatePosition(contentElement, outletElement ?? targetElement);
+        this.updatePosition(contentElement, container);
     }
 
-    private updatePosition(contentElement: HTMLElement, targetElement: HTMLElement): void {
-        if (!targetElement)
+    private updatePosition(contentElement: HTMLElement, container: HTMLElement): void {
+        if (!container)
             return;
 
         // TODO: consider using new anchor() CSS function when it becomes more widely
         // supported: https://caniuse.com/mdn-css_properties_anchor
-        const targetRect = targetElement.getBoundingClientRect();
-        contentElement.parentElement.style.width = `${targetRect.width}px`;
-        contentElement.parentElement.style.height = `${targetRect.height}px`;
-        contentElement.parentElement.style.top = `${targetRect.top}px`;
-        contentElement.parentElement.style.left = `${targetRect.left}px`;
+        const containerRect = container.getBoundingClientRect();
+        contentElement.parentElement.style.width = `${containerRect.width}px`;
+        contentElement.parentElement.style.height = `${containerRect.height}px`;
+        contentElement.parentElement.style.top = `${containerRect.top}px`;
+        contentElement.parentElement.style.left = `${containerRect.left}px`;
     }
 }

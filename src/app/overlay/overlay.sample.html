@@ -1,20 +1,20 @@
-<div #container class="container">
+<div #host class="host">
     <section class="sample-content">
         <div class="column">
             <p>Translate view</p>
             <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 20px; flex-direction: column;">
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'up', 1)">UP 1px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'down', 1)">DOWN 1px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'left', 1)">LEFT 1px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'right', 1)">RIGHT 1px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'up', 10)">UP 10px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'down', 10)">DOWN 10px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'left', 10)">LEFT 10px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'right', 10)">RIGHT 10px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'up', 100)">UP 100px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'down', 100)">DOWN 100px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'left', 100)">LEFT 100px</button>
-                <button igxButton="contained" igxRipple (click)="moveContainer(container, 'right', 100)">RIGHT 100px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'up', 1)">UP 1px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'down', 1)">DOWN 1px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'left', 1)">LEFT 1px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'right', 1)">RIGHT 1px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'up', 10)">UP 10px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'down', 10)">DOWN 10px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'left', 10)">LEFT 10px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'right', 10)">RIGHT 10px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'up', 100)">UP 100px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'down', 100)">DOWN 100px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'left', 100)">LEFT 100px</button>
+                <button igxButton="contained" igxRipple (click)="moveHost(host, 'right', 100)">RIGHT 100px</button>
             </div>
         </div>
         <div class="column">
@@ -79,12 +79,16 @@
                     (change)="onSwitchChange($event)">Modal</igx-switch>
             </div>
             <div>
-                <igx-switch class="settings" [(ngModel)]="useContainer" name="outlet" [value]="useContainer"
-                    (change)="onSwitchChange($event)">Open in outlet</igx-switch>
+                <igx-switch class="settings" [(ngModel)]="useContainer" name="container" [value]="useContainer"
+                    (change)="onSwitchChange($event)">Open in container</igx-switch>
             </div>
             <div>
-                <igx-switch class="settings" [(ngModel)]="hasAnimation" name="outlet" [value]="hasAnimation"
+                <igx-switch class="settings" [(ngModel)]="hasAnimation" name="animation" [value]="hasAnimation"
                     (change)="onSwitchChange($event)">Has animation</igx-switch>
+            </div>
+            <div>
+                <igx-switch class="settings" [(ngModel)]="changeContainer" name="changeContainer" [value]="changeContainer"
+                    (change)="onSwitchChange($event)">Change the container</igx-switch>
             </div>
             <div>
                 <igx-input-group>
@@ -101,10 +105,7 @@
                 </igx-input-group>
             </div>
         </div>
-        <div #outlet class="outlet column">
-            Outlet
-        </div>
-        <button #button igxButton="contained" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
+        <button #button igxButton="contained" igxRipple igxDrag (click)="toggle()" [style.position]="'absolute'"
             (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
         <igx-drop-down width="{{dropDownWidth}}px">
             @for (item of items; track item) {
@@ -116,4 +117,9 @@
             }
         </igx-drop-down>
     </section>
+    <div #container>
+        <div #containerTarget igxToggle class="container-target">
+            I am a container shown in Global or Container position strategy.
+        </div>
+    </div>
 </div>

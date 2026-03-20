@@ -21,7 +21,8 @@ import {
     IgxButtonDirective,
     IgxRippleDirective,
     IgxDropDownItemComponent,
-    IChangeCheckboxEventArgs
+    IChangeCheckboxEventArgs,
+    IgxToggleDirective
 } from 'igniteui-angular';
 import { IAnimationParams } from 'igniteui-angular/animations';
 
@@ -29,7 +30,7 @@ import { IAnimationParams } from 'igniteui-angular/animations';
     selector: 'overlay-sample',
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
-    imports: [IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
+    imports: [IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxToggleDirective]
 })
 export class OverlaySampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })
@@ -38,8 +39,10 @@ export class OverlaySampleComponent implements OnInit {
     private button: ElementRef;
     @ViewChild(IgxDragDirective, { static: true })
     private igxDrag: IgxDragDirective;
-    @ViewChild('outlet', { static: true })
-    private containerElement: ElementRef;
+    @ViewChild('container', { static: true })
+    private container: ElementRef;
+    @ViewChild('containerTarget', { static: true, read: IgxToggleDirective })
+    private containerTarget: IgxToggleDirective;
 
     public items = [];
     public itemsCount = 10;
@@ -60,6 +63,7 @@ export class OverlaySampleComponent implements OnInit {
     public modal = true;
     public useContainer = false;
     public hasAnimation = true;
+    public changeContainer = false;
     public animationLength = 300; // in ms
 
     private xAddition = 0;
@@ -225,7 +229,7 @@ export class OverlaySampleComponent implements OnInit {
             positionStrategy: stringMapping['PositionStrategy'][this.positionStrategy],
             scrollStrategy: stringMapping['ScrollStrategy'][this.scrollStrategy],
             modal: this.modal,
-            closeOnOutsideClick: this.closeOnOutsideClick,
+            closeOnOutsideClick: this.closeOnOutsideClick
         };
         this._overlaySettings.positionStrategy.settings.verticalDirection =
             stringMapping['VerticalDirection'][this.verticalDirection];
@@ -235,9 +239,6 @@ export class OverlaySampleComponent implements OnInit {
             stringMapping['HorizontalDirection'][this.horizontalDirection];
         this._overlaySettings.positionStrategy.settings.horizontalStartPoint =
             stringMapping['HorizontalStartPoint'][this.horizontalStartPoint];
-        if (this.useContainer) {
-            this._overlaySettings.target = this.containerElement.nativeElement;
-        }
     }
 
     public onSwitchChange(ev: IChangeCheckboxEventArgs) {
@@ -248,8 +249,24 @@ export class OverlaySampleComponent implements OnInit {
             case 'modal':
                 this._overlaySettings.modal = ev.checked;
                 break;
-            case 'outlet':
-                this._overlaySettings.target = ev.checked ? this.containerElement.nativeElement : null;
+            case 'container':
+                break;
+            case 'changeContainer':
+                if (ev.checked) {
+                    this.container.nativeElement.style.position = 'fixed';
+                    this.container.nativeElement.style.width = '600px';
+                    this.container.nativeElement.style.height = '400px';
+                    this.container.nativeElement.style.border = '1px solid red';
+                    this.container.nativeElement.style.top = '50px';
+                    this.container.nativeElement.style.left = '50px';
+                } else {
+                    this.container.nativeElement.style.position = 'static';
+                    this.container.nativeElement.style.width = 'unset';
+                    this.container.nativeElement.style.height = 'unset';
+                    this.container.nativeElement.style.border = '0';
+                    this.container.nativeElement.style.top = 'unset';
+                    this.container.nativeElement.style.left = 'unset';
+                }
                 break;
         }
     }
@@ -347,18 +364,17 @@ export class OverlaySampleComponent implements OnInit {
         e.target.classList.add('selected');
     }
 
-    public toggleDropDown() {
+    public toggle() {
         if (this.igxDropDown.collapsed) {
-            this.items = [];
-            for (let item = 0; item < this.itemsCount; item++) {
-                this.items.push(`Item ${item}`);
+            if (this.positionStrategy !== 'Container' && this.positionStrategy !== 'Global') {
+                this.items = [];
+                for (let item = 0; item < this.itemsCount; item++) {
+                    this.items.push(`Item ${item}`);
+                }
             }
             this.cdr.detectChanges();
             this.onChange2();
             this._overlaySettings.target = this.button.nativeElement;
-            if (this.useContainer) {
-                this._overlaySettings.target = this.containerElement.nativeElement;
-            }
             (this._overlaySettings.positionStrategy.settings.openAnimation.options.params as IAnimationParams).duration
                 = `${this.animationLength}ms`;
             (this._overlaySettings.positionStrategy.settings.closeAnimation.options.params as IAnimationParams).duration
@@ -368,7 +384,11 @@ export class OverlaySampleComponent implements OnInit {
                 this._overlaySettings.positionStrategy.settings.closeAnimation = null;
             }
         }
-        this.igxDropDown.toggle(this._overlaySettings);
+        if (this.positionStrategy === 'Container' || this.positionStrategy === 'Global') {
+            this.containerTarget.toggle(this._overlaySettings);
+        } else {
+            this.igxDropDown.toggle(this._overlaySettings);
+        }
     }
 
     public ngOnInit(): void {
@@ -402,7 +422,7 @@ export class OverlaySampleComponent implements OnInit {
         }
     }
 
-    protected moveContainer(target: HTMLElement, direction: string, distance: number): void{
+    protected moveHost(target: HTMLElement, direction: string, distance: number): void{
         const currentTop = parseInt(target.style.top, 10) || 0;
         const currentLeft = parseInt(target.style.left, 10) || 0;
 

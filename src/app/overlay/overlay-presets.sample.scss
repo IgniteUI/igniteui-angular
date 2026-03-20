@@ -37,6 +37,17 @@ $new-card-theme: card-theme(
     overflow: hidden;
 }
 
+.container-target{
+    background-color: #444;
+    color: white;
+    width: 300px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 .sample-dropdown{
     display: flex;
     justify-content: center;
