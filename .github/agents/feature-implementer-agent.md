@@ -106,6 +106,12 @@ Add JSDoc on every new or changed public member with `@param`, `@returns`, and `
 
 ---
 
+## Agent Skills
+
+Update component agent skills if you need to guide other agents on how to use the newly added feature.
+
+---
+
 ## What You Do NOT Do
 
 - Do not modify component SCSS or theme infrastructure — the `theming-styles-agent` handles that.

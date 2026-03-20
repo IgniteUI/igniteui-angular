@@ -132,7 +132,13 @@ projects/igniteui-angular/core/src/core/styles/   ← component SCSS themes
    - Whether styles or component themes are affected
    - Which test suite to use (grid vs non-grid)
 
-### Step 2 — Present a Scope Summary
+### Step 2 — Request Missing Context
+
+If the request is missing information needed to discover scope safely, pause and ask for the missing context before routing any work.
+
+Keep the follow-up short and specific.
+
+### Step 3 — Present a Scope Summary
 
 Present a brief scope summary to the user:
 
@@ -150,7 +156,7 @@ Wait for user confirmation.
 If a demo/sample is relevant, ask explicitly:
 `Do you want a demo/sample update for this feature? Yes / No`
 
-### Step 3 — Route Work
+### Step 4 — Route Work
 
 Delegate work only through isolated subagent execution when available. If isolated subagents are not available in the current environment, stop after scope discovery and require specialist work to continue in a new chat session with minimal context.
 
@@ -183,7 +189,7 @@ If the user declined, skip that handoff and continue with the remaining agents.
 If the feature is purely theming or styling, route directly from `tdd-test-writer-agent` to `theming-styles-agent` and skip the general
 implementer.
 
-### Step 4 — Verify Completeness
+### Step 5 — Verify Completeness
 
 After all agents finish, check:
 
