@@ -6,6 +6,7 @@ tools:
   - search/codebase
   - search/changes
   - read/problems
+  - web
 agents:
   - tdd-test-writer-agent
   - bug-fixing-implementer-agent
@@ -19,7 +20,7 @@ handoffs:
     send: false
   - label: "2. Implement Fix"
     agent: bug-fixing-implementer-agent
-    prompt: "Read the bug report and the existing failing test. Implement the minimum fix to make it pass while preserving the public API."
+    prompt: "Use the Bug Knowledge block below to implement the minimum fix. Skip your own investigation — the orchestrator has already done it."
     send: false
   - label: "3. Update Component README"
     agent: component-readme-agent
@@ -80,12 +81,15 @@ Do not restate the bug as:
 
 ## Delegation Format
 
-When delegating to another agent, use only this structure:
+When delegating to another agent, always include a **Bug Knowledge** block:
 
-- **Bug report**: one short sentence
-- **Root cause**: one short sentence
-- **Affected files**: concise path list
+- **Bug report**: one short sentence summarizing expected vs. actual behavior
+- **Root cause**: one short sentence explaining why the bug occurs
+- **Affected files**: concise path list of source files relevant to the fix
+- **Failing test**: path and description of the reproduction test (if written by `tdd-test-writer-agent`)
 - **Impact notes**: only relevant flags such as breaking change, i18n, accessibility, changelog, README, multi-branch
+
+This block is what downstream agents (especially `bug-fixing-implementer-agent`) use to skip redundant investigation.
 
 Do not add sections such as:
 - `Fix Requirements`
@@ -159,12 +163,13 @@ Wait for user confirmation.
 
 Delegate work only through isolated subagent execution when available. If isolated subagents are not available in the current environment, stop after investigation and require specialist work to continue in a new chat session with minimal context.
 
-For each subagent call, send only this minimal context:
-- the original bug report
-- root cause finding
-- affected component(s) and file path(s)
-- whether breaking-change, i18n, accessibility, changelog, or README follow-through may apply
-- the likely test suite
+For each subagent call, send a **Bug Knowledge** block containing:
+- **Bug report**: summary of expected vs. actual behavior
+- **Root cause**: identified root cause
+- **Affected files**: source file paths relevant to the fix
+- **Failing test**: path and description (once the test agent has written it)
+- **Impact notes**: flags (breaking change, i18n, accessibility, changelog, README, multi-branch)
+- **Test suite**: the smallest relevant test command
 
 Use agents in this order:
 
