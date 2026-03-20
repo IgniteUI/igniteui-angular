@@ -24,6 +24,11 @@ All notable changes for each version of this project will be documented in this 
 
     - `ContainerPositionStrategy` - The `ContainerPositionStrategy` now uses the `target` property from `OverlaySettings` (when set to an `HTMLElement`) as the container in which the overlay is rendered. This replaces the previous reliance on the deprecated `outlet` property and internal DOM traversal. The overlay wrapper is sized and positioned to match the target container's bounds and automatically updates on resize via `ResizeObserver`.
 
+## 21.1.3
+
+### Security Fixes
+- Bumped `jspdf` dependency to `4.2.1` to address a security vulnerability present in earlier versions.
+
 ## 21.1.0
 
 ### New Features
