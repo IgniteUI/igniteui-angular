@@ -669,7 +669,7 @@
 
         @if $bootstrap-theme {
             padding-block-start: pad-block(rem(16px));
-            border-top: rem(1px) solid color($color: 'gray', $variant: 300);
+            border-top: rem(1px) solid color-mix(in srgb, var(--ig-grid-foreground, --ig-gray-300) 20%, var(--ig-grid-background, --ig-gray-300));
         }
 
         %grid-excel-filter__apply,

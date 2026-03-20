@@ -257,11 +257,8 @@
 
 			@if $variant == 'fluent' {
 				--background: transparent;
-				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
 				--focus-visible-background: transparent;
 				--focus-background: transparent;
-				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
 			}
 
 			--foreground: #{var-get($theme, 'color-expression-group-and')};
@@ -307,11 +304,8 @@
 
 			@if $variant == 'fluent' {
 				--background: transparent;
-				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
 				--focus-visible-background: transparent;
 				--focus-background: transparent;
-				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
 			}
 
 			--foreground: #{var-get($theme, 'color-expression-group-or')};

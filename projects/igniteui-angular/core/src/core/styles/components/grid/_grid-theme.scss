@@ -47,7 +47,7 @@
                 $schema: $schema,
                 $background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, transparent),
                 $actions-background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, var(--ig-grid-background)),
-                $icon-color: var(--ig-grid-foreground),
+                $icon-color: var(--ig-grid-accent-color),
             )
         );
 
@@ -75,11 +75,33 @@
             );
         }
 
-        @include tokens(contained-button-theme($schema: $schema, $background: var(--ig-grid-accent-color)));
+        @include tokens(
+            contained-button-theme(
+                $schema: $schema,
+                $background: var(--ig-grid-accent-color),
+                $disabled-background: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
+                $disabled-foreground: color-mix(in srgb, var(--ig-grid-foreground) 50%, var(--ig-grid-background)),
+            )
+        );
 
-        @include tokens(flat-button-theme($schema: $schema, $foreground: var(--ig-grid-accent-color)));
+        @include tokens(
+            flat-button-theme(
+                $schema: $schema,
+                $foreground: var(--ig-grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
+            )
+        );
 
-        @include tokens(outlined-button-theme($schema: $schema, $foreground: var(--ig-grid-accent-color)));
+        @include tokens(
+            outlined-button-theme(
+                $schema: $schema,
+                $foreground: var(--ig-grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
+                $disabled-border-color: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
+            )
+        );
 
         @include tokens(
             checkbox-theme(
@@ -98,6 +120,9 @@
                 $schema: $schema,
                 $background: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
                 $text-color: var(--ig-grid-foreground),
+                $disabled-background: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                $disabled-text-color: color-mix(in srgb, var(--ig-grid-foreground) 50%, var(--ig-grid-background)),
+                $disabled-border-color: color-mix(in srgb, var(--ig-grid-foreground) 24%, var(--ig-grid-background)),
             )
         );
 
@@ -160,46 +185,45 @@
             flat-icon-button-theme(
                 $schema: $schema,
                 $foreground: var(--ig-grid-accent-color),
-                $disabled-background: color-mix(in srgb, var(--ig-grid-foreground) 10%, var(--ig-grid-background))
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
             )
         );
 
         @include tokens(
             outlined-icon-button-theme(
                 $schema: $schema,
-                $foreground: var(--ig-grid-accent-color)
-            )
-        );
-
-        @include tokens(
-            ripple-theme(
-                $schema: $schema,
-                $color: var(--ig-grid-foreground)
+                $foreground: var(--ig-grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
+                $disabled-border-color: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background))
             )
         );
 
         @if $variant == 'material' {
-            @include tokens(
-                input-group-theme(
-                    $schema: $schema,
-                    $box-background: var(--ig-grid-background),
-                    $idle-bottom-line-color: var(--ig-grid-accent-color),
-                    $border-color: var(--ig-grid-accent-color),
-                    $idle-text-color: var(--ig-grid-foreground),
-                    $placeholder-color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background)),
-                )
-            );
+            .igx-input-group--box {
+                @include tokens(
+                    input-group-theme(
+                        $schema: $schema,
+                        $box-background: var(--ig-grid-background),
+                        $idle-bottom-line-color: var(--ig-grid-accent-color),
+                        $border-color: var(--ig-grid-accent-color),
+                        $idle-text-color: var(--ig-grid-foreground),
+                        $placeholder-color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background)),
+                    )
+                );
+            }
 
             .igx-input-group--search {
                 @include tokens(
                     input-group-theme(
                         $schema: $schema,
-                        $search-background: var(--ig-grid-background)
+                        $search-background: color-mix(in srgb, var(--ig-grid-foreground) 6%, var(--ig-grid-background)),
+                        $idle-text-color: var(--ig-grid-foreground),
                     )
                 );
             }
-        }
-        @if $variant == 'indigo' {
+        } @else if $variant == 'indigo' {
             @include tokens(
                 input-group-theme(
                     $schema: $schema,
@@ -215,7 +239,9 @@
                     $border-color: var(--ig-grid-accent-color),
                     $idle-text-color: var(--ig-grid-foreground),
                     $placeholder-color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background)),
-                    $input-prefix-background: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                    $input-prefix-background: var(--ig-grid-accent-color),
+                    $border-disabled-background: transparent,
+                    $disabled-border-color: color-mix(in srgb, var(--ig-grid-accent-color) 50%, transparent),
                 )
             );
         }
@@ -238,12 +264,24 @@
             );
         }
 
-        @include tokens(
-            query-builder-theme(
-                $schema: $schema,
-                $background: var(--ig-grid-background)
-            )
-        );
+        @if $variant == 'bootstrap' {
+            @include tokens(
+                query-builder-theme(
+                    $schema: $schema,
+                    $background: var(--ig-grid-background),
+                    $header-foreground: var(--ig-grid-foreground),
+                    $header-border: color-mix(in srgb, var(--ig-grid-foreground) 20%, var(--ig-grid-background)),
+                )
+            );
+        } @else {
+            @include tokens(
+                query-builder-theme(
+                    $schema: $schema,
+                    $background: var(--ig-grid-background),
+                    $header-foreground: var(--ig-grid-foreground),
+                )
+            );
+        }
 
         @include tokens(
             scrollbar-theme(
@@ -267,6 +305,7 @@
             @include tokens(
                 select-theme(
                     $schema: $schema,
+                    $toggle-button-foreground: var(--ig-grid-foreground),
                     $toggle-button-background: var(--ig-grid-accent-color),
                     $toggle-button-background-disabled: color-mix(in srgb, var(--ig-grid-accent-color) 50%, var(--ig-grid-background)),
                 )
