@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -13,10 +13,6 @@ import { ColumnPinningPosition, IgxButtonDirective, IgxCellHeaderTemplateDirecti
     imports: [IgxButtonDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxPaginatorComponent, IgxColumnGroupComponent, IgxCellHeaderTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent]
 })
 export class GridColumnMovingSampleComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid', { static: true }) public gridMCH: IgxGridComponent;
 

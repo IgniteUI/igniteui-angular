@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
 
 @Component({
@@ -21,10 +21,6 @@ import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxCollap
     ]
 })
 export class GridColumnGroupsSampleComponent {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
     public collapse = true;

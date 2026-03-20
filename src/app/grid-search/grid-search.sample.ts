@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -14,10 +14,6 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
 })
 
 export class GridSearchComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public data: Array<any>;

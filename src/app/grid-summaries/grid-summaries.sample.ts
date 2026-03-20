@@ -47,10 +47,6 @@ class MySummary extends IgxNumberSummaryOperand {
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent]
 })
 export class GridSummaryComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     private grid1: IgxGridComponent;
 

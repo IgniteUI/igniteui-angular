@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IgxGridComponent, GridSelectionMode, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule } from 'igniteui-angular';
 
 @Component({
@@ -7,10 +7,6 @@ import { IgxGridComponent, GridSelectionMode, IgxGridToolbarComponent, IgxGridTo
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule]
 })
 export class GridMRLCustomNavigationSampleComponent {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     private grid: IgxGridComponent;
 

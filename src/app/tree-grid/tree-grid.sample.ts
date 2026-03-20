@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
@@ -14,10 +14,6 @@ import { IgxTreeGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsCom
 })
 
 export class TreeGridSampleComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public data: Array<any>;

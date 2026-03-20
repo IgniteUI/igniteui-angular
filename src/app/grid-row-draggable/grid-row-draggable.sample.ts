@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, HostBinding, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -22,10 +22,6 @@ enum DragIcon {
     imports: [IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, IgxGridEmptyTemplateDirective, AsyncPipe]
 })
 export class GridRowDraggableComponent implements AfterViewInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     private grid1: IgxGridComponent;
     @ViewChild('grid2', { read: IgxGridComponent, static: true })

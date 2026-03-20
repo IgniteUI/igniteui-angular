@@ -8,10 +8,6 @@ import { ColumnPinningPosition, GridSelectionMode, IgxActionStripComponent, IgxB
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective]
 })
 export class GridMRLSampleComponent {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     private grid: IgxGridComponent;
 

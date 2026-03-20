@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     GridSelectionMode,
@@ -39,11 +39,6 @@ export class GridCellEditingComponent {
     private gridWithPK: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     private gridWithoutPK: IgxGridComponent;
-
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
 
     public orderDateHidden = false;
     public data: any;

@@ -25,10 +25,6 @@ import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition
     ]
 })
 export class GridGroupBySampleComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true })
     private grid1: IgxGridComponent;
 

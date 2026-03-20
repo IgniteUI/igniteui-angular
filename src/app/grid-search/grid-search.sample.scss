@@ -1,8 +1,10 @@
-
-.sample-buttons {
-    margin-top: 24px;
+:host {
+    display: flex;
+    align-items: start;
+    gap: var(--demos-gap);
 }
 
-[igxButton]+[igxButton] {
-    margin-left: 8px;
+.demo-actions {
+    display: grid;
+    gap: var(--demos-gap);
 }

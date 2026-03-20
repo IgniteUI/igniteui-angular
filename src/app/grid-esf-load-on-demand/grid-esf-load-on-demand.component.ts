@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent, IgxColumnComponent, IFilteringExpressionsTree, GridSelectionMode, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular';
 import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
 
@@ -9,11 +9,6 @@ import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent]
 })
 export class GridEsfLoadOnDemandComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
-
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
 

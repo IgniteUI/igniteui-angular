@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { TreeGridLoadOnDemandService } from './tree-grid-load-on-demand.service';
@@ -26,10 +26,6 @@ export class MySummaryOperand extends IgxSummaryOperand {
     imports: [IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxSwitchComponent, FormsModule, IgxPaginatorComponent, IgxButtonDirective]
 })
 export class TreeGridLoadOnDemandSampleComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public data1: Array<any>;
