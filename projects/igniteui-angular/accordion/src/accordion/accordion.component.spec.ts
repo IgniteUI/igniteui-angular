@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,10 +24,12 @@ describe('Rendering Tests', () => {
             ]
         }).compileComponents();
     });
-    beforeEach(() => {
+    beforeEach(async () => {
         fix = TestBed.createComponent(IgxAccordionSampleTestComponent);
         fix.detectChanges();
-        accordion = fix.componentInstance.accordion;
+        await fix.whenStable();
+        fix.detectChanges();
+        accordion = fix.componentInstance.accordion();
     });
 
     describe('General', () => {
@@ -398,10 +400,10 @@ describe('Rendering Tests', () => {
         }
     </igx-accordion>
     `,
-    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
+    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IgxAccordionSampleTestComponent {
-    @ViewChild(IgxAccordionComponent)
-    public accordion: IgxAccordionComponent;
+    public accordion = viewChild.required(IgxAccordionComponent);
     public divChild = true;
 }
