@@ -3758,7 +3758,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.overlayService.opened.pipe(destructor).subscribe((event) => {
-            const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
+            const overlayInfo = this.overlayService.getOverlayById(event.id);
+            const overlaySettings = overlayInfo?.settings;
 
             // do not hide the advanced filtering overlay on scroll
             if (this._advancedFilteringOverlayId === event.id) {
@@ -3775,7 +3776,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                 return;
             }
 
-            if (overlaySettings?.outlet === this.outlet && this.overlayIDs.indexOf(event.id) === -1) {
+            const isGridOverlay = overlaySettings?.outlet === this.outlet ||
+                this.nativeElement.contains(overlayInfo?.elementRef?.nativeElement);
+            if (isGridOverlay && this.overlayIDs.indexOf(event.id) === -1) {
                 this.overlayIDs.push(event.id);
             }
         });
