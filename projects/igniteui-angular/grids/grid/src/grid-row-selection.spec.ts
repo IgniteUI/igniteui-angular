@@ -1618,8 +1618,9 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
+            const requiredRow = grid.gridAPI.get_row_by_index(0);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
-            GridSelectionFunctions.verifyRowSelected(selectedRow);
+            GridSelectionFunctions.verifyRowSelected(requiredRow);
         });
 
         it('Should be able to select and deselect rows from API', () => {

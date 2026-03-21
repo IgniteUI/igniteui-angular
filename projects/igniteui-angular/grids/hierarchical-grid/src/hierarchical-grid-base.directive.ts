@@ -226,6 +226,17 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         }
         return this.gridAPI.getChildGrid(path);
     }
+
+    /** @hidden @internal */
+    protected override isOwnOverlay(overlayInfo: { elementRef?: { nativeElement?: HTMLElement } }): boolean {
+        const element = overlayInfo?.elementRef?.nativeElement;
+        if (!this.nativeElement.contains(element)) {
+            return false;
+        }
+        // Exclude overlays that belong to child grids
+        return !this.gridAPI.getChildGrids(true)
+            .some(child => child.nativeElement.contains(element));
+    }
 }
 
 const flatten = (arr: any[]) => {

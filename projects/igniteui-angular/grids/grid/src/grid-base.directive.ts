@@ -3571,6 +3571,13 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * @hidden @internal
+     */
+    protected isOwnOverlay(overlayInfo: { elementRef?: { nativeElement?: HTMLElement } }): boolean {
+        return this.nativeElement.contains(overlayInfo?.elementRef?.nativeElement);
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -3777,7 +3784,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
 
             const isGridOverlay = overlaySettings?.outlet === this.outlet ||
-                this.nativeElement.contains(overlayInfo?.elementRef?.nativeElement);
+                this.isOwnOverlay(overlayInfo);
             if (isGridOverlay && this.overlayIDs.indexOf(event.id) === -1) {
                 this.overlayIDs.push(event.id);
             }
