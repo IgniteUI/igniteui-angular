@@ -56,3 +56,8 @@ extras/docs/themes/sassdoc/sassdoc/*
 
 # Localization sources
 i18nRepo
+
+# Eval artifacts (keep baseline results)
+evals/node_modules
+evals/results/*.json
+!evals/results/baseline.json
