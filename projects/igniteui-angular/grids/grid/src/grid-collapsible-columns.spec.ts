@@ -4,7 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
-    CollapsibleGroupsDynamicColComponent
+    CollapsibleGroupsDynamicColComponent,
+    CollapsibleGroupInitiallyCollapsedComponent
 } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -28,7 +29,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
-                CollapsibleGroupsDynamicColComponent
+                CollapsibleGroupsDynamicColComponent,
+                CollapsibleGroupInitiallyCollapsedComponent
             ]
         }).compileComponents();
     }));
@@ -243,6 +245,32 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(cityInf.visibleWhenCollapsedChange.emit).toHaveBeenCalledWith(false);
             expect(countryCol.visibleWhenCollapsedChange.emit).toHaveBeenCalledTimes(1);
             expect(countryCol.visibleWhenCollapsedChange.emit).toHaveBeenCalledWith(undefined);
+        });
+
+        it('calcPixelWidth of initially collapsed group should reflect only visible children widths - bug #17042', () => {
+            // Create a separate fixture for this test: a collapsible group initially collapsed
+            // with explicit child column widths
+            const localFixture = TestBed.createComponent(CollapsibleGroupInitiallyCollapsedComponent);
+            localFixture.detectChanges();
+            const localGrid = localFixture.componentInstance.grid;
+
+            const personalInfoGroup = GridFunctions.getColGroup(localGrid, 'Personal Info');
+
+            // After initial collapse (expanded=false in template):
+            // 'ContactName' (visibleWhenCollapsed=true) should be visible
+            // 'ContactTitle' (visibleWhenCollapsed=false) should be hidden
+            const contactNameCol = localGrid.getColumnByName('ContactName');
+            const contactTitleCol = localGrid.getColumnByName('ContactTitle');
+
+            expect(contactNameCol.hidden).toBeFalse();
+            expect(contactTitleCol.hidden).toBeTrue();
+
+            // The group's calcPixelWidth must equal only the visible child's width (200px),
+            // NOT the full expanded width (400px = 200 + 200).
+            // The dynamic `width` getter correctly excludes hidden children, so
+            // calcPixelWidth must match it.
+            const dynamicGroupWidth = parseFloat(personalInfoGroup.width);
+            expect(personalInfoGroup.calcPixelWidth).toEqual(dynamicGroupWidth);
         });
 
         it('verify ARIA Support', () => {
