@@ -6,6 +6,6 @@
 
 $_theme: $fluent;
 
-@include themed-block(igx-date-range-picker, bootstrap) {
+@include themed-block(igx-date-range-picker, fluent) {
     --input-group-size: #{map.get($_theme, 'size')};
 }

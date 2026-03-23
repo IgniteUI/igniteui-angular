@@ -6,6 +6,6 @@
 
 $_theme: $material;
 
-@include themed-block(igx-date-range-picker, bootstrap) {
+@include themed-block(igx-date-range-picker, material) {
     --input-group-size: #{map.get($_theme, 'size')};
 }

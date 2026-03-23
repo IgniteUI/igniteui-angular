@@ -20,7 +20,7 @@ $theme: $material;
         width: calc(50% + #{rem(1px)});
         border-width: var(--_range-border-size);
         border-inline-color: transparent;
-        border-style: var(--_range-border-style);
+        border-style: var(--_preview-border-style);
     }
 }
 
