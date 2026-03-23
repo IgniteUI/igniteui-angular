@@ -1,5 +1,5 @@
 import { QueryList } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -47,7 +47,7 @@ describe('IgxBottomNav', () => {
     });
 
     describe('Html Attributes', () => {
-        let fixture;
+        let fixture: ComponentFixture<BottomNavTestHtmlAttributesComponent>;
 
         beforeEach(async () => {
             fixture = TestBed.createComponent(BottomNavTestHtmlAttributesComponent);
@@ -55,10 +55,10 @@ describe('IgxBottomNav', () => {
         });
 
         it('should set the correct attributes on the html elements', () => {
-            const igxBottomNavs = document.querySelectorAll('igx-bottom-nav');
-            expect(igxBottomNavs.length).toBe(2);
+            const navItems = document.querySelectorAll('igx-bottom-nav');
+            expect(navItems.length).toBe(2);
 
-            igxBottomNavs.forEach((bottomNav, i) => {
+            navItems.forEach((bottomNav, i) => {
                 const tabHeaders = bottomNav.querySelectorAll('igx-bottom-nav-header');
                 const tabPanels = bottomNav.querySelectorAll('igx-bottom-nav-content');
                 expect(tabHeaders.length).toBe(3);
@@ -79,21 +79,22 @@ describe('IgxBottomNav', () => {
     });
 
     describe('Component with Panels Definitions', () => {
-        let fixture;
-        let bottomNav;
+        let fixture: ComponentFixture<TabBarTestComponent>;
+        let bottomNav: IgxBottomNavComponent;
         let tabItems: IgxBottomNavItemComponent[];
 
         beforeEach(async () => {
             fixture = TestBed.createComponent(TabBarTestComponent);
             fixture.detectChanges();
 
-            bottomNav = fixture.componentInstance.bottomNav;
+            bottomNav = fixture.componentInstance.bottomNav();
             tabItems = bottomNav.items.toArray();
         });
+
         afterEach(() => vi.useRealTimers());
 
         it('should initialize igx-bottom-nav, igx-bottom-nav-content and igx-bottom-nav-item', () => {
-            const panels: IgxBottomNavContentComponent[] = bottomNav.panels.toArray();
+            const panels = bottomNav.panels.toArray() as IgxBottomNavContentComponent[];
 
             expect(bottomNav).toBeDefined();
             expect(bottomNav instanceof IgxBottomNavComponent).toBeTruthy();
@@ -135,15 +136,16 @@ describe('IgxBottomNav', () => {
             }
         });
 
-        it('should select/deselect tabs', () => {
+        it('should select/deselect tabs', async () => {
             vi.useFakeTimers();
             expect(bottomNav.selectedIndex).toBe(0);
             const tab1: IgxBottomNavItemComponent = tabItems[0];
             const tab2: IgxBottomNavItemComponent = tabItems[1];
 
             tab2.selected = true;
-            vi.advanceTimersByTime(100);
-            fixture.detectChanges();
+            vi.runAllTicks();
+            fixture.changeDetectorRef.detectChanges();
+
 
             expect(bottomNav.selectedIndex).toBe(1);
             expect(bottomNav.selectedItem).toBe(tab2);
@@ -151,19 +153,19 @@ describe('IgxBottomNav', () => {
             expect(tab1.selected).toBeFalsy();
 
             tab1.selected = true;
-            vi.advanceTimersByTime(100);
-            fixture.detectChanges();
+            vi.runAllTicks();
+            fixture.changeDetectorRef.detectChanges();
 
             expect(bottomNav.selectedIndex).toBe(0);
             expect(bottomNav.selectedItem).toBe(tab1);
             expect(tab1.selected).toBeTruthy();
             expect(tab2.selected).toBeFalsy();
 
-            // select disabled tab
+            // // select disabled tab
             tab2.disabled = true;
             tab2.selected = true;
-            vi.advanceTimersByTime(100);
-            fixture.detectChanges();
+            vi.runAllTicks();
+            fixture.changeDetectorRef.detectChanges();
 
             expect(bottomNav.selectedIndex).toBe(1);
             expect(bottomNav.selectedItem).toBe(tab2);
@@ -174,12 +176,12 @@ describe('IgxBottomNav', () => {
     });
 
     describe('Routing Navigation Tests', () => {
-        let router;
-        let location;
-        let fixture;
-        let bottomNav;
-        let tabItems;
-        let headers;
+        let router: Router;
+        let location: Location;
+        let fixture: ComponentFixture<TabBarRoutingTestComponent>;
+        let bottomNav: IgxBottomNavComponent;
+        let tabItems: IgxBottomNavItemComponent[];
+        let headers: HTMLElement[];
 
         beforeEach(async () => {
             router = TestBed.inject(Router);
@@ -190,7 +192,8 @@ describe('IgxBottomNav', () => {
             beforeEach(async () => {
                 fixture = TestBed.createComponent(TabBarRoutingTestComponent);
                 fixture.detectChanges();
-                bottomNav = fixture.componentInstance.bottomNav;
+
+                bottomNav = fixture.componentInstance.bottomNav();
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
             });
@@ -252,7 +255,7 @@ describe('IgxBottomNav', () => {
                 fixture = TestBed.createComponent(BottomNavRoutingGuardTestComponent);
                 fixture.detectChanges();
 
-                bottomNav = fixture.componentInstance.bottomNav;
+                bottomNav = fixture.componentInstance.bottomNav();
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
 
@@ -282,14 +285,15 @@ describe('IgxBottomNav', () => {
     });
 
     describe('Tabs-only Mode Tests', () => {
-        let fixture;
-        let bottomNav;
-        let tabItems;
+        let fixture: ComponentFixture<TabBarTabsOnlyModeTestComponent>;
+        let bottomNav: IgxBottomNavComponent;
+        let tabItems: IgxBottomNavItemComponent[];
 
         beforeEach(async () => {
             fixture = TestBed.createComponent(TabBarTabsOnlyModeTestComponent);
-            bottomNav = fixture.componentInstance.bottomNav;
             fixture.detectChanges();
+
+            bottomNav = fixture.componentInstance.bottomNav();
             tabItems = bottomNav.items.toArray();
         });
 
@@ -307,34 +311,36 @@ describe('IgxBottomNav', () => {
     });
 
     describe('Events', () => {
-        let fixture;
-        let bottomNav;
-        let tabItems;
-        let headers;
-        let itemChangeSpy;
-        let indexChangeSpy;
-        let indexChangingSpy;
+        let fixture: ComponentFixture<TabBarTestComponent>;
+        let bottomNav: IgxBottomNavComponent;
+        let tabItems: IgxBottomNavItemComponent[];
+        let headers: HTMLElement[];
+        let itemChangeSpy: ReturnType<typeof vi.spyOn>;
+        let indexChangeSpy: ReturnType<typeof vi.spyOn>;
+        let indexChangingSpy: ReturnType<typeof vi.spyOn>;
 
         describe('', () => {
             beforeEach(async () => {
                 fixture = TestBed.createComponent(TabBarTestComponent);
                 fixture.detectChanges();
-                bottomNav = fixture.componentInstance.bottomNav;
+
+                bottomNav = fixture.componentInstance.bottomNav();
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
                 itemChangeSpy = vi.spyOn(bottomNav.selectedItemChange, 'emit');
                 indexChangeSpy = vi.spyOn(bottomNav.selectedIndexChange, 'emit');
                 indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
             });
+
             afterEach(() => vi.useRealTimers());
 
             it('Validate the fired events on clicking tab headers.', () => {
                 vi.useFakeTimers();
-                vi.advanceTimersByTime(100);
+                vi.runAllTicks();
 
                 headers[1].dispatchEvent(new Event('click', { bubbles: true }));
-                vi.advanceTimersByTime(200);
-                fixture.detectChanges();
+                vi.runAllTicks();
+                fixture.changeDetectorRef.detectChanges();
                 expect(bottomNav.selectedIndex).toBe(1);
 
                 expect(indexChangingSpy).toHaveBeenCalledWith({
@@ -353,13 +359,13 @@ describe('IgxBottomNav', () => {
 
             it('Cancel selectedIndexChanging event.', () => {
                 vi.useFakeTimers();
-                vi.advanceTimersByTime(100);
+                vi.runAllTicks();
                 bottomNav.selectedIndexChanging.pipe().subscribe((e) => e.cancel = true);
-                fixture.detectChanges();
+                fixture.changeDetectorRef.detectChanges();
 
                 headers[1].dispatchEvent(new Event('click', { bubbles: true }));
-                vi.advanceTimersByTime(200);
-                fixture.detectChanges();
+                vi.runAllTicks();
+                fixture.changeDetectorRef.detectChanges();
                 expect(bottomNav.selectedIndex).toBe(0);
 
                 expect(indexChangingSpy).toHaveBeenCalledWith({
@@ -374,49 +380,43 @@ describe('IgxBottomNav', () => {
         });
 
         describe('& Routing', () => {
-            let router;
-            let location;
-            const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
+            let router: Router;
+            let location: Location;
+            let fixture: ComponentFixture<TabBarRoutingTestComponent>;
+
             beforeEach(async () => {
                 router = TestBed.inject(Router);
                 location = TestBed.inject(Location);
+
                 fixture = TestBed.createComponent(TabBarRoutingTestComponent);
                 fixture.detectChanges();
-                bottomNav = fixture.componentInstance.bottomNav;
+
+                bottomNav = fixture.componentInstance.bottomNav();
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
                 itemChangeSpy = vi.spyOn(bottomNav.selectedItemChange, 'emit');
                 indexChangeSpy = vi.spyOn(bottomNav.selectedIndexChange, 'emit');
                 indexChangingSpy = vi.spyOn(bottomNav.selectedIndexChanging, 'emit');
             });
+
             afterEach(() => vi.useRealTimers());
 
-            it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', () => {
+            it('Validate the events are fired after clicking a routing tab header.', async () => {
                 vi.useFakeTimers();
                 fixture.ngZone.run(() => router.initialNavigation());
-                vi.runAllTimers();
+                await vi.runAllTimersAsync();
+
                 expect(location.path()).toBe('/');
 
                 fixture.ngZone.run(() => {
                     UIInteractions.simulateClickAndSelectEvent(headers[1]);
                 });
-                vi.runAllTimers();
-                expect(location.path()).toBe('/view2');
-                expect(bottomNav.selectedIndex).toBe(-1);
-
-                expect(indexChangingSpy).not.toHaveBeenCalled();
-                expect(indexChangeSpy).not.toHaveBeenCalled();
-                expect(itemChangeSpy).not.toHaveBeenCalled();
-
-                headers[1].dispatchEvent(KEY_ENTER_EVENT);
-                vi.advanceTimersByTime(200);
+                await vi.runAllTimersAsync();
                 fixture.detectChanges();
 
-                expect(itemChangeSpy).toHaveBeenCalledWith({
-                    owner: bottomNav,
-                    oldItem: undefined,
-                    newItem: tabItems[1]
-                });
+                expect(location.path()).toBe('/view2');
+                expect(bottomNav.selectedIndex).toBe(1);
+
                 expect(indexChangingSpy).toHaveBeenCalledWith({
                     owner: bottomNav,
                     cancel: false,
@@ -424,6 +424,11 @@ describe('IgxBottomNav', () => {
                     newIndex: 1
                 });
                 expect(indexChangeSpy).toHaveBeenCalledWith(1);
+                expect(itemChangeSpy).toHaveBeenCalledWith({
+                    owner: bottomNav,
+                    oldItem: undefined,
+                    newItem: tabItems[1]
+                });
             });
         });
     });

@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, DebugElement, Signal, Type, viewChild } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
@@ -39,20 +39,18 @@ describe('igxBanner', () => {
     });
 
     describe('General tests: ', () => {
-        it('Should initialize properly banner component with empty template', () => {
-            const fixture = TestBed.createComponent(IgxBannerEmptyComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+        it('Should initialize properly banner component with empty template', async () => {
+            const { fixture, banner} = await createComponent(IgxBannerEmptyComponent);
+
             expect(fixture.componentInstance).toBeDefined();
             expect(banner).toBeDefined();
             expect(banner.collapsed).toBeTruthy();
             expect(banner.useDefaultTemplate).toBeTruthy();
         });
 
-        it(`Should properly initialize banner component with message`, () => {
-            const fixture = TestBed.createComponent(SimpleBannerEventsComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+        it(`Should properly initialize banner component with message`, async () => {
+            const { fixture, banner} = await createComponent(SimpleBannerEventsComponent);
+
             expect(fixture.componentInstance).toBeDefined();
             expect(banner).toBeDefined();
             expect(banner.collapsed).toBeTruthy();
@@ -62,10 +60,9 @@ describe('igxBanner', () => {
             expect(bannerMessage.innerHTML.trim()).toEqual('Simple message');
         });
 
-        it('Should initialize properly banner component with message and a button', () => {
-            const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+        it('Should initialize properly banner component with message and a button', async () => {
+            const { fixture, banner} = await createComponent(IgxBannerOneButtonComponent);
+
             expect(fixture.componentInstance).toBeDefined();
             expect(banner).toBeDefined();
             expect(banner.collapsed).toBeTruthy();
@@ -77,10 +74,9 @@ describe('igxBanner', () => {
             expect(button.innerHTML).toEqual('TURN ON WIFI');
         });
 
-        it('Should initialize properly banner component with message and buttons', () => {
-            const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+        it('Should initialize properly banner component with message and buttons', async () => {
+            const { fixture, banner} = await createComponent(IgxBannerSampleComponent);
+
             expect(fixture.componentInstance).toBeDefined();
             expect(banner).toBeDefined();
             expect(banner.collapsed).toBeTruthy();
@@ -94,8 +90,7 @@ describe('igxBanner', () => {
         });
 
         it('Should properly set base classes', async () => {
-            const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
-            fixture.detectChanges();
+            const { fixture, banner} = await createComponent(IgxBannerSampleComponent);
 
             getBaseClassElements(fixture);
 
@@ -105,7 +100,6 @@ describe('igxBanner', () => {
             expect(bannerTextElement).toBeNull();
             expect(bannerActionsElement).toBeNull();
 
-            const banner = fixture.componentInstance.banner;
             banner.open();
             await fixture.whenStable();
             fixture.detectChanges();
@@ -120,8 +114,7 @@ describe('igxBanner', () => {
         });
 
         it('Should initialize banner with at least one and up to two buttons', async () => {
-            const fixture: ComponentFixture<IgxBannerEmptyComponent> = TestBed.createComponent(IgxBannerSampleComponent);
-            fixture.detectChanges();
+            const { fixture, banner} = await createComponent(IgxBannerSampleComponent);
 
             getBaseClassElements(fixture);
 
@@ -131,7 +124,6 @@ describe('igxBanner', () => {
             expect(bannerTextElement).toBeNull();
             expect(bannerActionsElement).toBeNull();
 
-            const banner = fixture.componentInstance.banner;
             banner.open();
             await fixture.whenStable();
             fixture.detectChanges();
@@ -158,10 +150,8 @@ describe('igxBanner', () => {
         });
 
         it('Should position buttons next to the banner content', async () => {
-            const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
-            fixture.detectChanges();
+            const { fixture, banner} = await createComponent(IgxBannerSampleComponent);
 
-            const banner: IgxBannerComponent = fixture.componentInstance.banner;
             banner.open();
             await fixture.whenStable();
             fixture.detectChanges();
@@ -175,10 +165,8 @@ describe('igxBanner', () => {
         });
 
         it('Should span the entire width of the parent element', async () => {
-            const fixture: ComponentFixture<IgxBannerOneButtonComponent> = TestBed.createComponent(IgxBannerOneButtonComponent);
-            fixture.detectChanges();
+            const { fixture, banner} = await createComponent(IgxBannerOneButtonComponent);
 
-            const banner: IgxBannerComponent = fixture.componentInstance.banner;
             banner.open();
             await fixture.whenStable();
             fixture.detectChanges();
@@ -197,13 +185,11 @@ describe('igxBanner', () => {
         });
 
         it('Should push parent element content downwards on loading', async () => {
-            const fixture: ComponentFixture<IgxBannerSampleComponent> = TestBed.createComponent(IgxBannerSampleComponent);
-            fixture.detectChanges();
+            const { fixture, banner} = await createComponent(IgxBannerSampleComponent);
 
             let pageContentElement = fixture.debugElement.query(By.css('#content'));
             let pageContentElementTop = pageContentElement.nativeElement.getBoundingClientRect().top;
 
-            const banner: IgxBannerComponent = fixture.componentInstance.banner;
             banner.open();
             await fixture.whenStable();
             fixture.detectChanges();
@@ -227,9 +213,8 @@ describe('igxBanner', () => {
 
     describe('Action tests: ', () => {
         it('Should dismiss/confirm banner on button clicking', async () => {
-            const fixture = TestBed.createComponent(IgxBannerSampleComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+            const { fixture, banner} = await createComponent(IgxBannerSampleComponent);
+
             expect(banner.collapsed).toBeTruthy();
 
             vi.spyOn(banner.opened, 'emit');
@@ -302,29 +287,41 @@ describe('igxBanner', () => {
             expect(bannerActionsElement).toBeNull();
         });
 
-        it('Should not be dismissed on user actions outside the component', () => {
-            const fixture = TestBed.createComponent(IgxBannerSampleComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+        it('Should not be dismissed on user actions outside the component', async () => {
+            const { fixture, banner } = await createComponent(IgxBannerSampleComponent);
+
             const targetDiv = document.createElement('DIV');
             const bannerNode: HTMLElement = banner.elementRef.nativeElement;
+
             targetDiv.style.height = '3000px';
             targetDiv.style.width = '1000px';
             targetDiv.style.backgroundColor = '#aa44bb';
             targetDiv.tabIndex = 1;
             bannerNode.parentNode.appendChild(targetDiv);
+
             expect(banner.collapsed).toBeTruthy();
+
             banner.open();
+            await fixture.whenStable();
             fixture.detectChanges();
+
             expect(banner.collapsed).toBeFalsy();
             targetDiv.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            await fixture.whenStable();
             fixture.detectChanges();
+
             expect(banner.collapsed).toBeFalsy();
+
             targetDiv.click();
+            await fixture.whenStable();
             fixture.detectChanges();
+
             expect(banner.collapsed).toBeFalsy();
+
             targetDiv.focus();
+            await fixture.whenStable();
             fixture.detectChanges();
+
             expect(banner.collapsed).toBeFalsy();
             targetDiv.style.height = '3000px';
             fixture.detectChanges();
@@ -335,9 +332,8 @@ describe('igxBanner', () => {
         });
 
         it('Should properly emit events', async () => {
-            const fixture = TestBed.createComponent(IgxBannerSampleComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+            const { fixture, banner } = await createComponent(IgxBannerSampleComponent);
+
             vi.spyOn(banner.closed, 'emit');
             vi.spyOn(banner.closing, 'emit');
             vi.spyOn(banner.opened, 'emit');
@@ -362,9 +358,8 @@ describe('igxBanner', () => {
         });
 
         it('Should properly cancel opening and closing', async () => {
-            const fixture = TestBed.createComponent(SimpleBannerEventsComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+            const { fixture, banner } = await createComponent(SimpleBannerEventsComponent);
+
             vi.spyOn(banner.closing, 'emit');
             vi.spyOn(banner.opening, 'emit');
             vi.spyOn(banner.closed, 'emit');
@@ -397,9 +392,7 @@ describe('igxBanner', () => {
         });
 
         it('Should toggle banner state when expanded property changes', async () => {
-            const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+            const { fixture, banner } = await createComponent(IgxBannerInitializedOpenComponent);
 
             banner.expanded = false;
             await fixture.whenStable();
@@ -429,9 +422,8 @@ describe('igxBanner', () => {
 
     describe('Rendering tests: ', () => {
         it('Should apply all appropriate classes on initialization_default template', async () => {
-            const fixture = TestBed.createComponent(IgxBannerSampleComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+            const { fixture, banner } = await createComponent(IgxBannerSampleComponent);
+
             const bannerNode: HTMLElement = banner.elementRef.nativeElement;
             expect(banner.collapsed).toBeTruthy();
             expect(bannerNode.childElementCount).toEqual(1); // collapsed expansion panel
@@ -463,9 +455,8 @@ describe('igxBanner', () => {
         });
 
         it('Should apply all appropriate classes on initialization_custom template', async () => {
-            const fixture = TestBed.createComponent(IgxBannerCustomTemplateComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+            const { fixture, banner } = await createComponent(IgxBannerCustomTemplateComponent);
+
             const panel = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             expect(panel).not.toBeNull();
             expect(panel.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
@@ -483,9 +474,8 @@ describe('igxBanner', () => {
         });
 
         it('Should apply the appropriate display style to the banner host', async () => {
-            const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+            const { fixture, banner } = await createComponent(IgxBannerOneButtonComponent);
+
             // Banner is collapsed, display is '';
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
             banner.toggle();
@@ -506,8 +496,7 @@ describe('igxBanner', () => {
         });
 
         it('Should apply the appropriate attributes on initialization', async () => {
-            const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
-            fixture.detectChanges();
+            const { fixture } = await createComponent(IgxBannerOneButtonComponent);
 
             const panel = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             expect(panel).not.toBeNull();
@@ -516,9 +505,7 @@ describe('igxBanner', () => {
         });
 
         it('Should initialize banner as open when expanded is set to true', async () => {
-            const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
-            fixture.detectChanges();
-            const banner = fixture.componentInstance.banner;
+            const { banner } = await createComponent(IgxBannerInitializedOpenComponent);
 
             expect(banner.expanded).toBe(true);
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
@@ -543,9 +530,8 @@ describe('igxBanner', () => {
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
     imports: [IgxBannerComponent]
 })
-export class IgxBannerEmptyComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
-    public banner: IgxBannerComponent;
+class IgxBannerEmptyComponent {
+    public banner = viewChild.required(IgxBannerComponent);
 }
 
 @Component({
@@ -562,9 +548,8 @@ export class IgxBannerEmptyComponent {
     `,
     imports: [IgxBannerComponent, IgxBannerActionsDirective]
 })
-export class IgxBannerOneButtonComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
-    public banner: IgxBannerComponent;
+class IgxBannerOneButtonComponent {
+    public banner = viewChild.required(IgxBannerComponent);
 }
 
 @Component({
@@ -574,8 +559,8 @@ export class IgxBannerOneButtonComponent {
                 <igx-icon>error</igx-icon>
                 Unfortunately, the credit card did not go through, please try again.
                 <igx-banner-actions>
-                    <button igxButton="contained" (click)="banner.close()">UPDATE</button>
-                    <button igxButton="contained" (click)="banner.close()">DISMISS</button>
+                    <button igxButton="contained" (click)="banner().close()">UPDATE</button>
+                    <button igxButton="contained" (click)="banner().close()">DISMISS</button>
                 </igx-banner-actions>
             </igx-banner>
         </div>
@@ -583,9 +568,8 @@ export class IgxBannerOneButtonComponent {
     `,
     imports: [IgxBannerComponent, IgxBannerActionsDirective, IgxIconComponent]
 })
-export class IgxBannerSampleComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
-    public banner: IgxBannerComponent;
+class IgxBannerSampleComponent {
+    public banner = viewChild.required(IgxBannerComponent);
 }
 
 @Component({
@@ -613,9 +597,8 @@ export class IgxBannerSampleComponent {
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
     imports: [IgxBannerComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxBannerActionsDirective, IgxAvatarComponent]
 })
-export class IgxBannerCustomTemplateComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
-    public banner: IgxBannerComponent;
+class IgxBannerCustomTemplateComponent {
+    public banner = viewChild.required(IgxBannerComponent);
 }
 
 @Component({
@@ -626,9 +609,8 @@ export class IgxBannerCustomTemplateComponent {
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
     imports: [IgxBannerComponent]
 })
-export class SimpleBannerEventsComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true })
-    public banner: IgxBannerComponent;
+class SimpleBannerEventsComponent {
+    public banner = viewChild.required(IgxBannerComponent);
 
     public cancelFlag = false;
 
@@ -652,7 +634,18 @@ export class SimpleBannerEventsComponent {
     standalone: true,
     imports: [IgxBannerComponent]
 })
-export class IgxBannerInitializedOpenComponent {
-    @ViewChild(IgxBannerComponent, { static: true })
-    public banner: IgxBannerComponent;
+class IgxBannerInitializedOpenComponent {
+    public banner = viewChild.required(IgxBannerComponent);
+}
+
+async function createComponent<T extends { banner: Signal<IgxBannerComponent> }>(component: Type<T>) {
+    const fixture = TestBed.createComponent(component);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    return {
+        fixture,
+        banner: fixture.componentInstance.banner(),
+    };
 }

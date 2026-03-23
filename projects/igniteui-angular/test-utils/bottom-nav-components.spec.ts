@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavItemComponent } from 'igniteui-angular/bottom-nav';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -55,10 +55,8 @@ import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from 'igniteui-
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class TabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true })
-    public bottomNav: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv', { static: true })
-    public wrapperDiv: any;
+    public bottomNav = viewChild.required(IgxBottomNavComponent);
+    public wrapperDiv = viewChild.required<HTMLElement>('wrapperDiv');
 }
 
 @Component({
@@ -112,10 +110,8 @@ export class TabBarTestComponent {
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class BottomTabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true })
-    public bottomNav: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv', { static: true })
-    public wrapperDiv: any;
+    public bottomNav = viewChild.required(IgxBottomNavComponent);
+    public wrapperDiv = viewChild.required<HTMLElement>('wrapperDiv');
 }
 
 @Component({
@@ -159,8 +155,7 @@ export class BottomTabBarTestComponent {
     ]
 })
 export class TabBarRoutingTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true })
-    public bottomNav: IgxBottomNavComponent;
+    public bottomNav = viewChild.required(IgxBottomNavComponent);
 }
 
 @Component({
@@ -194,8 +189,7 @@ export class TabBarRoutingTestComponent {
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class TabBarTabsOnlyModeTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true })
-    public bottomNav: IgxBottomNavComponent;
+    public bottomNav = viewChild.required(IgxBottomNavComponent);
 }
 
 @Component({
@@ -223,8 +217,7 @@ export class TabBarTabsOnlyModeTestComponent {
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class BottomNavRoutingGuardTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true })
-    public bottomNav: IgxBottomNavComponent;
+    public bottomNav = viewChild.required(IgxBottomNavComponent);
 }
 
 @Component({
@@ -291,6 +284,5 @@ export class BottomNavRoutingGuardTestComponent {
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class BottomNavTestHtmlAttributesComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true })
-    public bottomNav: IgxBottomNavComponent;
+    public bottomNav = viewChild.required(IgxBottomNavComponent);
 }

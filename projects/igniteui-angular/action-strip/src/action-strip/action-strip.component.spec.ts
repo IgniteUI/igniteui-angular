@@ -1,22 +1,16 @@
 import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
-import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { Component, ElementRef, ViewContainerRef, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { wait } from '../../../test-utils/ui-interactions.spec';
-import { describe, it, test, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
 
 describe('igxActionStrip', () => {
-    let fixture;
-    let actionStrip: IgxActionStripComponent;
-    let actionStripElement: ElementRef;
-    let parentContainer: ElementRef;
-    let innerContainer: ViewContainerRef;
-
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
@@ -29,12 +23,12 @@ describe('igxActionStrip', () => {
         }).compileComponents();
     });
 
-    describe('Unit tests: ', () => {
-
+    describe('Unit tests', () => {
         it('should properly show and hide using API', () => {
-            fixture = TestBed.createComponent(IgxActionStripComponent);
-            actionStrip = fixture.componentInstance as IgxActionStripComponent;
+            const fixture = TestBed.createComponent(IgxActionStripComponent);
+            const actionStrip = fixture.componentInstance;
             fixture.detectChanges();
+
             expect(actionStrip.hidden).toBeTruthy();
 
             const el = document.createElement('div');
@@ -42,22 +36,28 @@ describe('igxActionStrip', () => {
             actionStrip.show(el);
             expect(actionStrip.hidden).toBeFalsy();
             expect(actionStrip.context).toBe(el);
+
             actionStrip.hide();
             expect(actionStrip.hidden).toBeTruthy();
             fixture.debugElement.nativeElement.removeChild(el);
         });
-
     });
 
-    describe('Initialization and rendering tests: ', () => {
+    describe('Initialization and rendering tests', () => {
+        let fixture: ComponentFixture<IgxActionStripTestingComponent>;
+        let actionStrip: IgxActionStripComponent;
+        let actionStripElement: ElementRef;
+        let parentContainer: ElementRef;
+        let innerContainer: ViewContainerRef;
 
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            actionStripElement = fixture.componentInstance.actionStripElement;
-            parentContainer = fixture.componentInstance.parentContainer;
-            innerContainer = fixture.componentInstance.innerContainer;
+
+            actionStrip = fixture.componentInstance.actionStrip();
+            actionStripElement = fixture.componentInstance.actionStripElement();
+            parentContainer = fixture.componentInstance.parentContainer();
+            innerContainer = fixture.componentInstance.innerContainer();
         });
 
         it('should be overlapping its parent container when no context is applied', () => {
@@ -72,6 +72,7 @@ describe('igxActionStrip', () => {
         it('should be overlapping context.element when context is applied', () => {
             actionStrip.show(innerContainer);
             fixture.detectChanges();
+
             const innerBoundingRect = innerContainer.element.nativeElement.getBoundingClientRect();
             const actionStripBoundingRect = actionStripElement.nativeElement.getBoundingClientRect();
             expect(innerBoundingRect.top).toBe(actionStripBoundingRect.top);
@@ -89,50 +90,50 @@ describe('igxActionStrip', () => {
 
         it('should not display the action strip when setting it hidden', () => {
             actionStrip.hidden = true;
-            fixture.detectChanges();
+            fixture.changeDetectorRef.detectChanges();
+
             const asQuery = fixture.debugElement.query(By.css('igx-action-strip'));
             expect(asQuery.nativeElement.style.display).toBe('none');
         });
     });
 
     describe('render content as menu', () => {
-
-        it('should render tree-dot button which toggles the content as menu', () => {
-            fixture = TestBed.createComponent(IgxActionStripMenuTestingComponent);
+        it('should render three-dot button which toggles the content as menu', () => {
+            const fixture = TestBed.createComponent(IgxActionStripMenuTestingComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
+
             const actionStripContainer = fixture.debugElement.query(By.css(`.${ACTION_STRIP_CONTAINER_CSS}`));
             // there should be one rendered child and one hidden dropdown
             expect(actionStripContainer.nativeElement.children.length).toBe(2);
+
             let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
-            const icon = fixture.debugElement.query(By.css(`igx-icon`));
+
+            const icon = fixture.debugElement.query(By.css('igx-icon'));
             icon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
+
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
             const dropDownItems = dropDownList.queryAll(By.css('igx-drop-down-item'));
             expect(dropDownItems.length).toBe(3);
         });
 
-        it.skip('should emit onMenuOpen/onMenuOpening when toggling the menu', () => {
-            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-            // pending('implementation');
-            ;
-        });
-
         it('should allow combining content outside and inside the menu', () => {
-            fixture = TestBed.createComponent(IgxActionStripCombinedMenuTestingComponent);
+            const fixture = TestBed.createComponent(IgxActionStripCombinedMenuTestingComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
+
             const actionStripContainer = fixture.debugElement.query(By.css(`.${ACTION_STRIP_CONTAINER_CSS}`));
-            // there should be one rendered child and one hidden dropdown and one additional icon
+            // there should be one rendered child, one hidden dropdown, and one additional icon
             expect(actionStripContainer.nativeElement.children.length).toBe(3);
+
             let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
-            const icon = fixture.debugElement.query(By.css(`igx-icon`));
+
+            const icon = fixture.debugElement.query(By.css('igx-icon'));
             icon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
+
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
             const dropDownItems = dropDownList.queryAll(By.css('igx-drop-down-item'));
@@ -140,18 +141,21 @@ describe('igxActionStrip', () => {
         });
 
         it('should close the menu when hiding action strip', async () => {
-            fixture = TestBed.createComponent(IgxActionStripCombinedMenuTestingComponent);
+            const fixture = TestBed.createComponent(IgxActionStripCombinedMenuTestingComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            // there should be one rendered child and one hidden dropdown and one additional icon
-            const icon = fixture.debugElement.query(By.css(`igx-icon`));
+            const actionStrip = fixture.componentInstance.actionStrip();
+
+            const icon = fixture.debugElement.query(By.css('igx-icon'));
             icon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
+
             let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
+
             actionStrip.hide();
             await wait();
             fixture.detectChanges();
+
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
         });
@@ -162,9 +166,7 @@ describe('igxActionStrip', () => {
     template: `
     <div #parent style="position:relative; height: 200px; width: 400px;">
         <div #inner style="position:relative; height: 100px; width: 200px;">
-            <p>
-                Lorem ipsum dolor sit
-            </p>
+            <p>Lorem ipsum dolor sit</p>
         </div>
         <igx-action-strip #actionStrip [hidden]="false">
             <igx-icon class="asIcon" (click)="onIconClick()">alarm</igx-icon>
@@ -174,17 +176,10 @@ describe('igxActionStrip', () => {
     imports: [IgxActionStripComponent, IgxIconComponent]
 })
 class IgxActionStripTestingComponent {
-    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
-    public actionStrip: IgxActionStripComponent;
-
-    @ViewChild('actionStrip', { read: ElementRef, static: true })
-    public actionStripElement: ElementRef;
-
-    @ViewChild('parent', { static: true })
-    public parentContainer: ElementRef;
-
-    @ViewChild('inner', { read: ViewContainerRef, static: true })
-    public innerContainer: ViewContainerRef;
+    public actionStrip = viewChild.required(IgxActionStripComponent);
+    public actionStripElement = viewChild.required('actionStrip', { read: ElementRef });
+    public parentContainer = viewChild.required('parent', { read: ElementRef });
+    public innerContainer = viewChild.required('inner', { read: ViewContainerRef });
 
     public flag = false;
 
@@ -195,12 +190,8 @@ class IgxActionStripTestingComponent {
 
 @Component({
     template: `
-    <div #parent style="position:relative; height: 200px; width: 400px;">
-        <div>
-            <p>
-                Lorem ipsum dolor sit
-            </p>
-        </div>
+    <div style="position:relative; height: 200px; width: 400px;">
+        <p>Lorem ipsum dolor sit</p>
         <igx-action-strip #actionStrip [hidden]="false">
             <span *igxActionStripMenuItem>Mark</span>
             <span *igxActionStripMenuItem>Favorite</span>
@@ -211,18 +202,13 @@ class IgxActionStripTestingComponent {
     imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripMenuTestingComponent {
-    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
-    public actionStrip: IgxActionStripComponent;
+    public actionStrip = viewChild.required(IgxActionStripComponent);
 }
 
 @Component({
     template: `
-    <div #parent style="position:relative; height: 200px; width: 400px;">
-        <div>
-            <p>
-                Lorem ipsum dolor sit
-            </p>
-        </div>
+    <div style="position:relative; height: 200px; width: 400px;">
+        <p>Lorem ipsum dolor sit</p>
         <igx-action-strip #actionStrip [hidden]="false">
             <span>Mark</span>
             <span *igxActionStripMenuItem>Favorite</span>
@@ -233,6 +219,5 @@ class IgxActionStripMenuTestingComponent {
     imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripCombinedMenuTestingComponent {
-    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
-    public actionStrip: IgxActionStripComponent;
+    public actionStrip = viewChild.required(IgxActionStripComponent);
 }
