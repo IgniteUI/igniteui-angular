@@ -80,6 +80,9 @@ Instead of one general agent doing everything, work is split into two roles:
 ┌──────────────────────────┐  ┌──────────────────┐  ┌──────────────────┐
 │ component-readme-agent   │  │ migration-agent  │  │ changelog-agent  │
 └──────────────────────────┘  └──────────────────┘  └──────────────────┘
+┌──────────────────────────┐  ┌──────────────────────────┐
+│ theming-styles-agent     │  │ demo-sample-agent        │
+└──────────────────────────┘  └──────────────────────────┘
 ```
 
 - one core workflow is selected: **feature** or **bug**
@@ -98,6 +101,8 @@ Instead of one general agent doing everything, work is split into two roles:
 | [`tdd-test-writer-agent`](./agents/tdd-test-writer-agent.md) | Specialist | Small failing tests before production code |
 | [`feature-implementer-agent`](./agents/feature-implementer-agent.md) | Specialist | Feature implementation and refactor |
 | [`bug-fixing-implementer-agent`](./agents/bug-fixing-implementer-agent.md) | Specialist | Minimum safe bug fix |
+| [`theming-styles-agent`](./agents/theming-styles-agent.md) | Specialist | Component theming, structural SCSS, theme wiring, and style validation |
+| [`demo-sample-agent`](./agents/demo-sample-agent.md) | Specialist | Demo/sample updates in `src/app/` for user-visible changes |
 | [`component-readme-agent`](./agents/component-readme-agent.md) | Specialist | Component README updates |
 | [`migration-agent`](./agents/migration-agent.md) | Specialist | `ng update` migration for breaking changes |
 | [`changelog-agent`](./agents/changelog-agent.md) | Specialist | `CHANGELOG.md` updates |
@@ -128,6 +133,8 @@ Examples:
 
 - the TDD agent writes failing tests
 - implementer agents write production code
+- the theming agent handles SCSS and theme wiring
+- the demo agent updates demo/sample pages
 - the README agent updates component docs
 - the migration agent handles `ng update` migrations for breaking changes
 - the changelog agent updates release notes in the correct section
@@ -143,6 +150,8 @@ Examples:
 | Write failing tests first | `tdd-test-writer-agent` |
 | Implement a known feature | `feature-implementer-agent` |
 | Implement a known bug fix | `bug-fixing-implementer-agent` |
+| Style or theme a component | `theming-styles-agent` |
+| Update demo for a user-visible change | `demo-sample-agent` |
 | Update docs after public change | `component-readme-agent` |
 | Add migration for breaking change | `migration-agent` |
 | Add release-note coverage | `changelog-agent` |
@@ -198,6 +207,9 @@ Use the feature flow when the task is about **new behavior**, **new public API**
 │ component-   │ │ migration-│ │ changelog-   │
 │ readme-agent │ │ agent     │ │ agent        │
 └──────────────┘ └───────────┘ └──────────────┘
+┌──────────────────────────┐  ┌───────────────────┐
+│ theming-styles-agent     │  │ demo-sample-agent │
+└──────────────────────────┘  └───────────────────┘
             │
             ▼
 ┌──────────────────────────────┐
@@ -276,6 +288,9 @@ Use the bug-fix flow when the task is about **broken existing behavior**, **regr
 │ component-   │ │ migration-│ │ changelog-   │
 │ readme-agent │ │ agent     │ │ agent        │
 └──────────────┘ └───────────┘ └──────────────┘
+┌──────────────────────────┐  ┌───────────────────┐
+│ theming-styles-agent     │  │ demo-sample-agent │
+└──────────────────────────┘  └───────────────────┘
                   │
                   ▼
 ┌──────────────────────────────┐
@@ -305,6 +320,8 @@ Use this quick decision guide:
 | Bug report or regression | `bug-fixing-orchestrator-agent` |
 | Only need failing tests first | `tdd-test-writer-agent` |
 | Already have failing tests and need implementation | `feature-implementer-agent` or `bug-fixing-implementer-agent` |
+| Styling or theming a component | `theming-styles-agent` |
+| Demo update needed for user-visible change | `demo-sample-agent` |
 | Public behavior changed and docs must be updated | `component-readme-agent` |
 | Breaking change needs `ng update` support | `migration-agent` |
 | User-visible change needs release-note coverage | `changelog-agent` |
@@ -326,6 +343,8 @@ If the task is narrow and clearly scoped, start directly with the **specialist**
 | `tdd-test-writer-agent` | you need RED-phase tests or a failing repro | you need production code |
 | `feature-implementer-agent` | feature scope is known and implementation is next | the task is really a bug fix |
 | `bug-fixing-implementer-agent` | the bug is understood and needs the smallest safe fix | the task is actually a feature |
+| `theming-styles-agent` | SCSS, theme wiring, or style validation is needed | no styling impact exists |
+| `demo-sample-agent` | a demo is explicitly requested for a user-visible change | the change has no UI impact or sample coverage |
 | `component-readme-agent` | public API or documented behavior changed | no docs impact exists |
 | `migration-agent` | a breaking change needs migration support | the change is additive only |
 | `changelog-agent` | the change deserves release-note coverage | the change is too minor for changelog |
