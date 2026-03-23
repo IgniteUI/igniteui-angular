@@ -124,11 +124,11 @@ export abstract class BaseToolbarDirective implements OnDestroy {
                     ? actions.columnsAreaMaxHeight :
                     this.columnListHeight ??
                     `${Math.max(this.grid.calcHeight * 0.5, 200)}px`;
-                    // TODO: this is a workaround for the issue introduced by Angular's Ivy renderer.
-                    // This was fixed in ToggleDirective by PR16429. However, the fix there introduced the
-                    // issue here. To fix this in IgxColumnActionsComponent we need to set the height after
-                    // the toggle is opened and the classes are applied to ensure the height is calculated
-                    // correctly.
+                    // TODO: Workaround for an Ivy-related issue. The ToggleDirective was adjusted in PR16429,
+                    // which resolved the original problem but caused this side effect for IgxColumnActionsComponent.
+                    // We must set the height during the `opening` phase (after the toggle host classes are applied
+                    // but before the overlay is positioned/shown) so that the height is calculated correctly.
+                    // Revisit this once the underlying issue is fully addressed and the workaround is no longer needed.
                     this.cdr.detectChanges();
             }
             toggleRef.opening.pipe(first()).subscribe(setHeight);
