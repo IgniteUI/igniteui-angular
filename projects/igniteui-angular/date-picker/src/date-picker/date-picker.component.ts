@@ -5,7 +5,6 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
@@ -63,7 +62,6 @@ import {
     DatePartDeltas,
     DatePart,
     isDateInRanges,
-    IgxOverlayOutletDirective,
     I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
@@ -242,25 +240,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      */
     @Input()
     public spinDelta: Pick<DatePartDeltas, 'date' | 'month' | 'year'>;
-
-    /**
-     * Gets/Sets the container used for the popup element.
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
-     * //..
-     * ```
-     *
-     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
-     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
-     * DOM tree position instead.
-     */
-    @Input()
-    public override outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * Gets/Sets the value of `id` attribute.
@@ -599,9 +578,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         if (this.isDropdown && this.inputGroupElement) {
             overlaySettings.target = this.inputGroupElement;
-        }
-        if (this.outlet) {
-            overlaySettings.outlet = this.outlet;
         }
         this._overlayId = this._overlayService
             .attach(IgxCalendarContainerComponent, this.viewContainerRef, overlaySettings);

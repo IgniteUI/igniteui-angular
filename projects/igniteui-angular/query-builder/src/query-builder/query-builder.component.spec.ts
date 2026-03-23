@@ -52,7 +52,7 @@ describe('IgxQueryBuilder', () => {
 
       expect(queryBuilder.expressionTree).toBeUndefined();
 
-      expect(queryTreeElement.children.length).toEqual(3);
+      expect(queryTreeElement.children.length).toEqual(2);
       const bodyElement = queryTreeElement.children[0];
       expect(bodyElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_BODY);
       expect(bodyElement.children.length).toEqual(1);
@@ -456,9 +456,9 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
       fix.detectChanges();
 
-      // TO DO: refactor when overlay issue is fixed
-      const outlet = fix.debugElement.queryAll(By.css(`.igx-drop-down__list-scroll`))[1].nativeElement;
-      const dropdownItems = Array.from(outlet.querySelectorAll('.igx-drop-down__item'));;
+      const dropdownList = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`))
+        .filter(item => (item as HTMLElement).checkVisibility())[0] as HTMLElement;
+      const dropdownItems = Array.from(dropdownList.querySelectorAll('.igx-drop-down__item'));
       expect(dropdownItems.length).toBe(5);
       expect((dropdownItems[0] as HTMLElement).innerText).toBe('Select All');
       expect((dropdownItems[1] as HTMLElement).innerText).toBe('Id');
@@ -1822,7 +1822,7 @@ describe('IgxQueryBuilder', () => {
       const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
       expect(actionArea).toBeNull();
       expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1]).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
-      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].children.length).toEqual(3);
+      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].children.length).toEqual(2);
       const tree = bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].querySelector('.igx-filter-tree__expression');
       expect(tree).toBeNull();
     }));

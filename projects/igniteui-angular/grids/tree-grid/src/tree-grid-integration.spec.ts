@@ -582,8 +582,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(idCell.editMode).toBeFalsy();
             expect(ageCell.editMode).toBeTruthy();
 
-            const cancelBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[0] as DebugElement;
-            const doneBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[1];
+            const bannerRow = fix.debugElement.query(By.css('.igx-banner__row'));
+            const cancelBtn = bannerRow.queryAll(By.css('.igx-button--flat'))[0] as DebugElement;
+            const doneBtn = bannerRow.queryAll(By.css('.igx-button--flat'))[1];
             spyOn(cancelBtn.nativeElement, 'focus').and.callThrough();
             spyOn<any>(grid.rowEditTabs.first, 'move').and.callThrough();
             spyOn<any>(grid.rowEditTabs.last, 'move').and.callThrough();

@@ -238,9 +238,6 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     }
 
     public ngAfterViewInit() {
-        this._conditionsOverlaySettings.outlet = this.column.grid.outlet;
-        this._operatorsOverlaySettings.outlet = this.column.grid.outlet;
-
         const selectedItem = this.expressionsList.find(expr => expr.isSelected === true);
         if (selectedItem) {
             this.expression = selectedItem.expression;

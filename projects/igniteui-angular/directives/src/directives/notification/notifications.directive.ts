@@ -1,5 +1,5 @@
-import { Directive, ElementRef, HostBinding, Input, OnDestroy, booleanAttribute } from '@angular/core';
-import { IgxOverlayOutletDirective, IToggleView } from 'igniteui-angular/core';
+import { Directive, HostBinding, Input, OnDestroy, booleanAttribute } from '@angular/core';
+import { IToggleView } from 'igniteui-angular/core';
 import { IPositionStrategy, OverlaySettings } from 'igniteui-angular/core';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 
@@ -28,19 +28,6 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      */
     @Input()
     public displayTime = 4000;
-
-    /**
-     * Gets/Sets the container used for the element.
-     *
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     *
-     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
-     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
-     * DOM tree position instead or use `container` property instead.
-     */
-    @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef<HTMLElement>;
 
     /**
      * Gets/Sets the container used for the element.
@@ -100,7 +87,6 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
             closeOnEscape: false,
             closeOnOutsideClick: false,
             modal: false,
-            outlet: this.outlet
         };
 
         super.open(overlaySettings);

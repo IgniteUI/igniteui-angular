@@ -920,7 +920,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 closeOnOutsideClick: true,
                 excludeFromOutsideClick: [this.nativeElement],
                 closeOnEscape: false,
-                outlet: this.grid.outlet,
                 modal: false,
                 positionStrategy: new AutoPositionStrategy({
                     horizontalStartPoint: HorizontalAlignment.Center,

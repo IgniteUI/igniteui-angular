@@ -1147,12 +1147,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     @ViewChild('loadingOverlay', { read: IgxToggleDirective, static: true })
     public loadingOverlay: IgxToggleDirective;
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('igxLoadingOverlayOutlet', { static: true })
-    public loadingOutlet: ElementRef<HTMLElement>;
-
     /* reactContentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
@@ -1334,12 +1328,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef<HTMLElement>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden @internal
@@ -2674,20 +2662,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public get rowOutletDirective() {
-        return this.rowEditingOutletDirective;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get parentRowOutletDirective() {
-        return this.outlet;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get rowEditCustom(): TemplateRef<IgxGridRowEditTemplateContext> {
         if (this.rowEditCustomDirectives && this.rowEditCustomDirectives.first) {
             return this.rowEditCustomDirectives.first;
@@ -3311,7 +3285,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
-        outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
 
@@ -3598,6 +3571,13 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
+     * @hidden @internal
+     */
+    protected isOwnOverlay(overlayInfo: { elementRef?: { nativeElement?: HTMLElement } }): boolean {
+        return this.nativeElement.contains(overlayInfo?.elementRef?.nativeElement);
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -3785,7 +3765,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.overlayService.opened.pipe(destructor).subscribe((event) => {
-            const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
+            const overlayInfo = this.overlayService.getOverlayById(event.id);
+            const overlaySettings = overlayInfo?.settings;
 
             // do not hide the advanced filtering overlay on scroll
             if (this._advancedFilteringOverlayId === event.id) {
@@ -3802,7 +3783,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                 return;
             }
 
-            if (overlaySettings?.outlet === this.outlet && this.overlayIDs.indexOf(event.id) === -1) {
+            const isGridOverlay = overlaySettings?.outlet === this.outlet ||
+                this.isOwnOverlay(overlayInfo);
+            if (isGridOverlay && this.overlayIDs.indexOf(event.id) === -1) {
                 this.overlayIDs.push(event.id);
             }
         });
@@ -6366,7 +6349,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * TODO: MOVE to CRUD
      */
     public openRowOverlay(id) {
-        this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
+        this.configureRowEditingOverlay(id);
 
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler);
@@ -6747,13 +6730,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.shouldOverlayLoading) {
             // a new overlay should be shown
             const overlaySettings: OverlaySettings = {
-                outlet: this.loadingOutlet,
                 closeOnOutsideClick: false,
                 positionStrategy: new ContainerPositionStrategy()
             };
-            this.loadingOverlay.open(overlaySettings);
+            this.loadingOverlay?.open(overlaySettings);
         } else {
-            this.loadingOverlay.close();
+            this.loadingOverlay?.close();
         }
     }
 
@@ -8122,13 +8104,12 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     // TODO: About to Move to CRUD
-    private configureRowEditingOverlay(rowID: any, useOuter = false) {
+    private configureRowEditingOverlay(rowID: any) {
         let settings = this.rowEditSettings;
         const overlay = this.overlayService.getOverlayById(this.rowEditingOverlay.overlayId);
         if (overlay) {
             settings = overlay.settings;
         }
-        settings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
         const targetRow = !pinned ?

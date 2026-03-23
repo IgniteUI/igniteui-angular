@@ -390,7 +390,6 @@
                                 type="box"
                                 [disabled]="isSearchValueInputDisabled()"
                                 [locale]="this.locale"
-                                [outlet]="pickerOutlet"
                                 [formatter]="selectedField.formatter"
                                 [displayFormat]="selectedField.pipeArgs.format"
                                 [weekStart]="selectedField.pipeArgs.weekStart"
@@ -410,7 +409,6 @@
                                 type="box"
                                 [disabled]="isSearchValueInputDisabled()"
                                 [locale]="this.locale"
-                                [outlet]="pickerOutlet"
                                 [formatter]="selectedField.formatter"
                                 [displayFormat]="selectedField.pipeArgs.format"
                                 [inputFormat]="selectedField.editorOptions?.dateTimeFormat"
@@ -581,13 +579,6 @@
         </div>
     }
 </div>
-
-<div
-    #overlayOutlet
-    igxOverlayOutlet
-    class="igx-query-builder__outlet"
-    (pointerdown)="onOutletPointerDown($event)"
-></div>
 
 <igx-dialog
     #entityChangeDialog

@@ -1,4 +1,4 @@
-<!-- Have to apply styles inline because of the overlay outlet ... -->
+<!-- Have to apply styles inline because of the overlay ... -->
 <igx-drop-down #inputGroupConditions [style.--ig-size]="filteringElementsSize" [height]="'200px'" (selectionChanging)="onConditionsChanged($event)">
     @for (condition of conditions; track condition) {
         <igx-drop-down-item
@@ -60,7 +60,6 @@
 <ng-template #defaultDateUI>
     <igx-date-picker #picker
         [(value)]="value"
-        [outlet]="filteringService.grid.outlet"
         [locale]="filteringService.grid.locale"
         (click)="expression.condition.isUnary ? null : picker.open()"
         type="box"
@@ -109,7 +108,6 @@
         [displayFormat]="column.pipeArgs.format"
         [locale]="filteringService.grid.locale"
         [formatter]="column.formatter"
-        [outlet]="filteringService.grid.outlet"
         type="box"
         [style.--ig-size]="filteringElementsSize"
         [placeholder]="placeholder"

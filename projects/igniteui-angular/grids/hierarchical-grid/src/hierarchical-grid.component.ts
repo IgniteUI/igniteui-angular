@@ -660,15 +660,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public override get parentRowOutletDirective() {
-        // Targeting parent outlet in order to prevent hiding when outlet
-        // is present at a child grid and is attached to a row.
-        return this.parent ? this.parent.rowOutletDirective : this.outlet;
-    }
-
-    /**
-     * @hidden
-     */
     public override ngOnInit() {
         // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
         //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
