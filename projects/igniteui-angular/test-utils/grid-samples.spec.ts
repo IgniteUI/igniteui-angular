@@ -1882,6 +1882,29 @@ export class CollapsibleColumnGroupTestComponent {
     public data = SampleTestData.contactInfoDataFull();
 }
 
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" width="700px">
+        <igx-column-group header="General Information" [collapsible]="true" [expanded]="false">
+            <igx-column field="CompanyName" width="280px" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column field="ContactName" width="240px"></igx-column>
+            <igx-column field="ContactTitle" width="260px"></igx-column>
+        </igx-column-group>
+        <igx-column field="ID" width="180px"></igx-column>
+        <igx-column field="Country" width="220px"></igx-column>
+        <igx-column field="Region" width="220px"></igx-column>
+        <igx-column field="City" width="220px"></igx-column>
+        <igx-column field="Address" width="240px"></igx-column>
+    </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
+})
+export class CollapsibleFirstGroupExplicitWidthsComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+    public data = SampleTestData.contactInfoDataFull();
+}
+
 
 @Component({
     template: `

@@ -392,6 +392,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return width + 'px';
     }
 
+    /**
+     * @hidden
+     */
+    public override get calcWidth(): any {
+        this.calcPixelWidth = parseFloat(this.width);
+        return this.width;
+    }
+
      /* blazorSuppress */
     public override set width(val) { }
 

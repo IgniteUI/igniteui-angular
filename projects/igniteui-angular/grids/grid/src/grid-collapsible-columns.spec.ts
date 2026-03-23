@@ -4,7 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
-    CollapsibleGroupsDynamicColComponent
+    CollapsibleGroupsDynamicColComponent,
+    CollapsibleFirstGroupExplicitWidthsComponent
 } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -28,7 +29,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
-                CollapsibleGroupsDynamicColComponent
+                CollapsibleGroupsDynamicColComponent,
+                CollapsibleFirstGroupExplicitWidthsComponent
             ]
         }).compileComponents();
     }));
@@ -635,5 +637,37 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, countryInf, true, true);
             GridFunctions.verifyColumnIsHidden(countryCol, true, 12);
         });
+
+        it('should keep header and body cells aligned after horizontal scroll when first group is collapsed with explicit child widths (#17042)', fakeAsync(() => {
+            const regFixture = TestBed.createComponent(CollapsibleFirstGroupExplicitWidthsComponent);
+            regFixture.detectChanges();
+            tick();
+
+            const regGrid = regFixture.componentInstance.grid;
+            const firstGroup = GridFunctions.getColGroup(regGrid, 'General Information');
+            expect(firstGroup.expanded).toBeFalse();
+
+            const hScroll = regGrid.headerContainer.getScroll();
+            expect(hScroll.scrollWidth).toBeGreaterThan(hScroll.clientWidth);
+
+            GridFunctions.scrollLeft(regGrid, 300);
+            hScroll.dispatchEvent(new Event('scroll'));
+            tick(100);
+            regFixture.detectChanges();
+
+            const standaloneFields = new Set(['ID', 'Country', 'Region', 'City', 'Address']);
+            const firstRow = regGrid.rowList.first;
+            const standaloneCell = firstRow.cells.toArray().find(cell => standaloneFields.has(cell.column.field));
+            expect(standaloneCell).toBeDefined();
+
+            const standaloneHeader = regGrid.headerCellList.find(h => h.column.index === standaloneCell.column.index);
+            expect(standaloneHeader).toBeDefined();
+
+            const leftDiff = Math.abs(standaloneHeader.nativeElement.getBoundingClientRect().left - standaloneCell.nativeElement.getBoundingClientRect().left);
+            const widthDiff = Math.abs(standaloneHeader.nativeElement.clientWidth - standaloneCell.nativeElement.clientWidth);
+
+            expect(leftDiff).withContext('Header and body cell should stay horizontally aligned after scroll.').toBeLessThanOrEqual(1);
+            expect(widthDiff).withContext('Header and body cell width should stay synchronized after scroll.').toBeLessThanOrEqual(1);
+        }));
     });
 });
