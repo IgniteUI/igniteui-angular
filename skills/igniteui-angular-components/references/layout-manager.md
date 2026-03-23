@@ -424,7 +424,7 @@ The Tile Manager is a **layout Web Component** that displays content in individu
 ### Installation
 
 ```bash
-npm install igniteui-webcomponents --save
+npm install igniteui-webcomponents
 ```
 
 ### Setup
