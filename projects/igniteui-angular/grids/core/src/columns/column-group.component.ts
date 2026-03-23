@@ -394,9 +394,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     /**
      * @hidden
+     * Returns the live width of the group based on currently visible children.
      */
     public override get calcWidth(): any {
-        this.calcPixelWidth = parseFloat(this.width);
         return this.width;
     }
 

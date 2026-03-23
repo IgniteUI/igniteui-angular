@@ -639,6 +639,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
 
         it('should keep header and body cells aligned after horizontal scroll when first group is collapsed with explicit child widths (#17042)', fakeAsync(() => {
+            const alignmentTolerancePx = 1;
             const regFixture = TestBed.createComponent(CollapsibleFirstGroupExplicitWidthsComponent);
             regFixture.detectChanges();
             tick();
@@ -655,19 +656,20 @@ describe('IgxGrid - multi-column headers #grid', () => {
             tick(100);
             regFixture.detectChanges();
 
-            const standaloneFields = new Set(['ID', 'Country', 'Region', 'City', 'Address']);
+            const standaloneColumns = regGrid.visibleColumns.filter(col => !col.columnGroup && !col.parent?.columnGroup);
+            const standaloneColumnFields = new Set(standaloneColumns.map(col => col.field));
             const firstRow = regGrid.rowList.first;
-            const standaloneCell = firstRow.cells.toArray().find(cell => standaloneFields.has(cell.column.field));
-            expect(standaloneCell).toBeDefined();
+            const firstVisibleNonGroupedCell = firstRow.cells.toArray().find(cell => standaloneColumnFields.has(cell.column.field));
+            expect(firstVisibleNonGroupedCell).toBeDefined();
 
-            const standaloneHeader = regGrid.headerCellList.find(h => h.column.index === standaloneCell.column.index);
+            const standaloneHeader = regGrid.headerCellList.find(h => h.column.index === firstVisibleNonGroupedCell.column.index);
             expect(standaloneHeader).toBeDefined();
 
-            const leftDiff = Math.abs(standaloneHeader.nativeElement.getBoundingClientRect().left - standaloneCell.nativeElement.getBoundingClientRect().left);
-            const widthDiff = Math.abs(standaloneHeader.nativeElement.clientWidth - standaloneCell.nativeElement.clientWidth);
+            const leftDiff = Math.abs(standaloneHeader.nativeElement.getBoundingClientRect().left - firstVisibleNonGroupedCell.nativeElement.getBoundingClientRect().left);
+            const widthDiff = Math.abs(standaloneHeader.nativeElement.clientWidth - firstVisibleNonGroupedCell.nativeElement.clientWidth);
 
-            expect(leftDiff).withContext('Header and body cell should stay horizontally aligned after scroll.').toBeLessThanOrEqual(1);
-            expect(widthDiff).withContext('Header and body cell width should stay synchronized after scroll.').toBeLessThanOrEqual(1);
+            expect(leftDiff).withContext('Header and body cell should stay horizontally aligned after scroll.').toBeLessThanOrEqual(alignmentTolerancePx);
+            expect(widthDiff).withContext('Header and body cell width should stay synchronized after scroll.').toBeLessThanOrEqual(alignmentTolerancePx);
         }));
     });
 });
