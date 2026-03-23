@@ -104,7 +104,6 @@ Instead of one general agent doing everything, work is split into two roles:
 
 ---
 
-## Workflows
 ## How the System Is Structured
 
 ### 1. Orchestrators
