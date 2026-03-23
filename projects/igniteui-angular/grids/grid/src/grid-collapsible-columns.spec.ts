@@ -4,7 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
-    CollapsibleGroupsDynamicColComponent
+    CollapsibleGroupsDynamicColComponent,
+    CollapsibleFirstGroupExplicitWidthsComponent
 } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -28,7 +29,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
-                CollapsibleGroupsDynamicColComponent
+                CollapsibleGroupsDynamicColComponent,
+                CollapsibleFirstGroupExplicitWidthsComponent
             ]
         }).compileComponents();
     }));
@@ -635,5 +637,39 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, countryInf, true, true);
             GridFunctions.verifyColumnIsHidden(countryCol, true, 12);
         });
+
+        it('should keep header and body cells aligned after horizontal scroll when first group is collapsed with explicit child widths (#17042)', fakeAsync(() => {
+            const alignmentTolerancePx = 1;
+            const regFixture = TestBed.createComponent(CollapsibleFirstGroupExplicitWidthsComponent);
+            regFixture.detectChanges();
+            tick();
+
+            const regGrid = regFixture.componentInstance.grid;
+            const firstGroup = GridFunctions.getColGroup(regGrid, 'General Information');
+            expect(firstGroup.expanded).toBeFalse();
+
+            const hScroll = regGrid.headerContainer.getScroll();
+            expect(hScroll.scrollWidth).toBeGreaterThan(hScroll.clientWidth);
+
+            GridFunctions.scrollLeft(regGrid, 300);
+            hScroll.dispatchEvent(new Event('scroll'));
+            tick(100);
+            regFixture.detectChanges();
+
+            const standaloneColumns = regGrid.visibleColumns.filter(col => !col.columnGroup && !col.parent?.columnGroup);
+            const standaloneColumnFields = new Set(standaloneColumns.map(col => col.field));
+            const firstRow = regGrid.rowList.first;
+            const firstVisibleNonGroupedCell = firstRow.cells.toArray().find(cell => standaloneColumnFields.has(cell.column.field));
+            expect(firstVisibleNonGroupedCell).toBeDefined();
+
+            const standaloneHeader = regGrid.headerCellList.find(h => h.column.index === firstVisibleNonGroupedCell.column.index);
+            expect(standaloneHeader).toBeDefined();
+
+            const leftDiff = Math.abs(standaloneHeader.nativeElement.getBoundingClientRect().left - firstVisibleNonGroupedCell.nativeElement.getBoundingClientRect().left);
+            const widthDiff = Math.abs(standaloneHeader.nativeElement.clientWidth - firstVisibleNonGroupedCell.nativeElement.clientWidth);
+
+            expect(leftDiff).withContext('Header and body cell should stay horizontally aligned after scroll.').toBeLessThanOrEqual(alignmentTolerancePx);
+            expect(widthDiff).withContext('Header and body cell width should stay synchronized after scroll.').toBeLessThanOrEqual(alignmentTolerancePx);
+        }));
     });
 });
