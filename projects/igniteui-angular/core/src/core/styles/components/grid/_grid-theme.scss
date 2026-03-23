@@ -74,12 +74,30 @@
 
         .igx-excel-filter__menu .igx-button-group,
         .igx-button-group {
+            @if $variant == 'indigo' {
+                --ig-btn-group-selected-bg: #{dynamic-shade(var(--ig-grid-background), $offset: 10)};
+            }
+
             @include tokens(
                 button-group-theme(
                     $schema: $schema,
-                    $item-background: transparent,
-                    $item-text-color: var(--ig-grid-foreground),
-                    $item-selected-text-color: var(--ig-grid-accent-color),
+                    $item-background: var(--ig-grid-background, #{var-get($theme, if($variant == 'indigo', 'filtering-dialog-background', 'filtering-row-background'))}),
+                    $item-border-color: transparent,
+                    $item-text-color: var(--ig-grid-foreground, #{color($color: 'gray', $variant: 700)}),
+                    $item-selected-background: if(
+                        $variant == 'indigo',
+                        var(--ig-btn-group-selected-bg, var(--ig-primary-500)),
+                        null
+                    ),
+                    $item-selected-text-color: var(--ig-grid-accent-color, #{if(
+                        $variant == 'indigo',
+                        contrast-color($color: 'surface'),
+                        if($variant == 'material',
+                            color($color: 'secondary', $variant: 500),
+                            color($color: 'primary', $variant: 500)
+                        )
+                    )}),
+                    $item-selected-hover-text-color: var(--ig-grid-foreground, #{color($color: 'gray', $variant: 700)}),
                     $shadow: none
                 ),
                 $mode: 'scoped'
@@ -263,7 +281,8 @@
         @include tokens(
             list-theme(
                 $schema: $schema,
-                $background: var(--ig-grid-background)
+                $background: var(--ig-grid-background),
+                $item-background-hover: color-mix(in srgb, var(--ig-grid-accent-color) 8%, var(--ig-grid-background))
             )
         );
 
@@ -277,6 +296,24 @@
                 )
             );
         }
+
+        @include tokens(
+            progress-circular-theme(
+                $schema: $schema,
+                $base-circle-color: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                $fill-color-default: var(--ig-grid-accent-color),
+                $text-color: var(--ig-grid-foreground)
+            )
+        );
+
+        @include tokens(
+            progress-linear-theme(
+                $schema: $schema,
+                $track-color: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                $fill-color-default: var(--ig-grid-accent-color),
+                $text-color: var(--ig-grid-foreground)
+            ),
+        );
 
         @if $variant == 'bootstrap' {
             @include tokens(
@@ -325,11 +362,17 @@
         }
 
         @include tokens(
+            tooltip-theme(
+                $schema: $schema,
+                $background: hsl(from var(--ig-grid-foreground) h s l / 80%)
+            ),
+        );
+
+        @include tokens(
             tree-theme(
                 $schema: $schema,
                 $background: var(--ig-grid-background)
             ),
-            // $mode: 'scoped'
         );
 
         @include tokens(
