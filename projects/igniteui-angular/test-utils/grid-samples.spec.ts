@@ -2011,6 +2011,25 @@ export class CollapsibleGroupsDynamicColComponent {
 
 @Component({
     template: `
+    <igx-grid #grid [data]="data" height="500px" width="700px">
+        <igx-column-group header="Group A" [collapsible]="true">
+            <igx-column field="ID" width="200px" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="CompanyName" width="200px" [visibleWhenCollapsed]="false"></igx-column>
+        </igx-column-group>
+        <igx-column field="ContactName" minWidth="150px"></igx-column>
+        <igx-column field="ContactTitle" minWidth="150px"></igx-column>
+    </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
+})
+export class CollapsibleGroupWithExplicitWidthsTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+    public data = SampleTestData.contactInfoDataFull();
+}
+
+@Component({
+    template: `
     <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
 
         <igx-column-group header="General Information">

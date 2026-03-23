@@ -5654,7 +5654,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         const columnsWithSetWidths = this.hasColumnLayouts ?
             visibleCols.filter(c => c.widthSetByUser) :
-            visibleChildColumns.filter(c => (c.widthSetByUser || c.widthConstrained) && c.width !== 'fit-content');
+            visibleChildColumns.filter(c => (c.widthSetByUser || (c.widthConstrained && !isNaN(c.calcPixelWidth))) && c.width !== 'fit-content');
 
         const columnsToSize = this.hasColumnLayouts ?
             combinedBlocksSize - columnsWithSetWidths.length :
