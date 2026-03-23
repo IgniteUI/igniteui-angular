@@ -855,17 +855,15 @@ describe('IgxGrid - Column properties #grid', () => {
             const input = filterUIRow.query(By.directive(IgxInputDirective));
 
             // Suffix should not be visible before entering a value
-            let suffix = filterUIRow.query(By.css('igx-suffix'));
-            expect(suffix).toBeNull();
+            let percentLabel = filterUIRow.query(By.css('.igx-grid__filtering-row-percent-hint'));
+            expect(percentLabel).toBeNull();
 
-            // Enter a value to trigger the suffix
+            // Enter a value to trigger the suffix (350ms debounce is applied to the filter row input)
             GridFunctions.typeValueInFilterRowInput(0.03, fix, input);
             tick(350);
             fix.detectChanges();
 
-            suffix = filterUIRow.query(By.css('igx-suffix'));
-            expect(suffix).not.toBeNull();
-            const percentLabel = suffix.query(By.css('span'));
+            percentLabel = filterUIRow.query(By.css('.igx-grid__filtering-row-percent-hint'));
             expect(percentLabel).not.toBeNull();
             expect(percentLabel.nativeElement.textContent.trim()).toEqual('3%');
         }));
@@ -897,9 +895,8 @@ describe('IgxGrid - Column properties #grid', () => {
             const exprComponents = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix);
             expect(exprComponents.length).toBeGreaterThan(0);
 
-            // Suffix span (percent label) should not be visible before entering a value
-            // Note: igx-select toggle button is also an igx-suffix, so we check for the span inside it
-            let percentLabel = exprComponents[0].querySelector('igx-suffix span');
+            // Percent label should not be visible before entering a value
+            let percentLabel = exprComponents[0].querySelector('.igx-grid__filtering-row-percent-hint');
             expect(percentLabel).toBeNull();
 
             // Enter a value to trigger the suffix
@@ -907,7 +904,7 @@ describe('IgxGrid - Column properties #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            percentLabel = exprComponents[0].querySelector('igx-suffix span');
+            percentLabel = exprComponents[0].querySelector('.igx-grid__filtering-row-percent-hint');
             expect(percentLabel).not.toBeNull();
             expect(percentLabel.textContent.trim()).toEqual('5%');
         }));
