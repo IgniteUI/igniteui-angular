@@ -5,13 +5,14 @@ import { IgxPredefinedRangesAreaComponent } from './predefined-ranges-area.compo
 import { CalendarDay, CustomDateRange } from 'igniteui-angular/core';
 import { IDateRangePickerResourceStrings } from '../../../../core/src/core/i18n/date-range-picker-resources';
 import { IgxChipComponent } from '../../../../chips/src/chips/chip.component';
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxPredefinedRangesAreaComponent', () => {
     let fixture: ComponentFixture<PredefinedRangesDefaultComponent>;
     let component: PredefinedRangesDefaultComponent;
     let predefinedRanges: IgxPredefinedRangesAreaComponent;
+    let detectChanges: () => void;
 
     const customRanges: CustomDateRange[] = [
         {
@@ -41,9 +42,11 @@ describe('IgxPredefinedRangesAreaComponent', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(PredefinedRangesDefaultComponent);
-        component = fixture.componentInstance;
-        predefinedRanges = component.predefinedRanges;
         fixture.detectChanges();
+
+        component = fixture.componentInstance;
+        predefinedRanges = component.predefinedRanges();
+        detectChanges = () => fixture.changeDetectorRef.detectChanges();
     });
 
     it('should render no chips by default', () => {
@@ -52,7 +55,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
 
     it('should render predefined ranges when usePredefinedRanges = true', () => {
         component.usePredefinedRanges = true;
-        fixture.detectChanges();
+        detectChanges();
 
         const chips = getChips();
         expect(chips.length).toBe(predefinedRanges.ranges.length);
@@ -65,7 +68,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
     it('should render predefined + custom ranges together', () => {
         component.usePredefinedRanges = true;
         component.customRanges = customRanges;
-        fixture.detectChanges();
+        detectChanges();
 
         const chips = getChips();
         const ranges = predefinedRanges.ranges;
@@ -80,7 +83,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
     it('should render only custom ranges when usePredefinedRanges = false', () => {
         component.usePredefinedRanges = false;
         component.customRanges = customRanges;
-        fixture.detectChanges();
+        detectChanges();
 
         const chips = getChips();
         const ranges = predefinedRanges.ranges;
@@ -95,7 +98,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
     it('should emit selected range on chip click', () => {
         component.usePredefinedRanges = true;
         component.customRanges = customRanges;
-        fixture.detectChanges();
+        detectChanges();
 
         const chips = getChips();
         const ranges = predefinedRanges.ranges;
@@ -105,7 +108,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
 
         chips.forEach((de, i) => {
             (de.nativeElement as HTMLElement).click();
-            fixture.detectChanges();
+            detectChanges();
             expect(emitSpy).toHaveBeenCalledWith(ranges[i].dateRange);
         });
     });
@@ -124,7 +127,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
         predefinedRanges.resourceStrings = strings;
         component.usePredefinedRanges = true;
         component.customRanges = [];
-        fixture.detectChanges();
+        detectChanges();
 
         const chips = getChips();
         const labels = chips.map(de => (de.nativeElement as HTMLElement).innerText.trim());
@@ -148,10 +151,11 @@ describe('IgxPredefinedRangesAreaComponent', () => {
     imports: [IgxPredefinedRangesAreaComponent]
 })
 class PredefinedRangesDefaultComponent {
+    public predefinedRanges = viewChild.required(IgxPredefinedRangesAreaComponent);
+
     public usePredefinedRanges = false;
     public customRanges = [];
     public resourceStrings?: IDateRangePickerResourceStrings;
 
-    @ViewChild(IgxPredefinedRangesAreaComponent, { static: true })
-    public predefinedRanges!: IgxPredefinedRangesAreaComponent;
+
 }
