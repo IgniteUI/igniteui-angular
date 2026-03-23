@@ -141,6 +141,7 @@
     "karma-spec-reporter": "^0.0.36",
     "lit-html": "^3.2.1",
     "ng-packagr": "^21.0.0",
+    "node-releases": "^2.0.36",
     "postcss": "^8.5.1",
     "postcss-scss": "^4.0.6",
     "prettier": "^3.3.3",

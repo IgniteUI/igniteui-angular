@@ -838,6 +838,80 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('002.700%');
         }));
 
+        it('should show percent suffix in filter row when filtering a percent column', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const discountColumn = grid.getColumnByName('Discount');
+            grid.allowFiltering = true;
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChip(fix, discountColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            const filterUIRow = fix.debugElement.query(By.css('igx-grid-filtering-row'));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+
+            // Suffix should not be visible before entering a value
+            let suffix = filterUIRow.query(By.css('igx-suffix'));
+            expect(suffix).toBeNull();
+
+            // Enter a value to trigger the suffix
+            GridFunctions.typeValueInFilterRowInput(0.03, fix, input);
+            tick(350);
+            fix.detectChanges();
+
+            suffix = filterUIRow.query(By.css('igx-suffix'));
+            expect(suffix).not.toBeNull();
+            const percentLabel = suffix.query(By.css('span'));
+            expect(percentLabel).not.toBeNull();
+            expect(percentLabel.nativeElement.textContent.trim()).toEqual('3%');
+        }));
+
+        it('should show percent suffix in ESF custom dialog when filtering a percent column', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const discountColumn = grid.getColumnByName('Discount');
+            grid.allowFiltering = true;
+            grid.filterMode = 'excelStyleFilter';
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, discountColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Open custom filter dialog by selecting first operator (Equals)
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+            fix.detectChanges();
+
+            const exprComponents = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix);
+            expect(exprComponents.length).toBeGreaterThan(0);
+
+            // Suffix span (percent label) should not be visible before entering a value
+            // Note: igx-select toggle button is also an igx-suffix, so we check for the span inside it
+            let percentLabel = exprComponents[0].querySelector('igx-suffix span');
+            expect(percentLabel).toBeNull();
+
+            // Enter a value to trigger the suffix
+            GridFunctions.setInputValueESF(fix, 0, 0.05);
+            tick(100);
+            fix.detectChanges();
+
+            percentLabel = exprComponents[0].querySelector('igx-suffix span');
+            expect(percentLabel).not.toBeNull();
+            expect(percentLabel.textContent.trim()).toEqual('5%');
+        }));
+
     });
 
     describe('Date, DateTime and Time column tests', () => {
