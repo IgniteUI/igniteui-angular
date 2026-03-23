@@ -115,6 +115,8 @@ Feature implementation is handled by a set of specialized agents in `.github/age
 | `tdd-test-writer-agent` | `tdd-test-writer-agent.md` | Writes failing tests (RED phase) for features and bug fixes |
 | `feature-implementer-agent` | `feature-implementer-agent.md` | Implements features and refactors (GREEN + REFACTOR phases) |
 | `bug-fixing-implementer-agent` | `bug-fixing-implementer-agent.md` | Implements the minimum bug fix (GREEN phase) |
+| `theming-styles-agent` | `theming-styles-agent.md` | Implements component theming, structural SCSS, theme wiring, and style validation |
+| `demo-sample-agent` | `demo-sample-agent.md` | Updates existing demo/sample areas in `src/app/` when a demo is explicitly requested for a user-visible feature or bug fix |
 | `component-readme-agent` | `component-readme-agent.md` | Updates affected component `README.md` files for public API and documented behavior changes |
 | `migration-agent` | `migration-agent.md` | Creates `ng update` migration schematics for breaking changes |
 | `changelog-agent` | `changelog-agent.md` | Updates `CHANGELOG.md` following repo conventions |

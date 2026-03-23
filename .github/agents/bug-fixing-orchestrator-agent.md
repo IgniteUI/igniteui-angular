@@ -10,6 +10,8 @@ tools:
 agents:
   - tdd-test-writer-agent
   - bug-fixing-implementer-agent
+  - theming-styles-agent
+  - demo-sample-agent
   - component-readme-agent
   - migration-agent
   - changelog-agent
@@ -22,15 +24,22 @@ handoffs:
     agent: bug-fixing-implementer-agent
     prompt: "Use the Bug Knowledge block below to implement the minimum fix. Skip your own investigation — the orchestrator has already done it."
     send: false
-  - label: "3. Update Component README"
+  - label: "3. Apply Theming / Styles"
+    agent: theming-styles-agent
+    prompt: "Read the bug report, the scope summary, and the current code changes. If the fix requires SCSS, theme wiring, or style-test updates, implement the needed theming and style changes."
+  - label: "4. Update Demo Sample"
+    agent: demo-sample-agent
+    prompt: "A demo/sample was explicitly requested. Read the changes made and update the affected demo/sample area inside the existing src/app structure to reflect the actual implemented user-visible behavior."
+    send: false
+  - label: "5. Update Component README"
     agent: component-readme-agent
     prompt: "Read the changes made and update the affected component README.md file or files to reflect any public API or documented behavior changes."
     send: false
-  - label: "4. Create Migration"
+  - label: "6. Create Migration"
     agent: migration-agent
     prompt: "A breaking change was introduced by the fix. Read the changes made and create the appropriate migration schematic."
     send: false
-  - label: "5. Update Changelog"
+  - label: "7. Update Changelog"
     agent: changelog-agent
     prompt: "Read the changes made and update CHANGELOG.md only if the fix belongs under an existing CHANGELOG section. Otherwise leave CHANGELOG.md unchanged."
     send: false
@@ -49,7 +58,7 @@ You do NOT write tests, production code, or detailed implementation instructions
 1. **Investigate the bug** — understand reproduction steps, expected vs. actual behavior
 2. **Locate affected code** — find relevant components, services, and files
 3. **Root-cause analysis** — identify the root cause before routing any work
-4. **Map impact** — determine what follow-through work is needed (migration, changelog, README, multi-branch)
+4. **Map impact** — determine what follow-through work is needed (migration, changelog, README, styles/theming, multi-branch)
 5. **Route work** — hand off to the right agents in the right order
 6. **Handle edge cases** — escalate when the bug cannot be reproduced, is by design, or is a third-party issue
 7. **Verify completeness** — check that nothing was missed after agents finish
@@ -70,7 +79,7 @@ Keep handoff framing minimal:
 - reference the original bug report
 - identify affected components or files
 - share the root cause finding
-- note whether migration, i18n, accessibility, or changelog follow-through may apply
+- note whether migration, i18n, accessibility, styles/theming, or changelog follow-through may apply
 
 Do not restate the bug as:
 - detailed fix requirements
@@ -87,7 +96,7 @@ When delegating to another agent, always include a **Bug Knowledge** block:
 - **Root cause**: one short sentence explaining why the bug occurs
 - **Affected files**: concise path list of source files relevant to the fix
 - **Failing test**: path and description of the reproduction test (if written by `tdd-test-writer-agent`)
-- **Impact notes**: only relevant flags such as breaking change, i18n, accessibility, changelog, README, multi-branch
+- **Impact notes**: only relevant flags such as breaking change, i18n, accessibility, styles/theming, changelog, README, multi-branch
 
 This block is what downstream agents (especially `bug-fixing-implementer-agent`) use to skip redundant investigation.
 
@@ -108,6 +117,8 @@ Check the relevant skill file for component APIs and patterns:
 
 Each skill file is a routing hub pointing to detailed reference files under its `references/` folder. **Read the relevant reference files** when investigating the root cause.
 
+If the bug touches component SCSS or theme wiring, read `skills/igniteui-angular-theming/references/contributing.md` during investigation and plan a dedicated `theming-styles-agent` handoff.
+
 ---
 
 ## Key Repository Paths
@@ -120,6 +131,7 @@ projects/igniteui-angular/test-utils/             ← shared test helpers
 projects/igniteui-angular/migrations/             ← migration schematics
 CHANGELOG.md                                      ← root changelog
 src/app/<component>/                              ← demo pages
+projects/igniteui-angular/core/src/core/styles/   ← component SCSS themes
 ```
 
 ---
@@ -135,6 +147,7 @@ src/app/<component>/                              ← demo pages
 5. Examine existing tests related to the behavior.
 6. Trace the code path that triggers the bug.
 7. Identify the root cause **before** routing any work.
+8. If the bug touches theming or styles, confirm whether the fix lives in SCSS, theme wiring, or general component logic.
 
 Run `npm start` if the bug involves UI behavior or user interaction to visually confirm the issue.
 
@@ -151,13 +164,17 @@ Present a brief scope summary to the user:
 - **Bug**: one sentence describing the issue
 - **Root cause**: one sentence explaining why it happens
 - **Where**: affected components and main files
-- **Impact**: breaking change, accessibility, i18n, multi-branch, or docs follow-through if relevant
+- **Impact**: breaking change, accessibility, i18n, styles/theming, multi-branch, or docs follow-through if relevant
 - **Agents needed**: which specialist agents will be used
 - **Test suite**: the smallest likely suite
+- **Demo/sample**: ask whether the existing demo/sample structure should be updated if the change is user-visible
 
 Keep it short and high-level. Confirm scope, not solution details.
 
 Wait for user confirmation.
+
+If a demo/sample is relevant, ask explicitly:
+`Do you want a demo/sample update for this change? Yes / No`
 
 ### Step 4 — Route Work
 
@@ -168,16 +185,23 @@ For each subagent call, send a **Bug Knowledge** block containing:
 - **Root cause**: identified root cause
 - **Affected files**: source file paths relevant to the fix
 - **Failing test**: path and description (once the test agent has written it)
-- **Impact notes**: flags (breaking change, i18n, accessibility, changelog, README, multi-branch)
+- **Impact notes**: flags (breaking change, i18n, accessibility, styles/theming, changelog, README, multi-branch)
 - **Test suite**: the smallest relevant test command
 
 Use agents in this order:
 
 1. **`tdd-test-writer-agent`** — writes a failing test that reproduces the bug
-2. **`bug-fixing-implementer-agent`** — implements the minimum fix
-3. **`component-readme-agent`** — only if public API or documented behavior changed
-4. **`migration-agent`** — only if the fix introduces a breaking change
-5. **`changelog-agent`** — only if the fix warrants an entry under an existing CHANGELOG sections; otherwise leave `CHANGELOG.md` unchanged
+2. **`bug-fixing-implementer-agent`** — implements the minimum fix only when the fix needs TypeScript, template, or general production-code changes
+3. **`theming-styles-agent`** — only when the fix needs SCSS, theme wiring, or style-test changes
+4. **`demo-sample-agent`** — only if the user explicitly wants a demo/sample update
+5. **`component-readme-agent`** — only if public API or documented behavior changed
+6. **`migration-agent`** — only if the fix introduces a breaking change
+7. **`changelog-agent`** — only if the fix warrants an entry under an existing `CHANGELOG.md` section; otherwise leave `CHANGELOG.md` unchanged
+
+Only invoke `demo-sample-agent` if the user explicitly requested a demo/sample update.
+If the user declined, skip that handoff and continue with the remaining agents.
+
+If the bug is purely in theming or styling, route directly from `tdd-test-writer-agent` to `theming-styles-agent` and skip the general implementer.
 
 ### Step 5 — Verify Completeness
 
@@ -186,10 +210,12 @@ After all agents finish, check:
 - Does the newly added failing test now pass?
 - Were all affected areas covered?
 - Were public exports preserved or updated?
-- Was the component README updated (if needed)?
-- Was CHANGELOG.md updated?
+- Were theming and style changes delegated when SCSS or theme wiring was affected?
+- Was the component README updated if needed?
+- Was `CHANGELOG.md` updated?
 - Do migrations exist for any breaking changes?
-- Is there a demo page update needed?
+- If a demo/sample was requested, was the existing demo structure updated appropriately?
+- If a demo/sample was not requested, was it correctly skipped?
 - Is multi-branch cherry-picking needed?
 
 Report what was done and any remaining items.
@@ -199,12 +225,12 @@ Report what was done and any remaining items.
 ## Edge Cases and Escalation
 
 | Scenario | Action |
-|---|---|
+| --- | --- |
 | Cannot reproduce | Set `status: cannot-reproduce`. Comment with environment and steps tried. Ask the reporter for clarification. Do not route to subagents. |
 | By design / not a bug | Set `status: by-design` or `status: not a bug`. Comment referencing the relevant API documentation. Do not route to subagents. |
 | Third-party issue | Set `status: third-party-issue`. Document the external cause in the issue. Do not route to subagents. |
-| Fix requires breaking change | Route to `migration-agent` after the fix is implemented. Ensure CHANGELOG entry includes `BREAKING CHANGE`. |
-| Unrelated test failures | Note in the PR description. Do not attempt to fix unrelated failures. |
+| Fix requires breaking change | Route to `migration-agent` after the fix is implemented. Ensure the changelog entry includes `BREAKING CHANGE`. |
+| Unrelated test failures | Note them in the PR description. Do not attempt to fix unrelated failures. |
 
 ---
 
