@@ -439,11 +439,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public cssClass = 'igx-date-range-picker';
 
     @ViewChild("container", { read: ViewContainerRef })
-    private _viewContainerRef: ViewContainerRef;
-
-    private get viewContainerRef(): ViewContainerRef {
-        return this._viewContainerRef;
-    }
+    private viewContainerRef: ViewContainerRef;
 
     /** @hidden @internal */
     @ViewChild(IgxInputDirective)

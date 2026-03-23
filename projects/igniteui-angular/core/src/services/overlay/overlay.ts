@@ -310,7 +310,8 @@ export class IgxOverlayService implements OnDestroy {
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *
-     * Note created instance is in root scope, prefer the `viewContainerRef` overload when local injection context is needed.
+     * @note The component is created in the root scope and the overlay is attached to the document body.
+     * Prefer the `viewContainerRef` overload when a local injection context is needed.
      *
      * @param component Component Type to show in overlay
      * @param settings (optional): Create settings for the overlay, such as positioning and scroll/close behavior.
@@ -322,7 +323,6 @@ export class IgxOverlayService implements OnDestroy {
     /**
      * Generates an Id. Provide this Id when calling the `show(id)` method
      *
-     * @note If `viewContainerRef` is not provided, the component is created in the root scope and attached to the document body.
      * @param component Component Type to show in overlay
      * @param viewContainerRef Reference to the container where created component's host view will be inserted
      * @param settings (optional): Display settings for the overlay, such as positioning and scroll/close behavior.
@@ -353,6 +353,9 @@ export class IgxOverlayService implements OnDestroy {
         this.getComponentSize(info);
         info.wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
+
+        // TODO: This check for ContainerPositionStrategy is temporary and should be removed once a proper long-term
+        // solution for container-based positioning is in place.
         if (info.settings.positionStrategy instanceof ContainerPositionStrategy) {
             this.moveElementToContainer(info);
         } else if (info.settings.outlet) {

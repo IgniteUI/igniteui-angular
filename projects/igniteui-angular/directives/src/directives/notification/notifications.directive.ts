@@ -43,10 +43,7 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
     public outlet: IgxOverlayOutletDirective | ElementRef<HTMLElement>;
 
     /**
-     * Gets/Sets the container used for the element.
-     *
-     * @remarks
-     *  `container` is an instance of `HTMLElement`.
+     * Whether to position relative to its container instead of the viewport.
      */
     @Input()
     public useContainer: boolean;
