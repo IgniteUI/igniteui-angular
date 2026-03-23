@@ -3197,4 +3197,1055 @@ describe('PDF Exporter', () => {
             exporter.exportData(data, options);
         });
     });
+
+    describe('GroupedRecord Export', () => {
+        it('should export data containing GroupedRecord type records successfully', (done) => {
+            const groupedData: IExportRecord[] = [
+                {
+                    data: { name: 'Group: Category A', value: null },
+                    level: 0,
+                    type: ExportRecordType.GroupedRecord
+                },
+                {
+                    data: { name: 'Item 1', value: 100 },
+                    level: 1,
+                    type: ExportRecordType.DataRecord
+                },
+                {
+                    data: { name: 'Group: Category B', value: null },
+                    level: 0,
+                    type: ExportRecordType.GroupedRecord
+                },
+                {
+                    data: { name: 'Item 2', value: 200 },
+                    level: 1,
+                    type: ExportRecordType.DataRecord
+                }
+            ];
+
+            const columns: IColumnInfo[] = [
+                {
+                    header: 'Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                },
+                {
+                    header: 'Value',
+                    field: 'value',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 1,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(groupedData, options);
+        });
+
+        it('should export when all records are GroupedRecord type', (done) => {
+            const groupedData: IExportRecord[] = [
+                {
+                    data: { category: 'Electronics', count: 5 },
+                    level: 0,
+                    type: ExportRecordType.GroupedRecord
+                },
+                {
+                    data: { category: 'Clothing', count: 3 },
+                    level: 0,
+                    type: ExportRecordType.GroupedRecord
+                }
+            ];
+
+            const columns: IColumnInfo[] = [
+                {
+                    header: 'Category',
+                    field: 'category',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                },
+                {
+                    header: 'Count',
+                    field: 'count',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 1,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(groupedData, options);
+        });
+    });
+
+    describe('Summary Records Edge Cases', () => {
+        it('should handle summary records with unrecognized cellValue format', (done) => {
+            const summaryData: IExportRecord[] = [
+                {
+                    data: { name: 'Row 1', value: 100 },
+                    level: 0,
+                    type: ExportRecordType.DataRecord
+                },
+                {
+                    data: { name: 'Summary', value: { customProp: 'some value' } },
+                    level: 0,
+                    type: ExportRecordType.SummaryRecord
+                }
+            ];
+
+            const columns: IColumnInfo[] = [
+                {
+                    header: 'Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                },
+                {
+                    header: 'Value',
+                    field: 'value',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 1,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(summaryData, options);
+        });
+
+        it('should handle summary records with null cellValue', (done) => {
+            const summaryData: IExportRecord[] = [
+                {
+                    data: { name: 'Summary', value: null },
+                    level: 0,
+                    type: ExportRecordType.SummaryRecord
+                }
+            ];
+
+            const columns: IColumnInfo[] = [
+                {
+                    header: 'Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                },
+                {
+                    header: 'Value',
+                    field: 'value',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 1,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(summaryData, options);
+        });
+    });
+
+    describe('Pagination with Multi-Column Headers', () => {
+        it('should redraw multi-level column headers on page break', (done) => {
+            const columns: IColumnInfo[] = [
+                {
+                    header: 'Location',
+                    field: 'location',
+                    skip: false,
+                    headerType: ExportHeaderType.MultiColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 2,
+                    columnGroup: 'Location'
+                },
+                {
+                    header: 'City',
+                    field: 'city',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 1,
+                    columnSpan: 1,
+                    columnGroupParent: 'Location'
+                },
+                {
+                    header: 'Country',
+                    field: 'country',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 1,
+                    level: 1,
+                    columnSpan: 1,
+                    columnGroupParent: 'Location'
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            // Create enough records to trigger page break (~25 for A4 landscape with 2-level headers)
+            const data: IExportRecord[] = [];
+            for (let i = 0; i < 35; i++) {
+                data.push({
+                    data: { city: `City ${i}`, country: `Country ${i % 5}` },
+                    level: 0,
+                    type: ExportRecordType.DataRecord
+                });
+            }
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(data, options);
+        });
+
+        it('should redraw multi-level column headers on page break with borders disabled', (done) => {
+            options.showTableBorders = false;
+
+            const columns: IColumnInfo[] = [
+                {
+                    header: 'Info',
+                    field: 'info',
+                    skip: false,
+                    headerType: ExportHeaderType.MultiColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 2,
+                    columnGroup: 'Info'
+                },
+                {
+                    header: 'Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 1,
+                    columnSpan: 1,
+                    columnGroupParent: 'Info'
+                },
+                {
+                    header: 'Age',
+                    field: 'age',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 1,
+                    level: 1,
+                    columnSpan: 1,
+                    columnGroupParent: 'Info'
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            const data: IExportRecord[] = [];
+            for (let i = 0; i < 35; i++) {
+                data.push({
+                    data: { name: `Person ${i}`, age: 20 + (i % 50) },
+                    level: 0,
+                    type: ExportRecordType.DataRecord
+                });
+            }
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(data, options);
+        });
+    });
+
+    describe('Pivot Grid Border Options', () => {
+        it('should export pivot grid with multi-level headers and borders disabled', (done) => {
+            options.showTableBorders = false;
+
+            const pivotData: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', 'City-London-Sum': 100, 'City-Paris-Sum': 200 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product']
+                },
+                {
+                    data: { Product: 'Product B', 'City-London-Sum': 150, 'City-Paris-Sum': 250 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product']
+                }
+            ];
+
+            const columns: IColumnInfo[] = [
+                {
+                    header: 'Product',
+                    field: 'Product',
+                    skip: false,
+                    headerType: ExportHeaderType.PivotRowHeader,
+                    startIndex: 0,
+                    level: 0
+                },
+                {
+                    header: 'London',
+                    field: 'City',
+                    skip: false,
+                    headerType: ExportHeaderType.MultiColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1,
+                    columnGroup: 'London'
+                },
+                {
+                    header: 'Sum',
+                    field: 'City-London-Sum',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 1,
+                    columnSpan: 1,
+                    columnGroupParent: 'London'
+                },
+                {
+                    header: 'Paris',
+                    field: 'City',
+                    skip: false,
+                    headerType: ExportHeaderType.MultiColumnHeader,
+                    startIndex: 1,
+                    level: 0,
+                    columnSpan: 1,
+                    columnGroup: 'Paris'
+                },
+                {
+                    header: 'Sum',
+                    field: 'City-Paris-Sum',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 1,
+                    level: 1,
+                    columnSpan: 1,
+                    columnGroupParent: 'Paris'
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: 0,
+                maxLevel: 1,
+                maxRowLevel: 1
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(pivotData, options);
+        });
+
+        it('should export pivot grid with PivotMergedHeader and borders disabled', (done) => {
+            options.showTableBorders = false;
+
+            const pivotData: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product']
+                }
+            ];
+
+            const columns: IColumnInfo[] = [
+                {
+                    header: 'Product',
+                    field: 'Product',
+                    skip: false,
+                    headerType: ExportHeaderType.PivotRowHeader,
+                    startIndex: 0,
+                    level: 0
+                },
+                {
+                    header: '',
+                    field: '',
+                    skip: false,
+                    headerType: ExportHeaderType.PivotMergedHeader,
+                    startIndex: 0,
+                    level: 0
+                },
+                {
+                    header: 'Sum',
+                    field: 'City-London-Sum',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: 0,
+                maxLevel: 0,
+                maxRowLevel: 1
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(pivotData, options);
+        });
+
+        it('should export pivot grid with pagination (redraw multi-row headers on page break)', (done) => {
+            const pivotColumns: IColumnInfo[] = [
+                {
+                    header: 'Product',
+                    field: 'Product',
+                    skip: false,
+                    headerType: ExportHeaderType.PivotRowHeader,
+                    startIndex: 0,
+                    level: 0
+                },
+                {
+                    header: 'Sum',
+                    field: 'Value-Sum',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: pivotColumns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: 0,
+                maxLevel: 0,
+                maxRowLevel: 1
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            // Create enough pivot records to trigger page break
+            const pivotData: IExportRecord[] = [];
+            for (let i = 0; i < 35; i++) {
+                pivotData.push({
+                    data: { Product: `Product ${i}`, 'Value-Sum': i * 10 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product']
+                });
+            }
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(pivotData, options);
+        });
+    });
+
+    describe('Hierarchical Grid Additional Edge Cases', () => {
+        it('should return early from child table when all direct children are HeaderRecord', (done) => {
+            const childOwner = 'child1';
+
+            const childColumns: IColumnInfo[] = [
+                {
+                    header: 'Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const childOwnerList: IColumnList = {
+                columns: childColumns,
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(childOwner, childOwnerList);
+
+            const parentColumns: IColumnInfo[] = [
+                {
+                    header: 'Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const parentOwner: IColumnList = {
+                columns: parentColumns,
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, parentOwner);
+
+            const hierarchicalData: IExportRecord[] = [
+                {
+                    data: { name: 'Parent 1' },
+                    level: 0,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: DEFAULT_OWNER
+                },
+                // All direct children are HeaderRecord - drawHierarchicalChildren should return early
+                {
+                    data: {},
+                    level: 1,
+                    type: ExportRecordType.HeaderRecord,
+                    owner: childOwner
+                },
+                {
+                    data: {},
+                    level: 1,
+                    type: ExportRecordType.HeaderRecord,
+                    owner: childOwner
+                }
+            ];
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(hierarchicalData, options);
+        });
+
+        it('should handle child table page break before header draw', (done) => {
+            const childOwner = 'child1';
+
+            const childColumns: IColumnInfo[] = [
+                {
+                    header: 'Child Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const childOwnerList: IColumnList = {
+                columns: childColumns,
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(childOwner, childOwnerList);
+
+            const parentColumns: IColumnInfo[] = [
+                {
+                    header: 'Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const parentOwner: IColumnList = {
+                columns: parentColumns,
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, parentOwner);
+
+            // Fill parent rows to push to near bottom of page, then add child records.
+            // For A4 landscape (pageHeight=595.28pt, margin=40, headerHeight=25, rowHeight=20):
+            // After header: yPosition = 65. After N parents: yPosition = 65 + N*20.
+            // Child table enters drawHierarchicalChildren, adds 5, checks yPosition+25 > 555.28.
+            // Need: (65 + N*20 + 20) + 5 + 25 > 555.28 → N >= 23.
+            const hierarchicalData: IExportRecord[] = [];
+            // Add enough parent rows without children to fill most of the page
+            for (let i = 0; i < 23; i++) {
+                hierarchicalData.push({
+                    data: { name: `Parent ${i}` },
+                    level: 0,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: DEFAULT_OWNER
+                });
+            }
+            // Add a parent with a child near the end of the page
+            hierarchicalData.push({
+                data: { name: 'Parent with child' },
+                level: 0,
+                type: ExportRecordType.HierarchicalGridRecord,
+                owner: DEFAULT_OWNER
+            });
+            hierarchicalData.push({
+                data: { name: 'Child 1' },
+                level: 1,
+                type: ExportRecordType.HierarchicalGridRecord,
+                owner: childOwner
+            });
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(hierarchicalData, options);
+        });
+
+        it('should handle child table with multi-level headers page break during row iteration', (done) => {
+            const childOwner = 'child1';
+
+            const childColumns: IColumnInfo[] = [
+                {
+                    header: 'Location',
+                    field: 'location',
+                    skip: false,
+                    headerType: ExportHeaderType.MultiColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 2,
+                    columnGroup: 'Location'
+                },
+                {
+                    header: 'City',
+                    field: 'city',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 1,
+                    columnSpan: 1,
+                    columnGroupParent: 'Location'
+                },
+                {
+                    header: 'Country',
+                    field: 'country',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 1,
+                    level: 1,
+                    columnSpan: 1,
+                    columnGroupParent: 'Location'
+                }
+            ];
+
+            const childOwnerList: IColumnList = {
+                columns: childColumns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1
+            };
+
+            (exporter as any)._ownersMap.set(childOwner, childOwnerList);
+
+            const parentColumns: IColumnInfo[] = [
+                {
+                    header: 'Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const parentOwner: IColumnList = {
+                columns: parentColumns,
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, parentOwner);
+
+            const hierarchicalData: IExportRecord[] = [
+                {
+                    data: { name: 'Parent 1' },
+                    level: 0,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: DEFAULT_OWNER
+                }
+            ];
+
+            // Add many child records to trigger page break inside child table
+            for (let i = 0; i < 30; i++) {
+                hierarchicalData.push({
+                    data: { city: `City ${i}`, country: `Country ${i % 5}` },
+                    level: 1,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: childOwner
+                });
+            }
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(hierarchicalData, options);
+        });
+    });
+
+    describe('Pivot Grid Row Dimension Headers Filling', () => {
+        it('should fill missing row dimension headers from RowHeader columns', (done) => {
+            // Test scenario: 2 dimension keys but only 1 PivotRowHeader
+            // The missing header should be filled from the RowHeader columns
+            const pivotData: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', Category: 'Cat 1', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product', 'Category']
+                }
+            ];
+
+            const columns: IColumnInfo[] = [
+                // Only one PivotRowHeader (for Product) - Category header is missing
+                {
+                    header: 'Product',
+                    field: 'Product',
+                    skip: false,
+                    headerType: ExportHeaderType.PivotRowHeader,
+                    startIndex: 0,
+                    level: 0
+                },
+                // RowHeader column for Category - should fill the missing header
+                {
+                    header: 'Category Header',
+                    field: 'Category',
+                    skip: false,
+                    headerType: ExportHeaderType.RowHeader,
+                    startIndex: 1,
+                    level: 1
+                },
+                {
+                    header: 'Sum',
+                    field: 'City-London-Sum',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: 1,
+                maxLevel: 0,
+                maxRowLevel: 2
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(pivotData, options);
+        });
+
+        it('should fill missing row dimension headers with field names when no RowHeader matches', (done) => {
+            // Test scenario: 2 dimension keys, 1 PivotRowHeader, no matching RowHeader columns
+            // The missing header should fall back to using the field name
+            const pivotData: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', SubCategory: 'Sub 1', 'Value-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product', 'SubCategory']
+                }
+            ];
+
+            const columns: IColumnInfo[] = [
+                // Only one PivotRowHeader (for Product)
+                {
+                    header: 'Product',
+                    field: 'Product',
+                    skip: false,
+                    headerType: ExportHeaderType.PivotRowHeader,
+                    startIndex: 0,
+                    level: 0
+                },
+                // No RowHeader column for SubCategory
+                {
+                    header: 'Sum',
+                    field: 'Value-Sum',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: 1,
+                maxLevel: 0,
+                maxRowLevel: 2
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(pivotData, options);
+        });
+    });
+
+    describe('Tree Grid with Mixed Record Types', () => {
+        it('should apply indentation to DataRecord records when mixed with TreeGridRecord', (done) => {
+            // Tree grids can produce DataRecord types for nested children without sub-children
+            // but they should still be indented based on their level
+            const treeData: IExportRecord[] = [
+                {
+                    data: { name: 'Root 1', value: 100 },
+                    level: 0,
+                    type: ExportRecordType.TreeGridRecord
+                },
+                {
+                    data: { name: 'Child 1 (TreeGrid)', value: 50 },
+                    level: 1,
+                    type: ExportRecordType.TreeGridRecord
+                },
+                {
+                    data: { name: 'Grandchild 1 (Data)', value: 25 },
+                    level: 2,
+                    type: ExportRecordType.DataRecord  // DataRecord type nested in tree
+                },
+                {
+                    data: { name: 'Root 2', value: 200 },
+                    level: 0,
+                    type: ExportRecordType.TreeGridRecord
+                }
+            ];
+
+            const columns: IColumnInfo[] = [
+                {
+                    header: 'Name',
+                    field: 'name',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
+                },
+                {
+                    header: 'Value',
+                    field: 'value',
+                    skip: false,
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 1,
+                    level: 0,
+                    columnSpan: 1
+                }
+            ];
+
+            const owner: IColumnList = {
+                columns: columns,
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            };
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, owner);
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.exportData(treeData, options);
+        });
+    });
+
+    describe('Custom Font Success Path', () => {
+        beforeEach(() => {
+            spyOn(console, 'warn');
+        });
+
+        it('should set custom font name when valid font name and data are provided', (done) => {
+            // Provide a non-empty but minimal base64 string for font data
+            // This tests the success path where _currentFontName is set to the custom font
+            options.customFont = {
+                name: 'CustomTestFont',
+                data: 'AABB' // minimal valid base64
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should set custom bold font name when valid bold font is provided', (done) => {
+            options.customFont = {
+                name: 'CustomTestFont',
+                data: 'AABB', // minimal valid base64
+                bold: {
+                    name: 'CustomTestFont-Bold',
+                    data: 'CCDD' // minimal valid base64
+                }
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should use normal font for bold when bold variant has empty name', (done) => {
+            options.customFont = {
+                name: 'CustomTestFont',
+                data: 'AABB',
+                bold: {
+                    name: '',
+                    data: 'CCDD'
+                }
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should use normal font for bold when bold variant has empty data', (done) => {
+            options.customFont = {
+                name: 'CustomTestFont',
+                data: 'AABB',
+                bold: {
+                    name: 'CustomTestFont-Bold',
+                    data: ''
+                }
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(args.pdf).toBeDefined();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+    });
 });
