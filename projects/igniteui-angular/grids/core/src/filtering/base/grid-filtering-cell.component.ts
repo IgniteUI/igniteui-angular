@@ -79,6 +79,9 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         return !this.column.grid.hasColumnLayouts ? this.column.isFirstPinned : false;;
     }
 
+    @HostBinding('attr.role')
+    public role = 'gridcell';
+
     private baseClass = 'igx-grid__filtering-cell-indicator';
 
     constructor() {

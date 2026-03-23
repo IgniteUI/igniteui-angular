@@ -15,9 +15,9 @@
 >
 </igx-grid-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
+<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)"
-    (dragStop)="selectionService.dragMode = $event" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? null : 'row'"
+    (dragStop)="selectionService.dragMode = $event" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? 'rowgroup' : 'row'"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='totalHeight' [style.width.px]="totalCalcWidth" [style.width]="!platform.isBrowser ? '100%' : undefined" #tbody (scroll)='preventContainerScroll($event)'>
         @if (moving && columnInDrag && pinnedColumns.length <= 0) {
@@ -144,8 +144,8 @@
     <div igxOverlayOutlet #igxBodyOverlayOutlet="overlay-outlet"></div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summaryRowHeight' #tfoot>
-    <div tabindex="0" (focus)="navigation.focusFirstCell(false)"
+<div class="igx-grid__tfoot" role="presentation" [style.height.px]='summaryRowHeight' #tfoot>
+    <div tabindex="0" role="rowgroup" (focus)="navigation.focusFirstCell(false)"
         (keydown)="navigation.summaryNav($event)" [attr.aria-activedescendant]="activeDescendant">
         @if (hasSummarizedColumns && rootSummariesEnabled) {
             <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summaryRowHeight'
@@ -159,7 +159,7 @@
     </div>
 </div>
 
-<div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
+<div class="igx-grid__scroll" role="presentation" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
     <div class="igx-grid__scroll-start" [style.width.px]='pinnedStartWidth' [style.min-width.px]='pinnedStartWidth'></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
@@ -168,7 +168,7 @@
     <div class="igx-grid__scroll-end" [style.width.px]='pinnedEndWidth' [style.min-width.px]='pinnedEndWidth' [hidden]="pinnedEndWidth === 0"></div>
 </div>
 
-<div class="igx-grid__footer" #footer>
+<div class="igx-grid__footer" role="presentation" #footer>
     <ng-content select="igx-grid-footer,igc-grid-footer"></ng-content>
     <ng-content select="igx-paginator,igc-paginator"></ng-content>
 </div>
