@@ -416,7 +416,7 @@ export class DockManagerComponent {
 
 ## Tile Manager
 
-> **Docs:** [Tile Manager (Angular)](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tile-manager)  
+> **Docs:** [Tile Manager (Angular)](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tile-manager)
 > **Full API Docs:** [Tile Manager Web Component](https://www.infragistics.com/products/ignite-ui-web-components/web-components/components/layouts/tile-manager.html)
 
 The Tile Manager is a **layout Web Component** that displays content in individual tiles users can **rearrange and resize**. It is implemented as an `igc-tile-manager` container with one or more `igc-tile` children.
@@ -424,7 +424,7 @@ The Tile Manager is a **layout Web Component** that displays content in individu
 ### Installation
 
 ```bash
-npm install igniteui-webcomponents --save
+npm install igniteui-webcomponents
 ```
 
 ### Setup
