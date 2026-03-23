@@ -56,6 +56,13 @@
         );
 
         @include tokens(
+            badge-theme(
+                $schema: $schema,
+                $background-color: var(--ig-grid-accent-color),
+            )
+        );
+
+        @include tokens(
             banner-theme(
                 $schema: $schema,
                 $banner-background: var(--ig-grid-background),
@@ -132,6 +139,8 @@
                 $schema: $schema,
                 $background: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
                 $text-color: var(--ig-grid-foreground),
+                $ghost-background: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                $ghost-text-color: var(--ig-grid-foreground),
                 $disabled-background: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
                 $disabled-text-color: color-mix(in srgb, var(--ig-grid-foreground) 50%, var(--ig-grid-background)),
                 $disabled-border-color: color-mix(in srgb, var(--ig-grid-foreground) 24%, var(--ig-grid-background)),
@@ -629,6 +638,7 @@
                 igx-prefix,
                 igx-suffix {
                     background: transparent;
+                    color: color-mix(in srgb, var(--ig-grid-foreground) 80%, var(--ig-grid-background));
                     border-radius: 0;
 
                     /* stylelint-disable-next-line */
@@ -710,6 +720,7 @@
                 igx-prefix,
                 igx-suffix {
                     background: transparent !important;
+                    color: var(--ig-grid-foreground);
                     border-radius: 0;
                 }
             }
@@ -2118,7 +2129,7 @@
     }
 
     %grid-summaries--body {
-        // --summaries-patch-background: var(--ig-gray-100);
+        --summaries-patch-background: color-mix(in srgb, var(--ig-grid-foreground, var(--ig-gray-100)) 12%, var(--ig-grid-background, var(--ig-gray-100)));
 
         border-bottom: rem(1px) dashed var-get($theme, 'row-border-color');
         background-color: var-get($theme, 'summaries-patch-background');
@@ -3016,7 +3027,7 @@
     @include excel-filtering($theme);
 
     %advanced-filtering-dialog {
-	    background: var-get($theme, 'filtering-row-background');
+	    background: var-get($theme, 'filtering-dialog-background');
         box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
 
         @if $variant == 'material' or $variant == 'bootstrap' {

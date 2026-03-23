@@ -164,7 +164,7 @@
                 --disabled-selected-border-color: transparent;
             }
         } @else {
-            background: var-get($theme, 'filtering-row-background');
+            background: var-get($theme, 'filtering-dialog-background');
 
             %igx-group-display {
                 --item-background: transparent;
