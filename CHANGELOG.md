@@ -9,6 +9,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`, `IgxSimpleCombo`
     - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
 
+### General
+
+- `IgxGrid`
+    - Fixed an issue where headers and cells became misaligned when collapsible column groups were present and columns inside the collapsed group had explicit width values, causing standalone columns to misalign with their headers when scrolled horizontally (#17042).
+
 ## 21.1.3
 
 ### Security Fixes

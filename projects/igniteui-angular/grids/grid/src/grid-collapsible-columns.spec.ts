@@ -4,7 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
-    CollapsibleGroupsDynamicColComponent
+    CollapsibleGroupsDynamicColComponent,
+    CollapsibleGroupWithExplicitWidthsTestComponent
 } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -28,7 +29,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
-                CollapsibleGroupsDynamicColComponent
+                CollapsibleGroupsDynamicColComponent,
+                CollapsibleGroupWithExplicitWidthsTestComponent
             ]
         }).compileComponents();
     }));
@@ -635,5 +637,41 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, countryInf, true, true);
             GridFunctions.verifyColumnIsHidden(countryCol, true, 12);
         });
+    });
+
+    describe('Column width after collapse', () => {
+        let fixture;
+        let grid: IgxGridComponent;
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(CollapsibleGroupWithExplicitWidthsTestComponent);
+            fixture.detectChanges();
+            tick(16);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+        }));
+
+        it('standalone auto-sized columns with minWidth should not use stale widthConstrained after group collapse', fakeAsync(() => {
+            // In expanded state, standalone columns (minWidth=150px) fill (700 - 400) / 2 = 150px each,
+            // which equals minWidth, causing widthConstrained=true.
+            const standaloneContactName = grid.getColumnByName('ContactName');
+            const standaloneContactTitle = grid.getColumnByName('ContactTitle');
+
+            // Confirm group is initially expanded and standalone columns are constrained at minWidth
+            const groupA = GridFunctions.getColGroup(grid, 'Group A');
+            expect(groupA.expanded).toBe(true);
+            expect(standaloneContactName.calcPixelWidth).toBeLessThanOrEqual(150);
+
+            // Collapse the group — grouped columns (ID, CompanyName) become hidden
+            groupA.expanded = false;
+            tick(16);
+            fixture.detectChanges();
+
+            // After collapse only the 2 standalone auto-sized columns remain visible.
+            // Expected width per standalone ≈ 700 / 2 = 350px (no explicit-width columns remain visible).
+            // Bug: stale widthConstrained=true causes columnsToSize=0 → columnWidth=Infinity → wrong calcPixelWidth.
+            expect(standaloneContactName.calcPixelWidth).toBeGreaterThan(200);
+            expect(standaloneContactTitle.calcPixelWidth).toBeGreaterThan(200);
+        }));
     });
 });
