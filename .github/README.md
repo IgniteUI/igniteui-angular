@@ -30,7 +30,7 @@ The agent system keeps AI-assisted work **modular, consistent, and reviewable**.
 Instead of one general agent doing everything, work is split into two roles:
 
 - **Orchestrators** analyze scope, decide follow-through, and route work.
-- **Specialists** handle one focused responsibility well, such as tests, implementation, docs, migrations, or changelog updates.
+- **Specialists** handle one focused responsibility well, such as tests, implementation, theming/styles, demo updates, docs, migrations, or changelog updates.
 
 ---
 
@@ -72,6 +72,18 @@ Instead of one general agent doing everything, work is split into two roles:
                      └──────────────┬──────────────┘
                                     │
                                     ▼
+                    ┌──────────────────────────────┐
+                    │ theming-styles-agent         │
+                    │ (if needed)                  │
+                    └──────────────┬───────────────┘
+                                   │
+                                   ▼
+                    ┌──────────────────────────────┐
+                    │ demo-sample-agent            │
+                    │ (if explicitly requested)    │
+                    └──────────────┬───────────────┘
+                                   │
+                                   ▼
                     ┌───────────────────────────┐
                     │ Optional when needed      │
                     └──────────────┬────────────┘
@@ -80,14 +92,13 @@ Instead of one general agent doing everything, work is split into two roles:
 ┌──────────────────────────┐  ┌──────────────────┐  ┌──────────────────┐
 │ component-readme-agent   │  │ migration-agent  │  │ changelog-agent  │
 └──────────────────────────┘  └──────────────────┘  └──────────────────┘
-┌──────────────────────────┐  ┌──────────────────────────┐
-│ theming-styles-agent     │  │ demo-sample-agent        │
-└──────────────────────────┘  └──────────────────────────┘
 ```
 
 - one core workflow is selected: **feature** or **bug**
 - **TDD tests come first**
 - implementation follows
+- theming/style work follows implementation **when needed**
+- demo/sample work happens **only when explicitly requested**
 - README, migration, and changelog work are **optional follow-through**
 
 ---
@@ -102,7 +113,7 @@ Instead of one general agent doing everything, work is split into two roles:
 | [`feature-implementer-agent`](./agents/feature-implementer-agent.md) | Specialist | Feature implementation and refactor |
 | [`bug-fixing-implementer-agent`](./agents/bug-fixing-implementer-agent.md) | Specialist | Minimum safe bug fix |
 | [`theming-styles-agent`](./agents/theming-styles-agent.md) | Specialist | Component theming, structural SCSS, theme wiring, and style validation |
-| [`demo-sample-agent`](./agents/demo-sample-agent.md) | Specialist | Demo/sample updates in `src/app/` for user-visible changes |
+| [`demo-sample-agent`](./agents/demo-sample-agent.md) | Specialist | Demo/sample updates in `src/app/` for explicitly requested user-visible changes |
 | [`component-readme-agent`](./agents/component-readme-agent.md) | Specialist | Component README updates |
 | [`migration-agent`](./agents/migration-agent.md) | Specialist | `ng update` migration for breaking changes |
 | [`changelog-agent`](./agents/changelog-agent.md) | Specialist | `CHANGELOG.md` updates |
@@ -117,12 +128,14 @@ Orchestrators are responsible for:
 
 - understanding the request at a high level
 - identifying affected components and files
-- mapping impact such as breaking changes, docs impact, changelog impact, accessibility, i18n, or demos
+- mapping impact such as breaking changes, docs impact, changelog impact, accessibility, i18n, theming/styles impact, or demo/sample follow-through
 - deciding which specialist agents are needed
 - routing work in the correct order
 - verifying that nothing important was missed
 
 Orchestrators do **not** act as detailed spec writers. They should pass minimal context and avoid over-constraining downstream agents.
+
+Orchestrators also decide whether optional follow-through is needed after implementation or bug fixing.
 
 ### 2. Specialists
 
@@ -132,8 +145,8 @@ Examples:
 
 - the TDD agent writes failing tests
 - implementer agents write production code
-- the theming agent handles SCSS and theme wiring
-- the demo agent updates demo/sample pages
+- the theming agent handles SCSS, theme wiring, and style validation
+- the demo agent updates demo/sample pages in `src/app/` when a demo is explicitly requested
 - the README agent updates component docs
 - the migration agent handles `ng update` migrations for breaking changes
 - the changelog agent updates release notes in the correct section
@@ -150,7 +163,7 @@ Examples:
 | Implement a known feature | `feature-implementer-agent` |
 | Implement a known bug fix | `bug-fixing-implementer-agent` |
 | Style or theme a component | `theming-styles-agent` |
-| Update demo for a user-visible change | `demo-sample-agent` |
+| Update demo for an explicitly requested user-visible change | `demo-sample-agent` |
 | Update docs after public change | `component-readme-agent` |
 | Add migration for breaking change | `migration-agent` |
 | Add release-note coverage | `changelog-agent` |
@@ -195,6 +208,18 @@ Use the feature flow when the task is about **new behavior**, **new public API**
 └──────────────┬───────────────┘
                │
                ▼
+┌──────────────────────────────┐
+│ theming-styles-agent         │
+│ (if needed)                  │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│ demo-sample-agent            │
+│ (if explicitly requested)    │
+└──────────────┬───────────────┘
+               │
+               ▼
       ┌────────────────────────┐
       │ Optional follow-through│
       └───────────┬────────────┘
@@ -206,9 +231,6 @@ Use the feature flow when the task is about **new behavior**, **new public API**
 │ component-   │ │ migration-│ │ changelog-   │
 │ readme-agent │ │ agent     │ │ agent        │
 └──────────────┘ └───────────┘ └──────────────┘
-┌──────────────────────────┐  ┌───────────────────┐
-│ theming-styles-agent     │  │ demo-sample-agent │
-└──────────────────────────┘  └───────────────────┘
             │
             ▼
 ┌──────────────────────────────┐
@@ -221,6 +243,8 @@ Use the feature flow when the task is about **new behavior**, **new public API**
 - affected files and components
 - deprecations or API changes
 - accessibility and i18n impact
+- whether theming/style follow-through is needed
+- whether a demo/sample update was explicitly requested
 - whether README, migration, or changelog work is needed
 - smallest relevant test suite
 
@@ -230,9 +254,11 @@ The order keeps the workflow grounded:
 
 1. **Tests first** — define the missing behavior.
 2. **Implementation second** — satisfy the real feature contract, not just the tests literally.
-3. **Documentation follow-through** — reflect actual public changes.
-4. **Migration follow-through** — automate breaking changes.
-5. **Changelog follow-through** — record notable release information.
+3. **Theming/style follow-through** — handle SCSS and theme-system work when needed.
+4. **Demo follow-through** — update samples only when explicitly requested.
+5. **Documentation follow-through** — reflect actual public changes.
+6. **Migration follow-through** — automate breaking changes.
+7. **Changelog follow-through** — record notable release information.
 
 ---
 
@@ -276,6 +302,18 @@ Use the bug-fix flow when the task is about **broken existing behavior**, **regr
 └──────────────┬───────────────┘
                │
                ▼
+┌──────────────────────────────┐
+│ theming-styles-agent         │
+│ (if needed)                  │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│ demo-sample-agent            │
+│ (if explicitly requested)    │
+└──────────────┬───────────────┘
+               │
+               ▼
       ┌────────────────────────┐
       │ Optional follow-through│
       └───────────┬────────────┘
@@ -287,9 +325,6 @@ Use the bug-fix flow when the task is about **broken existing behavior**, **regr
 │ component-   │ │ migration-│ │ changelog-   │
 │ readme-agent │ │ agent     │ │ agent        │
 └──────────────┘ └───────────┘ └──────────────┘
-┌──────────────────────────┐  ┌───────────────────┐
-│ theming-styles-agent     │  │ demo-sample-agent │
-└──────────────────────────┘  └───────────────────┘
                   │
                   ▼
 ┌──────────────────────────────┐
@@ -304,6 +339,7 @@ Compared with feature work, bug fixing adds stronger emphasis on:
 - **root-cause analysis before routing**
 - **reproduction-first testing**
 - **minimal fixes** rather than scope expansion
+- **theming/style separation** when the required fix belongs in SCSS or theme wiring
 - **multi-branch handling** when the bug affects release branches
 - **edge-case escalation** when the issue is not reproducible, is by design, or is caused by a third party
 
@@ -320,7 +356,7 @@ Use this quick decision guide:
 | Only need failing tests first | `tdd-test-writer-agent` |
 | Already have failing tests and need implementation | `feature-implementer-agent` or `bug-fixing-implementer-agent` |
 | Styling or theming a component | `theming-styles-agent` |
-| Demo update needed for user-visible change | `demo-sample-agent` |
+| Demo update explicitly requested for a user-visible change | `demo-sample-agent` |
 | Public behavior changed and docs must be updated | `component-readme-agent` |
 | Breaking change needs `ng update` support | `migration-agent` |
 | User-visible change needs release-note coverage | `changelog-agent` |
@@ -343,7 +379,7 @@ If the task is narrow and clearly scoped, start directly with the **specialist**
 | `feature-implementer-agent` | feature scope is known and implementation is next | the task is really a bug fix |
 | `bug-fixing-implementer-agent` | the bug is understood and needs the smallest safe fix | the task is actually a feature |
 | `theming-styles-agent` | SCSS, theme wiring, or style validation is needed | no styling impact exists |
-| `demo-sample-agent` | a demo is explicitly requested for a user-visible change | the change has no UI impact or sample coverage |
+| `demo-sample-agent` | a demo is explicitly requested for a user-visible change | the change has no UI impact or no demo/sample was requested |
 | `component-readme-agent` | public API or documented behavior changed | no docs impact exists |
 | `migration-agent` | a breaking change needs migration support | the change is additive only |
 | `changelog-agent` | the change deserves release-note coverage | the change is too minor for changelog |
@@ -360,6 +396,7 @@ projects/igniteui-angular/<component>/index.ts    public barrel
 projects/igniteui-angular/<component>/README.md   component documentation
 projects/igniteui-angular/test-utils/             shared test helpers
 projects/igniteui-angular/migrations/             migration schematics
+projects/igniteui-angular/core/src/core/styles/   theming and shared style infrastructure
 CHANGELOG.md                                      root changelog
 src/app/<component>/                              demo pages
 ```
