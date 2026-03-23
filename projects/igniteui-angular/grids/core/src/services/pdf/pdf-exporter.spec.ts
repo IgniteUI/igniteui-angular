@@ -4,6 +4,7 @@ import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { ExportRecordType, ExportHeaderType, DEFAULT_OWNER, IExportRecord, IColumnInfo, IColumnList, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
+import { jsPDF } from 'jspdf';
 
 describe('PDF Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -4169,22 +4170,51 @@ describe('PDF Exporter', () => {
         });
     });
 
-    xdescribe('Custom Font Success Path', () => {
+    describe('Custom Font Success Path', () => {
+        let addFileToVFSSpy: jasmine.Spy;
+        let addFontSpy: jasmine.Spy;
+        let origAddFileToVFS: Function;
+        let origAddFont: Function;
+
         beforeEach(() => {
             spyOn(console, 'warn');
+
+            // jsPDF plugin methods live on jsPDF.API and are copied to each
+            // instance at construction time — they are NOT on the prototype.
+            // Replacing them on the API object before export ensures the
+            // exporter's newly-created jsPDF instance receives our spies.
+            // With both no-oped, the custom font name is never registered,
+            // so setFont falls back to the default font automatically.
+            const api = (jsPDF as any).API;
+
+            origAddFileToVFS = api.addFileToVFS;
+            origAddFont = api.addFont;
+
+            addFileToVFSSpy = jasmine.createSpy('addFileToVFS').and.callFake(function () { return this; });
+            addFontSpy = jasmine.createSpy('addFont').and.returnValue('');
+
+            api.addFileToVFS = addFileToVFSSpy;
+            api.addFont = addFontSpy;
+        });
+
+        afterEach(() => {
+            const api = (jsPDF as any).API;
+            api.addFileToVFS = origAddFileToVFS;
+            api.addFont = origAddFont;
         });
 
         it('should set custom font name when valid font name and data are provided', (done) => {
-            // Provide a non-empty but minimal base64 string for font data
-            // This tests the success path where _currentFontName is set to the custom font
             options.customFont = {
                 name: 'CustomTestFont',
-                data: 'AABB' // minimal valid base64
+                data: 'AABB'
             };
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 expect(args.pdf).toBeDefined();
+                expect(addFileToVFSSpy).toHaveBeenCalledWith('CustomTestFont.ttf', 'AABB');
+                expect(addFontSpy).toHaveBeenCalledWith('CustomTestFont.ttf', 'CustomTestFont', 'normal');
+                expect((exporter as any)._currentFontName).toBe('CustomTestFont');
                 done();
             });
 
@@ -4194,16 +4224,18 @@ describe('PDF Exporter', () => {
         it('should set custom bold font name when valid bold font is provided', (done) => {
             options.customFont = {
                 name: 'CustomTestFont',
-                data: 'AABB', // minimal valid base64
+                data: 'AABB',
                 bold: {
                     name: 'CustomTestFont-Bold',
-                    data: 'CCDD' // minimal valid base64
+                    data: 'CCDD'
                 }
             };
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 expect(args.pdf).toBeDefined();
+                expect(addFontSpy).toHaveBeenCalledWith('CustomTestFont-Bold.ttf', 'CustomTestFont-Bold', 'bold');
+                expect((exporter as any)._currentBoldFontName).toBe('CustomTestFont-Bold');
                 done();
             });
 
@@ -4223,6 +4255,8 @@ describe('PDF Exporter', () => {
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 expect(args.pdf).toBeDefined();
+                expect(addFontSpy).toHaveBeenCalledWith('CustomTestFont.ttf', 'CustomTestFont', 'bold');
+                expect((exporter as any)._currentBoldFontName).toBe('CustomTestFont');
                 done();
             });
 
@@ -4242,6 +4276,8 @@ describe('PDF Exporter', () => {
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 expect(args.pdf).toBeDefined();
+                expect(addFontSpy).toHaveBeenCalledWith('CustomTestFont.ttf', 'CustomTestFont', 'bold');
+                expect((exporter as any)._currentBoldFontName).toBe('CustomTestFont');
                 done();
             });
 
