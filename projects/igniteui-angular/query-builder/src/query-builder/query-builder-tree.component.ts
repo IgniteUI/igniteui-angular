@@ -670,7 +670,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             this._editedExpression = null;
             if (!this.parentExpression) {
-                this.expressionTreeChange.emit(this._expressionTree);
+                this.emitExpressionTreeChange();
             }
 
             this.rootGroup = null;
@@ -699,7 +699,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             if (this._expressionTree && !this.parentExpression) {
                 this._expressionTree.returnFields = value.length === this.fields.length ? ['*'] : value;
-                this.expressionTreeChange.emit(this._expressionTree);
+                this.emitExpressionTreeChange();
             }
         }
     }
@@ -892,7 +892,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, this.selectedEntity?.name, this.selectedReturnFields);
         if (!this.parentExpression) {
-            this.expressionTreeChange.emit(this._expressionTree);
+            this.emitExpressionTreeChange();
         }
     }
 
@@ -933,7 +933,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         if (!this.parentExpression && !skipEmit) {
-            this.expressionTreeChange.emit(this._expressionTree);
+            this.emitExpressionTreeChange();
         }
     }
 
@@ -1523,7 +1523,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         if (!this.parentExpression) {
-            this.expressionTreeChange.emit(this._expressionTree);
+            this.emitExpressionTreeChange();
         }
     }
 
@@ -1714,12 +1714,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }, this._focusDelay);
     }
 
+    private emitExpressionTreeChange(): void {
+        this.expressionTreeChange.emit(this._expressionTree);
+    }
+
     private init() {
         this.cancelOperandAdd();
         this.cancelOperandEdit();
 
         // Ignore values of certain properties for the comparison
-        const propsToIgnore = ['parent', 'hovered', 'ignoreCase', 'inEditMode', 'inAddMode'];
+        const propsToIgnore = ['parent', 'hovered', 'ignoreCase', 'inEditMode', 'inAddMode', 'externalObject'];
         const propsReplacer = function replacer(key, value) {
             if (propsToIgnore.indexOf(key) >= 0) {
                 return undefined;

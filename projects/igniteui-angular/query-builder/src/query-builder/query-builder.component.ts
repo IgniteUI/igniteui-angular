@@ -327,6 +327,22 @@ export class IgxQueryBuilderComponent implements OnDestroy {
         this.queryTree.setAddButtonFocus();
     }
 
+    private serializeExpressionTreeCallback(key: string, val: any) {
+        if (key === 'externalObject') {
+            return undefined;
+        }
+
+        return val;
+    }
+
+    private getSerializableExpressionTree(tree: IExpressionTree): IExpressionTree {
+        if (!tree) {
+            return tree;
+        }
+
+        return JSON.parse(JSON.stringify(tree, this.serializeExpressionTreeCallback));
+    }
+
     protected onExpressionTreeChange(tree: IExpressionTree) {
         if (tree && this.entities && tree !== this._expressionTree) {
             this._expressionTree = recreateTree(tree, this.entities);
@@ -334,7 +350,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
             this._expressionTree = tree;
         }
         if (this._shouldEmitTreeChange) {
-            this.expressionTreeChange.emit(tree);
+            this.expressionTreeChange.emit(this.getSerializableExpressionTree(this._expressionTree));
         }
     }
 
@@ -389,4 +405,3 @@ export class IgxQueryBuilderComponent implements OnDestroy {
         });
     }
 }
-
