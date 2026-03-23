@@ -4190,7 +4190,9 @@ describe('PDF Exporter', () => {
             origAddFileToVFS = api.addFileToVFS;
             origAddFont = api.addFont;
 
-            addFileToVFSSpy = jasmine.createSpy('addFileToVFS').and.callFake(function () { return this; });
+            addFileToVFSSpy = jasmine.createSpy('addFileToVFS').and.callFake(function () {
+                return this;
+            });
             addFontSpy = jasmine.createSpy('addFont').and.returnValue('');
 
             api.addFileToVFS = addFileToVFSSpy;
