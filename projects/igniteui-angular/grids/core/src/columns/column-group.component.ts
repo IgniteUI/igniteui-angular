@@ -429,4 +429,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         const li = visibleChildren[visibleChildren.length - 1].visibleIndex;
         return li - fi + 1;
     }
+
+    /**
+     * @hidden @internal
+     */
+    protected override setExpandCollapseState() {
+        super.setExpandCollapseState();
+        if (this.grid) {
+            this.cacheCalcWidth();
+        }
+    }
 }

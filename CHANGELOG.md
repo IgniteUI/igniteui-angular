@@ -100,6 +100,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 
+- `IgxGrid`
+    - Fixed an issue where headers and cells were misaligned when collapsible column groups had explicit widths set and horizontal scrolling was used.
+
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
     - Improved performance by dynamically adjusting the scroll throttle based on the data displayed in grid.
 
