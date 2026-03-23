@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterService } from './pdf-exporter';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
@@ -6,13 +6,22 @@ import { GridIDNameJobTitleComponent } from '../../../../../test-utils/grid-samp
 import { first } from 'rxjs/operators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent, BlueWhaleGridComponent } from '../../../../../test-utils/grid-mch-sample.spec';
-import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent } from '../../../../../test-utils/hierarchical-grid-components.spec';
-import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
+import {
+    IgxHierarchicalGridExportComponent,
+    IgxHierarchicalGridTestBaseComponent,
+    IgxHierarchicalGridMultiColumnHeadersExportComponent,
+    IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
+    IgxHierarchicalGridSummariesExportComponent,
+    IgxHierarchicalGridEmptyDataExportComponent,
+    IgxHierarchicalGridMissingChildDataExportComponent
+} from '../../../../../test-utils/hierarchical-grid-components.spec';
+import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
 import { CustomSummariesComponent } from 'igniteui-angular/grids/grid/src/grid-summary.spec';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
-import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../../../../test-utils/pivot-grid-samples.spec';
+import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-row.component';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
-import { PivotRowLayoutType } from 'igniteui-angular/grids/core';
+import { IgxPivotNumericAggregate, PivotRowLayoutType } from 'igniteui-angular/grids/core';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 describe('PDF Grid Exporter', () => {
@@ -593,6 +602,362 @@ describe('PDF Grid Exporter', () => {
 
                 exporter.export(pivotGrid, options);
             });
+        });
+    });
+
+    describe('Hierarchical Grid with Multi-Column Headers', () => {
+        it('should export hierarchical grid with multi-column headers in parent', (done) => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridMultiColumnHeadersExportComponent
+                ]
+            }).compileComponents();
+
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(hGrid, options);
+        });
+
+        it('should export hierarchical grid with multi-column headers in parent and expanded rows', (done) => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridMultiColumnHeadersExportComponent
+                ]
+            }).compileComponents();
+
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            const firstRow = hGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+            fix.detectChanges();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(hGrid, options);
+        });
+
+        it('should export hierarchical grid with multi-column headers only in child islands', (done) => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent
+                ]
+            }).compileComponents();
+
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(hGrid, options);
+        });
+
+        it('should export hierarchical grid with multi-column headers in child islands and expanded rows', (done) => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent
+                ]
+            }).compileComponents();
+
+            const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            const firstRow = hGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+            fix.detectChanges();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(hGrid, options);
+        });
+    });
+
+    describe('Hierarchical Grid Edge Cases', () => {
+        it('should export hierarchical grid with summaries', (done) => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridSummariesExportComponent
+                ]
+            }).compileComponents();
+
+            const fix = TestBed.createComponent(IgxHierarchicalGridSummariesExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(hGrid, options);
+        });
+
+        it('should export hierarchical grid with summaries and expanded rows', (done) => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridSummariesExportComponent
+                ]
+            }).compileComponents();
+
+            const fix = TestBed.createComponent(IgxHierarchicalGridSummariesExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            const firstRow = hGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+            fix.detectChanges();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(hGrid, options);
+        });
+
+        it('should export hierarchical grid with empty data', (done) => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridEmptyDataExportComponent
+                ]
+            }).compileComponents();
+
+            const fix = TestBed.createComponent(IgxHierarchicalGridEmptyDataExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(hGrid, options);
+        });
+
+        it('should export hierarchical grid with missing child data key without error', (done) => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridMissingChildDataExportComponent
+                ]
+            }).compileComponents();
+
+            const fix = TestBed.createComponent(IgxHierarchicalGridMissingChildDataExportComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(hGrid, options);
+        });
+    });
+
+    describe('Tree Grid Summaries', () => {
+        it('should export tree grid with summaries', (done) => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxTreeGridSummariesKeyComponent
+                ]
+            }).compileComponents();
+
+            const fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
+            fix.detectChanges();
+
+            const treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(treeGrid, options);
+        });
+    });
+
+    describe('Pivot Grid Hierarchical Row Dimensions', () => {
+        let pivotGrid: IgxPivotGridComponent;
+        let fix: ComponentFixture<IgxPivotGridMultipleRowComponent>;
+
+        beforeEach(async () => {
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+            await wait();
+            pivotGrid = fix.componentInstance.pivotGrid;
+        });
+
+        it('should export pivot grid with hierarchical row dimensions', (done) => {
+            fix.componentInstance.data = SALES_DATA;
+            fix.componentInstance.pivotConfigHierarchy = {
+                rows: [
+                    {
+                        memberName: 'All_Srep Code Alts',
+                        enabled: true,
+                        childLevel: {
+                            memberName: 'SREP_CODE_ALT',
+                            displayName: 'Srep Code Alt',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
+                    },
+                    {
+                        memberName: 'All_Srep Codes',
+                        enabled: true,
+                        childLevel: {
+                            memberName: 'SREP_CODE',
+                            displayName: 'Srep Code',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
+                    },
+                    {
+                        memberName: 'All_Customers',
+                        enabled: true,
+                        childLevel: {
+                            memberName: 'CUST_CODE',
+                            displayName: 'Customer',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
+                    }
+                ],
+                columns: [],
+                values: [
+                    {
+                        member: 'JOBS',
+                        aggregate: {
+                            key: 'Count of Jobs',
+                            aggregator: IgxPivotNumericAggregate.count,
+                            label: 'Count of Jobs',
+                        },
+                        enabled: true,
+                        dataType: 'number',
+                    },
+                    {
+                        member: 'INV_SALES',
+                        aggregate: {
+                            key: 'Sum of Sales',
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            label: 'Sum of Sales',
+                        },
+                        enabled: true,
+                        dataType: 'number',
+                    },
+                ],
+                filters: [],
+            };
+            pivotGrid.pivotUI.showRowHeaders = true;
+            fix.detectChanges();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with hierarchical row dimensions without borders', (done) => {
+            options.showTableBorders = false;
+            fix.componentInstance.data = SALES_DATA;
+            fix.componentInstance.pivotConfigHierarchy = {
+                rows: [
+                    {
+                        memberName: 'All_Srep Codes',
+                        enabled: true,
+                        childLevel: {
+                            memberName: 'SREP_CODE',
+                            displayName: 'Srep Code',
+                            sortDirection: 1,
+                            enabled: true,
+                        },
+                    }
+                ],
+                columns: [],
+                values: [
+                    {
+                        member: 'JOBS',
+                        aggregate: {
+                            key: 'Count of Jobs',
+                            aggregator: IgxPivotNumericAggregate.count,
+                            label: 'Count of Jobs',
+                        },
+                        enabled: true,
+                        dataType: 'number',
+                    },
+                ],
+                filters: [],
+            };
+            pivotGrid.pivotUI.showRowHeaders = true;
+            fix.detectChanges();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with row headers and no column dimensions', (done) => {
+            pivotGrid.pivotUI.showRowHeaders = true;
+            fix.detectChanges();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
+        });
+
+        it('should export pivot grid with row headers and landscape orientation', (done) => {
+            options.pageOrientation = 'landscape';
+            pivotGrid.pivotUI.showRowHeaders = true;
+            fix.detectChanges();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                done();
+            });
+
+            exporter.export(pivotGrid, options);
         });
     });
 });
