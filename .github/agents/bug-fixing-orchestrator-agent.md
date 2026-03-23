@@ -210,11 +210,15 @@ Report what was done and any remaining items.
 
 ## Multi-branch Fixes
 
+Only create PRs for **supported versions**. Before acting, read [SECURITY.md](../../SECURITY.md) to get the current list of supported versions. Do **not** create PRs for any version marked as unsupported there.
+
 When a bug exists in multiple supported release branches:
-1. Target the fix at the **oldest affected branch** first.
-2. Cherry-pick the commit to each newer branch up to and including `master`.
-3. Create separate PRs for each cherry-pick.
-4. Note all target branches in the original PR description.
+1. Read `SECURITY.md` and collect all versions currently marked as supported.
+2. Determine which of those supported branches are actually affected — a bug introduced in a later version does not need a fix in earlier branches.
+3. Target the fix at the **oldest affected supported branch** first.
+4. Cherry-pick the commit to each newer supported branch up to and including `master`.
+5. Create separate PRs for each cherry-pick.
+6. Note all target branches in the original PR description.
 
 ---
 
