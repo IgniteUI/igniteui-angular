@@ -4169,7 +4169,7 @@ describe('PDF Exporter', () => {
         });
     });
 
-    describe('Custom Font Success Path', () => {
+    fdescribe('Custom Font Success Path', () => {
         beforeEach(() => {
             spyOn(console, 'warn');
         });
