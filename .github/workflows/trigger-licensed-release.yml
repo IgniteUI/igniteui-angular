@@ -37,3 +37,15 @@ jobs:
               "release_tag": "${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.event.release.tag_name }}",
               "public_repo": "${{ github.repository }}"
             }
+
+      - name: Send repository dispatch to private repo for extras
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: IgniteUI/igniteui-actions
+          event-type: igniteui-angular-extras-public-release-created
+          client-payload: |
+            {
+              "release_tag": "${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.event.release.tag_name }}",
+              "public_repo": "${{ github.repository }}"
+            }
