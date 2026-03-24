@@ -1,5 +1,5 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
-import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component';
 import { Component, signal, TemplateRef, ViewRef, viewChild } from '@angular/core';
 import type { IgcChatComponent, IgcChatMessage, IgcChatMessageAttachment, IgcTextareaComponent } from 'igniteui-webcomponents';
 
