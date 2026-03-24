@@ -208,6 +208,9 @@
             "exclude": [
                 "migrations",
                 "schematics"
+            ],
+            "codeCoverageExclude": [
+                "test-utils"
             ]
           }
         },
