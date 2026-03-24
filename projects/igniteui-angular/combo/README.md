@@ -332,7 +332,7 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 | `collapsed`           | gets drop down state                              | boolean                     |
 | `disabled`            | defines whether the control is active or not      | boolean                     |
 | `disableClear`        | defines whether the clear button is rendered      | boolean                     |
-| `ariaLabelledBy`      | defines label ID related to combo                 | boolean                     |
+| `ariaLabelledBy`      | defines label ID related to combo                 | string                      |
 | `type`                | Combo style. - "line", "box", "border", "search"  | string                      |
 | `valid`               | gets if control is valid, when used in a form     | boolean                     |
 | `overlaySettings`     | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings |
