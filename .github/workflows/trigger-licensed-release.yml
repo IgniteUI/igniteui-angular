@@ -1,7 +1,6 @@
 name: Trigger Licensed Release
 
 permissions:
-  id-token: write
   contents: read
 
 on:
