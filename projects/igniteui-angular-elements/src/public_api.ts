@@ -52,5 +52,5 @@ export {
 
     // Transactions API
     TransactionType,
-    TransactionEventOrigin
+    TransactionEventOrigin,
 }
