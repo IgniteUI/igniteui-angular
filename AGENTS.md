@@ -57,7 +57,7 @@ css-naming-convention.md           ← CSS naming rules
 - Add or update `ng update` migrations for true breaking changes such as removals, renames, moved entry points, selector changes, or incompatible default-behavior changes.
 - Update the component `README.md` when the public API surface changes.
 - Update relevant Agent skills if a change is significant and/or you need to tell other agents how to use the newly introduced feature.
-- Consider demo/sample updates in `src/app/` for user-visible changes.
+- Consider demo/sample updates in `src/app/` only for explicitly requested user-visible changes.
 - Update `CHANGELOG.md` for new features, deprecations, breaking changes, and notable user-visible fixes when they fit the existing changelog section structure.
 
 ### Never
@@ -65,6 +65,7 @@ css-naming-convention.md           ← CSS naming rules
 - Skip steps in the implementation. 
 - Commit secrets, tokens, or credentials.
 - Introduce `eval()` or dynamic code execution.
+- Modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file.
 
 ### Ask First
 
