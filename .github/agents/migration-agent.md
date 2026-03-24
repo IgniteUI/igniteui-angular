@@ -120,6 +120,7 @@ Before finishing:
 3. Run:
    - `npm run test:schematics`
    - `npm run build:migrations`
+   - `npm run lint:lib`
 4. Confirm the migration updates the old API and leaves unrelated code unchanged.
 
 ### 7. Commit
