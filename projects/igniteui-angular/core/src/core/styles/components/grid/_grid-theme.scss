@@ -2482,6 +2482,16 @@
                 margin: rem(4px);
             }
         }
+
+        .igx-grid__filtering-row-percent-hint {
+            display: inline-block;
+            max-width: rem(56px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+            flex-shrink: 1;
+        }
     }
 
     %igx-grid__filtering-dropdown-items {
