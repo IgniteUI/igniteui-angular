@@ -304,7 +304,7 @@ When the combo is opened, allow custom values are enabled and add item button is
 | `collapsed`             | Gets the dropdown state.                              | `boolean`                     |
 | `disabled`              | Defines whether the control is active or not.      | `boolean`                     |
 | `disableClear`          | Defines whether the clear button is rendered.      | `boolean`                     |
-| `ariaLabelledBy`        | Defines label ID related to combo.                 | `boolean`                     |
+| `ariaLabelledBy`        | Defines label ID related to combo.                 | `string`                      |
 | `valid`                 | gets if control is valid, when used in a form.     | `boolean`                     |
 | `overlaySettings`       | Controls how the dropdown is displayed.            | `OverlaySettings`            |
 | `selected`              | Get current selection state.                       | `Array<any>`                |
