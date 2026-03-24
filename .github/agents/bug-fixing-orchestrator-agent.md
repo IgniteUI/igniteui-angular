@@ -108,14 +108,20 @@ Do not add sections such as:
 
 ---
 
-## Component-Specific Patterns
+## Skills Reference
 
-Check the relevant skill file for component APIs and patterns:
-- Non-grid components → `skills/igniteui-angular-components/SKILL.md`
-- Grid components → `skills/igniteui-angular-grids/SKILL.md`
-- Theming & styling → `skills/igniteui-angular-theming/SKILL.md`
+Consult the relevant skill file for the task at hand:
 
-Each skill file is a routing hub pointing to detailed reference files under its `references/` folder. **Read the relevant reference files** when investigating the root cause.
+| Skill | Path | Use when |
+|---|---|---|
+| Non-grid components | `skills/igniteui-angular-components/SKILL.md` | Investigating non-grid component APIs and patterns |
+| Grid components | `skills/igniteui-angular-grids/SKILL.md` | Investigating grid APIs and patterns |
+| Theming & styling | `skills/igniteui-angular-theming/SKILL.md` | Bug involves SCSS, theme wiring, or style changes |
+| Build | `skills/igniteui-angular-build/SKILL.md` | Need to verify compilation or run a partial build |
+| Testing | `skills/igniteui-angular-testing/SKILL.md` | Choosing the right test suite and Karma config |
+| Linting | `skills/igniteui-angular-linting/SKILL.md` | Running lint checks before marking work complete |
+
+Component and grid skill files are routing hubs pointing to detailed reference files under their `references/` folder. **Read the relevant reference files** when investigating the root cause.
 
 If the bug touches component SCSS or theme wiring, read `skills/igniteui-angular-theming/references/contributing.md` during investigation and plan a dedicated `theming-styles-agent` handoff.
 
@@ -217,6 +223,7 @@ After all agents finish, check:
 - If a demo/sample was requested, was the existing demo structure updated appropriately?
 - If a demo/sample was not requested, was it correctly skipped?
 - Is multi-branch cherry-picking needed?
+- Did `npm run lint:lib` pass? (see `skills/igniteui-angular-linting/SKILL.md`)
 
 Report what was done and any remaining items.
 
