@@ -1,378 +1,444 @@
+<p align="center">
+  <img alt="Node.js CI" src="https://github.com/IgniteUI/igniteui-angular/workflows/Node.js%20CI/badge.svg"/></a>
+  <a href="https://coveralls.io/github/IgniteUI/igniteui-angular?branch=master"><img alt="Coverage Status" src="https://coveralls.io/repos/github/IgniteUI/igniteui-angular/badge.svg?branch=master"/></a>
+  <a href="https://badge.fury.io/js/igniteui-angular"><img alt="npm version" src="https://badge.fury.io/js/igniteui-angular.svg"/></a>
+  <a href="https://discord.gg/39MjrTRqds"><img alt="Discord" src="https://img.shields.io/discord/836634487483269200?logo=discord&logoColor=ffffff"/></a>
+  <a href="https://www.npmjs.com/package/igniteui-cli"><img alt="Ignite UI MCP" src="https://img.shields.io/badge/Ignite_UI-MCP-blueviolet"/></a>
+  <a href="https://www.npmjs.com/package/igniteui-theming"><img alt="Ignite UI Theming MCP" src="https://img.shields.io/badge/Ignite_UI_Theming-MCP-blue"/></a>
+</p>
+
 ![ignite-ui-logo-flames](https://user-images.githubusercontent.com/52001020/173773052-e8fd2806-2631-47a8-838d-1eabdaa4afce.svg)
 
+<h1 align="center">Ignite UI for Angular — from Infragistics</h1>
 
-<h1 align="center">
-  Ignite UI for Angular - from Infragistics 
-</h1>
+<p align="center">
+  Enterprise Angular UI library with MCP server, AI Skills, and agent-native developer tooling.
+  60+ components, high-performance data grids, and 65+ chart types — built for production.
+</p>
 
+---
 
-![Node.js CI](https://github.com/IgniteUI/igniteui-angular/workflows/Node.js%20CI/badge.svg)
-[![Build Status](https://dev.azure.com/IgniteUI/igniteui-angular/_apis/build/status/IgniteUI.igniteui-angular)](https://dev.azure.com/IgniteUI/igniteui-angular/_build/latest?definitionId=3)
-[![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-angular/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-angular?branch=master)
-[![npm version](https://badge.fury.io/js/igniteui-angular.svg)](https://badge.fury.io/js/igniteui-angular)
-[![Discord](https://img.shields.io/discord/836634487483269200?logo=discord&logoColor=ffffff)](https://discord.gg/39MjrTRqds)
+## AI-Native Developer Tooling
 
-[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete library of Angular-native, Material-based Angular UI components designed to enable developers to build enterprise-ready HTML5 & JavaScript apps for modern desktop browsers. It packs full-featured components, including Pivot Grids, Dock Manager, Hierarchical Grid, Bottom Navigation, etc., 60+ high-performance Angular Charts for all business needs and any app scenario, and more.
+Ignite UI for Angular ships with a full AI developer toolchain: an **MCP server** for IDE agent integration, **AI Skills** for context-aware code generation, and structured documentation for LLM consumption. These are production tools — not demos.
 
-You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
-Or visit [Ignite UI for Angular Discord](https://discord.com/channels/836634487483269200/836636712292581456) and join the dev community there.
+### MCP Server
 
-### Contributing
-There are many ways in which you can [participate](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#overview) in this project, for example:
+The `@igniteui/mcp-server` (bundled in `igniteui-cli`) gives AI assistants direct access to Ignite UI documentation, component API references, and scaffolding guidance for Angular, React, Blazor, and Web Components.
 
- - [Submit bugs and feature requests](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github), and help us verify as they are checked in.
- - Review [source code changes](https://github.com/IgniteUI/igniteui-angular/pulls)
- - Review [the documentation](https://github.com/IgniteUI/igniteui-docfx) and make pull requests for anything from typos to additional and new content
- - If you are interested in fixing issues and contributing directly to the code base, please see the document [How to Contribute](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug), which covers the following:
+**Start the MCP server:**
 
- - [How to build and run from source](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug)
- - The [development workflow](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#workflow), including debugging and running tests
- - [Coding guidelines](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
- - [Submitting pull requests](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#commit-message-conventions)
- - [New feature development](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#new-feature-development)
- - [Accessibility and Localization](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#accessibility-a11y)
- - [Testing a PR](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#testing-a-pr)
+```bash
+# Install the CLI (if not already installed)
+npm install -g igniteui-cli
 
-### Feedback
- - Ask a question by starting [a discussion](https://github.com/IgniteUI/igniteui-angular/discussions) or submitting [an issue](https://github.com/IgniteUI/igniteui-angular/issues/new/choose)
- - Request a [new feature](https://github.com/IgniteUI/igniteui-angular/issues/new?assignees=&labels=%3Atoolbox%3A+feature-request&template=feature_request.md&title=)
- - Upvote [popular feature requests](https://github.com/IgniteUI/igniteui-angular/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Atoolbox%3A+feature-request%22)
- - [File an issue](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github)
- - Reach out to us [through Discord](https://discord.gg/sBwHs5cJ)
-
-### AI-Assisted Development
-
-This repository ships with **Copilot Skills** — structured knowledge files that teach AI coding assistants (GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to work with Ignite UI for Angular. The skill files live in the [`skills/`](skills/) directory:
-
-| Skill | Path | Description |
-|:------|:-----|:------------|
-| Components | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | UI Components (form controls, layout, data display, feedback/overlays, directives — Input Group, Combo, Select, Date/Time Pickers, Calendar, Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, Button, Ripple, Tooltip, Drag and Drop, Layout Manager, Dock Manager and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart)) |
-| Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) |
-| Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Theming & Styling (includes MCP server setup) |
-
-#### How It Works
-
-- **GitHub Copilot (VS Code / github.com)** — Skills should be discovered automatically via [`.github/copilot-instructions.md`](.github/copilot-instructions.md). No extra setup needed.
-- **Cursor** — Skills are picked up from the `skills/` directory. You can also reference them explicitly in `.cursorrules`.
-
-#### Manual Setup for Other IDEs
-
-If your editor doesn't auto-discover skill files, you can feed them to your AI assistant manually:
-
-1. **Copy the skill content** — Open the relevant `SKILL.md` file from the `skills/` folder and paste its contents into your AI assistant's system prompt or context window.
-2. **JetBrains IDEs (WebStorm, IntelliJ)** — Go to **Settings → Tools → AI Assistant → Project-level prompt** and paste the skill content there, or attach the files as context when chatting.
-3. **Claude Desktop / Claude Code** — Add the files to your project knowledge or include them as part of your CLAUDE.md project instructions.
-4. **Windsurf** — Reference the skill files in your `.windsurfrules` configuration or attach them as context in the chat.
-5. **Other editors** — Attach or paste the `SKILL.md` file contents into your AI assistant's context before asking questions about Ignite UI for Angular.
-
-#### Theming MCP Server
-
-The **Theming skill** includes setup instructions for the `igniteui-theming` MCP server, which gives AI assistants access to live theming tools (palette generation, component theme scaffolding, etc.). See [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) for configuration steps for VS Code, Cursor, Claude Desktop, and JetBrains IDEs.
- 
-## Browser Support
-
-| ![chrome][] | ![firefox][] | ![edge][] | ![opera][] | ![safari][] | ![ie][] |
-|:-----------:|:------------:|:---------:|:----------:|:-----------:|:-------:|
-|  Latest ✔   |   Latest ✔   | Latest ✔  |  Latest ✔  |  Latest ✔   |   11*   |
-
-\* *IE 11 is only supported in Ignite UI for Angular < 13.0.0*
-
-## Overview
-
-### Angular Data Grid
-
-The Ignite UI for [Angular Data Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) equips you with all the necessary features for manipulating and visualizing tabular data in a series of rows and columns with ease. You can find powerful grid elements for no-lag scrolling while rendering and going through millions of data points.
-
-Built for optimization and speed, our [Angular grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) component lets you quickly bind data with very little code and allows you to implement a variety of events in order to tailor different behaviors.
-
-#### [View running Grid samples here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
-
-### Angular Charts & Graphs
-
-Ignite UI for Angular arrives with an extensive library of data visualizations that enable stunning, interactive charts and dashboards for your modern web and mobile apps. All of them are designed to work flawlessly on every modern browser and provide complete touch as well as interactivity. Our comprehensive [Angular Charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/chart-overview) component supports more than 65 chart types that let you display all sorts of data representations and statistics. And with the rich and easy-to-use API, you can plot various types of charts.
-
-Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts.
-
-### Current List of Components Include:
-
-|Components|Status|||Added in|License|Directives|Status|||Added in|License|
-|:--|:--:|:--|:--|:--|:--|:--:|:--|:--|:--|:--|:--|
-|accordion|:white_check_mark:|[Readme](projects/igniteui-angular/accordion/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/accordion)|12.1.0|[MIT](/LICENSE)|autocomplete|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/autocomplete/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete)|7.1.0|[MIT](/LICENSE)
-|avatar|:white_check_mark:|[Readme](projects/igniteui-angular/avatar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar)|2.0.0|[MIT](/LICENSE)|button|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/button/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)|2.0.0|[MIT](/LICENSE)
-|badge|:white_check_mark:|[Readme](projects/igniteui-angular/badge/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge)|2.0.0|[MIT](/LICENSE)|date time editor|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/date-time-editor/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-time-editor)|9.1.0|[MIT](/LICENSE)
-|banner|:white_check_mark:|[Readme](projects/igniteui-angular/banner/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner)|7.0.2|[MIT](/LICENSE)|divider|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/divider/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/divider)|7.2.5|[MIT](/LICENSE)
-|bottom navigation|:white_check_mark:|[Readme](projects/igniteui-angular/bottom-nav/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar)|2.0.0|[MIT](/LICENSE)|dragdrop|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/drag-drop/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drag-drop)|5.2.0|[MIT](/LICENSE)
-|button group|:white_check_mark:|[Readme](projects/igniteui-angular/button-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button-group)|5.1.0|[MIT](/LICENSE)|filter|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/filter/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list)|2.0.0|[MIT](/LICENSE)
-|calendar|:white_check_mark:|[Readme](projects/igniteui-angular/calendar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar)|5.1.0|[MIT](/LICENSE)|focus-trap|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/focus-trap/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)|13.0.0|[MIT](/LICENSE)
-|card|:white_check_mark:|[Readme](projects/igniteui-angular/card/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card)|5.1.0|[MIT](/LICENSE)|forOf|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/for-of/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/for-of)|5.2.0|[MIT](/LICENSE)
-|carousel|:white_check_mark:|[Readme](projects/igniteui-angular/carousel/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel)|2.0.0|[MIT](/LICENSE)|hint|:white_check_mark:|[Readme](projects/igniteui-angular/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|5.3.0|[MIT](/LICENSE)
-|chat|:white_check_mark:|[Readme]()|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chat)|21.0.0|[MIT](/LICENSE)|checkbox|:white_check_mark:|[Readme](projects/igniteui-angular/checkbox/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox)|2.0.0|[MIT](/LICENSE)|input|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/input/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|2.0.0|[MIT](/LICENSE)|
-|chips|:white_check_mark:|[Readme](projects/igniteui-angular/chips/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip)|6.1.0|[MIT](/LICENSE)|label|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/label/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/label-input)|2.0.0|[MIT](/LICENSE)
-|circular progress|:white_check_mark:|[Readme](projects/igniteui-angular/progressbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/circular-progress)|5.1.0|[MIT](/LICENSE)|layout|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/layout/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/layout)|2.0.0|[MIT](/LICENSE)
-|combo|:white_check_mark:|[Readme](projects/igniteui-angular/combo/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo)|6.1.0|[MIT](/LICENSE)|mask|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/mask/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/mask)|5.3.0|[MIT](/LICENSE)
-|date picker|:white_check_mark:|[Readme](projects/igniteui-angular/date-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-picker)|5.3.0|[MIT](/LICENSE)|prefix|:white_check_mark:|[Readme](projects/igniteui-angular/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|5.3.0|[MIT](/LICENSE)
-|date range picker|:white_check_mark:|[Readme](projects/igniteui-angular/date-picker/src/date-range-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-range-picker)|9.1.0|[MIT](/LICENSE)|radio-group|:white_check_mark:||[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio-button)|6.0.4|[MIT](/LICENSE)
-|dialog|:white_check_mark:|[Readme](projects/igniteui-angular/dialog/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)|2.0.0|[MIT](/LICENSE)|ripple|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/ripple/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/ripple)|2.0.0|[MIT](/LICENSE)
-|dock manager|:white_check_mark:||[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dock-manager)|9.1.0|[Commercial](/LICENSE)|suffix|:white_check_mark:|[Readme](projects/igniteui-angular/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|5.3.0|[MIT](/LICENSE)
-|drop down|:white_check_mark:|[Readme](projects/igniteui-angular/drop-down/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down)|6.1.0|[MIT](/LICENSE)|text-highlight|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/text-highlight/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/texthighlight)|6.0.0|[MIT](/LICENSE)
-|expansion panel|:white_check_mark:|[Readme](projects/igniteui-angular/expansion-panel/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion-panel)|6.2.0|[MIT](/LICENSE)|toggle|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/toggle/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle)|6.2.0|[MIT](/LICENSE)
-|grid|:white_check_mark:|[Readme](projects/igniteui-angular/grids/grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)|5.1.0|[Commercial](/LICENSE)|tooltip|:white_check_mark:|[Readme](projects/igniteui-angular/directives/src/directives/tooltip/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)|6.2.0|[MIT](/LICENSE)
-|hierarchical grid|:white_check_mark:|[Readme](projects/igniteui-angular/grids/hierarchical-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid)|7.2.0|[Commercial](/LICENSE)|**Others**|**Status**||**License**|
-|icon|:white_check_mark:|[Readme](projects/igniteui-angular/icon/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon)|2.0.0|[MIT](/LICENSE)
-|icon button|:white_check_mark:|[Readme](projects/igniteui-angular/icon/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon-button)|17.1.0|[MIT](/LICENSE)|Animations|:white_check_mark:|[Readme](projects/igniteui-angular/animations/README.md)||2.0.0|[MIT](/LICENSE)|
-|input group|:white_check_mark:|[Readme](projects/igniteui-angular/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|5.3.0|[MIT](/LICENSE)|dataUtil|:white_check_mark:|[Readme](projects/igniteui-angular/core/src/core/README.md)||5.1.0|[MIT](/LICENSE)|
-|linear progress|:white_check_mark:|[Readme](projects/igniteui-angular/progressbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear-progress)|5.1.0|[MIT](/LICENSE)|dataContainer|:white_check_mark:|[Readme](projects/igniteui-angular/core/README.md)||5.1.0|[MIT](/LICENSE)||
-|list|:white_check_mark:|[Readme](projects/igniteui-angular/list/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list)|2.0.0|[MIT](/LICENSE)|IgxGridState|:white_check_mark:|[Readme](projects/igniteui-angular/grids/core/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/state-persistence)|9.0.0|[MIT](/LICENSE)||
-|month picker|:white_check_mark:|[Readme](projects/igniteui-angular/calendar/src/calendar/month-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/month-picker)|7.2.0|[MIT](/LICENSE)||||
-|navbar|:white_check_mark:|[Readme](projects/igniteui-angular/navbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navbar)|2.0.0|[MIT](/LICENSE)|||||
-|navigation drawer|:white_check_mark:|[Readme](projects/igniteui-angular/navigation-drawer/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)|2.0.0|[MIT](/LICENSE)|||||
-|pivot grid|:white_check_mark:|[Readme](projects/igniteui-angular/grids/pivot-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotgrid/pivot-grid)|13.1.0|[Commercial](/LICENSE)||||
-|query builder|:white_check_mark:|[Readme](projects/igniteui-angular/query-builder/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/query-builder)|14.2.0|[Commercial](/LICENSE)||||
-|radio|:white_check_mark:|[Readme](projects/igniteui-angular/radio/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio-button)|2.0.0|[MIT](/LICENSE)|||||
-|rating|:white_check_mark:||[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/rating)|14.1.0|[MIT](/LICENSE)||||
-|select|:white_check_mark:|[Readme](projects/igniteui-angular/select/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select)|5.3.0|[MIT](/LICENSE)||||
-|simple-combo|:white_check_mark:|[Readme](projects/igniteui-angular/simple-combo/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/simple-combo)|13.0.0|[MIT](/LICENSE)||||
-|slider|:white_check_mark:|[Readme](projects/igniteui-angular/slider/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider/slider)|5.1.0|[MIT](/LICENSE)||||
-|snackbar|:white_check_mark:|[Readme](projects/igniteui-angular/snackbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar)|5.1.0|[MIT](/LICENSE)||||
-|splitter|:white_check_mark:|[Readme](projects/igniteui-angular/splitter/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/splitter)|9.1.0|[MIT](/LICENSE)||||
-|stepper|:white_check_mark:|[Readme](projects/igniteui-angular/stepper/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper)|13.0.0|[MIT](/LICENSE)|
-|switch|:white_check_mark:|[Readme](projects/igniteui-angular/switch/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch)|2.0.0|[MIT](/LICENSE)|||||
-|tabs|:white_check_mark:|[Readme](projects/igniteui-angular/tabs/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)|5.1.0|[MIT](/LICENSE)||||
-|tile manager|:white_check_mark:||[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tile-manager)|19.2.0|[MIT](/LICENSE)||||
-|time picker|:white_check_mark:|[Readme](projects/igniteui-angular/time-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker)|5.3.0|[MIT](/LICENSE)||||
-|toast|:white_check_mark:|[Readme](projects/igniteui-angular/toast/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast)|5.1.0|[MIT](/LICENSE)||||
-|tree|:white_check_mark:|[Readme](projects/igniteui-angular/tree/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)|12.0.0|[MIT](/LICENSE)||||
-|tree grid|:white_check_mark:|[Readme](projects/igniteui-angular/grids/tree-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)|6.2.0|[Commercial](/LICENSE)||||
-
-### Release History
-
-|Ignite UI for Angular|Release date|Milestone|
-|:----|:----|:----|
-| | ||
-|4.0.0|18-April-17||
-|4.1.0|12-May-17||
-|4.2.0|20-Jul-17||
-|5.0.0|03-Nov-17||
-|5.1.0|17-Jan-18|[Milestone #1](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-1-by-january-15th-2018)|
-|5.2.0|23-Feb-18||
-|5.3.0|24-Apr-18|[Milestone #2](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-2-due-april-25th-2018)|
-|6.0.0|21-May-18||
-|6.1.0|05-Jul-18|[Milestone #3](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-3-by-july-6th-2018)|
-|6.2.0|05-Nov-18||
-|7.0.0|26-Nov-18|[Milestone #4](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-4-november-30th-2018)|
-|7.1.0|13-Dec-18|[Milestone #5](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-5-14122018)|
-|7.2.0|08-Mar-19|[Milestone #6](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-6-due-march-8th-2019)|
-|7.3.0|13-May-19|[Milestone #7](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-7-13052019)|
-|8.0.0|19-Jun-19||
-|8.1.0|22-Jul-19|[Milestone #8](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-8-released-july-22nd-2019)|
-|8.2.0|26-Sep-19|[Milestone #9](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-9-version-820-released-september-26th-2019-release-blog-82)|
-|9.0.0|11-Feb-20|[Milestone #10](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-10-version-900-released-february-11th-2020-release-blog-90)|
-|9.1.0|01-Jun-20|[Milestone #11](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-11-version-910-released-june-1st-2020-release-blog-91)|
-|10.0.0|25-Jun-20|[Milestone #12](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-12-version-1000--1010-released-august-12th-2020-release-blog-100)|
-|10.1.0|12-Aug-20|[Milestone #12](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-12-version-1000--1010-released-august-12th-2020-release-blog-100)|
-|10.2.0|20-Oct-20|[Milestone #13](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-13-version-1020-released-october-20th-2020-release-blog-102)|
-|11.0.0|13-Nov-20|[Milestone #14](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-14-version-1100-released-november-11th-2020-release-blog-110)|
-|11.1.0|17-Feb-21|[Milestone #15](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-15-version-1110-released-february-17th-2021-release-blog-111)|
-|12.0.0|14-May-21|[Milestone #16](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-16-version-1200-released-may-14th-2021-release-blog-1200)|
-|12.1.0|02-Aug-21|[Milestone #17](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-17--version-1210-released-august-2nd-2021-releae-blog-121)|
-|12.2.0|04-Oct-21|[Milestone #18](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-18-version-1220-released-october-4th-2021-release-blog-122)|
-|13.0.0|23-Nov-21|[Milestone #19](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-19-version-130-released-november-23rd-2021-release-blog-130)|
-|13.1.0|02-Mar-22|[Milestone #20](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-20-version-131-released-march-2nd-2022-release-blog-131)|
-|13.2.0|25-May-22|[Milestone #21](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-21-version-132-released-may-25th-2022-release-blog-221)|
-|14.0.0|09-Jun-22|[Milestone #22](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-22-version-140-released-june-09th-2022-release-blog-221)|
-|14.1.0|13-Sep-22|[Milestone #23](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-23-version-141-released-september-13th-2022-release-blog-141)|
-|14.2.0|06-Oct-22|[Milestone #24](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-24-version-142-released-october-06th-2022-release-blog-222)|
-|15.0.0|23-Nov-22|[Milestone #25](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-25-version-150-released-november-23rd-2022-release-blog-150)|
-|15.1.0|27-Mar-23|[Milestone #26](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-26-version-151-releasd-march-28th-2023)|
-|16.0.0|15-May-23|[Milestone #27](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-27-version-160-released-may-15th-2023-release-blog-160)|
-|16.1.0|02-Oct-23|[Milestone #28](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-28-version-161-released-oct-5th-2023-release-blog-161)|
-|17.0.0|09-Nov-23|[Milestone #29](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-29-version-170-released-nov-9th-2023-release-blog-170)|
-|17.1.0|26-Feb-24|[Milestone #30](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-30-version-171-released-feb-26th-2024)|
-|17.2.0|29-Apr-24|[Milestone #31](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-31-version-172-released-apr-29th-2024)|
-|18.0.0|07-Jun-24|[Milestone #32](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-32-version-180-released-jun-07th-2024)|
-|18.1.0|22-Jul-24|[Milestone #33](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-33-due-by-jul-2024)|
-|18.2.0|25-Oct-24|[Milestone #34](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-34-version-182-released-oct-25th-2024)|
-|19.0.0|25-Nov-24|[Milestone #35](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-35-version-190-released-nov-25th-2024)|
-|19.1.0|27-Feb-25|[Milestone #36](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-36--version-191-released-feb-27th-2025)|
-|19.2.0|16-Apr-25|[Milestone #37](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-37--version-192-released-apr-16th-2025-release-blog-192)|
-|20.0.0|09-Jun-25|[Milestone #38](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-38-version-200-released-jun-09th-2025)|
-|20.1.0|25-Sep-25|[Milestone #39](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-39-version-201-released-sep--25th-2025)|
-|21.0.0|03-Dec-25|[Milestone #40]()|
-
-
-### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)
-|Components||License|
-|:---|:---|:---|
-|Bar Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bar-chart)|[Commercial](/LICENSE)|
-|Line Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/line-chart)|[Commercial](/LICENSE)|
-|Financial Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart)|[Commercial](/LICENSE)|
-|Doughnut Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart)|[Commercial](/LICENSE)|
-|Pie Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart)|[Commercial](/LICENSE)|
-
-### Components available in [igniteui-angular-gauges](https://www.npmjs.com/package/igniteui-angular-gauges)
-|Components||License|
-|:---|:---|:---|
-|Bullet Graph|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/bullet-graph)|[Commercial](/LICENSE)|
-|Linear Gauge|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear-gauge)|[Commercial](/LICENSE)|
-|Radial Gauge|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radial-gauge)|[Commercial](/LICENSE)|
-
-### Components available in [igniteui-angular-excel](https://www.npmjs.com/package/igniteui-angular-excel)
-|Components||License|
-|:---|:---|:---|
-|Excel Library|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/excel-library)|[Commercial](/LICENSE)|
-
-
-### Components available in [igniteui-angular-spreadsheet](https://www.npmjs.com/package/igniteui-angular-spreadsheet)
-|Components||License|
-|:---|:---|:---|
-|Spreadsheet|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/spreadsheet-overview)|[Commercial](/LICENSE)|
-
-## Setup
-From the root folder run:
-
-```
-npm install
+# Start the MCP server
+ig mcp
 ```
 
-## Create new Project with Ignite UI CLI
-To get started with the Ignite UI CLI and Ignite UI for Angular:
+**Configure your IDE or agent client** — add to your `mcp.json` or settings.
+
+To use **both** MCP servers, configure them as separate entries — they serve different purposes and are not interchangeable:
+
+```json
+{
+  "mcpServers": {
+    "igniteui": {
+      "command": "ig",
+      "args": ["mcp"]
+    },
+    "igniteui-theming": {
+      "command": "npx",
+      "args": ["igniteui-theming/mcp"]
+    }
+  }
+}
+```
+
+**VS Code** — add to `.vscode/mcp.json` in your project root, or to your user `settings.json` under `"mcp"`.
+
+**Cursor** — add to `.cursor/mcp.json` in your project root.
+
+**Claude Code** — add to `.claude/mcp.json` or pass via `--mcp-config`.
+
+**Claude Desktop** — add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS).
+
+#### MCP tool inventory
+
+| Tool | Description | Input | Output |
+|------|-------------|-------|--------|
+| `list_components` | List available Ignite UI component docs | `{ framework: "angular" \| "react" \| "blazor" \| "webcomponents" }` | Component name list |
+| `get_doc` | Fetch full markdown of a component doc | `{ component, framework }` | Markdown content |
+| `search_docs` | Full-text search across all Ignite UI docs | `{ query, framework? }` | Ranked results |
+| `get_api_reference` | Retrieve full API reference for a component or class | `{ component, framework }` | API markdown |
+| `search_api` | Search API entries by keyword or partial name | `{ query, framework? }` | Matched entries |
+| `generate_ignite_app` | Return setup guide for a new Ignite UI project | `{ framework, template? }` | Step-by-step guide |
+
+> The MCP server runs over stdio. Remote backend option: `ig mcp --remote <url>`. Debug logging: `ig mcp --debug`.
+
+---
+
+### Theming MCP Server
+
+The `igniteui-theming` package ships a dedicated MCP server for AI-assisted theme generation — palettes, typography, elevations, and per-component themes across all four design systems (Material, Bootstrap, Fluent, Indigo).
+
+**Start the Theming MCP server:**
+
+```bash
+npx igniteui-theming/mcp
+```
+
+No global install required — the server is bundled inside the `igniteui-theming` npm package.
+
+#### Theming MCP tool inventory
+
+| Tool | Phase | Description |
+|------|-------|-------------|
+| `detect_platform` | 1 | Detect target platform from `package.json` |
+| `create_theme` | 1 | Generate a complete platform-specific theme (Sass + CSS) |
+| `create_palette` | 1 | Generate a color palette with shade calculations |
+| `create_custom_palette` | 1 | Generate a fully custom color palette |
+| `create_typography` | 1 | Set up typography system for a design system |
+| `create_elevations` | 1 | Configure elevation/shadow system |
+| `create_component_theme` | 1 | Create a scoped component-level theme |
+| `get_component_design_tokens` | 1 | Get the token schema for a specific component |
+| `get_color` | 2 | Retrieve a palette color as a CSS variable reference |
+| `suggest_palette` | 2 | Suggest a palette from a natural language description |
+| `check_contrast` | 2 | Check WCAG contrast ratio for a color pair |
+
+> Phase 1 tools are released. Phase 2 is partially implemented. Phase 3 (spacing/sizing) and Phase 4 (validation) are not yet available — do not call `validate_theme`, `set_size`, `set_spacing`, or `explain_function`.
+
+---
+
+### AI Skills
+
+Copilot Skills are structured knowledge files that teach AI coding assistants how to generate correct Ignite UI for Angular code. They live in the [`skills/`](skills/) directory and are loaded automatically in supported IDEs.
+
+| Skill | Path | Covers |
+|-------|------|--------|
+| Components | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | Form controls, layout, data display, overlays, charts (Input Group, Combo, Select, Date/Time Pickers, Calendar, Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, Button, Tooltip, Drag and Drop, Dock Manager, Area/Bar/Column/Stock/Pie Charts) |
+| Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence. Grid components: Grid, Tree Grid, Hierarchical Grid, Pivot Grid |
+| Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Design tokens, component themes, palette generation — includes Theming MCP server setup |
+
+**Skills are developer-owned npm packages, not single prompt files.** Each Skill is versioned, testable, and loaded via IDE configuration — not copy-pasted into chat.
+
+---
+
+### Integration matrix
+
+| Tool | VS Code | Cursor | Claude Code | Claude Desktop | JetBrains |
+|------|:-------:|:------:|:-----------:|:--------------:|:---------:|
+| Doc MCP (`ig mcp`) | ✓ | ✓ | ✓ | ✓ | via stdio |
+| Theming MCP (`npx igniteui-theming/mcp`) | ✓ | ✓ | ✓ | ✓ | via stdio |
+| Components Skill | ✓ auto | ✓ auto | manual | manual | manual |
+| Grids Skill | ✓ auto | ✓ auto | manual | manual | manual |
+| Theming Skill | ✓ auto | ✓ auto | manual | manual | manual |
+| GitHub Copilot auto-discovery | ✓ | — | — | — | — |
+
+> **Auto** = discovered via `.github/copilot-instructions.md` (Copilot) or `skills/` directory (Cursor).
+> **Manual** = copy the relevant `SKILL.md` content into your IDE's project-level system prompt or context window.
+
+---
+
+### AI toolchain architecture
 
 ```
-npm i -g igniteui-cli
-ig new <project name> --framework=angular
-cd <project name>
-ig add grid <component name>
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│               VS Code · Cursor · Claude Code · Claude Desktop                    │
+└───────────────────────────┬──────────────────────────────┬───────────────────────┘
+                            │                              │
+                  MCP protocol (stdio)          MCP protocol (stdio)
+                            │                              │
+           ┌────────────────▼────────────┐  ┌──────────────▼──────────────────────┐
+           │   @igniteui/mcp-server      │  │   igniteui-theming MCP             │
+           │   command: ig mcp           │  │   command: npx igniteui-theming/mcp │
+           │   (bundled in igniteui-cli) │  │   (bundled in igniteui-theming)    │
+           │                             │  │                                    │
+           │  › list_components          │  │  Phase 1 (released)                │
+           │  › get_doc                  │  │  › detect_platform                 │
+           │  › search_docs              │  │  › create_theme                    │
+           │  › get_api_reference        │  │  › create_palette                  │
+           │  › search_api               │  │  › create_custom_palette           │
+           │  › generate_ignite_app      │  │  › create_typography               │
+           │                             │  │  › create_elevations               │
+           │  SQLite doc index +         │  │  › create_component_theme          │
+           │  TypeDoc API refs           │  │  › get_component_design_tokens     │
+           │  (Angular, React, WC)       │  │                                    │
+           └─────────────────────────────┘  │  Phase 2 (partial)                 │
+                                            │  › get_color                       │
+                                            │  › suggest_palette                 │
+                                            │  › check_contrast                  │
+                                            │                                    │
+                                            │  Embedded knowledge:               │
+                                            │  color presets, type scales,       │
+                                            │  elevation defs, component         │
+                                            │  schemas — Material, Bootstrap,    │
+                                            │  Fluent, Indigo                    │
+                                            └────────────────────────────────────┘
+                                                             ▲
+                                                             │ loaded by
+           ┌─────────────────────────────────────────────────┴──────────────────┐
+           │                     AI Skills  (skills/)                           │
+           │  › igniteui-angular-components                                     │
+           │  › igniteui-angular-grids                                          │
+           │  › igniteui-angular-theming  ─────────────────────────────────────►│
+           └────────────────────────────────────────────────────────────────────┘
+```
+
+> The component/grid/theming **Skills** and the two **MCP servers** are distinct tools with different roles.
+> The Theming MCP (`npx igniteui-theming/mcp`) and the documentation MCP (`ig mcp`) require **separate entries** in your `mcp.json` — they are not interchangeable.
+
+---
+
+### Boundary constraints
+
+These constraints are explicit. Hallucinating around them breaks developer workflows.
+
+- The documentation MCP server requires `igniteui-cli` to be installed globally (`npm install -g igniteui-cli`). It does **not** run as a standalone npm package.
+- The Theming MCP server runs via `npx igniteui-theming/mcp` — no global install required. It is **not** part of `igniteui-cli`.
+- The Theming MCP (`npx igniteui-theming/mcp`) is a **separate** server from the documentation MCP (`ig mcp`). Different tools, different `mcp.json` entries, different purposes — they do not overlap.
+- AI Skills are developer-owned npm packages in the `skills/` directory. They are **not** single prompt files and should not be reduced to a system prompt string.
+- The `get_api_reference` and `search_api` doc MCP tools require API docs to be pre-built. Without the build step, these tools are unavailable — the remaining four tools still work via the bundled SQLite database.
+- The documentation MCP server provides **documentation and scaffolding guidance only**. It does **not** write files to disk, execute code, or modify your project directly.
+- The Theming MCP Phase 3 tools (`set_size`, `set_spacing`, `set_roundness`) and Phase 4 tools (`validate_theme`, `explain_function`) are **not yet implemented**. Do not suggest or call them.
+- Skills cover Angular only. For React, Blazor, or Web Components, use the doc MCP server's `framework` parameter — dedicated Skill files for those frameworks are not in this repository.
+
+---
+
+### Testing the MCP servers
+
+```bash
+# Test the documentation MCP server
+npx @modelcontextprotocol/inspector ig mcp
+
+# Test the Theming MCP server
+npx @modelcontextprotocol/inspector npx igniteui-theming/mcp
+```
+
+---
+
+## Installation
+
+```bash
+npm install igniteui-angular
+```
+
+Or scaffold a new project with Ignite UI CLI:
+
+```bash
+npm install -g igniteui-cli
+ig new <project-name> --framework=angular
+cd <project-name>
+ig add grid <component-name>
 ig start
 ```
 
-## Adding IgniteUI for Angular to Existing Project
+Add to an existing Angular project:
 
-Including the `igniteui-angular` and `igniteui-cli` packages to your project:
-
-```
+```bash
 ng add igniteui-angular
 ```
 
-After this operation you can use the Ignite UI CLI commands in your project, such as `ig` and `ig add`.
-[Learn more](https://github.com/IgniteUI/igniteui-cli#usage)
+---
 
-## Updating Existing Project
+## Browser Support
 
-Analyze your project for possible migrations:
+| ![chrome][] | ![firefox][] | ![edge][] | ![opera][] | ![safari][] |
+|:-----------:|:------------:|:---------:|:----------:|:-----------:|
+| Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
 
-```
-ng update
-```
+> IE 11 was supported in Ignite UI for Angular < 13.0.0. It is no longer supported.
 
-If there are new versions available, update your packages:
+---
 
-```
-ng update igniteui-angular
-...
-ng update igniteui-cli
-```
+## Component Library
 
-## Building the Library
-```
-// build the code
+### Data Grids
+
+The [Angular Data Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) handles millions of rows with no-lag scrolling. Includes Grid, Tree Grid, Hierarchical Grid, and Pivot Grid — all with sorting, filtering, editing, grouping, remote data, and state persistence.
+
+### Charts & Graphs
+
+65+ chart types via the [Angular Charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/chart-overview) component — line, bar, financial, pie, donut, polar, treemap, bubble, and more.
+
+### Full component list
+
+<details>
+<summary>Expand component inventory (60+ components + directives)</summary>
+
+| Component | Status | Docs | License | Since |
+|:----------|:------:|:-----|:-------:|------:|
+| accordion | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/accordion) | MIT | 12.1.0 |
+| avatar | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar) | MIT | 2.0.0 |
+| badge | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge) | MIT | 2.0.0 |
+| banner | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner) | MIT | 7.0.2 |
+| bottom navigation | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar) | MIT | 2.0.0 |
+| button group | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button-group) | MIT | 5.1.0 |
+| calendar | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar) | MIT | 5.1.0 |
+| card | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card) | MIT | 5.1.0 |
+| carousel | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel) | MIT | 2.0.0 |
+| chat | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chat) | MIT | 21.0.0 |
+| checkbox | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox) | MIT | 2.0.0 |
+| chips | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip) | MIT | 6.1.0 |
+| combo | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo) | MIT | 6.1.0 |
+| date picker | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-picker) | MIT | 5.3.0 |
+| date range picker | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-range-picker) | MIT | 9.1.0 |
+| dialog | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog) | MIT | 2.0.0 |
+| dock manager | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dock-manager) | Commercial | 9.1.0 |
+| drop down | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down) | MIT | 6.1.0 |
+| expansion panel | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion-panel) | MIT | 6.2.0 |
+| grid | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) | Commercial | 5.1.0 |
+| hierarchical grid | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid) | Commercial | 7.2.0 |
+| icon / icon button | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon) | MIT | 2.0.0 |
+| input group | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group) | MIT | 5.3.0 |
+| list | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list) | MIT | 2.0.0 |
+| navbar | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navbar) | MIT | 2.0.0 |
+| navigation drawer | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer) | MIT | 2.0.0 |
+| pivot grid | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotgrid/pivot-grid) | Commercial | 13.1.0 |
+| query builder | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/query-builder) | Commercial | 14.2.0 |
+| radio / radio group | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio-button) | MIT | 2.0.0 |
+| rating | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/rating) | MIT | 14.1.0 |
+| select | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select) | MIT | 5.3.0 |
+| simple combo | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/simple-combo) | MIT | 13.0.0 |
+| slider | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider/slider) | MIT | 5.1.0 |
+| snackbar | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar) | MIT | 5.1.0 |
+| splitter | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/splitter) | MIT | 9.1.0 |
+| stepper | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper) | MIT | 13.0.0 |
+| switch | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch) | MIT | 2.0.0 |
+| tabs | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs) | MIT | 5.1.0 |
+| tile manager | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tile-manager) | MIT | 19.2.0 |
+| time picker | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker) | MIT | 5.3.0 |
+| toast | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast) | MIT | 5.1.0 |
+| tree | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree) | MIT | 12.0.0 |
+| tree grid | ✔ | [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid) | Commercial | 6.2.0 |
+
+**Additional packages:**
+
+| Package | Components | License |
+|---------|-----------|---------|
+| [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts) | Bar, Line, Financial, Doughnut, Pie charts | Commercial |
+| [igniteui-angular-gauges](https://www.npmjs.com/package/igniteui-angular-gauges) | Bullet Graph, Linear Gauge, Radial Gauge | Commercial |
+| [igniteui-angular-excel](https://www.npmjs.com/package/igniteui-angular-excel) | Excel Library | Commercial |
+| [igniteui-angular-spreadsheet](https://www.npmjs.com/package/igniteui-angular-spreadsheet) | Spreadsheet | Commercial |
+
+</details>
+
+---
+
+## Development Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Build the library
 ng build igniteui-angular
 
-// build the css
+# Build CSS
 npm run build:styles
 
-// build them both
+# Build both
 npm run build:lib
 ```
 
-You can find the build output under `dist/igniteui-angular`.
+Output: `dist/igniteui-angular`
 
-## Running the tests
+### Running tests
 
-Running the tests in watch mode:
+```bash
+# Watch mode
+ng test igniteui-angular
 
-```
-ng test igniteui-angular // or npm run test:lib:watch
-```
-
-Running the tests once with code coverage enabled:
-```
+# Single run with coverage
 npm run test:lib
 ```
 
-## Building the API Docs
-The API docs are produced using TypeDoc and SassDoc. In order to build the docs, all you need to do is run:
+### Building API docs
 
-```
+```bash
 npm run build:docs
 ```
 
-The output of the API docs build is located under `dist/igniteui-angular/docs`.
+Output: `dist/igniteui-angular/docs`
 
-## Run Demos Application
+### Run demo application
 
-The repository includes a sample application featuring the showcasing the different components/directives.
-In order to run the demo samples, build the library first and start the application.
-```
+```bash
 npm start
 ```
 
-**NOTE**: Experimental demos are not always stable.
+### Updating an existing project
 
-## NPM Package
+```bash
+ng update
+ng update igniteui-angular
+ng update igniteui-cli
+```
 
-You can include Ignite UI for Angular in your project as a dependency using the NPM package.
+---
 
-`npm install igniteui-angular`
+## Demo applications
+
+- [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) — mobile app using multiple Ignite UI widgets
+- [FinTech Grid App](https://github.com/Infragistics/angular-samples/tree/master/Grid/FinJS) — Angular Grid handling thousands of updates per second
+- [FinTech Tree Grid App](https://github.com/Infragistics/angular-samples/tree/master/TreeGrid/FinJS) — Tree Grid under high-frequency updates
+- [Crypto Portfolio App](https://github.com/IgniteUI/crypto-portfolio-app) — web + mobile with Ignite UI theming engine
+- [Dock Manager + Data Analysis](https://github.com/IgniteUI/DockManager-DataAnalysis) — Grid + Chart + Dock Manager integration
+- [ASP.NET Core samples](https://github.com/IgniteUI/ASP.NET-Core-Samples) — Angular client + ASP.NET Core backend
+
+---
+
+## Documentation
+
+- [Getting started](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/getting-started)
+- [API reference](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/getting-started)
+- [Roadmap](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md)
+- [Release history](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#release-history)
+- [Changelog](https://github.com/IgniteUI/igniteui-angular/blob/master/CHANGELOG.md)
+
+---
 
 ## Contributing
-[General Naming and Coding Guidelines for Ignite UI for Angular](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
 
-## Demo Apps & Documentation
+- [How to contribute](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md)
+- [Coding guidelines](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
+- [Submit a bug or feature request](https://github.com/IgniteUI/igniteui-angular/issues/new/choose)
+- [Community discussions](https://github.com/IgniteUI/igniteui-angular/discussions)
+- [Discord](https://discord.gg/39MjrTRqds)
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular)
 
-### List of Angular Demo Apps
-- [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) - Demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
-
-- [FinTech Grid App]( https://github.com/Infragistics/angular-samples/tree/master/Grid/FinJS) - The Ignite UI for Angular Grid component is able to handle thousands of updates per second, while keeping the grid responsive for any interaction that the user may undertake. This sample demonstrates the Angular Grid handling thousands of updates per second.
-
-- [FinTech Tree Grid App](https://github.com/Infragistics/angular-samples/tree/master/TreeGrid/FinJS) - The Ignite UI for Angular Tree Grid component is able to handle thousands of updates per second, while keeping the grid responsive for any interaction that the user may undertake. This sample demonstrates the Tree Grid handling thousands of updates per second.
-
-- [Crypto Portfolio App](https://github.com/IgniteUI/crypto-portfolio-app) - This is a web and mobile application, developed with Ignite UI for Angular components and styled with our one of a kind theming engine.
-
-- [Task Planner Application](https://github.com/IgniteUI/TaskPlanner) – Task Planner is an Angular web application. It provides an effective means for managing projects and related tasks. Thus, it loads data from the Web API endpoint, enabling the user to start managing - filtering and sorting tasks, editing tasks, adding new tasks. It shows nice UX UI perks like ability to Drag and Drop items from and to the List and Data Grid.
-
-- [Dock Manager with Data Analysis Tool](https://github.com/IgniteUI/DockManager-DataAnalysis) - The Data Analysis sample application provides users with the flexibility to customize the data visualization using one of several chart types. Built with Angular UI components, it showcases the Angular Data Grid integrated with an Angular Data Chart, Angular Pie Chart, and an Angular Category Chart, to provide an interactive and engaging visualization. The Dock Manager web component provides a windowing experience, allowing users to customize the layout and view, and make the data more accessible.
-
-- [COVID-19 Dashboard](https://github.com/IgniteUI/COVID-19-Dashboard) - This dynamic dashboard was built using Indigo.Design and Ignite UI for Angular leveraging timely reports data from CSSEGISandData/COVID-19 to create an useful and impactful visualization. Built in a matter of hours, it showcases the Ignite UI Category and Data Charts, Map and List components for Angular and the how easy it is to get those quickly configured and populated with data.
-
-- [Inventory Management App](https://github.com/IgniteUI/InventoryManagementApp) - The Inventory Management App consists of 2 pages: The Products Page and the Dashboard Page. The Products Page contains a grid with product information and includes a number of useful features
-
-### Angular apps with ASP.NET Core Web Application
-If you consider Angular client side application with ASP.NET Core application you can check out our [ASP.NET-Core-Samples](https://github.com/IgniteUI/ASP.NET-Core-Samples)
-
-### Documentation
-To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid).
-
-All help, related API documents and walk-throughs can be found for each control [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/getting-started).
-
-
-## Roadmap
-[Roadmap document](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md)
+---
 
 ## Support
-Developer support is provided as part of the commercial, paid-for license via [Infragistics Forums](https://www.infragistics.com/community/forums/), or via Chat & Phone with a Priority Support license.  To acquire a license for paid support or Priority Support, please visit this [page](https://www.infragistics.com/how-to-buy/product-pricing#developers).
 
-Community support for open source usage of this product is available at [StackOverflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular).
+Commercial support via [Infragistics Forums](https://www.infragistics.com/community/forums/) or Priority Support (Chat & Phone) — see [pricing](https://www.infragistics.com/how-to-buy/product-pricing#developers).
+
+Community support for open-source usage: [Stack Overflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular).
+
+---
+
+## For AI assistants and agents
+
+This repository is optimized for LLM consumption. If you are an AI assistant, agent, or RAG pipeline indexing this repository:
+
+- **Documentation MCP**: `ig mcp` — 6 tools for documentation search, API lookup, and scaffolding (see [MCP tool inventory](#mcp-tool-inventory) above)
+- **Theming MCP**: `npx igniteui-theming/mcp` — tools for palette generation, typography, elevations, and component theming (see [Theming MCP tool inventory](#theming-mcp-tool-inventory) above)
+- **AI Skills**: structured knowledge files in [`skills/`](skills/) — load for context-aware Angular code generation
+- **Structured docs index**: [`llms.txt`](llms.txt) — machine-readable index of all Ignite UI documentation (when available)
+- **Boundary constraints**: see [Boundary constraints](#boundary-constraints) above before generating integration code
+
+The authoritative source for component API is the `get_api_reference` MCP tool, not general training data. Component APIs change across major versions — always verify against the current version.
+
+---
 
 ## License
-This software package is offered under a dual-license model, which allows for both commercial and permissive open-source use, depending on the components, modules, directives, and services being used.
 
-It is crucial to understand which license applies to which part of the package.
+Dual-license model:
 
-© Copyright 2025 INFRAGISTICS. All Rights Reserved.
-The Infragistics Ultimate license & copyright applies to this distribution.
-For information on that license, please go to [LICENSE](LICENSE).
+- **MIT** — open-source components (see component table above for per-component license)
+- **Commercial** — grids, charts, gauges, dock manager, and other premium components
 
-
+© 2025 INFRAGISTICS. All Rights Reserved. See [LICENSE](LICENSE).
 
 <!-- browser logos -->
 [chrome]: https://user-images.githubusercontent.com/2188411/168109445-fbd7b217-35f9-44d1-8002-1eb97e39cdc6.png "Google Chrome"
@@ -380,4 +446,3 @@ For information on that license, please go to [LICENSE](LICENSE).
 [edge]: https://user-images.githubusercontent.com/2188411/168109472-a730f8c0-3822-4ae6-9f54-785a66695245.png "Microsoft Edge"
 [opera]: https://user-images.githubusercontent.com/2188411/168109520-b6865a6c-b69f-44a4-9948-748d8afd687c.png "Opera"
 [safari]: https://user-images.githubusercontent.com/2188411/168109527-6c58f2cf-7386-4b97-98b1-cfe0ab4e8626.png "Safari"
-[ie]: https://user-images.githubusercontent.com/2188411/168135931-ce5259bb-5b26-4003-8b89-dbee3d4f247c.png "Internet Explorer"
