@@ -207,7 +207,6 @@ export interface OverlayInfo {
     event?: Event;
     wrapperElement?: HTMLElement;
     size?: string;
-    appendedToBody?: boolean
 }
 
 /** @hidden */

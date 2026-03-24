@@ -354,17 +354,7 @@ export class IgxOverlayService implements OnDestroy {
         info.wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
 
-        // TODO: This check for ContainerPositionStrategy is temporary and should be removed once a proper long-term
-        // solution for container-based positioning is in place.
-        if (info.settings.positionStrategy instanceof ContainerPositionStrategy) {
-            this.moveElementToContainer(info);
-        } else if (info.settings.outlet) {
-            this.moveElementToOutlet(info);
-        } else if (info.elementRef.nativeElement.parentElement) {
-            this.wrapElementInPlace(info);
-        } else {
-            this.appendElementToDocument(info);
-        }
+        this.insertWrapper(info);
         contentElement.appendChild(info.elementRef.nativeElement);
 
         // Update the container size after wrapping/moving if there is size.
@@ -680,8 +670,47 @@ export class IgxOverlayService implements OnDestroy {
         return hook;
     }
 
-    private moveElementToContainer(info: OverlayInfo) {
-        info.hook = this.placeElementHook(info.elementRef.nativeElement);
+    /**
+     * Determines the correct placement strategy for the overlay wrapper and inserts it into the DOM.
+     * Places a hook to mark the element's original DOM position whenever a parent exists.
+     * The absence of a hook indicates the element had no parent and was appended to the body.
+     */
+    private insertWrapper(info: OverlayInfo) {
+        const element = info.elementRef.nativeElement;
+        if (element.parentElement) {
+            info.hook = this.placeElementHook(element);
+        }
+
+        // TODO: This check for ContainerPositionStrategy is temporary and should be removed once a proper long-term
+        // solution for container-based positioning is in place.
+        if (info.settings.positionStrategy instanceof ContainerPositionStrategy) {
+            this.insertWrapperInContainer(info);
+        } else {
+            this.appendWrapperTo(info, this.getWrapperParent(info));
+        }
+    }
+
+    /** Resolves the DOM node that should host the wrapper element. */
+    private getWrapperParent(info: OverlayInfo): HTMLElement {
+        if (info.settings.outlet) {
+            return info.settings.outlet.nativeElement || info.settings.outlet;
+        }
+        return info.hook?.parentElement || this._document.body;
+    }
+
+    /**
+     * Appends the wrapper to the given parent. When a hook exists and lives under the same
+     * parent, the wrapper is inserted right before the original element to preserve DOM order.
+     */
+    private appendWrapperTo(info: OverlayInfo, parent: HTMLElement) {
+        const ref = info.hook?.parentElement === parent ? info.elementRef.nativeElement : null;
+        parent.insertBefore(info.wrapperElement, ref);
+    }
+
+    /**
+     * Creates an absolutely-positioned container div around the wrapper for ContainerPositionStrategy.
+     */
+    private insertWrapperInContainer(info: OverlayInfo) {
         const parent = info.settings.outlet?.nativeElement ||
                        info.settings.outlet ||
                        info.hook?.parentElement ||
@@ -694,23 +723,6 @@ export class IgxOverlayService implements OnDestroy {
         container.style.pointerEvents = 'none';
         container.appendChild(info.wrapperElement);
         parent.appendChild(container);
-    }
-
-    private moveElementToOutlet(info: OverlayInfo) {
-        info.hook = this.placeElementHook(info.elementRef.nativeElement);
-        const outlet = info.settings.outlet?.nativeElement || info.settings.outlet;
-        outlet.appendChild(info.wrapperElement);
-    }
-
-    private wrapElementInPlace(info: OverlayInfo) {
-        // Insert wrapper where element currently is, then move element inside the content div
-        const element = info.elementRef.nativeElement;
-        element.parentElement.insertBefore(info.wrapperElement, element);
-    }
-
-    private appendElementToDocument(info: OverlayInfo) {
-        this._document.body.appendChild(info.wrapperElement);
-        info.appendedToBody = true;
     }
 
     private getWrapperElement(): HTMLElement {
@@ -778,52 +790,83 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private cleanUp(info: OverlayInfo) {
+        this.removeWrapper(info);
+        this.restoreHook(info);
+        this.destroyComponent(info);
+        this.unregisterOverlay(info);
+        this.releaseResources(info);
+    }
+
+    /**
+     * Reverses the wrapper insertion performed by `insertWrapper`, restoring the element to its original DOM position.
+     */
+    private removeWrapper(info: OverlayInfo) {
         const child: HTMLElement = info.elementRef.nativeElement;
-        const outlet = info.settings.outlet?.nativeElement || info.settings.outlet;
-        if (info.appendedToBody) {
-            // Element was appended to document body as a fallback (no outlet, no parent).
-            // Just remove the wrapper; the dynamic component will be destroyed below.
+        if (!info.hook) {
+            // No hook means element had no parent and was appended to body.
+            // Just remove the wrapper; the dynamic component will be destroyed in cleanUp.
             info.wrapperElement?.parentElement?.removeChild(info.wrapperElement);
         } else if (info.settings.positionStrategy instanceof ContainerPositionStrategy) {
-            // Unwrap: move element back to wrapper's parent position, then remove wrapper
-            const parent = info.wrapperElement?.parentElement;
-            if (parent) {
-                parent.insertBefore(child, info.wrapperElement);
-                parent.removeChild(info.wrapperElement);
-                parent.remove();
+            // Unwrap from container: move element back, then remove both wrapper and container div
+            const container = info.wrapperElement?.parentElement;
+            if (container) {
+                container.insertBefore(child, info.wrapperElement);
+                container.removeChild(info.wrapperElement);
+                container.remove();
             }
-        } else if (outlet) {
+        } else if (info.settings.outlet) {
+            const outlet = info.settings.outlet?.nativeElement || info.settings.outlet;
             // if same element is shown in other overlay outlet will not contain
-            // the element and we should not remove it form outlet
+            // the element and we should not remove it from outlet
             if (outlet.contains(child)) {
                 outlet.removeChild(child.parentNode.parentNode);
             }
         } else {
-            // Unwrap in-place: move element back to wrapper's parent position, then remove wrapper
+            // Unwrap in-place: move element back to wrapper's position, then remove wrapper
             if (info.wrapperElement?.parentElement) {
                 info.wrapperElement.parentElement.insertBefore(child, info.wrapperElement);
                 info.wrapperElement.parentElement.removeChild(info.wrapperElement);
             }
         }
-        if (info.componentRef) {
-            this._appRef.detachView(info.componentRef.hostView);
-            info.componentRef.destroy();
-            delete info.componentRef;
-        }
+    }
+
+    /**
+     * Restores the element to its original position via the hook, then removes the hook. Must run
+     * before `destroyComponent`.
+     */
+    private restoreHook(info: OverlayInfo) {
         if (info.hook) {
             info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
             info.hook.parentElement.removeChild(info.hook);
             delete info.hook;
         }
+    }
 
+    /**
+     * Destroys the dynamically created component, if any.
+     */
+    private destroyComponent(info: OverlayInfo) {
+        if (info.componentRef) {
+            this._appRef.detachView(info.componentRef.hostView);
+            info.componentRef.destroy();
+            delete info.componentRef;
+        }
+    }
+
+    /**
+     * Removes the overlay from the tracked list and cleans up global listeners when none remain.
+     */
+    private unregisterOverlay(info: OverlayInfo) {
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
 
         if (this._overlayInfos.length === 0) {
             this.removeCloseOnEscapeListener();
         }
+    }
 
-        // clean all the resources attached to info
+    /** Releases all resources attached to the overlay info. */
+    private releaseResources(info: OverlayInfo) {
         delete info.elementRef;
         delete info.settings;
         delete info.initialSize;

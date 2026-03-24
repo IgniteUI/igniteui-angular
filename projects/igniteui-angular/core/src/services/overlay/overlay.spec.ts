@@ -363,7 +363,7 @@ describe('igxOverlay', () => {
             parent.remove();
         });
 
-        it('Should not create a hook element when outlet is not provided', () => {
+        it('Should create a hook element when element has a parent', () => {
             const parent = document.createElement('div');
             document.body.appendChild(parent);
             const element = document.createElement('div');
@@ -376,9 +376,9 @@ describe('igxOverlay', () => {
             };
             const id = overlay.attach(elementRef, settings);
 
-            // No hidden hook div should exist in the parent
+            // A hidden hook div should exist in the parent to mark the element's original position
             const hookElements = Array.from(parent.querySelectorAll('div[style*="display: none"]'));
-            expect(hookElements.length).toEqual(0);
+            expect(hookElements.length).toEqual(1);
 
             overlay.detach(id);
             parent.remove();

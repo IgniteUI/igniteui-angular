@@ -390,7 +390,7 @@ describe('Dialog', () => {
         tick();
         fix.detectChanges();
 
-        let overlayWrapper = (dialog as any).elementRef.nativeElement.children[0];
+        let overlayWrapper = (dialog as any).elementRef.nativeElement.lastElementChild;
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(false);
 
@@ -405,7 +405,7 @@ describe('Dialog', () => {
         tick(16);
         fix.detectChanges();
 
-        overlayWrapper = (dialog as any).elementRef.nativeElement.children[0];
+        overlayWrapper = (dialog as any).elementRef.nativeElement.lastElementChild;
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(true);
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
     }));
