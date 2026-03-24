@@ -1,12 +1,12 @@
 ---
 name: igniteui-angular-linting
-description: "Quick-reference for linting the Ignite UI for Angular codebase. Covers the combined lint command (`lint:lib`), ESLint for TypeScript and templates, and Stylelint for Sass/SCSS styles. Use when an agent needs to run linters, fix lint errors, or understand the lint configuration. Do NOT use for building — use igniteui-angular-build instead. Do NOT use for running tests — use igniteui-angular-testing instead."
+description: "Quick-reference for linting the core Ignite UI for Angular library. Covers the combined lint command (`lint:lib`), ESLint for TypeScript and templates, and Stylelint for Sass/SCSS styles. Use when an agent needs to run the main linters, fix lint errors, or understand the primary lint configuration. Do NOT use for building — use igniteui-angular-build instead. Do NOT use for running tests — use igniteui-angular-testing instead."
 user-invocable: true
 ---
 
 # Ignite UI for Angular — Linting
 
-Quick-reference card for all lint commands in this repository.
+Quick-reference card for the core lint commands for the main library in this repository.
 
 ## Prerequisites
 

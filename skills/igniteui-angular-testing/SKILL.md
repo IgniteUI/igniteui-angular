@@ -6,7 +6,7 @@ user-invocable: true
 
 # Ignite UI for Angular — Testing
 
-Quick-reference card for all test commands in this repository.
+Quick-reference card for the core test commands for the main igniteui-angular library plus schematics, styles, and i18n suites.
 
 ## Prerequisites
 

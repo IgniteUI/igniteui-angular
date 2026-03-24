@@ -1,12 +1,12 @@
 ---
 name: igniteui-angular-build
-description: "Quick-reference for building the Ignite UI for Angular library. Covers the full production build (`build:lib`), individual partial builds (styles, migrations, schematics, i18n, elements), and the combined build-all command. Use when an agent needs to compile the library, produce a dist output, or verify that code changes compile cleanly. Do NOT use for running tests — use igniteui-angular-testing instead. Do NOT use for linting — use igniteui-angular-linting instead."
+description: "Quick-reference for building the core Ignite UI for Angular library and related packages. Covers the full production build (`build:lib`), individual partial builds (styles, migrations, schematics, i18n, elements), and the combined build-all command. Use when an agent needs to compile the library, produce a dist output, or verify that code changes compile cleanly. Do NOT use for running tests — use igniteui-angular-testing instead. Do NOT use for linting — use igniteui-angular-linting instead."
 user-invocable: true
 ---
 
 # Ignite UI for Angular — Build
 
-Quick-reference card for all build commands in this repository.
+Quick-reference card for the core library and related build commands in this repository.
 
 ## Prerequisites
 
