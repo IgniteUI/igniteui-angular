@@ -103,9 +103,9 @@ Domain-specific knowledge for AI assistants:
 | Components | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | Working on non-grid UI components, charts |
 | Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Working on grid, tree-grid, hierarchical-grid, pivot-grid |
 | Theming | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Working on styles, themes, palettes |
-| Build | [`skills/igniteui-angular-build/SKILL.md`](skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
-| Testing | [`skills/igniteui-angular-testing/SKILL.md`](skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the right Karma config |
-| Linting | [`skills/igniteui-angular-linting/SKILL.md`](skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |
+| Build | [`.github/skills/igniteui-angular-build/SKILL.md`](.github/skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
+| Testing | [`.github/skills/igniteui-angular-testing/SKILL.md`](.github/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the right Karma config |
+| Linting | [`.github/skills/igniteui-angular-linting/SKILL.md`](.github/skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |
 
 ## Custom Agents
 

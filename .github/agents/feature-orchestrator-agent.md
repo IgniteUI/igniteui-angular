@@ -110,9 +110,9 @@ Consult the relevant skill file for the task at hand:
 | Non-grid components | `skills/igniteui-angular-components/SKILL.md` | Scoping non-grid component APIs and patterns |
 | Grid components | `skills/igniteui-angular-grids/SKILL.md` | Scoping grid APIs and patterns |
 | Theming & styling | `skills/igniteui-angular-theming/SKILL.md` | Feature needs SCSS, theme wiring, or style changes |
-| Build | `skills/igniteui-angular-build/SKILL.md` | Need to verify compilation or run a partial build |
-| Testing | `skills/igniteui-angular-testing/SKILL.md` | Choosing the right test suite and Karma config |
-| Linting | `skills/igniteui-angular-linting/SKILL.md` | Running lint checks before marking work complete |
+| Build | `.github/skills/igniteui-angular-build/SKILL.md` | Need to verify compilation or run a partial build |
+| Testing | `.github/skills/igniteui-angular-testing/SKILL.md` | Choosing the right test suite and Karma config |
+| Linting | `.github/skills/igniteui-angular-linting/SKILL.md` | Running lint checks before marking work complete |
 
 ---
 
@@ -145,7 +145,7 @@ projects/igniteui-angular/core/src/core/styles/   ← component SCSS themes
    - Whether a migration schematic is needed
    - Whether i18n strings are affected
    - Whether styles or component themes are affected
-   - Which test suite to use — consult `skills/igniteui-angular-testing/SKILL.md` for the decision guide
+   - Which test suite to use — consult `.github/skills/igniteui-angular-testing/SKILL.md` for the decision guide
 
 ### Step 2 — Request Missing Context
 
@@ -217,6 +217,6 @@ After all agents finish, check:
 - Do migrations exist for any breaking changes?
 - If a demo/sample was requested, was the existing demo structure updated appropriately?
 - If a demo/sample was not requested, was it correctly skipped?
-- Did `npm run lint:lib` pass? (see `skills/igniteui-angular-linting/SKILL.md`)
+- Did `npm run lint:lib` pass? (see `.github/skills/igniteui-angular-linting/SKILL.md`)
 
 Report what was done and any remaining items.

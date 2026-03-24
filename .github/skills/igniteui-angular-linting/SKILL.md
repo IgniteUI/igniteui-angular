@@ -49,7 +49,7 @@ Runs `stylelint "projects/igniteui-angular/core/src/core/styles"`. Use when you 
 
 ## Agent Rules
 
-- **Always run `npm run lint:lib` before marking work complete** — this is a requirement from [AGENTS.md](../../AGENTS.md).
+- **Always run `npm run lint:lib` before marking work complete** — this is a requirement from [AGENTS.md](../../../AGENTS.md).
 - Fix all lint errors before committing. Do not disable rules without justification.
 - If a lint rule conflicts with the intended change, investigate whether the rule is correct before suppressing it.
 

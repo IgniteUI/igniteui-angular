@@ -117,9 +117,9 @@ Consult the relevant skill file for the task at hand:
 | Non-grid components | `skills/igniteui-angular-components/SKILL.md` | Investigating non-grid component APIs and patterns |
 | Grid components | `skills/igniteui-angular-grids/SKILL.md` | Investigating grid APIs and patterns |
 | Theming & styling | `skills/igniteui-angular-theming/SKILL.md` | Bug involves SCSS, theme wiring, or style changes |
-| Build | `skills/igniteui-angular-build/SKILL.md` | Need to verify compilation or run a partial build |
-| Testing | `skills/igniteui-angular-testing/SKILL.md` | Choosing the right test suite and Karma config |
-| Linting | `skills/igniteui-angular-linting/SKILL.md` | Running lint checks before marking work complete |
+| Build | `.github/skills/igniteui-angular-build/SKILL.md` | Need to verify compilation or run a partial build |
+| Testing | `.github/skills/igniteui-angular-testing/SKILL.md` | Choosing the right test suite and Karma config |
+| Linting | `.github/skills/igniteui-angular-linting/SKILL.md` | Running lint checks before marking work complete |
 
 Component and grid skill files are routing hubs pointing to detailed reference files under their `references/` folder. **Read the relevant reference files** when investigating the root cause.
 
@@ -223,7 +223,7 @@ After all agents finish, check:
 - If a demo/sample was requested, was the existing demo structure updated appropriately?
 - If a demo/sample was not requested, was it correctly skipped?
 - Is multi-branch cherry-picking needed?
-- Did `npm run lint:lib` pass? (see `skills/igniteui-angular-linting/SKILL.md`)
+- Did `npm run lint:lib` pass? (see `.github/skills/igniteui-angular-linting/SKILL.md`)
 
 Report what was done and any remaining items.
 
