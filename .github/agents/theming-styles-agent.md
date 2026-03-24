@@ -121,6 +121,7 @@ If the task is purely documentation or planning, say clearly that style validati
 - Do not update component `README.md`.
 - Do not create migrations.
 - Do not update `CHANGELOG.md`.
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file.
 
 ---
 

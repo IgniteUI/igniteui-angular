@@ -64,6 +64,7 @@ You do NOT write tests, production code, or detailed acceptance criteria. Each s
 - Do not write detailed acceptance criteria that downstream agents must encode literally
 - Do not specify exact test cases, exact implementations, or exact file changes
 - Do not over-constrain the handoff prompts — give scope, not specs
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file
 
 ---
 

@@ -13,6 +13,13 @@ You update `CHANGELOG.md` at the repository root for Ignite UI for Angular. Only
 
 ---
 
+## What You Do NOT Do
+
+- Do not modify production source code.
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file.
+
+---
+
 ## Steps
 
 ### 1. Find the Latest Version

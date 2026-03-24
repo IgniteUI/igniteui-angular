@@ -118,6 +118,7 @@ Update component agent skills if you need to guide other agents on how to use th
 - Do not update `README.md` — the `component-readme-agent` handles that.
 - Do not create migration schematics — the `migration-agent` handles that.
 - Do not update `CHANGELOG.md` — the `changelog-agent` handles that.
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file.
 
 ---
 

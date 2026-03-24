@@ -39,6 +39,7 @@ You do not implement the library change itself, create new samples or demo folde
 - Do not update component `README.md`.
 - Do not update `CHANGELOG.md`.
 - Do not create migrations.
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file.
 
 ---
 

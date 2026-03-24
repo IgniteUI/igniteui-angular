@@ -68,6 +68,7 @@ You do NOT write tests, production code, or detailed implementation instructions
 - Do not write tests or production code
 - Do not specify exact test cases, exact implementations, or exact file changes
 - Do not over-constrain the handoff prompts — give scope and root cause, not specs
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file
 
 ---
 

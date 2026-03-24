@@ -55,6 +55,8 @@ Do not add extra scenarios unless they are explicitly requested, clearly require
    - No execution-order dependency.
 6. **Never write production code.**
    - Only test code in this phase to ensure the test does not give false negatives. The test MUST fail if the functionality is missing, or not behaving as intended.
+7. **Never modify dependency files.**
+   - `package.json`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, and similar manifest or lock files are off-limits.
 
 ---
 
