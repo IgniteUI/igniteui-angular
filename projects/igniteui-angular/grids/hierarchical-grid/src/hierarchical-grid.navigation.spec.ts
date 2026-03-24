@@ -10,7 +10,7 @@ import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../te
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
-import { SCROLL_THROTTLE_TIME } from './../../grid/src/grid-base.directive';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -40,7 +40,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+            providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
         });
     }));
 
@@ -50,7 +50,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fixture.detectChanges();
@@ -172,13 +172,13 @@ describe('IgxHierarchicalGrid Navigation', () => {
         it('should allow navigating to start in child grid when child grid target row moves outside the parent view port.', async () => {
             hierarchicalGrid.verticalScrollContainer.scrollTo(2);
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const horizontalScrDir = childGrid.dataRowList.toArray()[0].virtDirRow;
             horizontalScrDir.scrollTo(6);
             fixture.detectChanges();
-            await wait();
+            await wait(DEBOUNCE_TIME);
 
             const childLastCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[3];
             GridFunctions.focusCell(fixture, childLastCell);
@@ -965,7 +965,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
     describe('IgxHierarchicalGrid Navigation API #hGrid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 1 }]
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
             fixture.detectChanges();
@@ -979,7 +979,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             clearGridSubs();
         });
 
-        it('should navigate to exact child grid with navigateToChildGrid.', (done) => {
+        it('should navigate to exact child grid with navigateToChildGrid.', async() => {
             hierarchicalGrid.primaryKey = 'ID';
             hierarchicalGrid.expandChildren = false;
             fixture.detectChanges();
@@ -988,23 +988,25 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 rowIslandKey: 'childData2',
                 rowID: 10
             };
-            hierarchicalGrid.navigation.navigateToChildGrid([path], () => {
-                fixture.detectChanges();
-                const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([path]).nativeElement;
-                expect(childGrid).not.toBe(undefined);
+            await wait(16);
+            hierarchicalGrid.navigation.navigateToChildGrid([path]);
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+            const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([path]).nativeElement;
+            expect(childGrid).not.toBe(undefined);
 
-                const parentBottom = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().bottom;
-                const parentTop = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().top;
-                // check it's in view within its parent
-                expect(childGrid.getBoundingClientRect().bottom <= parentBottom && childGrid.getBoundingClientRect().top >= parentTop);
-                done();
-            });
+            const parentBottom = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+            const parentTop = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().top;
+            // check it's in view within its parent
+            expect(childGrid.getBoundingClientRect().bottom <= parentBottom && childGrid.getBoundingClientRect().top >= parentTop);
         });
-        it('should navigate to exact nested child grid with navigateToChildGrid.', (done) => {
+        it('should navigate to exact nested child grid with navigateToChildGrid.', async() => {
             hierarchicalGrid.expandChildren = false;
+            await wait(DEBOUNCE_TIME);
             hierarchicalGrid.primaryKey = 'ID';
             hierarchicalGrid.childLayoutList.toArray()[0].primaryKey = 'ID';
             fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
             const targetRoot: IPathSegment = {
                 rowKey: 10,
                 rowIslandKey: 'childData',
@@ -1016,19 +1018,18 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 rowID: 5
             };
 
-            hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested], () => {
+            hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested]);
+            await wait(DEBOUNCE_TIME * 2);
             fixture.detectChanges();
-                const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot]).nativeElement;
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([targetRoot]).nativeElement;
             expect(childGrid).not.toBe(undefined);
-                const childGridNested =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot, targetNested]).nativeElement;
+            const childGridNested = hierarchicalGrid.gridAPI.getChildGrid([targetRoot, targetNested]).nativeElement;
             expect(childGridNested).not.toBe(undefined);
 
             const parentBottom = childGrid.getBoundingClientRect().bottom;
             const parentTop = childGrid.getBoundingClientRect().top;
             // check it's in view within its parent
             expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
-                done();
-            });
         });
     });
 });

@@ -15,13 +15,13 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
  * IgxActionIcon is a container for the action nav icon of the IgxNavbar.
  */
 @Directive({
-    selector: 'igx-navbar-action,[igxNavbarAction]',
+    selector: '[igxNavbarAction],igx-navbar-action',
     standalone: true
 })
 export class IgxNavbarActionDirective { }
 
 @Directive({
-    selector: 'igx-navbar-title,[igxNavbarTitle]',
+    selector: '[igxNavbarTitle],igx-navbar-title',
     standalone: true
 })
 export class IgxNavbarTitleDirective { }

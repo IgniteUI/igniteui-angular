@@ -35,13 +35,13 @@ import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
 import { ColumnType, FilteringExpressionsTree, GridColumnDataType, GridTypeBase, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, SortingDirection } from 'igniteui-angular/core';
 
 @Directive({
-    selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
+    selector: '[igxExcelStyleColumnOperations],igx-excel-style-column-operations',
     standalone: true
 })
 export class IgxExcelStyleColumnOperationsTemplateDirective { }
 
 @Directive({
-    selector: 'igx-excel-style-filter-operations,[igxExcelStyleFilterOperations]',
+    selector: '[igxExcelStyleFilterOperations],igx-excel-style-filter-operations',
     standalone: true
 })
 export class IgxExcelStyleFilterOperationsTemplateDirective { }

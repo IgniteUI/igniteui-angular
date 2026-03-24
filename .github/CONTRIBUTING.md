@@ -231,3 +231,15 @@ In order to test a pull request that is awaiting test, perform the following act
 4. Verify that the expected behavior is observed with the changes in the pull request.
 5. Return the pull request in a not fixed state if you're still reproducing the issue.
 6. Don't forget to make the necessary status updates, as described in the workflow section.
+
+# Running the Dev Demos
+The developer demos for testing purposes are runnable:
+
+```bash
+npm i
+npm start
+```
+
+If you cannot find a suitable demo for a component, when trying to test and reproduce an issue or scenario, then add a new demo for the scenario.
+
+

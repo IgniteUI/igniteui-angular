@@ -3,6 +3,14 @@
 The overlay service allows users to show components on overlay div above all other elements in the page.
 A walk through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-main)
 
+## Key Features
+
+- **Popover API Integration**: Uses the HTML Popover API for improved z-index management and automatic top-layer placement
+- **Flexible Positioning**: Multiple position strategies (global, connected, auto, elastic, container)
+- **Scroll Strategies**: Handle scroll behavior with NoOp, Block, Close, and Absolute strategies
+- **Modal Support**: Optional modal backdrop with configurable close-on-outside-click behavior
+- **Animation Support**: Built-in support for open/close animations
+
 ## Usage
 
 ### With igxToggleDirective

@@ -22,25 +22,28 @@ import { IgxInputGroupComponent, IgxInputDirective, IgxReadOnlyInputDirective, I
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
-/** Event emitted when an igx-combo's selection is changing */
-export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
-    /** An array containing the values that are currently selected */
+/** Event emitted when the Combo's selection has changed */
+export interface IComboSelectionChangedEventArgs extends IBaseEventArgs {
+    /** An array containing the old selection values */
     oldValue: any[];
-    /** An array containing the values that will be selected after this event */
+    /** An array containing the new selection items */
     newValue: any[];
-    /** An array containing the items that are currently selected */
+    /** An array containing the old selection items */
     oldSelection: any[];
-    /** An array containing the items that will be selected after this event */
+    /** An array containing the new selection items */
     newSelection: any[];
-    /** An array containing the items that will be added to the selection (if any) */
+    /** An array containing the items added to the selection (if any) */
     added: any[];
-    /** An array containing the items that will be removed from the selection (if any) */
+    /** An array containing the items removed from the selection (if any) */
     removed: any[];
-    /** The text that will be displayed in the combo text box */
+    /** The display text of the combo text box */
     displayText: string;
     /** The user interaction that triggered the selection change */
     event?: Event;
 }
+
+/** Event emitted when the Combo's selection is changing */
+export interface IComboSelectionChangingEventArgs extends IComboSelectionChangedEventArgs, IBaseCancelableEventArgs {}
 
 /** Event emitted when the igx-combo's search input changes */
 export interface IComboSearchInputEventArgs extends IBaseCancelableEventArgs {
@@ -125,7 +128,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     @Input({ transform: booleanAttribute })
     public autoFocusSearch = true;
 
-
     /**
      * Defines the placeholder value for the combo dropdown search field
      *
@@ -153,6 +155,16 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     @Output()
     public selectionChanging = new EventEmitter<IComboSelectionChangingEventArgs>();
+
+    /**
+     * Emitted when item selection is changed, after the selection completes
+     *
+     * ```html
+     * <igx-combo (selectionChanged)='handleSelection()'></igx-combo>
+     * ```
+     */
+    @Output()
+    public selectionChanged = new EventEmitter<IComboSelectionChangedEventArgs>();
 
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
@@ -183,6 +195,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         event.preventDefault();
         event.stopPropagation();
         this.open();
+    }
+
+    @HostListener('keydown.Escape', ['$event'])
+    public onEscape(event: Event) {
+        if (this.collapsed) {
+            this.deselectAllItems(true, event);
+        }
     }
 
     /** @hidden @internal */
@@ -253,7 +272,10 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     /**
      * @hidden @internal
      */
-    public clearInput(event: Event): void {
+    public handleClearItems(event: Event): void {
+        if (this.disabled) {
+            return;
+        }
         this.deselectAllItems(true, event);
         if (this.collapsed) {
             this.getEditElement().focus();
@@ -261,26 +283,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             this.focusSearchInput(true);
         }
         event.stopPropagation();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public handleClearItems(event: Event): void {
-        if (this.disabled) {
-            return;
-        }
-        this.clearInput(event);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public handleClearKeyDown(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === 'Enter' || eventArgs.key === ' ') {
-            eventArgs.preventDefault();
-            this.clearInput(eventArgs);
-        }
     }
 
     /**
@@ -433,7 +435,19 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             } else {
                 this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
-            this._onChangeCallback(args.newValue);
+            this._onChangeCallback(this.value);
+            const changedArgs: IComboSelectionChangedEventArgs = {
+                newValue: this.value,
+                oldValue,
+                newSelection: this.selection,
+                oldSelection,
+                added: this.convertKeysToItems(diffInSets(new Set(this.value), new Set(oldValue))),
+                removed: this.convertKeysToItems(diffInSets(new Set(oldValue), new Set(this.value))),
+                event,
+                owner: this,
+                displayText: this._displayValue
+            };
+            this.selectionChanged.emit(changedArgs);
         } else if (this.isRemote) {
             this.registerRemoteEntries(diffInSets(selection, currentSelection), false);
         }

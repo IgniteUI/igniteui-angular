@@ -1,5 +1,5 @@
 @mixin nav-logo($url) {
-    background: url(#{$url}) no-repeat;
+    background: url($url) no-repeat;
     background-size: calc(100% - 100px) auto;
     background-position: 16px center;
     background-color: var(--ig-gray-200);

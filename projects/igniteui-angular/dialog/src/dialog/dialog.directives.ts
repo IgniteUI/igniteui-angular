@@ -4,7 +4,7 @@ import { Directive, HostBinding } from '@angular/core';
  * @hidden
  */
 @Directive({
-    selector: 'igx-dialog-title,[igxDialogTitle]',
+    selector: '[igxDialogTitle],igx-dialog-title',
     standalone: true
 })
 export class IgxDialogTitleDirective {
@@ -17,7 +17,7 @@ export class IgxDialogTitleDirective {
  * @hidden
  */
 @Directive({
-    selector: 'igx-dialog-actions,[igxDialogActions]',
+    selector: '[igxDialogActions],igx-dialog-actions',
     standalone: true
 })
 export class IgxDialogActionsDirective {
