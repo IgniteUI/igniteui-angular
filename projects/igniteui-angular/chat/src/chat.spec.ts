@@ -134,7 +134,9 @@ describe('Chat _createTemplateRenderer context dispatch', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
 
-        mockViewRef = { destroy: jasmine.createSpy('destroy'), rootNodes: ['mock-node'] as any };
+        const mockRootNode = document.createElement('div');
+        mockRootNode.textContent = 'mock-node';
+        mockViewRef = { destroy: jasmine.createSpy('destroy'), rootNodes: [mockRootNode] };
         mockTemplateRef = {} as TemplateRef<any>;
 
         createEmbeddedViewSpy = spyOn((component as any)._view, 'createEmbeddedView')
