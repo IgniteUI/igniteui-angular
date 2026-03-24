@@ -31,11 +31,17 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 
 /**
+ * Default debounce time (ms) for filtering row inputs.
+ * @hidden
+ */
+export const INPUT_DEBOUNCE_TIME_DEFAULT = 350;
+
+/**
  * Injection token for setting the debounce time used in filtering row inputs.
  * @hidden
  */
 export const INPUT_DEBOUNCE_TIME = /*@__PURE__*/new InjectionToken<number>('INPUT_DEBOUNCE_TIME', {
-    factory: () => 350
+    factory: () => INPUT_DEBOUNCE_TIME_DEFAULT
 });
 
 /**

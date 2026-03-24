@@ -20,7 +20,7 @@ import {
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
+import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, INPUT_DEBOUNCE_TIME_DEFAULT, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
@@ -858,9 +858,9 @@ describe('IgxGrid - Column properties #grid', () => {
             let percentLabel = filterUIRow.query(By.css('.igx-grid__filtering-row-percent-hint'));
             expect(percentLabel).toBeNull();
 
-            // Enter a value to trigger the suffix (350ms debounce is applied to the filter row input)
+            // Enter a value to trigger the suffix; wait for the filter row input debounce
             GridFunctions.typeValueInFilterRowInput(0.03, fix, input);
-            tick(350);
+            tick(INPUT_DEBOUNCE_TIME_DEFAULT);
             fix.detectChanges();
 
             percentLabel = filterUIRow.query(By.css('.igx-grid__filtering-row-percent-hint'));
