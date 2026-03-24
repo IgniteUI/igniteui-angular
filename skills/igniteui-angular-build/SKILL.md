@@ -18,15 +18,7 @@ Quick-reference card for the core library and related build commands in this rep
 npm run build
 ```
 
-Runs **everything** in sequence:
-
-1. `build:lib` — library + styles
-2. `build:elements` — Angular Elements package
-3. `build:schematics` — `ng add` schematics
-4. `build:migrations` — `ng update` migrations
-5. `build:i18n` — i18n resource package
-
-Use this when you need a complete publishable output or before running the full CI pipeline locally.
+Runs all sub-builds in sequence (library, elements, schematics, migrations, i18n). Use this when you need a complete publishable output or before running the full CI pipeline locally. Check `package.json` for the exact sequence.
 
 ## Library Build (most common)
 

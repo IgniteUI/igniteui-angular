@@ -408,6 +408,9 @@ The system also relies on repository-specific guidance in:
 skills/igniteui-angular-components/SKILL.md
 skills/igniteui-angular-grids/SKILL.md
 skills/igniteui-angular-theming/SKILL.md
+skills/igniteui-angular-build/SKILL.md
+skills/igniteui-angular-testing/SKILL.md
+skills/igniteui-angular-linting/SKILL.md
 ```
 
 ---

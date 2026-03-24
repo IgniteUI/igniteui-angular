@@ -30,6 +30,7 @@ Quick-reference card for the core test commands for the main igniteui-angular li
 | **Pivot grid tests** only | `npm run test:lib:pgrid` |
 | **All non-grid tests** (components, directives, services) | `npm run test:lib:others` |
 | **Watch mode** (re-runs on file changes, for dev loop) | `npm run test:lib:watch` |
+| **Performance tests** | `npm run test:lib:perf` |
 | **Schematics + migrations** | `npm run test:schematics` |
 | **Sass/style logic** | `npm run test:styles` |
 | **i18n resource validation** | `npm run test:i18n` |

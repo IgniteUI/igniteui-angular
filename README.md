@@ -49,6 +49,9 @@ This repository ships with **Copilot Skills** — structured knowledge files tha
 | Components | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | UI Components (form controls, layout, data display, feedback/overlays, directives — Input Group, Combo, Select, Date/Time Pickers, Calendar, Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, Button, Ripple, Tooltip, Drag and Drop, Layout Manager, Dock Manager and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart)) |
 | Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) |
 | Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Theming & Styling (includes MCP server setup) |
+| Build | [`skills/igniteui-angular-build/SKILL.md`](skills/igniteui-angular-build/SKILL.md) | Building the library — full build, `build:lib`, partial builds (styles, migrations, schematics, i18n, elements) |
+| Testing | [`skills/igniteui-angular-testing/SKILL.md`](skills/igniteui-angular-testing/SKILL.md) | Running test suites — choosing the right command, Karma config mapping, grid vs non-grid vs schematics tests |
+| Linting | [`skills/igniteui-angular-linting/SKILL.md`](skills/igniteui-angular-linting/SKILL.md) | Linting — `lint:lib` (ESLint + Stylelint), `lint:styles`, configuration files |
 
 #### How It Works
 
