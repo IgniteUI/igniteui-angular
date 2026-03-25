@@ -144,6 +144,45 @@ describe('IgxQueryBuilder', () => {
     }));
   });
 
+  describe('Serialization', () => {
+    it('Should serialize Set searchVal as array when emitting expressionTreeChange.', () => {
+      const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['*']);
+      tree.filteringOperands.push({
+        fieldName: 'OrderId',
+        condition: IgxNumberFilteringOperand.instance().condition('in'),
+        conditionName: 'in',
+        searchVal: new Set([1])
+      } as any);
+
+      spyOn(queryBuilder.expressionTreeChange, 'emit');
+      (queryBuilder as any).onExpressionTreeChange(tree);
+
+      const emittedTree = (queryBuilder.expressionTreeChange.emit as jasmine.Spy).calls.mostRecent().args[0] as IExpressionTree;
+      const emittedExpression = emittedTree.filteringOperands[0] as any;
+      expect(Array.isArray(emittedExpression.searchVal)).toBeTrue();
+      expect(emittedExpression.searchVal).toEqual([1]);
+    });
+
+    it('Should emit a deep-cloned serializable tree when expressionTreeChange fires.', () => {
+      const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['*']);
+      tree.filteringOperands.push({
+        fieldName: 'OrderId',
+        condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+        conditionName: 'greaterThan',
+        searchVal: 5
+      } as any);
+
+      spyOn(queryBuilder.expressionTreeChange, 'emit');
+      (queryBuilder as any).onExpressionTreeChange(tree);
+
+      const emittedTree = (queryBuilder.expressionTreeChange.emit as jasmine.Spy).calls.mostRecent().args[0] as IExpressionTree;
+      expect(emittedTree).not.toBe(queryBuilder.expressionTree);
+
+      (emittedTree.filteringOperands[0] as any).conditionName = 'equals';
+      expect((queryBuilder.expressionTree.filteringOperands[0] as any).conditionName).toBe('greaterThan');
+    });
+  });
+
   describe('Interactions', () => {
     it('Should correctly initialize a newly added \'And\' group.', fakeAsync(() => {
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
