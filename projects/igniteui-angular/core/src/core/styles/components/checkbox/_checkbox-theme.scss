@@ -260,6 +260,8 @@
     %igx-checkbox--disabled-indeterminate-indigo {
         @extend %cbx-composite--x--disabled;
 
+        background: var-get($theme, 'disabled-indeterminate-color');
+
         %cbx-composite-mark {
             rect {
                 fill: var-get($theme, 'disabled-tick-color');
