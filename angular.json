@@ -210,7 +210,7 @@
                 "schematics"
             ],
             "codeCoverageExclude": [
-                "test-utils"
+                "projects/igniteui-angular/test-utils/**"
             ]
           }
         },
