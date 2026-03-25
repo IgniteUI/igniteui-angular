@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, DoCheck, EventEmitter, HostListener, Output, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, EventEmitter, HostListener, Input, Output, ViewChild, booleanAttribute, inject } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
@@ -90,6 +90,22 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      */
     @Output()
     public selectionChanged = new EventEmitter<ISimpleComboSelectionChangedEventArgs>();
+
+    /**
+     * Controls whether the clear button is shown when an item is selected.
+     * Set to `false` to hide the clear button, e.g. when the field is required.
+     *
+     * @param value - `true` to show the clear button (default), `false` to hide it.
+     * @returns `true` if the clear button should be rendered; `false` otherwise.
+     *
+     * @example
+     * ```html
+     * <!-- Always hide the clear button -->
+     * <igx-simple-combo [showClearButton]="false"></igx-simple-combo>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public showClearButton = true;
 
     @ViewChild(IgxTextSelectionDirective, { static: true })
     private textSelection: IgxTextSelectionDirective;

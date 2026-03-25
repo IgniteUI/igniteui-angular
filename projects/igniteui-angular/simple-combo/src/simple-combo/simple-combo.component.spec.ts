@@ -902,6 +902,63 @@ describe('IgxSimpleCombo', () => {
             const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearBtn.nativeElement.ariaLabel).toEqual('Clear Selection');
         });
+        it('should show the clear button by default when a value is selected', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboFormControlRequiredComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            // No selection yet — clear button should not be present
+            expect(fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`))).toBeNull();
+
+            comboComponent.formControl.setValue(1);
+            tick();
+            fixture.detectChanges();
+
+            // Value selected and showClearButton defaults to true — button should appear
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).not.toBeNull();
+        }));
+        it('should hide the clear button when showClearButton is false even when a value is selected', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboFormControlRequiredComponent);
+            fixture.detectChanges();
+
+            const simpleCombo = fixture.debugElement.query(By.directive(IgxSimpleComboComponent)).componentInstance as IgxSimpleComboComponent;
+            simpleCombo.showClearButton = false;
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            comboComponent.formControl.setValue(1);
+            tick();
+            fixture.detectChanges();
+
+            // showClearButton is false — button must NOT be in the DOM
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+        }));
+        it('should show the clear button when showClearButton is explicitly true and a value is selected', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboFormControlRequiredComponent);
+            fixture.detectChanges();
+
+            const simpleCombo = fixture.debugElement.query(By.directive(IgxSimpleComboComponent)).componentInstance as IgxSimpleComboComponent;
+            simpleCombo.showClearButton = true;
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            comboComponent.formControl.setValue(1);
+            tick();
+            fixture.detectChanges();
+
+            // showClearButton is true — button should be in the DOM
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).not.toBeNull();
+        }));
     });
 
     describe('Binding tests: ', () => {

@@ -6,6 +6,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxSimpleCombo`
+    - Added `showClearButton` input that allows hiding the clear button from the DOM (making it non-focusable). When set to `false`, the clear button is not rendered, which is useful for required fields where clearing the value does not make sense.
+
 - `IgxCombo`, `IgxSimpleCombo`
     - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
 

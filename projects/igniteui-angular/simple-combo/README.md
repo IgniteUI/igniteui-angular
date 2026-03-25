@@ -150,6 +150,15 @@ You can disable the combo using the following code:
 
 <div class="divider--half"></div>
 
+### Show Clear Button
+By default, a clear button is rendered in the combo input. Setting `showClearButton` to `false` removes the clear button from the DOM entirely (it is not just hidden — it is not focusable or accessible). This is useful for required fields where clearing the value does not make sense.
+
+```html
+<igx-simple-combo [showClearButton]="false"></igx-simple-combo>
+```
+
+<div class="divider--half"></div>
+
 ### Grouping
 Defining a combo's groupKey option will group the items, according to that key.
 
@@ -298,6 +307,7 @@ When the combo is opened, allow custom values are enabled and add item button is
 | `selected`              | Get current selection state.                       | `Array<any>`                |
 | `filteringOptions`      | Configures the way combo items will be filtered    | IComboFilteringOptions      |
 | `filterFunction`        | Gets/Sets the custom filtering function of the combo | `(collection: any[], searchValue: any, caseSensitive: boolean) => any[]` |
+| `showClearButton`       | Controls whether the clear button is rendered. When `false`, the button is removed from the DOM and is not focusable. Defaults to `true`. | `boolean` |
 
 
 ### Methods
