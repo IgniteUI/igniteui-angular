@@ -681,6 +681,153 @@ describe('Navigation Drawer', () => {
         expect(drawer.drawer.matches(':popover-open')).toBeFalsy();
     });
 
+    it('should close on swipe when position is right', (done) => {
+        let fixture: ComponentFixture<TestComponentDIComponent>;
+        let navDrawer: IgxNavigationDrawerComponent;
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(TestComponentDIComponent);
+            fixture.detectChanges();
+            navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.position = 'right';
+            navDrawer.open();
+            fixture.detectChanges();
+            expect(navDrawer.isOpen).toBeTrue();
+
+            // For position='right': deltaX = -evt.deltaX. Swiping rightward (positive deltaX)
+            // yields a negative drawerDeltaX, satisfying isOpen && deltaX < 0 → toggle (close).
+            return swipe(document.body, 100, 10, 100, 200, 0);
+        }).then(() => {
+            expect(navDrawer.isOpen).toBeFalse();
+            done();
+        }).catch(() => done());
+    }, 10000);
+
+    it('should open on edge swipe when position is right', (done) => {
+        let fixture: ComponentFixture<TestComponentDIComponent>;
+        let navDrawer: IgxNavigationDrawerComponent;
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(TestComponentDIComponent);
+            fixture.detectChanges();
+            navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.position = 'right';
+            fixture.detectChanges();
+            expect(navDrawer.isOpen).toBeFalse();
+
+            // Swipe left from right edge. windowWidth is mocked to 915.
+            // pos=900, deltaX=-250 → center.x ≈ 775, distance=250 →
+            // startPosition = 915 - (775 + 250) = -110 < maxEdgeZone(50) and drawerDeltaX > 0 → toggle (open)
+            return swipe(document.body, 900, 10, 150, -250, 0);
+        }).then(() => {
+            expect(navDrawer.isOpen).toBeTrue();
+            done();
+        }).catch(() => done());
+    }, 10000);
+
+    it('should ignore swipe when enableGestures is false', (done) => {
+        let fixture: ComponentFixture<TestComponentDIComponent>;
+        let navDrawer: IgxNavigationDrawerComponent;
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(TestComponentDIComponent);
+            fixture.detectChanges();
+            navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.enableGestures = false;
+            fixture.detectChanges();
+            expect(navDrawer.isOpen).toBeFalse();
+
+            return swipe(document.body, 10, 10, 150, 250, 0);
+        }).then(() => {
+            expect(navDrawer.isOpen).toBeFalse();
+            done();
+        }).catch(() => done());
+    }, 10000);
+
+    it('should open via pan when hasAnimateWidth is true (mini template present)', (done) => {
+        let navDrawer: IgxNavigationDrawerComponent;
+        let fixture: ComponentFixture<TestComponentDIComponent>;
+
+        TestBed.overrideComponent(TestComponentDIComponent, {
+            set: {
+                template: `<igx-nav-drawer [miniWidth]="'68px'" [width]="'280px'">
+                    <ng-template igxDrawer></ng-template>
+                    <ng-template igxDrawerMini></ng-template>
+                </igx-nav-drawer>`,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
+            }
+        });
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(TestComponentDIComponent);
+            fixture.detectChanges();
+            navDrawer = fixture.componentInstance.navDrawer;
+            fixture.detectChanges();
+
+            expect(navDrawer.hasAnimateWidth).toBeTrue();
+            expect(navDrawer.isOpen).toBeFalse();
+
+            return pan(document.body, 10, 10, 100, 200, 0);
+        }).then(() => {
+            expect(navDrawer.isOpen).toBeTrue();
+            done();
+        }).catch(() => done());
+    }, 10000);
+
+    it('should close via pan when hasAnimateWidth is true (mini template present)', (done) => {
+        let navDrawer: IgxNavigationDrawerComponent;
+        let fixture: ComponentFixture<TestComponentDIComponent>;
+
+        TestBed.overrideComponent(TestComponentDIComponent, {
+            set: {
+                template: `<igx-nav-drawer [miniWidth]="'68px'" [width]="'280px'">
+                    <ng-template igxDrawer></ng-template>
+                    <ng-template igxDrawerMini></ng-template>
+                </igx-nav-drawer>`,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
+            }
+        });
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(TestComponentDIComponent);
+            fixture.detectChanges();
+            navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.open();
+            fixture.detectChanges();
+
+            expect(navDrawer.hasAnimateWidth).toBeTrue();
+            expect(navDrawer.isOpen).toBeTrue();
+
+            return pan(document.body, 250, 10, 100, -200, 0);
+        }).then(() => {
+            expect(navDrawer.isOpen).toBeFalse();
+            done();
+        }).catch(() => done());
+    }, 10000);
+
+    it('should not open when gestures are disabled during pan (panEnd early return)', (done) => {
+        let navDrawer: IgxNavigationDrawerComponent;
+        let fixture: ComponentFixture<TestComponentDIComponent>;
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(TestComponentDIComponent);
+            fixture.detectChanges();
+            navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.width = '280px';
+            navDrawer.enableGestures = false;
+            fixture.detectChanges();
+
+            expect(navDrawer.isOpen).toBeFalse();
+
+            // Pan gesture with gestures disabled: panstart returns early (_panning stays false),
+            // so panEnd early-returns when !this._panning, leaving the drawer closed.
+            return pan(document.body, 10, 10, 100, 200, 0);
+        }).then(() => {
+            expect(navDrawer.isOpen).toBeFalse();
+            done();
+        }).catch(() => done());
+    }, 10000);
+
     const swipe = (element, posX, posY, duration, deltaX, deltaY) => {
         const swipeOptions = {
             deltaX,
