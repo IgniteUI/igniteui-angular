@@ -331,6 +331,11 @@ export class IgxQueryBuilderComponent implements OnDestroy {
         if (key === 'externalObject') {
             return undefined;
         }
+        if (key === 'searchVal' && val instanceof Set) {
+            // Ensure Set-based search values (e.g. for "in" conditions) are serialized correctly
+            // JSON.stringify(new Set([...])) => '{}' by default, so convert to an array first
+            return Array.from(val);
+        }
 
         return val;
     }

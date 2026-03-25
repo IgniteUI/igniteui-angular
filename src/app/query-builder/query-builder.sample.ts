@@ -191,7 +191,15 @@ export class QueryBuilderComponent implements OnInit {
             // this.expressionTree = tree;
             // this.onChange();
         }
-        return tree ? JSON.stringify(tree, null, 2) : 'Please add an expression!';
+        return tree ? JSON.stringify(tree, this.serializeExpressionTreeCallback, 2) : 'Please add an expression!';
+    }
+
+    // JSON.stringify serializes Set as {}, so convert Set-based searchVal to array to preserve values in the printed output.
+    private serializeExpressionTreeCallback(key: string, val: any) {
+        if (key === 'searchVal' && val instanceof Set) {
+            return Array.from(val);
+        }
+        return val;
     }
 
     public canCommitExpressionTree() {
