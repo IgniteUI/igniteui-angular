@@ -47,7 +47,7 @@
     <div class="header-actions">
         <igx-select
             class="locale-select"
-            variant="outlined"
+            type="box"
             [(ngModel)]="locale"
             (selectionChanging)="updateLocale($event)">
 
@@ -60,7 +60,7 @@
 
         <igx-select
             class="size-select"
-            variant="outlined"
+            type="box"
             [ngModel]="selectedSize()"
             (selectionChanging)="updateSize($event)">
 
@@ -73,15 +73,18 @@
 
         <button
             (click)="onToggleDirectionClick()"
-            igxIconButton="flat"
+            igxButton="outlined"
             igxRipple
             [igxRippleCentered]="true"
-            class="toggle-button">
+            class="toggle-button" style="--ig-size: 2">
+
 
             @if(dirMode() === 'ltr') {
                 <igx-icon>format_textdirection_l_to_r</igx-icon>
+                <span>LTR</span>
             } @else {
                 <igx-icon>format_textdirection_r_to_l</igx-icon>
+                <span>RTL</span>
             }
         </button>
 

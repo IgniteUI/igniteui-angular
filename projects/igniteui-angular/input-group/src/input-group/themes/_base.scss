@@ -16,15 +16,15 @@ $transition-timing: .25s $out-cubic;
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --_bundle-template-columns: auto 1fr auto;
         --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(12px), rem(16px))};
-        --_label-row: var(--_ig-input-label-row, 1);
-        --_bundle-row: var(--_ig-input-bundle-row, calc(var(--_label-row) + 1));
-        --_hint-row: var(--_ig-input-hint-row, calc(var(--_bundle-row) + 1));
-
+        --_label-row: 1;
+        --_bundle-row: 2;
+        --_hint-row: 3;
 
         display: grid;
         grid-template-columns: var(--_bundle-template-columns);
         position: relative;
         color: var-get($theme, 'idle-text-color');
+        min-height: var-get($theme, 'size');
 
         igx-icon,
         igx-icon[igxPrefix],
@@ -521,6 +521,11 @@ $transition-timing: .25s $out-cubic;
             /* stylelint-enable max-nesting-depth */
         }
 
+    }
+
+    .igx-input-group:not(:not(.igx-input-group__label)) {
+        --_bundle-row: 1;
+        --_hint-row: 2;
     }
 
     igx-combo .igx-input-group:not(.igx-input-group--disabled),

@@ -6,4 +6,9 @@
     @include e(label) {
         @include type-style(body-1);
     }
+
+    .igx-input-group:not(:has(.igx-input-group__label)) {
+        --_bundle-row: 1;
+        --_hint-row: 2;
+    }
 }

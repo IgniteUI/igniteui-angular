@@ -11,69 +11,101 @@ $theme: $material;
 
 @include layer(base) {
     @include b(igx-date-range-picker) {
+        --_range-column-gap: #{rem(4px)};
+
         @include sizable();
 
-        --input-group-size: #{map.get($theme, 'size')};
-
         display: grid;
+        position: relative;
+
         align-items: start;
         row-gap: rem(4px);
-        column-gap: rem(8px);
+        column-gap: var(--_range-column-gap);
 
         > igx-icon {
             cursor: pointer;
         }
 
-        &:has(:not(.igx-date-range-picker__label)) {
+        // Don't have middle label
+        &:not(:has(.igx-date-range-picker__label)) {
+            grid-template-columns: auto 1fr auto auto 1fr auto;
+
             igx-date-range-start {
-                > * {
-                    grid-column: 1;
+                .igx-input-group__bundle {
+                    grid-column: 1 / span 3 !important;
                 }
             }
 
             igx-date-range-end {
-                > * {
-                    grid-column: 2;
+                .igx-input-group__bundle {
+                    grid-column: 4 / -1 !important;
                 }
             }
         }
 
+        // have middle label
         &:has(.igx-date-range-picker__label) {
-            grid-template-columns: 1fr auto 1fr;
+            grid-template-columns: auto 1fr auto min(2ch) auto 1fr auto;
 
             igx-date-range-start {
-                > * {
-                    grid-column: 1;
+                .igx-input-group__bundle {
+                    grid-column: 1 / span 3 !important;
+                }
+
+                .igx-input-group__label {
+                    grid-column: 2 / span 2 !important;
+                }
+
+                .igx-input-group__hint {
+                    grid-column: 1 / span 2 !important;
                 }
             }
 
             igx-date-range-end {
-                > * {
-                    grid-column: 3;
+                .igx-input-group__bundle {
+                    grid-column: 5 / -1 !important;
+                }
+
+                .igx-input-group__label,
+                .igx-input-group__hint {
+                    grid-column: 6 / 7 !important;
+                }
+
+                .igx-input-group__hint {
+                    grid-column: 5 / span 2 !important;
                 }
             }
+        }
+
+        &:has(.igx-input-group__label) {
+            .igx-date-range-picker__label {
+                grid-row: 2;
+            }
+        }
+
+        .igx-input-group__label:only-child,
+        .igx-input-group__hint:only-child {
+            grid-column: 1 / -1;
+        }
+
+
+        igx-date-range-start,
+        igx-date-range-end {
+            display: contents;
         }
 
         @include e(label) {
+            @include sizable();
             @include type-style(caption);
 
             display: flex;
             align-items: center;
+            justify-content: center;
+            height: 100%;
             color: var-get($theme, 'label-color');
-            align-self: flex-end;
-            height: var(--input-group-size);
-            grid-column: 2;
-            grid-row: 2;
-
-            // TODO material
-            &.input-has-hint {
-                align-self: center;
-            }
-        }
-
-        igx-date-range-start,
-        igx-date-range-end {
-            display: contents !important;
+            pointer-events: none;
+            grid-column: 4 / 5;
+            grid-row: 1;
         }
     }
 

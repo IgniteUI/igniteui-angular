@@ -93,6 +93,14 @@ export class DateRangeSampleComponent {
                 defaultValue: 'dropdown'
             }
         },
+        inputType: {
+            label: 'Input Type',
+            control: {
+                type: 'button-group',
+                options: ['line', 'border', 'box'],
+                defaultValue: 'outlined'
+            }
+        },
         value: {
             control: {
                 type: 'date-range',
