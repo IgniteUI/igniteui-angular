@@ -15,7 +15,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      *
      * @memberof IgxExcelExporterOptions
      */
-    public ignorePinning? = false;
+    public ignorePinning = false;
 
     /**
      * Specifies whether the exported data should be formatted as Excel table. (True by default)
