@@ -902,6 +902,33 @@ describe('IgxSimpleCombo', () => {
             const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearBtn.nativeElement.ariaLabel).toEqual('Clear Selection');
         });
+        it('should show clear button by default when an item is selected', () => {
+            combo.select('Illinois');
+            fixture.detectChanges();
+
+            const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearBtn).not.toBeNull();
+        });
+        it('should not render clear button in DOM when showClearButton is false', () => {
+            combo.showClearButton = false;
+            combo.select('Illinois');
+            fixture.detectChanges();
+
+            const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearBtn).toBeNull();
+        });
+        it('should render clear button again when showClearButton is toggled back to true', () => {
+            combo.showClearButton = false;
+            combo.select('Illinois');
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`))).toBeNull();
+
+            combo.showClearButton = true;
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`))).not.toBeNull();
+        });
     });
 
     describe('Binding tests: ', () => {
