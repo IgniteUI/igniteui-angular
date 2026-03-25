@@ -327,7 +327,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
         this.queryTree.setAddButtonFocus();
     }
 
-    private serializeExpressionTreeCallback(key: string, val: any) {
+    private serializeExpressionTreeCallback(key: string, val: unknown): unknown {
         if (key === 'externalObject') {
             return undefined;
         }
