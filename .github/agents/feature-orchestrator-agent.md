@@ -6,6 +6,7 @@ tools:
   - search/codebase
   - search/changes
   - read/problems
+  - web
 agents:
   - tdd-test-writer-agent
   - feature-implementer-agent

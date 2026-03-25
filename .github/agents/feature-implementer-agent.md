@@ -8,6 +8,7 @@ tools:
   - read/problems
   - execute/runTests
   - read/terminalLastCommand
+  - web
 ---
 
 # Implementer — GREEN + REFACTOR Phases

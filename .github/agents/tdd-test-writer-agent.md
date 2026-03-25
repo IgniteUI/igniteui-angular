@@ -8,6 +8,7 @@ tools:
   - execute/runTests
   - read/problems
   - read/terminalLastCommand
+  - web
 ---
 
 # TDD Test Writer — RED Phase

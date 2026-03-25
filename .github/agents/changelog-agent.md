@@ -5,6 +5,7 @@ tools:
   - search/codebase
   - edit/editFiles
   - read/problems
+  - web
 ---
 
 # Changelog Agent

@@ -7,6 +7,7 @@ tools:
   - read/problems
   - execute/runTests
   - read/terminalLastCommand
+  - web
 ---
 
 # Demo / Sample Agent
