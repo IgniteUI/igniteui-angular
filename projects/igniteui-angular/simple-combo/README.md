@@ -150,6 +150,15 @@ You can disable the combo using the following code:
 
 <div class="divider--half"></div>
 
+### Hide Clear Button
+By default, the clear button is shown when a value is selected. To hide it (e.g. inside a focus-trap dialog where the extra focusable element causes issues, or when clearing should be prevented programmatically), set `[showClearButton]="false"`. When `false`, the button is removed from the DOM entirely so it cannot receive focus.
+
+```html
+<igx-simple-combo [showClearButton]="false"></igx-simple-combo>
+```
+
+<div class="divider--half"></div>
+
 ### Grouping
 Defining a combo's groupKey option will group the items, according to that key.
 

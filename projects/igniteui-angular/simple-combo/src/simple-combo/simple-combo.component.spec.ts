@@ -525,6 +525,7 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboFormControlRequiredComponent,
                     IgxSimpleComboFormWithFormControlComponent,
                     IgxSimpleComboNgModelComponent,
+                    IgxSimpleComboHideClearButtonComponent,
                 ]
             }).compileComponents();
         }));
@@ -901,6 +902,55 @@ describe('IgxSimpleCombo', () => {
 
             const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearBtn.nativeElement.ariaLabel).toEqual('Clear Selection');
+        });
+        it('should render the clear button by default when a value is selected', () => {
+            fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.combo;
+
+            combo.select('Connecticut');
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).not.toBeNull();
+        });
+        it('should not render the clear button when showClearButton is false', () => {
+            fixture = TestBed.createComponent(IgxSimpleComboHideClearButtonComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.combo;
+
+            combo.select('Connecticut');
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+        });
+        it('should toggle clear button visibility dynamically via showClearButton', () => {
+            fixture = TestBed.createComponent(IgxSimpleComboHideClearButtonComponent);
+            fixture.detectChanges();
+            const componentInstance = fixture.componentInstance;
+            combo = componentInstance.combo;
+
+            combo.select('Connecticut');
+            fixture.detectChanges();
+
+            // showClearButton is false — button should not be in the DOM
+            let clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            // show the clear button
+            componentInstance.showClearButton = true;
+            fixture.detectChanges();
+
+            clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).not.toBeNull();
+
+            // hide it again
+            componentInstance.showClearButton = false;
+            fixture.detectChanges();
+
+            clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
         });
     });
 
@@ -3604,4 +3654,26 @@ export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {
             { id: 5, name: 'Phoenix' }
         ];
     }
+}
+
+@Component({
+    template: `
+    <igx-simple-combo #combo [placeholder]="'Location'" [data]="items"
+        [valueKey]="'field'" [width]="'400px'"
+        [showClearButton]="showClearButton">
+    </igx-simple-combo>
+    `,
+    imports: [IgxSimpleComboComponent]
+})
+export class IgxSimpleComboHideClearButtonComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public showClearButton = false;
+
+    public items = [
+        { field: 'Connecticut', region: 'New England' },
+        { field: 'Maine', region: 'New England' },
+        { field: 'Massachusetts', region: 'New England' }
+    ];
 }

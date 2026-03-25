@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, DoCheck, EventEmitter, HostListener, Output, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, EventEmitter, HostListener, Output, ViewChild, booleanAttribute, input, inject } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
@@ -93,6 +93,18 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     @ViewChild(IgxTextSelectionDirective, { static: true })
     private textSelection: IgxTextSelectionDirective;
+
+    /**
+     * Whether the clear button is rendered.
+     * When set to `false`, the clear button is removed from the DOM entirely so it is not focusable.
+     * Defaults to `true`.
+     *
+     * @example
+     * ```html
+     * <igx-simple-combo [showClearButton]="false"></igx-simple-combo>
+     * ```
+     */
+    public showClearButton = input(true, { transform: booleanAttribute });
 
     public override get value(): any {
         return this._value[0];
