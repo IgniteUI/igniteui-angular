@@ -306,7 +306,7 @@
         %filtering-row-input-overrides {
             igx-input-group {
                 width: 100%;
-                max-width: rem(200px);
+                max-width: rem(240px);
                 min-width: rem(140px);
 
                 @if $variant != 'fluent' {
