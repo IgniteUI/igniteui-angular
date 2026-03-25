@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Node.js CI" src="https://github.com/IgniteUI/igniteui-angular/workflows/Node.js%20CI/badge.svg"/></a>
+  <img alt="Node.js CI" src="https://github.com/IgniteUI/igniteui-angular/workflows/Node.js%20CI/badge.svg"/>
   <a href="https://coveralls.io/github/IgniteUI/igniteui-angular?branch=master"><img alt="Coverage Status" src="https://coveralls.io/repos/github/IgniteUI/igniteui-angular/badge.svg?branch=master"/></a>
   <a href="https://badge.fury.io/js/igniteui-angular"><img alt="npm version" src="https://badge.fury.io/js/igniteui-angular.svg"/></a>
   <a href="https://discord.gg/39MjrTRqds"><img alt="Discord" src="https://img.shields.io/discord/836634487483269200?logo=discord&logoColor=ffffff"/></a>
