@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib",
+    "declarationMap": true,
+    "declaration": true,
+    "inlineSources": true,
+    "types": [],
+    "paths": {
+      "igniteui-angular": [
+        "dist/igniteui-angular/"
+      ],
+      "igniteui-angular/*": [
+        "dist/igniteui-angular/*"
+      ]
+    }
+  },
+  "exclude": [
+    "src/test.ts",
+    "**/*.spec.ts"
+  ]
+}

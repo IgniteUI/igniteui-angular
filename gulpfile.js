@@ -70,6 +70,15 @@ module.exports.copyMigrations = (cb) => {
     cb();
 };
 
+module.exports.copyExtrasMigrations = (cb) => {
+    gulp.src([
+        './projects/igniteui-angular-extras/migrations/**/*.json',
+        '!**/tsconfig.json'
+    ]).pipe(gulp.dest('./dist/igniteui-angular-extras/migrations'));
+
+    cb();
+};
+
 module.exports.copySchematics = (cb) => {
     gulp.src([
         './projects/igniteui-angular/schematics/**/*.json',
