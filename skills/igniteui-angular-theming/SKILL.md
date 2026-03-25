@@ -1,7 +1,7 @@
 ---
 name: igniteui-angular-theming
-description: "Customize Ignite UI components styling using the igniteui-theming MCP server for AI-assisted theming. Use when users ask to theme or restyle Ignite UI components, change the color palette, switch between light and dark themes, apply or generate a global theme, customize typography or elevations, or configure component-level styles."
-user-invokable: true
+description: "Generates and customizes Ignite UI for Angular themes including color palettes, typography, elevations, and component-level styles using the Sass theming system and the igniteui-theming MCP server. Use when users ask to theme, restyle, or style Ignite UI components, change colors or the color palette, switch between light and dark themes, create or apply a global theme, customize typography or elevation shadows, adjust spacing, sizing, or roundness, or configure per-component design tokens. Do NOT use for component behavior, APIs, or data binding — use igniteui-angular-components or igniteui-angular-grids instead."
+user-invocable: true
 ---
 
 # Ignite UI for Angular — Theming Skill
@@ -29,71 +29,7 @@ This skill teaches AI agents how to theme Ignite UI for Angular applications usi
 
 ## Setting Up the Theming MCP Server
 
-The Ignite UI Theming MCP server enables AI assistants to generate production-ready theming code. It must be configured in your editor before the theming tools become available.
-
-### VS Code
-
-Create or edit `.vscode/mcp.json` in your project:
-
-```json
-{
-  "servers": {
-    "igniteui-theming": {
-      "command": "npx",
-      "args": ["-y", "igniteui-theming", "igniteui-theming-mcp"]
-    }
-  }
-}
-```
-
-This works whether `igniteui-theming` is installed locally in `node_modules` or needs to be pulled from the npm registry — `npx -y` handles both cases.
-
-### Cursor
-
-Create or edit `.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "igniteui-theming": {
-      "command": "npx",
-      "args": ["-y", "igniteui-theming", "igniteui-theming-mcp"]
-    }
-  }
-}
-```
-
-### Claude Desktop
-
-Edit the Claude Desktop config file:
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "igniteui-theming": {
-      "command": "npx",
-      "args": ["-y", "igniteui-theming", "igniteui-theming-mcp"]
-    }
-  }
-}
-```
-
-### WebStorm / JetBrains IDEs
-
-1. Go to **Settings → Tools → AI Assistant → MCP Servers**
-2. Click **+ Add MCP Server**
-3. Set Command to `npx` and Arguments to `igniteui-theming igniteui-theming-mcp`
-4. Click OK and restart the AI Assistant
-
-### Verifying the Setup
-
-After configuring the MCP server, ask your AI assistant:
-
-> "Detect which Ignite UI platform my project uses"
-
-If the MCP server is running, the `detect_platform` tool will analyze your `package.json` and return the detected platform (e.g., `angular`).
+> **Full setup instructions for VS Code, Cursor, Claude Desktop, and JetBrains IDEs are in [`references/mcp-setup.md`](./references/mcp-setup.md).** Read that file for editor-specific configuration steps and verification.
 
 ## Theming Architecture
 
@@ -101,12 +37,12 @@ If the MCP server is running, the `detect_platform` tool will analyze your `pack
 
 The Ignite UI theming system is built on four pillars:
 
-| Concept | Purpose |
-|---|---|
-| **Palette** | Color system with primary, secondary, surface, gray, info, success, warn, error families, each with shades 50–900 + accents A100–A700 |
-| **Typography** | Font family, type scale (h1–h6, subtitle, body, button, caption, overline) |
-| **Elevations** | Box-shadow levels 0–24 for visual depth |
-| **Schema** | Per-component recipes mapping palette colors to component tokens |
+| Concept        | Purpose                                                                                                                               |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Palette**    | Color system with primary, secondary, surface, gray, info, success, warn, error families, each with shades 50–900 + accents A100–A700 |
+| **Typography** | Font family, type scale (h1–h6, subtitle, body, button, caption, overline)                                                            |
+| **Elevations** | Box-shadow levels 0–24 for visual depth                                                                                               |
+| **Schema**     | Per-component recipes mapping palette colors to component tokens                                                                      |
 
 ### Design Systems
 
@@ -134,22 +70,23 @@ The quickest way to theme an app is to include a pre-built CSS file in `angular.
 
 Available pre-built CSS files:
 
-| File | Theme |
-|---|---|
-| `igniteui-angular.css` | Material Light |
-| `igniteui-angular-dark.css` | Material Dark |
-| `igniteui-fluent-light.css` | Fluent Light |
-| `igniteui-fluent-dark.css` | Fluent Dark |
+| File                           | Theme           |
+| ------------------------------ | --------------- |
+| `igniteui-angular.css`         | Material Light  |
+| `igniteui-angular-dark.css`    | Material Dark   |
+| `igniteui-fluent-light.css`    | Fluent Light    |
+| `igniteui-fluent-dark.css`     | Fluent Dark     |
 | `igniteui-bootstrap-light.css` | Bootstrap Light |
-| `igniteui-bootstrap-dark.css` | Bootstrap Dark |
-| `igniteui-indigo-light.css` | Indigo Light |
-| `igniteui-indigo-dark.css` | Indigo Dark |
+| `igniteui-bootstrap-dark.css`  | Bootstrap Dark  |
+| `igniteui-indigo-light.css`    | Indigo Light    |
+| `igniteui-indigo-dark.css`     | Indigo Dark     |
 
 All files are located under `node_modules/igniteui-angular/styles/` (or `node_modules/@infragistics/igniteui-angular/styles/` for the licensed package).
 
 ## Custom Sass Theme (Manual)
 
 > **AGENT INSTRUCTION — Sass Theming Docs**: If the user explicitly asks to build a Sass-based theme or configure Sass, refer to the dedicated Sass documentation:
+>
 > - [Sass Theming Overview](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/index)
 > - [Sass Configuration](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/configuration)
 > - [Sass Palettes](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/palettes)
@@ -163,40 +100,31 @@ Create a `styles.scss` file and include it in `angular.json`:
 // Licensed package — same Sass API, different import path
 // @use '@infragistics/igniteui-angular/theming' as *;
 $my-palette: palette(
-  $primary: #1976D2,
-  $secondary: #FF9800,
-  $surface: #FAFAFA
+  $primary: #1976d2,
+  $secondary: #ff9800,
+  $surface: #fafafa,
 );
 
 // 2. Typography (optional)
-@include typography(
-  $font-family: $material-typeface,
-  $type-scale: $material-type-scale
-);
+@include typography($font-family: $material-typeface, $type-scale: $material-type-scale);
 
 // 3. Core reset & base styles
 @include core();
 
 // 4. Apply theme
-@include theme(
-  $palette: $my-palette,
-  $schema: $light-material-schema
-);
+@include theme($palette: $my-palette, $schema: $light-material-schema);
 ```
 
 For dark themes, use a dark surface color and a dark schema:
 
 ```scss
 $dark-palette: palette(
-  $primary: #90CAF9,
-  $secondary: #FFB74D,
-  $surface: #121212
+  $primary: #90caf9,
+  $secondary: #ffb74d,
+  $surface: #121212,
 );
 
-@include theme(
-  $palette: $dark-palette,
-  $schema: $dark-material-schema
-);
+@include theme($palette: $dark-palette, $schema: $dark-material-schema);
 ```
 
 ## Component-Level Theming
@@ -214,19 +142,21 @@ Override individual component appearance using component theme functions and the
 > or the `get_color` MCP tool to obtain the correct token reference.
 >
 > **WRONG** (hardcoded hex — breaks theme switching, ignores the palette):
+>
 > ```scss
 > $custom-avatar: avatar-theme(
->   $background: #E91E63,
->   $color: #FFFFFF
+>   $background: #e91e63,
+>   $color: #ffffff,
 > );
 > ```
 >
 > **RIGHT** (palette token — stays in sync with the theme):
+>
 > ```scss
 > $custom-avatar: avatar-theme(
 >   $schema: $light-material-schema,
 >   $background: var(--ig-primary-500),
->   $color: var(--ig-primary-500-contrast)
+>   $color: var(--ig-primary-500-contrast),
 > );
 > ```
 >
@@ -241,7 +171,7 @@ Override individual component appearance using component theme functions and the
 $custom-avatar: avatar-theme(
   $schema: $light-material-schema,
   $background: var(--ig-primary-500),
-  $color: var(--ig-primary-500-contrast)
+  $color: var(--ig-primary-500-contrast),
 );
 
 igx-avatar {
@@ -272,10 +202,14 @@ Controls the size of components via `--ig-size` (values: 1 = small, 2 = medium, 
 
 ```css
 /* Global */
-:root { --ig-size: 2; }
+:root {
+  --ig-size: 2;
+}
 
 /* Component-scoped */
-igx-grid { --ig-size: 1; }
+igx-grid {
+  --ig-size: 1;
+}
 ```
 
 ### Spacing
@@ -285,8 +219,12 @@ igx-grid { --ig-size: 1; }
 Controls internal padding via `--ig-spacing` (1 = default, 0.5 = compact, 2 = spacious):
 
 ```css
-:root { --ig-spacing: 1; }
-.compact-section { --ig-spacing: 0.75; }
+:root {
+  --ig-spacing: 1;
+}
+.compact-section {
+  --ig-spacing: 0.75;
+}
 ```
 
 ### Roundness
@@ -294,8 +232,12 @@ Controls internal padding via `--ig-spacing` (1 = default, 0.5 = compact, 2 = sp
 Controls border-radius via `--ig-radius-factor` (0 = square, 1 = maximum radius):
 
 ```css
-:root { --ig-radius-factor: 1; }
-igx-avatar { --ig-radius-factor: 0.5; }
+:root {
+  --ig-radius-factor: 1;
+}
+igx-avatar {
+  --ig-radius-factor: 0.5;
+}
 ```
 
 ## Using the Theming MCP Server
@@ -413,15 +355,15 @@ The **only** place raw hex values are acceptable is in the initial `palette()` c
 
 Use `read_resource` with these URIs for preset values and documentation:
 
-| URI | Content |
-|---|---|
-| `theming://presets/palettes` | Preset palette colors |
-| `theming://presets/typography` | Typography presets |
-| `theming://presets/elevations` | Elevation shadow presets |
+| URI                               | Content                        |
+| --------------------------------- | ------------------------------ |
+| `theming://presets/palettes`      | Preset palette colors          |
+| `theming://presets/typography`    | Typography presets             |
+| `theming://presets/elevations`    | Elevation shadow presets       |
 | `theming://guidance/colors/usage` | Which shades for which purpose |
-| `theming://guidance/colors/roles` | Semantic color roles |
-| `theming://guidance/colors/rules` | Light/dark theme rules |
-| `theming://platforms/angular` | Angular platform specifics |
+| `theming://guidance/colors/roles` | Semantic color roles           |
+| `theming://guidance/colors/rules` | Light/dark theme rules         |
+| `theming://platforms/angular`     | Angular platform specifics     |
 
 ## Referencing Colors in Custom Styles
 
@@ -452,13 +394,13 @@ After a theme is applied, the palette is available as CSS custom properties on `
 
 ```scss
 // WRONG — these break when the palette changes and ignore dark/light mode
-$primary-color: #00838F;      // ✗ hardcoded
-$secondary-color: #3D5AFE;    // ✗ hardcoded
-$surface-color: #F0F5FA;      // ✗ hardcoded
+$primary-color: #00838f; // ✗ hardcoded
+$secondary-color: #3d5afe; // ✗ hardcoded
+$surface-color: #f0f5fa; // ✗ hardcoded
 
 .sidebar {
-  background: $surface-color;  // ✗ not a palette token
-  color: #333;                 // ✗ not a palette token
+  background: $surface-color; // ✗ not a palette token
+  color: #333; // ✗ not a palette token
 }
 ```
 
@@ -472,43 +414,12 @@ Raw hex values are acceptable **only** in these contexts:
 
 Everything else must use `var(--ig-<family>-<shade>)` tokens.
 
+## Contributing to Component Themes
+> **Contributing to the in-repo SCSS source (component theme files, structural SCSS, base functions, and the component registry) is covered in [`references/contributing.md`](./references/contributing.md).** Read that file when modifying or creating `_*-theme.scss` or `_*-component.scss` files, wiring a new component into the theme system, or writing style tests.
+
 ## Common Patterns
 
-### Switching Between Light and Dark Themes
-
-```scss
-@use 'igniteui-angular/theming' as *;
-
-$light-palette: palette($primary: #1976D2, $secondary: #FF9800, $surface: #FAFAFA);
-$dark-palette: palette($primary: #90CAF9, $secondary: #FFB74D, $surface: #121212);
-
-@include core();
-@include typography($font-family: $material-typeface, $type-scale: $material-type-scale);
-
-// Light is default
-@include theme($palette: $light-palette, $schema: $light-material-schema);
-
-// Dark via class on <body> or <html>
-.dark-theme {
-  @include theme($palette: $dark-palette, $schema: $dark-material-schema);
-}
-```
-
-### Scoping a Theme to a Container
-
-```scss
-.admin-panel {
-  @include theme($palette: $admin-palette, $schema: $light-indigo-schema);
-}
-```
-
-### Licensed Package Users
-
-If using the licensed `@infragistics/igniteui-angular` package, set `licensed: true` on MCP tool calls and change the Sass import:
-
-```scss
-@use '@infragistics/igniteui-angular/theming' as *;
-```
+> **Light/dark theme switching, scoped themes, and licensed package configuration are in [`references/common-patterns.md`](./references/common-patterns.md).** Read that file for ready-to-use Sass patterns.
 
 ## Key Rules
 
@@ -524,7 +435,5 @@ If using the licensed `@infragistics/igniteui-angular` package, set `licensed: t
 
 ## Related Skills
 
-- [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) — Form controls, application setup, architecture, and import patterns
-- [`igniteui-angular-components-layout`](../igniteui-angular-components-layout/SKILL.md) — Layout, data display, feedback/overlay components, and directives
-- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — Data Grid structure, column configuration, sorting, filtering, selection
-- [`igniteui-angular-grids-types`](../igniteui-angular-grids-types/SKILL.md) — Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid specifics
+- [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) — UI components (form controls, layout, data display, feedback/overlays, directives, charts)
+- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — Data Grids (Flat Grid, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid)

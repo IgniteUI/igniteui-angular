@@ -1,5 +1,5 @@
 import { registerI18n, setCurrentI18n } from 'igniteui-i18n-core';
-import { ByLevelTreeGridMergeStrategy, ColumnPinningPosition, DefaultMergeStrategy, DefaultTreeGridMergeStrategy, FilteringExpressionsTree, FilteringExpressionsTreeType, FilteringLogic, HorizontalAlignment, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy, NoopSortingStrategy, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
+import { ByLevelTreeGridMergeStrategy, ColumnPinningPosition, DefaultMergeStrategy, DefaultTreeGridMergeStrategy, FilteringExpressionsTree, FilteringExpressionsTreeType, FilteringLogic, HorizontalAlignment, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy, NoopSortingStrategy, SortingDirection, TransactionType, TransactionEventOrigin, VerticalAlignment } from 'igniteui-angular/core';
 import { CsvFileTypes, DropPosition, GridPagingMode, IgxCsvExporterOptions, IgxDateSummaryOperand, IgxExcelExporterOptions, IgxNumberSummaryOperand, IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IgxSummaryOperand, IgxTimeSummaryOperand, NoopPivotDimensionsStrategy, PivotDimensionType, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { IgcExcelExporterService } from './lib/excel-exporter';
 import { IgcCsvExporterService } from './lib/csv-exporter';
@@ -52,6 +52,11 @@ export {
     registerI18n,
     setCurrentI18n,
 
+    // Transactions API
+    TransactionType,
+    TransactionEventOrigin,
+
+    // Exporters
     IgxExcelExporterOptions as IgcExcelExporterOptions,
     IgxCsvExporterOptions as IgcCsvExporterOptions,
     IgcExcelExporterService,
