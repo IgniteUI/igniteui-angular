@@ -65,7 +65,7 @@ You do NOT write tests, production code, or detailed acceptance criteria. Each s
 - Do not write detailed acceptance criteria that downstream agents must encode literally
 - Do not specify exact test cases, exact implementations, or exact file changes
 - Do not over-constrain the handoff prompts — give scope, not specs
-- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file. If a dependency change appears truly necessary, ask for approval first. Never commit `package-lock.json` unless you have been explicitly approved to introduce a new dependency — committing unintended lock file changes can break builds.
 
 ---
 

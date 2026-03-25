@@ -57,7 +57,7 @@ Do not add extra scenarios unless they are explicitly requested, clearly require
 6. **Never write production code.**
    - Only test code in this phase to ensure the test does not give false negatives. The test MUST fail if the functionality is missing, or not behaving as intended.
 7. **Never modify dependency files.**
-   - `package.json`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, and similar manifest or lock files are off-limits.
+   - `package.json`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, and similar manifest or lock files are off-limits. If a dependency change appears truly necessary, ask for approval first. Never commit `package-lock.json` unless you have been explicitly approved to introduce a new dependency — committing unintended lock file changes can break builds.
 
 ---
 

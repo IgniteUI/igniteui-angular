@@ -35,7 +35,7 @@ You do not implement production code, write tests, write migrations, or update `
 - Do not rewrite the whole README if only one area changed.
 - Do not update `CHANGELOG.md`.
 - Do not document private/internal implementation details.
-- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file.
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file. If a dependency change appears truly necessary, ask for approval first. Never commit `package-lock.json` unless you have been explicitly approved to introduce a new dependency — committing unintended lock file changes can break builds.
 
 ---
 

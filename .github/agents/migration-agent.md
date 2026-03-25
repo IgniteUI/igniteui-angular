@@ -31,7 +31,7 @@ You create **`ng update` migration schematics** for breaking changes in Ignite U
 
 ## What You Do NOT Do
 
-- Do not add, remove, or change entries in `package.json`, `package-lock.json`, or any other dependency manifest or lock file.
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file. If a dependency change appears truly necessary, ask for approval first. Never commit `package-lock.json` unless you have been explicitly approved to introduce a new dependency — committing unintended lock file changes can break builds.
 
 ---
 

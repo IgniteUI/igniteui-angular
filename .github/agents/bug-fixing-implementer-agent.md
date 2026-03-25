@@ -114,7 +114,7 @@ If the bug requires SCSS, theme wiring, or style-test changes, do not implement 
 - Do not update `README.md` — the `component-readme-agent` handles that.
 - Do not create migration schematics — the `migration-agent` handles that.
 - Do not update `CHANGELOG.md` — the `changelog-agent` handles that.
-- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file.
+- Do not modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file. If a dependency change appears truly necessary, ask for approval first. Never commit `package-lock.json` unless you have been explicitly approved to introduce a new dependency — committing unintended lock file changes can break builds.
 
 ---
 
