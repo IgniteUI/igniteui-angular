@@ -8,7 +8,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    public ignoreColumnsVisibility = false;
+    public ignoreColumnsVisibility? = false;
 
     /**
      * Specifies whether filtered out rows should be exported.
@@ -19,7 +19,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    public ignoreFiltering = false;
+    public ignoreFiltering? = false;
 
     /**
      * Specifies if the exporter should ignore the current column order in the IgxGrid.
@@ -30,7 +30,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    public ignoreColumnsOrder = false;
+    public ignoreColumnsOrder? = false;
 
     /**
      * Specifies whether the exported data should be sorted as in the provided IgxGrid.
@@ -43,7 +43,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    public ignoreSorting = false;
+    public ignoreSorting? = false;
 
     /**
      * Specifies whether the exported data should be grouped as in the provided IgxGrid.
@@ -54,7 +54,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    public ignoreGrouping = false;
+    public ignoreGrouping? = false;
 
     /**
      * Specifies whether the exported data should include multi column headers as in the provided IgxGrid.
@@ -65,7 +65,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    public ignoreMultiColumnHeaders = false;
+    public ignoreMultiColumnHeaders? = false;
 
     /**
      * Specifies whether the exported data should include column summaries.
@@ -76,7 +76,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    public exportSummaries = true;
+    public exportSummaries? = true;
 
     /**
      * Specifies whether the exported data should have frozen headers.
@@ -87,7 +87,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    public freezeHeaders = false;
+    public freezeHeaders? = false;
 
     /**
      * Specifies whether the headers should be exported if there is no data.
@@ -98,7 +98,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-     public alwaysExportHeaders = true;
+     public alwaysExportHeaders? = true;
 
     private _fileName: string;
 
