@@ -9,6 +9,7 @@ import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-heade
 import { DebugElement } from '@angular/core';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxGridNavigationService, PivotRowLayoutType } from 'igniteui-angular/grids/core';
+import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 
 const DEBOUNCE_TIME = 250;
 const PIVOT_TBODY_CSS_CLASS = '.igx-grid__tbody';
@@ -402,6 +403,190 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
                 By.directive(IgxPivotRowDimensionHeaderComponent));
 
             expect(allHeaders.length).toBe(5, 'There should be 5 row dimension headers after expand with Alt + ArrowRight');
+        });
+    });
+
+    describe('headerNavigation with isRowDimensionHeaderActive', () => {
+        let fixture: ComponentFixture<IgxPivotGridMultipleRowComponent>;
+        let pivotGrid: IgxPivotGridComponent;
+        let pivotNav: IgxPivotGridNavigationService;
+        let headerRow: DebugElement;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxPivotGridMultipleRowComponent
+                ],
+                providers: [
+                    IgxGridNavigationService
+                ]
+            }).compileComponents();
+        }));
+
+        beforeEach(fakeAsync(async () => {
+            fixture = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fixture.detectChanges();
+            pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotNav = pivotGrid.navigation as IgxPivotGridNavigationService;
+            await fixture.whenStable();
+            headerRow = fixture.debugElement.query(By.directive(IgxPivotHeaderRowComponent));
+
+            // Enable row headers so ArrowLeft on column 0 activates row dimension header navigation
+            pivotGrid.pivotUI = { ...pivotGrid.pivotUI, showRowHeaders: true };
+            fixture.detectChanges();
+        }));
+
+        /**
+         * Helper: directly set activeNode to column 0 in header mode and press ArrowLeft
+         * to set isRowDimensionHeaderActive=true with activeNode.column = lastRowDimensionsIndex.
+         */
+        const activateRowDimensionHeaderNav = () => {
+            // Directly set activeNode to simulate "column header 0 is active" state
+            // (bypasses the need to click on the correct header with showRowHeaders=true)
+            pivotNav.activeNode = { row: -1, column: 0 };
+            // ArrowLeft on column 0 with showRowHeaders=true → else if branch →
+            // sets isRowDimensionHeaderActive=true and activeNode.column=lastRowDimensionsIndex
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+        };
+
+        it('should set isRowDimensionHeaderActive when pressing ArrowLeft at column 0 with showRowHeaders', () => {
+            expect(pivotNav.isRowDimensionHeaderActive).toBeFalse();
+
+            activateRowDimensionHeaderNav();
+
+            expect(pivotNav.isRowDimensionHeaderActive).toBeTrue();
+            // activeNode.column is set to lastRowDimensionsIndex (3 row dims → index 2)
+            expect(pivotNav.activeNode.column).toBe(pivotNav.lastRowDimensionsIndex);
+        });
+
+        it('should move left within row dimension headers when isRowDimensionHeaderActive=true', () => {
+            activateRowDimensionHeaderNav();
+            expect(pivotNav.activeNode.column).toBe(pivotNav.lastRowDimensionsIndex);
+
+            // ArrowLeft from index 2 → index 1
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+
+            expect(pivotNav.activeNode.column).toBe(1);
+        });
+
+        it('should move to first row dimension header on Home key when isRowDimensionHeaderActive=true', () => {
+            activateRowDimensionHeaderNav();
+            expect(pivotNav.activeNode.column).toBe(pivotNav.lastRowDimensionsIndex);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Home', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+
+            expect(pivotNav.activeNode.column).toBe(0);
+        });
+
+        it('should move right within row dimension headers when isRowDimensionHeaderActive=true', () => {
+            activateRowDimensionHeaderNav();
+
+            // Move left first to column 0
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+            expect(pivotNav.activeNode.column).toBe(0);
+
+            // ArrowRight from column 0 → column 1
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+
+            expect(pivotNav.activeNode.column).toBe(1);
+        });
+
+        it('should move to last row dimension header on End key when isRowDimensionHeaderActive=true', () => {
+            activateRowDimensionHeaderNav();
+
+            // Move to column 0 first
+            UIInteractions.triggerKeyDownEvtUponElem('Home', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+            expect(pivotNav.activeNode.column).toBe(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+
+            expect(pivotNav.activeNode.column).toBe(pivotNav.lastRowDimensionsIndex);
+        });
+
+        it('should deactivate isRowDimensionHeaderActive when pressing ArrowRight at last row dimension', () => {
+            activateRowDimensionHeaderNav();
+            // activeNode.column = lastRowDimensionsIndex (2) after activating
+            expect(pivotNav.activeNode.column).toBe(pivotNav.lastRowDimensionsIndex);
+
+            // ArrowRight at the last row dimension → switches back to column header navigation
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+
+            expect(pivotNav.isRowDimensionHeaderActive).toBeFalse();
+            expect(pivotNav.activeNode.column).toBe(0);
+        });
+
+        it('should focus row cells (isRowHeaderActive) when pressing ArrowDown from row dimension header', () => {
+            activateRowDimensionHeaderNav();
+
+            expect(pivotNav.isRowDimensionHeaderActive).toBeTrue();
+            expect(pivotNav.isRowHeaderActive).toBeFalse();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+
+            // ArrowDown should deactivate row dimension header nav and activate row header nav
+            expect(pivotNav.isRowDimensionHeaderActive).toBeFalse();
+            expect(pivotNav.isRowHeaderActive).toBeTrue();
+        });
+
+        it('should sort dimension when pressing ctrl+ArrowDown with row=-1 in row dimension header nav', () => {
+            activateRowDimensionHeaderNav();
+
+            const col = pivotNav.activeNode.column;
+            const dim = pivotGrid.visibleRowDimensions[col];
+            const initialSortDirection = dim.sortDirection;
+
+            spyOn(pivotGrid, 'sortDimension').and.callThrough();
+
+            // ctrl+ArrowDown at row=-1 → sortDimension is called
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', pivotGrid.theadRow.nativeElement, true, false, false, true);
+            fixture.detectChanges();
+
+            expect(pivotGrid.sortDimension).toHaveBeenCalled();
+        });
+
+        it('should sort dimension when pressing ctrl+ArrowUp with row=-1 in row dimension header nav', () => {
+            activateRowDimensionHeaderNav();
+
+            spyOn(pivotGrid, 'sortDimension').and.callThrough();
+
+            // ctrl+ArrowUp at row=-1 → sortDimension is called
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', pivotGrid.theadRow.nativeElement, true, false, false, true);
+            fixture.detectChanges();
+
+            expect(pivotGrid.sortDimension).toHaveBeenCalled();
+        });
+
+        it('should call super.headerNavigation for unhandled keys when isRowDimensionHeaderActive is false', () => {
+            // When isRowDimensionHeaderActive=false and column > 0,
+            // the else branch calls super.headerNavigation(event) which navigates columns.
+            // Directly set activeNode to column 1 in header mode (no row dimension header active)
+            pivotNav.activeNode = { row: -1, column: 1 };
+            fixture.detectChanges();
+
+            expect(pivotNav.isRowDimensionHeaderActive).toBeFalse();
+
+            // Spy on the base class method to verify the else branch routes to super
+            spyOn(IgxGridNavigationService.prototype, 'headerNavigation').and.callThrough();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', pivotGrid.theadRow.nativeElement);
+            fixture.detectChanges();
+
+            // isRowDimensionHeaderActive should remain false (else branch, not else-if)
+            expect(pivotNav.isRowDimensionHeaderActive).toBeFalse();
+            // super.headerNavigation was invoked (the else branch executed)
+            expect(IgxGridNavigationService.prototype.headerNavigation).toHaveBeenCalled();
         });
     });
 });
