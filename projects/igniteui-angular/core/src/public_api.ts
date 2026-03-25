@@ -41,9 +41,6 @@ export * from './data-operations/pipes';
 // Services
 export * from './services/public_api';
 
-// Performance service
-export * from './performance.service';
-
 // i18n
 export { setCurrentI18n } from 'igniteui-i18n-core';
 export { IResourceStrings, changei18n, registerI18n } from './core/i18n/resources';
