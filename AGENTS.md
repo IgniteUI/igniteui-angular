@@ -65,7 +65,7 @@ css-naming-convention.md           ← CSS naming rules
 - Skip steps in the implementation. 
 - Commit secrets, tokens, or credentials.
 - Introduce `eval()` or dynamic code execution.
-- Modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file.
+- Modify `package.json`, `package-lock.json`, or any other dependency manifest or lock file. If a dependency change appears truly necessary, ask for approval first. Never commit `package-lock.json` unless you have been explicitly approved to introduce a new dependency — committing unintended lock file changes can break builds.
 
 ### Ask First
 
