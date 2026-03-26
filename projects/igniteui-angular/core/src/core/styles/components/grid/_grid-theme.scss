@@ -96,13 +96,17 @@
                     ),
                     $item-selected-text-color: var(--ig-grid-accent-color, #{if(
                         $variant == 'indigo',
-                        contrast-color($color: 'surface'),
+                        contrast-color($color: 'primary'),
                         if($variant == 'material',
                             color($color: 'secondary', $variant: 500),
                             color($color: 'primary', $variant: 500)
                         )
                     )}),
-                    $item-selected-hover-text-color: var(--ig-grid-foreground, #{color($color: 'gray', $variant: 700)}),
+                    $item-selected-hover-text-color: var(--ig-grid-foreground, #{if(
+                        $variant == 'indigo',
+                        contrast-color($color: 'primary'),
+                        color($color: 'gray', $variant: 700),
+                    )}),
                     $shadow: none
                 ),
                 $mode: 'scoped'

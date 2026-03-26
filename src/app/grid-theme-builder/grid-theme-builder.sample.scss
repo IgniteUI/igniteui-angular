@@ -9,11 +9,20 @@
     @include tokens(
         grid-theme(
             $schema: vars.$schema,
-            $background: #092444,
-            $foreground: #f1f4ed,
-            $accent-color: #d66620
+            $background: #f7f4f0,
+            $foreground: #1E2A35,
+            $accent-color: #5B8F8A
         )
     );
+
+    // @include tokens(
+    //     grid-theme(
+    //         $schema: vars.$schema,
+    //         $background: #092444,
+    //         $foreground: #f1f4ed,
+    //         $accent-color: #d66620
+    //     )
+    // );
 }
 
 .color-pickers {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, signal, viewChild } from '@angular/core';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -18,17 +18,25 @@ class EmployeesSummary extends IgxNumberSummaryOperand {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IGX_GRID_DIRECTIVES, IgxActionStripComponent]
 })
-export class GridThemeBuilderSampleComponent implements OnInit {
-    protected readonly gridForeground = signal('#f1f4ed');
-    protected readonly gridBackground = signal('#092444');
-    protected readonly gridAccentColor = signal('#d66620');
+export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
+    protected readonly gridForeground = signal('');
+    protected readonly gridBackground = signal('');
+    protected readonly gridAccentColor = signal('');
 
     protected readonly gridRef = viewChild.required<IgxGridComponent>('grid');
+    private readonly sampleEl = viewChild.required<ElementRef>('sampleEl');
 
     public data: Array<any>;
     public readonly employeesSummary = EmployeesSummary;
 
     public ngOnInit(): void {
         this.data = SAMPLE_DATA;
+    }
+
+    public ngAfterViewInit(): void {
+        const styles = getComputedStyle(this.sampleEl().nativeElement);
+        this.gridBackground.set(styles.getPropertyValue('--ig-grid-background').trim());
+        this.gridForeground.set(styles.getPropertyValue('--ig-grid-foreground').trim());
+        this.gridAccentColor.set(styles.getPropertyValue('--ig-grid-accent-color').trim());
     }
 }
