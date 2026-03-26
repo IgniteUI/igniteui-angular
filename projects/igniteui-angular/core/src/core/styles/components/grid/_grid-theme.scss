@@ -79,9 +79,7 @@
 
         .igx-excel-filter__menu .igx-button-group,
         .igx-button-group {
-            @if $variant == 'indigo' {
-                --ig-btn-group-selected-bg: #{dynamic-shade(var(--ig-grid-background), $offset: 10)};
-            }
+            --ig-btn-group-selected-bg: color-mix(in srgb, var(--ig-grid-accent-color) 8%, var(--ig-grid-background));
 
             @include tokens(
                 button-group-theme(
@@ -92,8 +90,9 @@
                     $item-selected-background: if(
                         $variant == 'indigo',
                         var(--ig-btn-group-selected-bg, var(--ig-primary-500)),
-                        null
+                        var(--ig-btn-group-selected-bg, #{color($color: 'gray', $variant: 100)}),
                     ),
+                    $item-hover-background: var(--item-selected-background),
                     $item-selected-text-color: var(--ig-grid-accent-color, #{if(
                         $variant == 'indigo',
                         contrast-color($color: 'primary'),
@@ -102,11 +101,15 @@
                             color($color: 'primary', $variant: 500)
                         )
                     )}),
-                    $item-selected-hover-text-color: var(--ig-grid-foreground, #{if(
+                    $item-selected-hover-text-color: var(--ig-grid-accent-color, #{if(
                         $variant == 'indigo',
                         contrast-color($color: 'primary'),
-                        color($color: 'gray', $variant: 700),
+                        if($variant == 'material',
+                            color($color: 'secondary', $variant: 500),
+                            color($color: 'primary', $variant: 500)
+                        )
                     )}),
+                    $item-selected-hover-background: dynamic-shade(var(--item-hover-background), $offset: 3),
                     $shadow: none
                 ),
                 $mode: 'scoped'

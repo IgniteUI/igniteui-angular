@@ -39,11 +39,10 @@
     font-size: 14px;
 
     input[type='color'] {
+        background: transparent;
         width: 36px;
         height: 36px;
         border: none;
-        border-radius: 4px;
         cursor: pointer;
-        padding: 0;
     }
 }

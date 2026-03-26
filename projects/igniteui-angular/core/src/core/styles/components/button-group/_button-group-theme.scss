@@ -386,7 +386,6 @@
         @if $variant == 'fluent' {
             &:hover {
                 background: var-get($theme, 'item-selected-background');
-                color: var-get($theme, 'item-selected-text-color');
 
                 @extend %item-overlay;
 
