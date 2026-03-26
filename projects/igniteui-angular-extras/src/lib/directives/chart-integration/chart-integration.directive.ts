@@ -89,6 +89,13 @@ export class IgxChartIntegrationDirective {
     @Input()
     public defaultLabelMemberPath: string = undefined;
 
+    /**
+     * When set to `true`, the directive automatically hides the Y-axis if the
+     * selected numeric member paths do not contain finite numeric values in the
+     * current data view.
+     *
+     * @default false
+     */
     @Input()
     public autoHideYAxisWhenNoData = false;
 
@@ -285,17 +292,17 @@ export class IgxChartIntegrationDirective {
         const customComponentOptions: IChartComponentOptions = this.customChartComponentOptions.get(type) || {};
         const customChartOptions = customComponentOptions.chartOptions || {};
         const customSeriesModel = customComponentOptions.seriesModel || {};
-        const valueMemberPathsWithData = this._valueMemberPaths.filter(memberPath => this.hasSeriesData(memberPath));
-        const valueMemberPathsForSeries = this.autoHideYAxisWhenNoData ? valueMemberPathsWithData : this._valueMemberPaths;
+        const pathsWithData = this._valueMemberPaths.filter(memberPath => this.hasSeriesData(memberPath));
+        const seriesPaths = this.autoHideYAxisWhenNoData ? pathsWithData : this._valueMemberPaths;
         chartComponentOptions.chartOptions = { ...this.dataChartOptions, ...customChartOptions };
         if (type.indexOf('Scatter') !== -1) {
             this.addScatterChartDataOptions(type, chartComponentOptions);
         } else {
             chartComponentOptions.seriesModel = { ...this.dataChartSeriesOptionsModel, ...customSeriesModel };
-            const hideYAxis = this.autoHideYAxisWhenNoData && valueMemberPathsWithData.length === 0;
+            const hideYAxis = this.autoHideYAxisWhenNoData && pathsWithData.length === 0;
             this.setAxisLabelOption(type, chartComponentOptions, hideYAxis);
             const options: IOptions[] = [];
-            valueMemberPathsForSeries.forEach(valueMemberPath => {
+            seriesPaths.forEach(valueMemberPath => {
                 const dataOptions = {
                     title: valueMemberPath,
                     valueMemberPath
@@ -352,6 +359,13 @@ export class IgxChartIntegrationDirective {
         return dataRecord;
     }
 
+    /**
+     * Checks whether the current data set contains at least one finite numeric
+     * value for the provided member path.
+     *
+     * @param memberPath The numeric member path to inspect.
+     * @returns `true` when at least one finite number exists for the path.
+     */
     private hasSeriesData(memberPath: string): boolean {
         return this._chartData.some(record => Number.isFinite(record[memberPath]));
     }

@@ -291,7 +291,7 @@ describe('IgxChartIntegrationDirective', () => {
 
         it('should auto-hide y-axis and skip series creation when autoHideYAxisWhenNoData is enabled and no numeric values exist', () => {
             directive.autoHideYAxisWhenNoData = true;
-            directive.chartData = [{ name: 'A', value: Number.NaN }, { name: 'B', value: undefined as any }];
+            directive.chartData = [{ name: 'A', value: Number.NaN }, { name: 'B', value: Number.NaN }];
 
             const axisAddArgs: any[] = [];
             const seriesAddSpy = jasmine.createSpy('seriesAdd');
