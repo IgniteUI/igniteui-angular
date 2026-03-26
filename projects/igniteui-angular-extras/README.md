@@ -48,6 +48,15 @@ export class AppModule { }
 </igx-grid>
 ```
 
+When integrating charts with dynamic filtering scenarios, you can enable automatic Y-axis hiding when there is no numeric data for the charted series:
+
+```html
+<igx-grid #grid1 igxChartIntegration [autoHideYAxisWhenNoData]="true"
+    igxConditionalFormatting igxContextMenu
+    [autoGenerate]="true" [paging]="true" [data]="localData" >
+</igx-grid>
+```
+
 ### After Version 19.x
 
 Since version 19.x, Ignite UI for Angular Extras has adopted standalone components and directives, removing the need to add `IgxExtrasModule` to your `app.module.ts`. You can now directly import the required components and directives as standalone elements.
