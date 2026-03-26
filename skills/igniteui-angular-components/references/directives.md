@@ -6,6 +6,7 @@
 ## Contents
 
 - [Button & Icon Button](#button--icon-button)
+- [Button Group](#button-group)
 - [Ripple Effect](#ripple-effect)
 - [Tooltip](#tooltip)
 - [Drag and Drop](#drag-and-drop)
@@ -39,6 +40,121 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 
 Button variants for `igxButton`: `'flat'`, `'raised'`, `'outlined'`, `'fab'`.
 Button variants for `igxIconButton`: `'flat'`, `'outlined'`, `'contained'`.
+
+## Button Group
+
+> **Docs:** [Button Group Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/buttongroup)
+
+```typescript
+// Option A — convenience collection (includes IgxButtonGroupComponent + IgxButtonDirective)
+import { IGX_BUTTON_GROUP_DIRECTIVES } from 'igniteui-angular/button-group';
+
+// Option B — individual imports
+import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+
+import { IgxIconComponent } from 'igniteui-angular/icon';
+```
+
+```html
+<!-- Text buttons — single selection (default) -->
+<igx-buttongroup>
+  <button igxButton>Left</button>
+  <button igxButton [selected]="true">Center</button>
+  <button igxButton>Right</button>
+</igx-buttongroup>
+
+<!-- Multi-selection -->
+<igx-buttongroup selectionMode="multi">
+  <button igxButton><igx-icon>format_bold</igx-icon></button>
+  <button igxButton><igx-icon>format_italic</igx-icon></button>
+  <button igxButton><igx-icon>format_underlined</igx-icon></button>
+</igx-buttongroup>
+
+<!-- singleRequired — always keeps one button selected, cannot deselect -->
+<igx-buttongroup selectionMode="singleRequired">
+  <button igxButton [selected]="true">Day</button>
+  <button igxButton>Week</button>
+  <button igxButton>Month</button>
+</igx-buttongroup>
+
+<!-- Vertical alignment -->
+<igx-buttongroup alignment="vertical">
+  <button igxButton>Top</button>
+  <button igxButton>Middle</button>
+  <button igxButton>Bottom</button>
+</igx-buttongroup>
+
+<!-- Disabled group -->
+<igx-buttongroup [disabled]="true">
+  <button igxButton>A</button>
+  <button igxButton>B</button>
+</igx-buttongroup>
+
+<!-- React to selection / deselection events -->
+<igx-buttongroup (selected)="onSelected($event)" (deselected)="onDeselected($event)">
+  <button igxButton>One</button>
+  <button igxButton>Two</button>
+  <button igxButton>Three</button>
+</igx-buttongroup>
+```
+
+```typescript
+import { IButtonGroupEventArgs } from 'igniteui-angular/button-group';
+
+onSelected(event: IButtonGroupEventArgs) {
+  console.log('Selected index:', event.index, 'button:', event.button);
+}
+
+onDeselected(event: IButtonGroupEventArgs) {
+  console.log('Deselected index:', event.index);
+}
+```
+
+**Key inputs on `igx-buttongroup`:**
+
+| Input | Type | Default | Description |
+|---|---|---|---|
+| `selectionMode` | `'single' \| 'singleRequired' \| 'multi'` | `'single'` | Selection behaviour. `singleRequired` prevents full deselection. |
+| `alignment` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction of the buttons. |
+| `disabled` | `boolean` | `false` | Disables every button in the group. |
+
+**Key outputs on `igx-buttongroup`:**
+
+| Output | Payload | Emits when |
+|---|---|---|
+| `(selected)` | `IButtonGroupEventArgs` | A button is selected. |
+| `(deselected)` | `IButtonGroupEventArgs` | A button is deselected. |
+
+`IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`, where `IgxButtonDirective` is imported from `igniteui-angular/directives` (see **Button & Icon Button** section above).
+
+**Key inputs on each `<button igxButton>` child:**
+
+| Input | Type | Description |
+|---|---|---|
+| `[selected]` | `boolean` | Sets the initial selected state of the button. |
+| `[disabled]` | `boolean` | Disables a specific button within the group. |
+
+**Programmatic control:**
+
+```typescript
+import { viewChild } from '@angular/core';
+import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
+
+buttonGroup = viewChild.required<IgxButtonGroupComponent>('myGroup');
+
+selectSecond()   { this.buttonGroup().selectButton(1); }
+deselectSecond() { this.buttonGroup().deselectButton(1); }
+getSelected()    { return this.buttonGroup().selectedButtons; }
+```
+
+```html
+<igx-buttongroup #myGroup selectionMode="multi">
+  <button igxButton>A</button>
+  <button igxButton>B</button>
+  <button igxButton>C</button>
+</igx-buttongroup>
+```
 
 ## Ripple Effect
 
