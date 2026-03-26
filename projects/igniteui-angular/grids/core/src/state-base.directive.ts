@@ -154,14 +154,7 @@ export class IgxGridStateBaseDirective {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const filteringState = context.currGrid.filteringExpressionsTree;
                 if (filteringState) {
-                    const filteringStateCopy = { ...filteringState };
-                    delete filteringStateCopy.owner;
-                    filteringStateCopy.filteringOperands = filteringState.filteringOperands.map(item => {
-                        const itemCopy = { ...item };
-                        delete (itemCopy as IFilteringExpressionsTree).owner;
-                        return itemCopy;
-                    });
-                    return { filtering: filteringStateCopy as IFilteringExpressionsTree };
+                    return { filtering: context.cloneFilteringTree(filteringState) };
                 }
                 return { filtering: filteringState };
             },
@@ -175,14 +168,7 @@ export class IgxGridStateBaseDirective {
                 const filteringState = context.currGrid.advancedFilteringExpressionsTree;
                 let advancedFiltering: any;
                 if (filteringState) {
-                    const filteringStateCopy = { ...filteringState };
-                    delete filteringStateCopy.owner;
-                    filteringStateCopy.filteringOperands = filteringState.filteringOperands.map(item => {
-                        const itemCopy = { ...item };
-                        delete (itemCopy as IFilteringExpressionsTree).owner;
-                        return itemCopy;
-                    });
-                    advancedFiltering = filteringStateCopy;
+                    advancedFiltering = context.cloneFilteringTree(filteringState);
                 } else {
                     advancedFiltering = {};
                 }
@@ -713,5 +699,21 @@ export class IgxGridStateBaseDirective {
     private getFeature(key: string): Feature {
         const feature: Feature = this.FEATURES[key];
         return feature;
+    }
+
+    /**
+     * Creates a deep clone of an IFilteringExpressionsTree, removing the `owner`
+     * property at every level so the original live tree is not mutated.
+     */
+    private cloneFilteringTree(tree: IFilteringExpressionsTree): IFilteringExpressionsTree {
+        const copy = { ...tree };
+        delete copy.owner;
+        copy.filteringOperands = tree.filteringOperands.map(item => {
+            if ((item as IFilteringExpressionsTree).filteringOperands !== undefined) {
+                return this.cloneFilteringTree(item as IFilteringExpressionsTree);
+            }
+            return { ...item };
+        });
+        return copy as IFilteringExpressionsTree;
     }
 }
