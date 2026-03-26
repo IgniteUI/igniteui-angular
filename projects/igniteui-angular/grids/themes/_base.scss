@@ -878,8 +878,6 @@ $z-grid-loading: 10003;
         @include e(td, $mods: (editing, valid)) {
             &::after {
                 box-shadow: inset 0 0 0 $cell-editing-outline-width color($color: 'success');
-                top: calc($cell-editing-outline-width / 2);
-                height: calc(100% - $cell-editing-outline-width)
             }
         }
 
@@ -1510,7 +1508,7 @@ $z-grid-loading: 10003;
             align-items: center !important;
             background: var-get($theme, 'ghost-header-background') !important;
             color: var-get($theme, 'ghost-header-text-color') !important;
-            border-inline-end: transparent !important;
+            border: transparent !important;
             min-width: rem(168px);
             max-width: rem(320px);
             height: var(--header-size);
@@ -1518,7 +1516,6 @@ $z-grid-loading: 10003;
             padding-inline: pad-inline(rem(24px), rem(16px), rem(12px));
             top: rem(-10000px);
             inset-inline-start: rem(-10000px);
-            border: none;
             box-shadow: var(--drag-shadow);
             overflow: hidden;
             z-index: $z-grid-drag-ghost;
@@ -1532,14 +1529,16 @@ $z-grid-loading: 10003;
                 color: var-get($theme, 'ghost-header-text-color') !important;
             }
 
-            .igx-grid-th__icons {
-                display: none;
-            }
-
             .igx-grid-thead__title {
                 border: none;
                 color: var-get($theme, 'ghost-header-text-color') !important;
                 background: transparent !important;
+            }
+
+            .igx-grid-th__icons,
+            &::before,
+            &::after {
+                display: none;
             }
         }
 
@@ -2162,6 +2161,15 @@ $z-grid-loading: 10003;
                     line-height: rem(10px);
                 }
             }
+
+            .igx-excel-filter__icon--filtered {
+                color: var-get($theme, 'sorted-header-icon-color');
+
+                &:hover,
+                &:focus {
+                    color: var-get($theme, 'sortable-header-icon-hover-color');
+                }
+            }
         }
 
         @include e(resize-handle) {
@@ -2292,12 +2300,6 @@ $z-grid-loading: 10003;
                 &:is(:hover, :focus) {
                     color: var-get($theme, 'sortable-header-icon-hover-color');
                 }
-            }
-
-            // When hovering over the header cell itself, change icon color
-            // TODO: Questionable why this is here
-            &:hover :where(.sort-icon) {
-                color: var-get($theme, 'sortable-header-icon-hover-color');
             }
         }
 

@@ -122,8 +122,11 @@
     }
 
     @include e(icons) {
-        .sort-icon igx-icon {
-            --size: var(--ig-icon-size, #{rem(15px)});
+        .icon--filtered,
+        .sort-icon {
+            igx-icon {
+                --size: var(--ig-icon-size, #{rem(15px)});
+            }
         }
     }
 }

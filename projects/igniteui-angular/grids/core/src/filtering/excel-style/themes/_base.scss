@@ -105,6 +105,7 @@ $checkbox-indent: (
         height: 100%;
         flex-grow: 1;
         box-shadow: elevation(12);
+        background: var(--filtering-row-background);
 
         @include e(sizing) {
             @include sizable();
