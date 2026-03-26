@@ -7,6 +7,28 @@ import { DateTimeUtil } from '../date-common/public_api';
 
 export class ExpressionsTreeUtil {
     /**
+     * Returns the unique field names from the provided filtering expressions tree.
+     * Useful for calculating the number of columns that have advanced filters applied.
+     * ```typescript
+     * let fieldNames = ExpressionsTreeUtil.extractUniqueFieldNamesFromFilterTree(gridExpressionTree);
+     * ```
+     * @param filteringTree The filtering expressions tree to extract field names from.
+     * @returns An array of unique field names referenced in the filtering tree.
+     */
+    public static extractUniqueFieldNamesFromFilterTree(filteringTree?: IFilteringExpressionsTree): string[] {
+        const columnNames: string[] = [];
+        if (!filteringTree) return columnNames;
+        filteringTree.filteringOperands.forEach((expr) => {
+            if (isTree(expr)) {
+                columnNames.push(...this.extractUniqueFieldNamesFromFilterTree(expr as IFilteringExpressionsTree));
+            } else {
+                columnNames.push((expr as IFilteringExpression).fieldName);
+            }
+        });
+        return [...new Set(columnNames)];
+    }
+
+    /**
      * Returns the filtering expression for a column with the provided tree and fieldName.
      * ```typescript
      * let filteringExpression = ExpressionsTreeUtil.find(gridExpressionTree, 'Column Field');
