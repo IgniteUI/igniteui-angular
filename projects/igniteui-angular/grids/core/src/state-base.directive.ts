@@ -139,10 +139,11 @@ export class IgxGridStateBaseDirective {
     private FEATURES = {
         sorting:  {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
-                const sortingState = context.currGrid.sortingExpressions;
-                sortingState.forEach(s => {
-                    delete s.strategy;
-                    delete s.owner;
+                const sortingState = context.currGrid.sortingExpressions.map(s => {
+                    const copy: any = { ...s };
+                    delete copy.strategy;
+                    delete copy.owner;
+                    return copy;
                 });
                 return { sorting: sortingState };
             },
@@ -154,10 +155,14 @@ export class IgxGridStateBaseDirective {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const filteringState = context.currGrid.filteringExpressionsTree;
                 if (filteringState) {
-                    delete filteringState.owner;
-                    for (const item of filteringState.filteringOperands) {
-                        delete (item as IFilteringExpressionsTree).owner;
-                    }
+                    const filterCopy: any = { ...filteringState };
+                    delete filterCopy.owner;
+                    filterCopy.filteringOperands = filteringState.filteringOperands.map(item => {
+                        const itemCopy: any = { ...item };
+                        delete itemCopy.owner;
+                        return itemCopy;
+                    });
+                    return { filtering: filterCopy as IFilteringExpressionsTree };
                 }
                 return { filtering: filteringState };
             },
@@ -171,11 +176,14 @@ export class IgxGridStateBaseDirective {
                 const filteringState = context.currGrid.advancedFilteringExpressionsTree;
                 let advancedFiltering: any;
                 if (filteringState) {
-                    delete filteringState.owner;
-                    for (const item of filteringState.filteringOperands) {
-                        delete (item as IFilteringExpressionsTree).owner;
-                    }
-                    advancedFiltering = filteringState;
+                    const filterCopy: any = { ...filteringState };
+                    delete filterCopy.owner;
+                    filterCopy.filteringOperands = filteringState.filteringOperands.map(item => {
+                        const itemCopy: any = { ...item };
+                        delete itemCopy.owner;
+                        return itemCopy;
+                    });
+                    advancedFiltering = filterCopy;
                 } else {
                     advancedFiltering = {};
                 }
