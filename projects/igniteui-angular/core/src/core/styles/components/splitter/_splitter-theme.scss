@@ -95,7 +95,7 @@
         }
 
         &:hover {
-                @extend %expand-bars;
+            @extend %expand-bars;
         }
 
         &.igx-splitter-bar--collapsible {
