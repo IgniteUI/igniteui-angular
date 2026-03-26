@@ -101,18 +101,7 @@ Do not add sections such as:
 
 ---
 
-## Skills Reference
-
-Consult the relevant skill file for the task at hand:
-
-| Skill | Path | Use when |
-|---|---|---|
-| Non-grid components | `skills/igniteui-angular-components/SKILL.md` | Scoping non-grid component APIs and patterns |
-| Grid components | `skills/igniteui-angular-grids/SKILL.md` | Scoping grid APIs and patterns |
-| Theming & styling | `skills/igniteui-angular-theming/SKILL.md` | Feature needs SCSS, theme wiring, or style changes |
-| Build | `.github/skills/igniteui-angular-build/SKILL.md` | Need to verify compilation or run a partial build |
-| Testing | `.github/skills/igniteui-angular-testing/SKILL.md` | Choosing the right test suite and Karma config |
-| Linting | `.github/skills/igniteui-angular-linting/SKILL.md` | Running lint checks before marking work complete |
+For component/grid APIs read `skills/igniteui-angular-components/SKILL.md` or `skills/igniteui-angular-grids/SKILL.md`; for test suite selection see `.github/skills/igniteui-angular-testing/SKILL.md`; for lint/build commands see `.github/skills/igniteui-angular-linting/SKILL.md` and `.github/skills/igniteui-angular-build/SKILL.md`.
 
 ---
 
@@ -145,7 +134,7 @@ projects/igniteui-angular/core/src/core/styles/   ← component SCSS themes
    - Whether a migration schematic is needed
    - Whether i18n strings are affected
    - Whether styles or component themes are affected
-   - Which test suite to use — consult `.github/skills/igniteui-angular-testing/SKILL.md` for the decision guide
+   - Which test suite to use (grid vs non-grid vs schematics/styles/i18n)
 
 ### Step 2 — Request Missing Context
 
@@ -217,6 +206,6 @@ After all agents finish, check:
 - Do migrations exist for any breaking changes?
 - If a demo/sample was requested, was the existing demo structure updated appropriately?
 - If a demo/sample was not requested, was it correctly skipped?
-- Did `npm run lint:lib` pass? (see `.github/skills/igniteui-angular-linting/SKILL.md`)
+- Did `npm run lint:lib` pass?
 
 Report what was done and any remaining items.
