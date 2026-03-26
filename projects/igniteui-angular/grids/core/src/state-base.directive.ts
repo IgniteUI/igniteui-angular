@@ -139,7 +139,7 @@ export class IgxGridStateBaseDirective {
     private FEATURES = {
         sorting:  {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
-                const sortingState = context.currGrid.sortingExpressions;
+                const sortingState = context.currGrid.sortingExpressions.map(s => ({ ...s }));
                 sortingState.forEach(s => {
                     delete s.strategy;
                     delete s.owner;
@@ -154,10 +154,14 @@ export class IgxGridStateBaseDirective {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const filteringState = context.currGrid.filteringExpressionsTree;
                 if (filteringState) {
-                    delete filteringState.owner;
-                    for (const item of filteringState.filteringOperands) {
-                        delete (item as IFilteringExpressionsTree).owner;
-                    }
+                    const filteringStateCopy = { ...filteringState };
+                    delete filteringStateCopy.owner;
+                    filteringStateCopy.filteringOperands = filteringState.filteringOperands.map(item => {
+                        const itemCopy = { ...item };
+                        delete (itemCopy as IFilteringExpressionsTree).owner;
+                        return itemCopy;
+                    });
+                    return { filtering: filteringStateCopy as IFilteringExpressionsTree };
                 }
                 return { filtering: filteringState };
             },
@@ -171,11 +175,14 @@ export class IgxGridStateBaseDirective {
                 const filteringState = context.currGrid.advancedFilteringExpressionsTree;
                 let advancedFiltering: any;
                 if (filteringState) {
-                    delete filteringState.owner;
-                    for (const item of filteringState.filteringOperands) {
-                        delete (item as IFilteringExpressionsTree).owner;
-                    }
-                    advancedFiltering = filteringState;
+                    const filteringStateCopy = { ...filteringState };
+                    delete filteringStateCopy.owner;
+                    filteringStateCopy.filteringOperands = filteringState.filteringOperands.map(item => {
+                        const itemCopy = { ...item };
+                        delete (itemCopy as IFilteringExpressionsTree).owner;
+                        return itemCopy;
+                    });
+                    advancedFiltering = filteringStateCopy;
                 } else {
                     advancedFiltering = {};
                 }
@@ -299,7 +306,7 @@ export class IgxGridStateBaseDirective {
         groupBy: {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const grid = context.currGrid;
-                const groupingExpressions = grid.groupingExpressions;
+                const groupingExpressions = grid.groupingExpressions.map(expr => ({ ...expr }));
                 groupingExpressions.forEach(expr => {
                     delete expr.strategy;
                 });
