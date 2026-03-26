@@ -1,0 +1,125 @@
+<div class="sample"
+    [style.--ig-grid-foreground]="gridForeground()"
+    [style.--ig-grid-background]="gridBackground()"
+    [style.--ig-grid-accent-color]="gridAccentColor()">
+
+    <div class="color-pickers">
+        <span class="color-picker-item">
+            <label for="gridBackground">Background</label>
+            <input id="gridBackground" type="color" [value]="gridBackground()" (input)="gridBackground.set($any($event.target).value)" />
+        </span>
+        <span class="color-picker-item">
+            <label for="gridForeground">Foreground</label>
+            <input id="gridForeground" type="color" [value]="gridForeground()" (input)="gridForeground.set($any($event.target).value)" />
+        </span>
+        <span class="color-picker-item">
+            <label for="gridAccentColor">Accent Color</label>
+            <input id="gridAccentColor" type="color" [value]="gridAccentColor()" (input)="gridAccentColor.set($any($event.target).value)" />
+        </span>
+    </div>
+
+    <igx-grid #grid
+        [data]="data"
+        [primaryKey]="'ID'"
+        [allowFiltering]="true"
+        [allowAdvancedFiltering]="true"
+        [filterMode]="'excelStyleFilter'"
+        [rowSelection]="'multiple'"
+        [columnSelection]="'multiple'"
+        [cellSelection]="'multiple'"
+        [rowEditable]="true"
+        [rowDraggable]="true"
+        [moving]="true"
+        [groupsExpanded]="true">
+
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-title>Customer Data</igx-grid-toolbar-title>
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
+
+        <!-- ID — pinned, hidden from user but usable as PK -->
+        <igx-column field="ID" header="ID" [sortable]="true" [resizable]="true"
+            dataType="string" [pinned]="true" [hidden]="true">
+        </igx-column>
+
+        <!-- Company / Contact column group -->
+        <igx-column-group header="Company & Contact">
+            <igx-column field="CompanyName" header="Company" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true" [groupable]="true" [hasSummary]="true"
+                dataType="string" [pinned]="true" [minWidth]="'180px'">
+            </igx-column>
+            <igx-column field="ContactName" header="Contact" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true" [groupable]="true"
+                dataType="string" [minWidth]="'150px'">
+            </igx-column>
+            <igx-column field="ContactTitle" header="Title" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true" [groupable]="true"
+                dataType="string" [minWidth]="'150px'">
+            </igx-column>
+        </igx-column-group>
+
+        <!-- Location column group -->
+        <igx-column-group header="Location">
+            <igx-column field="Country" header="Country" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true" [groupable]="true" [hasSummary]="true"
+                dataType="string" [minWidth]="'120px'">
+            </igx-column>
+            <igx-column field="City" header="City" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true" [groupable]="true"
+                dataType="string" [minWidth]="'120px'">
+            </igx-column>
+            <igx-column field="Region" header="Region" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true" [groupable]="true"
+                dataType="string" [minWidth]="'100px'">
+            </igx-column>
+            <igx-column field="PostalCode" header="Postal Code" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true"
+                dataType="string" [minWidth]="'120px'">
+            </igx-column>
+            <igx-column field="Address" header="Address" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true"
+                dataType="string" [minWidth]="'200px'" [hidden]="true">
+            </igx-column>
+        </igx-column-group>
+
+        <!-- Contact details column group -->
+        <igx-column-group header="Contact Details">
+            <igx-column field="Phone" header="Phone" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true"
+                dataType="string" [minWidth]="'130px'">
+            </igx-column>
+            <igx-column field="Fax" header="Fax" [sortable]="true" [filterable]="true"
+                [resizable]="true" [editable]="true"
+                dataType="string" [minWidth]="'130px'" [hidden]="true">
+            </igx-column>
+        </igx-column-group>
+
+        <!-- Numeric / date / boolean standalone columns -->
+        <igx-column field="Employees" header="Employees" [sortable]="true" [filterable]="true"
+            [resizable]="true" [editable]="true" [groupable]="true" [hasSummary]="true"
+            [summaries]="employeesSummary"
+            dataType="number" [minWidth]="'110px'">
+        </igx-column>
+        <igx-column field="Contract" header="Contract" [sortable]="true" [filterable]="true"
+            [resizable]="true" [editable]="true" [groupable]="true"
+            dataType="boolean" [minWidth]="'100px'">
+        </igx-column>
+        <igx-column field="DateCreated" header="Date Created" [sortable]="true" [filterable]="true"
+            [resizable]="true" [editable]="true"
+            dataType="date" [minWidth]="'140px'">
+        </igx-column>
+
+        <!-- Action strip: edit/delete on hover + row pinning -->
+        <igx-action-strip>
+            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+            <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
+        </igx-action-strip>
+
+        <igx-paginator [perPage]="15"></igx-paginator>
+    </igx-grid>
+</div>

@@ -1,0 +1,40 @@
+@use '../../../projects/igniteui-angular/core/src/core/styles/themes' as *;
+@use '../../styles/variables' as vars;
+
+.sample {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    @include tokens(
+        grid-theme(
+            $schema: vars.$schema,
+            $background: #092444,
+            $foreground: #f1f4ed,
+            $accent-color: #d66620
+        )
+    );
+}
+
+.color-pickers {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 8px 0;
+}
+
+.color-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+
+    input[type='color'] {
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 0;
+    }
+}
