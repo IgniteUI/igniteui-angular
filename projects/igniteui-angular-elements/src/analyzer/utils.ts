@@ -71,11 +71,10 @@ export function isMethod(symbol: ts.Symbol): boolean {
 }
 
 export function isPublic(symbol: ts.Symbol) {
-    const nonPublicTags = new Set(['hidden', 'internal']);
-    const elementsShowTags = new Set(['exportElements']);
+    const tags = new Set(['hidden', 'internal']);
     if (!(symbol && symbol.valueDeclaration)) return false;
     if ((ts.getCombinedModifierFlags(symbol.valueDeclaration) & ts.ModifierFlags.Public) !== ts.ModifierFlags.None) {
-        return !symbol.getJsDocTags().some(({ name }) => nonPublicTags.has(name)) || symbol.getJsDocTags().some(({ name }) => elementsShowTags.has(name));
+        return !symbol.getJsDocTags().some(({ name }) => tags.has(name));
     }
     return false;
 }
