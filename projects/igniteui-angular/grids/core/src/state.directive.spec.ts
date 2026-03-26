@@ -139,6 +139,48 @@ describe('IgxGridState - input properties #grid', () => {
         HelperFunctions.verifyMoving(moving, gridState);
     });
 
+    it('getState should not mutate live sorting, grouping, or filtering expressions', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        // Set up sorting with a strategy
+        const sortingExpressions = [
+            { dir: SortingDirection.Asc, fieldName: 'ProductID', ignoreCase: false,
+              strategy: DefaultSortingStrategy.instance() }
+        ];
+        grid.sortingExpressions = sortingExpressions;
+
+        // Set up grouping with a strategy
+        const groupingExpressions = [
+            { dir: SortingDirection.Asc, fieldName: 'ProductName', ignoreCase: false,
+              strategy: DefaultSortingStrategy.instance() }
+        ];
+        grid.groupingExpressions = groupingExpressions;
+
+        // Set up filtering with an owner
+        const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        (gridFilteringExpressionsTree as any).owner = grid;
+        const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        (productFilteringExpressionsTree as any).owner = grid;
+        gridFilteringExpressionsTree.filteringOperands.push(productFilteringExpressionsTree);
+        grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+        fix.detectChanges();
+
+        // Call getState
+        state.getState(false);
+        state.getState(true);
+
+        // Verify sorting strategy is NOT removed from the live expressions
+        expect(grid.sortingExpressions[0].strategy).toBeDefined('sorting strategy should not be deleted after getState');
+        // Verify grouping strategy is NOT removed from the live expressions
+        expect(grid.groupingExpressions[0].strategy).toBeDefined('grouping strategy should not be deleted after getState');
+        // Verify filtering owner is NOT removed from the live expressions tree
+        expect((grid.filteringExpressionsTree as any).owner).toBeDefined('filtering owner should not be deleted after getState');
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as any).owner).toBeDefined('filtering operand owner should not be deleted after getState');
+    });
+
     it('getState should return correct IGridState object when options are not default', () => {
         const fix = TestBed.createComponent(IgxGridStateWithOptionsComponent);
         fix.detectChanges();
