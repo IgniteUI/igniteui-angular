@@ -14,17 +14,23 @@ Ignite UI for Angular is a comprehensive UI component library built on the Angul
 
 ## Repository Structure
 
-```
-.github/                           ← contributing docs, templates, workflows, Copilot instructions
+```text
+.github/                           ← contributing docs, agent docs, templates, workflows, Copilot instructions
+  agents/                          ← custom agent definitions and handoff workflows
+  copilot-instructions.md          ← repository coding standards and AI-specific guidance
 cypress/                           ← repository-level Cypress setup/tests
 projects/
   bundle-test/                     ← auxiliary bundle test project
   igniteui-angular/                ← main Angular component library
     <component>/                   ← component entry points (accordion, combo, slider, etc.)
     core/                          ← shared core code, styles, and related infrastructure
+      src/core/styles/             ← shared Sass theme infrastructure used by theming/style work
     cypress/                       ← library-scoped Cypress tests/assets
+    directives/                    ← shared directives and directive-level documentation areas
     grids/                         ← grid-related library area
     migrations/                    ← `ng update` migrations
+      common/                      ← shared migration utilities
+      migration-collection.json    ← registered migration entry points
     schematics/                    ← `ng add` / schematics
     src/                           ← shared library sources
     test-utils/                    ← shared test helpers
@@ -35,7 +41,9 @@ projects/
 scripts/                           ← build, docs, packaging, and style scripts
 skills/                            ← AI skill guides for components, grids, and theming
 src/app/                           ← demo application
+  <component>/                     ← existing demo/sample areas reused for user-visible changes
 CHANGELOG.md                       ← release notes
+SECURITY.md                        ← supported-version policy for multi-branch bug fixes
 css-naming-convention.md           ← CSS naming rules
 ```
 
@@ -48,21 +56,27 @@ css-naming-convention.md           ← CSS naming rules
 ### Always
 
 - Reuse existing repository patterns before introducing new abstractions.
-- Read existing source and tests before editing.
-- Run `npm run lint:lib` and the relevant test suite before considering work complete.
+- Read the original request, existing source, and existing tests before editing.
+- Read the relevant skill file before modifying component code.
+- If a skill points to reference files, read the relevant reference files before editing.
+- If the task changes behavior or fixes a bug, write or update failing tests before production code.
+- Reuse the existing spec structure whenever possible.
+- Run the smallest relevant test suite and `npm run lint:lib` before considering work complete.
+- Run additional checks when applicable, such as `npm run lint:styles`, `npm run test:styles`, `npm run test:schematics`, `npm run build:migrations`, or i18n-specific checks.
 - Export new public symbols from `<component>/index.ts`.
 - Keep accessibility intact: ARIA, keyboard navigation, focus behavior, and screen reader semantics.
 - Keep i18n intact when user-facing text changes.
 - Add JSDoc with `@param`, `@returns`, and `@example` on every new public member.
+- Treat SCSS, theme wiring, and style-test work as dedicated theming/styles follow-through, and validate it with the relevant style checks when needed.
 - Add or update `ng update` migrations for true breaking changes such as removals, renames, moved entry points, selector changes, or incompatible default-behavior changes.
-- Update the component `README.md` when the public API surface changes.
+- Update the component `README.md` when public API, documented usage, or documented behavior changes, including new features, renamed or deprecated API, and behavior changes.
+- Consider demo/sample updates in `src/app/` only for explicitly requested user-visible changes.
+- Update `CHANGELOG.md` for new features, deprecations, breaking changes, behavioral changes, and notable user-visible fixes when they fit the existing changelog section structure.
 - Update relevant Agent skills if a change is significant and/or you need to tell other agents how to use the newly introduced feature.
-- Consider demo/sample updates in `src/app/` for user-visible changes.
-- Update `CHANGELOG.md` for new features, deprecations, breaking changes, and notable user-visible fixes when they fit the existing changelog section structure.
 
 ### Never
 
-- Skip steps in the implementation. 
+- Skip steps in the implementation.
 - Commit secrets, tokens, or credentials.
 - Introduce `eval()` or dynamic code execution.
 
@@ -106,23 +120,28 @@ Domain-specific knowledge for AI assistants:
 
 ## Custom Agents
 
-Feature implementation is handled by a set of specialized agents in `.github/agents/`:
+The repository provides a set of agents in `.github/agents/`. Orchestrators analyze requests, define scope, and route work to the right specialists; they do not implement code directly. Specialists handle focused implementation and follow-through tasks.
 
-| Agent | File | Purpose |
-|---|---|---|
-| `feature-orchestrator-agent` | `feature-orchestrator-agent.md` | Orchestrates end-to-end feature implementation via TDD |
-| `bug-fixing-orchestrator-agent` | `bug-fixing-orchestrator-agent.md` | Orchestrates end-to-end bug fixing via TDD |
-| `tdd-test-writer-agent` | `tdd-test-writer-agent.md` | Writes failing tests (RED phase) for features and bug fixes |
-| `feature-implementer-agent` | `feature-implementer-agent.md` | Implements features and refactors (GREEN + REFACTOR phases) |
-| `bug-fixing-implementer-agent` | `bug-fixing-implementer-agent.md` | Implements the minimum bug fix (GREEN phase) |
-| `theming-styles-agent` | `theming-styles-agent.md` | Implements component theming, structural SCSS, theme wiring, and style validation |
-| `demo-sample-agent` | `demo-sample-agent.md` | Updates existing demo/sample areas in `src/app/` when a demo is explicitly requested for a user-visible feature or bug fix |
-| `component-readme-agent` | `component-readme-agent.md` | Updates affected component `README.md` files for public API and documented behavior changes |
-| `migration-agent` | `migration-agent.md` | Creates `ng update` migration schematics for breaking changes |
-| `changelog-agent` | `changelog-agent.md` | Updates `CHANGELOG.md` following repo conventions |
+| Agent | Role | File | Use it for |
+|---|---|---|---|
+| `feature-orchestrator-agent` | Orchestrator | `feature-orchestrator-agent.md` | Analyzing feature requests, defining scope, deciding which specialists are needed, and routing the work. Does not implement code directly. |
+| `bug-fixing-orchestrator-agent` | Orchestrator | `bug-fixing-orchestrator-agent.md` | Analyzing bug reports, confirming likely scope and root-cause direction, deciding which specialists are needed, and routing the work. Does not implement code directly. |
+| `tdd-test-writer-agent` | Specialist | `tdd-test-writer-agent.md` | Writing small failing tests before production code for features and bug fixes |
+| `feature-implementer-agent` | Specialist | `feature-implementer-agent.md` | Implementing a feature or feature-side refactor after scope and tests are clear |
+| `bug-fixing-implementer-agent` | Specialist | `bug-fixing-implementer-agent.md` | Implementing the minimum safe bug fix once reproduction and root cause are known |
+| `theming-styles-agent` | Specialist | `theming-styles-agent.md` | Component SCSS, theme wiring, structural styles, and style validation |
+| `demo-sample-agent` | Specialist | `demo-sample-agent.md` | Updating existing `src/app/` demo/sample areas for explicitly requested user-visible changes |
+| `component-readme-agent` | Specialist | `component-readme-agent.md` | Updating affected component `README.md` files when public API or documented behavior changes |
+| `migration-agent` | Specialist | `migration-agent.md` | Creating `ng update` migrations for true breaking changes |
+| `changelog-agent` | Specialist | `changelog-agent.md` | Updating `CHANGELOG.md` for notable user-visible changes |
 
-Feature and bug orchestrators route work in this order:
-TDD → implementer → README (if needed) → migration (if breaking) → changelog (if needed).
+These agents are available as specialized helpers for repository work. Select and use the relevant subagent when it adds clarity, specialization, or better task separation, but do not treat subagent use as mandatory — an agent may decide to handle the work directly as long as it follows the same repository workflow, standards, and validation steps.
+
+## Workflow
+
+### Standard default flow
+
+TDD (write or update failing tests first) → feature implementation or bug-fix implementation → theming/styles follow-through (only when the change affects SCSS, theme wiring, or style-test validation) → demo/sample update (only if explicitly requested) → component README update (when needed) → migration (for breaking changes) → changelog update (when needed).
 
 ## Commit Message Conventions
 
