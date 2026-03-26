@@ -2037,6 +2037,19 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(162);
             });
 
+            it('should trigger resize when browser zoom changes at runtime', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid as any;
+                const devicePixelRatioSpy = spyOnProperty(window, 'devicePixelRatio', 'get').and.returnValues(1, 1.25, 1.25);
+
+                pivotGrid._devicePixelRatio = 1;
+                expect(pivotGrid.shouldResize).toBeTrue();
+                expect(devicePixelRatioSpy).toHaveBeenCalled();
+                expect(pivotGrid._devicePixelRatio).toBe(1.25);
+
+                expect(pivotGrid.shouldResize).toBeFalse();
+                expect(pivotGrid._devicePixelRatio).toBe(1.25);
+            });
+
             it('should auto-size row dimension when width is set to auto.', fakeAsync(() => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 let rowDimension = pivotGrid.pivotConfiguration.rows[0];

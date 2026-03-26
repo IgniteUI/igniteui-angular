@@ -661,6 +661,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _sortableColumns = true;
     private _visibleRowDimensions: IPivotDimension[] = [];
     private _shouldUpdateSizes = false;
+    private _devicePixelRatio = 1;
 
     /**
     * Gets/Sets the default expand state for all rows.
@@ -1013,6 +1014,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public override ngAfterViewInit() {
         Promise.resolve().then(() => {
             super.ngAfterViewInit();
+            if (this.platform.isBrowser) {
+                this._devicePixelRatio = window.devicePixelRatio || 1;
+            }
         });
 
     }
@@ -1065,8 +1069,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             return false;
         }
         const isSizePropChanged = super.shouldResize;
-        if (isSizePropChanged || this._shouldUpdateSizes) {
+        const isZoomLevelChanged = this.platform.isBrowser && this._devicePixelRatio !== (window.devicePixelRatio || 1);
+        if (isSizePropChanged || this._shouldUpdateSizes || isZoomLevelChanged) {
             this._shouldUpdateSizes = false;
+            this._devicePixelRatio = this.platform.isBrowser ? (window.devicePixelRatio || 1) : this._devicePixelRatio;
             return true;
         }
         return false;
