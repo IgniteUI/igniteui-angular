@@ -175,7 +175,7 @@ Before routing any work, ask:
 
 **`Do you want me to proceed with this implementation flow?`**
 
-If the feature is user-visible, also ask:
+If the fix is user-visible, also ask:
 
 **`Do you want a demo/sample update for this feature?`**
 
