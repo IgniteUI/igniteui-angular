@@ -4,14 +4,14 @@
 @use './excel-filtering-theme' as *;
 @use 'igniteui-theming/sass/animations' as *;
 
-@mixin _filtering-scroll-mask($theme, $dir) {
-    display: block;
-    position: absolute;
-    width: rem(10px);
-    content: '';
-    inset-block: rem(-2px);
-    background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
-}
+//@mixin _filtering-scroll-mask($theme, $dir) {
+//    display: block;
+//    position: absolute;
+//    width: rem(10px);
+//    content: '';
+//    inset-block: rem(-2px);
+//    background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
+//}
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars

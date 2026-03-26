@@ -1999,8 +1999,12 @@ $z-grid-loading: 10003;
             gap: 0.5rem;
         }
 
-        .igx-grid__tr--selected .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-            border-inline-end-color: var-get($theme, 'cell-selected-within-background');
+        .igx-grid__tr {
+            &:hover {
+                .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
+                    border-inline-end-color: var-get($theme, 'cell-selected-background');
+                }
+            }
         }
 
         .igx-grid__tr--selected {
@@ -2011,13 +2015,10 @@ $z-grid-loading: 10003;
             }
         }
 
-        .igx-grid__tr {
-            &:hover {
-                .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-                    border-inline-end-color: var-get($theme, 'cell-selected-background');
-                }
-            }
+        .igx-grid__tr--selected .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
+            border-inline-end-color: var-get($theme, 'cell-selected-within-background');
         }
+
 
         .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
             border-inline-end-color: var-get($theme, 'cell-selected-background');
@@ -2783,7 +2784,7 @@ $z-grid-loading: 10003;
         }
     }
 
-     //MRL block context - multi-row layout grid structure
+     // MRL block context - multi-row layout grid structure
     .igx-grid__mrl-block {
         .igx-grid-thead__item {
             display: flex;
@@ -2796,11 +2797,7 @@ $z-grid-loading: 10003;
         }
     }
 
-    //.igx-grid-thead__wrapper.igx-grid__tr--mrl {
-    //    border-block-end: 0 !important;
-    //}
-
-    //// MRL row context - rows in multi-row layout
+    // MRL row context - rows in multi-row layout
     .igx-grid__tr--mrl {
         .igx-grid__cbx-selection,
         .igx-grid__hierarchical-expander,
