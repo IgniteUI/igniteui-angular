@@ -2038,8 +2038,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it('should trigger resize when browser zoom changes at runtime', () => {
-                const pivotGrid = fixture.componentInstance.pivotGrid as any;
-                const devicePixelRatioSpy = spyOnProperty(window, 'devicePixelRatio', 'get').and.returnValues(1, 1.25, 1.25);
+                const pivotGrid = fixture.componentInstance.pivotGrid as unknown as { _devicePixelRatio: number; shouldResize: boolean };
+                const devicePixelRatioSpy = spyOnProperty(window, 'devicePixelRatio', 'get').and.returnValues(1.25, 1.25);
 
                 pivotGrid._devicePixelRatio = 1;
                 expect(pivotGrid.shouldResize).toBeTrue();
@@ -2048,6 +2048,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(pivotGrid.shouldResize).toBeFalse();
                 expect(pivotGrid._devicePixelRatio).toBe(1.25);
+                expect(devicePixelRatioSpy.calls.count()).toBeGreaterThan(1);
             });
 
             it('should auto-size row dimension when width is set to auto.', fakeAsync(() => {
