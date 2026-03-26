@@ -803,6 +803,47 @@ describe('IgxGridState - input properties #grid', () => {
         expect(prodIdColumn.colEnd).toBe(1);
     });
 
+    it('getState should not mutate sortingExpressions - strategy and owner should be preserved', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const sortingStrategy = DefaultSortingStrategy.instance();
+        grid.sortingExpressions = [
+            { fieldName: 'ProductID', dir: SortingDirection.Asc, ignoreCase: false, strategy: sortingStrategy }
+        ];
+        fix.detectChanges();
+
+        state.getState(false, 'sorting');
+
+        expect(grid.sortingExpressions[0].strategy).toBe(sortingStrategy,
+            'strategy should not be deleted from the original sortingExpression after calling getState');
+    });
+
+    it('getState should not mutate filteringExpressionsTree - owner should be preserved', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'InStock');
+        const ownerRef = {};
+        (gridFilteringExpressionsTree as any).owner = ownerRef;
+        (productFilteringExpressionsTree as any).owner = ownerRef;
+        gridFilteringExpressionsTree.filteringOperands.push(productFilteringExpressionsTree);
+        grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+        fix.detectChanges();
+
+        state.getState(false, 'filtering');
+
+        expect((grid.filteringExpressionsTree as any).owner).toBe(ownerRef,
+            'owner should not be deleted from the original filteringExpressionsTree after calling getState');
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as any).owner).toBe(ownerRef,
+            'owner should not be deleted from the original filteringOperands after calling getState');
+    });
+
     it('should preserve column widths when restoring state with all columns hidden', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
