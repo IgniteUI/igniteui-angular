@@ -39,7 +39,7 @@
                 @extend %igx-splitter-expander--end !optional;
             }
 
-             &:active {
+            &:active {
                 @extend %igx-splitter-bar--active !optional;
 
                 @include e(handle) {
