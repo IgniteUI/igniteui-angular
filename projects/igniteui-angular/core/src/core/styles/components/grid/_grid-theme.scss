@@ -198,7 +198,7 @@
         @include tokens(
             grid-summary-theme(
                 $schema: $schema,
-                $background-color: var(--ig-grid-background),
+                $background-color: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
                 $border-color: color-mix(in srgb, var(--ig-grid-foreground) 20%, var(--ig-grid-background)),
                 $label-color: var(--ig-grid-accent-color),
                 $result-color: var(--ig-grid-foreground)
