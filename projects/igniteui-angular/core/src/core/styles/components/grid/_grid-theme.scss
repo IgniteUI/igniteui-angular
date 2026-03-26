@@ -178,22 +178,19 @@
             )
         );
 
-        &,
-        .igx-drop-down__list {
-            @include tokens(
-                drop-down-theme(
-                    $schema: $schema,
-                    $background-color: var(--ig-grid-background),
-                    $item-text-color: var(--ig-grid-foreground),
-                    $border-color: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
-                    $hover-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 8%, var(--ig-grid-background)),
-                    $focused-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, var(--ig-grid-background)),
-                    $selected-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, var(--ig-grid-background)),
-                    $selected-hover-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 16%, var(--ig-grid-background)),
-                    $selected-focus-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 24%, var(--ig-grid-background)),
-                )
-            );
-        }
+        @include tokens(
+            drop-down-theme(
+                $schema: $schema,
+                $background-color: var(--ig-grid-background),
+                $item-text-color: var(--ig-grid-foreground),
+                $border-color: color-mix(in srgb, var(--ig-grid-foreground) 12%, var(--ig-grid-background)),
+                $hover-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 8%, var(--ig-grid-background)),
+                $focused-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, var(--ig-grid-background)),
+                $selected-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 12%, var(--ig-grid-background)),
+                $selected-hover-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 16%, var(--ig-grid-background)),
+                $selected-focus-item-background: color-mix(in srgb, var(--ig-grid-accent-color) 24%, var(--ig-grid-background)),
+            )
+        );
 
         @include tokens(
             grid-summary-theme(
