@@ -10,7 +10,12 @@
         </span>
         <span class="color-picker-item">
             <label for="gridForeground">Foreground</label>
-            <input id="gridForeground" type="color" [value]="gridForeground()" (input)="gridForeground.set($any($event.target).value)" />
+            @if (gridForeground()) {
+                <input id="gridForeground" type="color" [value]="gridForeground()" (input)="gridForeground.set($any($event.target).value)" />
+                <button (click)="resetForeground()" title="Reset to auto">↺</button>
+            } @else {
+                <button class="no-color" (click)="gridForeground.set('#1E2A35')" title="Auto (click to override)"></button>
+            }
         </span>
         <span class="color-picker-item">
             <label for="gridAccentColor">Accent Color</label>

@@ -11,19 +11,9 @@
         grid-theme(
             $schema: vars.$schema,
             $background: #f7f4f0,
-            $foreground: #1E2A35,
             $accent-color: #5B8F8A
         )
     );
-
-    // @include tokens(
-    //     grid-theme(
-    //         $schema: vars.$schema,
-    //         $background: #092444,
-    //         $foreground: #f1f4ed,
-    //         $accent-color: #d66620
-    //     )
-    // );
 }
 
 .color-pickers {
@@ -40,10 +30,39 @@
     font-size: 14px;
 
     input[type='color'] {
-        background: transparent;
+        -webkit-appearance: none;
+        appearance: none;
         width: 36px;
         height: 36px;
-        border: none;
+        border: 1px solid currentColor;
+        padding: 0;
         cursor: pointer;
+
+        &::-webkit-color-swatch-wrapper { padding: 0; }
+        &::-webkit-color-swatch { border: none; }
+        &::-moz-color-swatch { border: none; }
+    }
+
+    .no-color {
+        position: relative;
+        width: 36px;
+        height: 36px;
+        border: 1px solid currentColor;
+        background: transparent;
+        cursor: pointer;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 1px;
+            height: 70%;
+            background: red;
+        }
+
+        &::before { transform: rotate(45deg); }
+        &::after { transform: rotate(-45deg); }
     }
 }

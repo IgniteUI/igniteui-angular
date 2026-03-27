@@ -1,7 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, signal, viewChild } from '@angular/core';
-
 import { SAMPLE_DATA } from '../shared/sample-data';
-
 import { IGX_GRID_DIRECTIVES, IgxActionStripComponent, IgxGridComponent, IgxNumberSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
 
 class EmployeesSummary extends IgxNumberSummaryOperand {
@@ -36,7 +34,10 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     public ngAfterViewInit(): void {
         const styles = getComputedStyle(this.sampleEl().nativeElement);
         this.gridBackground.set(styles.getPropertyValue('--ig-grid-background').trim());
-        this.gridForeground.set(styles.getPropertyValue('--ig-grid-foreground').trim());
         this.gridAccentColor.set(styles.getPropertyValue('--ig-grid-accent-color').trim());
+    }
+
+    protected resetForeground(): void {
+        this.gridForeground.set('');
     }
 }
