@@ -18,7 +18,7 @@
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
-    @if (displayValue) {
+    @if (displayValue && !disableClear) {
         <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
             (click)="handleClearItems($event)">
             @if (clearIconTemplate) {
