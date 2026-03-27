@@ -425,7 +425,7 @@ describe('IgxContextMenuDirective', () => {
                 { visibleIndex: 1, headerCell: { nativeElement: headerElement } }
             ]);
             // First column not visible, second one visible
-            mockGrid.navigation.isColumnFullyVisible.and.callFake((idx) => idx === 0);
+            mockGrid.navigation.isColumnFullyVisible.and.callFake((idx) => idx === 1);
 
             mockGrid.columnSelectionChanging.next({ newSelection: ['col1', 'col2'], oldSelection: [] });
             tick(100);
