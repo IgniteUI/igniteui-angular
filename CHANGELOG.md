@@ -8,6 +8,12 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxCombo`, `IgxSimpleCombo`
     - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
+    - Added `disableClear` input that allows hiding the clear button even when items are selected. Defaults to `false`.
+
+## 21.1.3
+
+### Security Fixes
+- Bumped `jspdf` dependency to `4.2.1` to address a security vulnerability present in earlier versions.
 
 ## 21.1.0
 
