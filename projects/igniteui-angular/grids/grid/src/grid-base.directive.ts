@@ -7793,9 +7793,18 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.disableTransitions = false;
 
         this.hideOverlays();
-        this.actionStrip?.hide();
-        if (this.actionStrip) {
-            this.actionStrip.context = null;
+        const context = this.actionStrip?.context;
+        const contextEl = context?.element?.nativeElement as HTMLElement;
+        const keepActionStrip =
+            !!context?.pinned &&
+            !!contextEl?.isConnected &&
+            !(this.actionStrip?.menuItems?.length > 0);
+
+        if (!keepActionStrip) {
+            if (this.actionStrip) {
+                this.actionStrip.hide();
+                this.actionStrip.context = null;
+            }
         }
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
