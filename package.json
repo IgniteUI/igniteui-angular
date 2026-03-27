@@ -7,7 +7,7 @@
     "start:elements": "ng serve --project igniteui-angular-elements",
     "start:performance": "ng serve --project igniteui-angular-performance",
     "build": "npm run build:lib && npm run build:elements && npm run build:extras && npm run build:schematics && npm run build:migrations && npm run build:i18n",
-    "test": "ng test igniteui-angular",
+    "test": "npm run test:lib && npm run test:styles && npm run test:schematics && npm run test:i18n && npm run test:extras && npm run test:elements",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "test:lib": "ng test igniteui-angular --watch=false --no-progress --code-coverage",

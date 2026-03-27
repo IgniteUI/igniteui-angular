@@ -1,4 +1,4 @@
-import { CHART_TYPE } from './chart-types';
+import { CHART_TYPE, OPTIONS_TYPE } from './chart-types';
 import { IgxChartIntegrationDirective, IDeterminedChartTypesArgs } from './chart-integration.directive';
 
 describe('IgxChartIntegrationDirective', () => {
@@ -323,6 +323,125 @@ describe('IgxChartIntegrationDirective', () => {
         it('should accept false', () => {
             directive.useLegend = false;
             expect(directive.useLegend).toBeFalse();
+        });
+    });
+
+    describe('setChartComponentOptions', () => {
+        it('should set custom chart options for a specific chart type', () => {
+            directive.setChartComponentOptions(CHART_TYPE.Pie, OPTIONS_TYPE.Chart, { width: '50%' });
+
+            // Verify by creating a chart and checking the option is applied
+            directive.chartData = [{ name: 'A', value: 10 }];
+            const mockChart = { width: '', dataSource: null } as any;
+            directive.chartFactory(CHART_TYPE.Pie, undefined, mockChart);
+
+            expect(mockChart.width).toBe('50%');
+        });
+
+        it('should merge multiple option sets for the same chart type and options type', () => {
+            directive.setChartComponentOptions(CHART_TYPE.Pie, OPTIONS_TYPE.Chart, { width: '50%' });
+            directive.setChartComponentOptions(CHART_TYPE.Pie, OPTIONS_TYPE.Chart, { height: '60%' });
+
+            directive.chartData = [{ name: 'A', value: 10 }];
+            const mockChart = { width: '', height: '', dataSource: null } as any;
+            directive.chartFactory(CHART_TYPE.Pie, undefined, mockChart);
+
+            expect(mockChart.width).toBe('50%');
+            expect(mockChart.height).toBe('60%');
+        });
+
+        it('should allow setting series model options', () => {
+            expect(() => {
+                directive.setChartComponentOptions(CHART_TYPE.ColumnGrouped, OPTIONS_TYPE.Series, { markerType: 5 });
+            }).not.toThrow();
+        });
+
+        it('should allow setting x and y axis options', () => {
+            expect(() => {
+                directive.setChartComponentOptions(CHART_TYPE.ColumnGrouped, OPTIONS_TYPE.XAxis, { labelTextColor: 'red' });
+                directive.setChartComponentOptions(CHART_TYPE.ColumnGrouped, OPTIONS_TYPE.YAxis, { labelExtent: 50 });
+            }).not.toThrow();
+        });
+
+        it('should allow setting stacked fragment options', () => {
+            expect(() => {
+                directive.setChartComponentOptions(CHART_TYPE.ColumnStacked, OPTIONS_TYPE.StackedSeries, { title: 'test' });
+            }).not.toThrow();
+        });
+    });
+
+    describe('defaultLabelMemberPath', () => {
+        it('should use defaultLabelMemberPath when it exists in the data', () => {
+            // First call initializes _chartData so the getter can access it
+            directive.chartData = [{ name: 'A', value: 10 }, { name: 'B', value: 20 }];
+            directive.defaultLabelMemberPath = 'name';
+            // Re-set to apply the label member path
+            directive.chartData = [{ name: 'A', value: 10 }, { name: 'B', value: 20 }];
+
+            const data = directive.chartData;
+            expect(data[0].name).toBe('A');
+            expect(data[1].name).toBe('B');
+        });
+
+        it('should fall back to first string field when defaultLabelMemberPath is not in data', () => {
+            // First call initializes _chartData
+            directive.chartData = [{ label: 'X', value: 10 }];
+            directive.defaultLabelMemberPath = 'nonexistent';
+            directive.chartData = [{ label: 'X', value: 10 }];
+
+            const data = directive.chartData;
+            expect(data[0].label).toBe('X');
+        });
+
+        it('should use Index when no string fields are present', () => {
+            directive.chartData = [{ x: 10, y: 20 }];
+
+            const data = directive.chartData;
+            expect(data[0]['Index']).toBe(1);
+        });
+
+        it('should default to undefined', () => {
+            expect(directive.defaultLabelMemberPath).toBeUndefined();
+        });
+    });
+
+    describe('chartData Pie with all zero values', () => {
+        it('should exclude Pie chart when all values are zero', () => {
+            let emittedArgs: IDeterminedChartTypesArgs;
+            directive.chartTypesDetermined.subscribe((args) => emittedArgs = args);
+
+            directive.chartData = [{ name: 'A', value: 0 }, { name: 'B', value: 0 }];
+
+            expect(emittedArgs.chartsForCreation).not.toContain(CHART_TYPE.Pie);
+        });
+    });
+
+    describe('enableCharts / disableCharts idempotency', () => {
+        it('should not duplicate charts when enabling an already enabled chart', () => {
+            const initialCount = directive.getAvailableCharts().length;
+            directive.enableCharts([CHART_TYPE.Pie]);
+            expect(directive.getAvailableCharts().length).toBe(initialCount);
+        });
+
+        it('should handle disabling an already disabled chart', () => {
+            directive.disableCharts([CHART_TYPE.Pie]);
+            const afterFirst = directive.getAvailableCharts().length;
+            directive.disableCharts([CHART_TYPE.Pie]);
+            expect(directive.getAvailableCharts().length).toBe(afterFirst);
+        });
+    });
+
+    describe('scatter chart scatter line creation', () => {
+        it('should create a scatter line chart', () => {
+            directive.chartData = [{ name: 'A', x: 10, y: 20 }, { name: 'B', x: 30, y: 40 }];
+            const mockChart = {
+                series: { count: 0, clear: () => {}, add: jasmine.createSpy('add') },
+                axes: { count: 0, clear: () => {}, add: jasmine.createSpy('add') }
+            } as any;
+
+            const result = directive.chartFactory(CHART_TYPE.ScatterLine, undefined, mockChart);
+
+            expect(result).toBeDefined();
         });
     });
 });
