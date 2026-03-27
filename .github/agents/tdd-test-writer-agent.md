@@ -8,6 +8,7 @@ tools:
   - execute/runTests
   - read/problems
   - read/terminalLastCommand
+  - web
 ---
 
 # TDD Test Writer — RED Phase
@@ -55,6 +56,8 @@ Do not add extra scenarios unless they are explicitly requested, clearly require
    - No execution-order dependency.
 6. **Never write production code.**
    - Only test code in this phase to ensure the test does not give false negatives. The test MUST fail if the functionality is missing, or not behaving as intended.
+7. **Do not modify dependency files.**
+   - Do not modify dependency manifests or lock files (`package.json`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, etc.). Ask for approval first if a dependency change is truly required.
 
 ---
 
