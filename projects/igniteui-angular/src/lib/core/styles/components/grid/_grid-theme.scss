@@ -1268,7 +1268,7 @@
         outline-style: none;
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 3)};
+            --ig-size: #{if($variant == 'indigo', 2, 3)};
         }
     }
 
