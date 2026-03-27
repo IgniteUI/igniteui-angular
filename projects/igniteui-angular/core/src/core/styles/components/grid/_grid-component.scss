@@ -107,7 +107,7 @@
         }
 
         @include e(tr-action) {
-            @extend %igx-grid__tr-action !optional
+            @extend %igx-grid__tr-action !optional;
         }
 
         @include e(tr, $m: 'drag') {
@@ -561,45 +561,45 @@
 
         // Pivot start
         @include e(pivot, $m: 'super-compact') {
-            @extend %igx-grid__pivot--super-compact !optional
+            @extend %igx-grid__pivot--super-compact !optional;
         }
 
         @include e(tr-pivot) {
-            @extend %igx-grid__tr-pivot !optional
+            @extend %igx-grid__tr-pivot !optional;
         }
 
         @include e(pivot-filter-toggle) {
-            @extend %igx-grid__pivot-filter-toggle !optional
+            @extend %igx-grid__pivot-filter-toggle !optional;
         }
 
         @include e(pivot-empty-chip-area) {
-            @extend %igx-grid__pivot-empty-chip-area !optional
+            @extend %igx-grid__pivot-empty-chip-area !optional;
         }
 
 
 
         @include e(tr-pivot, $m: 'row-area') {
-            @extend %igx-grid__tr-pivot--row-area !optional
+            @extend %igx-grid__tr-pivot--row-area !optional;
         }
 
         @include e(tr-pivot, $m: 'filter-container') {
-            @extend %igx-grid__tr-pivot--filter-container !optional
+            @extend %igx-grid__tr-pivot--filter-container !optional;
         }
 
         @include e(tr-pivot, $m: 'chip_drop_indicator') {
-            @extend %igx-grid__tr-pivot--chip_drop_indicator !optional
+            @extend %igx-grid__tr-pivot--chip_drop_indicator !optional;
         }
 
         @include e(tr-pivot, $m: 'drop-row-area') {
-            @extend %igx-grid__tr-pivot--drop-row-area !optional
+            @extend %igx-grid__tr-pivot--drop-row-area !optional;
         }
 
         @include e(tr-pivot, $m: 'filter') {
-            @extend %igx-grid__tr-pivot--filter !optional
+            @extend %igx-grid__tr-pivot--filter !optional;
         }
 
         @include e(tr-pivot-group) {
-            @extend %igx-grid__tr-pivot-group !optional
+            @extend %igx-grid__tr-pivot-group !optional;
         }
 
         @include e(tr-header-row) {
@@ -607,15 +607,15 @@
         }
 
         @include e(tr-pivot, $m: 'columnDimensionLeaf') {
-            @extend %igx-grid__tr-pivot--columnDimensionLeaf !optional
+            @extend %igx-grid__tr-pivot--columnDimensionLeaf !optional;
         }
 
         @include e(tr-pivot, $m: 'columnMultiRowSpan') {
-            @extend %igx-grid__tr-pivot--columnMultiRowSpan !optional
+            @extend %igx-grid__tr-pivot--columnMultiRowSpan !optional;
         }
 
         @include e(tbody-pivot-mrl-dimension) {
-            @extend %igx-grid__tbody-pivot-mrl-dimension !optional
+            @extend %igx-grid__tbody-pivot-mrl-dimension !optional;
         }
 
         @include e(tr-pivot-toggle-icons) {
