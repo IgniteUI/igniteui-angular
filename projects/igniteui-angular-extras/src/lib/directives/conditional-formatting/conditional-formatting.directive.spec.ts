@@ -141,6 +141,28 @@ describe('IgxConditionalFormattingDirective', () => {
         it('should return success color for values above the mid threshold (66%)', () => {
             expect(directive.colorScale.backgroundColor(null, 0, 80, 0)).toBe(directive.formatColors.success);
         });
+
+        it('should return error color for exact low threshold boundary value', () => {
+            // lowThreshold = 0.33 * ceil(100) = 33
+            expect(directive.colorScale.backgroundColor(null, 0, 33, 0)).toBe(directive.formatColors.error);
+        });
+
+        it('should return warning color for exact mid threshold boundary value', () => {
+            // middleThreshold = 0.66 * ceil(100) = 66
+            expect(directive.colorScale.backgroundColor(null, 0, 66, 0)).toBe(directive.formatColors.warning);
+        });
+
+        it('should return success color for values above mid threshold', () => {
+            expect(directive.colorScale.backgroundColor(null, 0, 67, 0)).toBe(directive.formatColors.success);
+        });
+
+        it('should return error color for zero value', () => {
+            expect(directive.colorScale.backgroundColor(null, 0, 0, 0)).toBe(directive.formatColors.error);
+        });
+
+        it('should return error color for negative values', () => {
+            expect(directive.colorScale.backgroundColor(null, 0, -10, 0)).toBe(directive.formatColors.error);
+        });
     });
 
     describe('top10Percent formatter', () => {
@@ -158,8 +180,21 @@ describe('IgxConditionalFormattingDirective', () => {
             expect(directive.top10Percent.backgroundColor(null, 0, 85, 0)).toBeUndefined();
         });
 
+        it('should return undefined color for values below the top 10% threshold', () => {
+            expect(directive.top10Percent.color(null, 0, 85, 0)).toBeUndefined();
+        });
+
         it('should return undefined for non-numeric cell values', () => {
             expect(directive.top10Percent.backgroundColor(null, 0, 'text', 0)).toBeUndefined();
+        });
+
+        it('should return undefined color for non-numeric cell values', () => {
+            expect(directive.top10Percent.color(null, 0, 'text', 0)).toBeUndefined();
+        });
+
+        it('should return undefined when cell is not in the formatted range', () => {
+            expect(directive.top10Percent.backgroundColor(null, 0, 95, 5)).toBeUndefined();
+            expect(directive.top10Percent.color(null, 0, 95, 5)).toBeUndefined();
         });
     });
 
@@ -175,6 +210,23 @@ describe('IgxConditionalFormattingDirective', () => {
 
         it('should return undefined for non-empty cell values', () => {
             expect(directive.empty.backgroundColor(null, 0, 'value', 0)).toBeUndefined();
+        });
+
+        it('should return undefined color for non-empty cell values', () => {
+            expect(directive.empty.color(null, 0, 'value', 0)).toBeUndefined();
+        });
+
+        it('should return undefined when cell is outside the formatted range', () => {
+            expect(directive.empty.backgroundColor(null, 0, undefined, 5)).toBeUndefined();
+            expect(directive.empty.color(null, 0, undefined, 5)).toBeUndefined();
+        });
+
+        it('should return undefined for zero values (not undefined)', () => {
+            expect(directive.empty.backgroundColor(null, 0, 0, 0)).toBeUndefined();
+        });
+
+        it('should return undefined for null values (not undefined)', () => {
+            expect(directive.empty.backgroundColor(null, 0, null, 0)).toBeUndefined();
         });
     });
 
@@ -453,6 +505,15 @@ describe('IgxConditionalFormattingDirective', () => {
 
         it('should return undefined when cell is not in the formatted range', () => {
             expect(directive.greaterThan.backgroundColor(null, 0, 50, 5)).toBeUndefined();
+        });
+
+        it('should return undefined for non-numeric values', () => {
+            expect(directive.greaterThan.backgroundColor(null, 0, 'text', 0)).toBeUndefined();
+            expect(directive.greaterThan.color(null, 0, 'text', 0)).toBeUndefined();
+        });
+
+        it('should return undefined color when cell is not in the formatted range', () => {
+            expect(directive.greaterThan.color(null, 0, 50, 5)).toBeUndefined();
         });
     });
 
