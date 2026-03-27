@@ -17,12 +17,12 @@ body {
 @include typography($font-family: $typeface, $type-scale: $type-scale);
 @include theme($palette: $palette, $schema: $schema);
 
-.nav-header {
+.demos-logo {
     --logo-fill: #27265f;
 
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: .5rem;
 
     svg {
         height: 2rem;

@@ -8,6 +8,16 @@
     igx-input-group {
         display: block grid !important;
     }
+
+    .igx-navbar__left:not(:empty) {
+        margin-inline: 0;
+    }
+
+    @include tokens(navbar-theme(
+        $background: var(--ig-gray-100),
+        $disable-shadow: true,
+        $border-color: var(--ig-gray-300)
+    ));
 }
 
 .header-actions {

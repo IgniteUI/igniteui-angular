@@ -8,7 +8,6 @@ import {
     IgxDatePickerComponent,
     IgxDateRangePickerComponent,
     IgxDateTimeEditorModule,
-    IgxIconComponent,
     IgxInputDirective,
     IgxInputGroupComponent,
     IgxInputGroupModule,
@@ -45,7 +44,6 @@ import {
         IgxTimePickerComponent,
         IgxDateTimeEditorModule,
         IgxDateRangePickerComponent,
-        IgxIconComponent
     ]
 })
 

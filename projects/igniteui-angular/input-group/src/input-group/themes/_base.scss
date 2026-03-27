@@ -523,7 +523,7 @@ $transition-timing: .25s $out-cubic;
 
     }
 
-    .igx-input-group:not(:not(.igx-input-group__label)) {
+    .igx-input-group:has(:not(.igx-input-group__label)) {
         --_bundle-row: 1;
         --_hint-row: 2;
     }

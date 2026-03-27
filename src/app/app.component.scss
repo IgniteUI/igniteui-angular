@@ -1,3 +1,5 @@
+@use '../../projects/igniteui-angular/core/src/core/styles/base' as *;
+
 ::ng-deep {
     app-root {
         --demo-navbar-size: 56px;
@@ -24,10 +26,6 @@
     }
 
     .demos-main-nav {
-        .igx-navbar__left:not(:empty) {
-            margin-inline-end: 0;
-        }
-
         .igx-nav-drawer__aside {
             padding-top: 0;
         }
@@ -92,10 +90,19 @@
 
 .demos-main-nav {
     grid-column: 1;
+
+    @include tokens(navdrawer-theme(
+        $background: var(--ig-gray-100),
+        $border-radius: 0,
+        $item-border-radius: 0,
+        $border-color: var(--ig-gray-300),
+
+    ));
 }
 
 .demos-settings-nav {
     --ig-nav-drawer-size: 24rem;
+    --aside-padding: calc(var(--content-spacing) * 1.5);
 
     grid-column: 3;
 }

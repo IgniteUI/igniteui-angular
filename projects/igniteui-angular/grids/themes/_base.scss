@@ -2795,6 +2795,17 @@ $z-grid-loading: 10003;
             border-inline-end: $grid-header-border !important;
             border-block-end: $grid-header-border !important;
         }
+
+        .igx-grid__th {
+            border-block-end: $grid-header-border !important;
+        }
+
+        .igx-grid__th:only-child,
+        .igx-grid__th:last-child,
+        .igx-grid__td:only-child,
+        .igx-grid__td:last-child {
+            border-block-end: 0;
+        }
     }
 
     // MRL row context - rows in multi-row layout
@@ -2805,11 +2816,6 @@ $z-grid-loading: 10003;
         .igx-grid__row-indentation,
         .igx-grid__drag-indicator {
             border-bottom: $grid-header-border;
-        }
-
-        .igx-grid__td:only-child,
-        .igx-grid__td:last-child {
-            border-block-end: 0;
         }
 
         background-clip: padding-box !important;
