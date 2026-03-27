@@ -98,6 +98,25 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.columnEventCount).toEqual(4);
         });
 
+        it('should initialize a grid with data and columns if autoGenerate is set after the data', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.data = [
+                { Number: 1, String: '1', Boolean: true, Date: new Date(Date.now()) }
+            ];
+            fix.componentInstance.columns = [];
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+
+            expect(grid.columns.length).toBe(0);
+
+            fix.componentInstance.autoGenerate = true;
+            fix.detectChanges();
+
+            expect(grid.columns.length).toBe(4);
+            expect(grid.rowList.length).toBe(1);
+        });
+
         it('should initialize a grid and change column properties during initialization', () => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             fix.componentInstance.columns = [];
