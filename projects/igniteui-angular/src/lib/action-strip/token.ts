@@ -5,6 +5,7 @@ import { OverlaySettings } from '../services/public_api';
 export abstract class IgxActionStripToken {
     public abstract context: any;
     public abstract menuOverlaySettings: OverlaySettings;
+    public abstract get menuItems(): any[];
     public abstract get hideOnRowLeave(): boolean;
 
     public abstract show(context?: any): void;
