@@ -286,11 +286,11 @@ describe('IgxContextMenuComponent', () => {
 
             // The closing event checks instanceof IgxChartMenuComponent — we mock at the overlay level
             (mockOverlay.closing as Subject<any>).next({
-                componentRef: { instance: component }
+                componentRef: { instance: mockInstance }
             });
 
-            // Since the instance is not actually IgxChartMenuComponent, tabsMenu.open should not be called
-            expect(mockTabsMenu.open).not.toHaveBeenCalled();
+            // When the closed component looks like an IgxChartMenuComponent and _dialogId is set, tabsMenu.open should be called
+            expect(mockTabsMenu.open).toHaveBeenCalled();
         });
 
         it('should not open tabsMenu when closing event has no componentRef', () => {
