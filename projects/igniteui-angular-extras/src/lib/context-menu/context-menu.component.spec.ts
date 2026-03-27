@@ -281,7 +281,7 @@ describe('IgxContextMenuComponent', () => {
         it('should reopen tabsMenu when closing a chart dialog and dialogId exists', () => {
             // Simulate having an open dialog
             (component as any)._dialogId = 'dialog-id';
-            const mockInstance = new (class { constructor() {} })();
+            const mockInstance = new (class { })();
             Object.setPrototypeOf(mockInstance, { constructor: { name: 'IgxChartMenuComponent' } });
 
             // The closing event checks instanceof IgxChartMenuComponent — we mock at the overlay level

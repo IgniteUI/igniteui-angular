@@ -200,9 +200,6 @@ describe('IgxChartIntegrationDirective', () => {
 
     describe('disableCharts and chartData interaction', () => {
         it('should not include disabled chart types in emitted chartsForCreation', () => {
-            let emittedArgs: IDeterminedChartTypesArgs;
-            directive.chartTypesDetermined.subscribe((args) => emittedArgs = args);
-
             directive.disableCharts([CHART_TYPE.Pie]);
 
             // chartsAvailability is updated but chartsForCreation only populated when chartData is set
