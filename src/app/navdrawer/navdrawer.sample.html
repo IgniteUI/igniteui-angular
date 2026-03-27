@@ -4,7 +4,7 @@
         <article>
             <h5 class="setting-title">Visibility</h5>
             <div class="setting-container">
-                <igx-switch (ngModelChange)="toggle()" [checked]="this.app.navdrawer.isOpen" [(ngModel)]="this.app.drawerState.open">
+                <igx-switch [(ngModel)]="this.app.drawerState.open">
                     Show Navdrawer
                 </igx-switch>
             </div>

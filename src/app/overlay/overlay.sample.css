@@ -1,3 +1,7 @@
+.container{
+    position: relative;
+}
+
 .sample-content {
     margin-bottom: 500px;
 }
@@ -31,7 +35,7 @@
 
 .column {
     min-width: 150px;
-    margin: 20px;
+    margin: 5px;
     padding: 0 20px 20px 20px;
     background-color: #444444;
 }
