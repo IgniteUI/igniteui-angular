@@ -3,6 +3,15 @@
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 > For app setup, providers, and import patterns — see [`setup.md`](./setup.md).
 
+## Contents
+
+- [Tabs](#tabs)
+- [Bottom Navigation](#bottom-navigation)
+- [Stepper](#stepper)
+- [Accordion](#accordion)
+- [Splitter](#splitter)
+- [Navigation Drawer](#navigation-drawer)
+
 ## Tabs
 
 > **Docs:** [Tabs Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)
