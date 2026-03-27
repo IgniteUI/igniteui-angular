@@ -457,6 +457,22 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public disabled = false;
 
     /**
+     * Disables the clear button. The default is `false`.
+     *
+     * ```typescript
+     * // get
+     * let myComboDisableClear = this.combo.disableClear;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [disableClear]="true"></igx-combo>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public disableClear = false;
+
+    /**
      * Sets the visual combo type.
      * The allowed values are `line`, `box`, `border` and `search`. The default is `box`.
      * ```html
