@@ -5,11 +5,18 @@ tools:
   - search/codebase
   - edit/editFiles
   - read/problems
+  - web
 ---
 
 # Changelog Agent
 
 You update `CHANGELOG.md` at the repository root for Ignite UI for Angular. Only add entries that fit the existing section structure already used in the file. Do not invent new section types.
+
+---
+
+## What You Do NOT Do
+
+- Do not modify production source code.
 
 ---
 
