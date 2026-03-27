@@ -401,7 +401,7 @@ CHANGELOG.md                                      root changelog
 src/app/<component>/                              demo pages
 ```
 
-The system also relies on repository-specific guidance in:
+The system also relies on repository-specific guidance and internal operational skills in:
 
 ```text
 .github/copilot-instructions.md
@@ -412,6 +412,20 @@ skills/igniteui-angular-theming/SKILL.md
 .github/skills/igniteui-angular-testing/SKILL.md
 .github/skills/igniteui-angular-linting/SKILL.md
 ```
+
+Repository-specific skills for implementation guidance:
+
+- `igniteui-angular-components` — shared guidance for general component patterns, structure, and repository conventions.
+- `igniteui-angular-grids` — shared guidance for grid architecture, patterns, and grid-specific implementation work.
+- `igniteui-angular-theming` — shared guidance for SCSS structure, theme wiring, and style-system conventions.
+
+The internal operational skills are shared references for repository commands and validation flow:
+
+- `igniteui-angular-build` — build command reference for full and partial builds such as library, schematics, migrations, elements, i18n, and related repo build targets.
+- `igniteui-angular-testing` — test suite selection guide, Karma config mapping, and command reference for choosing the smallest relevant test run.
+- `igniteui-angular-linting` — lint command reference, ESLint and Stylelint config locations, and lint expectations before work is considered complete.
+
+Orchestrators should use these skills for command selection instead of repeating command lists inline.
 
 ---
 

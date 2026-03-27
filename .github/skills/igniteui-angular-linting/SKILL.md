@@ -45,7 +45,7 @@ Runs `stylelint "projects/igniteui-angular/core/src/core/styles"`. Use when you 
 |---|---|
 | `eslint.config.mjs` (repo root) | Root ESLint config |
 | `projects/igniteui-angular/eslint.config.mjs` | Library-specific ESLint config (referenced in `angular.json`) |
-| Stylelint config | Resolved from the repo root (check `package.json` or `.stylelintrc` for the active config) |
+| `.stylelintrc.json` (repo root) | Root Stylelint config used by `npm run lint:styles` |
 
 ## Agent Rules
 

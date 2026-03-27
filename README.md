@@ -50,7 +50,6 @@ This repository ships with **Copilot Skills** — structured knowledge files tha
 | Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) |
 | Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Theming & Styling (includes MCP server setup) |
 
-
 #### How It Works
 
 - **GitHub Copilot (VS Code / github.com)** — Skills should be discovered automatically via [`.github/copilot-instructions.md`](.github/copilot-instructions.md). No extra setup needed.
