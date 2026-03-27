@@ -8,6 +8,7 @@ tools:
   - execute/runTests
   - read/problems
   - read/terminalLastCommand
+  - web
 ---
 
 # Theming and Styles Agent
@@ -121,6 +122,7 @@ If the task is purely documentation or planning, say clearly that style validati
 - Do not update component `README.md`.
 - Do not create migrations.
 - Do not update `CHANGELOG.md`.
+- Do not modify dependency manifests or lock files (`package.json`, `package-lock.json`, etc.). Ask for approval first if a dependency change is truly required.
 
 ---
 
