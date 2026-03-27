@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { IgxOverlayService } from 'igniteui-angular/core';
 import { IgxContextMenuComponent } from './context-menu.component';
 import { CHART_TYPE } from '../directives/chart-integration/chart-types';
+import { IgxChartMenuComponent } from 'igniteui-angular-extras';
 
 describe('IgxContextMenuComponent', () => {
     let component: IgxContextMenuComponent;
@@ -286,7 +287,7 @@ describe('IgxContextMenuComponent', () => {
 
             // The closing event checks instanceof IgxChartMenuComponent — we mock at the overlay level
             (mockOverlay.closing as Subject<any>).next({
-                componentRef: { instance: mockInstance }
+                componentRef: { instance: TestBed.createComponent(IgxChartMenuComponent).componentInstance }
             });
 
             // When the closed component looks like an IgxChartMenuComponent and _dialogId is set, tabsMenu.open should be called
