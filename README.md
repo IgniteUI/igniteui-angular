@@ -391,7 +391,7 @@ ng update igniteui-cli
 ## Documentation
 
 - [Getting started](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/getting-started)
-- [API reference](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/getting-started)
+- [API reference](https://www.infragistics.com/products/ignite-ui-angular/angular/api)
 - [Roadmap](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md)
 - [Release history](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#release-history)
 - [Changelog](https://github.com/IgniteUI/igniteui-angular/blob/master/CHANGELOG.md)
