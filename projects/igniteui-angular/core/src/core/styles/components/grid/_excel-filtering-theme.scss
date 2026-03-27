@@ -178,7 +178,7 @@
         .ig-typography %grid-excel-menu--compact {
             %grid-excel-menu__header {
                 > h4 {
-                    @include type-style('h6')
+                    @include type-style('h6');
                 }
             }
         }
@@ -659,7 +659,7 @@
 
     %grid-excel-menu {
         %grid-excel-menu__header > h4 {
-            @include type-style('h6')
+            @include type-style('h6');
         }
     }
 
@@ -678,13 +678,13 @@
 
     %grid-excel-menu--cosy {
         %grid-excel-menu__header > h4 {
-            @include type-style('h6')
+            @include type-style('h6');
         }
     }
 
     %grid-excel-menu--compact {
         %grid-excel-menu__header > h4 {
-            @include type-style('subtitle-1')
+            @include type-style('subtitle-1');
         }
 
         %grid-excel-sort,
