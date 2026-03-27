@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { IGX_CHIPS_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IgxGridComponent, IgxHierarchicalGridComponent, IgxIconComponent, IgxRippleDirective, IgxTreeGridComponent } from 'igniteui-angular';
+import { IGX_CHIPS_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IgxGridComponent, IgxHierarchicalGridComponent, IgxIconComponent, IgxTreeGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-search-box',
