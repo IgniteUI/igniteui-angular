@@ -17,13 +17,6 @@ body {
 
 :root {
     --some-dynamic-color: hsl(#{math.random(360)}, 100%, 50%);
-
-    @include tokens(grid-theme(
-        $schema: $schema,
-        $background: #F9FAFA,
-        $foreground: #3B4249,
-        $accent-color: #0D6EFD
-    ));
 }
 
 .nav-header {

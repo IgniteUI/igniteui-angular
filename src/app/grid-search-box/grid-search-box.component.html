@@ -30,10 +30,10 @@
             }
             <div class="chips">
                 <igx-chips-area>
-                    <igx-chip (click)="updateSearch()" [color]="caseSensitive? 'var(--item-focus-background)' : 'rgba(0, 0, 0, .04)'">
+                    <igx-chip (click)="updateSearch()" [color]="caseSensitive? 'var(--focus-background)' : 'rgba(0, 0, 0, .04)'">
                         <span title="Match Case">Aa</span>
                     </igx-chip>
-                    <igx-chip (click)="updateExactSearch()" [color]="exactMatch? 'var(--item-focus-background)' : 'rgba(0, 0, 0, .04)'">
+                    <igx-chip (click)="updateExactSearch()" [color]="exactMatch? 'var(--focus-background)' : 'rgba(0, 0, 0, .04)'">
                         <u title="Match Whole Word">Ab</u>
                     </igx-chip>
                 </igx-chips-area>
