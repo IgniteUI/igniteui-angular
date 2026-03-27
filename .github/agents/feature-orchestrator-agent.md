@@ -6,6 +6,7 @@ tools:
   - search/codebase
   - search/changes
   - read/problems
+  - web
 agents:
   - tdd-test-writer-agent
   - feature-implementer-agent
@@ -64,6 +65,7 @@ You do NOT write tests, production code, or detailed acceptance criteria. Each s
 - Do not write detailed acceptance criteria that downstream agents must encode literally
 - Do not specify exact test cases, exact implementations, or exact file changes
 - Do not over-constrain the handoff prompts — give scope, not specs
+- Do not modify dependency manifests or lock files (`package.json`, `package-lock.json`, etc.). Ask for approval first if a dependency change is truly required.
 
 ---
 
@@ -181,13 +183,12 @@ Use agents in this order:
 4. **`demo-sample-agent`** — only if the user explicitly wants a demo/sample update
 5. **`component-readme-agent`** — updates affected component `README.md` files
 6. **`migration-agent`** — only if breaking changes exist
-7. **`changelog-agent`** — updates `CHANGELOG.md`
+7. **`changelog-agent`** — only if the change warrants an entry under the existing `CHANGELOG.md` structure
 
 Only invoke `demo-sample-agent` if the user explicitly requested a demo/sample update.
 If the user declined, skip that handoff and continue with the remaining agents.
 
-If the feature is purely theming or styling, route directly from `tdd-test-writer-agent` to `theming-styles-agent` and skip the general
-implementer.
+If the feature is purely theming or styling, route directly from `tdd-test-writer-agent` to `theming-styles-agent` and skip the general implementer.
 
 ### Step 5 — Verify Completeness
 
@@ -195,10 +196,9 @@ After all agents finish, check:
 
 - Were all affected areas covered?
 - Were public exports updated?
-- Were theming and style changes delegated when SCSS or theme wiring was
-  affected?
-- Was the component README updated?
-- Was `CHANGELOG.md` updated?
+- Were theming and style changes delegated when SCSS or theme wiring was affected?
+- Was the component README updated if needed?
+- Was `CHANGELOG.md` updated if needed?
 - Do migrations exist for any breaking changes?
 - If a demo/sample was requested, was the existing demo structure updated appropriately?
 - If a demo/sample was not requested, was it correctly skipped?
