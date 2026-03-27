@@ -11,7 +11,8 @@ Quick-reference card for the core test commands for the main igniteui-angular li
 ## Prerequisites
 
 - Run `npm install` at the repo root.
-- For schematics tests: run `npm run build:schematics` and `npm run build:migrations` first.
+- Schematics tests normally run from source and do not require a build first. Only run `npm run build:schematics` and `npm run build:migrations` when you specifically want to validate the compiled schematics or migrations output.
+- For performance tests: run `npm run build:lib` first, or at minimum `npm run build:styles`, because `test:lib:perf` loads `dist/igniteui-angular/styles/igniteui-angular.css`.
 
 ## Test Runner
 
@@ -40,10 +41,11 @@ Quick-reference card for the core test commands for the main igniteui-angular li
 1. **Working on a grid component?** → Use the matching grid command (`test:lib:grid`, `test:lib:tgrid`, `test:lib:hgrid`, or `test:lib:pgrid`).
 2. **Working on a non-grid component or directive?** → Use `test:lib:others`.
 3. **Iterating quickly during development?** → Use `test:lib:watch`.
-4. **Edited a migration or schematic?** → Build first (`build:schematics` / `build:migrations`), then `test:schematics`.
-5. **Changed Sass theme logic?** → Use `test:styles`.
-6. **Changed i18n resource strings?** → Use `test:i18n`.
-7. **Final verification before marking work complete?** → Use `test:lib` (full suite).
+4. **Edited a migration or schematic?** → Use `test:schematics`. Build first only if you also need to validate compiled output.
+5. **Running performance tests?** → Build first (`build:lib` or at least `build:styles`), then use `test:lib:perf`.
+6. **Changed Sass theme logic?** → Use `test:styles`.
+7. **Changed i18n resource strings?** → Use `test:i18n`.
+8. **Final verification before marking work complete?** → Use `test:lib` (full suite).
 
 ## Karma Configs
 
