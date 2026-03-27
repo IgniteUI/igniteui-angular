@@ -33,7 +33,6 @@
         [columnSelection]="'multiple'"
         [cellSelection]="'multiple'"
         [rowEditable]="true"
-        [rowDraggable]="true"
         [moving]="true"
         [groupsExpanded]="true">
 
@@ -110,13 +109,13 @@
             [summaries]="employeesSummary"
             dataType="number" [minWidth]="'110px'">
         </igx-column>
-        <igx-column field="Contract" header="Contract" [sortable]="true" [filterable]="true"
-            [resizable]="true" [editable]="true" [groupable]="true"
-            dataType="boolean" [minWidth]="'100px'">
-        </igx-column>
         <igx-column field="DateCreated" header="Date Created" [sortable]="true" [filterable]="true"
             [resizable]="true" [editable]="true"
             dataType="date" [minWidth]="'140px'">
+        </igx-column>
+        <igx-column field="Contract" header="Contract" [sortable]="true" [filterable]="true"
+            [resizable]="true" [editable]="true" [groupable]="true"
+            dataType="boolean" [minWidth]="'100px'">
         </igx-column>
 
         <!-- Action strip: edit/delete on hover + row pinning -->
