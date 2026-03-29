@@ -1,0 +1,154 @@
+<ng-container *ngTemplateOutlet='addRowUI ? addTemp : defaultTemp'></ng-container>
+<ng-template #defaultExpandedTemplate>
+    <igx-icon family="default" name="tree_collapse" [active]='!added'></igx-icon>
+</ng-template>
+
+<ng-template #defaultCollapsedTemplate>
+    <igx-icon family="default" name="tree_expand" [active]='!added'></igx-icon>
+</ng-template>
+
+<ng-template #defaultEmptyTemplate>
+    <!-- Empty icon used as spacer for size matching-->
+    <igx-icon></igx-icon>
+</ng-template>
+
+<ng-template #addTemp>
+    <div class='igx-grid__tr--inner' [class.igx-grid__tr--add-animate]='triggerAddAnimationClass' (animationend)='animationEndHandler()'>
+        <ng-container *ngTemplateOutlet='defaultTemp'></ng-container>
+    </div>
+</ng-template>
+<ng-template #defaultTemp>
+    <!-- Drag indicator -->
+    @if (rowDraggable) {
+        <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()" [ghostTemplate]="this.grid.getDragGhostCustomTemplate()" (pointerdown)="$event.preventDefault()">
+            <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
+        </div>
+    }
+
+    <!-- Select Row -->
+    @if (showRowSelectors) {
+        <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onRowSelectorClick($event)" (pointerdown)="$event.preventDefault()">
+            <ng-template *ngTemplateOutlet="
+                this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
+                context: { $implicit: {
+                                index: viewIndex,
+                                rowID: key,
+                                key,
+                                selected: selected,
+                                select: select,
+                                deselect: deselect }}">
+            </ng-template>
+        </div>
+    }
+
+    <!-- Row Expander -->
+    @if (hasChildren) {
+        <div  (click)="expanderClick($event)" (mousedown)='$event.preventDefault()' [ngClass]="expanderClassResolved" #expander>
+            <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
+            </ng-container>
+        </div>
+    }
+
+    @if (pinnedStartColumns.length > 0) {
+        <ng-template *ngTemplateOutlet="pinnedCellsTemplate;  context: { $implicit: this, columns: pinnedStartColumns}"></ng-template>
+    }
+
+    <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForSizePropName]='"calcPixelWidth"' [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+        @if (this.hasMergedCells) {
+            <div [style.height.px]=" this.metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1 ? getRowHeight() : null"
+                 class="igx-grid__mrl-block"
+                 [style.visibility]="this.metaData?.cellMergeMeta.get(col.field)?.root ? 'hidden' : 'visible'"
+                 [ngStyle]="{
+                'grid-template-rows': this.metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1 ? this.getMergeCellSpan(col) : null
+            }">
+                <ng-container *ngTemplateOutlet="cellTemplate; context: { $implicit: this, column: col }"></ng-container>
+            </div>
+        }
+        @else {
+            <ng-container *ngTemplateOutlet="cellTemplate; context: { $implicit: this, column: col }"></ng-container>
+        }
+    </ng-template>
+
+    @if (pinnedEndColumns.length > 0) {
+        <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: { $implicit: this, columns: pinnedEndColumns}"></ng-template>
+    }
+
+    <ng-template #rowSelectorBaseTemplate>
+        <div class="igx-grid__cbx-padding">
+            <igx-checkbox
+                [tabindex]="-1"
+                [readonly]="true"
+                [checked]="selected"
+                [disableRipple]="true"
+                [disabled]="deleted"
+                [disableTransitions]="grid.disableTransitions"
+                [aria-label]="rowCheckboxAriaLabel">
+            </igx-checkbox>
+        </div>
+    </ng-template>
+
+    <ng-template #pinnedCellsTemplate let-col let-columns="columns">
+        @for (col of columns | igxNotGrouped; track trackPinnedColumn(col)) {
+            <igx-hierarchical-grid-cell
+                class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
+                [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
+                [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
+                [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
+                [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
+                [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
+                [column]="col"
+                [formatter]="col.formatter"
+                [intRow]="this"
+                [active]="isCellActive(col.visibleIndex)"
+                [firstPinned]="col.isFirstPinned"
+                [lastPinned]="col.isLastPinned"
+                [rowData]="data"
+                [style.min-width]="col.resolvedWidth"
+                [style.max-width]="col.resolvedWidth"
+                [style.flex-basis]="col.resolvedWidth"
+                [width]="col.getCellWidth()"
+                [visibleColumnIndex]="col.visibleIndex"
+                [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
+                [cellTemplate]="col.bodyTemplate"
+                [cellValidationErrorTemplate]="col.errorTemplate"
+                [lastSearchInfo]="grid.lastSearchInfo"
+                [cellSelectionMode]="grid.cellSelection"
+                [displayPinnedChip]="shouldDisplayPinnedChip(col)">
+            </igx-hierarchical-grid-cell>
+        }
+    </ng-template>
+</ng-template>
+
+<ng-template #cellTemplate let-col="column">
+    <igx-hierarchical-grid-cell
+    [class.igx-grid__td--merged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
+    [isMerged]="metaData?.cellMergeMeta.get(col.field)?.rowSpan > 1"
+    [isPlaceholder]="!!this.metaData?.cellMergeMeta.get(col.field)?.root"
+    [class.igx-grid__td--merged-selected]="isSelectionRoot(col)"
+    [class.igx-grid__td--merged-hovered]="isHoveredRoot(col)"
+    class="igx-grid__td igx-grid__td--fw"
+    [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
+
+    [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
+    [class.igx-grid__td--bool]="col.dataType === 'boolean'"
+    [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
+    [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
+    [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
+    [column]="col"
+    [formatter]="col.formatter"
+    [intRow]="this"
+    [active]="isCellActive(col.visibleIndex)"
+    [rowData]="data"
+    [style.min-width]="col.resolvedWidth"
+    [style.max-width]="col.resolvedWidth"
+    [style.flex-basis]="col.resolvedWidth"
+    [width]="col.getCellWidth()"
+    [visibleColumnIndex]="col.visibleIndex"
+    [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
+    [cellTemplate]="col.bodyTemplate"
+    [cellValidationErrorTemplate]="col.errorTemplate"
+    [lastSearchInfo]="grid.lastSearchInfo"
+    [cellSelectionMode]="grid.cellSelection"
+    [displayPinnedChip]="shouldDisplayPinnedChip(col)">
+</igx-hierarchical-grid-cell>
+</ng-template>

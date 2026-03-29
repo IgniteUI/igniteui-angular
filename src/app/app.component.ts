@@ -5,15 +5,33 @@ import {
     HostBinding,
     inject,
     signal,
+    computed,
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective, IGX_NAVIGATION_DRAWER_DIRECTIVES } from 'igniteui-angular';
 import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
-import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
+import { IGX_NAVIGATION_DRAWER_DIRECTIVES, IgxNavigationDrawerComponent } from 'igniteui-angular/navigation-drawer';
+import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+
+// I18n
+import { registerI18n } from 'igniteui-angular';
+import { IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT, IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT } from 'igniteui-angular-i18n';
+import localeBG from '@angular/common/locales/bg';
+import localeEN from '@angular/common/locales/en';
+import localeDE from '@angular/common/locales/de';
+import localeES from '@angular/common/locales/es';
+import localeFR from '@angular/common/locales/fr';
+import localeIT from '@angular/common/locales/it';
+import localeJA from '@angular/common/locales/ja';
+import localeKO from '@angular/common/locales/ko';
+import localeHans from '@angular/common/locales/zh-Hans';
+import localeHant from '@angular/common/locales/zh-Hant';
 
 @Component({
     selector: 'app-root',
@@ -23,13 +41,18 @@ import { PropertyChangeService } from './properties-panel/property-change.servic
         IgxNavigationDrawerComponent,
         IGX_NAVIGATION_DRAWER_DIRECTIVES,
         CommonModule,
+        FormsModule,
         RouterLinkActive,
         RouterLink,
         IgxIconComponent,
         PageHeaderComponent,
         RouterOutlet,
         IgxRippleDirective,
-        PropertiesPanelComponent
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxPrefixDirective,
+        IgxSuffixDirective,
+        PropertiesPanelComponent,
     ]
 })
 export class AppComponent implements OnInit {
@@ -40,6 +63,9 @@ export class AppComponent implements OnInit {
     public navdrawer: IgxNavigationDrawerComponent;
 
     public dirMode = signal<'ltr' | 'rtl'>('ltr');
+
+    // Filter for navigation items
+    public filterText = signal('');
 
     // This method will be triggered by PageHeaderComponent's toggleDirection event
     public onDirectionToggle(dir: DocumentDirection): void {
@@ -52,7 +78,7 @@ export class AppComponent implements OnInit {
 
     public drawerState = {
         enableGestures: true,
-        open: true,
+        open: signal(true),
         pin: false,
         pinThreshold: 768,
         position: 'left',
@@ -128,6 +154,11 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
+            link: '/chat',
+            icon: 'chat',
+            name: 'Chat'
+        },
+        {
             link: '/chip',
             icon: 'android',
             name: 'Chips'
@@ -191,6 +222,11 @@ export class AppComponent implements OnInit {
             link: '/inputs',
             icon: 'web',
             name: 'Forms'
+        },
+        {
+            link: '/gridLite',
+            icon: 'view_column',
+            name: 'Grid Lite'
         },
         {
             link: '/grid',
@@ -342,6 +378,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Events'
         },
         {
+            link: '/gridDataAnalysis',
+            icon: 'view_column',
+            name: 'Grid Data Analysis'
+        },
+        {
             link: '/gridFinJS',
             icon: 'view_column',
             name: 'Grid FinJS'
@@ -420,6 +461,11 @@ export class AppComponent implements OnInit {
             link: '/gridExport',
             icon: 'view_column',
             name: 'Grid Export'
+        },
+        {
+            link: '/gridPdfExport',
+            icon: 'view_column',
+            name: 'Grid PDF Export'
         },
         {
             link: '/gridSearch',
@@ -747,6 +793,31 @@ export class AppComponent implements OnInit {
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
+    // Computed filtered arrays
+    public filteredComponentLinks = computed(() => {
+        const filterValue = this.filterText().toLowerCase();
+        if (!filterValue) {
+            return this.componentLinks;
+        }
+        return this.componentLinks.filter(item => item.name.toLowerCase().includes(filterValue));
+    });
+
+    public filteredDirectiveLinks = computed(() => {
+        const filterValue = this.filterText().toLowerCase();
+        if (!filterValue) {
+            return this.directiveLinks;
+        }
+        return this.directiveLinks.filter(item => item.name.toLowerCase().includes(filterValue));
+    });
+
+    public filteredStyleLinks = computed(() => {
+        const filterValue = this.filterText().toLowerCase();
+        if (!filterValue) {
+            return this.styleLinks;
+        }
+        return this.styleLinks.filter(item => item.name.toLowerCase().includes(filterValue));
+    });
+
     constructor(private router: Router, private iconService: IgxIconService) {
         iconService.setFamily('fa-solid', { className: 'fa', type: 'font', prefix: 'fa-'});
         iconService.setFamily('fa-brands', { className: 'fab', type: 'font' });
@@ -775,5 +846,28 @@ export class AppComponent implements OnInit {
         this.iconService.addSvgIcon('fa-breeze', '../assets/images/card/icons/breeze.svg', 'fa-solid');
         this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
         this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
+
+        // Angular locale data
+        registerLocaleData(localeBG);
+        registerLocaleData(localeEN);
+        registerLocaleData(localeDE);
+        registerLocaleData(localeES);
+        registerLocaleData(localeFR);
+        registerLocaleData(localeIT);
+        registerLocaleData(localeJA);
+        registerLocaleData(localeKO);
+        registerLocaleData(localeHans);
+        registerLocaleData(localeHant);
+
+        registerI18n(IgxResourceStringsBG, 'bg');
+        registerI18n(IgxResourceStringsDE, 'de');
+        registerI18n(IgxResourceStringsES, 'es');
+        registerI18n(IgxResourceStringsFR, 'fr');
+        registerI18n(IgxResourceStringsIT, 'it');
+        registerI18n(IgxResourceStringsJA, 'ja');
+        registerI18n(IgxResourceStringsKO, 'ko');
+        registerI18n(IgxResourceStringsZHHANS, 'zh-Hans');
+        registerI18n(IgxResourceStringsZHHANT, 'zh-Hant');
     }
+
 }

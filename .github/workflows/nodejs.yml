@@ -2,6 +2,8 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
 name: Node.js CI
+permissions:
+  contents: read
 
 on:
   push:
@@ -16,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.17.1]
+        node-version: [22.x]
 
     steps:
       - name: Checkout
@@ -34,8 +36,12 @@ jobs:
             NODE_OPTIONS: --max_old_space_size=4096
       - name: Lint i18n
         run: npm run lint:i18n
+      - name: Lint Extras
+        run: npm run lint:extras
       - name: Build Lib
         run: npm run build:lib
+      - name: Build Extras
+        run: npm run build:extras
       - name: Build Schematics
         run: npm run build:schematics
       - name: Build Migrations
@@ -49,8 +55,9 @@ jobs:
             npm run test:styles
             npm run test:schematics
             npm run test:i18n
+            npm run test:extras
         env:
-            NODE_OPTIONS: --max_old_space_size=4096
+            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
             TZ: America/New_York
       - name: Build i18n & validate output
         run: |
@@ -71,7 +78,6 @@ jobs:
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
       - name: Publish to coveralls.io
-        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '20.x'
-        uses: coverallsapp/github-action@v2.3.4
+        uses: coverallsapp/github-action@v2
         with:
             github-token: ${{ github.token }}

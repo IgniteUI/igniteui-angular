@@ -1,0 +1,287 @@
+@use 'sass:map';
+@use 'sass:math';
+@use '../../base' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin splitter($theme) {
+    @include css-vars($theme);
+    $splitter-color: var-get($theme, 'bar-color');
+    $hitbox-size: rem(4px);
+    $debug-hitbox: false;
+    $hitbox-debug-color: rgba(coral, .24);
+
+    $variant: map.get($theme, '_meta', 'theme');
+
+    //splitter-size + borders
+    $splitter-size: unitless(map.get($theme, 'size')) + 2;
+
+    //calculate the value for the slim(indigo) splitter
+    $slim-splitter: calc( 1 / $splitter-size);
+
+    %igx-splitter-base {
+        &[aria-orientation='horizontal'] {
+            [dir='rtl'] & {
+                flex-direction: row-reverse !important;
+            }
+        }
+    }
+
+    %handle-area {
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: $hitbox-size;
+        background: if($debug-hitbox, $hitbox-debug-color, transparent);
+
+        @if $variant == 'indigo' {
+            height: rem($splitter-size * 4px);
+        }
+    }
+
+    %handle-area--vertical {
+        width: $hitbox-size;
+        height: 100%;
+
+        @if $variant == 'indigo' {
+            width: rem($splitter-size * 4px);
+        }
+    }
+
+    %hide-controls {
+        %igx-splitter-handle,
+        %igx-splitter-expander {
+            opacity: 0;
+            transition: opacity .25s .5s ease;
+            pointer-events: none;
+        }
+    }
+
+    %show-controls {
+        %igx-splitter-handle,
+        %igx-splitter-expander {
+            opacity: 1;
+            transition: opacity .25s ease;
+            pointer-events: auto;
+        }
+    }
+
+    %expand-bars {
+        [aria-orientation='horizontal'] & {
+            transform: scaleX(1);
+        }
+
+        [aria-orientation='vertical'] & {
+            transform: scaleY(1);
+        }
+        transition-delay: 0s !important;
+    }
+
+    %indigo-splitter-bar {
+        @extend %hide-controls;
+
+        [aria-orientation='horizontal'] & {
+            transform: scaleX($slim-splitter);
+        }
+
+        [aria-orientation='vertical'] & {
+            transform: scaleY($slim-splitter);
+        }
+
+        &.igx-splitter-bar--collapsible {
+            transition: all .25s .5s $in-out-quad !important;
+
+            &::before,
+            &::after {
+                transition-delay: 2s;
+            }
+
+            &:hover {
+                @extend %show-controls;
+                @extend %expand-bars;
+
+                &::before,
+                &::after {
+                    height: $hitbox-size;
+                    width: 100%;
+                    transition-delay: .5s;
+                }
+
+                &.igx-splitter-bar--vertical {
+                    &::before,
+                    &::after {
+                        width: $hitbox-size;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+    }
+
+    %igx-splitter-bar {
+        position: relative;
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        align-items: center;
+        background: $splitter-color;
+        border: rem(1px) solid $splitter-color;
+        z-index: 99;
+        opacity: .68;
+        transition: opacity .15s $out-quad !important;
+
+        @if $variant != 'indigo' {
+            @extend %hide-controls;
+
+            &.igx-splitter-bar--collapsible {
+                @extend %show-controls;
+            }
+        }
+
+        @if $variant == 'indigo' {
+            @extend %indigo-splitter-bar;
+        }
+
+        &::before {
+            @extend %handle-area;
+            top: 100%;
+        }
+
+        &::after {
+            @extend %handle-area;
+            bottom: 100%;
+        }
+
+        &:hover {
+            transition: all .25s ease-out;
+            opacity: 1;
+        }
+    }
+
+    %igx-splitter-bar--focus {
+        // Remove the default browser outline styles
+        outline: transparent solid rem(1px);
+        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focus-color');
+
+        @if $variant == 'indigo' {
+            box-shadow: none;
+
+            %indigo-splitter-bar {
+                background: var-get($theme, 'focus-color');
+                border-color: var-get($theme, 'focus-color');
+
+                &.igx-splitter-bar--collapsible {
+                    @extend %show-controls;
+                    @extend %expand-bars;
+                }
+            }
+        }
+    }
+
+    %igx-splitter-bar--vertical {
+        flex-direction: column;
+        height: 100%;
+
+        &::before {
+            @extend %handle-area--vertical;
+            top: 0;
+            right: 100%;
+        }
+
+        &::after {
+            @extend %handle-area--vertical;
+            top: 0;
+            left: 100%;
+        }
+    }
+
+    %igx-splitter-handle {
+        background: var-get($theme, 'handle-color');
+        border-radius: var-get($theme, 'border-radius');
+    }
+
+    %igx-splitter-handle--horizontal {
+        width: 25%;
+        height: var-get($theme, 'size');
+        margin: 0 rem(48px);
+    }
+
+    %igx-splitter-handle--vertical {
+        width: var-get($theme, 'size');
+        height: 25%;
+        margin: rem(48px) 0;
+    }
+
+    %igx-splitter-hitbox {
+        position: absolute;
+        content: '';
+        background: if($debug-hitbox, $hitbox-debug-color, transparent);
+    }
+
+    %igx-splitter-expander {
+        position: relative;
+        width: 0;
+        height: 0;
+        border-inline-end: var-get($theme, 'size') solid transparent;
+        border-inline-start: var-get($theme, 'size') solid transparent;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    %igx-splitter-expander--start {
+        border-bottom: var-get($theme, 'size') solid var-get($theme, 'expander-color');
+
+        &::before {
+            @extend %igx-splitter-hitbox;
+            top: calc(100% - #{map.get($theme, 'size')});
+            left: calc(100% - (#{map.get($theme, 'size')} * 2));
+            width: calc(#{map.get($theme, 'size')} * 4);
+            height: calc(#{map.get($theme, 'size')} * 3);
+        }
+    }
+
+    %igx-splitter-expander--end {
+        border-bottom: unset;
+        border-top: var-get($theme, 'size') solid var-get($theme, 'expander-color');
+
+        &::before {
+            @extend %igx-splitter-hitbox;
+            top: calc(100% - (#{map.get($theme, 'size')} * 2));
+            left: calc(100% - (#{map.get($theme, 'size')} * 2));
+            width: calc(#{map.get($theme, 'size')} * 4);
+            height: calc(#{map.get($theme, 'size')} * 3);
+        }
+    }
+
+    %igx-splitter-expander--start-vertical {
+        border-top: var-get($theme, 'size') solid transparent;
+        border-inline-end: var-get($theme, 'size') solid var-get($theme, 'expander-color');
+        border-bottom: var-get($theme, 'size') solid transparent;
+        border-inline-start: unset;
+
+        &::before {
+            @extend %igx-splitter-hitbox;
+            top: calc(100% - (#{map.get($theme, 'size')} * 2));
+            left: calc(100% - (#{map.get($theme, 'size')} * 2));
+            width: calc(#{map.get($theme, 'size')} * 3);
+            height: calc(#{map.get($theme, 'size')} * 4);
+        }
+    }
+
+    %igx-splitter-expander--end-vertical {
+        border-top: var-get($theme, 'size') solid transparent;
+        border-inline-end: unset;
+        border-bottom: var-get($theme, 'size') solid transparent;
+        border-inline-start: var-get($theme, 'size') solid var-get($theme, 'expander-color');
+
+        &::before {
+            @extend %igx-splitter-hitbox;
+            left: calc(100% - (#{map.get($theme, 'size')} * 2));
+            top: calc(100% - (#{map.get($theme, 'size')} * 2));
+            height: calc(#{map.get($theme, 'size')} * 4);
+            width: calc(#{map.get($theme, 'size')} * 3);
+        }
+    }
+}

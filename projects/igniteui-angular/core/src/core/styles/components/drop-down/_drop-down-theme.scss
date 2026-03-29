@@ -1,0 +1,245 @@
+@use 'sass:map';
+@use '../../base' as *;
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin drop-down($theme) {
+    @include css-vars($theme, '.igx-drop-down__list, .igx-grid-toolbar__dd-list');
+    $variant: map.get($theme, '_meta', 'theme');
+
+    %igx-drop-down {
+        position: absolute;
+    }
+
+    %igx-drop-down__list {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --dropdown-size: var(--component-size);
+        overflow: hidden;
+        border-radius: var-get($theme, 'border-radius');
+        background: var-get($theme, 'background-color');
+        box-shadow: var-get($theme, 'elevation');
+        min-width: rem(128px);
+        border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
+
+        @if $variant == 'indigo' {
+            padding: pad(rem(3px));
+
+            %igx-drop-down__item {
+                margin-block: rem(2px);
+
+                &:first-of-type,
+                &:last-of-type {
+                    margin-block: initial;
+                }
+            }
+
+            %igx-drop-down__header {
+                margin-block-end: rem(2px);
+            }
+        }
+    }
+
+    %igx-drop-down__list-scroll {
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        position: relative;
+
+        .igx-display-container--scrollbar {
+            padding-inline-end: var(--vhelper-scrollbar-size);
+        }
+    }
+
+    %igx-drop-down__content {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        gap: rem(8px)
+    }
+
+    %igx-drop-down__inner {
+        display: block;
+        @include ellipsis();
+        margin-inline-end: auto;
+    }
+
+    %igx-drop-down__inner + [igxSuffix],
+    %igx-drop-down__inner + igx-suffix {
+        margin-inline-end: 0;
+    }
+
+    %igx-drop-down__header,
+    %igx-drop-down__item {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        white-space: nowrap;
+        position: relative;
+        height: var-get($theme, 'size');
+
+        igx-divider {
+            position: absolute;
+            width: 100%;
+            inset-inline-start: 0;
+            bottom: 0;
+        }
+
+        igx-icon,
+        igc-icon {
+            justify-content: center;
+
+            @if $variant == 'indigo' {
+                $icon-size: sizable(rem(14px), rem(16px), rem(16px));
+
+                --size: #{$icon-size};
+            } @else {
+                --component-size: 1;
+            }
+        }
+    }
+
+    %igx-drop-down__item {
+        @include sizable();
+        --component-size: var(--dropdown-size);
+
+        color: var-get($theme, 'item-text-color');
+        cursor: pointer;
+        padding-inline: pad-inline(rem(16px), rem(20px), rem(24px));
+        border-radius: var-get($theme, 'item-border-radius');
+
+        igx-icon {
+            color: var-get($theme, 'item-icon-color');
+        }
+
+        @if $variant == 'indigo' {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(12px));
+        }
+
+        &:focus {
+            outline: 0;
+            outline-color: transparent;
+            background: var-get($theme, 'focused-item-background');
+            color: var-get($theme, 'focused-item-text-color');
+        }
+
+        &:hover {
+            background: var-get($theme, 'hover-item-background');
+            color: var-get($theme, 'hover-item-text-color');
+
+            igx-icon {
+                color: var-get($theme, 'hover-item-icon-color');
+            }
+        }
+    }
+
+    %igx-drop-down__header {
+        color: var-get($theme, 'header-text-color');
+        pointer-events: none;
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+
+        @if $variant == 'indigo' {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(12px));
+            padding-block: pad-inline(rem(4px), rem(6px), rem(8px));
+        }
+    }
+
+    %igx-drop-down__group {
+        pointer-events: auto;
+
+        label {
+            @extend %igx-drop-down__header !optional;
+        }
+    }
+
+    %igx-drop-down__item--focused {
+        background: var-get($theme, 'focused-item-background');
+        color: var-get($theme, 'focused-item-text-color');
+
+        @if $variant == 'fluent' {
+            outline: rem(1px) solid var-get($theme, 'border-color');
+            outline-offset: rem(-1px);
+        }
+
+        @if $variant == 'indigo' {
+            outline: rem(2px) solid var-get($theme, 'focused-item-border-color');
+            outline-offset: rem(-2px);
+        }
+    }
+
+    %igx-drop-down__item--selected {
+        background: var-get($theme, 'selected-item-background');
+        color: var-get($theme, 'selected-item-text-color');
+
+        igx-icon {
+            color: var-get($theme, 'selected-item-icon-color');
+        }
+    }
+
+    %igx-drop-down__item--selected--focused {
+        background: var-get($theme, 'selected-focus-item-background');
+        color: var-get($theme, 'selected-focus-item-text-color');
+    }
+
+    %igx-drop-down__item--selected,
+    %igx-drop-down__item--selected--focused {
+        &:hover {
+            background: var-get($theme, 'selected-hover-item-background');
+            color: var-get($theme, 'selected-hover-item-text-color');
+
+            igx-icon {
+                color: var-get($theme, 'selected-hover-item-icon-color');
+            }
+        }
+    }
+
+    %igx-drop-down__item--disabled {
+        background: var-get($theme, 'disabled-item-background');
+        color: var-get($theme, 'disabled-item-text-color');
+        cursor: default;
+        pointer-events: none;
+
+        igx-icon {
+            color: var-get($theme, 'disabled-item-text-color');
+        }
+    }
+}
+
+/// Adds typography styles for the igx-drop-down component.
+/// Uses the 'overline', 'body-2', 'subtitle-1'
+/// categories from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(header: 'overline', item: 'body-2', select-item: 'body-2')] - The categories from the typographic scale used for type styles.
+@mixin drop-down-typography(
+    $categories: (
+        header: 'overline',
+        item: 'body-2',
+        select-item: 'body-2'
+    )
+) {
+    $header: map.get($categories, 'header');
+    $item: map.get($categories, 'item');
+    $select-item: map.get($categories, 'select-item');
+
+    %igx-drop-down__header,
+    %igx-drop-down__group > label {
+        @include type-style($header) {
+            margin: 0;
+        }
+    }
+
+    %igx-drop-down__item {
+        @include type-style($item) {
+            margin: 0;
+        }
+    }
+
+    %igx-drop-down__item--selected {
+        @include type-style($select-item) {
+            margin: 0;
+        }
+    }
+}

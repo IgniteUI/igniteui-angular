@@ -166,7 +166,7 @@
     },
     "igniteui-angular": {
       "root": "projects/igniteui-angular",
-      "sourceRoot": "projects/igniteui-angular/src",
+      "sourceRoot": "projects/igniteui-angular",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
@@ -196,7 +196,7 @@
               "projects/igniteui-angular/test.css"
             ],
             "assets": [
-              "projects/igniteui-angular/src/assets"
+              "projects/igniteui-angular/test-utils/assets"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -204,7 +204,14 @@
               ]
             },
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
-            "karmaConfig": "projects/igniteui-angular/karma.conf.js"
+            "karmaConfig": "projects/igniteui-angular/karma.conf.js",
+            "exclude": [
+                "migrations",
+                "schematics"
+            ],
+            "codeCoverageExclude": [
+                "projects/igniteui-angular/test-utils/**"
+            ]
           }
         },
         "lint": {
@@ -248,6 +255,57 @@
             "production": {
               "devServerTarget": "igniteui-angular:serve:production"
             }
+          }
+        }
+      }
+    },
+    "igniteui-angular-extras": {
+      "root": "projects/igniteui-angular-extras",
+      "sourceRoot": "projects/igniteui-angular-extras/src",
+      "projectType": "library",
+      "prefix": "igx",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/igniteui-angular-extras/tsconfig.lib.json",
+            "project": "projects/igniteui-angular-extras/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/igniteui-angular-extras/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "hammerjs"
+            ],
+            "styles": [
+              "src/styles/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules",
+                "node_modules/@infragistics"
+              ]
+            },
+            "tsConfig": "projects/igniteui-angular-extras/tsconfig.spec.json",
+            "karmaConfig": "projects/igniteui-angular-extras/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/igniteui-angular-extras/**/*.ts",
+              "projects/igniteui-angular-extras/**/*.html"
+            ],
+            "eslintConfig": "projects/igniteui-angular/eslint.config.mjs"
           }
         }
       }
@@ -301,14 +359,14 @@
               "budgets": [
                 {
                   "type": "allScript",
-                  "maximumWarning": "2.1mb",
-                  "maximumError": "2.5mb"
+                  "maximumWarning": "2.5mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "bundle",
                   "name": "styles",
-                  "maximumWarning": "480kb",
-                  "maximumError": "490kb"
+                  "maximumWarning": "600kb",
+                  "maximumError": "600kb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -324,7 +382,7 @@
               ],
               "outputHashing": "none",
               "optimization": true,
-              "externalDependencies": ["lit"]
+              "externalDependencies": ["lit", "igniteui-i18n-core"]
             },
             "development": {
               "optimization": false,
@@ -399,6 +457,7 @@
             "outputPath": "dist/bundle-test",
             "index": "projects/bundle-test/src/index.html",
             "browser": "projects/bundle-test/src/main.ts",
+            "server": "projects/bundle-test/src/main.server.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -414,16 +473,22 @@
                 "node_modules"
               ]
             },
-            "server": "projects/bundle-test/src/main.server.ts",
             "ssr": {
               "entry": "projects/bundle-test/server.ts"
             }
           },
           "configurations": {
             "production": {
+              "statsJson": true,
               "budgets": [
                 {
                   "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "grid-component",
                   "maximumWarning": "500kb",
                   "maximumError": "1mb"
                 },

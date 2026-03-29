@@ -1,10 +1,7 @@
-import { IListResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ListResourceStringsHU as AListResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Hungarian resource strings for IgxList
  */
-export const ListResourceStringsHU = {
-    igx_list_no_items: 'Nincsenek elemek a listában.',
-    igx_list_loading: 'Adatok betöltése a szerverről...'
-} satisfies MakeRequired<IListResourceStrings>;
+export const ListResourceStringsHU = prefixResource(IGX_PREFIX, AListResourceStrings);

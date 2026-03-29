@@ -1,16 +1,14 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     DefaultTreeGridMergeStrategy,
     IgxActionStripComponent,
-    IgxButtonDirective,
     IgxCellTemplateDirective,
     IgxColumnComponent,
     IgxGridComponent,
     IgxGridPinningActionsComponent,
     IgxGridToolbarActionsComponent,
     IgxGridToolbarComponent,
-    IgxGridToolbarExporterComponent,
     IgxGridToolbarHidingComponent,
     IgxGridToolbarPinningComponent,
     IgxHierarchicalGridComponent,
@@ -25,7 +23,6 @@ import {
 } from 'igniteui-angular';
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
 
-import { data, dataWithoutPK } from '../shared/data';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import { ByLevelTreeGridMergeStrategy } from 'igniteui-angular';
 import { INVOICE_DATA } from '../shared/invoiceData';
@@ -38,7 +35,7 @@ import { INVOICE_DATA } from '../shared/invoiceData';
         FormsModule,
         IgxColumnComponent,
         IgxGridComponent,
-        IgxPaginatorComponent,
+        // IgxPaginatorComponent,
         IgxActionStripComponent,
         IgxGridPinningActionsComponent,
         IgxGridToolbarComponent,
@@ -65,6 +62,17 @@ export class GridCellMergingComponent {
     public searchText: string ='';
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
     public data = INVOICE_DATA;
+
+    constructor(){
+        const allData = INVOICE_DATA
+        const length = INVOICE_DATA.length;
+        for (let i = 1; i <= 600_000; i++) {
+            const rnd = Math.floor(Math.random() * length);
+            allData.push(Object.assign({}, INVOICE_DATA[rnd]));
+        }
+
+        this.data = allData;
+    }
 
     public toggleStrategy() {
         if (this.treeGridMergeStrategy instanceof ByLevelTreeGridMergeStrategy) {
