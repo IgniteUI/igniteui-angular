@@ -143,6 +143,10 @@
 
         grid1.data = northwindProducts;
         grid2.data = northwindProducts;
+        grid1.addEventListener('childrenAttached', () => {
+            console.log("Ready!");
+            restoreState();
+        });
         const categories = Array.from(new Set(northwindProducts.map(x => x.CategoryName)));
 
         let groupingExpression1 = [];
@@ -288,6 +292,41 @@
             <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
         </igc-action-strip>
     </igc-tree-grid>
+
+  <igc-hierarchical-grid id="hgrid1" primary-key="ProjectId" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+    <igc-grid-state id="state2"></igc-grid-state>
+    <igc-column field="ProjectId" data-type="number" header="Project Id" sortable="true" selectable="false"></igc-column>
+    <igc-column field="Name" data-type="string" header="Name" sortable="true" selectable="false"></igc-column>
+    <igc-column field="StartDate" data-type="date" header="Start Date" sortable="true" selectable="false"></igc-column>
+    <igc-column field="EndDate" data-type="date" header="End Date" sortable="true" selectable="false"></igc-column>
+    <igc-column field="IsPostponed" data-type="boolean" header="Postponed" sortable="true" selectable="false"></igc-column>
+
+    <igc-row-island id="DevelopersRowIsland" key="Developers">
+        <igc-column field="Name" header="Name" sortable="true"></igc-column>
+        <igc-column-group header="Position Information">
+            <igc-column-group header="Position Details" collapsible>
+                <igc-column field="Position" header="Position" sortable="true" visible-when-collapsed></igc-column>
+                <igc-column field="Salary" header="Salary" sortable="true" visible-when-collapsed="false"></igc-column>
+            </igc-column-group>
+            <igc-column field="HireDate" header="HireDate" data-type="date" sortable="true"></igc-column>
+        </igc-column-group>
+        <igc-action-strip>
+            <igc-grid-pinning-actions></igc-grid-pinning-actions>
+            <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+        </igc-action-strip>
+        <igc-row-island auto-generate id="VirtualMachinesRowIsland" key="VirtualMachines"></igc-row-island>
+    </igc-row-island>
+    <igc-paginator per-page="10"></igc-paginator>
+    <igc-action-strip>
+        <igc-grid-pinning-actions></igc-grid-pinning-actions>
+        <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+    </igc-action-strip>
+    <igc-grid-state id="hgridState"></igc-grid-state>
+  </igc-hierarchical-grid>
+  <div class="hgrid1-actions">
+    <button id="saveStateHierarchical">Save state</button>
+    <button id="restoreStateHierarchical">Restore</button>
+  </div>
 
     <script src="assets/data/tree-grid-ds.js"></script>
     <script>
@@ -444,9 +483,27 @@
         import { html } from "/lit-html.js";
         // jump around vite import analysis with dynamic import url
         const hgridData = (await import(`/assets/${'data'}/projects-hgrid.js`)).default;
-        let hgrid = document.getElementById('hgrid1');
-        hgrid.data = hgridData;
+        function saveStateHierarchical() {
+            const stateComponent = document.getElementById('hgridState');
+            const stringData = stateComponent.getStateAsString();
+            window.localStorage.setItem(`hgrid1-state`, stringData);
+        }
 
+        function restoreStateHierarchical() {
+            const stateComponent = document.getElementById('hgridState');
+            const stateData = window.localStorage.getItem(`hgrid1-state`);
+            if (stateData) {
+                const obj = JSON.parse(stateData);
+                stateComponent.applyState(obj);
+            }
+        }
+        let hgrid = document.getElementById('hgrid1');
+        hgrid.addEventListener('childrenAttached', () => {
+            restoreStateHierarchical();
+        });
+        hgrid.data = hgridData;
+        document.getElementById("saveStateHierarchical").addEventListener("click", saveStateHierarchical);
+        document.getElementById("restoreStateHierarchical").addEventListener("click", restoreStateHierarchical);
         let developersRowIsland = document.getElementById('DevelopersRowIsland');
         let virtualMachinesRowIsland = document.getElementById('VirtualMachinesRowIsland');
         virtualMachinesRowIsland.paginatorTemplate = (ctx) => html`
