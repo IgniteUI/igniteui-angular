@@ -23,7 +23,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 ```html
 <!-- Text buttons -->
 <button igxButton="flat">Flat</button>
-<button igxButton="contained">Raised</button>
+<button igxButton="contained">Contained</button>
 <button igxButton="outlined">Outlined</button>
 <button igxButton="fab">
   <igx-icon>add</igx-icon>
