@@ -167,6 +167,15 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // TODO(D.P.): Temporary maintain pre-check for ngAfterViewInit handling on _init flag w/ ngDoCheck interaction of row island
         (this as any).componentRef.changeDetectorRef.detectChanges();
 
+        // check if there are any content children associated with a content query collection.
+        // if no, then just emit the event, otherwise we wait for the collection to be updated in updateQuery.
+        const contentChildrenTypes = this.config.filter(x => contentChildrenTags.indexOf(x.selector) !== -1).map(x => x.provideAs ?? x.component);
+        const contentQueryChildrenCollection = componentConfig.contentQueries.filter(x => contentChildrenTypes.includes(x.childType));
+        if (contentQueryChildrenCollection.length === 0) {
+            // no content children, emit event immediately, since there's nothing to be attached.
+            (this as any).componentRef?.instance?.childrenAttached?.emit();
+        }
+
         if (parentAnchor && parentInjector) {
             // attempt to attach the newly created ViewRef to the parents's instead of the App global
             const parentViewRef = parentInjector.get<ViewContainerRef>(ViewContainerRef);
@@ -207,15 +216,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         if (['igc-grid', 'igc-tree-grid', 'igc-hierarchical-grid'].includes(element.tagName.toLocaleLowerCase())) {
             this.patchGridPopups();
-        }
-
-        // check if there are any content children associated with a content query collection.
-        // if no, then just emit the event, otherwise we wait for the collection to be updated in updateQuery.
-        const contentChildrenTypes = this.config.filter(x => contentChildrenTags.indexOf(x.selector) !== -1).map(x => x.provideAs ?? x.component);
-        const contentQueryChildrenCollection = componentConfig?.contentQueries?.filter(x => contentChildrenTypes.includes(x.childType));
-        if (!contentQueryChildrenCollection?.length) {
-            // no content children that will trigger query updates, emit event immediately.
-            (this as any).componentRef?.instance?.childrenAttached?.emit();
         }
 
         // instead of duplicating super.disconnect() w/ the scheduled destroy:
