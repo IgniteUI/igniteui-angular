@@ -126,7 +126,7 @@
     }
 
     @include e(icons) {
-        .icon--filtered,
+        .igx-excel-filter__icon--filtered,
         .sort-icon {
             igx-icon {
                 --size: var(--ig-icon-size, #{rem(15px)});

@@ -150,7 +150,7 @@
     }
 
     @include e(icons) {
-        .icon--filtered,
+	    .igx-excel-filter__icon--filtered,
         .sort-icon {
             igx-icon {
                 --component-size: 2;

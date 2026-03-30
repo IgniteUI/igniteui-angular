@@ -2164,6 +2164,7 @@ $z-grid-loading: 10003;
             }
 
             .igx-excel-filter__icon--filtered {
+	            display: inline-flex;
                 color: var-get($theme, 'sorted-header-icon-color');
 
                 &:hover,
@@ -2383,7 +2384,6 @@ $z-grid-loading: 10003;
                     opacity: 1;
                 }
             }
-            @extend %igx-grid-th--filtrable-sortable !optional;
         }
 
         @include mx(selectable, sorted) {
@@ -2878,5 +2878,4 @@ $z-grid-loading: 10003;
             }
         }
     }
-
 }
