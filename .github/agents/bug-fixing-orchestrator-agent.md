@@ -109,7 +109,9 @@ Do not add sections such as:
 
 ---
 
-For component/grid APIs read `skills/igniteui-angular-components/SKILL.md` or `skills/igniteui-angular-grids/SKILL.md`; for theming see `skills/igniteui-angular-theming/SKILL.md`; for test suite selection, lint, or build commands see the skills under `.github/skills/`.
+> Skills:
+> - APIs: `skills/igniteui-angular-{components,grids,theming}/SKILL.md`
+> - Build / test / lint: `.github/skills/`
 
 ---
 
@@ -209,7 +211,7 @@ After all agents finish, check:
 - If a demo/sample was requested, was the existing demo structure updated appropriately?
 - If a demo/sample was not requested, was it correctly skipped?
 - Is multi-branch cherry-picking needed?
-- Did `npm run lint:lib` pass?
+- Run `npm run lint:lib` and verify it passes.
 
 Report what was done and any remaining items.
 
