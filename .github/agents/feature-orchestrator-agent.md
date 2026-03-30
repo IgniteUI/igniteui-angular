@@ -153,10 +153,15 @@ Present a brief scope summary to the user:
 
 Keep it short and high-level. Confirm scope, not solution details.
 
-Wait for user confirmation.
+Before routing any work, ask:
 
-If a demo/sample is relevant, ask explicitly:
-`Do you want a demo/sample update for this feature? Yes / No`
+**`Do you want me to proceed with this implementation flow?`**
+
+If the feature is user-visible, also ask:
+
+**`Do you want a demo/sample update for this feature?`**
+
+Wait for the user's answer before routing work.
 
 ### Step 4 — Route Work
 
