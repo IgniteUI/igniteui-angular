@@ -1,0 +1,37 @@
+/* ===========================================
+   CHILD C COMPONENT - EXTRA STYLES ONLY
+   This file should ONLY contain Child C specific styles.
+   Base styles should come from the parent component.
+   
+   ⚠️ BUT: We did NOT include base styles via styleUrls!
+   So .base-container, .base-button etc. won't work.
+   =========================================== */
+
+/* Child C specific wrapper modification */
+.child-c-wrapper {
+    border-color: #f44336;
+    background-color: #ffebee;
+}
+
+/* Child C specific elements */
+.child-c-extra {
+    margin: 15px 0;
+}
+
+.child-c-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.missing-styles-note {
+    color: #d32f2f;
+    font-size: 0.875rem;
+    font-style: italic;
+    margin-top: 10px;
+}
+
