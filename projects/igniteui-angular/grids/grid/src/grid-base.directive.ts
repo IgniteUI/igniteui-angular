@@ -6209,7 +6209,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public showSnackbarFor(index: number) {
         this.addRowSnackbar.actionText = index === -1 ? '' : this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
-        this.addRowSnackbar.useContainer = true;
+        this.addRowSnackbar.positioning = 'container';
         this.lastAddedRowIndex = index;
         this.addRowSnackbar.open();
     }

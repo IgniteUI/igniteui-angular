@@ -37,17 +37,16 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      *
      * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
      * body by default, so using outlet is also no longer needed - just define the overlay in the intended
-     * DOM tree position instead or use `container` property instead.
+     * DOM tree position instead or use `positioning` property instead.
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef<HTMLElement>;
 
     /**
-     * Whether to position relative to its container instead of the viewport.
+     * Controls whether positioning is relative to the viewport or to the nearest positioned container.
      */
     @Input()
-    public useContainer: boolean;
-
+    public positioning: 'viewport' | 'container' = 'viewport';
 
     /**
      * Enables/Disables the visibility of the element.

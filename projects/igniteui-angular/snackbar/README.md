@@ -57,17 +57,17 @@ You can display custom content by adding elements inside the snackbar.
 
 ## Snackbar with a container
 
-You can render the snackbar inside its nearest positioned ancestor by setting the `useContainer` input to `true`.
+You can render the snackbar inside its nearest positioned ancestor by setting the `positioning` input to `container`.
 
 ```html
 <div style="position: relative; height: 300px;">
     <button type="button" igxButton (click)="snackbar.open()">Show snackbar</button>
 
     <igx-snackbar #snackbar
-                 [useContainer]="true"
+                 [positioning]="'container'"
                  message="This snackbar is rendered inside a container!">
     </igx-snackbar>
 </div>
 ```
 
-When `useContainer` is `true`, the snackbar uses a `ContainerPositionStrategy` and is positioned relative to its nearest positioned ancestor.
+When `positioning` is set to `container`, the snackbar uses a `ContainerPositionStrategy` and is positioned relative to its nearest positioned ancestor.

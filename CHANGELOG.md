@@ -12,7 +12,7 @@ All notable changes for each version of this project will be documented in this 
     - `IgxOverlayService.createAbsoluteOverlaySettings` - Added a new overload accepting `useContainerStrategy?: boolean` as the second parameter. When `true`, uses `ContainerPositionStrategy`; otherwise defaults to `GlobalPositionStrategy`. The previous overload accepting `outlet?: IgxOverlayOutletDirective | ElementRef` is still supported but deprecated.
 
 - `IgxNotificationsDirective`, `IgxSnackbarComponent`, `IgxToastComponent`
-    - Added a new `container` input property of type `HTMLElement`. When set, overlay content is rendered inside the given container using `ContainerPositionStrategy`. The deprecated `outlet` property now points users to `container` as its replacement.
+    - Added a new `positioning` input property. When set to `container`, overlay content is rendered inside its nearest positioned ancestor. The deprecated `outlet` property now points users to `positioning` as its replacement.
 
 - `IgxCombo`, `IgxSimpleCombo`
     - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
