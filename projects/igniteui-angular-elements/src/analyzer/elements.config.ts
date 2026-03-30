@@ -3,6 +3,9 @@ import {
   IgxPivotDataSelectorComponent,
   IgxPivotGridComponent,
 } from "../../../igniteui-angular/grids/pivot-grid";
+import { IgxGridElementsComponent } from "../lib/grids/grid.component";
+import { IgxHierarchicalGridElementsComponent } from "../lib/grids/hierarchical-grid.component";
+import { IgxTreeGridElementsComponent } from "../lib/grids/tree-grid.component";
 import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
 import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/paginator/src/paginator/paginator.component";
@@ -23,12 +26,8 @@ import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/grids
 import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-hiding.component";
 import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-pinning.component";
 import { IgxRowIslandComponent } from "../../../igniteui-angular/grids/hierarchical-grid/src/row-island.component";
+import { IgxRowIslandElementsComponent } from "../lib/grids/row-island.component";
 import { IgxGridStateComponent } from "../lib/state.component";
-import { IgxGridElementsComponent } from "../lib/grids/grid.component";
-import { IgxHierarchicalGridElementsComponent } from "../lib/grids/hierarchical-grid.component";
-import { IgxTreeGridElementsComponent } from "../lib/grids/tree-grid.component";
-import { IgxRowIslandElementsComponent } from '../lib/grids/row-island.component';
-import { IgxGridActionsBaseDirective } from '../../../igniteui-angular/grids/core/src/grid-actions/grid-actions-base.directive';
 
 export const registerComponents = [
   IgxGridElementsComponent,
@@ -245,7 +244,7 @@ export var registerConfig = [
     additionalProperties: [{ name: "hasChildren" }],
     methods: ["startEdit"],
     boolProps: ["addRow", "editRow", "deleteRow", "addChild", "asMenuItems"],
-    provideAs: IgxGridActionsBaseDirective,
+    provideAs: IgxActionStripActionsToken,
   },
   {
     component: IgxGridElementsComponent,
@@ -272,10 +271,6 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
-      { name: "validation" },
-      { name: "gridAPI" },
-      { name: "cdr" },
-      { name: "navigation", writable: true },
       { name: "actionStripComponents", writable: true },
       { name: "groupsRecords" },
       { name: "selectedCells" },
@@ -425,16 +420,6 @@ export var registerConfig = [
     ],
   },
   {
-    component: IgxGridEditingActionsComponent,
-    selector: "igc-grid-editing-actions",
-    parents: [IgxActionStripComponent],
-    contentQueries: [],
-    additionalProperties: [{ name: "hasChildren" }],
-    methods: ["startEdit"],
-    boolProps: ["addRow", "editRow", "deleteRow", "addChild", "asMenuItems"],
-    provideAs: IgxGridActionsBaseDirective,
-  },
-  {
     component: IgxGridPinningActionsComponent,
     selector: "igc-grid-pinning-actions",
     parents: [IgxActionStripComponent],
@@ -574,16 +559,14 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
-      { name: "validation" },
-      { name: "gridAPI" },
-      { name: "cdr" },
-      { name: "navigation", writable: true },
       { name: "childLayoutList", writable: true },
       { name: "actionStripComponents", writable: true },
       { name: "foreignKey" },
       { name: "selectedCells" },
       { name: "gridAPI", writable: true },
       { name: "navigation", writable: true },
+      { name: "validation" },
+      { name: "cdr" },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
@@ -903,15 +886,14 @@ export var registerConfig = [
       { name: "rowIslandAPI", writable: true },
       { name: "gridAPI", writable: true },
       { name: "navigation", writable: true },
+      { name: "validation" },
+      { name: "cdr" },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "transactions" },
-      { name: "validation" },
-      { name: "cdr" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
-      { name: "defaultHeaderGroupMinWidth" },
       { name: "columns" },
       { name: "pinnedRows" },
     ],
@@ -949,7 +931,8 @@ export var registerConfig = [
       "findPrev",
       "refreshSearch",
       "clearSearch",
-      "getPinnedWidth",
+      "getPinnedStartWidth",
+      "getPinnedEndWidth",
       "selectRows",
       "deselectRows",
       "selectAllRows",
@@ -1054,8 +1037,8 @@ export var registerConfig = [
       { property: "actionStripComponent", childType: IgxActionStripToken },
     ],
     additionalProperties: [
-      { name: "rowIslandAPI", writable: true },
       { name: "childLayoutList", writable: true },
+      { name: "rowIslandAPI", writable: true },
       { name: "gridAPI", writable: true },
       { name: "navigation", writable: true },
       { name: "validation" },
