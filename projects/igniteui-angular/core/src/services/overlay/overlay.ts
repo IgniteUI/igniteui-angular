@@ -141,7 +141,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param outlet The outlet container to attach the overlay to
      * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
     *
-     * @deprecated The outlet parameter is deprecated. Please provide the container or outlet element through the
+     * @deprecated in version 21.2.0. The outlet parameter is deprecated. Please provide the container or outlet element through the
      * `createAbsoluteOverlaySettings` method when calling `attach` method.
      * Creates overlay settings with global or container position strategy and preset position settings
      */

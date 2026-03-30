@@ -57,7 +57,7 @@ You can display custom content by adding elements inside the snackbar.
 
 ## Snackbar with a container
 
-You can render the snackbar inside its nearest positioned ancestor by setting the `positioning` input to `container`.
+You can display the snackbar inside its nearest positioned ancestor by setting the `positioning` input to `container`.
 
 ```html
 <div style="position: relative; height: 300px;">

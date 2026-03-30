@@ -89,8 +89,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      *
      * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
-     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
-     * DOM tree position instead or use `container` property instead.
+     * body by default, so using outlet is also no longer needed.
      */
     public override get outlet() {
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
@@ -101,8 +100,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * Sets the outlet used to attach the grid's overlays to.
      *
      * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
-     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
-     * DOM tree position instead or use `container` property instead.
+     * body by default, so using outlet is also no longer needed.
      */
     public override set outlet(val: any) {
         this._userOutletDirective = val;
