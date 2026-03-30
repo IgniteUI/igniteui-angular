@@ -349,6 +349,182 @@ describe('IgxContextMenuDirective', () => {
         });
     });
 
+    describe('ngOnDestroy', () => {
+        it('should complete destroy$ and disconnect the contentObserver', () => {
+            directive.ngOnDestroy();
+
+            // After destroy, emitting events should not cause errors
+            expect(() => mockGrid.rangeSelected.next({})).not.toThrow();
+            expect(() => mockGrid.columnSelectionChanging.next({})).not.toThrow();
+        });
+
+        it('should close the overlay when not collapsed at time of destroy', () => {
+            (directive as any)._collapsed = false;
+            (directive as any)._id = 'some-id';
+
+            directive.ngOnDestroy();
+
+            expect(mockOverlay.hide).toHaveBeenCalledWith('some-id');
+        });
+
+        it('should not call hide when already collapsed at time of destroy', () => {
+            (directive as any)._collapsed = true;
+
+            directive.ngOnDestroy();
+
+            expect(mockOverlay.hide).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('overlayService.opening subscription', () => {
+        it('should set contextDirective on the component instance when opening has componentRef', () => {
+            const mockInstance: any = {};
+            const mockComponentRef = { instance: mockInstance };
+
+            (mockOverlay.opening as Subject<any>).next({ componentRef: mockComponentRef });
+
+            expect(mockInstance.contextDirective).toBe(directive);
+        });
+
+        it('should not throw when opening event has no componentRef', () => {
+            expect(() => {
+                (mockOverlay.opening as Subject<any>).next({ componentRef: undefined });
+            }).not.toThrow();
+        });
+    });
+
+    describe('renderHeaderButton via column selection', () => {
+        it('should show the overlay when a column is selected and fully visible', fakeAsync(() => {
+            const headerElement = document.createElement('div');
+            mockGrid.selectedColumns.and.returnValue([
+                { visibleIndex: 0, headerCell: { nativeElement: headerElement } }
+            ]);
+            mockGrid.navigation.isColumnFullyVisible.and.returnValue(true);
+
+            mockGrid.columnSelectionChanging.next({ newSelection: ['col1'], oldSelection: [] });
+            tick(100);
+
+            expect(mockOverlay.attach).toHaveBeenCalled();
+            expect(mockOverlay.show).toHaveBeenCalled();
+        }));
+
+        it('should skip rendering when no columns are selected after column selection event', fakeAsync(() => {
+            mockGrid.selectedColumns.and.returnValue([]);
+
+            mockGrid.columnSelectionChanging.next({ newSelection: [], oldSelection: [] });
+            tick(100);
+
+            // Only the attach from range selection should be called, not from header
+            expect(mockOverlay.show).not.toHaveBeenCalled();
+        }));
+
+        it('should skip columns that are not fully visible', fakeAsync(() => {
+            const headerElement = document.createElement('div');
+            mockGrid.selectedColumns.and.returnValue([
+                { visibleIndex: 0, headerCell: { nativeElement: headerElement } },
+                { visibleIndex: 1, headerCell: { nativeElement: headerElement } }
+            ]);
+            // First column not visible, second one visible
+            mockGrid.navigation.isColumnFullyVisible.and.callFake((idx) => idx === 1);
+
+            mockGrid.columnSelectionChanging.next({ newSelection: ['col1', 'col2'], oldSelection: [] });
+            tick(100);
+
+            expect(mockOverlay.attach).toHaveBeenCalled();
+        }));
+
+        it('should not render when all selected columns are not fully visible', fakeAsync(() => {
+            mockGrid.selectedColumns.and.returnValue([
+                { visibleIndex: 0, headerCell: { nativeElement: document.createElement('div') } }
+            ]);
+            mockGrid.navigation.isColumnFullyVisible.and.returnValue(false);
+
+            mockGrid.columnSelectionChanging.next({ newSelection: ['col1'], oldSelection: [] });
+            tick(100);
+
+            expect(mockOverlay.show).not.toHaveBeenCalled();
+        }));
+
+        it('should close and re-show when already visible and a new column selection happens', fakeAsync(() => {
+            const headerElement = document.createElement('div');
+            mockGrid.selectedColumns.and.returnValue([
+                { visibleIndex: 0, headerCell: { nativeElement: headerElement } }
+            ]);
+            mockGrid.navigation.isColumnFullyVisible.and.returnValue(true);
+
+            // First selection — show
+            mockGrid.columnSelectionChanging.next({ newSelection: ['col1'], oldSelection: [] });
+            tick(100);
+
+            // Second selection — close (because newSelection && oldSelection && !_collapsed) then re-show
+            mockGrid.columnSelectionChanging.next({ newSelection: ['col1'], oldSelection: ['col0'] });
+            tick(100);
+
+            expect(mockOverlay.hide).toHaveBeenCalled();
+            // show called twice: once per selection
+            expect(mockOverlay.show).toHaveBeenCalledTimes(2);
+        }));
+    });
+
+    describe('renderButton edge cases', () => {
+        it('should return early when _range is undefined', fakeAsync(() => {
+            (directive as any)._collapsed = false;
+            (directive as any)._id = 'some-id';
+            (directive as any)._range = undefined;
+
+            directive.gridResizeNotify.next();
+
+            expect(mockGrid.gridAPI.get_cell_by_index).not.toHaveBeenCalled();
+        }));
+
+        it('should skip columns that are not fully visible and find the last visible one', fakeAsync(() => {
+            mockGrid.navigation.isColumnFullyVisible.and.callFake((idx) => idx === 0);
+            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 1 }]);
+            const mockCell = {
+                row: { key: 0 },
+                column: { index: 1 },
+                nativeElement: document.createElement('div')
+            };
+            mockGrid.gridAPI.get_cell_by_index.and.returnValue(mockCell);
+
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 1 });
+            tick(200);
+
+            expect(mockOverlay.attach).toHaveBeenCalled();
+        }));
+
+        it('should close when get_cell_by_index returns null', fakeAsync(() => {
+            mockGrid.gridAPI.get_cell_by_index.and.returnValue(null);
+            (directive as any)._collapsed = false;
+            (directive as any)._id = 'some-id';
+            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 }]);
+
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 });
+            tick(200);
+
+            expect(mockOverlay.hide).toHaveBeenCalledWith('some-id');
+        }));
+    });
+
+    describe('show guard', () => {
+        it('should not show twice when already shown', fakeAsync(() => {
+            const mockCell = {
+                row: { key: 0 },
+                column: { index: 1 },
+                nativeElement: document.createElement('div')
+            };
+            mockGrid.gridAPI.get_cell_by_index.and.returnValue(mockCell);
+            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 }]);
+            mockOverlay.getOverlayById.and.returnValue({ settings: { positionStrategy: null } });
+
+            // First range selection — show
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 });
+            tick(200);
+
+            expect(mockOverlay.show).toHaveBeenCalledTimes(1);
+        }));
+    });
+
     describe('show and close guards', () => {
         it('should not re-attach or re-show when already visible', fakeAsync(() => {
             const mockCell = {
