@@ -803,6 +803,76 @@ describe('IgxGridState - input properties #grid', () => {
         expect(prodIdColumn.colEnd).toBe(1);
     });
 
+    it('getState should not mutate sorting expressions', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+        const sortingStrategy = DefaultSortingStrategy.instance();
+
+        grid.sortingExpressions = [
+            { fieldName: 'ProductID', dir: SortingDirection.Asc, ignoreCase: true, strategy: sortingStrategy }
+        ];
+        fix.detectChanges();
+
+        // Verify strategy is set before calling getState
+        expect(grid.sortingExpressions[0].strategy).toBe(sortingStrategy);
+
+        state.getState(true, 'sorting');
+
+        // Verify strategy is still set after calling getState
+        expect(grid.sortingExpressions[0].strategy).toBe(sortingStrategy);
+    });
+
+    it('getState should not mutate groupBy expressions', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+        const sortingStrategy = DefaultSortingStrategy.instance();
+
+        grid.groupingExpressions = [
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: sortingStrategy }
+        ];
+        fix.detectChanges();
+
+        // Verify strategy is set before calling getState
+        expect(grid.groupingExpressions[0].strategy).toBe(sortingStrategy);
+
+        state.getState(true, 'groupBy');
+
+        // Verify strategy is still set after calling getState
+        expect(grid.groupingExpressions[0].strategy).toBe(sortingStrategy);
+    });
+
+    it('getState should not mutate filtering expressions tree', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const filteringTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const expression = {
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: 'true',
+            fieldName: 'InStock',
+            ignoreCase: true
+        };
+        filteringTree.filteringOperands.push(expression);
+        (filteringTree as any).owner = grid;
+
+        grid.filteringExpressionsTree = filteringTree;
+        fix.detectChanges();
+
+        // Verify owner is set before calling getState
+        expect((grid.filteringExpressionsTree as any).owner).toBe(grid);
+
+        state.getState(true, 'filtering');
+
+        // Verify owner is still set after calling getState
+        expect((grid.filteringExpressionsTree as any).owner).toBe(grid);
+    });
+
     it('should preserve column widths when restoring state with all columns hidden', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
