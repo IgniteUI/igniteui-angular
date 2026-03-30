@@ -132,7 +132,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(treeGrid.getSelectedData()).toEqual([{ ID: 957 }]);
         });
 
-        it('Should not change selection when expand collapse row with keyboard', (async () => {
+        it('Should clear selection when expand collapse row with keyboard', (async () => {
             const expectedData1 = [
                 { ID: 19 },
                 { ID: 15 }
@@ -157,20 +157,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', startCell.nativeElement, true, true);
             await wait(30);
             fix.detectChanges();
-
-            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
-            GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
-            expect(treeGrid.getSelectedData()).toEqual(expectedData2);
-
-            startCell = treeGrid.gridAPI.get_cell_by_index(10, 'ID');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', startCell.nativeElement, true, true);
-            await wait(30);
-            fix.detectChanges();
-
-            startCell = treeGrid.gridAPI.get_cell_by_index(10, 'ID');
-            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
-            GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
-            expect(treeGrid.getSelectedData()).toEqual(expectedData1);
+            expect(treeGrid.getSelectedData().length).toEqual(0, 'Expand/collapsing a tree grid row with keyboard should clear cell selection');
         }));
 
         it('Should be able to select a range with holding Shift key', (async () => {
@@ -997,29 +984,6 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             { ID: 998, Name: 'Sven Ottlieb', Age: 44 },
             { ID: 847, Name: 'Ana Sanders', Age: 42 }
         ];
-        const expectedData2 = [
-            { ID: 475, Name: 'Michael Langdon', Age: 43 },
-            { ID: 957, Name: 'Thomas Hardy', Age: 29 },
-            { ID: 317, Name: 'Monica Reyes', Age: 31 },
-            { ID: 847, Name: 'Ana Sanders', Age: 42 },
-            { ID: 225, Name: 'Laurence Johnson', Age: 44 },
-            { ID: 663, Name: 'Elizabeth Richards', Age: 25 }
-        ];
-
-        const expectedData3 = [
-            { ID: 847, Name: 'Ana Sanders', Age: 42 },
-            { ID: 225, Name: 'Laurence Johnson', Age: 44 },
-            { ID: 663, Name: 'Elizabeth Richards', Age: 25 },
-            { ID: 141, Name: 'Trevor Ashworth', Age: 39 },
-            { ID: 19, Name: 'Victoria Lincoln', Age: 49 },
-            { ID: 15, Name: 'Antonio Moreno', Age: 44 }
-        ];
-
-        const expectedData4 = [
-            { ID: 847, Name: 'Ana Sanders', Age: 42 },
-            { ID: 19, Name: 'Victoria Lincoln', Age: 49 },
-            { ID: 17, Name: 'Yang Wang', Age: 61 }
-        ];
 
         treeGrid.selectRange(range);
         fix.detectChanges();
@@ -1031,30 +995,15 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
         fix.detectChanges();
 
-        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
-        GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
-        expect(treeGrid.getSelectedData()).toEqual(expectedData2);
+        expect(treeGrid.getSelectedData().length).toBe(0, 'Expand/collapsing a tree grid row should clear cell selection');
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
+        treeGrid.selectRange(range);
         fix.detectChanges();
-
-        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
-        GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
-        expect(treeGrid.getSelectedData()).toEqual(expectedData3);
 
         treeGrid.collapseAll();
         fix.detectChanges();
 
-        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 3, 0, 2);
-        GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
-        expect(treeGrid.getSelectedData()).toEqual(expectedData4);
-
-        treeGrid.expandAll();
-        fix.detectChanges();
-
-        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
-        GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
-        expect(treeGrid.getSelectedData()).toEqual(expectedData1);
+        expect(treeGrid.getSelectedData().length).toBe(0, 'Expand/collapsing all tree rows should clear cell selection');
     };
 
     const verifySelectingRangeWithMouseDrag = (fix, treeGrid, detect) => {
