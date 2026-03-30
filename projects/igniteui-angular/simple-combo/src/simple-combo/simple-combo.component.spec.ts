@@ -1799,6 +1799,26 @@ describe('IgxSimpleCombo', () => {
             expect(clearButton).toBeNull();
         });
 
+        it('should default disableClear to false', () => {
+            expect(combo.disableClear).toBe(false);
+        });
+        it('should hide the clear button when disableClear is true and an item is selected', () => {
+            combo.select('Wisconsin');
+            fixture.detectChanges();
+            // Verify the clear button is visible before setting disableClear
+            expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
+
+            combo.disableClear = true;
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(0);
+        });
+        it('should show the clear button when disableClear is false (default) and an item is selected', () => {
+            combo.select('Wisconsin');
+            fixture.detectChanges();
+            expect(combo.disableClear).toBe(false);
+            expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
+        });
+
         it('should open the combo to the top when there is no space to open to the bottom', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxBottomPositionSimpleComboComponent);
             fixture.detectChanges();

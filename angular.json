@@ -208,6 +208,9 @@
             "exclude": [
                 "migrations",
                 "schematics"
+            ],
+            "codeCoverageExclude": [
+                "projects/igniteui-angular/test-utils/**"
             ]
           }
         },

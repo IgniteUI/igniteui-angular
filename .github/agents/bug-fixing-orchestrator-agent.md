@@ -68,6 +68,7 @@ You do NOT write tests, production code, or detailed implementation instructions
 - Do not write tests or production code
 - Do not specify exact test cases, exact implementations, or exact file changes
 - Do not over-constrain the handoff prompts — give scope and root cause, not specs
+- Do not modify dependency manifests or lock files (`package.json`, `package-lock.json`, etc.). Ask for approval first if a dependency change is truly required.
 
 ---
 
@@ -171,10 +172,15 @@ Present a brief scope summary to the user:
 
 Keep it short and high-level. Confirm scope, not solution details.
 
-Wait for user confirmation.
+Before routing any work, ask:
 
-If a demo/sample is relevant, ask explicitly:
-`Do you want a demo/sample update for this change? Yes / No`
+**`Do you want me to proceed with this implementation flow?`**
+
+If the fix is user-visible, also ask:
+
+**`Do you want a demo/sample update for this feature?`**
+
+Wait for the user's answer before routing work.
 
 ### Step 4 — Route Work
 
