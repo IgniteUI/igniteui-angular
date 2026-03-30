@@ -90,9 +90,9 @@ Accessibility is an integral part of any UI component. We as a team are committe
 ## Localization (i18n) - applicable to components' string resources
 There are several ways to localize components' string resources. For more information on how it works, refer to our [Documentation - Localization (i18n)](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/localization#localization-i18n-1).
 
-**NOTE** As of 21.1.x the localization resource strings have been moved to the [`igniteui-i18n`](https://github.com/IgniteUI/igniteui-i18n) repository under `projects/igniteui-i18n-resources`. The package `igniteui-angular-i18n` under `./projects/igniteui-angular-i18n` remains as a source of the localization resources for Ignite UI for Angular, that derives the resources from [`igniteui-i18n`](https://github.com/IgniteUI/igniteui-i18n).
+**NOTE** As of 21.1.x, the localization resource strings have been moved to the [`igniteui-i18n`](https://github.com/IgniteUI/igniteui-i18n) repository under `projects/igniteui-i18n-resources`. The package `igniteui-angular-i18n` under `./projects/igniteui-angular-i18n` remains as a source of the localization resources for Ignite UI for Angular, that derives the resources from [`igniteui-i18n`](https://github.com/IgniteUI/igniteui-i18n).
 
-**NOTE (21.0.x and lower)**  The localization resource strings live inside the `igniteui-angular` repository under `./projects/igniteui-angular-i18n`.
+**NOTE (21.0.x and lower)** The localization resource strings live inside the `igniteui-angular` repository under `./projects/igniteui-angular-i18n`.
 
 A npm package should be published each time we release new version of Ignite UI for Angular. Its version should correspond to the version of the igniteui-angular npm package.
 One could localize an application by importing the corresponding localized resource strings from the localization package (`igniteui-angular-i18n`) and use the methods described in the previous bullet to localize the whole application or part of it.
