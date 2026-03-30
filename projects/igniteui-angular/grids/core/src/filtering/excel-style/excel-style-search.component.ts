@@ -484,7 +484,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.cdr.detectChanges();
             this.tree.nodes.forEach(n => {
                 n.selected = true;
-                if ((n.data as FilterListItem).label.toString().toLowerCase().indexOf(searchVal) > -1) {
+                const item = n.data as FilterListItem;
+                if (item.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
+                    this.matchesNumericValue(item, searchVal)) {
                     this.expandAllParentNodes(n);
                 }
             });
@@ -492,7 +494,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.displayedListData = this.esf.listData.filter((it, i) => (i === 0 && it.isSpecial) ||
                 (it.label !== null && it.label !== undefined) &&
                 !it.isBlanks &&
-                it.label.toString().toLowerCase().indexOf(searchVal) > -1);
+                (it.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
+                this.matchesNumericValue(it, searchVal)));
 
             this.esf.listData.forEach(i => i.isSelected = false);
             this.displayedListData.forEach(i => i.isSelected = true);
@@ -724,7 +727,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 node.expanded = false;
             }
 
-            if (element.label.toString().toLowerCase().indexOf(searchVal) > -1) {
+            if (element.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
+                this.matchesNumericValue(element, searchVal)) {
                 element.isSelected = true;
                 this.hierarchicalSelectAllChildren(element);
                 this._hierarchicalSelectedItems.push(element);
@@ -800,6 +804,23 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.searchInput.value = this.searchValue.replace(regExp, '');
             this.searchValue = this.searchInput.value;
         }
+    }
+
+    private matchesNumericValue(item: FilterListItem, searchVal: string): boolean {
+        const columnDataType = this.esf.column?.dataType;
+        if (typeof item.value !== 'number' ||
+            (columnDataType !== GridColumnDataType.Number &&
+             columnDataType !== GridColumnDataType.Currency &&
+             columnDataType !== GridColumnDataType.Percent)) {
+            return false;
+        }
+
+        let numericValue = item.value;
+        if (columnDataType === GridColumnDataType.Percent) {
+            numericValue = parseFloat((item.value * 100).toPrecision(15));
+        }
+
+        return numericValue.toString().toLowerCase().indexOf(searchVal) > -1;
     }
 
     private onArrowUpKeyDown() {
