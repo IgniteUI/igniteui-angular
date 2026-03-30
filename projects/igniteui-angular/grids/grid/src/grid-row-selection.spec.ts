@@ -2451,6 +2451,11 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(rowSelector.textContent).toBe('CUSTOM SELECTOR: 0');
             expect(groupRowSelector.textContent).toBe('CUSTOM GROUP SELECTOR');
             expect(headerSelector.textContent).toBe('CUSTOM HEADER SELECTOR');
+
+            // ARIA: row-selector wrappers must have the correct cell roles
+            expect(rowSelector.getAttribute('role')).toBe('gridcell');
+            expect(groupRowSelector.getAttribute('role')).toBe('gridcell');
+            expect(headerSelector.getAttribute('role')).toBe('columnheader');
         });
     });
 });
