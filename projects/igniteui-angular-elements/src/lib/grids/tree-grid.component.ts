@@ -1,31 +1,44 @@
-import { DOCUMENT, NgClass, NgFor, NgIf, NgStyle, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, ElementRef, EnvironmentInjector, EventEmitter, Inject, Injector, IterableDiffers, LOCALE_ID, NgZone, Optional, Output, QueryList, ViewContainerRef } from '@angular/core';
-import { GridServiceType, HierarchicalState, HierarchicalTransaction, HierarchicalTransactionService, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxButtonDirective, IgxCircularProgressBarComponent, IgxGridForOfDirective, IgxGridHeaderRowComponent, IgxGridTransaction, IgxHierarchicalTransactionFactory, IgxIconComponent, IgxOverlayOutletDirective, IgxOverlayService, IgxRippleDirective, IgxRowEditTabStopDirective, IgxSnackbarComponent, IgxTemplateOutletDirective, IgxTextHighlightService, IgxToggleDirective, IgxTreeGridComponent } from 'igniteui-angular';
-import { PlatformUtil } from 'igniteui-angular/src/lib/core/utils';
-import { IgxForOfScrollSyncService, IgxForOfSyncService } from 'igniteui-angular/src/lib/directives/for-of/for_of.sync.service';
-import { IgxGridCRUDService } from 'igniteui-angular/src/lib/grids/common/crud.service';
-import { IgxGridRowClassesPipe, IgxGridRowPinningPipe, IgxGridRowStylesPipe, IgxHasVisibleColumnsPipe, IgxStringReplacePipe } from 'igniteui-angular/src/lib/grids/common/pipes';
-import { IgxFilteringService } from 'igniteui-angular/src/lib/grids/filtering/grid-filtering.service';
-import { IgxGridNavigationService } from 'igniteui-angular/src/lib/grids/grid-navigation.service';
-import { IgxGridBodyDirective } from 'igniteui-angular/src/lib/grids/grid.common';
-import { IgxGridValidationService } from 'igniteui-angular/src/lib/grids/grid/grid-validation.service';
-import { IgxColumnMovingDropDirective } from 'igniteui-angular/src/lib/grids/moving/moving.drop.directive';
-import { IgxGridColumnResizerComponent } from 'igniteui-angular/src/lib/grids/resizing/resizer.component';
-import { IgxColumnResizingService } from 'igniteui-angular/src/lib/grids/resizing/resizing.service';
-import { IgxGridDragSelectDirective } from 'igniteui-angular/src/lib/grids/selection/drag-select.directive';
-import { IgxGridSelectionService } from 'igniteui-angular/src/lib/grids/selection/selection.service';
-import { IgxSummaryDataPipe } from 'igniteui-angular/src/lib/grids/summaries/grid-root-summary.pipe';
-import { IgxGridSummaryService } from 'igniteui-angular/src/lib/grids/summaries/grid-summary.service';
-import { IgxSummaryRowComponent } from 'igniteui-angular/src/lib/grids/summaries/summary-row.component';
-import { IgxTreeGridAPIService } from 'igniteui-angular/src/lib/grids/tree-grid/tree-grid-api.service';
-import { IgxTreeGridRowComponent } from 'igniteui-angular/src/lib/grids/tree-grid/tree-grid-row.component';
-import { IgxTreeGridSelectionService } from 'igniteui-angular/src/lib/grids/tree-grid/tree-grid-selection.service';
-import { IgxTreeGridFilteringPipe } from 'igniteui-angular/src/lib/grids/tree-grid/tree-grid.filtering.pipe';
-import { IgxTreeGridAddRowPipe, IgxTreeGridFlatteningPipe, IgxTreeGridHierarchizingPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridPagingPipe, IgxTreeGridSortingPipe, IgxTreeGridTransactionPipe } from 'igniteui-angular/src/lib/grids/tree-grid/tree-grid.pipes';
-import { IgxTreeGridSummaryPipe } from 'igniteui-angular/src/lib/grids/tree-grid/tree-grid.summary.pipe';
-import { takeUntil } from 'rxjs';
+import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output, QueryList } from '@angular/core';
+import { IgxTreeGridAPIService } from 'igniteui-angular/grids/tree-grid/src/tree-grid-api.service';
+import { IgxGridCellMergePipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
+import {
+    IGX_GRID_BASE,
+    IGX_GRID_SERVICE_BASE,
+    IgxColumnMovingDropDirective,
+    IgxColumnResizingService,
+    IgxFilteringService,
+    IgxGridBodyDirective,
+    IgxGridColumnResizerComponent,
+    IgxGridCRUDService,
+    IgxGridDragSelectDirective,
+    IgxGridHeaderRowComponent,
+    IgxGridNavigationService,
+    IgxGridRowClassesPipe,
+    IgxGridRowPinningPipe,
+    IgxGridRowStylesPipe,
+    IgxGridSelectionService,
+    IgxGridSummaryService,
+    IgxGridTransaction,
+    IgxGridValidationService,
+    IgxHasVisibleColumnsPipe,
+    IgxRowEditTabStopDirective,
+    IgxStringReplacePipe,
+    IgxSummaryDataPipe,
+    IgxSummaryRowComponent,
+} from 'igniteui-angular/grids/core';
+import { IgxTreeGridSelectionService } from 'igniteui-angular/grids/tree-grid/src/tree-grid-selection.service';
+import { IgxActionStripToken, IgxOverlayOutletDirective } from 'igniteui-angular/core';
+import { IgxTreeGridSummaryPipe } from 'igniteui-angular/grids/tree-grid/src/tree-grid.summary.pipe';
+import { IgxTreeGridFilteringPipe } from 'igniteui-angular/grids/tree-grid/src/tree-grid.filtering.pipe';
+import { IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe } from 'igniteui-angular/grids/tree-grid/src/tree-grid.pipes';
+import { IgxTreeGridRowComponent } from 'igniteui-angular/grids/tree-grid/src/tree-grid-row.component';
+import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxRippleDirective, IgxScrollInertiaDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
+import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid/src/tree-grid.component';
 import { IColumnsAutoGeneratedEventArgs } from './events';
-import { IgxActionStripToken } from 'igniteui-angular/src/lib/action-strip/token';
 
 
 /* blazorAdditionalDependency: Column */
@@ -62,7 +75,7 @@ import { IgxActionStripToken } from 'igniteui-angular/src/lib/action-strip/token
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-tree-grid',
-    templateUrl: '../../../../igniteui-angular/src/lib/grids/tree-grid/tree-grid.component.html',
+    templateUrl: '../../../../igniteui-angular/grids/tree-grid/src/tree-grid.component.html',
     providers: [
         IgxGridCRUDService,
         IgxGridValidationService,
@@ -111,61 +124,14 @@ import { IgxActionStripToken } from 'igniteui-angular/src/lib/action-strip/token
         IgxTreeGridSummaryPipe,
         IgxTreeGridNormalizeRecordsPipe,
         IgxTreeGridAddRowPipe,
-        IgxStringReplacePipe
+        IgxStringReplacePipe,
+        IgxGridCellMergePipe,
+        IgxScrollInertiaDirective,
+        IgxGridUnmergeActivePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridElementsComponent extends IgxTreeGridComponent {
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: GridServiceType,
-        // public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        transactionFactory: IgxHierarchicalTransactionFactory,
-        _elementRef: ElementRef<HTMLElement>,
-        _zone: NgZone,
-        @Inject(DOCUMENT) document: any,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        navigation: IgxGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
-            HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-    ) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            _elementRef,
-            _zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform,
-            _diTransactions,
-        );
-    }
-
     @Output()
     public columnsAutogenerated = new EventEmitter<IColumnsAutoGeneratedEventArgs>();
 

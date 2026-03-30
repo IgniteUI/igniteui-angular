@@ -1,11 +1,8 @@
 import { IgxQueryBuilderComponent } from "../../../igniteui-angular/query-builder";
-import { IgxGridComponent } from "../../../igniteui-angular/grids/grid";
-import { IgxHierarchicalGridComponent } from "../../../igniteui-angular/grids/hierarchical-grid";
 import {
   IgxPivotDataSelectorComponent,
   IgxPivotGridComponent,
 } from "../../../igniteui-angular/grids/pivot-grid";
-import { IgxTreeGridComponent } from "../../../igniteui-angular/grids/tree-grid";
 import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
 import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/paginator/src/paginator/paginator.component";
@@ -30,6 +27,8 @@ import { IgxGridStateComponent } from "../lib/state.component";
 import { IgxGridElementsComponent } from "../lib/grids/grid.component";
 import { IgxHierarchicalGridElementsComponent } from "../lib/grids/hierarchical-grid.component";
 import { IgxTreeGridElementsComponent } from "../lib/grids/tree-grid.component";
+import { IgxRowIslandElementsComponent } from '../lib/grids/row-island.component';
+import { IgxGridActionsBaseDirective } from '../../../igniteui-angular/grids/core/src/grid-actions/grid-actions-base.directive';
 
 export const registerComponents = [
   IgxGridElementsComponent,
