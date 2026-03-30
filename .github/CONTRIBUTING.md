@@ -88,7 +88,7 @@ Accessibility is an integral part of any UI component. We as a team are committe
 2. `status: localized` this status is for issues that were with a pending translation status and have already been localized. Place this status label once these translation changes have been included in the current pull request, or the changes are already pulled with a different pull request.
 
 ## Localization (i18n) - applicable to components' string resources
-There are several ways to localize components' string resources. For more information on how it works refer to our [Documentation - Localization (i18n)](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/localization#localization-i18n-1)
+There are several ways to localize components' string resources. For more information on how it works, refer to our [Documentation - Localization (i18n)](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/localization#localization-i18n-1).
 
 **NOTE** As of 21.1.x the localization resource strings have been moved to the [`igniteui-i18n`](https://github.com/IgniteUI/igniteui-i18n) repository under `projects/igniteui-i18n-resources`. The package `igniteui-angular-i18n` under `./projects/igniteui-angular-i18n` remains as a source of the localization resources for Ignite UI for Angular, that derives the resources from [`igniteui-i18n`](https://github.com/IgniteUI/igniteui-i18n).
 
