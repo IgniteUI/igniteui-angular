@@ -3,6 +3,19 @@
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 > For app setup, providers, and import patterns — see [`setup.md`](./setup.md).
 
+## Contents
+
+- [List](#list)
+- [Tree](#tree)
+- [Card](#card)
+- [Chips](#chips)
+- [Avatar & Badge](#avatar--badge)
+- [Icon](#icon)
+- [Carousel](#carousel)
+- [Paginator](#paginator)
+- [Progress Indicators](#progress-indicators)
+- [Chat (AI Chat Component)](#chat-ai-chat-component)
+
 ## List
 
 > **Docs:** [List Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list)

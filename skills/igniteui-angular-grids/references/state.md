@@ -5,6 +5,15 @@
 > For Tree Grid / Hierarchical Grid / Pivot Grid / Grid Lite setup — see [`types.md`](./types.md).
 > For paging and remote data — see [`paging-remote.md`](./paging-remote.md).
 
+## Contents
+
+- [State Persistence](#state-persistence)
+- [Tree Grid Data Operations](#tree-grid-data-operations)
+- [Hierarchical Grid Data Operations](#hierarchical-grid-data-operations)
+- [Pivot Grid Data Operations](#pivot-grid-data-operations)
+- [Grid Lite Data Operations](#grid-lite-data-operations)
+- [Key Rules](#key-rules)
+
 ## State Persistence
 
 > **Docs:** [State Persistence](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/state-persistence) (substitute URL prefix per grid type)
@@ -20,7 +29,7 @@ Use `IgxGridStateDirective` to persist sorting, filtering, grouping, paging, sel
 ```
 
 ```typescript
-import { IgxGridStateDirective } from 'igniteui-angular/grids/grid';
+import { IgxGridStateDirective } from 'igniteui-angular/grids/core';
 
 export class StatefulGridComponent {
   gridState = viewChild.required(IgxGridStateDirective);
@@ -234,7 +243,7 @@ Setting `[batchEditing]="true"` on the root hierarchical grid automatically prop
 ### Dimension-Based Filtering
 
 ```typescript
-import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/grids/core';
+import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/core';
 
 // Create a filter for a dimension
 const regionFilter = new FilteringExpressionsTree(FilteringLogic.Or);
@@ -277,155 +286,12 @@ this.pivotGridRef().pipeTrigger++;
 
 ## Grid Lite Data Operations
 
-**Grid Lite** is a lightweight, open-source (MIT licensed) Web Component grid with an Angular wrapper. It supports **sorting and filtering only** — no editing, grouping, paging, summaries, selection, or export. Its API is **different from** the Flat/Tree/Hierarchical Grid APIs.
-
-> **IMPORTANT**: Grid Lite uses `IgxGridLiteSortingExpression` and `IgxGridLiteFilteringExpression` — NOT `ISortingExpression` or `FilteringExpressionsTree` from the enterprise grids.
-
-### Grid Lite Sorting
-
-```typescript
-import {
-  IgxGridLiteComponent,
-  IgxGridLiteSortingExpression,
-  IgxGridLiteSortingOptions
-} from 'igniteui-angular/grids/lite';
-
-@Component({
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  // ...
-})
-export class GridLiteSortExample {
-  gridRef = viewChild<IgxGridLiteComponent<Product>>('grid');
-
-  // Sorting options: mode can be 'single' or 'multiple'
-  sortingOptions: IgxGridLiteSortingOptions = { mode: 'multiple' };
-
-  // Initial sort state
-  sortExprs: IgxGridLiteSortingExpression[] = [
-    { key: 'name', direction: 'ascending' }
-  ];
-
-  sortByPrice() {
-    // Sort programmatically (single expression or array)
-    this.gridRef().sort({ key: 'price', direction: 'descending' });
-  }
-
-  clearAllSorts() {
-    this.gridRef().clearSort(); // clear all
-    // or: this.gridRef().clearSort('price'); // clear specific column
-  }
-}
-```
-
-```html
-<igx-grid-lite #grid
-  [data]="data"
-  [sortingOptions]="sortingOptions"
-  [(sortingExpressions)]="sortExprs"
-  (sorting)="onSorting($event)"
-  (sorted)="onSorted($event)">
-  <igx-grid-lite-column field="name" header="Name" sortable></igx-grid-lite-column>
-  <igx-grid-lite-column field="price" header="Price" dataType="number" sortable></igx-grid-lite-column>
-</igx-grid-lite>
-```
-
-Sort expression shape: `{ key: string, direction: 'ascending' | 'descending' | 'none' }`
-
-Sorting modes:
-- `'single'` — only one column sorted at a time
-- `'multiple'` — multi-column sorting
-- `triState: true` — allows cycling through ascending → descending → none
-
-### Grid Lite Filtering
-
-```typescript
-import {
-  IgxGridLiteComponent,
-  IgxGridLiteFilteringExpression
-} from 'igniteui-angular/grids/lite';
-
-// Filter expression shape
-const filters: IgxGridLiteFilteringExpression[] = [
-  { key: 'price', condition: 'greaterThan', searchTerm: 100 },
-  { key: 'name', condition: 'contains', searchTerm: 'Widget' }
-];
-
-// Programmatic filtering
-this.gridRef().filter({ key: 'price', condition: 'greaterThan', searchTerm: 100 });
-this.gridRef().clearFilter('price');
-this.gridRef().clearFilter(); // clear all
-```
-
-```html
-<igx-grid-lite #grid
-  [data]="data"
-  [(filteringExpressions)]="filterExprs"
-  (filtering)="onFiltering($event)"
-  (filtered)="onFiltered($event)">
-  <igx-grid-lite-column field="name" header="Name" filterable></igx-grid-lite-column>
-  <igx-grid-lite-column field="price" header="Price" dataType="number" filterable></igx-grid-lite-column>
-</igx-grid-lite>
-```
-
-Filter expression shape: `{ key: string, condition: string, searchTerm: any, criteria?: any[], caseSensitive?: boolean }`
-
-Filter conditions depend on `dataType`:
-- **string**: `contains`, `startsWith`, `endsWith`, `equals`, `doesNotContain`, `doesNotEqual`, `empty`, `notEmpty`, `null`, `notNull`
-- **number**: `equals`, `doesNotEqual`, `greaterThan`, `lessThan`, `greaterThanOrEqualTo`, `lessThanOrEqualTo`, `empty`, `notEmpty`, `null`, `notNull`
-- **boolean**: `all`, `true`, `false`, `empty`, `notEmpty`, `null`, `notNull`
-- **date**: `equals`, `doesNotEqual`, `before`, `after`, `today`, `yesterday`, `thisMonth`, `lastMonth`, `nextMonth`, `thisYear`, `lastYear`, `nextYear`, `empty`, `notEmpty`, `null`, `notNull`
-
-### Grid Lite Remote Data Operations
-
-Grid Lite uses `dataPipelineConfiguration` — a callback-based approach (NOT noop strategies):
-
-```typescript
-import { IgxGridLiteDataPipelineConfiguration } from 'igniteui-angular/grids/lite';
-
-dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
-  sort: async (params) => {
-    // params.grid — the grid instance
-    // params.data — current data array
-    // params.type — 'sort'
-    const result = await fetch(`/api/products?sort=${JSON.stringify(params.grid.sortingExpressions)}`);
-    return await result.json();
-  },
-  filter: async (params) => {
-    const result = await fetch(`/api/products?filter=${JSON.stringify(params.grid.filteringExpressions)}`);
-    return await result.json();
-  }
-};
-```
-
-```html
-<igx-grid-lite #grid
-  [data]="data"
-  [dataPipelineConfiguration]="dataPipeline">
-</igx-grid-lite>
-```
-
-Callbacks can be synchronous (return `T[]`) or asynchronous (return `Promise<T[]>`). When a `dataPipelineConfiguration` callback is provided for a given operation, the client-side pipeline for that operation is bypassed entirely.
-
-### Grid Lite Events
-
-| Event | Cancelable | Payload |
-|---|---|---|
-| `(sorting)` | Yes (`event.detail.cancel = true`) | Sorting expression about to be applied |
-| `(sorted)` | No | Sorting completed |
-| `(filtering)` | Yes (`event.detail.cancel = true`) | Filter expression about to be applied |
-| `(filtered)` | No | Filtering completed |
-
-### Grid Lite Limitations (No Data Operations)
-
-These data operations are **NOT available** in Grid Lite:
-- Editing (cell, row, batch) — no `[editable]`, no `beginEdit()`, no transactions
-- Grouping — no `groupBy()`, no `IgxGroupByRow`
-- Paging — no `IgxPaginatorComponent`
-- Summaries — no `IgxSummaryOperand`
-- Selection — no `rowSelection`, `cellSelection`, or `columnSelection`
-- State persistence — no `IgxGridStateDirective`
-- Export — no `IgxExcelExporterService` or `IgxCsvExporterService`
-- Advanced filtering — no `advancedFilteringExpressionsTree`
+> **Grid Lite sorting, filtering, remote data, events, and limitations are fully documented in [`types.md`](./types.md#grid-lite).** Refer to that file for all Grid Lite data operations — this section intentionally avoids duplicating that content.
+>
+> Key differences from Flat/Tree/Hierarchical Grid APIs:
+> - Uses `IgxGridLiteSortingExpression` / `IgxGridLiteFilteringExpression` (NOT `ISortingExpression` / `FilteringExpressionsTree`)
+> - Uses `dataPipelineConfiguration` for remote ops (NOT noop strategies + events)
+> - Has no editing, grouping, paging, summaries, selection, state persistence, or export
 
 ## Key Rules
 
