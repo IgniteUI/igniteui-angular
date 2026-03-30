@@ -116,9 +116,21 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     @HostBinding('class.igx-input-group--warning')
     public hasWarning = false;
 
-    /** @hidden */
+    /**
+     * @hidden
+     * Hints resolved via @ContentChildren — used for standalone input-group usage.
+     * Kept separate from _externalHints to avoid being overwritten by Angular's
+     * change detection re-evaluation of @ContentChildren, which caused hints
+     * projected through wrapper components (e.g. combo) to flicker/disappear.
+     */
     @ContentChildren(IgxHintDirective, { read: IgxHintDirective, descendants: true })
-    protected _hints: QueryList<IgxHintDirective>;
+    protected _ownHints: QueryList<IgxHintDirective>;
+
+    /**
+     * Hints set explicitly by wrapper components (e.g. combo) via the `hints` setter.
+     * Takes precedence over _ownHints in `hasHints` to avoid CD timing conflicts.
+     */
+    private _externalHints: QueryList<IgxHintDirective>;
 
     @ContentChildren(IgxPrefixDirective, { read: IgxPrefixDirective, descendants: true })
     protected _prefixes: QueryList<IgxPrefixDirective>;
@@ -279,12 +291,15 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * ```
      */
     public get hasHints() {
-        return this._hints.length > 0;
+        // Prefer externally set hints (from wrapper components like combo)
+        // over @ContentChildren to avoid CD timing race conditions.
+        const hints = this._externalHints ?? this._ownHints;
+        return hints?.length > 0;
     }
 
     /** @hidden @internal */
     public set hints(items: QueryList<IgxHintDirective>) {
-        this._hints = items;
+        this._externalHints = items;
     }
 
     /** @hidden @internal */
