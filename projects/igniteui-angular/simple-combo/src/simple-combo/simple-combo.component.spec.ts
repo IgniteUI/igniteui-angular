@@ -1134,6 +1134,38 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).not.toBeDefined();
         }));
 
+        it('should stop Escape keydown event propagation when the dropdown is open', fakeAsync(() => {
+            const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+            spyOn(escapeEvent, 'stopPropagation');
+
+            combo.open();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBeFalsy();
+
+            combo.handleKeyDown(escapeEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(escapeEvent.stopPropagation).toHaveBeenCalled();
+        }));
+
+        it('should stop Escape key propagation when the combo is collapsed and has a selection', fakeAsync(() => {
+            combo.comboInput.nativeElement.focus();
+            fixture.detectChanges();
+
+            combo.select(combo.data[2][combo.valueKey]);
+            fixture.detectChanges();
+            expect(combo.selection).toBeDefined();
+
+            const keyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+            const stopPropSpy = spyOn(keyEvent, 'stopPropagation');
+
+            combo.handleKeyDown(keyEvent);
+            fixture.detectChanges();
+
+            expect(stopPropSpy).toHaveBeenCalledTimes(1);
+        }));
+
         it('should clear the selection on tab/blur if the search text does not match any value', () => {
             // allowCustomValues does not matter
             combo.select(combo.data[2][combo.valueKey]);
