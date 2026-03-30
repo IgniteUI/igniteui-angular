@@ -38,6 +38,9 @@
             (keyup)="onInputKeyUp()"/>
         @if (value || value === 0) {
             <igx-suffix>
+                @if (column.dataType === 'percent') {
+                    <span class="igx-grid__filtering-row-percent-hint">{{ value | percent:column.pipeArgs.digitsInfo:filteringService.grid.locale }}</span>
+                }
                 <igx-icon
                     (keydown)="onCommitKeyDown($event)"
                     (click)="onCommitClick()"

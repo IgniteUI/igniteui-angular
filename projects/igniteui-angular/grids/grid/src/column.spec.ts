@@ -20,7 +20,7 @@ import {
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
+import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, INPUT_DEBOUNCE_TIME_DEFAULT, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
@@ -836,6 +836,77 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('-070.000%');
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('002.700%');
+        }));
+
+        it('should show percent suffix in filter row when filtering a percent column', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const discountColumn = grid.getColumnByName('Discount');
+            grid.allowFiltering = true;
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChip(fix, discountColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            const filterUIRow = fix.debugElement.query(By.css('igx-grid-filtering-row'));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+
+            // Suffix should not be visible before entering a value
+            let percentLabel = filterUIRow.query(By.css('.igx-grid__filtering-row-percent-hint'));
+            expect(percentLabel).toBeNull();
+
+            // Enter a value to trigger the suffix; wait for the filter row input debounce
+            GridFunctions.typeValueInFilterRowInput(0.03, fix, input);
+            tick(INPUT_DEBOUNCE_TIME_DEFAULT);
+            fix.detectChanges();
+
+            percentLabel = filterUIRow.query(By.css('.igx-grid__filtering-row-percent-hint'));
+            expect(percentLabel).not.toBeNull();
+            expect(percentLabel.nativeElement.textContent.trim()).toEqual('3%');
+        }));
+
+        it('should show percent suffix in ESF custom dialog when filtering a percent column', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const discountColumn = grid.getColumnByName('Discount');
+            grid.allowFiltering = true;
+            grid.filterMode = 'excelStyleFilter';
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, discountColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Open custom filter dialog by selecting first operator (Equals)
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+            fix.detectChanges();
+
+            const exprComponents = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix);
+            expect(exprComponents.length).toBeGreaterThan(0);
+
+            // Percent label should not be visible before entering a value
+            let percentLabel = exprComponents[0].querySelector('.igx-grid__filtering-row-percent-hint');
+            expect(percentLabel).toBeNull();
+
+            // Enter a value to trigger the suffix
+            GridFunctions.setInputValueESF(fix, 0, 0.05);
+            tick(100);
+            fix.detectChanges();
+
+            percentLabel = exprComponents[0].querySelector('.igx-grid__filtering-row-percent-hint');
+            expect(percentLabel).not.toBeNull();
+            expect(percentLabel.textContent.trim()).toEqual('5%');
         }));
 
     });
