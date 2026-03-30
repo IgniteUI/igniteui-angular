@@ -288,6 +288,48 @@ describe('IgxChartIntegrationDirective', () => {
             expect(result).toBeUndefined();
             expect(emittedChart).toBeUndefined(); // chart is undefined, but event still emits
         });
+
+        it('should auto-hide y-axis and skip series creation when autoHideYAxisWhenNoData is enabled and no numeric values exist', () => {
+            directive.autoHideYAxisWhenNoData = true;
+            directive.chartData = [{ name: 'A', value: Number.NaN }, { name: 'B', value: Number.NaN }];
+
+            const axisAddArgs: any[] = [];
+            const seriesAddSpy = jasmine.createSpy('seriesAdd');
+            const mockChart = {
+                series: { count: 0, clear: () => {}, add: seriesAddSpy },
+                axes: {
+                    count: 0,
+                    clear: () => {},
+                    add: (axis) => axisAddArgs.push(axis)
+                }
+            } as any;
+
+            directive.chartFactory(CHART_TYPE.ColumnGrouped, undefined, mockChart);
+
+            expect(seriesAddSpy).not.toHaveBeenCalled();
+            expect(axisAddArgs[1].labelExtent).toBe(0);
+        });
+
+        it('should keep y-axis visible when autoHideYAxisWhenNoData is enabled and at least one numeric value exists', () => {
+            directive.autoHideYAxisWhenNoData = true;
+            directive.chartData = [{ name: 'A', value: Number.NaN }, { name: 'B', value: 10 }];
+
+            const axisAddArgs: any[] = [];
+            const seriesAddSpy = jasmine.createSpy('seriesAdd');
+            const mockChart = {
+                series: { count: 0, clear: () => {}, add: seriesAddSpy },
+                axes: {
+                    count: 0,
+                    clear: () => {},
+                    add: (axis) => axisAddArgs.push(axis)
+                }
+            } as any;
+
+            directive.chartFactory(CHART_TYPE.ColumnGrouped, undefined, mockChart);
+
+            expect(seriesAddSpy).toHaveBeenCalledTimes(1);
+            expect(axisAddArgs[1].labelExtent).toBeNaN();
+        });
     });
 
     describe('_labelMemberPath fallback', () => {

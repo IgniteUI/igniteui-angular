@@ -89,6 +89,16 @@ export class IgxChartIntegrationDirective {
     @Input()
     public defaultLabelMemberPath: string = undefined;
 
+    /**
+     * When set to `true`, the directive automatically hides the Y-axis if the
+     * selected numeric member paths do not contain finite numeric values in the
+     * current data view.
+     *
+     * @default false
+     */
+    @Input()
+    public autoHideYAxisWhenNoData = false;
+
     @Input()
     public set scatterChartYAxisValueMemberPath(path: string) {
         this._scatterChartYAxisValueMemberPath = path;
@@ -282,14 +292,17 @@ export class IgxChartIntegrationDirective {
         const customComponentOptions: IChartComponentOptions = this.customChartComponentOptions.get(type) || {};
         const customChartOptions = customComponentOptions.chartOptions || {};
         const customSeriesModel = customComponentOptions.seriesModel || {};
+        const pathsWithData = this._valueMemberPaths.filter(memberPath => this.hasSeriesData(memberPath));
+        const seriesPaths = this.autoHideYAxisWhenNoData ? pathsWithData : this._valueMemberPaths;
         chartComponentOptions.chartOptions = { ...this.dataChartOptions, ...customChartOptions };
         if (type.indexOf('Scatter') !== -1) {
             this.addScatterChartDataOptions(type, chartComponentOptions);
         } else {
             chartComponentOptions.seriesModel = { ...this.dataChartSeriesOptionsModel, ...customSeriesModel };
-            this.setAxisLabelOption(type, chartComponentOptions);
+            const hideYAxis = this.autoHideYAxisWhenNoData && pathsWithData.length === 0;
+            this.setAxisLabelOption(type, chartComponentOptions, hideYAxis);
             const options: IOptions[] = [];
-            this._valueMemberPaths.forEach(valueMemberPath => {
+            seriesPaths.forEach(valueMemberPath => {
                 const dataOptions = {
                     title: valueMemberPath,
                     valueMemberPath
@@ -346,13 +359,24 @@ export class IgxChartIntegrationDirective {
         return dataRecord;
     }
 
-    private setAxisLabelOption(type: CHART_TYPE, options: IChartComponentOptions) {
+    /**
+     * Checks whether the current data set contains at least one finite numeric
+     * value for the provided member path.
+     *
+     * @param memberPath The numeric member path to inspect.
+     * @returns `true` when at least one finite number exists for the path.
+     */
+    private hasSeriesData(memberPath: string): boolean {
+        return this._chartData.some(record => Number.isFinite(record[memberPath]));
+    }
+
+    private setAxisLabelOption(type: CHART_TYPE, options: IChartComponentOptions, hideYAxis = false) {
         const customOptions = this.customChartComponentOptions.get(type) || {};
         if (type.indexOf('Bar') !== -1) {
             options.yAxisOptions = Object.assign({
                 label: this._labelMemberPath,
                 labelTextColor: null,
-                labelExtent: NaN,
+                labelExtent: hideYAxis ? 0 : NaN,
             }, customOptions.yAxisOptions);
             options.xAxisOptions = Object.assign({
                 labelTextColor: null,
@@ -366,7 +390,7 @@ export class IgxChartIntegrationDirective {
             }, customOptions.xAxisOptions);
             options.yAxisOptions = Object.assign({
                 labelTextColor: null,
-                labelExtent: NaN,
+                labelExtent: hideYAxis ? 0 : NaN,
             }, customOptions.yAxisOptions);
         }
     }
