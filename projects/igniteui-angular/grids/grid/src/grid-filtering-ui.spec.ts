@@ -4113,6 +4113,25 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
         });
 
+        it('Should match numeric column values when searching without locale-specific formatting characters.', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            fix.detectChanges();
+            await wait(100);
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            // Type 1000 (without thousands separator) in search box.
+            // The value 1000 is displayed as "1,000" in the ESF list due to locale formatting.
+            // Searching "1000" should still match the "1,000" entry.
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1000', fix);
+            fix.detectChanges();
+            await wait(100);
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            // Expect 3 items: Select All + Add to current filter + the matched "1,000" item
+            expect(listItems.length).toBe(3, 'searching plain number should match locale-formatted label');
+        });
+
         it('Should enable/disable the apply button correctly.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
