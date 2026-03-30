@@ -50,16 +50,13 @@ import { IForOfState } from 'igniteui-angular/directives';
  * Row island
  *
  * @igxModule IgxHierarchicalGridModule
- * @igxParent IgxHierarchicalGridComponent, IgxRowIslandComponent
+ * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxRowIslandElementsComponent
  *
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
-    template: `@if (platform.isElements) {
-        <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
-        <ng-content select="igx-row-island,igc-row-island"></ng-content>
-    }`,
+    template: ``,
     providers: [
         IgxRowIslandAPIService,
         IgxFilteringService,
@@ -88,20 +85,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     @Input()
     public key: string;
-
-    /* blazorInclude,wcInclude TODO: Move to Elements-only component */
-    /**
-     * Sets the key of the row island by which child data would be taken from the row data if such is provided.
-     * @hidden @internal
-     */
-    @Input()
-    public get childDataKey() {
-        return this.key;
-    }
-    /* blazorInclude,wcInclude */
-    public set childDataKey(value: string) {
-        this.key = value;
-    }
 
     /**
      * Gets/Sets the resource strings.
@@ -173,17 +156,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public set paginatorTemplate(template: TemplateRef<IgxGridPaginatorTemplateContext>) {
         this._paginatorTemplate = template;
     }
-
-    // TODO(api-analyzer): Shouldn't need all tags to copy from base or hidden/internal due to include tag
-    /* contentChildren */
-    /* blazorInclude */
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: ActionStripCollection */
-    /* blazorCollectionItemName: ActionStrip */
-    /* ngQueryListName: actionStripComponents */
-    /** @hidden @internal */
-    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     /**
      * @hidden

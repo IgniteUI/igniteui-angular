@@ -24,7 +24,7 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 /**
  * **Ignite UI for Angular Column Group**
  *
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxColumnGroupComponent, IgxRowIslandComponent
+ * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxTreeGridElementsComponent, IgxColumnGroupComponent, IgxRowIslandElementsComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

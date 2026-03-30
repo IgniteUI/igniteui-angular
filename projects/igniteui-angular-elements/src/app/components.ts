@@ -2,32 +2,33 @@ import { NgElement, WithProperties } from '@angular/elements';
 import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement, withRegister } from './create-custom-element';
 import { IgxGridStateComponent } from '../lib/state.component';
+import { IgxGridElementsComponent } from '../lib/grids/grid.component';
 import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 import { injector } from '../utils/injector-ref';
 import { registerComponent } from '../utils/register';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
-import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
-import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { GridType, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent } from 'igniteui-angular/query-builder';
+import { IgxHierarchicalGridElementsComponent } from '../lib/grids/hierarchical-grid.component';
+import { IgxRowIslandElementsComponent } from '../lib/grids/row-island.component';
+import { IgxTreeGridElementsComponent } from '../lib/grids/tree-grid.component';
 
 // force-create icon service, TODO: move to initializer or register/define mechanic to avoid side-effect?
 const _iconBroadcast: IgxIconBroadcastService = injector.get(IgxIconBroadcastService);
 
-const grid = createIgxCustomElement(IgxGridComponent, { injector, registerConfig });
+const grid = createIgxCustomElement(IgxGridElementsComponent, { injector, registerConfig });
 const IgcGridComponent = withRegister(grid, () => {
     registerComponent(IgcGridComponent)
 });
 
-const treeGrid = createIgxCustomElement(IgxTreeGridComponent, { injector, registerConfig });
+const treeGrid = createIgxCustomElement(IgxTreeGridElementsComponent, { injector, registerConfig });
 const IgcTreeGridComponent = withRegister(treeGrid, () => {
     registerComponent(IgcTreeGridComponent)
 });
 
-const hGrid = createIgxCustomElement(IgxHierarchicalGridComponent, { injector, registerConfig });
+const hGrid = createIgxCustomElement(IgxHierarchicalGridElementsComponent, { injector, registerConfig });
 const IgcHierarchicalGridComponent = withRegister(hGrid, () => {
     registerComponent(IgcHierarchicalGridComponent)
 });
@@ -42,7 +43,7 @@ const IgcPivotDataSelectorComponent = withRegister(pivotDataSelector, () => {
     registerComponent(IgcPivotDataSelectorComponent)
 });
 
-const rowIsland = createIgxCustomElement(IgxRowIslandComponent, { injector, registerConfig });
+const rowIsland = createIgxCustomElement(IgxRowIslandElementsComponent, { injector, registerConfig });
 const IgcRowIslandComponent = withRegister(rowIsland, () => {
     registerComponent(IgcRowIslandComponent)
 });
@@ -160,7 +161,7 @@ export {
 // TODO: Custom elements JSON as well
 declare global {
     type IgxGridElement = NgElement & WithProperties<GridType>;
-    type IgxTreeGridElement = NgElement & WithProperties<IgxTreeGridComponent>;
+    type IgxTreeGridElement = NgElement & WithProperties<IgxTreeGridElementsComponent>;
     interface HTMLElementTagNameMap {
         'igc-grid': NgElement & WithProperties<GridType>;
         'igc-tree-grid': NgElement & WithProperties<IgxTreeGridElement>;
