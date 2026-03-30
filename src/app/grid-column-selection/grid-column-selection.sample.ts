@@ -64,10 +64,6 @@ export class GridColumnSelectionFilterPipe implements PipeTransform {
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe, IgxLabelDirective, IgxIconComponent, IgxSuffixDirective, IgxGridToolbarTitleComponent]
 })
 export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid2', { static: true }) public grid2: IgxGridComponent;
 
@@ -149,10 +145,6 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     public getGenInfoState() {
         console.log('general info', this.grid2.getColumnByName('CompanyName').parent.selected);
         console.log('company name', this.grid2.getColumnByName('CompanyName').selected);
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public selected(event) {

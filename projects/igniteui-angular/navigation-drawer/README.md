@@ -1,6 +1,6 @@
 # IgxNavigationDrawer Component
 
-The **igx-nav-drawer** is a container element for side navigation, providing quick access between views. It can be used for navigation apps and with top-level views. Drawer will be hidden until invoked by the user.  
+The **igx-nav-drawer** is a container element for side navigation, providing quick access between views. It can be used for navigation apps and with top-level views. Drawer will be hidden until invoked by the user.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)
 
 ## Dependencies
@@ -86,7 +86,7 @@ The navigation drawer can either sit above content or be pinned alongside it and
 
 ## Modes
 
-Unpinned (elevated above content) mode is the normal behavior where the drawer sits above and applies a darkened overlay over all content. Generally used to provide a temporary navigation suitable for mobile devices. 
+Unpinned (elevated above content) mode is the normal behavior where the drawer sits above and applies a darkened overlay over all content. Generally used to provide a temporary navigation suitable for mobile devices.
 
 The drawer can be pinned to take advantage of larger screens, placing it within normal content flow with relative position. Depending on whether the app provides a way to toggle the drawer, the pinned mode can be used to achieve either [permanent or persistent behavior](https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-behavior).
 
@@ -138,13 +138,13 @@ This variant is enabled simply by the presence of an alternative mini template m
 <igx-nav-drawer id="navdrawer">
     <ng-template igxDrawer>
         <span igxDrawerItem [isHeader]="true"> Header </span>
-        <span igxDrawerItem igxRipple> 
+        <span igxDrawerItem igxRipple>
             <igx-icon>home</igx-icon>
             <span>Home</span>
         </span>
     </ng-template>
     <ng-template igxDrawerMini>
-        <span igxDrawerItem igxRipple> 
+        <span igxDrawerItem igxRipple>
             <igx-icon>home</igx-icon>
         </span>
     </ng-template>
@@ -188,15 +188,15 @@ export class AppComponent {
     ];
 }
 ```
-One way to tie in the active state is to directly use the [`routerLinkActive`](https://angular.io/api/router/RouterLinkActive) default functionality and pass the drawer items active class `igx-nav-drawer__item--active`, so the `<igx-nav-drawer>` template would look like:
+One way to tie in the active state is to directly use the [`routerLinkActive`](https://angular.io/api/router/RouterLinkActive) default functionality and pass the drawer items active class `igx-nav-drawer-item--active`, so the `<igx-nav-drawer>` template would look like:
 
 ```html
 <!-- ... -->
 <ng-template igxDrawer>
     <nav>
         <span *ngFor="let item of componentLinks" routerLink="{{item.link}}"
-            igxDrawerItem igxRipple 
-            routerLinkActive="igx-nav-drawer__item--active" >
+            igxDrawerItem igxRipple
+            routerLinkActive="igx-nav-drawer-item--active" >
                 {{item.name}}
         </span>
     </nav>

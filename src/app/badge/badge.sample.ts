@@ -3,7 +3,6 @@ import {
     IgxBadgeComponent,
     IgxAvatarComponent,
     IgxIconComponent,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -33,18 +32,11 @@ registerIconFromText('bluetooth', bluetooth);
     styleUrls: ['badge.sample.scss'],
     templateUrl: 'badge.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxBadgeComponent, IgxAvatarComponent, IgxIconComponent, IgSizeDirective]
+    imports: [IgxBadgeComponent, IgxAvatarComponent, IgxIconComponent]
 })
 
 export class BadgeSampleComponent {
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium'
-            }
-        },
         shape: {
             control: {
                 type: 'button-group',

@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes/index' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/progress' as *;
+
+$base: digest-schema($dark-base-progress-circular);
+$material: digest-schema($dark-material-progress-circular);
+$bootstrap: digest-schema($dark-bootstrap-progress-circular);
+$fluent: digest-schema($dark-fluent-progress-circular);
+$indigo: digest-schema($dark-indigo-progress-circular);

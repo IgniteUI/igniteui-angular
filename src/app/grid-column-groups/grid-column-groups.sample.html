@@ -1,7 +1,4 @@
 <section class="sample-content">
-    <div class="density-chooser">
-        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
-    </div>
     <ng-template igxCollapsibleIndicator let-column="column" #ind >
         <igx-icon family="default" [name]="column.expanded ? 'horizontal_rule' : 'add'"></igx-icon>
     </ng-template>

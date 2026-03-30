@@ -2,7 +2,6 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import {
     IgxAvatarComponent,
     IgxIconComponent,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -31,18 +30,10 @@ defineComponents(IgcAvatarComponent, IgcIconComponent);
     imports: [
         IgxAvatarComponent,
         IgxIconComponent,
-        IgSizeDirective
     ],
 })
 export class AvatarSampleComponent {
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium'
-            }
-        },
         shape: {
             control: {
                 type: 'radio-inline',

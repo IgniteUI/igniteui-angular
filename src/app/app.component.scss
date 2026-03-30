@@ -1,7 +1,114 @@
-.test {
-    color: red;
+@use '../../projects/igniteui-angular/core/src/core/styles/base' as *;
+
+::ng-deep {
+    app-root {
+        --demo-navbar-size: 56px;
+        --header-row: 1;
+        --content-row: 2;
+        --content-spacing: 1rem;
+        --demos-gap: 1rem;
+
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: var(--demo-navbar-size) 1fr;
+
+        main {
+            display: flex;
+            flex-direction: column;
+            grid-column: 2;
+            grid-row: var(--content-row);
+            background: var(--ig-gray-50);
+            overflow-x: clip;
+            overflow-y: auto;
+
+            height: calc(100dvh - var(--demo-navbar-size));
+        }
+    }
+
+    .demos-main-nav {
+        .igx-nav-drawer__aside {
+            padding-top: 0;
+        }
+    }
+
+    [data-ig-theme='fluent'] {
+        .demos-settings-nav {
+            --aside-padding: 1rem;
+        }
+    }
 }
 
-#paneldrawer {
-    --ig-nav-drawer-size: 27rem;
+.demos-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+    padding: var(--content-spacing);
+
+    > h3 {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--demos-gap) / 2);
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0;
+
+        igx-icon {
+            --color : var(--ig-primary-500);
+        }
+    }
+}
+
+.demos-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100% - (var(--demo-navbar-size) + var(--demos-gap) + (var(--content-spacing) * 2)));
+    overflow-y: auto;
+    padding: var(--content-spacing);
+}
+
+.demos-filter {
+    padding-block: var(--item-padding);
+    padding-inline: var(--item-padding);
+    padding-block-end: 1rem;
+    background: var(--background);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    &::after {
+        content: '';
+        height: 8px;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: linear-gradient(360deg,rgba(255, 255, 255, 0) 0%, var(--background) 70%);
+    }
+}
+
+.demos-main-nav {
+    grid-column: 1;
+
+    @include tokens(navdrawer-theme(
+        $background: var(--ig-gray-100),
+        $border-radius: 0,
+        $item-border-radius: 0,
+        $border-color: var(--ig-gray-300),
+
+    ));
+}
+
+.demos-settings-nav {
+    --ig-nav-drawer-size: 24rem;
+    --aside-padding: calc(var(--content-spacing) * 1.5);
+
+    grid-column: 3;
+}
+
+.demos-main-nav,
+.demos-settings-nav {
+    height: calc(100dvh - var(--demo-navbar-size));
+    grid-row: var(--content-row);
 }

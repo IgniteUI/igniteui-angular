@@ -1,9 +1,10 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ViewEncapsulation } from '@angular/core';
 import { IgxTabHeaderBase, IgxTabHeaderDirective } from 'igniteui-angular/tabs';
 
 @Component({
     selector: 'igx-bottom-nav-header',
     templateUrl: 'bottom-nav-header.component.html',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabHeaderBase, useExisting: IgxBottomNavHeaderComponent }],
     standalone: true
 })
@@ -23,7 +24,5 @@ export class IgxBottomNavHeaderComponent extends IgxTabHeaderDirective {
 
     /** @hidden */
     @HostBinding('class.igx-bottom-nav__menu-item')
-    public get cssClass(): boolean {
-        return (!this.tab.disabled && !this.tab.selected);
-    }
+    public readonly cssClass = 'igx-bottom-nav__menu-item';
 }

@@ -43,7 +43,6 @@ registerIconFromText('face', face);
         IgxSwitchComponent,
         IgxButtonDirective,
         IgxIconComponent,
-        IgSizeDirective,
     ],
 })
 export class ButtonSampleComponent implements OnInit {
@@ -54,12 +53,6 @@ export class ButtonSampleComponent implements OnInit {
     public hasSuffix = false;
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-            }
-        },
         variant: {
             control: {
                 type: 'button-group',
