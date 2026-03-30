@@ -372,6 +372,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
         }
         if (event.key === this.platformUtil.KEYMAP.ESCAPE) {
+            event.stopPropagation();
             if (this.collapsed) {
                 const oldSelection = this.selection;
                 this.clearSelection(true);
