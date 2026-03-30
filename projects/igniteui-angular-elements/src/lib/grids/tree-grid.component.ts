@@ -19,7 +19,6 @@ import {
     IgxGridRowStylesPipe,
     IgxGridSelectionService,
     IgxGridSummaryService,
-    IgxGridTransaction,
     IgxGridValidationService,
     IgxHasVisibleColumnsPipe,
     IgxRowEditTabStopDirective,
