@@ -398,6 +398,28 @@ $_theme: $material;
             }
         }
 
+        @include mx(checked, disabled) {
+            @include e(composite) {
+                background: var-get($_theme, 'disabled-fill-color');
+                border-color: transparent;
+            }
+
+            @include e(composite-mark) {
+                stroke: var-get($_theme, 'disabled-tick-color');
+            }
+        }
+
+        @include mx(indeterminate, disabled) {
+            @include e(composite) {
+                background: var-get($_theme, 'disabled-indeterminate-color');
+                border-color: transparent;
+            }
+
+            @include e(composite-mark) {
+                stroke: var-get($_theme, 'disabled-tick-color');
+            }
+        }
+
         @include m(plain) {
             @include e(composite) {
                 transition: none;

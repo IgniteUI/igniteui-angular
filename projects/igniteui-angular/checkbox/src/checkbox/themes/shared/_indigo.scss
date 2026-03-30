@@ -152,22 +152,12 @@ $_theme: $indigo;
     }
 
     @include mx(disabled, checked) {
-        @include e(composite) {
-            background: var-get($_theme, 'disabled-indeterminate-color');
-            border-color: transparent;
-        }
-
         @include e(composite-mark) {
             fill: var-get($_theme, 'disabled-tick-color');
         }
     }
 
     @include mx(disabled, indeterminate) {
-        @include e(composite) {
-            background: var-get($_theme, 'disabled-indeterminate-color');
-            border-color: transparent;
-        }
-
         @include e(composite-mark) {
             stroke: unset;
             fill: none;
