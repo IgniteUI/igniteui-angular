@@ -87,3 +87,25 @@ jobs:
       - name: Publish igniteui-angular-extras
         run: npm publish --tag ${NPM_TAG}
         working-directory: dist/igniteui-angular-extras
+
+  dispatch-api-update:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get app token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.IGNITEUI_GITHUB_APP_ID }}
+          private-key: ${{ secrets.IGNITEUI_GITHUB_APP_PRIVATE_KEY }}
+          owner: IgniteUI
+      - name: Trigger API update workflow
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: IgniteUI/igniteui-angular-api-i18n
+          event-type: api-update
+          client-payload: |
+            {
+              "release_tag": "${{ github.event.release.tag_name }}"
+            }
