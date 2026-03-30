@@ -661,6 +661,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     private _sortableColumns = true;
     private _visibleRowDimensions: IPivotDimension[] = [];
     private _shouldUpdateSizes = false;
+    /**
+     * Tracks the latest known browser zoom ratio so runtime zoom changes
+     * can trigger a resize/reflow and keep headers and cells aligned.
+     * Initialized in `ngAfterViewInit` when running in a browser.
+     */
+    private _devicePixelRatio = 1;
 
     /**
     * Gets/Sets the default expand state for all rows.
@@ -1013,6 +1019,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public override ngAfterViewInit() {
         Promise.resolve().then(() => {
             super.ngAfterViewInit();
+            if (this.platform.isBrowser) {
+                this._devicePixelRatio = this.getCurrentDevicePixelRatio();
+            }
         });
 
     }
@@ -1065,11 +1074,22 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             return false;
         }
         const isSizePropChanged = super.shouldResize;
-        if (isSizePropChanged || this._shouldUpdateSizes) {
+        const currentDevicePixelRatio = this.platform.isBrowser ? this.getCurrentDevicePixelRatio() : this._devicePixelRatio;
+        const isZoomLevelChanged = this.platform.isBrowser && this._devicePixelRatio !== currentDevicePixelRatio;
+        if (isSizePropChanged || this._shouldUpdateSizes || isZoomLevelChanged) {
             this._shouldUpdateSizes = false;
+            this._devicePixelRatio = this.platform.isBrowser ? currentDevicePixelRatio : this._devicePixelRatio;
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns the current browser device pixel ratio (zoom ratio), or `1`
+     * when unavailable.
+     */
+    private getCurrentDevicePixelRatio(): number {
+        return window.devicePixelRatio || 1;
     }
 
     protected get emptyBottomSize() {
