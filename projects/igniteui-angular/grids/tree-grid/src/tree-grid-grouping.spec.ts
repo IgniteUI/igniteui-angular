@@ -206,6 +206,96 @@ describe('IgxTreeGrid', () => {
             expect(treeGrid.getCellByColumn(0, 'HireDate').value).toEqual(new Date(2009, 6, 19));
             expect(treeGrid.getCellByColumn(1, 'HireDate').value).toEqual(new Date(2007, 11, 18));
         }));
+
+        it('handleReorder with a KeyboardEvent sets expressions to the reordered result', fakeAsync(() => {
+            expect(groupByArea.expressions.length).toEqual(2);
+            spyOn(groupByArea.expressionsChange, 'emit').and.callThrough();
+
+            // Pass an empty chipsArray to keep the test simple (columns are not groupable by default,
+            // so getReorderedExpressions always returns [] regardless of chipsArray contents)
+            groupByArea.handleReorder({ chipsArray: [] as any, originalEvent: new KeyboardEvent('keydown'), owner: null });
+            fix.detectChanges();
+            tick();
+
+            // When originalEvent is a KeyboardEvent, expressions is assigned the new (empty) expressions
+            expect(groupByArea.expressionsChange.emit).toHaveBeenCalled();
+            expect(groupByArea.expressions.length).toEqual(0);
+        }));
+
+        it('handleReorder with a non-keyboard event only updates chipExpressions, not expressions', fakeAsync(() => {
+            expect(groupByArea.expressions.length).toEqual(2);
+            spyOn(groupByArea.expressionsChange, 'emit');
+
+            groupByArea.handleReorder({ chipsArray: [] as any, originalEvent: new MouseEvent('mouseup'), owner: null });
+            fix.detectChanges();
+            tick();
+
+            // Without a KeyboardEvent, only chipExpressions is updated — expressions stays unchanged
+            expect(groupByArea.expressionsChange.emit).not.toHaveBeenCalled();
+            expect(groupByArea.expressions.length).toEqual(2);
+            expect(groupByArea.chipExpressions.length).toEqual(0);
+        }));
+
+        it('handleMoveEnd sets expressions to chipExpressions', fakeAsync(() => {
+            const newExprs = [{ fieldName: 'OnPTO', dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }];
+            groupByArea.chipExpressions = newExprs;
+
+            groupByArea.handleMoveEnd();
+            fix.detectChanges();
+            tick();
+
+            expect(groupByArea.expressions.length).toEqual(1);
+            expect(groupByArea.expressions[0].fieldName).toEqual('OnPTO');
+        }));
+
+        it('groupBy adds a new grouping expression', fakeAsync(() => {
+            expect(groupByArea.expressions.length).toEqual(2);
+
+            groupByArea.groupBy({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
+            fix.detectChanges();
+            tick();
+
+            expect(groupByArea.expressions.length).toEqual(3);
+            expect(groupByArea.expressions.find(e => e.fieldName === 'JobTitle')).toBeTruthy();
+        }));
+
+        it('clearGrouping removes the expression for the given field name', fakeAsync(() => {
+            expect(groupByArea.expressions.length).toEqual(2);
+
+            groupByArea.clearGrouping('HireDate');
+            fix.detectChanges();
+            tick();
+
+            expect(groupByArea.expressions.length).toEqual(1);
+            expect(groupByArea.expressions.find(e => e.fieldName === 'HireDate')).toBeFalsy();
+            expect(groupByArea.expressions[0].fieldName).toEqual('OnPTO');
+        }));
+
+        it('updates grouping expression direction when sortingExpressionsChange fires', fakeAsync(() => {
+            // HireDate starts with dir: 2 (Desc)
+            expect(groupByArea.expressions.find(e => e.fieldName === 'HireDate').dir).toEqual(2);
+
+            // Setting sortingExpressions triggers sortingExpressionsChange which the component subscribes to
+            treeGrid.sortingExpressions = [{ fieldName: 'HireDate', dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }];
+            fix.detectChanges();
+            tick();
+
+            expect(groupByArea.expressions.find(e => e.fieldName === 'HireDate').dir).toEqual(1);
+        }));
+
+        it('hideGroupedColumns setter hides all grouped columns when set to true with columns already initialized', fakeAsync(() => {
+            // Both grouped columns should be visible by default
+            expect(treeGrid.getColumnByName('OnPTO').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+
+            groupByArea.hideGroupedColumns = true;
+            fix.detectChanges();
+            tick();
+
+            // setColumnsVisibility iterates all expressions and hides their columns
+            expect(treeGrid.getColumnByName('OnPTO').hidden).toBeTrue();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeTrue();
+        }));
     });
 
     const getChips = (fixture) => {

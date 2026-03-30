@@ -317,6 +317,52 @@ describe('IgxHighlight', () => {
         // Destroy the component without initializing it
         expect(() => fix.destroy()).not.toThrowError();
     });
+
+    describe('observe()', () => {
+        it('should create a MutationObserver and watch for DOM changes', (done) => {
+            const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+            fix.detectChanges();
+            const component = fix.componentInstance;
+            const directive = component.highlight;
+
+            component.highlightText('a');
+            fix.detectChanges();
+
+            // Initially no observer
+            expect((directive as any)._observer).toBeNull();
+
+            directive.observe();
+
+            // Observer is now attached
+            expect((directive as any)._observer).not.toBeNull();
+
+            // Calling observe() again should be a no-op (guard _observer !== null)
+            const existingObserver = (directive as any)._observer;
+            directive.observe();
+            expect((directive as any)._observer).toBe(existingObserver);
+
+            // Simulate node removal (the container being removed from the DOM)
+            const parent = directive.parentElement as HTMLElement;
+            const container = (directive as any)._container as Node;
+
+            // Remove the container - this should trigger the MutationObserver callback
+            parent.removeChild(container);
+
+            // Use a short timeout to allow the MutationObserver microtask to fire
+            setTimeout(() => {
+                expect((directive as any)._nodeWasRemoved).toBeTrue();
+
+                // Re-add the container as the first element child to trigger re-highlight
+                parent.insertBefore(container, parent.firstChild);
+
+                setTimeout(() => {
+                    // After re-add, observer should have disconnected and set _observer = null
+                    expect((directive as any)._observer).toBeNull();
+                    done();
+                }, 50);
+            }, 50);
+        });
+    });
 });
 
 @Component({
