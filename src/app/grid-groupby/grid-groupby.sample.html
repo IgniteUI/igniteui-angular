@@ -35,6 +35,14 @@
     <igx-grid #grid1 [data]="data" [allowFiltering]="true" [moving]="true" [cellSelection]="'single'" [width]="'1200px'"
         [hideGroupedColumns]="hideGroupedColumns" [height]="'700px'" [(groupingExpansionState)]='expState' [sortingOptions]="sortingOp"
         [summaryCalculationMode]="summaryMode" [summaryPosition]="position" [rowDraggable]="true">
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
         @for (c of columns; track c) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
                 [hidden]='c.hidden' [sortable]="true" [groupable]='c.groupable' [pinned]='!!c.pinned'

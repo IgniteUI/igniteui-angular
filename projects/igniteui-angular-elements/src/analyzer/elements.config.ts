@@ -1,31 +1,35 @@
+import { IgxQueryBuilderComponent } from "../../../igniteui-angular/query-builder";
+import { IgxGridComponent } from "../../../igniteui-angular/grids/grid";
+import { IgxHierarchicalGridComponent } from "../../../igniteui-angular/grids/hierarchical-grid";
 import {
   IgxPivotDataSelectorComponent,
   IgxPivotGridComponent,
-} from "../../../igniteui-angular/src/public_api";
+} from "../../../igniteui-angular/grids/pivot-grid";
+import { IgxTreeGridComponent } from "../../../igniteui-angular/grids/tree-grid";
+import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
+import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
+import { IgxPaginatorComponent } from "../../../igniteui-angular/paginator/src/paginator/paginator.component";
+import { IgxPaginatorToken } from "../../../igniteui-angular/paginator/src/paginator/token";
+import { IgxColumnGroupComponent } from "../../../igniteui-angular/grids/core/src/columns/column-group.component";
+import { IgxColumnComponent } from "../../../igniteui-angular/grids/core/src/columns/column.component";
+import { IgxColumnLayoutComponent } from "../../../igniteui-angular/grids/core/src/columns/column-layout.component";
+import { IgxQueryBuilderHeaderComponent } from "../../../igniteui-angular/query-builder/src/query-builder/query-builder-header.component";
+import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-editing-actions.component";
+import { IgxActionStripActionsToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
+import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/grids/core/src/grid-actions/grid-pinning-actions.component";
+import { IgxGridToolbarTitleComponent } from "../../../igniteui-angular/grids/core/src/toolbar/common";
+import { IgxGridToolbarActionsComponent } from "../../../igniteui-angular/grids/core/src/toolbar/common";
+import { IgxGridToolbarAdvancedFilteringComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-advanced-filtering.component";
+import { IgxGridToolbarComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar.component";
+import { IgxToolbarToken } from "../../../igniteui-angular/grids/core/src/toolbar/token";
+import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-exporter.component";
+import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-hiding.component";
+import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-pinning.component";
+import { IgxRowIslandComponent } from "../../../igniteui-angular/grids/hierarchical-grid/src/row-island.component";
+import { IgxGridStateComponent } from "../lib/state.component";
 import { IgxGridElementsComponent } from "../lib/grids/grid.component";
 import { IgxHierarchicalGridElementsComponent } from "../lib/grids/hierarchical-grid.component";
 import { IgxTreeGridElementsComponent } from "../lib/grids/tree-grid.component";
-import { IgxPaginatorComponent } from "../../../igniteui-angular/src/lib/paginator/paginator.component";
-import { IgxPaginatorToken } from "../../../igniteui-angular/src/lib/paginator/token";
-import { IgxGridToolbarTitleComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
-import { IgxGridToolbarActionsComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/common";
-import { IgxGridToolbarAdvancedFilteringComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component";
-import { IgxGridToolbarComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component";
-import { IgxToolbarToken } from "../../../igniteui-angular/src/lib/grids/toolbar/token";
-import { IgxColumnComponent } from "../../../igniteui-angular/src/lib/grids/columns/column.component";
-import { IgxColumnGroupComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-group.component";
-import { IgxColumnLayoutComponent } from "../../../igniteui-angular/src/lib/grids/columns/column-layout.component";
-import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component";
-import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component";
-import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component";
-import { IgxRowIslandComponent } from "../../../igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component";
-import { IgxActionStripComponent } from "../../../igniteui-angular/src/lib/action-strip/action-strip.component";
-import { IgxActionStripToken } from "../../../igniteui-angular/src/lib/action-strip/token";
-import { IgxGridEditingActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component";
-import { IgxGridActionsBaseDirective } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-actions-base.directive";
-import { IgxGridPinningActionsComponent } from "../../../igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component";
-import { IgxRowIslandElementsComponent } from "../lib/grids/row-island.component";
-import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [
   IgxGridElementsComponent,
@@ -33,6 +37,7 @@ export const registerComponents = [
   IgxTreeGridElementsComponent,
   IgxPivotGridComponent,
   IgxPivotDataSelectorComponent,
+  IgxQueryBuilderComponent,
 ];
 
 //// WARNING: Code below this line is auto-generated and any modifications will be overwritten
@@ -49,11 +54,11 @@ export var registerConfig = [
     contentQueries: [
       {
         property: "actionButtons",
-        childType: IgxGridActionsBaseDirective,
+        childType: IgxActionStripActionsToken,
         isQueryList: true,
       },
     ],
-    additionalProperties: [],
+    additionalProperties: [{ name: "cdr", writable: true }],
     methods: ["show", "hide"],
     boolProps: ["hidden"],
     provideAs: IgxActionStripToken,
@@ -72,6 +77,7 @@ export var registerConfig = [
     ],
     contentQueries: [],
     additionalProperties: [
+      { name: "grid", writable: true },
       { name: "selected", writable: true },
       { name: "index" },
       { name: "visibleIndex" },
@@ -82,7 +88,6 @@ export var registerConfig = [
       { name: "level" },
       { name: "filteringExpressionsTree" },
       { name: "parent", writable: true },
-      { name: "grid", writable: true },
       { name: "topLevelParent" },
     ],
     methods: ["pin", "unpin", "move", "autosize"],
@@ -137,13 +142,13 @@ export var registerConfig = [
       { name: "childColumns" },
       { name: "columnGroup" },
       { name: "columnLayout" },
+      { name: "grid", writable: true },
       { name: "index" },
       { name: "visibleIndex" },
       { name: "columnLayoutChild" },
       { name: "level" },
       { name: "filteringExpressionsTree" },
       { name: "parent", writable: true },
-      { name: "grid", writable: true },
       { name: "topLevelParent" },
     ],
     methods: ["pin", "unpin", "move", "autosize"],
@@ -194,12 +199,12 @@ export var registerConfig = [
       { name: "selected", writable: true },
       { name: "childColumns" },
       { name: "columnGroup" },
+      { name: "grid", writable: true },
       { name: "index" },
       { name: "columnLayoutChild" },
       { name: "level" },
       { name: "filteringExpressionsTree" },
       { name: "parent", writable: true },
-      { name: "grid", writable: true },
       { name: "topLevelParent" },
     ],
     methods: ["pin", "unpin", "move", "autosize"],
@@ -275,6 +280,10 @@ export var registerConfig = [
       { name: "actionStripComponents", writable: true },
       { name: "groupsRecords" },
       { name: "selectedCells" },
+      { name: "validation" },
+      { name: "gridAPI" },
+      { name: "cdr" },
+      { name: "navigation", writable: true },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
@@ -417,6 +426,16 @@ export var registerConfig = [
     ],
   },
   {
+    component: IgxGridEditingActionsComponent,
+    selector: "igc-grid-editing-actions",
+    parents: [IgxActionStripComponent],
+    contentQueries: [],
+    additionalProperties: [{ name: "hasChildren" }],
+    methods: ["startEdit"],
+    boolProps: ["addRow", "editRow", "deleteRow", "addChild", "asMenuItems"],
+    provideAs: IgxGridActionsBaseDirective,
+  },
+  {
     component: IgxGridPinningActionsComponent,
     selector: "igc-grid-pinning-actions",
     parents: [IgxActionStripComponent],
@@ -424,7 +443,7 @@ export var registerConfig = [
     additionalProperties: [],
     methods: ["pin", "unpin", "scrollToRow"],
     boolProps: ["asMenuItems"],
-    provideAs: IgxGridActionsBaseDirective,
+    provideAs: IgxActionStripActionsToken,
   },
   {
     component: IgxGridStateComponent,
@@ -484,7 +503,7 @@ export var registerConfig = [
     contentQueries: [],
     additionalProperties: [],
     methods: ["export"],
-    boolProps: ["exportCSV", "exportExcel"],
+    boolProps: ["exportCSV", "exportExcel", "exportPDF"],
   },
   {
     component: IgxGridToolbarHidingComponent,
@@ -564,6 +583,8 @@ export var registerConfig = [
       { name: "actionStripComponents", writable: true },
       { name: "foreignKey" },
       { name: "selectedCells" },
+      { name: "gridAPI", writable: true },
+      { name: "navigation", writable: true },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
@@ -745,17 +766,17 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
-      { name: "dimensionsSortingExpressions" },
+      { name: "gridAPI" },
       { name: "navigation", writable: true },
+      { name: "dimensionsSortingExpressions" },
       { name: "allDimensions" },
+      { name: "validation" },
+      { name: "cdr" },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "lastSearchInfo" },
       { name: "filteredData" },
       { name: "filteredSortedData" },
-      { name: "validation" },
-      { name: "gridAPI" },
-      { name: "cdr" },
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
@@ -840,6 +861,35 @@ export var registerConfig = [
       "isLoading",
       "selectRowOnClick",
     ],
+  },
+  {
+    component: IgxQueryBuilderComponent,
+    selector: "igc-query-builder",
+    parents: [],
+    contentQueries: [
+      {
+        property: "queryBuilderHeaderCollection",
+        childType: IgxQueryBuilderHeaderComponent,
+        isQueryList: true,
+      },
+    ],
+    additionalProperties: [],
+    methods: ["canCommit", "commit", "discard"],
+    templateProps: ["searchValueTemplate"],
+    boolProps: [
+      "showEntityChangeDialog",
+      "disableEntityChange",
+      "disableReturnFieldsChange",
+    ],
+  },
+  {
+    component: IgxQueryBuilderHeaderComponent,
+    selector: "igc-query-builder-header",
+    parents: [IgxQueryBuilderComponent],
+    contentQueries: [],
+    additionalProperties: [],
+    methods: [],
+    boolProps: ["showLegend"],
   },
   {
     component: IgxRowIslandComponent,
@@ -1009,17 +1059,15 @@ export var registerConfig = [
       { name: "childLayoutList", writable: true },
       { name: "gridAPI", writable: true },
       { name: "navigation", writable: true },
+      { name: "validation" },
+      { name: "cdr" },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "transactions" },
-      { name: "validation" },
-      { name: "cdr" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
       { name: "columns" },
-      { name: "pinnedStartColumns" },
-      { name: "pinnedEndColumns" },
       { name: "pinnedRows" },
     ],
     methods: [
@@ -1155,6 +1203,10 @@ export var registerConfig = [
       { name: "processedRootRecords", writable: true },
       { name: "processedRecords", writable: true },
       { name: "selectedCells" },
+      { name: "validation" },
+      { name: "gridAPI" },
+      { name: "cdr" },
+      { name: "navigation", writable: true },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
@@ -1163,10 +1215,6 @@ export var registerConfig = [
       { name: "lastSearchInfo" },
       { name: "filteredData" },
       { name: "filteredSortedData" },
-      { name: "validation" },
-      { name: "gridAPI" },
-      { name: "cdr" },
-      { name: "navigation", writable: true },
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },

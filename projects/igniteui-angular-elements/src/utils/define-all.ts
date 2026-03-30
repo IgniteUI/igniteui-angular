@@ -21,6 +21,8 @@ import {
     IgcGridToolbarPinningComponent,
     IgcGridToolbarExporterComponent,
     IgcGridToolbarAdvancedFilteringComponent,
+    IgcQueryBuilderComponent,
+    IgcQueryBuilderHeaderComponent
 } from '../app/components';
 
 export function defineAllComponents() {
@@ -46,5 +48,7 @@ export function defineAllComponents() {
     IgcGridToolbarPinningComponent,
     IgcGridToolbarExporterComponent,
     IgcGridToolbarAdvancedFilteringComponent,
+    IgcQueryBuilderComponent,
+    IgcQueryBuilderHeaderComponent
   );
 }
