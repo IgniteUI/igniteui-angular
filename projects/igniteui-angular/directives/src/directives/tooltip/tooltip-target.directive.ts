@@ -409,12 +409,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     public onHide(event?: Event): void {
-        if (this.tooltipDisabled) {
+        if (this.target.collapsed) {
+            this._cancelPendingShow(event);
             return;
         }
 
-        if (this.target.collapsed) {
-            this._cancelPendingShow(event);
+        if (this.tooltipDisabled) {
             return;
         }
 
