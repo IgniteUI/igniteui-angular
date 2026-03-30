@@ -17,9 +17,6 @@
         igc-grid,
         igc-tree-grid {
             max-height: 550px;
-            --ig-grid-grouparea-background: #ff000012;
-            --ig-grid-drop-area-background: #ff004c12;
-            --ig-paginator-border-color: #d0ab23;
         }
 
         .range-wrapper {
@@ -443,7 +440,7 @@
     <script type="module">
         import { html } from "/lit-html.js";
         // jump around vite import analysis with dynamic import url
-        const hgridData = (await import(`/assets/${'data'}/projects-hgrid.js`)).default;
+        const hgridData = (await import(/* @vite-ignore */ `/assets/${'data'}/projects-hgrid.js`)).default;
         let hgrid = document.getElementById('hgrid1');
         hgrid.data = hgridData;
 

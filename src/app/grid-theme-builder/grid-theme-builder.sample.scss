@@ -1,0 +1,68 @@
+@use '../../../projects/igniteui-angular/core/src/core/styles/themes' as *;
+@use '../../styles/variables' as vars;
+
+.sample {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-block-end: 64px;
+
+    @include tokens(
+        grid-theme(
+            $schema: vars.$schema,
+            $background: #f7f4f0,
+            $accent-color: #5B8F8A
+        )
+    );
+}
+
+.color-pickers {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 8px 0;
+}
+
+.color-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+
+    input[type='color'] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 36px;
+        height: 36px;
+        border: 1px solid currentColor;
+        padding: 0;
+        cursor: pointer;
+
+        &::-webkit-color-swatch-wrapper { padding: 0; }
+        &::-webkit-color-swatch { border: none; }
+        &::-moz-color-swatch { border: none; }
+    }
+
+    .no-color {
+        position: relative;
+        width: 36px;
+        height: 36px;
+        border: 1px solid currentColor;
+        background: transparent;
+        cursor: pointer;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 1px;
+            height: 70%;
+            background: red;
+        }
+
+        &::before { transform: rotate(45deg); }
+        &::after { transform: rotate(-45deg); }
+    }
+}
