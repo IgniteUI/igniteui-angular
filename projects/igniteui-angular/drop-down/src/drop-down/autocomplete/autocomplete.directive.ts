@@ -32,7 +32,13 @@ export interface AutocompleteOverlaySettings {
     positionStrategy?: IPositionStrategy;
     /** Scroll strategy to use with this settings */
     scrollStrategy?: IScrollStrategy;
-    /** Set the outlet container to attach the overlay to */
+    /**
+     * Set the outlet container to attach the overlay to
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
+     */
     outlet?: IgxOverlayOutletDirective | ElementRef;
 }
 

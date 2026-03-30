@@ -30,12 +30,8 @@ export class GlobalPositionStrategy implements IPositionStrategy {
      * Position the element based on the PositionStrategy implementing this interface.
      *
      * @param contentElement The HTML element to be positioned
-     * @param size Size of the element
-     * @param document reference to the Document object
-     * @param initialCall should be true if this is the initial call to the method
-     * @param target attaching target for the component to show
      * ```typescript
-     * settings.positionStrategy.position(content, size, document, true);
+     * settings.positionStrategy.position(content);
      * ```
      */
     public position(contentElement: HTMLElement): void {

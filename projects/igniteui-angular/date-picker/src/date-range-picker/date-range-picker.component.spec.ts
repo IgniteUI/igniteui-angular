@@ -786,7 +786,7 @@ describe('IgxDateRangePicker', () => {
                         .toBeTrue();
                     expect(dateRange.isFocused).toBeTrue();
 
-                    UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', range, true);
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
