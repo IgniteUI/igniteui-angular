@@ -23,7 +23,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 ```html
 <!-- Text buttons -->
 <button igxButton="flat">Flat</button>
-<button igxButton="raised">Raised</button>
+<button igxButton="contained">Contained</button>
 <button igxButton="outlined">Outlined</button>
 <button igxButton="fab">
   <igx-icon>add</igx-icon>
@@ -35,10 +35,10 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 <button igxIconButton="contained"><igx-icon>save</igx-icon></button>
 
 <!-- Disabled state -->
-<button igxButton="raised" [disabled]="isLoading()">Submit</button>
+<button igxButton="contained" [disabled]="isLoading()">Submit</button>
 ```
 
-Button variants for `igxButton`: `'flat'`, `'raised'`, `'outlined'`, `'fab'`.
+Button variants for `igxButton`: `'flat'`, `'contained'`, `'outlined'`, `'fab'`.
 Button variants for `igxIconButton`: `'flat'`, `'outlined'`, `'contained'`.
 
 ## Button Group
@@ -166,14 +166,14 @@ import { IgxRippleDirective } from 'igniteui-angular/directives';
 
 ```html
 <!-- Add to any clickable element for Material-style ink ripple -->
-<button igxButton="raised" igxRipple>Click me</button>
+<button igxButton="contained" igxRipple>Click me</button>
 <div igxRipple igxRippleTarget=".my-class" class="custom-surface">Interactive div</div>
 ```
 
 Inputs: `[igxRipple]` (ripple color), `[igxRippleCentered]` (always start from center), `[igxRippleDisabled]`.
 
 ```html
-<button igxButton="raised" igxRipple="#ff4081" [igxRippleCentered]="true">Pink ripple</button>
+<button igxButton="contained" igxRipple="#ff4081" [igxRippleCentered]="true">Pink ripple</button>
 ```
 
 ## Tooltip
