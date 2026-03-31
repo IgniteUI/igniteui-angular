@@ -1008,6 +1008,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public selectedRowsChange = new EventEmitter<any[]>();
 
+    /* blazorInclude */
+    /** @hidden @internal */
+    /**
+     * Emitted when content children are resolved and collections in grid are updated.
+     */
+    @Output()
+    public childrenResolved = new EventEmitter<void>();
+
     /**
      * Emitted when the expanded state of a row gets changed.
      *
@@ -1144,8 +1152,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    @ViewChild('igxLoadingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    public loadingOutlet: IgxOverlayOutletDirective;
+    @ViewChild('igxLoadingOverlayOutlet', { static: true })
+    public loadingOutlet: ElementRef<HTMLElement>;
 
     /* reactContentChildren */
     /* blazorInclude */
@@ -4479,6 +4487,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @remarks
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed.
      */
     @Input()
     public get outlet() {
@@ -6193,6 +6204,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public showSnackbarFor(index: number) {
         this.addRowSnackbar.actionText = index === -1 ? '' : this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
+        this.addRowSnackbar.positioning = 'container';
         this.lastAddedRowIndex = index;
         this.addRowSnackbar.open();
     }
