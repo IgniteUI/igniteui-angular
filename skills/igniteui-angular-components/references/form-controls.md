@@ -127,8 +127,7 @@ Implements `ControlValueAccessor` and `Validator`. Works with both reactive and 
 import { IgxDateRangePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
-
-// import { IgxDateTimeEditorDirective, IGX_INPUT_GROUP_DIRECTIVES } from '@infragistics/igniteui-angular'; for licensed package
+import { IgxIconComponent } from 'igniteui-angular/icon';
 ```
 
 ```html
@@ -137,6 +136,31 @@ import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
     <input igxInput igxDateTimeEditor type="text" />
   </igx-date-range-start>
   <igx-date-range-end>
+    <input igxInput igxDateTimeEditor type="text" />
+  </igx-date-range-end>
+</igx-date-range-picker>
+```
+
+>[!NOTE]
+> `IgxDateRangePickerComponent` is imported from `igniteui-angular/date-picker`.
+> In the two-input configuration, place the `input` directly inside `igx-date-range-start` and `igx-date-range-end`.
+> To open the calendar from an icon, use `igx-picker-toggle`.
+> Do not wrap the inputs in an additional `igx-input-group`.
+
+Common two-input configuration with calendar toggles:
+
+```html
+<igx-date-range-picker [(ngModel)]="dateRange">
+  <igx-date-range-start>
+    <igx-picker-toggle igxPrefix>
+      <igx-icon>calendar_today</igx-icon>
+    </igx-picker-toggle>
+    <input igxInput igxDateTimeEditor type="text" />
+  </igx-date-range-start>
+  <igx-date-range-end>
+    <igx-picker-toggle igxPrefix>
+      <igx-icon>calendar_today</igx-icon>
+    </igx-picker-toggle>
     <input igxInput igxDateTimeEditor type="text" />
   </igx-date-range-end>
 </igx-date-range-picker>
@@ -303,6 +327,7 @@ export class MyFormComponent {
 - **Always check `app.config.ts` first** — add `provideAnimations()` before using Combo, Select, Date Picker, or any overlay component
 - **Import from specific entry points** — avoid the root `igniteui-angular` barrel
 - Date/Time pickers implement both `ControlValueAccessor` and `Validator` — they integrate with reactive forms natively
+- For `igx-date-range-picker` with separate start and end inputs, place the inputs directly inside `igx-date-range-start` and `igx-date-range-end`. Use `igx-picker-toggle` if an icon should open the calendar.
 
 ## See Also
 
