@@ -1017,10 +1017,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorInclude */
     /** @hidden @internal */
     /**
-     * Emitted when content children are attached and collections in grid are updated.
+     * Emitted when content children are resolved and collections in grid are updated.
      */
     @Output()
-    public childrenAttached = new EventEmitter<void>();
+    public childrenResolved = new EventEmitter<void>();
 
     /**
      * Emitted when the expanded state of a row gets changed.

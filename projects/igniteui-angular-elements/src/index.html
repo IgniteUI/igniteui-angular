@@ -143,7 +143,7 @@
 
         grid1.data = northwindProducts;
         grid2.data = northwindProducts;
-        grid1.addEventListener('childrenAttached', () => {
+        grid1.addEventListener('childrenResolved', () => {
             console.log("Ready!");
             restoreState();
         });
@@ -498,7 +498,7 @@
             }
         }
         let hgrid = document.getElementById('hgrid1');
-        hgrid.addEventListener('childrenAttached', () => {
+        hgrid.addEventListener('childrenResolved', () => {
             restoreStateHierarchical();
         });
         hgrid.data = hgridData;

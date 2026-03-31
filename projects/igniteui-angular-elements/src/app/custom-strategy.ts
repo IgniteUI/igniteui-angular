@@ -173,7 +173,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const contentQueryChildrenCollection = componentConfig.contentQueries.filter(x => contentChildrenTypes.includes(x.childType));
         if (contentQueryChildrenCollection.length === 0) {
             // no content children, emit event immediately, since there's nothing to be attached.
-            (this as any).componentRef?.instance?.childrenAttached?.emit();
+            (this as any).componentRef?.instance?.childrenResolved?.emit();
         }
 
         if (parentAnchor && parentInjector) {
@@ -343,7 +343,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
         if (this.schedule.size === 0) {
             // children are attached and collections are updated, emit event.
-            (this as any).componentRef?.instance?.childrenAttached?.emit();
+            (this as any).componentRef?.instance?.childrenResolved?.emit();
         }
     }
 
