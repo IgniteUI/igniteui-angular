@@ -66,6 +66,7 @@
     min-height: calc(100% - (var(--demo-navbar-size) + var(--demos-gap) + (var(--content-spacing) * 2)));
     overflow-y: auto;
     padding: var(--content-spacing);
+	color: var(--ig-gray-900);
 }
 
 .demos-filter {

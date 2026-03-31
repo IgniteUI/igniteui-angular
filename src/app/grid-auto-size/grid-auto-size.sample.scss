@@ -1,8 +1,6 @@
-.sample-buttons {
-    margin-top: 24px;
-}
-
-[igxButton] {
-    margin-right: 8px;
-    margin-bottom: 8px;
+:host {
+	display: grid;
+	gap: var(--demos-gap);
+	height: 100%;
+	align-items: start;
 }
