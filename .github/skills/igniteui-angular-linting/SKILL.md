@@ -19,6 +19,7 @@ Quick-reference card for the core lint commands for the main library in this rep
 | `npm run lint:lib` | ESLint **+** Stylelint (both — use this as the default) |
 | `npm run lint:styles` | Stylelint only (Sass/SCSS files) |
 | `npm run lint` | `ng lint` — ESLint only (TypeScript + templates) |
+| `ng lint --fix` | Quick fix for tool identifiable fixes |
 
 ### `lint:lib` (recommended)
 
