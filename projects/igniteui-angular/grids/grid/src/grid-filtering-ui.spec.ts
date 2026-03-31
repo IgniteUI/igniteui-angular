@@ -5162,7 +5162,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify the calendar is scrolled to previous month.
             const headerLabel = document.querySelector('igx-calendar').querySelector('.igx-calendar-picker__date') as HTMLElement;
             const today = new Date();
-            const prevMonth = new Date(today.setMonth(today.getMonth() - 1));
+            const prevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
             const monthName = prevMonth.toLocaleString('default', { month: 'short' });
             expect(headerLabel.innerText.trim()).toMatch(`${monthName}`);
         }));
