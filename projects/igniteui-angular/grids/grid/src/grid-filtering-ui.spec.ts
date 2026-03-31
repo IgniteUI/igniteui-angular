@@ -1977,7 +1977,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should scroll correct chip in view when one is deleted', async () => {
-            grid.width = '800px';
+            grid.width = '840px';
             fix.detectChanges();
             await wait(DEBOUNCE_TIME);
 
