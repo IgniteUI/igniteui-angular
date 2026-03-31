@@ -209,4 +209,14 @@ describe('IgxStackedDataChartInitializer', () => {
         expect((init as any).xAxis).toBeDefined();
         expect((init as any).yAxis).toBeDefined();
     });
+
+    it('should store the seriesType', () => {
+        const init = new IgxStackedDataChartInitializer(IgxStackedColumnSeriesComponent);
+        expect(init.seriesType).toBe(IgxStackedColumnSeriesComponent);
+    });
+
+    it('should store the seriesType for bar', () => {
+        const init = new IgxStackedDataChartInitializer(IgxStackedBarSeriesComponent);
+        expect(init.seriesType).toBe(IgxStackedBarSeriesComponent);
+    });
 });

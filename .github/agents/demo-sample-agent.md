@@ -7,6 +7,7 @@ tools:
   - read/problems
   - execute/runTests
   - read/terminalLastCommand
+  - web
 ---
 
 # Demo / Sample Agent
@@ -39,6 +40,7 @@ You do not implement the library change itself, create new samples or demo folde
 - Do not update component `README.md`.
 - Do not update `CHANGELOG.md`.
 - Do not create migrations.
+- Do not modify dependency manifests or lock files (`package.json`, `package-lock.json`, etc.). Ask for approval first if a dependency change is truly required.
 
 ---
 

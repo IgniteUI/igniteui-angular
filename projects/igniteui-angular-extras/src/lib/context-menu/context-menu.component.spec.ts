@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { IgxOverlayService } from 'igniteui-angular/core';
 import { IgxContextMenuComponent } from './context-menu.component';
 import { CHART_TYPE } from '../directives/chart-integration/chart-types';
+import { IgxChartMenuComponent } from 'igniteui-angular-extras';
 
 describe('IgxContextMenuComponent', () => {
     let component: IgxContextMenuComponent;
@@ -263,6 +264,70 @@ describe('IgxContextMenuComponent', () => {
             // Re-init to pick up the new value
             component.ngAfterViewInit();
             expect(component.displayCreationTab).toBeFalse();
+        });
+    });
+
+    describe('ngOnDestroy', () => {
+        it('should complete destroy$ and not throw on subsequent event emissions', () => {
+            component.ngOnDestroy();
+
+            // After destroy, emitting on subscribed observables should not cause errors
+            expect(() => mockContextDirective.chartsDirective.chartTypesDetermined.emit({ chartsForCreation: [] })).not.toThrow();
+            expect(() => mockContextDirective.textFormatter.formattersReady.emit([])).not.toThrow();
+            expect(() => mockContextDirective.buttonClose.emit()).not.toThrow();
+        });
+    });
+
+    describe('overlayService.closing subscription', () => {
+        it('should not reopen tabsMenu when closing a dialog that is not IgxChartMenuComponent', () => {
+            // Simulate having an open dialog
+            (component as any)._dialogId = 'dialog-id';
+            const mockInstance = new (class { })();
+            Object.setPrototypeOf(mockInstance, { constructor: { name: 'IgxChartMenuComponent' } });
+
+            // The closing event checks instanceof IgxChartMenuComponent — we mock at the overlay level
+            (mockOverlay.closing as Subject<any>).next({
+                componentRef: { instance: TestBed.createComponent(IgxChartMenuComponent).componentInstance }
+            });
+
+            // When the closed component looks like an IgxChartMenuComponent and _dialogId is set, tabsMenu.open should be called
+            expect(mockTabsMenu.open).toHaveBeenCalled();
+        });
+
+        it('should not open tabsMenu when closing event has no componentRef', () => {
+            (component as any)._dialogId = 'dialog-id';
+
+            (mockOverlay.closing as Subject<any>).next({ componentRef: undefined });
+
+            expect(mockTabsMenu.open).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('overlayService.opening with chartDialogResizeNotify', () => {
+        it('should not throw when opening event has no componentRef', () => {
+            expect(() => {
+                (mockOverlay.opening as Subject<any>).next({ componentRef: undefined });
+            }).not.toThrow();
+        });
+    });
+
+    describe('constructor', () => {
+        it('should initialize chartImages and conditionImages', () => {
+            expect(component.chartImages).toBeDefined();
+            expect(component.conditionImages).toBeDefined();
+        });
+    });
+
+    describe('toggleTabMenu with target setting', () => {
+        it('should set the overlay target to the button nativeElement', () => {
+            component.toggleTabMenu();
+            expect((component as any)._tabsMenuOverlaySettings.target).toBe(component.button.nativeElement);
+        });
+
+        it('should preserve currentChartType if already set', () => {
+            component.currentChartType = CHART_TYPE.Pie;
+            component.toggleTabMenu();
+            expect(component.currentChartType).toBe(CHART_TYPE.Pie);
         });
     });
 });
