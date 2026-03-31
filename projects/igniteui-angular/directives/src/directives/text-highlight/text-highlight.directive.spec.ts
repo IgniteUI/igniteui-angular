@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
@@ -319,7 +319,7 @@ describe('IgxHighlight', () => {
     });
 
     describe('observe()', () => {
-        it('should create a MutationObserver and watch for DOM changes', (done) => {
+        it('should create a MutationObserver and watch for DOM changes', fakeAsync(() => {
             const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
             fix.detectChanges();
             const component = fix.componentInstance;
@@ -331,6 +331,18 @@ describe('IgxHighlight', () => {
             // Initially no observer
             expect((directive as any)._observer).toBeNull();
 
+            // Replace window.MutationObserver to capture the callback synchronously,
+            // avoiding any real-timer dependency for deterministic testing.
+            let observerCallback: MutationCallback;
+            const disconnectSpy = jasmine.createSpy('disconnect');
+            const observeSpy = jasmine.createSpy('observe');
+            const originalMO = window.MutationObserver;
+            (window as any).MutationObserver = function(cb: MutationCallback) {
+                observerCallback = cb;
+                return { observe: observeSpy, disconnect: disconnectSpy };
+            };
+
+            try {
             directive.observe();
 
             // Observer is now attached
@@ -341,27 +353,38 @@ describe('IgxHighlight', () => {
             directive.observe();
             expect((directive as any)._observer).toBe(existingObserver);
 
-            // Simulate node removal (the container being removed from the DOM)
             const parent = directive.parentElement as HTMLElement;
             const container = (directive as any)._container as Node;
 
-            // Remove the container - this should trigger the MutationObserver callback
+            // Simulate container removal: remove from DOM then invoke the captured callback
             parent.removeChild(container);
+            observerCallback([{
+                type: 'childList',
+                removedNodes: [container] as unknown as NodeList,
+                addedNodes: [] as unknown as NodeList,
+                target: parent, attributeName: null, attributeNamespace: null,
+                nextSibling: null, oldValue: null, previousSibling: null
+            } as MutationRecord], existingObserver as unknown as MutationObserver);
 
-            // Use a short timeout to allow the MutationObserver microtask to fire
-            setTimeout(() => {
-                expect((directive as any)._nodeWasRemoved).toBeTrue();
+            expect((directive as any)._nodeWasRemoved).toBeTrue();
 
-                // Re-add the container as the first element child to trigger re-highlight
-                parent.insertBefore(container, parent.firstChild);
+            // Simulate container re-insertion as firstElementChild, then invoke the callback
+            parent.insertBefore(container, parent.firstChild);
+            observerCallback([{
+                type: 'childList',
+                removedNodes: [] as unknown as NodeList,
+                addedNodes: [container] as unknown as NodeList,
+                target: parent, attributeName: null, attributeNamespace: null,
+                nextSibling: null, oldValue: null, previousSibling: null
+            } as MutationRecord], existingObserver as unknown as MutationObserver);
 
-                setTimeout(() => {
-                    // After re-add, observer should have disconnected and set _observer = null
-                    expect((directive as any)._observer).toBeNull();
-                    done();
-                }, 50);
-            }, 50);
-        });
+            // Callback should have disconnected the observer and reset _observer to null
+            expect(disconnectSpy).toHaveBeenCalled();
+            expect((directive as any)._observer).toBeNull();
+            } finally {
+                (window as any).MutationObserver = originalMO;
+            }
+        }));
     });
 });
 
