@@ -23,9 +23,9 @@
                         <igx-row-island #rowIsland2 [key]="'Order_Details'" [height]="'300px'" [primaryKey]="'ProductID'"
                                 [autoGenerate]="false" [rowSelection]='selectionMode' (gridCreated)="gridCreated($event, rowIsland2)">
                                 <igx-column field="ProductID"></igx-column>
-                                <igx-column field="UnitPrice"></igx-column>
+                                <igx-column field="UnitPrice" [dataType]='"currency"'></igx-column>
                                 <igx-column field="Quantity"></igx-column>
-                                <igx-column field="Discount"></igx-column>
+                                <igx-column field="Discount" [dataType]='"percent"'></igx-column>
                         </igx-row-island>
                 </igx-row-island>
         </igx-hierarchical-grid>
