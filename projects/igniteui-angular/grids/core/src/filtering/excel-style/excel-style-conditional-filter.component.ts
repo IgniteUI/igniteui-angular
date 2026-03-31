@@ -131,35 +131,32 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         const overlaySettings: OverlaySettings = {
             modal: false,
             closeOnOutsideClick: true,
-            positionStrategy: new ContainerPositionStrategy(),
-            scrollStrategy: new AbsoluteScrollStrategy()
+            positionStrategy: new ContainerPositionStrategy()
         };
         const overlayId = this._overlayService.attach(IgxExcelStyleCustomDialogComponent, this.esf.grid.viewRef, overlaySettings);
         const overlayInfo = this._overlayService.getOverlayById(overlayId);
         const customDialog = overlayInfo.componentRef.instance as IgxExcelStyleCustomDialogComponent;
         this.esf.grid.tbody.nativeElement.appendChild(overlayInfo.wrapperElement.parentElement);
 
+        customDialog.esf = this.esf;
+        customDialog.column = this.esf.column;
+        customDialog.filteringService = this.esf.grid.filteringService;
+        customDialog.overlayComponentId = overlayId;
+        if (this.esf.expressionsList && this.esf.expressionsList.length &&
+            this.esf.expressionsList[0].expression.condition.name !== 'in') {
+            customDialog.expressionsList = this.esf.expressionsList;
+        } else {
+            customDialog.expressionsList = customDialog.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
+        }
+        customDialog.selectedOperator = eventArgs.newSelection.value;
+
         this._overlayService.opening.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-            if (args.id === overlayId) {
-                customDialog.esf = this.esf;
-                customDialog.column = this.esf.column;
-                customDialog.filteringService = this.esf.grid.filteringService;
-                customDialog.overlayComponentId = overlayId;
-                customDialog.selectedOperator = eventArgs.newSelection.value;
-                if (this.esf.expressionsList && this.esf.expressionsList.length &&
-                    this.esf.expressionsList[0].expression.condition.name !== 'in') {
-                    customDialog.expressionsList = this.esf.expressionsList;
-                } else {
-                    customDialog.expressionsList = customDialog.expressionsList
-                    .filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
-                }
+            if (args.id === overlayId)
                 customDialog.onCustomDialogOpening();
-            }
         });
         this._overlayService.opened.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-            if (args.id === overlayId) {
+            if (args.id === overlayId)
                 customDialog.onCustomDialogOpened();
-            }
         });
 
         eventArgs.cancel = true;
@@ -167,7 +164,6 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
             this.esf.hide();
         }
         this.subMenu.close();
-
         this._overlayService.show(overlayId);
     }
 
