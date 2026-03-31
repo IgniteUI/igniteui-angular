@@ -1,13 +1,13 @@
-import { Component, Input, ChangeDetectorRef, ViewChild, TemplateRef, ViewChildren, QueryList, ElementRef, inject } from '@angular/core';
-import { IgxFilteringService } from '../grid-filtering.service';
-import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
-import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
-import { ExpressionUI } from './common';
 import { NgClass } from '@angular/common';
-import { BaseFilteringComponent } from './base-filtering.component';
+import { ChangeDetectorRef, Component, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import { ColumnType, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { ColumnType, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil } from 'igniteui-angular/core';
+import { IgxFilteringService } from '../grid-filtering.service';
+import { BaseFilteringComponent } from './base-filtering.component';
+import { ExpressionUI } from './common';
+import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
+import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 
 /**
  * @hidden
