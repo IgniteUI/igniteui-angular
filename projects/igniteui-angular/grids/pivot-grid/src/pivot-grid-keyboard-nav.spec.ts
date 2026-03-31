@@ -410,7 +410,6 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         let fixture: ComponentFixture<IgxPivotGridMultipleRowComponent>;
         let pivotGrid: IgxPivotGridComponent;
         let pivotNav: IgxPivotGridNavigationService;
-        let headerRow: DebugElement;
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
@@ -430,7 +429,6 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             pivotGrid = fixture.componentInstance.pivotGrid;
             pivotNav = pivotGrid.navigation as IgxPivotGridNavigationService;
             await fixture.whenStable();
-            headerRow = fixture.debugElement.query(By.directive(IgxPivotHeaderRowComponent));
 
             // Enable row headers so ArrowLeft on column 0 activates row dimension header navigation
             pivotGrid.pivotUI = { ...pivotGrid.pivotUI, showRowHeaders: true };
@@ -542,10 +540,6 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
         it('should sort dimension when pressing ctrl+ArrowDown with row=-1 in row dimension header nav', () => {
             activateRowDimensionHeaderNav();
-
-            const col = pivotNav.activeNode.column;
-            const dim = pivotGrid.visibleRowDimensions[col];
-            const initialSortDirection = dim.sortDirection;
 
             spyOn(pivotGrid, 'sortDimension').and.callThrough();
 

@@ -592,7 +592,7 @@ describe('IgxMonthPicker', () => {
         expect(monthPicker.viewDate.getFullYear()).toBe(initialYear - 1);
     });
 
-    it('should navigate forward by 15 years via Shift+PageDown in default (year) view', () => {
+    it('should navigate forward one year via PageDown in default (year) view', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
         const monthPicker = fixture.componentInstance.monthPicker;
@@ -601,10 +601,9 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         const initialYear = monthPicker.viewDate.getFullYear();
-        UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement, true, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement);
         fixture.detectChanges();
 
-        // Shift+PageDown in year view increments by 1 year (delta=1) using viewDate shift
         expect(monthPicker.viewDate.getFullYear()).toBe(initialYear + 1);
     });
 
@@ -650,7 +649,6 @@ describe('IgxMonthPicker', () => {
     it('should navigate to January via Home key in default (year) view', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
-        const monthPicker = fixture.componentInstance.monthPicker;
         const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
         wrapper.nativeElement.focus();
         fixture.detectChanges();
@@ -666,7 +664,6 @@ describe('IgxMonthPicker', () => {
     it('should navigate to December via End key in default (year) view', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
-        const monthPicker = fixture.componentInstance.monthPicker;
         const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
         wrapper.nativeElement.focus();
         fixture.detectChanges();
