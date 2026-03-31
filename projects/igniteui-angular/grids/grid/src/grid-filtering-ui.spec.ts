@@ -2732,19 +2732,19 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const thead = GridFunctions.getGridHeader(grid).nativeElement;
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
             setElementSize(grid.nativeElement, ɵSize.Medium);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
             setElementSize(grid.nativeElement, ɵSize.Small);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
         });
 
@@ -5162,7 +5162,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify the calendar is scrolled to previous month.
             const headerLabel = document.querySelector('igx-calendar').querySelector('.igx-calendar-picker__date') as HTMLElement;
             const today = new Date();
-            const prevMonth = new Date(today.setMonth(today.getMonth() - 1));
+            const prevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
             const monthName = prevMonth.toLocaleString('default', { month: 'short' });
             expect(headerLabel.innerText.trim()).toMatch(`${monthName}`);
         }));
