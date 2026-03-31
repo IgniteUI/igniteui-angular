@@ -34,11 +34,11 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
   <p>Are you sure you want to delete this item? This action cannot be undone.</p>
   <div igxDialogActions>
     <button igxButton="flat" (click)="confirmDialog.close()">Cancel</button>
-    <button igxButton="raised" (click)="deleteItem(); confirmDialog.close()">Delete</button>
+    <button igxButton="contained" (click)="deleteItem(); confirmDialog.close()">Delete</button>
   </div>
 </igx-dialog>
 
-<button igxButton="raised" (click)="confirmDialog.open()">Delete Item</button>
+<button igxButton="contained" (click)="confirmDialog.open()">Delete Item</button>
 ```
 
 Programmatic control:
