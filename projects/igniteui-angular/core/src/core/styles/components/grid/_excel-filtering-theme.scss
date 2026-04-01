@@ -409,7 +409,7 @@
             overflow: hidden;
 
             @if $variant == 'indigo' {
-                --background: var(--ig-grid-background, #{color($color: 'surface', $variant: 500)});
+                --background: var(--_grid-background, #{color($color: 'surface', $variant: 500)});
 
                 margin-inline: calc(sizable(rem(-16px)) * -1);
 
@@ -619,7 +619,7 @@
 
         @if $bootstrap-theme {
             padding-block-start: pad-block(rem(16px));
-            border-top: rem(1px) solid color-mix(in srgb, var(--ig-grid-foreground, var(--ig-gray-300)) 20%, var(--ig-grid-background, var(--ig-gray-300)));
+            border-top: rem(1px) solid color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-300)) 20%, var(--_grid-background, var(--ig-gray-300)));
         }
 
         %grid-excel-filter__apply,
