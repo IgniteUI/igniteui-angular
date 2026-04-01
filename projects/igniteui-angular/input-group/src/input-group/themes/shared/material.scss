@@ -29,6 +29,11 @@ $input-bottom-spacing: rem(6px);
         --_bundle-row: 1;
         --_hint-row: 2;
     }
+	
+	.igx-input-group:has(:not(.igx-input-group__label)) {
+		--_bundle-row: 1;
+		--_hint-row: 2;
+	}
 
     row-gap: rem(4px);
 

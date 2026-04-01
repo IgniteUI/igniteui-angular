@@ -520,12 +520,6 @@ $transition-timing: .25s $out-cubic;
             }
             /* stylelint-enable max-nesting-depth */
         }
-
-    }
-
-    .igx-input-group:has(:not(.igx-input-group__label)) {
-        --_bundle-row: 1;
-        --_hint-row: 2;
     }
 
     igx-combo .igx-input-group:not(.igx-input-group--disabled),
