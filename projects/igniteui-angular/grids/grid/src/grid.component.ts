@@ -70,21 +70,11 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
-/* blazorAdditionalDependency: Column */
-/* blazorAdditionalDependency: ColumnGroup */
-/* blazorAdditionalDependency: ColumnLayout */
-/* blazorAdditionalDependency: GridToolbar */
-/* blazorAdditionalDependency: GridToolbarActions */
-/* blazorAdditionalDependency: GridToolbarTitle */
-/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
-/* blazorAdditionalDependency: GridToolbarExporter */
-/* blazorAdditionalDependency: GridToolbarHiding */
-/* blazorAdditionalDependency: GridToolbarPinning */
-/* blazorAdditionalDependency: ActionStrip */
-/* blazorAdditionalDependency: GridActionsBaseDirective */
-/* blazorAdditionalDependency: GridEditingActions */
-/* blazorAdditionalDependency: GridPinningActions */
-/* blazorIndirectRender */
+/* blazorAlternateName: GridBase */
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *

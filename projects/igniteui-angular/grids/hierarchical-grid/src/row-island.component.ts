@@ -36,16 +36,11 @@ import { IGridCreatedEventArgs } from './events';
 import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
 import { IForOfState } from 'igniteui-angular/directives';
 
-/* blazorCopyInheritedMembers */
-/* blazorElement */
-/* wcElementTag: igc-row-island */
-/* blazorIndirectRender */
-/* jsonAPIManageCollectionInMarkup */
-/* jsonAPIManageItemInMarkup */
-/* mustUseNGParentAnchor */
-/* additionalIdentifier: ChildDataKey */
-/* contentParent: RowIsland */
-/* contentParent: HierarchicalGrid */
+/* blazorAlternateName: RowIslandBase */
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 /**
  * Row island
  *

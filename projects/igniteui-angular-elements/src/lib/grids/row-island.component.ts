@@ -4,6 +4,7 @@
 /* blazorIndirectRender */
 /* jsonAPIManageCollectionInMarkup */
 /* jsonAPIManageItemInMarkup */
+/* blazorAlternateName: RowIsland */
 /* mustUseNGParentAnchor */
 /* additionalIdentifier: ChildDataKey */
 /* contentParent: RowIsland */
