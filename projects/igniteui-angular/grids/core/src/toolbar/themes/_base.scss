@@ -3,11 +3,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
 @use 'styles/themes/standalone' as *;
-@use './light/list/tokens' as list;
-@use './light/toolbar/tokens' as toolbar;
+@use 'light/tokens' as *;
 
-$_theme: toolbar.$base;
-$_theme-dd: list.$base;
+$theme: $base;
 
 @include layer(base) {
     @include b(igx-grid-toolbar) {
@@ -21,10 +19,10 @@ $_theme-dd: list.$base;
         justify-content: space-between;
         grid-row: 1;
         font-size: rem(16px);
-        border-bottom: rem(1px) solid var-get($_theme, 'border-color');
-        background: var-get($_theme, 'background-color');
+        border-bottom: rem(1px) solid var-get($theme, 'border-color');
+        background: var-get($theme, 'background-color');
         height: auto;
-        min-height: var-get($_theme, 'size');
+        min-height: var-get($theme, 'size');
         padding-block: 0;
         padding-inline-start: pad-inline(rem(12px), rem(16px), rem(24px));
         padding-inline-end: pad-inline(rem(8px), rem(12px), rem(16px));
@@ -57,7 +55,7 @@ $_theme-dd: list.$base;
         @include e(title) {
             @include ellipsis();
 
-            color: var-get($_theme, 'title-text-color');
+            color: var-get($theme, 'title-text-color');
             flex: 1 1 auto;
             max-width: 40ch;
             margin-inline-end: rem(16px);
@@ -111,7 +109,7 @@ $_theme-dd: list.$base;
             bottom: rem(-1px);
             height: rem(2px);
             overflow: hidden;
-            background: var-get($_theme, 'background-color');
+            background: var-get($theme, 'background-color');
 
             igx-linear-bar > * {
                 border-radius: 0;
@@ -128,7 +126,7 @@ $_theme-dd: list.$base;
 
         @include e(dd-list){
             list-style: none;
-            background: var-get($_theme-dd, 'dropdown-background');
+            background: var-get($theme, 'dropdown-background');
             margin: 0;
             padding: 0;
             box-shadow: var(--ig-elevation-8);
@@ -138,17 +136,17 @@ $_theme-dd: list.$base;
             cursor: pointer;
             position: relative;
             padding: rem(8px) rem(16px);
-            color: var-get($_theme-dd, 'item-text-color');
+            color: var-get($theme, 'item-text-color');
             white-space: nowrap;
 
             &:hover {
-                background: var-get($_theme-dd, 'item-hover-background');
-                color: var-get($_theme-dd, 'item-hover-text-color');
+                background: var-get($theme, 'item-hover-background');
+                color: var-get($theme, 'item-hover-text-color');
             }
 
             &:focus {
-                background: var-get($_theme-dd, 'item-focus-background');
-                color: var-get($_theme-dd, 'item-focus-text-color');
+                background: var-get($theme, 'item-focus-background');
+                color: var-get($theme, 'item-focus-text-color');
             }
         }
     }
