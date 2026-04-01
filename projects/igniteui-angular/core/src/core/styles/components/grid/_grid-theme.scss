@@ -342,12 +342,20 @@
             );
         }
 
+        $scrollbar-theme: digest-schema(map.get($schema, 'scrollbar'));
+        $scrollbar-bg-color: map.get($scrollbar-theme, 'sb-track-bg-color');
+        $scrollbar-thumb-color: map.get($scrollbar-theme, 'sb-thumb-bg-color');
+        $scrollbar-track-color: map.get($scrollbar-theme, 'sb-track-border-color');
+
+        --_scrollbar-thumb-color: color-mix(in srgb, var(--ig-grid-foreground) 50%, var(--ig-grid-background));
+        --_scrollbar-track-border-color: color-mix(in srgb, var(--ig-grid-foreground) 16%, var(--ig-grid-background));
+
         @include tokens(
             scrollbar-theme(
                 $schema: $schema,
-                $sb-track-bg-color: var(--ig-grid-background),
-                $sb-thumb-bg-color: color-mix(in srgb, var(--ig-grid-foreground) 50%, var(--ig-grid-background)),
-                $sb-track-border-color: color-mix(in srgb, var(--ig-grid-foreground) 16%, var(--ig-grid-background)),
+                $sb-track-bg-color: var(--ig-grid-background, $scrollbar-bg-color),
+                $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
+                $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-color),
             ),
             $mode: 'scoped'
         );
