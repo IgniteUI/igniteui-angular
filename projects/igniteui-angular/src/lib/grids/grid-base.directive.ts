@@ -186,6 +186,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
+import { IgxActionStripComponent, IgxGridPinningActionsComponent } from 'igniteui-angular';
 
 interface IMatchInfoCache {
     row: any;
@@ -7836,7 +7837,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keepActionStrip =
             !!context?.pinned &&
             !!contextEl?.isConnected &&
-            !(this.actionStrip?.menuItems?.length > 0);
+            !this.hasMenuPinningActions();
 
         if (!keepActionStrip) {
             if (this.actionStrip) {
@@ -7850,6 +7851,22 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
+    }
+
+    protected hasMenuPinningActions(): boolean {
+        const strip = this.actionStrip as IgxActionStripComponent;
+        if (!strip?.actionButtons?.length) {
+            return false;
+        }
+
+        let hasMenuPinningActions = false;
+        strip.actionButtons.forEach((button) => {
+            if (button instanceof IgxGridPinningActionsComponent && button.asMenuItems) {
+                hasMenuPinningActions = true;
+            }
+        });
+
+        return hasMenuPinningActions;
     }
 
     protected horizontalScrollHandler(event) {
