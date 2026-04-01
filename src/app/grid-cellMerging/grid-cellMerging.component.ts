@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import {
     DefaultTreeGridMergeStrategy,
     IgxActionStripComponent,
+    IgxButtonDirective,
     IgxCellTemplateDirective,
     IgxColumnComponent,
     IgxGridComponent,
@@ -12,10 +13,10 @@ import {
     IgxGridToolbarHidingComponent,
     IgxGridToolbarPinningComponent,
     IgxHierarchicalGridComponent,
+    IgxIconButtonDirective,
     IgxIconComponent,
     IgxInputDirective,
     IgxInputGroupComponent,
-    IgxPaginatorComponent,
     IgxPrefixDirective,
     IgxRowIslandComponent,
     IgxSuffixDirective,
@@ -50,7 +51,9 @@ import { INVOICE_DATA } from '../shared/invoiceData';
         IgxSuffixDirective,
         IgxIconComponent,
         IgxInputDirective,
-        IgxCellTemplateDirective
+        IgxCellTemplateDirective,
+        IgxButtonDirective,
+        IgxIconButtonDirective
     ]
 })
 export class GridCellMergingComponent {
