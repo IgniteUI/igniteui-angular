@@ -2812,3 +2812,26 @@ export class IgxGridRowEditingDefinedColumnsComponent extends BasicGridComponent
 })
 export class IgxGridConditionalFilteringComponent extends IgxGridFilteringComponent {
 }
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" width="600px">
+        <igx-column-group header="Customer Information" [collapsible]="true" [expanded]="false">
+            <igx-column field="CompanyName" width="100px" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column field="ContactName" width="100px" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="ContactTitle" width="100px" [visibleWhenCollapsed]="false"></igx-column>
+        </igx-column-group>
+        <igx-column field="ID" width="200px"></igx-column>
+        <igx-column field="Address" width="200px"></igx-column>
+        <igx-column field="City" width="200px"></igx-column>
+        <igx-column field="Country" width="200px"></igx-column>
+        <igx-column field="Phone" width="200px"></igx-column>
+    </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
+})
+export class CollapsibleGroupWithExplicitChildWidthsComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+    public data = SampleTestData.contactInfoDataFull();
+}

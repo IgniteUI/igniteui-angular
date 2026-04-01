@@ -216,7 +216,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.cdr.markForCheck();
         this._displayValue = this.createDisplayText(super.selection, oldSelection);
         this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
-        this.filterValue = this._displayValue?.toString() || '';
+        this.searchValue = this.filterValue = this._displayValue?.toString() || '';
     }
 
     /** @hidden @internal */
@@ -260,11 +260,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
             if (this.getEditElement() && !args.event) {
                 this._collapsing = true;
+                // Only focus back when programmatically closing (no user event)
+                // to avoid focus loops when user clicks on another combo
+                this.comboInput.focus();
             } else {
                 this.clearOnBlur();
                 this._onTouchedCallback();
             }
-            this.comboInput.focus();
         });
 
         // in reactive form the control is not present initially

@@ -178,11 +178,14 @@
 
     .igx-input-group {
         %igx-combo__toggle-button {
+            cursor: pointer;
             background: var-get($theme, 'toggle-button-background');
             color: var-get($theme, 'toggle-button-foreground');
         }
 
         %igx-combo__clear-button {
+            cursor: pointer;
+
             @if $variant == 'bootstrap' {
                 border-inline-end: rem(1px) solid var(--border-color);
             }
@@ -284,6 +287,14 @@
             @if $variant == 'bootstrap' {
                 border-inline-end: 0;
             }
+        }
+    }
+
+    igx-combo {
+        %form-group-input,
+        %form-group-prefix,
+        %form-group-suffix {
+            cursor: pointer;
         }
     }
 }

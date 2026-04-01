@@ -2208,6 +2208,57 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(document.activeElement).toEqual(thirdComboInput.nativeElement);
         }));
+
+        it('should lose focus when user closes combo by clicking outside', fakeAsync(() => {
+            // Initially combo is not focused
+            expect(document.activeElement).not.toBe(input.nativeElement);
+
+            // Click inside combo input to focus it
+            input.triggerEventHandler('focus', {});
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            // Verify combo is focused and opened
+            expect(document.activeElement).toBe(input.nativeElement);
+            expect(combo.collapsed).toBe(false);
+
+            // Simulate outside click by clicking on document body
+            // This triggers the blur event which is what happens on outside clicks
+            input.triggerEventHandler('blur', {});
+            document.body.click();
+            tick();
+            fixture.detectChanges();
+
+            expect(document.activeElement).not.toBe(input.nativeElement);
+        }));
+
+        it('should sync searchValue/filterValue on writeValue and keep selection on blur', fakeAsync(() => {
+            combo.searchValue = combo.filterValue = 'zzz';
+
+            combo.writeValue('Connecticut');
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.displayValue).toEqual('Connecticut');
+            expect(combo.searchValue).toEqual('Connecticut');
+            expect(combo.filterValue).toEqual('Connecticut');
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.selection).toBeDefined();
+            expect(combo.selection.field).toEqual('Connecticut');
+            expect(combo.displayValue).toEqual('Connecticut');
+            expect(input.nativeElement.value).toEqual('Connecticut');
+        }));
     });
 
     describe('Form control tests: ', () => {
