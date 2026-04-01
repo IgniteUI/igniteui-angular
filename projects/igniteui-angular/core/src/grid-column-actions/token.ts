@@ -7,7 +7,7 @@ export abstract class IgxActionStripToken {
     public abstract cdr: ChangeDetectorRef
     public abstract context: any;
     public abstract menuOverlaySettings: OverlaySettings;
-    public abstract get menuItems(): any[];
+    public abstract actionButtons: QueryList<IgxActionStripActionsToken>;
     public abstract get hideOnRowLeave(): boolean;
 
     public abstract show(context?: any): void;
