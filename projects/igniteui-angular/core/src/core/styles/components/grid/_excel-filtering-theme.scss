@@ -93,7 +93,7 @@
 
         @if $variant != 'indigo' {
             igx-icon {
-                --size: var(--igx-icon-size, #{rem(15px)});
+                --size: var(--ig-icon-size, #{rem(15px)});
             }
         }
     }
@@ -235,7 +235,7 @@
         .ig-typography %grid-excel-menu--compact {
             %grid-excel-menu__header {
                 > h4 {
-                    @include type-style('h6')
+                    @include type-style('h6');
                 }
             }
         }
@@ -546,9 +546,9 @@
             }
 
             igx-icon {
-                width: var(--igx-icon-size, #{$tree-node-expander-size});
-                height: var(--igx-icon-size, #{$tree-node-expander-size});
-                font-size: var(--igx-icon-size, #{$tree-node-expander-size});
+                width: var(--ig-icon-size, #{$tree-node-expander-size});
+                height: var(--ig-icon-size, #{$tree-node-expander-size});
+                font-size: var(--ig-icon-size, #{$tree-node-expander-size});
             }
 
             > igx-checkbox,
@@ -694,9 +694,9 @@
         }
 
         igx-icon {
-            width: var(--igx-icon-size, #{rem(18px)});
-            height: var(--igx-icon-size, #{rem(18px)});
-            font-size: var(--igx-icon-size, #{rem(18px)});
+            width: var(--ig-icon-size, #{rem(18px)});
+            height: var(--ig-icon-size, #{rem(18px)});
+            font-size: var(--ig-icon-size, #{rem(18px)});
         }
     }
 
@@ -761,7 +761,7 @@
 
     %grid-excel-menu {
         %grid-excel-menu__header > h4 {
-            @include type-style('h6')
+            @include type-style('h6');
         }
     }
 
@@ -780,13 +780,13 @@
 
     %grid-excel-menu--cosy {
         %grid-excel-menu__header > h4 {
-            @include type-style('h6')
+            @include type-style('h6');
         }
     }
 
     %grid-excel-menu--compact {
         %grid-excel-menu__header > h4 {
-            @include type-style('subtitle-1')
+            @include type-style('subtitle-1');
         }
 
         %grid-excel-sort,

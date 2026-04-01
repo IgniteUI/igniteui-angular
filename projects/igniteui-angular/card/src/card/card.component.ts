@@ -7,6 +7,7 @@ let NEXT_ID = 0;
  * Use it to wrap images and videos.
  */
 @Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-media',
     standalone: true
 })
@@ -118,7 +119,7 @@ export class IgxCardHeaderSubtitleDirective {
  * IgxCardContent is container for the card content.
  */
 @Directive({
-
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-content',
     standalone: true
 })
@@ -132,7 +133,7 @@ export class IgxCardContentDirective {
  * IgxCardFooter is container for the card footer
  */
 @Directive({
-
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-footer',
     standalone: true
 })
@@ -266,7 +267,6 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
  * IgxCardActions is container for the card actions.
  */
 @Component({
-
     selector: 'igx-card-actions',
     templateUrl: 'card-actions.component.html',
     standalone: true

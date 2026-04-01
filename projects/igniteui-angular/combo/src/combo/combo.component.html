@@ -18,9 +18,9 @@
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
-    @if (displayValue) {
+    @if (displayValue && !disableClear) {
         <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
-            (click)="handleClearItems($event)" (keydown)="handleClearKeyDown($event)" [tabindex]="disabled ? -1 : 0" role="button">
+            (click)="handleClearItems($event)">
             @if (clearIconTemplate) {
                 <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
             }
@@ -29,7 +29,7 @@
             }
         </igx-suffix>
     }
-    <igx-suffix class="igx-combo__toggle-button" (keydown)="handleToggleKeyDown($event)" [tabindex]="disabled ? -1 : 0" role="button">
+    <igx-suffix class="igx-combo__toggle-button">
         @if (toggleIconTemplate) {
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         }

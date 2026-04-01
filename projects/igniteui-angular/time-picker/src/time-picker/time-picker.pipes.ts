@@ -29,12 +29,11 @@ export class TimeItemPipe implements PipeTransform {
 
 
     public transform(_collection: any[], timePart: string, selectedDate: Date, min: Date, max: Date) {
-        let list;
-        let part;
+        let list, part, hours, selectedAmPm;
         switch (timePart) {
             case 'hour':
                 list = this.generateHours(min, max);
-                const hours = this.timePicker.isTwelveHourFormat ? this.toTwelveHourFormat(selectedDate.getHours())
+                hours = this.timePicker.isTwelveHourFormat ? this.toTwelveHourFormat(selectedDate.getHours())
                     : selectedDate.getHours();
                 list = this.scrollListItem(hours, list);
                 part = DatePart.Hours;
@@ -50,7 +49,7 @@ export class TimeItemPipe implements PipeTransform {
                 part = DatePart.Seconds;
                 break;
             case 'ampm':
-                const selectedAmPm = this.timePicker.getPartValue(selectedDate, 'ampm');
+                selectedAmPm = this.timePicker.getPartValue(selectedDate, 'ampm');
                 list = this.generateAmPm(min, max, selectedAmPm);
                 list = this.scrollListItem(selectedAmPm, list);
                 part = DatePart.AmPm;

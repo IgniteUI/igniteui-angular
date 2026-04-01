@@ -112,7 +112,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _cdr = inject(ChangeDetectorRef);
     private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
 
-
     /**
      * The number of displayed month views.
      *
@@ -377,6 +376,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * <igx-date-range-picker [outlet]="outlet"></igx-date-range-picker>
      * //..
      * ```
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead.
      */
     @Input()
     public override outlet: IgxOverlayOutletDirective | ElementRef<any>;
@@ -435,7 +438,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @HostBinding('class.igx-date-range-picker')
     public cssClass = 'igx-date-range-picker';
 
-    @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
+    @ViewChild("container", { read: ViewContainerRef })
     private viewContainerRef: ViewContainerRef;
 
     /** @hidden @internal */
@@ -1255,10 +1258,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private configPositionStrategy(): void {
         this._positionSettings = {
             openAnimation: fadeIn,
-            closeAnimation: fadeOut
+            closeAnimation: fadeOut,
+            offset: 1
         };
         this._dropDownOverlaySettings.positionStrategy = new AutoPositionStrategy(this._positionSettings);
-        this._dropDownOverlaySettings.target = this.element.nativeElement;
+
+        const bundle = this.hasProjectedInputs
+            ? this.projectedInputs.first?.nativeElement.querySelector('.igx-input-group__bundle')
+            : this.element.nativeElement.querySelector('.igx-input-group__bundle');
+        this._dropDownOverlaySettings.target = bundle || this.element.nativeElement;
     }
 
     private configOverlaySettings(): void {

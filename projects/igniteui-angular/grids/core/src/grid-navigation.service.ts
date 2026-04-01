@@ -4,15 +4,17 @@ import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { GridType } from './common/grid.interface';
 import {
     NAVIGATION_KEYS,
+    PlatformUtil,
+    SortingDirection
+} from 'igniteui-angular/core';
+import {
     ROW_COLLAPSE_KEYS,
     ROW_EXPAND_KEYS,
     SUPPORTED_KEYS,
     HORIZONTAL_NAV_KEYS,
     HEADER_KEYS,
-    ROW_ADD_KEYS,
-    PlatformUtil,
-    SortingDirection
-} from 'igniteui-angular/core';
+    ROW_ADD_KEYS
+} from './grid-navigation-keys';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IMultiRowLayoutNode } from './common/types';

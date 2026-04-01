@@ -88,11 +88,13 @@
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
             (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
+            <div [attr.data-index]="rowIndex">
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)'
                 (beforeViewDetach)="viewDetachHandler($event)"
                 (cachedViewLoaded)='cachedViewLoaded($event)'>
             </ng-template>
+            </div>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
         <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-metaData="metaData">
@@ -136,10 +138,8 @@
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
     </div>
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]='snackbarDisplayTime'>{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]='snackbarDisplayTime'>{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
-
-    <div igxOverlayOutlet #igxBodyOverlayOutlet="overlay-outlet"></div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summaryRowHeight' #tfoot>
@@ -250,7 +250,7 @@
 @if (colResizingService.showResizer) {
     <igx-grid-column-resizer></igx-grid-column-resizer>
 }
-<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
+<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 @if (platform.isElements) {
     <div #sink style="display: none;"></div>

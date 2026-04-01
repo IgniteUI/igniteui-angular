@@ -457,6 +457,22 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public disabled = false;
 
     /**
+     * Disables the clear button. The default is `false`.
+     *
+     * ```typescript
+     * // get
+     * let myComboDisableClear = this.combo.disableClear;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [disableClear]="true"></igx-combo>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public disableClear = false;
+
+    /**
      * Sets the visual combo type.
      * The allowed values are `line`, `box`, `border` and `search`. The default is `box`.
      * ```html
@@ -982,6 +998,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
+    public abstract selectionChanged: EventEmitter<any>;
 
     constructor() {
         onResourceChangeHandle(this.destroy$, () => {
@@ -1221,7 +1238,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             return;
         }
         this.searchValue = '';
-        if (!e.event) {
+        const isTab = (e.event as KeyboardEvent)?.key === 'Tab';
+        if (!e.event || isTab) {
             this.comboInput?.nativeElement.focus();
         } else {
             this._onTouchedCallback();
@@ -1241,13 +1259,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             event.stopPropagation();
             this.close();
         }
-    }
-
-    /** @hidden @internal */
-    public handleToggleKeyDown(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === 'Enter' || eventArgs.key === ' ') {
-            eventArgs.preventDefault();
-            this.toggle();
+        if (event.key === 'Tab') {
+            this.close();
         }
     }
 

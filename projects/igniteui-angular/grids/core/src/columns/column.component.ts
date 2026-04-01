@@ -1795,6 +1795,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /* alternateName: parentColumn */
+    /* blazorAlternateType: object */
+    // We need that because Blazor cannot handle the type correctly.
     /**
      * Sets/gets the parent column.
      * ```typescript
@@ -2187,7 +2189,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 result.push(size.width + 'px');
             } else {
                 const currentWidth = parseFloat(this.grid.getPossibleColumnWidth());
-                result.push((this.getConstrainedSizePx(currentWidth)) + 'px');
+                const target = size && size.ref ? size.ref : this;
+                result.push((target as IgxColumnComponent).getConstrainedSizePx(currentWidth) + 'px');
             }
         }
         return result;
@@ -2680,7 +2683,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         } else if (this.minWidth && newSize <= this.userSetMinWidthPx) {
             this.widthConstrained = true;
             return this.userSetMinWidthPx;
-        } else if (!this.minWidth && (!this.widthSetByUser || this.width === 'fit-content') && !this.grid.columnWidthSetByUser && (!newSize || newSize <= this.grid.minColumnWidth)) {
+        } else if (!this.columnGroup && !this.minWidth && (!this.widthSetByUser || this.width === 'fit-content') && !this.grid.columnWidthSetByUser && (!newSize || newSize <= this.grid.minColumnWidth)) {
             return this.grid.minColumnWidth;
         } else {
             this.widthConstrained = false;

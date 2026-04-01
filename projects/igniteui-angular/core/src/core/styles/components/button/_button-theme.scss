@@ -61,11 +61,6 @@
         $variant
     );
 
-    $button-transition: color var(--_init-transition, #{$time}) ease-in-out,
-        background-color var(--_init-transition, #{$time}) ease-in-out,
-        border-color var(--_init-transition, #{$time}) ease-in-out,
-        box-shadow var(--_init-transition, #{$time}) ease-in-out;
-
     $button-disabled-shadow: none;
 
     $button-floating-width: rem(56px);
@@ -287,6 +282,12 @@
     }
 
     %igx-button-display {
+        --_button-transition:
+            color var(--_init-transition, #{$time}) ease-in-out,
+            background-color var(--_init-transition, #{$time}) ease-in-out,
+            border-color var(--_init-transition, #{$time}) ease-in-out,
+            box-shadow var(--_init-transition, #{$time}) ease-in-out;
+
         @include sizable();
 
         position: relative;
@@ -312,7 +313,7 @@
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         white-space: nowrap;
-        transition: $button-transition;
+        transition: var(--_button-transition);
         gap: pad-inline(
             map.get($items-gap, 'compact'),
             map.get($items-gap, 'cosy'),
@@ -327,10 +328,10 @@
             --component-size: var(--ig-size, var(--ig-size-large));
             display: flex;
             justify-content: center;
-            width: var(--igx-icon-size, #{$icon-in-button-size});
-            height: var(--igx-icon-size, #{$icon-in-button-size});
-            font-size: var(--igx-icon-size, #{$icon-in-button-size});
-            transition: $button-transition;
+            width: var(--ig-icon-size, #{$icon-in-button-size});
+            height: var(--ig-icon-size, #{$icon-in-button-size});
+            font-size: var(--ig-icon-size, #{$icon-in-button-size});
+            transition: var(--_button-transition);
         }
     }
 
@@ -525,7 +526,7 @@
         color: var-get($outlined-theme, 'focus-visible-foreground');
         border-color: var-get($outlined-theme, 'focus-visible-border-color');
 
-        @if $variant == 'material'  or $variant == 'bootstrap' {
+        @if $variant == 'material' or $variant == 'bootstrap' {
             igx-icon {
                 color: var-get($outlined-theme, 'icon-color-hover');
             }
@@ -701,7 +702,7 @@
         align-items: center;
         outline: none;
         cursor: pointer;
-        transition: $button-transition;
+        transition: var(--_button-transition);
         user-select: none;
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;

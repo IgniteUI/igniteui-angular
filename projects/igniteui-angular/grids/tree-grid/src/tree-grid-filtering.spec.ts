@@ -770,6 +770,25 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
             expect(console.error).not.toHaveBeenCalled();
         }));
+
+        it('Should filter hierarchical data when an item is unselected.', fakeAsync(() => {
+            tGrid.filterStrategy = new TreeGridFilteringStrategy(['ID', "Name"]);
+            GridFunctions.clickExcelFilterIcon(fix, 'Name');
+            fix.detectChanges();
+            tick();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+            checkboxes[1].click();
+            fix.detectChanges();
+            tick();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix, null, 'igx-tree-grid');
+            fix.detectChanges();
+            tick();
+
+            expect(tGrid.filteredSortedData.length).toBeGreaterThan(0);
+        }));
     });
 
     describe('Tree grid ESF templates', () => {

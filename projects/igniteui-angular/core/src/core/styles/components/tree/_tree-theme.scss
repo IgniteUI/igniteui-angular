@@ -319,6 +319,6 @@
     $text: map.get($categories, 'label');
 
     %node-content {
-        @include type-style($text)
+        @include type-style($text);
     }
 }

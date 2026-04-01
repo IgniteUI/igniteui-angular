@@ -203,7 +203,7 @@ export class IgxGridStateBaseDirective {
                     dataType: c.dataType,
                     hasSummary: c.hasSummary,
                     field: c.field,
-                    width: c.width,
+                    width: ((c as IgxColumnComponent).widthSetByUser || context.currGrid.columnWidthSetByUser) ? c.width : undefined,
                     header: c.header,
                     resizable: c.resizable,
                     searchable: c.searchable,
@@ -226,6 +226,21 @@ export class IgxGridStateBaseDirective {
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IColumnState[]): void => {
                 const newColumns = [];
+                
+                // Helper to restore column state without auto-persisting widths
+                const restoreColumnState = (column: IgxColumnComponent | IgxColumnGroupComponent, colState: IColumnState) => {
+                    // Extract width to handle it separately
+                    const width = colState.width;
+                    delete colState.width;
+                    
+                    Object.assign(column, colState);
+                    
+                    // Only restore width if it was explicitly set by the user (not undefined)
+                    if (width !== undefined) {
+                        column.width = width;
+                    }
+                };
+                
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     const hasColumnLayouts = colState.columnLayout;
@@ -242,7 +257,9 @@ export class IgxGridStateBaseDirective {
                         } else {
                             ref1.children.reset([]);
                         }
-                        Object.assign(ref1, colState);
+                        
+                        restoreColumnState(ref1, colState);
+                        
                         ref1.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref1.parent));
@@ -259,7 +276,8 @@ export class IgxGridStateBaseDirective {
                             component.changeDetectorRef.detectChanges();
                         }
 
-                        Object.assign(ref, colState);
+                        restoreColumnState(ref, colState);
+                        
                         ref.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e =>  e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref.parent));

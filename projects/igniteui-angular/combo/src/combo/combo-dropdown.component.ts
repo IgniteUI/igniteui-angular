@@ -155,7 +155,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden @internal
      */
-    public override onItemActionKey(key: DropDownActionKey) {
+    public override onItemActionKey(key: DropDownActionKey, event?: KeyboardEvent) {
         switch (key) {
             case DropDownActionKey.ENTER:
                 this.handleEnter();
@@ -164,8 +164,10 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
                 this.handleSpace();
                 break;
             case DropDownActionKey.ESCAPE:
-            case DropDownActionKey.TAB:
                 this.close();
+                break;
+            case DropDownActionKey.TAB:
+                this.close(event);
         }
     }
 

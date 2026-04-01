@@ -245,7 +245,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Gets/Sets the container used for the popup element.
-     *
      * @remarks
      *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      * @example
@@ -255,6 +254,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * <igx-date-picker [outlet]="outlet"></igx-date-picker>
      * //..
      * ```
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead.
      */
     @Input()
     public override outlet: IgxOverlayOutletDirective | ElementRef;
@@ -462,7 +465,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private get inputGroupElement(): HTMLElement {
-        return this.inputGroup?.element.nativeElement;
+        return this.inputGroup?.element.nativeElement.querySelector('.igx-input-group__bundle');
     }
 
     private get dateValue(): Date {

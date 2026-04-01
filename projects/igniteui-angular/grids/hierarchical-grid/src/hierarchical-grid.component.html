@@ -82,11 +82,13 @@
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
             [igxForContainerSize]="calcHeight" [igxForItemSize]="renderedRowHeight" [igxForTrackBy]="trackChanges"
             #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
+            <div [attr.data-index]="rowIndex">
             <ng-template
                 [igxTemplateOutlet]="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) ? child_record_template : hierarchical_record_template))"
                 [igxTemplateOutletContext]="getContext(rowData, rowIndex, false)" (viewCreated)="viewCreatedHandler($event)"
                 (viewMoved)="viewMovedHandler($event)" (cachedViewLoaded)="cachedViewLoaded($event)" (beforeViewDetach)="viewDetachHandler($event)">
             </ng-template>
+            </div>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
         <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-metaData="metaData">
@@ -145,10 +147,8 @@
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]="!isRowPinningToTop ? pinnedRowHeight : 0"></div>
     </div>
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
-
-    <div igxOverlayOutlet #igxBodyOverlayOutlet="overlay-outlet"></div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]="summaryRowHeight" #tfoot>
@@ -270,7 +270,7 @@
 @if (colResizingService.showResizer) {
     <igx-grid-column-resizer></igx-grid-column-resizer>
 }
-<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
+<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 @if (platform.isElements) {
     <div #sink style="display: none;"></div>
