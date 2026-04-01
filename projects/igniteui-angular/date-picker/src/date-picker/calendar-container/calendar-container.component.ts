@@ -72,6 +72,10 @@ export class IgxCalendarContainerComponent {
     @HostListener('keydown.alt.arrowup', ['$event'])
     public onEscape(event: KeyboardEvent) {
         event.preventDefault();
+
+        // Prevent the event from reaching IgxDatePickerComponent/IgxDateRangePickerComponent,
+        // which also handle Alt+ArrowUp and would call close() a second time.
+        event.stopPropagation();
         this.calendarClose.emit();
     }
 

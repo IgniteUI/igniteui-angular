@@ -214,6 +214,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     @HostListener('keydown.Escape', ['$event'])
     public onEscape(event: Event) {
+        event.stopPropagation();
         if (this.collapsed) {
             this.deselectAllItems(true, event);
         }

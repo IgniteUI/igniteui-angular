@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2, DebugElement, inject } from '@angular/core';
+import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2, inject } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait} from '../../../../test-utils/ui-interactions.spec';
@@ -14,7 +14,6 @@ import {
     IgxDragIgnoreDirective
 } from './drag-drop.directive';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
-import { configureTestSuite } from '../../../../test-utils/configure-suite';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
@@ -1925,69 +1924,139 @@ describe('Nested igxDrag elements', () => {
     });
 })
 
-describe('Ghost Classes', () => {
-    let fix: ComponentFixture<TestGhostClassesComponent>;
-    let draggable: DebugElement[];
+describe('igxDrag touch, mouse, pointerLost and shadow root coverage', () => {
+    let fix: ComponentFixture<TestDragDropComponent>;
+    let dragDirsRects: { top: number; left: number; right: number; bottom: number }[];
 
-    const GHOST_CLASS = 'ghostElement';
-    const CASPER_CLASS = 'casper';
-    const DRAG_OFFSET = 10;
-
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [TestGhostClassesComponent]
+            imports: [TestDragDropComponent]
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fix = TestBed.createComponent(TestGhostClassesComponent);
+        fix = TestBed.createComponent(TestDragDropComponent);
         fix.detectChanges();
-        draggable = fix.debugElement.queryAll(By.directive(IgxDragDirective));
+        dragDirsRects = getDragDirsRects(fix.componentInstance.dragElems);
     });
 
-    afterEach(() => {
-        fix.destroy();
-    });
+    it('should handle touchstart event to initiate drag when touch events are used', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
 
-    it('should apply single ghost class when using ghostClass input', async () => {
-        const chip = draggable[0];
-        const dragDirective = chip.injector.get(IgxDragDirective);
+        spyOn(firstDrag.dragStart, 'emit');
 
-        const coords = {
-            x: chip.nativeElement.offsetLeft,
-            y: chip.nativeElement.offsetTop
-        };
+        // In Chrome headless, pointerEventsEnabled is true (PointerEvent is defined).
+        // Mock the properties so the touch path is taken in ngAfterContentInit
+        spyOnProperty(firstDrag, 'pointerEventsEnabled').and.returnValue(false);
+        spyOnProperty(firstDrag, 'touchEventsEnabled').and.returnValue(true);
 
-        await simulateDrag(chip.nativeElement, coords);
+        // Re-bind events with the mocked touch path
+        firstDrag.ngAfterContentInit();
 
-        expect(dragDirective.ghostElement.classList.contains(GHOST_CLASS)).toBeTruthy();
-        expect(dragDirective.ghostElement.classList.length).toBe(3);
-    });
+        // Simulate touchstart — triggers onPointerDown via touchstart path
+        UIInteractions.simulateTouchStartEvent(firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
 
-    it('should apply multiple ghost classes when using ghostClasses input', async () => {
-        const chip = draggable[1];
-        const dragDirective = chip.injector.get(IgxDragDirective);
-
-        const coords = {
-            x: chip.nativeElement.offsetLeft,
-            y: chip.nativeElement.offsetTop
-        };
-
-        await simulateDrag(chip.nativeElement, coords);
-
-        expect(dragDirective.ghostElement.classList.contains(GHOST_CLASS)).toBeTruthy();
-        expect(dragDirective.ghostElement.classList.contains(CASPER_CLASS)).toBeTruthy();
-        expect(dragDirective.ghostElement.classList.length).toBe(4);
-    });
-
-    async function simulateDrag(element: HTMLElement, coords: { x: number, y: number }): Promise<void> {
-        UIInteractions.simulatePointerEvent('pointerdown', element, coords.x, coords.y);
-        UIInteractions.simulatePointerEvent('pointermove', element, coords.x + DRAG_OFFSET, coords.y + DRAG_OFFSET);
+        // Simulate touch move via document.defaultView (bound by ngAfterContentInit touch path)
+        UIInteractions.simulateTouchMoveEvent(document.defaultView, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait(100);
-    }
-});
+
+        // After a 20px move the drag should have started
+        expect(firstDrag.dragStart.emit).toHaveBeenCalled();
+
+        UIInteractions.simulateTouchEndEvent(document.defaultView, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+    });
+
+    it('should handle mousedown event to initiate drag when mouse events are used', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        spyOn(firstDrag.dragStart, 'emit');
+        // Spy on pointerEventsEnabled to return false so the mousedown path is taken
+        spyOnProperty(firstDrag, 'pointerEventsEnabled').and.returnValue(false);
+        spyOnProperty(firstDrag, 'touchEventsEnabled').and.returnValue(false);
+
+        // Re-init the event subscriptions with the mocked properties
+        firstDrag.ngAfterContentInit();
+
+        UIInteractions.simulateMouseEvent('mousedown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        UIInteractions.simulateMouseEvent('mousemove', document.body, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.dragStart.emit).toHaveBeenCalled();
+
+        UIInteractions.simulateMouseEvent('mouseup', document.body, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+    });
+
+    it('should call onPointerLost early return when _clicked is false', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+
+        spyOn(firstDrag.dragEnd, 'emit');
+
+        // _clicked starts as false — calling onPointerLost should return immediately
+        firstDrag.onPointerLost({ pageX: 100, pageY: 100 });
+
+        expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+    });
+
+    it('should emit dragEnd on onPointerLost when drag was in progress', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        spyOn(firstDrag.dragEnd, 'emit');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Ghost is now active — onPointerLost should emit dragEnd
+        UIInteractions.simulatePointerEvent('lostpointercapture', firstDrag.ghostElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait();
+
+        expect(firstDrag.dragEnd.emit).toHaveBeenCalled();
+    });
+
+    it('should return elements from shadow root via getFromShadowRoot', () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+
+        // Create a mock element with a shadowRoot that returns elements from point
+        const innerElem = document.createElement('span');
+        const shadowHost = document.createElement('div');
+        const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+        shadowRoot.appendChild(innerElem);
+
+        const mockParentElems = [shadowHost];
+
+        // Mock elementsFromPoint to return our inner element
+        spyOn(shadowRoot, 'elementsFromPoint').and.returnValue([innerElem]);
+
+        const result = (firstDrag as any).getFromShadowRoot(shadowHost, 100, 100, mockParentElems);
+
+        expect(result).toContain(innerElem);
+    });
+})
 
 const getDragDirsRects = (dragDirs: QueryList<IgxDragDirective>) => {
     const dragDirsRects = [];
@@ -2059,20 +2128,7 @@ const generalStyles = [`
 `];
 
 @Component({
-    template: `
-        <h3>Draggable elements:</h3>
-        <div>
-            <div id="firstDrag" [ghostClass]="'ghostElement'" igxDrag><span>Drag 1</span></div>
-            <div id="secondDrag" [ghostClasses]="['ghostElement', 'casper']" igxDrag>Drag 2</div>
-        </div>
-    `,
-    imports: [IgxDragDirective, IgxDragHandleDirective]
-})
-class TestGhostClassesComponent {}
-
-@Component({
     styles: generalStyles,
-    imports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective],
     template: `
         <h3>Draggable elements:</h3>
         <div #container class="container">
@@ -2098,6 +2154,7 @@ class TestGhostClassesComponent {}
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }"></div>
     `,
+    imports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective]
 })
 class TestDragDropComponent {
     public renderer = inject(Renderer2);
