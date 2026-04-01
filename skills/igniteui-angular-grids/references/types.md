@@ -5,6 +5,14 @@
 > For shared column config, sorting, filtering, selection — see [`structure.md`](./structure.md).
 > For editing, grouping, toolbar, export — see [`features.md`](./features.md).
 
+## Contents
+
+- [Tree Grid](#tree-grid)
+- [Hierarchical Grid](#hierarchical-grid)
+- [Grid Lite](#grid-lite)
+- [Pivot Grid](#pivot-grid)
+- [Key Rules](#key-rules)
+
 ## Tree Grid
 
 > **Docs:** [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)
@@ -332,6 +340,27 @@ dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
   [dataPipelineConfiguration]="dataPipeline">
 </igx-grid-lite>
 ```
+
+### Grid Lite Events
+
+| Event | Cancelable | Payload |
+|---|---|---|
+| `(sorting)` | Yes (`event.detail.cancel = true`) | Sorting expression about to be applied |
+| `(sorted)` | No | Sorting completed |
+| `(filtering)` | Yes (`event.detail.cancel = true`) | Filter expression about to be applied |
+| `(filtered)` | No | Filtering completed |
+
+### Grid Lite Limitations
+
+These features are **NOT available** in Grid Lite:
+- Editing (cell, row, batch) — no `[editable]`, no `beginEdit()`, no transactions
+- Grouping — no `groupBy()`, no `IgxGroupByRow`
+- Paging — no `IgxPaginatorComponent`
+- Summaries — no `IgxSummaryOperand`
+- Selection — no `rowSelection`, `cellSelection`, or `columnSelection`
+- State persistence — no `IgxGridStateDirective`
+- Export — no `IgxExcelExporterService` or `IgxCsvExporterService`
+- Advanced filtering — no `advancedFilteringExpressionsTree`
 
 ### Grid Lite Key Differences from Flat Grid
 

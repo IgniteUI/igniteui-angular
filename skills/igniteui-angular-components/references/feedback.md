@@ -5,6 +5,14 @@
 
 > **AGENT INSTRUCTION:** All components in this file rely on Angular animations and the Ignite UI overlay system. Before using any of them, ensure `provideAnimations()` (or `provideAnimationsAsync()`) is present in `app.config.ts`. If it is missing, add it — these components will throw runtime errors or silently fail to animate without it.
 
+## Contents
+
+- [Dialog](#dialog)
+- [Snackbar](#snackbar)
+- [Toast](#toast)
+- [Banner](#banner)
+- [Key Rules](#key-rules)
+
 ## Dialog
 
 > **Docs:** [Dialog Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)
@@ -26,11 +34,11 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
   <p>Are you sure you want to delete this item? This action cannot be undone.</p>
   <div igxDialogActions>
     <button igxButton="flat" (click)="confirmDialog.close()">Cancel</button>
-    <button igxButton="raised" (click)="deleteItem(); confirmDialog.close()">Delete</button>
+    <button igxButton="contained" (click)="deleteItem(); confirmDialog.close()">Delete</button>
   </div>
 </igx-dialog>
 
-<button igxButton="raised" (click)="confirmDialog.open()">Delete Item</button>
+<button igxButton="contained" (click)="confirmDialog.open()">Delete Item</button>
 ```
 
 Programmatic control:

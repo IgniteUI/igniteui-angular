@@ -25,7 +25,7 @@
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
 
-    @if (hasSelectedItem) {
+    @if (hasSelectedItem && !disableClear) {
         <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
             (click)="handleClear($event)">
             @if (clearIconTemplate) {

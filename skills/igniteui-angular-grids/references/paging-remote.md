@@ -5,6 +5,14 @@
 > For editing and validation — see [`editing.md`](./editing.md).
 > For state persistence — see [`state.md`](./state.md).
 
+## Contents
+
+- [Paging](#paging)
+- [Remote Data Operations](#remote-data-operations)
+- [Virtualization](#virtualization)
+- [Multi-Grid Coordination](#multi-grid-coordination)
+- [Key Rules](#key-rules)
+
 ## Paging
 
 > **Docs:** [Paging — Remote Paging](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging) (substitute URL prefix per grid type)

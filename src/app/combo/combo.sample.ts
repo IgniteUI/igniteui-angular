@@ -107,6 +107,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public disableFilteringFlag = false;
     public customValuesFlag = true;
     public autoFocusSearch = true;
+    public disableClear = false;
     public items: any[] = [];
     public values1: Array<any> = ['Arizona'];
     public singleValue = 'Arizona';
