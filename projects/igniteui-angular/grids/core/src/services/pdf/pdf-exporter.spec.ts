@@ -257,7 +257,12 @@ describe('PDF Exporter', () => {
 
     describe('Custom Font Support', () => {
         beforeEach(() => {
-            spyOn(console, 'warn');
+            // Guard against karma-parallel sharding leaving a stale spy from a skipped test
+            if (jasmine.isSpy(console.warn)) {
+                (console.warn as jasmine.Spy).calls.reset();
+            } else {
+                spyOn(console, 'warn');
+            }
         });
 
         it('should export without custom font when customFont is not set', (done) => {
