@@ -831,7 +831,8 @@ export class AppComponent implements OnInit {
         iconService.setFamily('fa-brands', { className: 'fab', type: 'font' });
 
         router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
-            for (const component of this.componentLinks) {
+            const allLinks = [...this.componentLinks, ...this.directiveLinks, ...this.styleLinks];
+            for (const component of allLinks) {
                 if (component.link === router.url) {
                     this.urlString = component.name;
                     this.urlIcon = component.icon;

@@ -79,6 +79,10 @@
             igx-icon {
                 --size: #{$icon-in-button-size};
             }
+	        
+	        &:focus-visible {
+		        outline: none;
+	        }
         }
 
         @if $variant == 'fluent' {

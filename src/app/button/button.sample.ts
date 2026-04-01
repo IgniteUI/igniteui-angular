@@ -5,14 +5,12 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxButtonDirective,
     IgxIconComponent,
     IgxSwitchComponent,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -37,7 +35,6 @@ registerIconFromText('face', face);
     styleUrls: ['button.sample.scss'],
     templateUrl: 'button.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    encapsulation: ViewEncapsulation.None,
     imports: [
         FormsModule,
         IgxSwitchComponent,
