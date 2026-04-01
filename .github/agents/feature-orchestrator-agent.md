@@ -103,6 +103,12 @@ Do not add sections such as:
 
 ---
 
+> Skills:
+> - APIs: `skills/igniteui-angular-{components,grids,theming}/SKILL.md`
+> - Build / test / lint: `.github/skills/`
+
+---
+
 ## Key Repository Paths
 
 ```
@@ -132,7 +138,7 @@ projects/igniteui-angular/core/src/core/styles/   ← component SCSS themes
    - Whether a migration schematic is needed
    - Whether i18n strings are affected
    - Whether styles or component themes are affected
-   - Which test suite to use (grid vs non-grid)
+   - Which test suite to use (grid vs non-grid vs schematics/styles/i18n)
 
 ### Step 2 — Request Missing Context
 
@@ -153,10 +159,15 @@ Present a brief scope summary to the user:
 
 Keep it short and high-level. Confirm scope, not solution details.
 
-Wait for user confirmation.
+Before routing any work, ask:
 
-If a demo/sample is relevant, ask explicitly:
-`Do you want a demo/sample update for this feature? Yes / No`
+**`Do you want me to proceed with this implementation flow?`**
+
+If the feature is user-visible, also ask:
+
+**`Do you want a demo/sample update for this feature?`**
+
+Wait for the user's answer before routing work.
 
 ### Step 4 — Route Work
 
@@ -202,5 +213,6 @@ After all agents finish, check:
 - Do migrations exist for any breaking changes?
 - If a demo/sample was requested, was the existing demo structure updated appropriately?
 - If a demo/sample was not requested, was it correctly skipped?
+- Run `npm run lint:lib` and verify it passes.
 
 Report what was done and any remaining items.
