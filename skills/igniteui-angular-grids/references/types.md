@@ -5,6 +5,14 @@
 > For shared column config, sorting, filtering, selection — see [`structure.md`](./structure.md).
 > For editing, grouping, toolbar, export — see [`features.md`](./features.md).
 
+## Contents
+
+- [Tree Grid](#tree-grid)
+- [Hierarchical Grid](#hierarchical-grid)
+- [Grid Lite](#grid-lite)
+- [Pivot Grid](#pivot-grid)
+- [Key Rules](#key-rules)
+
 ## Tree Grid
 
 > **Docs:** [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)
@@ -333,6 +341,27 @@ dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
 </igx-grid-lite>
 ```
 
+### Grid Lite Events
+
+| Event | Cancelable | Payload |
+|---|---|---|
+| `(sorting)` | Yes (`event.detail.cancel = true`) | Sorting expression about to be applied |
+| `(sorted)` | No | Sorting completed |
+| `(filtering)` | Yes (`event.detail.cancel = true`) | Filter expression about to be applied |
+| `(filtered)` | No | Filtering completed |
+
+### Grid Lite Limitations
+
+These features are **NOT available** in Grid Lite:
+- Editing (cell, row, batch) — no `[editable]`, no `beginEdit()`, no transactions
+- Grouping — no `groupBy()`, no `IgxGroupByRow`
+- Paging — no `IgxPaginatorComponent`
+- Summaries — no `IgxSummaryOperand`
+- Selection — no `rowSelection`, `cellSelection`, or `columnSelection`
+- State persistence — no `IgxGridStateDirective`
+- Export — no `IgxExcelExporterService` or `IgxCsvExporterService`
+- Advanced filtering — no `advancedFilteringExpressionsTree`
+
 ### Grid Lite Key Differences from Flat Grid
 
 - **Separate package**: `npm install igniteui-grid-lite`
@@ -356,39 +385,89 @@ For **pivot table analytics** where users reshape data by dragging dimensions be
 > **IMPORTANT**: The Pivot Grid is fundamentally different from the other three grids. Standard grid features like cell editing, row editing, batch editing, paging, column pinning, column moving, row dragging, and standard filtering/sorting are **disabled**. All data operations are driven by the `pivotConfiguration`.
 
 ```typescript
-import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
-import { IgxPivotGridComponent, IGX_PIVOT_GRID_DIRECTIVES } from 'igniteui-angular/grids/pivot-grid';
-import { IPivotConfiguration, IgxPivotNumericAggregate } from 'igniteui-angular/grids/pivot-grid';
+import { Component } from "@angular/core";
+import { DATA } from '../../data/pivot-data';
+
+import { IPivotConfiguration, IgxPivotNumericAggregate } from 'igniteui-angular/grids/core';
+import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 
 @Component({
-  selector: 'app-sales-pivot',
-  imports: [IGX_PIVOT_GRID_DIRECTIVES],
-  templateUrl: './sales-pivot.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-pivot-grid-basic-sample',
+    styleUrls: ['./pivot-grid-basic-sample.component.scss'],
+    templateUrl: './pivot-grid-basic-sample.component.html',
+    imports: [IgxPivotGridComponent]
 })
-export class SalesPivotComponent {
-  pivotGridRef = viewChild.required<IgxPivotGridComponent>('pivotGrid');
-  salesData = signal<Sale[]>([]);
+export class PivotGridBasicSampleComponent {
+    public data = DATA;
+    public pivotConfigHierarchy: IPivotConfiguration = {
+        columns: [
+            {
 
-  pivotConfig: IPivotConfiguration = {
-    columns: [{ memberName: 'Quarter', enabled: true }],
-    rows: [{ memberName: 'Region', enabled: true }],
-    values: [{
-      member: 'Revenue',
-      aggregate: { aggregator: IgxPivotNumericAggregate.sum, key: 'SUM', label: 'Sum' },
-      enabled: true
-    }],
-    filters: [{ memberName: 'Year', enabled: true }]
-  };
+                memberName: 'Product',
+                memberFunction: (data) => data.Product.Name,
+                enabled: true
+            }
+            
+        ],
+        rows: [
+            {
+                memberName: 'Seller',
+                memberFunction: (data) => data.Seller.Name,
+                enabled: true
+            }
+        ],
+        values: [
+            {
+                member: 'NumberOfUnits',
+                aggregate: {
+                    aggregator: IgxPivotNumericAggregate.sum,
+                    key: 'sum',
+                    label: 'Sum'
+                },
+                enabled: true
+
+            }
+        ],
+        filters: null
+    };
 }
 ```
 
 ```html
-<igx-pivot-grid #pivotGrid
-  [data]="salesData()"
-  [pivotConfiguration]="pivotConfig"
-  height="600px">
+<igx-pivot-grid #grid1 [data]="data" [pivotConfiguration]="pivotConfigHierarchy" height="500px">
 </igx-pivot-grid>
+```
+
+```json
+export const DATA = [
+    {
+        Product: {
+            Name: 'Clothing',
+            UnitPrice: '12.814860936633712'
+        },
+        Seller: {
+            Name: 'Stanley Brooker',
+            City: 'Seattle'
+        },
+        Date: '2007-01-01T00:00:00',
+        Value: '94.2652032683907',
+        NumberOfUnits: '282'
+    },
+    {
+        Product: {
+            Name: 'Clothing',
+            UnitPrice: '49.579375120615296'
+        },
+        Seller: {
+            Name: 'Elisa Longbottom',
+            City: 'Sofia'
+        },
+        Date: '2007-01-05T00:00:00',
+        Value: '70.798922689072285',
+        NumberOfUnits: '296'
+    }
+    ...
+];
 ```
 
 ### Pivot Data Selector

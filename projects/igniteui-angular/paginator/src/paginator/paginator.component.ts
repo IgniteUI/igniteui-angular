@@ -256,7 +256,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      */
     @Input()
     public set resourceStrings(value: IPaginatorResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = Object.assign({}, this.resourceStrings, value);
     }
 
     /**

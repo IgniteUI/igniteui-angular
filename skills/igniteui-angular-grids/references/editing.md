@@ -5,6 +5,16 @@
 > For state persistence — see [`state.md`](./state.md).
 > For paging and remote data — see [`paging-remote.md`](./paging-remote.md).
 
+## Contents
+
+- [Editing Data Through the Grid](#editing-data-through-the-grid)
+- [Batch Editing & Transactions](#batch-editing--transactions)
+- [Excel-Style Editing Workflows](#excel-style-editing-workflows)
+- [Editing Events Reference](#editing-events-reference)
+- [Validation](#validation)
+- [Summaries](#summaries)
+- [Key Rules](#key-rules)
+
 ## Editing Data Through the Grid
 
 > **AGENT INSTRUCTION:** When a user says they want to "edit data through the grid", "make the grid editable", or "allow CRUD in the grid", use this section to pick the right editing mode before writing any code.
@@ -423,7 +433,8 @@ Default summaries by type:
 ### Custom Summary Operand
 
 ```typescript
-import { IgxNumberSummaryOperand, IgxSummaryResult } from 'igniteui-angular/grids/core';
+import { IgxNumberSummaryOperand } from 'igniteui-angular/grids/core';
+import { IgxSummaryResult } from 'igniteui-angular/core';
 
 class RevenueSummary extends IgxNumberSummaryOperand {
   operate(data: number[]): IgxSummaryResult[] {

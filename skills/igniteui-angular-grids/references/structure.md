@@ -6,6 +6,15 @@
 > For Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid specifics — see [`types.md`](./types.md).
 > For programmatic data operations — see [`data-operations.md`](./data-operations.md).
 
+## Contents
+
+- [Quick Start](#quick-start)
+- [Column Configuration](#column-configuration)
+- [Sorting](#sorting)
+- [Filtering](#filtering)
+- [Selection](#selection)
+- [Key Rules](#key-rules)
+
 ## Quick Start
 
 ### Imports
