@@ -105,6 +105,9 @@
             <igx-switch [(ngModel)]="autoFocusSearch"
                 >Automatic Search Focus</igx-switch
             >
+            <igx-switch [(ngModel)]="disableClear"
+                >Hide Clear Button</igx-switch
+            >
         </div>
 
         <igx-buttongroup>
@@ -148,6 +151,7 @@
             [allowCustomValues]="customValuesFlag"
             [autoFocusSearch]="autoFocusSearch"
             [disableFiltering]="disableFilteringFlag"
+            [disableClear]="disableClear"
             [displayKey]="valueKeyVar"
             [valueKey]="valueKeyVar"
             [groupKey]="valueKeyVar ? 'region' : ''"
@@ -219,6 +223,7 @@
             [data]="items"
             [displayKey]="valueKeyVar"
             [disabled]="isDisabled"
+            [disableClear]="disableClear"
             [valueKey]="valueKeyVar"
             [groupKey]="valueKeyVar ? 'region' : ''"
             (selectionChanging)="handleSelectionChanging($event)"
@@ -234,6 +239,7 @@
             [data]="items"
             [displayKey]="valueKeyVar"
             [disabled]="isDisabled"
+            [disableClear]="disableClear"
             [valueKey]="valueKeyVar"
             [groupKey]="valueKeyVar ? 'region' : ''"
         >
