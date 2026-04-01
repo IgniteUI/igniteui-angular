@@ -482,6 +482,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             const matchedData = cloneHierarchicalArray(this.esf.listData, 'children');
             this.displayedListData = this.hierarchicalSelectMatches(matchedData, searchVal);
             this.cdr.detectChanges();
+            /**
+             * There are two calls of `matchesNumericValue` in this method: one when we generate the displayedListData in hierarchicalSelectMatches method
+             * and another one when going through the tree nodes. We can avoid the second call by storing the items in a set.
+             * However, if the datasource is small there is no significant difference in performance but we would be adding extra memory overhead.
+             * We should test this when https://github.com/IgniteUI/igniteui-angular/issues/17144 issue is fixed with 100k or 1m records
+             */
             this.tree.nodes.forEach(n => {
                 n.selected = true;
                 const item = n.data as FilterListItem;
