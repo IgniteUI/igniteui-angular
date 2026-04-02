@@ -81,10 +81,8 @@
     </div>
 
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
-
-    <div #igxBodyOverlayOutlet="overlay-outlet" igxOverlayOutlet></div>
 </div>
 
 <div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
@@ -124,7 +122,7 @@
 @if (colResizingService.showResizer) {
     <igx-pivot-grid-column-resizer [restrictResizerTop]="calculateResizerTop()"></igx-pivot-grid-column-resizer>
 }
-<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
+<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 
 <ng-template #headerTemplate let-column>
@@ -151,14 +149,16 @@
                 [igxForSizePropName]="'height'"
                 #verticalRowDimScrollContainer
             >
-                <igx-pivot-row-dimension-content
-                    class="igx-grid-thead" [grid]="this"
-                    [dimension]="rowData.dimensions[dimIndex]"
-                    [rootDimension]="dim"
-                    [style.height.px]="renderedRowHeight * (rowData.rowSpan || 1)"
-                    [rowIndex]="rowIndex" [rowData]="rowData"
-                    [width]="rowDimensionWidthToPixels(dim)">
-                </igx-pivot-row-dimension-content>
+                <div [attr.data-index]="rowIndex">
+                    <igx-pivot-row-dimension-content
+                        class="igx-grid-thead" [grid]="this"
+                        [dimension]="rowData.dimensions[dimIndex]"
+                        [rootDimension]="dim"
+                        [style.height.px]="renderedRowHeight * (rowData.rowSpan || 1)"
+                        [rowIndex]="rowIndex" [rowData]="rowData"
+                        [width]="rowDimensionWidthToPixels(dim)">
+                    </igx-pivot-row-dimension-content>
+                </div>
             </ng-template>
             <ng-container *ngTemplateOutlet="emptyRowDimensionFill; context: { $implicit: this, widthPx: rowDimensionWidthToPixels(dim) }"></ng-container>
         </div>
@@ -177,7 +177,9 @@
                 [igxForItemSize]="renderedRowHeight"
                 [igxForSizePropName]="'height'"
             >
-                <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData" [style.height.px]="renderedRowHeight * rowGroup.length"></igx-pivot-row-dimension-mrl-row>
+                <div [attr.data-index]="rowIndex">
+                    <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData" [style.height.px]="renderedRowHeight * rowGroup.length"></igx-pivot-row-dimension-mrl-row>
+                </div>
             </ng-template>
         }
         <ng-container *ngTemplateOutlet="emptyRowDimensionFill; context: { $implicit: this, widthPx: pivotRowWidths }"></ng-container>

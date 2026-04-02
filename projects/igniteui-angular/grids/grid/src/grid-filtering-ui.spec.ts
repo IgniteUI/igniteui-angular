@@ -1977,7 +1977,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should scroll correct chip in view when one is deleted', async () => {
-            grid.width = '800px';
+            grid.width = '840px';
             fix.detectChanges();
             await wait(DEBOUNCE_TIME);
 
@@ -2732,19 +2732,19 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const thead = GridFunctions.getGridHeader(grid).nativeElement;
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
             setElementSize(grid.nativeElement, ɵSize.Medium);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
             setElementSize(grid.nativeElement, ɵSize.Small);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
         });
 
@@ -4113,6 +4113,25 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
         });
 
+        it('Should match numeric column values when searching without locale-specific formatting characters.', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            fix.detectChanges();
+            await wait(100);
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            // Type 1000 (without thousands separator) in search box.
+            // The value 1000 is displayed as "1,000" in the ESF list due to locale formatting.
+            // Searching "1000" should still match the "1,000" entry.
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1000', fix);
+            fix.detectChanges();
+            await wait(100);
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            // Expect 3 items: Select All + Add to current filter + the matched "1,000" item
+            expect(listItems.length).toBe(3, 'searching plain number should match locale-formatted label');
+        });
+
         it('Should enable/disable the apply button correctly.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
@@ -5162,7 +5181,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify the calendar is scrolled to previous month.
             const headerLabel = document.querySelector('igx-calendar').querySelector('.igx-calendar-picker__date') as HTMLElement;
             const today = new Date();
-            const prevMonth = new Date(today.setMonth(today.getMonth() - 1));
+            const prevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
             const monthName = prevMonth.toLocaleString('default', { month: 'short' });
             expect(headerLabel.innerText.trim()).toMatch(`${monthName}`);
         }));

@@ -11,24 +11,25 @@ import {
     IgxDropDownItemComponent,
     RelativePositionStrategy,
     AbsolutePosition,
-    RelativePosition
+    RelativePosition,
+    IgxToggleDirective
 } from 'igniteui-angular';
 
 @Component({
     selector: 'overlay-presets-sample',
     templateUrl: './overlay-presets.sample.html',
     styleUrls: ['overlay-presets.sample.scss'],
-    imports: [IgxRadioComponent, FormsModule, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
+    imports: [IgxRadioComponent, FormsModule, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxToggleDirective]
 })
 export class OverlayPresetsSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })
     private igxDropDown: IgxDropDownComponent;
     @ViewChild('button', { static: true })
     private button: ElementRef;
-    @ViewChild('outlet', { static: true })
-    private outletElement: ElementRef;
     @ViewChild(IgxDragDirective, { static: true })
     private igxDrag: IgxDragDirective;
+    @ViewChild('containerTarget', { static: true, read: IgxToggleDirective })
+    private containerTarget: IgxToggleDirective;
 
     public items = [];
     public itemsCount = 10;
@@ -79,7 +80,7 @@ export class OverlayPresetsSampleComponent implements OnInit {
                 break;
             case 'Container':
                 this.relPosition = null;
-                this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition, this.outletElement);
+                this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition, true);
                 break;
             default:
                 this.relPosition = null;
@@ -87,8 +88,12 @@ export class OverlayPresetsSampleComponent implements OnInit {
         }
     }
 
-    public toggleDropDown() {
+    public toggle() {
+        if (this.positionStrategy === 'Global' || this.positionStrategy === 'Container') {
+            this.containerTarget.toggle(this._overlaySettings);
+        } else {
         this.igxDropDown.toggle(this._overlaySettings);
+        }
     }
 
     public onDragEnd(e) {

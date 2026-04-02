@@ -26,16 +26,22 @@ import { IBaseChipEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'ign
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
-import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxPickerClearComponent, IgxPickerToggleComponent, isEqual, OverlaySettings, PlatformUtil, ɵSize, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxPercentFormatterPipe, IgxPickerClearComponent, IgxPickerToggleComponent, isEqual, OverlaySettings, PlatformUtil, ɵSize, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
+
+/**
+ * Default debounce time (ms) for filtering row inputs.
+ * @hidden
+ */
+export const INPUT_DEBOUNCE_TIME_DEFAULT = 350;
 
 /**
  * Injection token for setting the debounce time used in filtering row inputs.
  * @hidden
  */
 export const INPUT_DEBOUNCE_TIME = /*@__PURE__*/new InjectionToken<number>('INPUT_DEBOUNCE_TIME', {
-    factory: () => 350
+    factory: () => INPUT_DEBOUNCE_TIME_DEFAULT
 });
 
 /**
@@ -65,7 +71,8 @@ export const INPUT_DEBOUNCE_TIME = /*@__PURE__*/new InjectionToken<number>('INPU
         IgxButtonDirective,
         NgClass,
         IgxRippleDirective,
-        IgxIconButtonDirective
+        IgxIconButtonDirective,
+        IgxPercentFormatterPipe
     ]
 })
 export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -280,6 +287,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
                 return 'text';
             case GridColumnDataType.Number:
             case GridColumnDataType.Currency:
+            case GridColumnDataType.Percent:
                 return 'number';
         }
     }

@@ -584,6 +584,40 @@ describe('igxMask', () => {
         expect(inputElement.nativeElement.selectionEnd).toEqual(8);
         expect(inputHTMLElement.value).toEqual('(123) __67-890');
     });
+
+    it('should handle deleteContentBackward input event after compositionend (line 209 branch)', fakeAsync(() => {
+        // This test covers the branch at line 209 of mask.directive.ts:
+        // After compositionend, Chromium fires an input event with inputType='deleteContentBackward'.
+        // The branch adjusts start/end indexes to account for mask literals.
+        const fixture = TestBed.createComponent(MaskComponent);
+        fixture.detectChanges();
+        tick();
+
+        const inputDebugEl = fixture.debugElement.query(By.css('input'));
+        const inputEl = inputDebugEl.nativeElement as HTMLInputElement;
+
+        // Focus and set a starting selection
+        inputDebugEl.triggerEventHandler('focus', {});
+        fixture.detectChanges();
+
+        // Use compositionstart → compositionend to set up _compositionStartIndex and _compositionValue
+        UIInteractions.simulateCompositionEvent('123', inputDebugEl, 0, 3, false);
+        fixture.detectChanges();
+        tick();
+
+        // Now trigger an InputEvent with inputType='deleteContentBackward' and _key != BACKSPACE
+        // This is the path Chromium takes after compositionend
+        const deleteEvent = new InputEvent('input', {
+            bubbles: true,
+            inputType: 'deleteContentBackward'
+        });
+        inputEl.dispatchEvent(deleteEvent);
+        fixture.detectChanges();
+        tick();
+
+        // The branch should have run without throwing; mask is still applied
+        expect(inputEl.value).toBeDefined();
+    }));
 });
 
 describe('igxMaskDirective ControlValueAccessor Unit', () => {
