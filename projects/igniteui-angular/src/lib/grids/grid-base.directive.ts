@@ -7854,7 +7854,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected hasMenuPinningActions(): boolean {
-        const strip = this.actionStrip as IgxActionStripComponent;
+        const strip = this.actionStrip;
         if (!strip?.actionButtons?.length) {
             return false;
         }
