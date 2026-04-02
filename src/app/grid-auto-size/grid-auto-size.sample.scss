@@ -1,6 +1,7 @@
 :host {
 	display: grid;
 	gap: var(--demos-gap);
+	grid-template-rows: auto 1fr;
 	height: 100%;
 	align-items: start;
 }
