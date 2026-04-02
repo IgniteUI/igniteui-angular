@@ -138,7 +138,7 @@ export class IgxGridElementsComponent extends IgxGridComponent {
     constructor() {
         super();
         this.selectionService.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe((args: any[]) => {
-            this.selectedRowsChange.emit(args);IGX_GRID_BASE
+            this.selectedRowsChange.emit(args);
         });
     }
 
