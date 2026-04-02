@@ -124,11 +124,11 @@ Implements `ControlValueAccessor` and `Validator`. Works with both reactive and 
 > **Docs:** [Date Range Picker](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-range-picker)
 
 ```typescript
-import { IgxDateRangePickerComponent } from 'igniteui-angular/date-picker';
+import { IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent } from 'igniteui-angular/date-picker';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
-
-// import { IgxDateTimeEditorDirective, IGX_INPUT_GROUP_DIRECTIVES } from '@infragistics/igniteui-angular'; for licensed package
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxPickerToggleComponent, IgxPickerClearComponent } from 'igniteui-angular/core';
 ```
 
 ```html
@@ -138,6 +138,52 @@ import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
   </igx-date-range-start>
   <igx-date-range-end>
     <input igxInput igxDateTimeEditor type="text" />
+  </igx-date-range-end>
+</igx-date-range-picker>
+```
+
+
+`IgxDateRangePickerComponent` is imported from `igniteui-angular/date-picker`.
+
+In the two-input configuration:
+
+- place the `input` directly inside `igx-date-range-start` and `igx-date-range-end`
+- use `igx-picker-toggle igxPrefix` for the calendar action
+- use `igx-picker-clear igxSuffix` for the clear action
+
+A plain `igx-prefix` or `igx-suffix` with an `igx-icon` is decorative only and does not trigger picker actions.
+Do not wrap the inputs in an additional `igx-input-group`.
+
+**Avoid these patterns in two-input mode:**
+
+- `<igx-prefix><igx-icon>calendar_today</igx-icon></igx-prefix>`
+
+- placing the toggle on only one input unless explicitly requested
+
+Common two-input configuration with calendar toggles:
+
+```html
+<igx-date-range-picker [(ngModel)]="dateRange">
+  <igx-date-range-start>
+    <igx-picker-toggle igxPrefix>
+      <igx-icon>calendar_today</igx-icon>
+    </igx-picker-toggle>
+    <label igxLabel>Start Date</label>
+    <input igxInput igxDateTimeEditor type="text" />
+    <igx-picker-clear igxSuffix>
+      <igx-icon>clear</igx-icon>
+    </igx-picker-clear>
+  </igx-date-range-start>
+
+  <igx-date-range-end>
+    <igx-picker-toggle igxPrefix>
+      <igx-icon>calendar_today</igx-icon>
+    </igx-picker-toggle>
+    <label igxLabel>End Date</label>
+    <input igxInput igxDateTimeEditor type="text" />
+    <igx-picker-clear igxSuffix>
+      <igx-icon>clear</igx-icon>
+    </igx-picker-clear>
   </igx-date-range-end>
 </igx-date-range-picker>
 ```
@@ -303,6 +349,8 @@ export class MyFormComponent {
 - **Always check `app.config.ts` first** — add `provideAnimations()` before using Combo, Select, Date Picker, or any overlay component
 - **Import from specific entry points** — avoid the root `igniteui-angular` barrel
 - Date/Time pickers implement both `ControlValueAccessor` and `Validator` — they integrate with reactive forms natively
+- For `igx-date-range-picker` with separate start and end inputs, use this structure for both inputs: `igx-picker-toggle igxPrefix`, then `input igxInput igxDateTimeEditor`, then optional `igx-picker-clear igxSuffix`.
+- Do not use a plain `igx-prefix` / `igx-suffix` icon for calendar or clear actions.
 
 ## See Also
 
