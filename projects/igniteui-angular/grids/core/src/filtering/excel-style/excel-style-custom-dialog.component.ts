@@ -110,7 +110,7 @@ export class IgxExcelStyleCustomDialogComponent {
     }
 
     public cancelDialog() {
-        this.esf.cancel();
+        this.esf?.cancel();
         this.closeDialog();
     }
 

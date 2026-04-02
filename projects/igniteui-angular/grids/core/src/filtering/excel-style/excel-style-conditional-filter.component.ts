@@ -6,7 +6,7 @@ import { BaseFilteringComponent } from './base-filtering.component';
 import { NgClass } from '@angular/common';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, ContainerPositionStrategy, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxOverlayService, OverlaySettings, PlatformUtil, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxOverlayService, OverlaySettings, PlatformUtil, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 
 
 /**
@@ -128,22 +128,29 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      * @hidden @internal
      */
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
+        const positionSettings: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection: VerticalAlignment.Middle,
+            horizontalStartPoint: HorizontalAlignment.Center,
+            verticalStartPoint: VerticalAlignment.Middle
+        };
         const overlaySettings: OverlaySettings = {
+            target: this.esf.grid.tbody.nativeElement,
             modal: false,
             closeOnOutsideClick: true,
-            positionStrategy: new ContainerPositionStrategy()
+            positionStrategy: new AutoPositionStrategy(positionSettings),
+            scrollStrategy: new AbsoluteScrollStrategy(),
         };
-        const overlayId = this._overlayService.attach(IgxExcelStyleCustomDialogComponent, this.esf.grid.viewRef, overlaySettings);
+        const overlayId = this._overlayService.attach(IgxExcelStyleCustomDialogComponent, this.esf.grid.bodyViewContainerRef, overlaySettings);
         const overlayInfo = this._overlayService.getOverlayById(overlayId);
-        const customDialog = overlayInfo.componentRef.instance as IgxExcelStyleCustomDialogComponent;
-        this.esf.grid.tbody.nativeElement.appendChild(overlayInfo.wrapperElement.parentElement);
+        const customDialog = overlayInfo.componentRef!.instance as IgxExcelStyleCustomDialogComponent;
 
         customDialog.esf = this.esf;
         customDialog.column = this.esf.column;
         customDialog.filteringService = this.esf.grid.filteringService;
         customDialog.overlayComponentId = overlayId;
         if (this.esf.expressionsList && this.esf.expressionsList.length &&
-            this.esf.expressionsList[0].expression.condition.name !== 'in') {
+            this.esf.expressionsList[0].expression.condition?.name !== 'in') {
             customDialog.expressionsList = this.esf.expressionsList;
         } else {
             customDialog.expressionsList = customDialog.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
