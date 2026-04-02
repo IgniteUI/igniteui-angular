@@ -271,7 +271,6 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
-      { name: "actionStripComponents", writable: true },
       { name: "groupsRecords" },
       { name: "selectedCells" },
       { name: "validation" },
@@ -560,7 +559,6 @@ export var registerConfig = [
     ],
     additionalProperties: [
       { name: "childLayoutList", writable: true },
-      { name: "actionStripComponents", writable: true },
       { name: "foreignKey" },
       { name: "selectedCells" },
       { name: "gridAPI", writable: true },
@@ -1179,7 +1177,6 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
-      { name: "actionStripComponents", writable: true },
       { name: "rootRecords", writable: true },
       { name: "records", writable: true },
       { name: "processedRootRecords", writable: true },
