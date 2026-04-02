@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Injectable, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, DOCUMENT, inject } from '@angular/core';
+import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Injectable, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
