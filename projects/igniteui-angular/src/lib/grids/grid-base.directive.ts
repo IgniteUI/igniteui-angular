@@ -7855,18 +7855,19 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected hasMenuPinningActions(): boolean {
         const strip = this.actionStrip;
-        if (!strip?.actionButtons?.length) {
+        const actionButtons = strip?.actionButtons;
+
+        if (!actionButtons?.length) {
             return false;
         }
 
-        let hasMenuPinningActions = false;
-        strip.actionButtons.forEach((button) => {
-            if (button instanceof IgxGridPinningActionsComponent && button.asMenuItems) {
-                hasMenuPinningActions = true;
-            }
-        });
-
-        return hasMenuPinningActions;
+        return actionButtons
+            .toArray()
+            .some(
+                (button) =>
+                    button instanceof IgxGridPinningActionsComponent &&
+                    button.asMenuItems
+            );
     }
 
     protected horizontalScrollHandler(event) {
