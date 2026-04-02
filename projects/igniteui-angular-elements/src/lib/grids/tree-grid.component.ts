@@ -140,6 +140,8 @@ export class IgxTreeGridElementsComponent extends IgxTreeGridComponent {
     @Output()
     public childrenResolved = new EventEmitter<void>();
 
+    /** @hidden @internal */
+    /* blazorInclude */
     /* contentChildren */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: ActionStripCollection */

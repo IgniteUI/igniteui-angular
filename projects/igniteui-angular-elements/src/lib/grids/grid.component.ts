@@ -151,6 +151,8 @@ export class IgxGridElementsComponent extends IgxGridComponent {
     @Output()
     public childrenResolved = new EventEmitter<void>();
 
+    /** @hidden @internal */
+    /* blazorInclude */
     /* contentChildren */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: ActionStripCollection */
