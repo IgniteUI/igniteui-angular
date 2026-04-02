@@ -16,6 +16,9 @@
     @include e(property-label) {
         display: inline-block;
         margin-bottom: 0.5rem;
+	    color: var(--ig-primary-300);
+	    font-size: 14px;
+	    line-height: 1.5;
     }
 
     @include e(switch-container) {
