@@ -332,7 +332,7 @@ export interface GridServiceType {
     grid: GridType;
     /** Represents the type of the CRUD service (Create, Read, Update, Delete) operations on the grid data. */
     crudService: any;
-    /** A service responsible for handling column moving within the grid. It contains a reference to the column, its icon, and indicator for cancelation. */
+    /** A service responsible for handling column moving within the grid. It contains a reference to the column, its icon, and indicator for cancellation. */
     cms: IgxColumnMovingService;
 
     /** Represents a method declaration for retrieving the data used in the grid. The returned values could be of any type */
@@ -504,6 +504,8 @@ export interface GridType extends IGridDataBindable {
     crudService: any;
     /** @hidden @internal */
     summaryService: any;
+    /** @hidden @internal */
+    i18nFormatter: any;
 
 
 
@@ -516,6 +518,11 @@ export interface GridType extends IGridDataBindable {
     navigation: any;
     /** @hidden @internal */
     filteringService: any;
+    /**
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
+     */
     outlet: any;
     /** Indicates whether the grid has columns that can be moved */
     /** @hidden @internal */
@@ -905,7 +912,7 @@ export interface GridType extends IGridDataBindable {
     refreshSearch(): void;
     getDefaultExpandState(record: any): boolean;
     trackColumnChanges(index: number, column: any): any;
-    getPossibleColumnWidth(baseWidth?: number, minColumnWidth?: number): string;
+    getPossibleColumnWidth(baseWidth?: number): string;
     resetHorizontalVirtualization(): void;
     hasVerticalScroll(): boolean;
     getVisibleContentHeight(): number;

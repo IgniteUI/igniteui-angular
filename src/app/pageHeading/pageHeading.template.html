@@ -15,6 +15,30 @@
     </div>
 
     <div class="header-actions">
+        <small class="header-actions__title">Localization: </small>
+        <igx-input-group class="locale-select">
+            <input
+                type="text"
+                [igxToggleAction]="dropdown3"
+                [igxDropDownItemNavigation]="dropdown3"
+                igxInput
+                readonly="true"
+                [(ngModel)]="locale"
+            />
+        </igx-input-group>
+        <igx-drop-down
+            #dropdown3
+            (selectionChanging)="updateLocale($event)"
+        >
+            @for(item of selectLocales; track item) {
+                <igx-drop-down-item
+                    [value]="item"
+                >
+                    {{ item }}
+                </igx-drop-down-item>
+            }
+        </igx-drop-down>
+
         <small class="header-actions__title">Direction: </small>
         <button
                 (click)="onToggleDirectionClick()"

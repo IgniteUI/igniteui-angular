@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { GridType, RowType } from 'igniteui-angular/grids/core';
+import { GridType, RowType, SUPPORTED_KEYS } from 'igniteui-angular/grids/core';
 import { IActiveNode, IgxGridNavigationService } from 'igniteui-angular/grids/core';
-import { IPathSegment, NAVIGATION_KEYS, SUPPORTED_KEYS } from 'igniteui-angular/core';
+import { IPathSegment, NAVIGATION_KEYS } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {

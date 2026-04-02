@@ -8,7 +8,7 @@ import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { GridType } from '../common/grid.interface';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
-import { AbsoluteScrollStrategy, ColumnType, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, formatDate, IFilteringExpression, IFilteringExpressionsTree, IFilteringOperation, IgxOverlayService, isTree, OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, ColumnType, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, IFilteringExpression, IFilteringExpressionsTree, IFilteringOperation, IgxOverlayService, isTree, OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { IForOfState } from 'igniteui-angular/directives';
 
@@ -462,7 +462,7 @@ export class IgxFilteringService implements OnDestroy {
                 return formatter(expression.searchVal, undefined);
             }
             const pipeArgs = column.pipeArgs;
-            return formatDate(expression.searchVal, pipeArgs.format, this.grid.locale);
+            return this.grid.i18nFormatter.formatDate(expression.searchVal, pipeArgs.format, this.grid.locale);
         } else {
             return expression.searchVal;
         }

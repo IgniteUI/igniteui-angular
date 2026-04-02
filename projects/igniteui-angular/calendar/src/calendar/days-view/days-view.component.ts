@@ -12,7 +12,6 @@ import {
     ChangeDetectorRef,
     ChangeDetectionStrategy,
     inject,
-    DestroyRef,
     AfterContentChecked
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -37,6 +36,8 @@ import {
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { KeyboardNavigationService } from '../calendar.services';
+import { DayDigitPipe } from "../day-digit.pipe";
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 let NEXT_ID = 0;
 
@@ -52,7 +53,7 @@ let NEXT_ID = 0;
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [IgxDayItemComponent, TitleCasePipe]
+    imports: [IgxDayItemComponent, TitleCasePipe, DayDigitPipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements AfterContentChecked {
     protected el = inject(ElementRef);
@@ -206,8 +207,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
     private _hideLeadingDays: boolean;
     private _hideTrailingDays: boolean;
     private _showActiveDay: boolean;
-
-    private _destroyRef = inject(DestroyRef);
     private _theme: IgxTheme;
 
     @HostBinding('class.igx-days-view')
@@ -457,7 +456,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
      */
     public get weekHeaderLabels(): {long: string, formatted: string}[] {
         const weekdays = [];
-        const rawFormatter = new Intl.DateTimeFormat(this.locale, { weekday: 'long' });
+        const rawFormatter = getDateFormatter().getIntlFormatter(this.locale, { weekday: 'long' });
 
         for (const day of this.monthWeeks.at(0)) {
             weekdays.push({

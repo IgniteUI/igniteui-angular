@@ -9,7 +9,7 @@ import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../../../input-group/src/public_api';
 import { PickerInteractionMode } from '../../../core/src/date-common/types';
-import { PlatformUtil } from 'igniteui-angular/core';
+import { PlatformUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { DatePart } from '../../../core/src/date-common/public_api';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
@@ -1306,11 +1306,11 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should resolve inputFormat, if not set, for the editor to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
-                timePicker.displayFormat = 'h:mm:ss aa';
+                timePicker.displayFormat = 'h:mm:ss tt';
                 fixture.detectChanges();
 
-                expect(dateTimeEditor.displayFormat.normalize('NFKC')).toEqual('h:mm:ss aa');
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('h:mm:ss aa');
+                expect(dateTimeEditor.displayFormat.normalize('NFKC')).toEqual('h:mm:ss tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('h:mm:ss tt');
 
                 timePicker.displayFormat = 'shortTime';
                 fixture.detectChanges();

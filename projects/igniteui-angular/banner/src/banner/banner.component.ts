@@ -1,4 +1,15 @@
-import { Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild, inject } from '@angular/core';
+import {
+    Component,
+    ContentChild,
+    DestroyRef,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    inject,
+    Input,
+    Output,
+    ViewChild
+} from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
@@ -9,6 +20,7 @@ import {
     BannerResourceStringsEN,
     IBannerResourceStrings,
     getCurrentResourceStrings,
+    onResourceChangeHandle,
     IToggleView
 } from 'igniteui-angular/core';
 import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
@@ -147,7 +159,7 @@ export class IgxBannerComponent implements IToggleView {
     }
 
     public get resourceStrings(): IBannerResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -225,11 +237,19 @@ export class IgxBannerComponent implements IToggleView {
     @ContentChild(IgxBannerActionsDirective)
     private _bannerActionTemplate: IgxBannerActionsDirective;
 
+    private _destroyRef = inject(DestroyRef);
     private _expanded: boolean = false;
     private _shouldFireEvent: boolean = false;
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
-    private _resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
+    private _resourceStrings: IBannerResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
+
+    constructor() {
+        onResourceChangeHandle(this._destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN, false);
+        }, this);
+    }
 
     /**
      * Opens the banner

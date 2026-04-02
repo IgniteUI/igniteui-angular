@@ -44,6 +44,7 @@ export interface IGridStateInfo {
     standalone: true
 })
 export class IgxGridStateComponent extends IgxGridStateBaseDirective {
+    /* blazorSuppress */
     public override grid = inject<GridType>(IGX_GRID_BASE);
     /**
      * Restores grid features' state based on the IGridStateInfo object passed as an argument.

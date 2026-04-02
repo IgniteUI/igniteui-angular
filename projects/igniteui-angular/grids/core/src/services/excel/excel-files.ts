@@ -4,7 +4,7 @@ import { WorksheetData } from './worksheet-data';
 
 import { strToU8 } from 'fflate';
 import { ExportHeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
-import { yieldingLoop } from 'igniteui-angular/core';
+import { yieldingLoop } from '../exporter-common/yielding-loop';
 
 /**
  * @hidden
@@ -551,9 +551,15 @@ export class WorksheetFile implements IExcelFile {
     }
 
     private getSummaryFunction(type: string, key: string, dimensionMapKey: any, recordLevel: number, col: IColumnInfo): string {
-        const dimensionMap = dimensionMapKey ? this.hierarchicalDimensionMap.get(dimensionMapKey) : this.dimensionMap;
+        const dimensionMap = dimensionMapKey ? (this.hierarchicalDimensionMap.get(dimensionMapKey) ?? this.dimensionMap) : this.dimensionMap;
+        if (!dimensionMap) {
+            return '';
+        }
         const dimensions = dimensionMap.get(key);
         const levelDimensions = dimensionMap.get(GRID_LEVEL_COL);
+        if (!dimensions || !levelDimensions) {
+            return '';
+        }
 
         let func = '';
         let funcType = '';

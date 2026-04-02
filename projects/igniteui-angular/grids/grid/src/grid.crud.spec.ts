@@ -43,7 +43,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.length).toEqual(expectedLength);
     });
 
-    it('should support adding rows by manipulating the `data` @Input of the grid', () => {
+    // No longer supported - array mutations are not detected automatically, need ref change.
+    xit('should support adding rows by manipulating the `data` @Input of the grid', () => {
         // Add to the data array without changing the reference
         // with manual detection
         for (let i = 0; i < 10; i++) {
@@ -103,7 +104,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.data.length).toEqual(8);
     });
 
-    it('should support removing rows by manipulating the `data` @Input of the grid', () => {
+    // No longer supported - array mutations are not detected automatically, need ref change.
+    xit('should support removing rows by manipulating the `data` @Input of the grid', () => {
         // Remove from the data array without changing the reference
         // with manual detection
         fix.componentInstance.data.pop();

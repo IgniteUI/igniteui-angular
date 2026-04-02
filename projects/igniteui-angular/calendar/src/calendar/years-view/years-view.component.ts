@@ -11,6 +11,7 @@ import {
     DAY_INTERVAL_TOKEN,
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { getDateFormatter } from 'igniteui-i18n-core';
 import { CalendarDay, calendarRange, PlatformUtil } from 'igniteui-angular/core';
 
 @Component({
@@ -59,6 +60,13 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
     /**
      * @hidden
      */
+    protected override get formatter(): Intl.DateTimeFormat {
+        return getDateFormatter().getIntlFormatter(this.locale, { year: this.yearFormat});
+    }
+
+    /**
+     * @hidden
+     */
     private _yearFormat = "numeric";
 
     /**
@@ -87,7 +95,6 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      */
     public set yearFormat(value: any) {
         this._yearFormat = value;
-        this.initFormatter();
     }
 
     /**
@@ -117,12 +124,12 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      * @hidden
      */
     public formattedYear(value: Date): {long: string, formatted: string} {
-        const rawFormatter = new Intl.DateTimeFormat(this.locale, { year: 'numeric' });
+        const rawFormatter = getDateFormatter().getIntlFormatter(this.locale, { year: 'numeric' });
 
         if (this.formatView) {
             return {
                 long: rawFormatter.format(value),
-                formatted: this._formatter.format(value)
+                formatted: this.formatter.format(value)
             }
         }
 
@@ -137,15 +144,6 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      */
     public yearTracker(_: number, item: Date): string {
         return `${item.getFullYear()}}`;
-    }
-
-    /**
-     * @hidden
-     */
-    protected initFormatter() {
-        this._formatter = new Intl.DateTimeFormat(this._locale, {
-            year: this.yearFormat,
-        });
     }
 
     /**

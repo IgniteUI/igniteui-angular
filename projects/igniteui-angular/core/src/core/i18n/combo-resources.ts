@@ -1,17 +1,11 @@
-export interface IComboResourceStrings {
-    igx_combo_empty_message?: string;
-    igx_combo_filter_search_placeholder?: string;
-    igx_combo_addCustomValues_placeholder?: string;
-    igx_combo_clearItems_placeholder?: string;
-    igx_combo_aria_label_options?: string;
-    igx_combo_aria_label_no_options?: string;
-}
+import {
+    type IComboResourceStrings as IAComboResourceStrings,
+    type PrefixedResourceStrings,
+    ComboResourceStringsEN as AComboResourceStrings,
+    IGX_PREFIX,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export const ComboResourceStringsEN: IComboResourceStrings = {
-    igx_combo_empty_message: 'The list is empty',
-    igx_combo_filter_search_placeholder: 'Enter a Search Term',
-    igx_combo_addCustomValues_placeholder: 'Add Item',
-    igx_combo_clearItems_placeholder: 'Clear Selection',
-    igx_combo_aria_label_options: 'Selected options',
-    igx_combo_aria_label_no_options: 'No options selected'
-};
+export type IComboResourceStrings = PrefixedResourceStrings<IAComboResourceStrings, typeof IGX_PREFIX>;
+
+export const ComboResourceStringsEN: IComboResourceStrings = prefixResource(IGX_PREFIX, AComboResourceStrings);

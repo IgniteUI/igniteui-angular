@@ -55,6 +55,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
     standalone: true
 })
 export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
+    /* blazorSuppress */
     public grid = inject<GridType>(IGX_GRID_BASE);
     private _validators = inject<Validator[]>(NG_VALIDATORS, { optional: true, self: true });
 
@@ -1794,6 +1795,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /* alternateName: parentColumn */
+    /* blazorAlternateType: object */
+    // We need that because Blazor cannot handle the type correctly.
     /**
      * Sets/gets the parent column.
      * ```typescript
@@ -2186,7 +2189,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 result.push(size.width + 'px');
             } else {
                 const currentWidth = parseFloat(this.grid.getPossibleColumnWidth());
-                result.push((this.getConstrainedSizePx(currentWidth)) + 'px');
+                const target = size && size.ref ? size.ref : this;
+                result.push((target as IgxColumnComponent).getConstrainedSizePx(currentWidth) + 'px');
             }
         }
         return result;
@@ -2672,13 +2676,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      * @internal
      */
-    public getConstrainedSizePx(newSize){
-        if (this.maxWidth && newSize > this.maxWidthPx) {
+    public getConstrainedSizePx(newSize) {
+        if (this.maxWidth && newSize >= this.maxWidthPx) {
             this.widthConstrained = true;
             return this.maxWidthPx;
-        } else if (this.minWidth && newSize < this.userSetMinWidthPx) {
+        } else if (this.minWidth && newSize <= this.userSetMinWidthPx) {
             this.widthConstrained = true;
             return this.userSetMinWidthPx;
+        } else if (!this.columnGroup && !this.minWidth && (!this.widthSetByUser || this.width === 'fit-content') && !this.grid.columnWidthSetByUser && (!newSize || newSize <= this.grid.minColumnWidth)) {
+            return this.grid.minColumnWidth;
         } else {
             this.widthConstrained = false;
             return newSize;
@@ -2701,11 +2707,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
-            this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
+            this._calcWidth = this.getConstrainedSizePx(parseFloat(currentCalcWidth));
         } else {
             let possibleColumnWidth = '';
             if (!this.widthSetByUser && this.userSetMinWidthPx && this.userSetMinWidthPx < this.grid.minColumnWidth) {
-                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth(null, this.userSetMinWidthPx);
+                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth();
             } else {
                 possibleColumnWidth = this.width;
             }

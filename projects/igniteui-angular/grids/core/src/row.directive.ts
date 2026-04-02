@@ -33,9 +33,13 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
     standalone: true
 })
 export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
+    /* blazorSuppress */
     public grid = inject<GridType>(IGX_GRID_BASE);
+    /* blazorSuppress */
     public selectionService = inject(IgxGridSelectionService);
+    /* blazorSuppress */
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    /* blazorSuppress */
     public cdr = inject(ChangeDetectorRef);
 
     /**

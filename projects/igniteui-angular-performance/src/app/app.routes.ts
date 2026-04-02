@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { GridComponent } from './grid/grid.component';
 import { TreeGridComponent } from './tree-grid/tree-grid.component';
 import { PivotGridComponent } from './pivot-grid/pivot-grid.component';
+import { HierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 
 export const routes: Routes = [
     {
@@ -45,6 +46,12 @@ export const routes: Routes = [
         pathMatch: 'full',
         component: GridComponent,
         data: { rows: 1000 }
-    }
+    },
+    {
+        path: "hierarchical-grid-100k",
+        title: "Hierarchical Grid 100k records",
+        component: HierarchicalGridComponent,
+        data: { rows: 100_000 }
+    },
 
 ];

@@ -23,15 +23,11 @@ import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */
     id: string;
-    /** Provides reference to the owner component (from IBaseEventArgs) */
-    owner?: any;
     /* blazorSuppress */
     event?: Event;
 }
 
-export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs {
-    cancel: boolean;
-}
+export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs { }
 
 @Directive({
     exportAs: 'toggle',
@@ -448,6 +444,10 @@ export class IgxToggleActionDirective implements OnInit {
      * <div igxToggleAction [igxToggleOutlet]="outlet"></div>
      * ```
      * Where `outlet` in an instance of `IgxOverlayOutletDirective` or an `ElementRef`
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
      */
     @Input('igxToggleOutlet')
     public outlet: IgxOverlayOutletDirective | ElementRef;

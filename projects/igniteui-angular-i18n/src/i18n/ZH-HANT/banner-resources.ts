@@ -1,9 +1,7 @@
-import { IBannerResourceStrings } from 'igniteui-angular/core';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { BannerResourceStringsZHHANT as ABannerResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxBanner
  */
-export const BannerResourceStringsZHHANT = {
-    igx_banner_button_dismiss: '關閉'
-} satisfies MakeRequired<IBannerResourceStrings>;
+export const BannerResourceStringsZHHANT = prefixResource(IGX_PREFIX, ABannerResourceStrings);

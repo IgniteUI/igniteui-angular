@@ -22,7 +22,7 @@ import { ChipResourceStringsEN, IChipResourceStrings } from 'igniteui-angular/co
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 
 export const IgxChipTypeVariant = {
     PRIMARY: 'primary',
@@ -352,7 +352,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IChipResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -608,7 +608,14 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
     protected computedStyles;
-    private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
+    private _resourceStrings: IChipResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
+
+    constructor() {
+        onResourceChangeHandle(this.destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
+        }, this);
+    }
 
     /**
      * @hidden

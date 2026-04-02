@@ -9,8 +9,10 @@ import {
     booleanAttribute,
     inject,
     AfterViewInit,
+    OnDestroy
 } from '@angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';
+import { animationFrameScheduler, Subscription } from 'rxjs';
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -20,10 +22,11 @@ export const IgxBaseButtonType = {
 
 
 @Directive()
-export abstract class IgxButtonBaseDirective implements AfterViewInit{
+export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy {
     private _platformUtil = inject(PlatformUtil);
     public element = inject(ElementRef);
-        private _viewInit = false;
+    private _viewInit = false;
+    private _animationScheduler: Subscription;
 
     /**
      * Emitted when the button is clicked.
@@ -102,6 +105,7 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit{
         // Fix style flickering https://github.com/IgniteUI/igniteui-angular/issues/14759
         if (this._platformUtil.isBrowser) {
             this.element.nativeElement.style.setProperty('--_init-transition', '0s');
+            this.element.nativeElement.style.setProperty('transition', 'none');
         }
     }
 
@@ -109,9 +113,16 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit{
         if (this._platformUtil.isBrowser && !this._viewInit) {
             this._viewInit = true;
 
-            requestAnimationFrame(() => {
+            this._animationScheduler = animationFrameScheduler.schedule(() => {
                 this.element.nativeElement.style.removeProperty('--_init-transition');
+                this.element.nativeElement.style.setProperty('transition', 'var(--_button-transition)');
             });
+        }
+    }
+
+    public ngOnDestroy(): void {
+        if (this._animationScheduler) {
+            this._animationScheduler.unsubscribe();
         }
     }
 

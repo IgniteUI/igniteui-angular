@@ -6,6 +6,11 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
 /**
+ * @hidden @internal
+ */
+const getIntersectionObserver = () => globalThis.window?.IntersectionObserver;
+
+/**
  * Mark an element as an igxOverlay outlet container.
  * Directive instance is exported as `overlay-outlet` to be assigned to templates variables:
  * ```html
@@ -18,6 +23,7 @@ import { IScrollStrategy } from './scroll';
     standalone: true
 })
 export class IgxOverlayOutletDirective {
+    /* blazorSuppress */
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /** @hidden */
@@ -129,7 +135,13 @@ export interface OverlaySettings {
     /** Set if the overlay should close when `Esc` key is pressed */
     closeOnEscape?: boolean;
     /* blazorSuppress */
-    /** Set the outlet container to attach the overlay to */
+    /**
+     * Set the outlet container to attach the overlay to
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead.
+     */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
      * @hidden @internal
@@ -198,7 +210,7 @@ export interface OverlayInfo {
     transformY?: number;
     event?: Event;
     wrapperElement?: HTMLElement;
-    size?: string
+    size?: string;
 }
 
 /** @hidden */
@@ -333,5 +345,41 @@ export class Util {
 
         return 0;
     }
+    /**
+     * Sets up IntersectionObserver for a target element and provides position update callbacks
+     * @param element The element to observe
+     * @param doc The document context
+     * @param onPositionUpdate Callback function to reposition the overlay
+     */
+    public static setupIntersectionObserver(
+        element: HTMLElement | null,
+        doc: Document | null,
+        onPositionUpdate: () => void
+    ): IntersectionObserver | null {
+        const intersectionObserver = getIntersectionObserver();
+        if (!intersectionObserver) {
+            return null;
+        }
+        if (!element || !doc) {
+            return null;
+        }
+        const rect = element.getBoundingClientRect();
+        const viewPortRect = Util.getViewportRect(doc);
+        const rootMargin = {
+            top: -Math.abs(rect.top),
+            right: -Math.abs(viewPortRect.width - rect.right),
+            bottom: -Math.abs(viewPortRect.height - rect.bottom),
+            left: -Math.abs(rect.left),
+        };
+        const options = {
+            rootMargin: `${rootMargin.top}px ${rootMargin.right}px ${rootMargin.bottom}px ${rootMargin.left}px`,
+            threshold: Array.from({ length: 1001 }, (_, i) => i / 1000), // Thresholds from 0 to 1 with step of 0.001
+            root: doc
+        };
+        const io = new intersectionObserver((_e) => {
+            onPositionUpdate();
+        }, options);
+        io.observe(element);
+        return io;
+    }
 }
-

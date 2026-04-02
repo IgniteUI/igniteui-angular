@@ -34,7 +34,9 @@ export const IgxHierarchicalTransactionServiceFactory = {
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective implements GridType {
+    /* blazorSuppress */
     public override gridAPI = inject<IgxHierarchicalGridAPIService>(IGX_GRID_SERVICE_BASE);
+    /* blazorSuppress */
     public override navigation = inject(IgxHierarchicalGridNavigationService);
     /**
      * Gets/Sets the key indicating whether a row has children. If row has no children it does not render an expand indicator.
@@ -85,6 +87,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      *
      * @remarks
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed.
      */
     public override get outlet() {
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
@@ -93,6 +98,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /* blazorSuppress */
     /**
      * Sets the outlet used to attach the grid's overlays to.
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed.
      */
     public override set outlet(val: any) {
         this._userOutletDirective = val;

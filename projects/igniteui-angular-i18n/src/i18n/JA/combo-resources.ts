@@ -1,14 +1,7 @@
-import { IComboResourceStrings } from 'igniteui-angular/core';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ComboResourceStringsJA as AComboResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Japanese resource strings for IgxCombo
  */
-export const ComboResourceStringsJA = {
-    igx_combo_empty_message: 'リストが空です',
-    igx_combo_filter_search_placeholder: '検索条件の入力',
-    igx_combo_addCustomValues_placeholder: '項目の追加',
-    igx_combo_clearItems_placeholder: '選択のクリア',
-    igx_combo_aria_label_options: '選択されたオプション',
-    igx_combo_aria_label_no_options: '選択されたオプションはありません'
-} satisfies MakeRequired<IComboResourceStrings>;
+export const ComboResourceStringsJA = prefixResource(IGX_PREFIX, AComboResourceStrings);

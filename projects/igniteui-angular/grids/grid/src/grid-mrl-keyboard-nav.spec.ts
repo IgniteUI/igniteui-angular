@@ -11,8 +11,9 @@ import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-function
 import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
-const DEBOUNCE_TIME = 30;
+const DEBOUNCE_TIME = 60;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const CELL_BLOCK = `.${GRID_MRL_BLOCK}`;
@@ -28,6 +29,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     }));
 
     beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
+        });
         fix = TestBed.createComponent(ColumnLayoutTestComponent);
     });
 
@@ -295,6 +299,40 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(selectedCell.column.field).toMatch('City');
                 const cell = fix.componentInstance.grid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field);
                 GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
+            });
+
+            it('should not return an out of bounds row index when navigating down from the last layout row', () => {
+                fix.componentInstance.data = SampleTestData.contactInfoDataFull().slice(0, 10);
+                fix.componentInstance.colGroups = [{
+                    group: 'group1',
+                    columns: [
+                        { field: 'ID', rowStart: 1, colStart: 1 },
+                        { field: 'CompanyName', rowStart: 1, colStart: 2 },
+                        { field: 'ContactName', rowStart: 1, colStart: 3 },
+                        { field: 'ContactTitle', rowStart: 1, colStart: 4 },
+                        { field: 'Address', rowStart: 1, colStart: 5 },
+                        { field: 'City', rowStart: 2, colStart: 1 },
+                        { field: 'Region', rowStart: 2, colStart: 2 },
+                        { field: 'PostalCode', rowStart: 2, colStart: 3 },
+                        { field: 'Phone', rowStart: 2, colStart: 4 },
+                        { field: 'Fax', rowStart: 2, colStart: 5 }
+                    ]
+                }];
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const lastRowIndex = grid.dataView.length - 1;
+                const navService = grid.navigation as IgxGridMRLNavigationService;
+                const col = grid.getColumnByName('City');
+                navService.setActiveNode({
+                    row: lastRowIndex,
+                    column: col.visibleIndex,
+                    layout: navService.layout(col.visibleIndex)
+                });
+
+                const nextPos = navService.getNextVerticalPosition();
+                expect(nextPos.row).toBe(lastRowIndex);
+                expect(nextPos.column).toBe(navService.activeNode.column);
             });
 
             it('should navigate up correctly', () => {

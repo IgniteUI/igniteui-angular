@@ -20,8 +20,23 @@
         background: transparent;
         transition: background .25s $in-out-quad;
         pointer-events: none;
-        z-index: 10005;
         box-sizing: content-box;
+
+        // Override browser's default popover styles to maintain our custom positioning
+        &[popover] {
+            // Reset popover defaults to use our positioning with !important to override UA styles
+            position: fixed !important;
+            margin: 0 !important;
+            border: 0 !important;
+            padding: 0 !important;
+            width: auto;
+            height: auto;
+            overflow: visible !important;
+
+            &:not(:popover-open) {
+                display: initial !important;
+            }
+        }
     }
 
     %overlay-wrapper--modal {
@@ -79,6 +94,5 @@
         pointer-events: none;
         overflow: hidden;
         appearance: none;
-        z-index: -1;
     }
 }

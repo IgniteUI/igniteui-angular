@@ -1,5 +1,22 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, ContentChildren, ElementRef, EventEmitter, forwardRef, HostBinding, Input, Output, QueryList, TemplateRef, ViewChild, Directive, booleanAttribute, inject } from '@angular/core';
+import {
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    Input,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    Directive,
+    booleanAttribute,
+    inject,
+    DestroyRef
+} from '@angular/core';
 
 
 
@@ -14,7 +31,7 @@ import {
 } from './list.common';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IListResourceStrings, ListResourceStringsEN } from 'igniteui-angular/core';
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -135,6 +152,7 @@ export class IgxListLineSubTitleDirective {
 })
 export class IgxListComponent extends IgxListBaseDirective {
     public element = inject(ElementRef);
+    private destroyRef = inject(DestroyRef);
 
     /**
      * Returns a collection of all items and headers in the list.
@@ -429,7 +447,8 @@ export class IgxListComponent extends IgxListBaseDirective {
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
-    private _resourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
+    private _resourceStrings: IListResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
     /**
      * Sets the resource strings.
@@ -444,7 +463,14 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Returns the resource strings.
      */
     public get resourceStrings(): IListResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
+    }
+
+    constructor() {
+        super();
+        onResourceChangeHandle(this.destroyRef, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
+        }, this);
     }
 
     /**

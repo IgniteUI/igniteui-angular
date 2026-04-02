@@ -2,9 +2,9 @@ import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, E
 import {
     IgxSummaryOperand
 } from './grid-summary';
-import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, getLocaleCurrencySymbol, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
-import { ColumnType, GridColumnDataType, IgxSummaryResult, trackByIdentity } from 'igniteui-angular/core';
+import { GridTypeBase,  ColumnType, GridColumnDataType, IgxSummaryResult, trackByIdentity, BaseFormatter } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,6 +33,12 @@ export class IgxSummaryCellComponent {
 
     @Input()
     public summaryTemplate: TemplateRef<any>;
+
+    @Input()
+    public locale;
+
+    @Input()
+    public gridResourceStrings;
 
     /** @hidden */
     @Input()
@@ -91,31 +97,29 @@ export class IgxSummaryCellComponent {
     /**
      * @hidden
      */
-    public get grid() {
-        return (this.column.grid as any);
+    public get grid(): GridTypeBase {
+        return this.column.grid;
+    }
+
+    /**
+     * @hidden
+     */
+    public get i18nFormatter(): BaseFormatter {
+        return this.grid.i18nFormatter;
     }
 
     /**
      * @hidden @internal
      */
     public get currencyCode(): string {
-        return this.column.pipeArgs.currencyCode ?
-            this.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get currencySymbol(): string {
-        return this.column.pipeArgs.display ?
-            this.column.pipeArgs.display : getLocaleCurrencySymbol(this.grid.locale);
+        return this.i18nFormatter.getCurrencyCode(this.locale, this.column.pipeArgs.currencyCode);
     }
 
     /** cached single summary res after filter resets collection */
     protected trackSummaryResult = trackByIdentity;
 
     public translateSummary(summary: IgxSummaryResult): string {
-        return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
+        return this.gridResourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
 
     /**
@@ -131,24 +135,24 @@ export class IgxSummaryCellComponent {
         }
 
         const args = this.column.pipeArgs;
-        const locale = this.grid.locale;
+        const locale = this.locale;
 
         if (summary.key === 'count') {
-            return formatNumber(summary.summaryResult, locale)
+            return this.i18nFormatter.formatNumber(summary.summaryResult, locale)
         }
 
         if (summary.defaultFormatting) {
             switch (this.column.dataType) {
                 case GridColumnDataType.Number:
-                    return formatNumber(summary.summaryResult, locale, args.digitsInfo);
+                    return this.i18nFormatter.formatNumber(summary.summaryResult, locale, args.digitsInfo);
                 case GridColumnDataType.Date:
                 case GridColumnDataType.DateTime:
                 case GridColumnDataType.Time:
-                    return formatDate(summary.summaryResult, args.format, locale, args.timezone);
+                    return this.i18nFormatter.formatDate(summary.summaryResult, args.format, locale, args.timezone);
                 case GridColumnDataType.Currency:
-                    return formatCurrency(summary.summaryResult, locale, this.currencySymbol, this.currencyCode, args.digitsInfo);
+                    return this.i18nFormatter.formatCurrency(summary.summaryResult, locale, args.display, this.currencyCode, args.digitsInfo);
                 case GridColumnDataType.Percent:
-                    return formatPercent(summary.summaryResult, locale, args.digitsInfo);
+                    return this.i18nFormatter.formatPercent(summary.summaryResult, locale, args.digitsInfo);
             }
         }
         return summary.summaryResult;

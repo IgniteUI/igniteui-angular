@@ -1,12 +1,7 @@
-import { ITimePickerResourceStrings } from 'igniteui-angular/core';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { TimePickerResourceStringsFR as ATimePickerResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * French resource strings for IgxTimePicker
  */
-export const TimePickerResourceStringsFR = {
-    igx_time_picker_ok: 'Ok',
-    igx_time_picker_cancel: 'Annuler',
-    igx_time_picker_change_time: 'Modifier l’heure',
-    igx_time_picker_choose_time: 'Choisir l’heure'
-} satisfies MakeRequired<ITimePickerResourceStrings>;
+export const TimePickerResourceStringsFR = prefixResource(IGX_PREFIX, ATimePickerResourceStrings);
