@@ -94,6 +94,9 @@ export interface GridTypeBase {
     primaryKey?: string;
     id?: string;
     data: any[] | null;
+    /* csSuppress */
+    /** The type of the grid: `'flat'`, `'tree'`, `'hierarchical'`, or `'pivot'`. */
+    readonly type: 'flat' | 'tree' | 'hierarchical' | 'pivot';
     [key: string]: any;
 }
 

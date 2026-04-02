@@ -896,8 +896,6 @@ export interface GridType extends IGridDataBindable {
     selectedRows: any[];
     /** @hidden @internal */
     activeDescendant?: string;
-    /** @hidden @internal */
-    readonly type: 'flat' | 'tree' | 'hierarchical' | 'pivot';
 
     toggleGroup?(groupRow: IGroupByRecord): void;
     clearGrouping?(field: string): void;

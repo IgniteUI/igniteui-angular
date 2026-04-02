@@ -3097,7 +3097,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     */
     public EMPTY_DATA = [];
 
-    /** @hidden @internal */
+    /* csSuppress */
+    /**
+     * Returns the type of the grid.
+     */
     public get type(): GridType["type"] {
         return 'flat';
     }

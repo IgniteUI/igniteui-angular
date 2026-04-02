@@ -357,7 +357,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.cdr.markForCheck();
     }
 
-    /** @hidden @internal */
+    /* csSuppress */
+    /**
+     * Returns the type of the grid.
+     */
     public override get type(): GridType["type"] {
         return 'tree';
     }

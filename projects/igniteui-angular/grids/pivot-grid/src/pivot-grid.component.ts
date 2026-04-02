@@ -614,7 +614,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public get pivotKeys() {
         return this.pivotConfiguration.pivotKeys || DEFAULT_PIVOT_KEYS;
     }
-    /** @hidden @internal */
+
+    /* csSuppress */
+    /**
+     * Returns the type of the grid.
+     */
     public override get type(): GridType["type"] {
         return 'pivot';
     }

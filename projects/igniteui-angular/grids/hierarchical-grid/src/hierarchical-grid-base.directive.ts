@@ -76,7 +76,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     @Output()
     public dataPreLoad = new EventEmitter<IForOfState>();
 
-    /** @hidden @internal */
+    /* csSuppress */
+    /**
+     * Returns the type of the grid.
+     */
     public override get type(): GridType["type"] {
         return 'hierarchical';
     }
