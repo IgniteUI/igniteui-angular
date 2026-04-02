@@ -92,6 +92,8 @@ $z-grid-loading: 10003;
         }
 
         igx-input-group {
+	        --_bundle-row: 1;
+	        
             background: var-get($theme, 'cell-editing-background');
 
             input {
