@@ -8,7 +8,7 @@ import * as ts from 'typescript';
 import { UpdateChanges } from '../common/UpdateChanges';
 // use bare specifier to escape the schematics encapsulation for the dynamic import:
 import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
-import { namedImportFilter } from '../common/tsUtils';
+import { igNamedImportFilter } from '../common/tsUtils';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 
 const version = '17.0.0';
@@ -95,7 +95,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         var fileContent = host.read(filePath).toString();
 
         const source = ts.createSourceFile('', fileContent, ts.ScriptTarget.Latest, true)
-        const igImports = source.statements.filter(<(a: ts.Statement) => a is ts.ImportDeclaration>namedImportFilter);
+        const igImports = source.statements.filter(igNamedImportFilter);
 
         // Find all animations imported from 'igniteui-angular' and delete them.
         for (const igImport of igImports) {

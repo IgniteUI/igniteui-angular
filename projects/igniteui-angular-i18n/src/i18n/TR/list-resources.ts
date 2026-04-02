@@ -1,10 +1,7 @@
-import { IListResourceStrings } from 'igniteui-angular';
+import { IGX_PREFIX, prefixResource } from 'igniteui-i18n-core';
+import { ListResourceStringsTR as AListResourceStrings } from 'igniteui-i18n-resources';
 
-// only use `satisfies` operator so export is typed by its schema
 /**
  * Turkish resource strings for IgxList
  */
-export const ListResourceStringsTR = {
-    igx_list_no_items: 'Listede hiç öğe yok.',
-    igx_list_loading: 'Sunucudan veri yükleniyor...'
-} satisfies MakeRequired<IListResourceStrings>;
+export const ListResourceStringsTR = prefixResource(IGX_PREFIX, AListResourceStrings);

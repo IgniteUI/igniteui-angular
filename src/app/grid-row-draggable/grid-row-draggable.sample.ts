@@ -5,8 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { RemoteService } from '../shared/remote.service';
-import { IgxButtonGroupComponent, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxIconComponent, IgxSwitchComponent, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective, IgxDropDirective, IgxGridEmptyTemplateDirective } from 'igniteui-angular';
-import { IgxRowDragDirective } from 'projects/igniteui-angular/src/lib/grids/row-drag.directive';
+import { IgxButtonGroupComponent, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxIconComponent, IgxSwitchComponent, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective, IgxDropDirective, IgxGridEmptyTemplateDirective, IgxRowDragDirective } from 'igniteui-angular';
 
 
 enum DragIcon {

@@ -1,0 +1,11 @@
+<ng-content select="igx-query-builder-header,igc-query-builder-header"></ng-content>
+
+<igx-query-builder-tree
+    [entities]="this.entities"
+    [expressionTree]="this.expressionTree"
+    [locale]="this.locale"
+    [resourceStrings]="this.resourceStrings"
+    [queryBuilder]="this"
+    (expressionTreeChange)="onExpressionTreeChange($event)"
+    [searchValueTemplate]="searchValueTemplate">
+</igx-query-builder-tree>

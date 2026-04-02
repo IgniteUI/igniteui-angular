@@ -1,0 +1,160 @@
+<div class="sample-wrapper">
+    <h2 class="sample-title">PDF Export Service Demo</h2>
+    <p class="sample-description">
+        This demo shows how to use the IgxPdfExporterService API directly to export grids to PDF format.
+        Configure the export options using the controls below and click the export buttons.
+    </p>
+
+    <!-- Export Configuration Panel -->
+    <div class="config-panel">
+        <h3>Export Options Configuration</h3>
+
+        <div class="config-row">
+            <igx-input-group>
+                <label igxLabel>File Name</label>
+                <input igxInput type="text" [(ngModel)]="fileName" />
+            </igx-input-group>
+        </div>
+
+        <div class="config-row">
+            <igx-select [(ngModel)]="pageOrientation">
+                <label igxLabel>Page Orientation</label>
+                <igx-select-item value="portrait">Portrait</igx-select-item>
+                <igx-select-item value="landscape">Landscape</igx-select-item>
+            </igx-select>
+        </div>
+
+        <div class="config-row">
+            <igx-select [(ngModel)]="pageSize">
+                <label igxLabel>Page Size</label>
+                @for (size of pageSizes; track size) {
+                    <igx-select-item [value]="size">{{ size.toUpperCase() }}</igx-select-item>
+                }
+            </igx-select>
+        </div>
+
+        <div class="config-row">
+            <igx-input-group>
+                <label igxLabel>Font Size</label>
+                <input igxInput type="number" [(ngModel)]="fontSize" min="8" max="16" />
+            </igx-input-group>
+        </div>
+
+        <div class="config-row">
+            <igx-switch [(ngModel)]="showTableBorders">Show Table Borders</igx-switch>
+        </div>
+    </div>
+
+    <!-- Regular Grid -->
+    <div class="grid-container">
+        <div class="grid-header">
+            <h3>Regular Grid (with Multi-Column Headers and Summaries)</h3>
+            <button igxButton="contained" (click)="exportGrid()">
+                Export to PDF
+            </button>
+        </div>
+
+        <igx-grid #grid1 [data]="gridData" [autoGenerate]="false" height="500px" width="100%">
+            <igx-column field="ID" header="ID" [width]="'80px'" [hasSummary]="true"></igx-column>
+
+            <igx-column-group header="Product Information">
+                <igx-column field="Name" header="Product Name" [width]="'200px'"></igx-column>
+                <igx-column field="Category" header="Category" [width]="'150px'"></igx-column>
+            </igx-column-group>
+
+            <igx-column-group header="Financial Details">
+                <igx-column field="Price" header="Price" dataType="currency" [width]="'120px'" [hasSummary]="true"></igx-column>
+                <igx-column field="InStock" header="In Stock" dataType="boolean" [width]="'100px'" [hasSummary]="true"></igx-column>
+            </igx-column-group>
+
+            <igx-column field="LaunchDate" header="Launch Date" dataType="date" [width]="'150px'"></igx-column>
+        </igx-grid>
+    </div>
+
+    <!-- Tree Grid -->
+    <div class="grid-container">
+        <div class="grid-header">
+            <h3>Tree Grid (with Hierarchy and Summaries)</h3>
+            <button igxButton="contained" (click)="exportTreeGrid()">
+                Export to PDF
+            </button>
+        </div>
+
+        <igx-tree-grid #treeGrid [data]="treeGridData" [autoGenerate]="false"
+                       primaryKey="ID" foreignKey="ParentID" height="500px" width="100%">
+            <igx-column field="ID" header="ID" [width]="'100px'" [hasSummary]="true"></igx-column>
+            <igx-column field="Name" header="Department Name" [width]="'300px'"></igx-column>
+            <igx-column field="Budget" header="Budget" dataType="currency" [width]="'150px'" [hasSummary]="true"></igx-column>
+        </igx-tree-grid>
+    </div>
+
+    <!-- Hierarchical Grid -->
+    <div class="grid-container">
+        <div class="grid-header">
+            <h3>Hierarchical Grid (with Multi-Column Headers and Summaries)</h3>
+            <button igxButton="contained" (click)="exportHierarchicalGrid()">
+                Export to PDF
+            </button>
+        </div>
+
+        <igx-hierarchical-grid #hierarchicalGrid [data]="hierarchicalGridData"
+                               [autoGenerate]="false" height="500px" width="100%">
+            <igx-column field="ID" header="ID" [width]="'80px'" [hasSummary]="true"></igx-column>
+
+            <igx-column-group header="Company Details">
+                <igx-column field="CompanyName" header="Company" [width]="'250px'"></igx-column>
+                <igx-column field="Revenue" header="Revenue" dataType="currency" [width]="'150px'" [hasSummary]="true"></igx-column>
+            </igx-column-group>
+
+            <igx-row-island [key]="'Employees'" [autoGenerate]="false">
+                <igx-column field="ID" header="Employee ID" [width]="'120px'" [hasSummary]="true"></igx-column>
+
+                <igx-column-group header="Employee Info">
+                    <igx-column field="Name" header="Name" [width]="'200px'"></igx-column>
+                    <igx-column field="Position" header="Position" [width]="'150px'"></igx-column>
+                </igx-column-group>
+
+                <igx-column field="Salary" header="Salary" dataType="currency" [width]="'120px'" [hasSummary]="true"></igx-column>
+            </igx-row-island>
+        </igx-hierarchical-grid>
+    </div>
+
+    <!-- Pivot Grid -->
+    <div class="grid-container">
+        <div class="grid-header">
+            <h3>Pivot Grid (with Aggregated Data)</h3>
+            <button igxButton="contained" (click)="exportPivotGrid()">
+                Export to PDF
+            </button>
+        </div>
+
+        <div style="display: flex">
+            <igx-pivot-grid #pivotGrid [data]="pivotGridData" [autoGenerateConfig]="true" height="850px" width="80%">
+            </igx-pivot-grid>
+            <igx-pivot-data-selector [grid]="pivotGrid"></igx-pivot-data-selector>
+        </div>
+    </div>
+
+    <div class="info-section">
+        <h4>How to Use:</h4>
+        <ol>
+            <li>Configure the export options using the controls at the top</li>
+            <li>Click any of the "Export to PDF" buttons to export the corresponding grid</li>
+            <li>The PDF will be downloaded with your configured settings</li>
+            <li>Tree and Hierarchical grids will show indentation in the exported PDF</li>
+            <li>Multi-column headers and summaries are automatically included in the export</li>
+            <li>Pivot grids export with aggregated data values</li>
+        </ol>
+
+        <h4>Key Features:</h4>
+        <ul>
+            <li><strong>Direct API Usage:</strong> Uses IgxPdfExporterService.export() method directly</li>
+            <li><strong>Configurable Options:</strong> Adjust orientation, page size, font size, and borders</li>
+            <li><strong>Hierarchy Support:</strong> Tree and Hierarchical grids export with proper indentation</li>
+            <li><strong>Multi-Column Headers:</strong> Column groups are preserved in the exported PDF</li>
+            <li><strong>Summaries Support:</strong> Grid summaries are automatically exported to PDF</li>
+            <li><strong>Pivot Grid Support:</strong> Pivot grids export with aggregated data and pivot structure</li>
+            <li><strong>Multiple Grids:</strong> Export different grid types with the same configuration</li>
+        </ul>
+    </div>
+</div>

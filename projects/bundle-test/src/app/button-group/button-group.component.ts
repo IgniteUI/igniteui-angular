@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IGX_BUTTON_GROUP_DIRECTIVES } from 'igniteui-angular';
+import { IGX_BUTTON_GROUP_DIRECTIVES } from 'igniteui-angular/button-group';
 
 @Component({
     selector: 'app-button-group',

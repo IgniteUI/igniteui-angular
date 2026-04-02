@@ -1,18 +1,35 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "ImportsChange": {
+            "properties": {
+                "name": {
+                    "description": "Name of the module to change",
+                    "type": "string"
+                },
+                "replaceWith": {
+                    "description": "Replace original name with new one",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "replaceWith"
+            ],
+            "type": "object"
+        }
+    },
     "properties": {
-        "name": {
-            "description": "Name of the module to change",
-            "type": "string"
-        },
-        "replaceWith": {
-            "description": "Replace original name with new one",
-            "type": "string"
+        "changes": {
+            "description": "An array of changes to imports array",
+            "items": {
+                "$ref": "#/definitions/ImportsChange"
+            },
+            "type": "array"
         }
     },
     "required": [
-        "name",
-        "replaceWith"
+        "changes"
     ],
     "type": "object"
 }

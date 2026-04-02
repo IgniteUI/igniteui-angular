@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IgxStepperComponent } from 'igniteui-angular';
+import { IgxStepperComponent } from 'igniteui-angular/stepper';
 
 @Component({
   selector: 'app-grid',

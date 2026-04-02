@@ -1,5 +1,27 @@
 <div class="columns-container">
     <article class="timepicker-column">
+        <h4 class="sample-title">Angular Time Picker with Reactive Form</h4>
+        <div class="preview" [igSize]="properties.size">
+            <form [formGroup]="reactiveForm">
+                <igx-time-picker
+                    #tpReactive
+                    formControlName="timePicker"
+                    [mode]="properties.mode"
+                    [type]="properties.type"
+                    [inputFormat]="properties.inputFormat"
+                    [displayFormat]="properties.displayFormat"
+                    [required]="properties.required"
+                    [readOnly]="properties.readonly"
+                    [disabled]="properties.disabled"
+                    [placeholder]="properties.placeholder"
+                >
+                    <label igxLabel>Select a Time</label>
+                    <span igxHint>Helper text</span>
+                </igx-time-picker>
+            </form>
+        </div>
+    </article>
+    <article class="timepicker-column">
         <h4 class="sample-title">Time Picker with Date value binding</h4>
         <p class="sample-description">{{showDate(date)}}</p>
         <div class="preview" [igSize]="properties.size">

@@ -4,7 +4,7 @@
         <igx-switch [(ngModel)]="rowEditNoTransactions">Row edit</igx-switch>
         <igx-grid [rowStyles]="rowStyles"  validationTrigger="change" (validationStatusChange)="validationChange($event)" (cellEdit)="cellEdit($event)" (formGroupCreated)="formCreateHandler($event)" #gridNoTransactions primaryKey="ProductID" [data]="data" [rowEditable]="rowEditNoTransactions"
             [width]="'1000px'" [height]="'800px'">
-            <igx-column [field]="" [editable]="false">
+            <igx-column [editable]="false">
                 <ng-template igxCell let-cell="cell">
                     {{cell.row.validation.status}}
                 </ng-template>
@@ -71,7 +71,7 @@
         <h4 class="sample-title">TreeGrid</h4>
         <igx-tree-grid #treegrid [data]="treeData" primaryKey="employeeID" [rowStyles]="rowStyles"
             foreignKey="PID" [width]="'900px'" [height]="'800px'" [rowEditable]="true" [moving]="true">
-            <igx-column [field]="" [editable]="false">
+            <igx-column [editable]="false">
                 <ng-template igxCell let-cell="cell">
                     {{cell.row.validation.status}}
                 </ng-template>

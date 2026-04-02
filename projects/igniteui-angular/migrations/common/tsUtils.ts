@@ -7,10 +7,24 @@ import { Logger } from './tsLogger';
 import { TSLanguageService } from './tsPlugin/TSLanguageService';
 
 export const IG_PACKAGE_NAME = 'igniteui-angular';
+export const IG_LICENSED_PACKAGE_NAME = '@infragistics/igniteui-angular';
 export const NG_LANG_SERVICE_PACKAGE_NAME = '@angular/language-service';
 export const NG_CORE_PACKAGE_NAME = '@angular/core';
 export const CUSTOM_TS_PLUGIN_PATH = './tsPlugin';
 export const CUSTOM_TS_PLUGIN_NAME = 'igx-ts-plugin';
+
+/**
+ * Checks if the given import path is from igniteui-angular package.
+ * Handles both OSS (igniteui-angular) and licensed (@infragistics/igniteui-angular) versions,
+ * as well as subpaths (e.g., igniteui-angular/core, @infragistics/igniteui-angular/grids).
+ * @param importPath The module specifier text to check
+ * @returns true if the import path is from igniteui-angular package
+ */
+export const isIgniteuiImport = (importPath: string): boolean =>
+    importPath === IG_PACKAGE_NAME ||
+    importPath === IG_LICENSED_PACKAGE_NAME ||
+    importPath.startsWith(`${IG_PACKAGE_NAME}/`) ||
+    importPath.startsWith(`${IG_LICENSED_PACKAGE_NAME}/`);
 
 enum SyntaxTokens {
     ClosingParenthesis = ')',
@@ -83,13 +97,13 @@ export const getImportModulePositions = (sourceText: string, startsWith: string)
     return positions;
 };
 
-/** Filters out statements to named imports (e.g. `import {x, y}`) from PACKAGE_IMPORT */
-export const namedImportFilter = (statement: ts.Statement) => {
-    if (statement.kind === ts.SyntaxKind.ImportDeclaration &&
-        ((statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral).text.endsWith(IG_PACKAGE_NAME)) {
-
-        const clause = (statement as ts.ImportDeclaration).importClause;
-        return clause && clause.namedBindings && clause.namedBindings.kind === ts.SyntaxKind.NamedImports;
+/** Filters out statements to named imports (e.g. `import {x, y}`) from IG_PACKAGE_NAME */
+export const igNamedImportFilter = (
+    statement: ts.Statement,
+): statement is ts.ImportDeclaration & { moduleSpecifier: ts.StringLiteral } & { importClause: { namedBindings: ts.NamedImports } } => {
+    if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier) && isIgniteuiImport(statement.moduleSpecifier.text)) {
+        const clause = statement.importClause;
+        return clause?.namedBindings && clause.namedBindings.kind === ts.SyntaxKind.NamedImports;
     }
     return false;
 };
@@ -100,14 +114,13 @@ export const getRenamePositions = (sourcePath: string, name: string, service: ts
     const source = service.getProgram().getSourceFile(sourcePath);
     const positions = [];
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const imports = source.statements.filter(<(a: ts.Statement) => a is ts.ImportDeclaration>namedImportFilter);
+    const imports = source.statements.filter(igNamedImportFilter);
     if (!imports.length) {
         return positions;
     }
     const elements: ts.NodeArray<ts.ImportSpecifier> =
         imports
-            .map(x => (x.importClause.namedBindings as ts.NamedImports).elements)
+            .map(x => x.importClause.namedBindings.elements)
             .reduce((prev, current) => prev.concat(current) as unknown as ts.NodeArray<ts.ImportSpecifier>);
 
     for (const elem of elements) {
