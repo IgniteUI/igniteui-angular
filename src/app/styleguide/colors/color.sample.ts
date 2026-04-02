@@ -33,6 +33,7 @@ export class ColorsSampleComponent implements OnDestroy {
     private el = inject(ElementRef<HTMLElement>);
     private cdr = inject(ChangeDetectorRef);
     private observer: MutationObserver;
+    private canvasCtx: CanvasRenderingContext2D | null = null;
 
     private snackbar = viewChild<IgxSnackbarComponent>('snackbar');
 
@@ -64,6 +65,7 @@ export class ColorsSampleComponent implements OnDestroy {
 
     public ngOnDestroy(): void {
         this.observer?.disconnect();
+        this.canvasCtx = null;
     }
 
     public copyHex(hex: string): void {
@@ -98,15 +100,32 @@ export class ColorsSampleComponent implements OnDestroy {
         const resolved = getComputedStyle(temp).color;
         document.body.removeChild(temp);
 
-        return this.rgbToHex(resolved);
+        return this.colorToHex(resolved);
     }
 
-    private rgbToHex(rgb: string): string {
-        const match = rgb.match(/\d+/g);
-        if (!match || match.length < 3) {
-            return rgb;
+    /**
+     * Converts any resolved CSS color string to a hex value.
+     * Uses a canvas to reliably handle all CSS color formats
+     * (rgb, color(srgb), oklch, lab, etc.) that modern browsers
+     * may return from getComputedStyle.
+     */
+    private colorToHex(color: string): string {
+        if (!this.canvasCtx) {
+            const canvas = document.createElement('canvas');
+            canvas.width = canvas.height = 1;
+            this.canvasCtx = canvas.getContext('2d');
         }
-        const [r, g, b] = match.map(Number);
+
+        const ctx = this.canvasCtx;
+        if (!ctx) {
+            return '';
+        }
+
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.fillStyle = '#000';
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, 1, 1);
+        const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
         return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
     }
 }
