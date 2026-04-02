@@ -96,7 +96,6 @@ import {
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile, throttle, take, switchMap } from 'rxjs/operators';
-import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import {
     IgxToggleDirective,
     IForOfDataChangeEventArgs,
