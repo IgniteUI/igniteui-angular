@@ -3,7 +3,7 @@ import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
 import { Subject } from 'rxjs';
 import { NgClass } from '@angular/common';
-import { ɵIgxDirectionality } from 'igniteui-angular/core';
+import { isLeftToRight } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -15,7 +15,6 @@ import { ɵIgxDirectionality } from 'igniteui-angular/core';
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     private _elementRef = inject(ElementRef);
-    private _dir = inject(ɵIgxDirectionality);
 
     @Input()
     public value: any;
@@ -210,11 +209,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         }
 
         let increment = 0;
+        const rtl = !isLeftToRight(this._elementRef.nativeElement);
         const stepWithDir = (rtl: boolean) => rtl ? this.step * -1 : this.step;
         if (event.key.endsWith('Left')) {
-            increment = stepWithDir(!this._dir.rtl);
+            increment = stepWithDir(!rtl);
         } else if (event.key.endsWith('Right')) {
-            increment = stepWithDir(this._dir.rtl);
+            increment = stepWithDir(rtl);
         } else {
             return;
         }
@@ -278,10 +278,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     }
 
     private calculateTrackUpdate(mouseX: number): number {
-        const scaleX = this._dir.rtl ? this.thumbPositionX - mouseX : mouseX - this.thumbPositionX;
+        const scaleX = !isLeftToRight(this._elementRef.nativeElement)
+            ? this.thumbPositionX - mouseX
+            : mouseX - this.thumbPositionX;
         const stepDistanceCenter = this.stepDistance / 2;
 
-        // If the thumb scale range (slider update) is less thàn a half step,
+        // If the thumb scale range (slider update) is less than a half step,
         // the position stays the same.
         const scaleXPositive = Math.abs(scaleX);
         if (scaleXPositive < stepDistanceCenter) {
