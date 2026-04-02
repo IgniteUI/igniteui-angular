@@ -12,3 +12,9 @@
 .searchInput{
     width: 800px;
 }
+
+.grids-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(800px, 1fr));
+    gap: 1rem;
+}
