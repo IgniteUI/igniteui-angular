@@ -209,12 +209,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         }
 
         let increment = 0;
-        const rtl = !isLeftToRight(this._elementRef.nativeElement);
+        const isRTL = !isLeftToRight(this._elementRef.nativeElement);
         const stepWithDir = (rtl: boolean) => rtl ? this.step * -1 : this.step;
         if (event.key.endsWith('Left')) {
-            increment = stepWithDir(!rtl);
+            increment = stepWithDir(!isRTL);
         } else if (event.key.endsWith('Right')) {
-            increment = stepWithDir(rtl);
+            increment = stepWithDir(isRTL);
         } else {
             return;
         }
