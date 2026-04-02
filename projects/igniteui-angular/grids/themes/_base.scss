@@ -411,7 +411,7 @@ $z-grid-loading: 10003;
             border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
 
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
-            // this is very important especially of the borders have slide alpha
+            // this is very important especially if the borders have slide alpha
             background-clip: padding-box !important;
 
             .igx-display-container {
@@ -2600,6 +2600,15 @@ $z-grid-loading: 10003;
                 }
             }
         }
+	    
+	    .igx-grid__group-expand-btn {
+		    color: var-get($theme, 'expand-all-icon-color');
+		    
+		    &:hover,
+		    &:focus {
+			    color: var-get($theme, 'expand-all-icon-hover-color');
+		    }
+	    }
     }
 
     @include b(igx-drop-area) {
