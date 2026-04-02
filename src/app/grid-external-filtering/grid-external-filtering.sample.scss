@@ -1,21 +1,31 @@
-
-
-.sample-buttons {
-    margin-top: 24px;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-igx-checkbox {
-    margin: 0 10px;
-}
-
-[igxButton]+[igxButton] {
-    margin-left: 8px;
-}
-
-.efs-grid {
-    display: flex;
-    flex: 1 0 auto;
-    flex-direction: column;
+:host {
+	display: flex;
+	flex-grow: 1;
+	gap: var(--demos-gap);
+	
+	.demo-esf__sample {
+		padding: var(--content-spacing);
+		border: 1px dashed var(--ig-gray-300);
+	}
+	
+	.demo-esf__sample-select {}
+	
+	.demo-esf__grid-sample {
+		display: flex;
+		flex-direction: column;
+		gap: var(--demos-gap);
+		padding: var(--content-spacing);
+		border: 1px dashed var(--ig-gray-300);
+		flex: 1;
+	}
+	
+	.demo-esf__grid-sample-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--demos-gap);
+		
+		igx-buttongroup {
+			min-width: 230px;
+		}
+	}
 }

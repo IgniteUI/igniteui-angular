@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode, IChangeCheckboxEventArgs, IgxAdvancedFilteringDialogComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxCSVTextDirective, IgxCheckboxComponent, IgxColumnComponent, IgxExcelTextDirective, IgxFlexDirective, IgxGridComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxLabelDirective, IgxLayoutDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode, IChangeCheckboxEventArgs, IgxAdvancedFilteringDialogComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxCSVTextDirective, IgxCheckboxComponent, IgxColumnComponent, IgxExcelTextDirective, IgxGridComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxLabelDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 
 
 @Component({
@@ -8,7 +8,7 @@ import { FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode
     selector: 'app-grid-external-filtering-sample',
     styleUrls: ['grid-external-filtering.sample.scss'],
     templateUrl: 'grid-external-filtering.sample.html',
-    imports: [IgxFlexDirective, IgxLayoutDirective, IgxButtonGroupComponent, IgxSelectComponent, IgxLabelDirective, IgxSelectItemComponent, IgxGridExcelStyleFilteringComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxAdvancedFilteringDialogComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective]
+    imports: [IgxButtonGroupComponent, IgxSelectComponent, IgxLabelDirective, IgxSelectItemComponent, IgxGridExcelStyleFilteringComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxAdvancedFilteringDialogComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective]
 })
 export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true })
