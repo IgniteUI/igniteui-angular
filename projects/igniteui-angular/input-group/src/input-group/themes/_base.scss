@@ -296,6 +296,19 @@ $transition-timing: .25s $out-cubic;
 
             @include e(bundle-main) {
                 display: contents;
+	            
+	            > input {
+		            position: absolute;
+		            border: none;
+		            inset: 0;
+		            grid-row: inherit;
+		            opacity: 0 !important;
+		            appearance: none;
+		            height: 100%;
+		            grid-column: 2 / 4;
+		            cursor: pointer;
+		            z-index: 1;
+	            }
             }
         }
 
