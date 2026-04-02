@@ -1328,6 +1328,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     @ViewChild('tbody', { static: true })
     public tbody: ElementRef;
 
+    /** @hidden @internal */
+    @ViewChild("bodyViewContainerRef", { read: ViewContainerRef })
+    public bodyViewContainerRef?: ViewContainerRef;
+
     @ViewChild(IgxGridBodyDirective, { static: true, read: ElementRef })
     protected tbodyContainer: ElementRef;
 
