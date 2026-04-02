@@ -225,7 +225,7 @@ export abstract class IgxBaseExporter {
      *
      * @memberof IgxBaseExporter
      */
-    public export(grid: any, options: IgxExporterOptionsBase): void {
+    public export(grid: GridTypeBase, options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {
             throw Error('No options provided!');
         }
