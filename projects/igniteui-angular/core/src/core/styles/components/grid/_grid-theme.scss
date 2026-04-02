@@ -208,6 +208,7 @@
                 $schema: $schema,
                 $background-color: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
                 $border-color: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background)),
+                $pinned-border-color: color-mix(in srgb, var(--_grid-foreground) 30%, var(--_grid-background)),
                 $label-color: var(--_grid-accent-color),
                 $result-color: var(--_grid-foreground)
             )
