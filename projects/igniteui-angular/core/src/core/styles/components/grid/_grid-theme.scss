@@ -892,7 +892,7 @@
         &%igx-grid__tr--ghost {
             background: var-get($theme, 'row-ghost-background');
             color: var-get($theme, 'row-drag-color');
-            border: rem(1px) solid var-get($theme, 'row-ghost-border-color');
+            outline: rem(1px) solid var-get($theme, 'row-ghost-border-color');
             z-index: 10002;
 
             @include css-vars((
