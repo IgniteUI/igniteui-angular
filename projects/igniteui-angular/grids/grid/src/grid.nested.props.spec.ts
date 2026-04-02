@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, DebugElement, ViewChild } from '@angular/core';
@@ -318,6 +318,29 @@ describe('Grid - nested data source properties #grid', () => {
 
             expect(first(copiedData).user.name.first).toMatch('Updated!');
         });
+
+        it('should correctly filter with ESF', fakeAsync(() => {
+            setupData(DATA);
+            grid.getColumnByName('user').field = 'user.name.first';
+            fixture.detectChanges();
+            grid.allowFiltering = true;
+            grid.filterMode="excelStyleFilter";
+            fixture.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fixture, 'user.name.first');
+            fixture.detectChanges();
+            tick();
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fixture, 'igx-grid');
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-grid'));
+            checkboxes[1].click();
+            fixture.detectChanges();
+            tick();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fixture, null, 'igx-grid');
+            fixture.detectChanges();
+            tick();
+            expect(grid.filteredSortedData.length).toBeGreaterThan(0);
+        }));
     });
 });
 

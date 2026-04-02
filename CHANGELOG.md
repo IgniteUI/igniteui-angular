@@ -2,6 +2,30 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.2.0
+
+### New Features
+
+- `IgxOverlayService`
+    - `IgxOverlayService.createAbsoluteOverlaySettings` - Added a new overload accepting `useContainerStrategy?: boolean` as the second parameter. When `true`, uses `ContainerPositionStrategy`; otherwise defaults to `GlobalPositionStrategy`. The previous overload accepting `outlet?: IgxOverlayOutletDirective | ElementRef` is still supported but deprecated.
+
+- `IgxSnackbarComponent`, `IgxToastComponent`
+    - Added a new `positioning` input property. When set to `container`, the components is displayed inside its nearest positioned ancestor in place of the now deprecated `outlet` property .
+
+- `IgxCombo`, `IgxSimpleCombo`
+    - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
+    - Added `disableClear` input that allows hiding the clear button even when items are selected. Defaults to `false`.
+
+### General
+
+- `IgxOverlayService`
+    - **Deprecation** - The `outlet` property in `OverlaySettings`, `IgxOverlayOutletDirective`, and `igxToggleOutlet` input on `IgxToggleActionDirective` are deprecated and will be removed in a future version. As overlay service now integrates the HTML Popover API and prefers rendering content in place / in the top layer, significantly reducing the need for outlet containers, new code should rely on the default in-place / top-layer rendering behavior instead of custom outlet containers.
+
+## 21.1.3
+
+### Security Fixes
+- Bumped `jspdf` dependency to `4.2.1` to address a security vulnerability present in earlier versions.
+
 ## 21.1.0
 
 ### New Features
@@ -45,6 +69,46 @@ All notable changes for each version of this project will be documented in this 
         <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'" [hideTriggers]="'keypress,blur'">info</igx-icon>
         <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
         ```
+- `IgxNavigationDrawer` - Integrated HTML Popover API to place overlay elements when not pinned in the top layer, eliminating z-index stacking issues.
+
+- `IgxOverlayService`
+    - Integrated HTML Popover API into the overlay service for improved z-index management and layering control.
+    - The overlay service now uses the Popover API to place overlay elements in the top layer, eliminating z-index stacking issues.
+    - Improved positioning accuracy for container-based overlays with fixed container bounds.
+
+- **AI-Assisted Development - Copilot Skills**
+    - Three consolidated Copilot Skills are now included in the repository to teach AI coding assistants/agents (e.g., GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to work with Ignite UI for Angular:
+        - **Components** - UI Components (form controls, layout, data display, feedback/overlays, directives — Input Group, Combo, Select, Date/Time Pickers, Calendar, Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, Button, Ripple, Tooltip, Drag and Drop, Layout Manager, Dock Manager and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart))
+        - **Data Grids** - Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid)
+        - **Theming & Styling** - Theming & Styling (includes MCP server setup for live theming tools)
+    - These skills are automatically discovered when placed in the agent's skills path ( e.g. `.claude/skills`) and this release ships with an optional migration to add those to your project. For more information, see the [README](README.md#ai-assisted-development).
+
+- Added `IgxGridLiteComponent` wrapper around the `igc-grid-lite` Web Component _(in Developer Preview)_ 
+
+  Available from the `igniteui-angular/grids/lite` entry point. The wrapper component adds Angular-friendly API with similar inputs, including two-way bindable `sortingExpressions` and `filteringExpressions`, Angular template-based cell and header rendering with declarative templates via the `igxGridLiteCell` and `igxGridLiteHeader` directives.
+
+    ```
+    npm i igniteui-grid-lite
+    ```
+    ```ts
+    import { IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective } from "igniteui-angular/grids/lite";
+
+    @Component({
+        selector: 'app-grid-lite-sample',
+        templateUrl: 'grid-lite.sample.html',
+        imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective]
+    })
+    export class GridLiteSampleComponent { }
+    ```
+    ```html
+    <igx-grid-lite [data]="data">
+        <igx-grid-lite-column field="name" header="Name" [sortable]="true">
+            <ng-template igxGridLiteCell let-value>
+                <strong>{{ value }}</strong>
+            </ng-template>
+        </igx-grid-lite-column>
+    </igx-grid-lite>
+    ```
 
 ### General
 

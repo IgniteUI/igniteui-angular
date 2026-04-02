@@ -1,0 +1,99 @@
+
+<div class="grid-chart-contextmenu-wrapper">
+    <igx-grid #grid igxChartIntegration igxConditionalFormatting igxContextMenu primaryKey='ID' [data]="data" [style.--ig-size]="'var(--ig-size-small)'" [columnSelection]="'multiple'">
+        <igx-column field='ID' [hidden]='true'></igx-column>
+        <igx-column field='Category' [editable]="true" [width]="'110px'"></igx-column>
+        <igx-column field='Type' [editable]="true" [filterable]='false' [width]="'130px'"></igx-column>
+        <igx-column field='Country' [editable]="true" [width]="'100px'"></igx-column>
+        <igx-column field='Price' dataType="number" [width]="'120px'" [editable]="true">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='Start(Y)' [width]="'100px'" dataType="number" [formatter]="formatCurrency" [editable]="true">
+        </igx-column>
+        <igx-column field='Start(Y)Diff' dataType="number" [width]="'120px'" [editable]="true">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | number:'1.4-4'}}%</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='Buy' [width]="'100px'" dataType="number" [formatter]="formatCurrency" [editable]="true">
+        </igx-column>
+        <igx-column field='BuyDiff' dataType="number" [width]="'120px'" [editable]="true">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | number:'1.4-4'}}%</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='High(Y)' [width]="'100px'" dataType="number" [formatter]="formatCurrency" [editable]="true">
+        </igx-column>
+        <igx-column field='High(Y)Diff' [width]="'120px'" dataType="number" [formatter]="formatCurrency"
+            [editable]="true">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='Open Price' dataType="number" [formatter]="formatCurrency" [editable]="true"
+            [width]="'130px'">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='OpenPriceDiff' dataType="number" [width]="'140px'" [editable]="true">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | number:'1.4-4'}}%</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='Low(Y)' [width]="'100px'" dataType="number" [formatter]="formatCurrency" [editable]="true">
+        </igx-column>
+        <igx-column field='Low(Y)Diff' dataType="number" [width]="'120px'" [editable]="true">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | number:'1.4-4'}}%</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='High(D)' [width]="'100px'" dataType="number" [headerClasses]="'headerAlignSyle'"
+            [editable]="true" [formatter]="formatCurrency">
+        </igx-column>
+        <igx-column field='High(D)Diff' dataType="number" [width]="'120px'" [editable]="true">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | number:'1.4-4'}}%</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='Low(D)' [width]="'100px'" dataType="number" [formatter]="formatCurrency" [editable]="true">
+        </igx-column>
+        <igx-column field='Low(D)Diff' dataType="number" [width]="'120px'" [editable]="true">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | number:'1.4-4'}}%</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='Sell' [width]="'110px'" dataType="number" [formatter]="formatCurrency" [editable]="true">
+        </igx-column>
+        <igx-column field='SellDiff' dataType="number" [width]="'120px'" [editable]="true">
+            <ng-template igxCell let-cell="cell">
+                <div class="finjs-icons">
+                    <span>{{cell.value | number:'1.4-4'}}%</span>
+                </div>
+            </ng-template>
+        </igx-column>
+        <igx-column field='Region' [editable]="true"></igx-column>
+        <igx-column field='Contract' [editable]="true"></igx-column>
+        <igx-column field='Settlement' [width]="'150px'" [editable]="true"></igx-column>
+    </igx-grid>
+  </div>

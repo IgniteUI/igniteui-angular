@@ -802,6 +802,55 @@ describe('IgxGridState - input properties #grid', () => {
         expect(prodIdColumn.colStart).toBe(1);
         expect(prodIdColumn.colEnd).toBe(1);
     });
+
+    it('should preserve column widths when restoring state with all columns hidden', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        // Store initial column widths - don't hardcode expected values
+        const initialWidths = grid.columns.map(col => col.width);
+
+        // Hide all columns
+        grid.columns.forEach(col => col.hidden = true);
+        fix.detectChanges();
+
+        // Verify all columns are hidden
+        expect(grid.columns.every(col => col.hidden)).toBe(true);
+
+        // Get and save the state with all columns hidden
+        const gridState = state.getState(false) as IGridState;
+        expect(gridState.columns.every(col => col.hidden)).toBe(true);
+
+        // Restore the state
+        state.setState(gridState);
+        fix.detectChanges();
+
+        // Verify all columns are still hidden
+        expect(grid.columns.every(col => col.hidden)).toBe(true);
+
+        // Unhide all columns
+        grid.columns.forEach(col => col.hidden = false);
+        fix.detectChanges();
+
+        // Verify column widths are preserved and not set to minimum
+        // The issue was that when all columns were hidden, _columnWidth would be set to "0px"
+        // and all columns would end up with minimum width when unhidden
+        grid.columns.forEach((col, index) => {
+            expect(col.width).toBe(initialWidths[index], `Column ${index} width should be preserved`);
+            // The calcWidth should be based on the column width or grid default, not forced to 0px
+            const calcWidth = parseFloat(col.calcWidth);
+            // Note: some columns may be constrained by minWidth which is expected
+            // The key is they shouldn't all be the same minimum width
+            expect(calcWidth).toBeGreaterThan(0, `Column ${index} calcWidth should be greater than 0`);
+        });
+
+        // Verify that not all columns have the same width (which would indicate the bug)
+        const calcWidths = grid.columns.map(col => parseFloat(col.calcWidth));
+        const allSameWidth = calcWidths.every(w => w === calcWidths[0]);
+        expect(allSameWidth).toBe(false, 'Columns should not all have the same width');
+    });
 });
 
 class HelperFunctions {
