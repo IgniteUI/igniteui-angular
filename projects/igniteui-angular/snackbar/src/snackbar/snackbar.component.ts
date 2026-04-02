@@ -156,8 +156,9 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
             this.textMessage = message;
         }
 
-        this.strategy = this.outlet ? new ContainerPositionStrategy(this.positionSettings)
-            : new GlobalPositionStrategy(this.positionSettings);
+        this.strategy = this.outlet || this.positioning === 'container' ?
+            new ContainerPositionStrategy(this.positionSettings) :
+            new GlobalPositionStrategy(this.positionSettings);
         super.open();
     }
 

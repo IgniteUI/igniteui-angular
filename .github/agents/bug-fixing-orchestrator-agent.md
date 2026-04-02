@@ -109,16 +109,9 @@ Do not add sections such as:
 
 ---
 
-## Component-Specific Patterns
-
-Check the relevant skill file for component APIs and patterns:
-- Non-grid components → `skills/igniteui-angular-components/SKILL.md`
-- Grid components → `skills/igniteui-angular-grids/SKILL.md`
-- Theming & styling → `skills/igniteui-angular-theming/SKILL.md`
-
-Each skill file is a routing hub pointing to detailed reference files under its `references/` folder. **Read the relevant reference files** when investigating the root cause.
-
-If the bug touches component SCSS or theme wiring, read `skills/igniteui-angular-theming/references/contributing.md` during investigation and plan a dedicated `theming-styles-agent` handoff.
+> Skills:
+> - APIs: `skills/igniteui-angular-{components,grids,theming}/SKILL.md`
+> - Build / test / lint: `.github/skills/`
 
 ---
 
@@ -172,10 +165,15 @@ Present a brief scope summary to the user:
 
 Keep it short and high-level. Confirm scope, not solution details.
 
-Wait for user confirmation.
+Before routing any work, ask:
 
-If a demo/sample is relevant, ask explicitly:
-`Do you want a demo/sample update for this change? Yes / No`
+**`Do you want me to proceed with this implementation flow?`**
+
+If the fix is user-visible, also ask:
+
+**`Do you want a demo/sample update for this feature?`**
+
+Wait for the user's answer before routing work.
 
 ### Step 4 — Route Work
 
@@ -218,6 +216,7 @@ After all agents finish, check:
 - If a demo/sample was requested, was the existing demo structure updated appropriately?
 - If a demo/sample was not requested, was it correctly skipped?
 - Is multi-branch cherry-picking needed?
+- Run `npm run lint:lib` and verify it passes.
 
 Report what was done and any remaining items.
 
