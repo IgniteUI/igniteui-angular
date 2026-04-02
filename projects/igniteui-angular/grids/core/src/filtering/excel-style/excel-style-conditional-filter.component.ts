@@ -150,15 +150,6 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         }
         customDialog.selectedOperator = eventArgs.newSelection.value;
 
-        this._overlayService.opening.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-            if (args.id === overlayId)
-                customDialog.onCustomDialogOpening();
-        });
-        this._overlayService.opened.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-            if (args.id === overlayId)
-                customDialog.onCustomDialogOpened();
-        });
-
         eventArgs.cancel = true;
         if (this.esf.overlayComponentId) {
             this.esf.hide();

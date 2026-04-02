@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ColumnType, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -21,7 +22,23 @@ export class IgxExcelStyleCustomDialogComponent {
     protected overlayService = inject(IgxOverlayService);
     private cdr = inject(ChangeDetectorRef);
     protected platform = inject(PlatformUtil);
-    public esf: BaseFilteringComponent;
+    public esf?: BaseFilteringComponent;
+
+    constructor() {
+        this.overlayService.opening.pipe(takeUntilDestroyed()).subscribe((args) => {
+            if (args.id === this.overlayComponentId)
+                this.onCustomDialogOpening();
+        });
+        this.overlayService.opened.pipe(takeUntilDestroyed()).subscribe((args) => {
+            if (args.id === this.overlayComponentId)
+                this.onCustomDialogOpened();
+        });
+
+        this.overlayService.closed.pipe(takeUntilDestroyed()).subscribe((args) => {
+            if (args.id === this.overlayComponentId)
+                this.closeDialog();
+        });
+    }
 
     @Input()
     public expressionsList = new Array<ExpressionUI>();
