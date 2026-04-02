@@ -35,8 +35,10 @@ export class IgxExcelStyleCustomDialogComponent {
         });
 
         this.overlayService.closed.pipe(takeUntilDestroyed()).subscribe((args) => {
-            if (args.id === this.overlayComponentId)
-                this.closeDialog();
+            if (args.id === this.overlayComponentId) {
+                this.overlayService.detach(this.overlayComponentId);
+                this.overlayComponentId = null;
+            }
         });
     }
 
