@@ -15,6 +15,7 @@ export const SAMPLE_DATA = [
         DateCreated: undefined,
         Contract: null,
         Time: new Date(2017, 10, 1, 11, 47, 0),
+        Discount: 0.05,
     },
     {
         ID: 'ANATR',
@@ -32,6 +33,7 @@ export const SAMPLE_DATA = [
         DateCreated: new Date(2015, 10, 1, 11, 37, 22),
         Contract: true,
         Time: new Date(2017, 10, 1, 12, 17, 1),
+        Discount: 0.10,
     },
     {
         ID: 'ANTON',
@@ -47,7 +49,8 @@ export const SAMPLE_DATA = [
         Fax: null,
         Employees: 16,
         DateCreated: new Date(2015, 10, 1, 11, 37, 23),
-        Contract: false
+        Contract: false,
+        Discount: 0.15,
     },
     {
         ID: 'AROUT',
@@ -65,6 +68,7 @@ export const SAMPLE_DATA = [
         DateCreated: new Date(2010, 2, 15, 15, 51, 22),
         Contract: false,
         Time: new Date(2017, 11, 11, 11, 11, 1),
+        Discount: 0.20,
     },
     {
         ID: 'BERGS',
@@ -82,6 +86,7 @@ export const SAMPLE_DATA = [
         DateCreated: new Date(2015, 2, 5, 5, 3, 22),
         Contract: true,
         Time: new Date(2018, 9, 14, 14, 4, 3),
+        Discount: 0.25,
     },
     {
         ID: 'BLAUS',
@@ -99,6 +104,7 @@ export const SAMPLE_DATA = [
         DateCreated: new Date(2016, 7, 1, 19, 22, 22),
         Contract: true,
         Time: new Date(2018, 6, 7, 7, 6, 5),
+        Discount: 0.30,
     },
     {
         ID: 'BLONP',
@@ -115,7 +121,8 @@ export const SAMPLE_DATA = [
         Employees: 34,
         DateCreated: new Date(2016, 10, 5, 21, 21, 22),
         Time: new Date(2018, 6, 17, 7, 6, 5),
-        Contract: true
+        Contract: true,
+        Discount: 0.05,
     },
     {
         ID: 'BOLID',
@@ -133,6 +140,7 @@ export const SAMPLE_DATA = [
         DateCreated: new Date(2016, 4, 20),
         Contract: true,
         Time: new Date(2018, 6, 7, 7, 7, 7),
+        Discount: 0.10,
     },
     {
         ID: 'BONAP',
@@ -150,6 +158,7 @@ export const SAMPLE_DATA = [
         DateCreated: new Date(2018, 3, 5, 8, 13, 22),
         Contract: false,
         Time: new Date(2018, 6, 7, 9, 19, 5),
+        Discount: 0.15,
     },
     {
         ID: 'BOTTM',
@@ -167,6 +176,7 @@ export const SAMPLE_DATA = [
         DateCreated: new Date(2017, 6, 10, 7, 33, 22),
         Contract: true,
         Time: new Date(2018, 6, 7, 7, 6, 5),
+        Discount: 0.20,
     },
     {
         ID: 'BSBEV',
@@ -183,7 +193,8 @@ export const SAMPLE_DATA = [
         Employees: 197,
         DateCreated: new Date(2017, 10, 4, 12, 42, 22),
         Contract: true,
-        Time: new Date(2021, 1, 2, 1, 12, 21)
+        Time: new Date(2021, 1, 2, 1, 12, 21),
+        Discount: 0.25,
     },
     {
         ID: 'CACTU',
@@ -199,7 +210,8 @@ export const SAMPLE_DATA = [
         Fax: '(1) 135-4892',
         Employees: 33,
         DateCreated: new Date(2014, 5, 12, 11, 17, 22),
-        Contract: false
+        Contract: false,
+        Discount: 0.30,
     },
     {
         ID: 'CENTC',
@@ -215,7 +227,8 @@ export const SAMPLE_DATA = [
         Fax: '(5) 555-7293',
         Employees: 18,
         DateCreated: new Date(2015, 6, 27, 6, 31, 22),
-        Contract: true
+        Contract: true,
+        Discount: 0.05,
     },
     {
         ID: 'CHOPS',
@@ -232,7 +245,8 @@ export const SAMPLE_DATA = [
         Employees: 380,
         DateCreated: new Date(2011, 8, 6, 4, 11, 22),
         Contract: true,
-        Time: new Date(2023, 7, 12, 4, 42, 21)
+        Time: new Date(2023, 7, 12, 4, 42, 21),
+        Discount: 0.10,
     },
     {
         ID: 'COMMI',
@@ -247,7 +261,8 @@ export const SAMPLE_DATA = [
         Fax: null,
         Employees: 137,
         DateCreated: new Date(2012, 6, 10, 16, 31, 22),
-        Contract: false
+        Contract: false,
+        Discount: 0.15,
     },
     {
         ID: 'CONSH',
@@ -264,7 +279,8 @@ export const SAMPLE_DATA = [
         Employees: 150,
         DateCreated: new Date(2012, 6, 10, 5, 19, 22),
         Contract: false,
-        Time: new Date(2020, 9, 6, 14, 40, 20)
+        Time: new Date(2020, 9, 6, 14, 40, 20),
+        Discount: 0.20,
     },
     {
         ID: 'DRACD',
@@ -280,7 +296,8 @@ export const SAMPLE_DATA = [
         Fax: '0241-059428',
         Employees: 265,
         DateCreated: new Date(2014, 9, 11, 3, 31, 22),
-        Contract: true
+        Contract: true,
+        Discount: 0.25,
     },
     {
         ID: 'DUMON',
@@ -297,7 +314,8 @@ export const SAMPLE_DATA = [
         Employees: 24,
         DateCreated: new Date(2015, 8, 4, 5, 11, 22),
         Contract: true,
-        Time: new Date(2020, 9, 22, 16, 40, 10)
+        Time: new Date(2020, 9, 22, 16, 40, 10),
+        Discount: 0.30,
     },
     {
         ID: 'EASTC',
@@ -314,7 +332,8 @@ export const SAMPLE_DATA = [
         Employees: 123,
         DateCreated: new Date(2013, 4, 18, 15, 39, 22),
         Contract: false,
-        Time: new Date(2020, 5, 4, 17, 30, 15)
+        Time: new Date(2020, 5, 4, 17, 30, 15),
+        Discount: 0.05,
     },
     {
         ID: 'ERNSH',
@@ -331,7 +350,8 @@ export const SAMPLE_DATA = [
         Employees: 9,
         DateCreated: new Date(2013, 7, 9, 15, 31, 22),
         Contract: true,
-        Time: new Date(2020, 4, 7, 17, 30, 15)
+        Time: new Date(2020, 4, 7, 17, 30, 15),
+        Discount: 0.10,
     },
     {
         ID: 'FAMIA',
@@ -348,7 +368,8 @@ export const SAMPLE_DATA = [
         Employees: 67,
         DateCreated: new Date(2015, 6, 17, 16, 22, 22),
         Contract: true,
-        Time: new Date(2020, 5, 17, 17, 45, 55)
+        Time: new Date(2020, 5, 17, 17, 45, 55),
+        Discount: 0.15,
     },
     {
         ID: 'FISSA',
@@ -365,7 +386,8 @@ export const SAMPLE_DATA = [
         Employees: 87,
         DateCreated: new Date(2015, 6, 17, 14, 1, 22),
         Contract: false,
-        Time: new Date(2020, 3, 7, 15, 41, 27)
+        Time: new Date(2020, 3, 7, 15, 41, 27),
+        Discount: 0.20,
     },
     {
         ID: 'FOLIG',
@@ -382,7 +404,8 @@ export const SAMPLE_DATA = [
         Employees: 37,
         DateCreated: new Date(2014, 5, 14, 15, 31, 22),
         Contract: false,
-        Time: new Date(2020, 8, 16, 16, 30, 15)
+        Time: new Date(2020, 8, 16, 16, 30, 15),
+        Discount: 0.25,
     },
     {
         ID: 'FOLKO',
@@ -399,7 +422,8 @@ export const SAMPLE_DATA = [
         Employees: 42,
         DateCreated: new Date(2011, 3, 21, 17, 11, 22),
         Contract: true,
-        Time: new Date(2020, 8, 17, 10, 30, 15)
+        Time: new Date(2020, 8, 17, 10, 30, 15),
+        Discount: 0.30,
     },
     {
         ID: 'FRANK',
@@ -416,7 +440,8 @@ export const SAMPLE_DATA = [
         Employees: 17,
         DateCreated: new Date(2015, 6, 17, 14, 41, 22),
         Contract: true,
-        Time: new Date(2020, 8, 7, 14, 14, 19)
+        Time: new Date(2020, 8, 7, 14, 14, 19),
+        Discount: 0.05,
     },
     {
         ID: 'FRANR',
@@ -433,7 +458,8 @@ export const SAMPLE_DATA = [
         Employees: 20,
         DateCreated: new Date(2011, 7, 14, 15, 21, 22),
         Contract: true,
-        Time: new Date(2020, 6, 7, 20, 14, 15)
+        Time: new Date(2020, 6, 7, 20, 14, 15),
+        Discount: 0.10,
     },
     {
         ID: 'FRANS',
@@ -449,7 +475,8 @@ export const SAMPLE_DATA = [
         Employees: 5,
         DateCreated: new Date(2012, 8, 3, 16, 31, 22),
         Contract: false,
-        Time: new Date(2020, 6, 7, 22, 4, 5)
+        Time: new Date(2020, 6, 7, 22, 4, 5),
+        Discount: 0.15,
     }
 ];
 
