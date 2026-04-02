@@ -966,7 +966,7 @@ describe('IgxDatePicker', () => {
                 },
                 element: {
                     nativeElement: jasmine.createSpyObj('mockElement',
-                        ['focus', 'blur', 'click', 'addEventListener', 'removeEventListener'])
+                        ['focus', 'blur', 'click', 'addEventListener', 'removeEventListener', 'querySelector'])
                 }
             } as any;
             mockInputDirective = {
@@ -1016,6 +1016,7 @@ describe('IgxDatePicker', () => {
             };
             datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
+            (mockInputGroup.element.nativeElement.querySelector as jasmine.Spy).and.returnValue(mockInputGroup.element.nativeElement);
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
             (datePicker as any).viewContainerRef = viewsContainerRef;
