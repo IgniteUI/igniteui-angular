@@ -309,7 +309,7 @@
 				--background: transparent;
 				--focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
 				--focus-visible-background: transparent;
-				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});;
+				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
 				--active-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
 				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
 			}
