@@ -186,7 +186,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
-import { IgxActionStripComponent, IgxGridPinningActionsComponent } from 'igniteui-angular';
+import { IgxGridPinningActionsComponent } from 'igniteui-angular';
 
 interface IMatchInfoCache {
     row: any;
