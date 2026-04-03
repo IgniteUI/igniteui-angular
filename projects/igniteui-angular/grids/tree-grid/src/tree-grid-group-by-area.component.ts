@@ -1,13 +1,4 @@
-import {
-    AfterContentInit,
-    Component,
-    ElementRef,
-    Input,
-    IterableDiffer,
-    IterableDiffers,
-    OnDestroy,
-    booleanAttribute,
-} from '@angular/core';
+import { AfterContentInit, Component, Input, IterableDiffer, IterableDiffers, OnDestroy, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
@@ -15,7 +6,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxDropDirective } from 'igniteui-angular/directives';
-import { IGroupingExpression, ISortingExpression, PlatformUtil } from 'igniteui-angular/core';
+import { IGroupingExpression, ISortingExpression } from 'igniteui-angular/core';
 import { IgxGroupAreaDropDirective, IgxGroupByAreaDirective, IgxGroupByMetaPipe } from 'igniteui-angular/grids/core';
 
 /**
@@ -30,6 +21,8 @@ import { IgxGroupAreaDropDirective, IgxGroupByAreaDirective, IgxGroupByMetaPipe 
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective implements AfterContentInit, OnDestroy {
+    private differs = inject(IterableDiffers);
+
     @Input({ transform: booleanAttribute })
     public get hideGroupedColumns() {
         return this._hideGroupedColumns;
@@ -46,10 +39,6 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     private _hideGroupedColumns = false;
     private groupingDiffer: IterableDiffer<IGroupingExpression>;
     private destroy$ = new Subject<any>();
-
-    constructor(private differs: IterableDiffers, ref: ElementRef<HTMLElement>, platform: PlatformUtil) {
-        super(ref, platform);
-    }
 
     public ngAfterContentInit(): void {
         if (this.grid.columns && this.expressions) {

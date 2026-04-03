@@ -1,4 +1,4 @@
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef, inject } from '@angular/core';
 
 /**
  * @hidden
@@ -8,6 +8,5 @@ import { Directive, TemplateRef } from '@angular/core';
     standalone: true
 })
 export class IgxRowLoadingIndicatorTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
+    public template = inject<TemplateRef<any>>(TemplateRef);
 }

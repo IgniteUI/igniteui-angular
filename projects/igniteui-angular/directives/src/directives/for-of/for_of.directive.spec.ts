@@ -1,22 +1,5 @@
 ﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    Directive,
-    Injectable,
-    IterableDiffers,
-    NgZone,
-    OnInit,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef,
-    DebugElement,
-    Pipe,
-    PipeTransform
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -24,7 +7,6 @@ import { IForOfState, IgxForOfDirective } from './for_of.directive';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
-import { PlatformUtil } from '../../../../core/src/core/utils';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -267,15 +249,17 @@ describe('IgxForOf directive -', () => {
         it('should update vertical scroll offsets if igxForOf changes. ', () => {
             fix.componentInstance.scrollTop(5);
             fix.detectChanges();
+            let transform = displayContainer.style.transform;
 
-            expect(parseInt(displayContainer.style.top, 10)).toEqual(-5);
+            expect(parseInt(transform.slice(transform.indexOf('(') + 1, transform.indexOf(')')), 10)).toEqual(-5);
 
             spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             fix.componentInstance.data = [{ 1: 1, 2: 2, 3: 3, 4: 4 }];
             fix.detectChanges();
 
-            expect(parseInt(displayContainer.style.top, 10)).toEqual(0);
+            transform = displayContainer.style.transform;
+            expect(parseInt(transform.slice(transform.indexOf('(') + 1, transform.indexOf(')')), 10)).toEqual(0);
             expect(fix.componentInstance.parentVirtDir.chunkLoad.emit).toHaveBeenCalledTimes(1);
         });
 
@@ -1356,18 +1340,16 @@ class DataGenerator {
     standalone: true
 })
 export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
+    public viewContainer: ViewContainerRef;
+    public template: TemplateRef<NgForOfContext<T>>;
+    public differs: IterableDiffers;
+    public changeDet: ChangeDetectorRef;
+    public zone: NgZone;
+    protected syncService: IgxForOfScrollSyncService;
+
     public scrStepArray = [];
     public scrTopArray = [];
-    constructor(
-        public viewContainer: ViewContainerRef,
-        public template: TemplateRef<NgForOfContext<T>>,
-        public differs: IterableDiffers,
-        public changeDet: ChangeDetectorRef,
-        public zone: NgZone,
-        protected syncService: IgxForOfScrollSyncService,
-        platformUtil: PlatformUtil) {
-        super(viewContainer, template, differs, changeDet, zone, syncService, platformUtil, document);
-    }
+
     public override onScroll(evt) {
         const ind = this.scrTopArray.length - 1;
         const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
@@ -1745,6 +1727,8 @@ export class LocalService {
     imports: [TestIgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
+    private localService = inject(LocalService);
+
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
@@ -1753,8 +1737,6 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
 
     public height = '500px';
     public data;
-
-    constructor(private localService: LocalService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
     }
@@ -1790,6 +1772,8 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
     imports: [TestIgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
+    private localService = inject(LocalService);
+
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
@@ -1799,8 +1783,6 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
     public height = '500px';
     public data;
     public count: Observable<number>;
-
-    constructor(private localService: LocalService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
         this.count = this.localService.count;

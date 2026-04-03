@@ -1,18 +1,20 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { first, throttleTime } from 'rxjs/operators';
 import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { GridType } from './common/grid.interface';
 import {
     NAVIGATION_KEYS,
+    PlatformUtil,
+    SortingDirection
+} from 'igniteui-angular/core';
+import {
     ROW_COLLAPSE_KEYS,
     ROW_EXPAND_KEYS,
     SUPPORTED_KEYS,
     HORIZONTAL_NAV_KEYS,
     HEADER_KEYS,
-    ROW_ADD_KEYS,
-    PlatformUtil,
-    SortingDirection
-} from 'igniteui-angular/core';
+    ROW_ADD_KEYS
+} from './grid-navigation-keys';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IMultiRowLayoutNode } from './common/types';
@@ -34,6 +36,7 @@ export interface IActiveNode {
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
+    protected platform = inject(PlatformUtil);
     public grid: GridType;
     public _activeNode: IActiveNode = {} as IActiveNode;
     public lastActiveNode: IActiveNode = {} as IActiveNode;
@@ -48,7 +51,7 @@ export class IgxGridNavigationService {
         this._activeNode = value;
     }
 
-    constructor(protected platform: PlatformUtil) {
+    constructor() {
         this.keydownNotify.pipe(
             throttleTime(30, animationFrameScheduler),
         )
@@ -519,7 +522,8 @@ export class IgxGridNavigationService {
         return Math.ceil(this.grid.headerContainer.scrollPosition);
     }
     public get containerTopOffset() {
-        return parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+        const transform = this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.transform
+        return  Number(transform.match(/translateY\((-?\d+\.?\d*)px\)/)?.[1])
     }
 
     protected getColumnUnpinnedIndex(visibleColumnIndex: number) {

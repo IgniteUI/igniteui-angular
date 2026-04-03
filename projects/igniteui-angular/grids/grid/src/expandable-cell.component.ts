@@ -1,27 +1,22 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ElementRef,
-    Inject,
     Input,
-    NgZone,
     OnInit,
     TemplateRef,
     ViewChild,
-    DOCUMENT
+    DOCUMENT,
+    inject
 } from '@angular/core';
-import { NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-    GridType,
-    IGX_GRID_BASE,
     IgxColumnFormatterPipe,
     IgxGridCellComponent,
     IgxGridCellImageAltPipe,
-    IgxGridSelectionService,
     IgxStringReplacePipe
 } from 'igniteui-angular/grids/core';
-import { HammerGesturesManager, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { HammerGesturesManager, IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe } from 'igniteui-angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDateTimeEditorDirective, IgxFocusDirective, IgxTextHighlightDirective, IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
@@ -36,9 +31,15 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
     selector: 'igx-expandable-grid-cell',
     templateUrl: 'expandable-cell.component.html',
     providers: [HammerGesturesManager],
-    imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe]
+    imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule,
+        IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent,
+        IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet,
+        IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe,
+        IgxColumnFormatterPipe, IgxNumberFormatterPipe, IgxPercentFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe]
 })
 export class IgxGridExpandableCellComponent extends IgxGridCellComponent implements OnInit {
+    public document = inject(DOCUMENT);
+
     /**
      * @hidden
      */
@@ -62,18 +63,6 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
-
-    constructor(selectionService: IgxGridSelectionService,
-                @Inject(IGX_GRID_BASE) grid: GridType,
-                @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-                cdr: ChangeDetectorRef,
-                element: ElementRef,
-                zone: NgZone,
-                touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document,
-                platformUtil: PlatformUtil) {
-        super(selectionService, grid, overlayService, cdr, element, zone, touchManager, platformUtil);
-    }
 
     /**
      * @hidden

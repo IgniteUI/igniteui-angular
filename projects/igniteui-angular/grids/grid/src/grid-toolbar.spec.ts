@@ -4,8 +4,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { GridFunctions } from "../../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
-import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from 'igniteui-angular/core';
-import { IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
+import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular/core';
+import { IgxCsvExporterService, IgxExcelExporterService, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
+import { ExportUtilities } from 'igniteui-angular/grids/core';
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';
@@ -180,6 +181,87 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(instance.exporterAction.toolbar.showProgress).toBeFalse();
         });
 
+        it('toolbar exporter should include PDF option by default', () => {
+            const exporterButton = $(TOOLBAR_EXPORTER_TAG).querySelector('button');
+            exporterButton.click();
+            fixture.detectChanges();
+
+            expect($('#pdfEntry')).not.toBeNull();
+        });
+
+        it('toolbar exporter should hide PDF option when exportPDF is false', () => {
+            instance.exportPDF = false;
+            fixture.detectChanges();
+
+            const exporterButton = $(TOOLBAR_EXPORTER_TAG).querySelector('button');
+            exporterButton.click();
+            fixture.detectChanges();
+
+            expect($('#pdfEntry')).toBeNull();
+        });
+
+        it('toolbar exporter should show PDF option when exportPDF is true', () => {
+            instance.exportPDF = true;
+            fixture.detectChanges();
+
+            const exporterButton = $(TOOLBAR_EXPORTER_TAG).querySelector('button');
+            exporterButton.click();
+            fixture.detectChanges();
+
+            expect($('#pdfEntry')).not.toBeNull();
+        });
+
+        it('toolbar exporter should display custom PDF text', () => {
+            const exporterButton = $(TOOLBAR_EXPORTER_TAG).querySelector('button');
+            exporterButton.click();
+            fixture.detectChanges();
+
+            expect($('#pdfEntry').textContent).toMatch(instance.customPDFText);
+        });
+
+        it('toolbar exporter should export to PDF when clicked', () => {
+            const exporterButton = $(TOOLBAR_EXPORTER_TAG).querySelector('button');
+            exporterButton.click();
+            fixture.detectChanges();
+
+            spyOn(instance.exporterAction, 'export');
+            $('#pdfEntry').click();
+            fixture.detectChanges();
+
+            expect(instance.exporterAction.export).toHaveBeenCalledWith('pdf');
+        });
+
+        it('toolbar exporter should emit exportStarted event for PDF export', () => {
+            let exportStartedFired = false;
+            instance.exporterAction.exportStarted.subscribe(() => {
+                exportStartedFired = true;
+            });
+
+            const exporterButton = $(TOOLBAR_EXPORTER_TAG).querySelector('button');
+            exporterButton.click();
+            fixture.detectChanges();
+
+            spyOn(ExportUtilities, 'saveBlobToFile');
+            $('#pdfEntry').click();
+            fixture.detectChanges();
+
+            expect(exportStartedFired).toBe(true);
+        });
+
+        it('toolbar exporter PDF export can be cancelled', () => {
+            fixture.componentInstance.exportStartCancelled = true;
+            fixture.detectChanges();
+
+            const exporterButton = $(TOOLBAR_EXPORTER_TAG).querySelector('button');
+            exporterButton.click();
+            fixture.detectChanges();
+            $('#pdfEntry').click();
+            fixture.detectChanges();
+
+            expect(instance.exporterAction.isExporting).toBeFalse();
+            expect(instance.exporterAction.toolbar.showProgress).toBeFalse();
+        });
+
         it('Setting overlaySettings for each toolbar columns action', () => {
             const defaultSettings = instance.pinningAction.overlaySettings;
             const defaultFiltSettings = instance.advancedFiltAction.overlaySettings;
@@ -304,10 +386,11 @@ export class DefaultToolbarComponent {
                 <igx-grid-toolbar-advanced-filtering #advancedFiltAction>
                     {{ advancedFilteringTitle }}
                 </igx-grid-toolbar-advanced-filtering>
-                <igx-grid-toolbar-exporter #exporterAction [exportCSV]="exportCSV" [exportExcel]="exportExcel" [filename]="exportFilename" (exportStarted)="exportStarted($event)">
+                <igx-grid-toolbar-exporter #exporterAction [exportCSV]="exportCSV" [exportExcel]="exportExcel" [exportPDF]="exportPDF" [filename]="exportFilename" (exportStarted)="exportStarted($event)">
                     {{ exporterText }}
                     <span id="excelEntry" excelText>{{ customExcelText }}</span>
                     <span id="csvEntry" csvText>{{ customCSVText }}</span>
+                    <span id="pdfEntry" pdfText>{{ customPDFText }}</span>
                 </igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
@@ -343,10 +426,12 @@ export class ToolbarActionsComponent {
     public advancedFilteringTitle = 'Custom button text';
     public exportCSV = true;
     public exportExcel = true;
+    public exportPDF = true;
     public exportFilename = '';
     public exporterText = 'Exporter Options';
     public customExcelText = '<< Excel export >>';
     public customCSVText = '<< CSV export >>';
+    public customPDFText = '<< PDF export >>';
     public overlaySettings = {
         positionStrategy: new GlobalPositionStrategy(),
         scrollStrategy: new AbsoluteScrollStrategy(),

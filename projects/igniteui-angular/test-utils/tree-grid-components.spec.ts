@@ -722,7 +722,7 @@ export class IgxTreeGridLoadOnDemandComponent {
 }
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="500px" height="600px"columnWidth="150px" >
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="500px" height="600px" columnWidth="150px" >
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
@@ -767,7 +767,7 @@ export class IgxTreeGridLoadOnDemandChildDataComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="500px" height="600px"columnWidth="150px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="500px" height="600px" columnWidth="150px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>

@@ -9,11 +9,10 @@ import {
 	AfterViewInit,
 	ViewChildren,
 	QueryList,
-	OnDestroy,
 	booleanAttribute,
     HostListener,
 } from '@angular/core';
-import { NgTemplateOutlet, DatePipe } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import {
@@ -32,7 +31,8 @@ import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxCalendarBaseDirective } from './calendar-base';
 import { KeyboardNavigationService } from './calendar.services';
-import { areSameMonth, CalendarDay, formatToParts, getClosestActiveDate, isDateInRanges } from 'igniteui-angular/core';
+import { getDateFormatter } from 'igniteui-i18n-core';
+import { areSameMonth, CalendarDay, formatToParts, getClosestActiveDate, isDateInRanges, IgxDateFormatterPipe } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -70,9 +70,9 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html',
-    imports: [NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
+    imports: [NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, IgxDateFormatterPipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
 })
-export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit, OnDestroy {
+export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit {
     /**
      * @hidden
      * @internal
@@ -512,6 +512,10 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
                 currentValue: this.viewDate
             });
         });
+
+        this._destroyRef.onDestroy(() => {
+            this.keyboardNavigation.detachKeyboardHandlers();
+        });
     }
 
     protected onWrapperFocus(_event: FocusEvent) {
@@ -882,12 +886,12 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 */
 	protected getFormattedDate(): { weekday: string; monthday: string } {
 		const date = this.headerDate;
-        const monthFormatter = new Intl.DateTimeFormat(this.locale, { month: 'short', day: 'numeric' })
-        const dayFormatter = new Intl.DateTimeFormat(this.locale, { weekday: 'short' })
+        const monthFormatted = getDateFormatter().formatDateTime(date, this.locale, { month: 'short', day: 'numeric' });
+        const dayFormatted = getDateFormatter().formatDateTime(date, this.locale,{ weekday: 'short' });
 
 		return {
-			monthday: monthFormatter.format(date),
-			weekday: dayFormatter.format(date),
+			monthday: monthFormatted,
+			weekday: dayFormatted,
 		};
 	}
 
@@ -899,8 +903,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 		const dates = this.selectedDates as Date[];
 
 		return {
-			start: this.formatterRangeday.format(dates.at(0)),
-			end: this.formatterRangeday.format(dates.at(-1))
+			start: this.formatterRangeDay.format(dates.at(0)),
+			end: this.formatterRangeDay.format(dates.at(-1))
 		};
 	}
 
@@ -1057,14 +1061,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
             isDateInRanges(target, this.disabledDates);
 
         this.activeDate = outOfRange ? date : target.native;
-	}
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public ngOnDestroy(): void {
-        this.keyboardNavigation.detachKeyboardHandlers();
 	}
 
 	/**

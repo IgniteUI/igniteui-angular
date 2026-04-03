@@ -8,6 +8,7 @@ export enum FilteringLogic {
 }
 
 /* marshalByValue */
+/* tsPlainInterface */
 /**
  * Represents filtering expressions.
  */

@@ -3,53 +3,38 @@ import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
-    ElementRef,
-    EnvironmentInjector,
     EventEmitter,
     forwardRef,
-    Inject,
-    Injector,
     Input,
     IterableChangeRecord,
-    IterableDiffers,
-    LOCALE_ID,
-    NgZone,
     OnChanges,
     OnDestroy,
     OnInit,
     Output,
     QueryList,
     TemplateRef,
-    ViewContainerRef,
-    DOCUMENT
+    inject
 } from '@angular/core';
-import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import {
     GridType,
-    IGX_GRID_SERVICE_BASE,
     IgxColumnComponent,
-    IgxColumnResizingService,
     IgxFilteringService,
     IgxGridPaginatorTemplateContext,
     IgxGridSelectionService,
-    IgxGridSummaryService,
     IgxGridToolbarDirective,
     IgxGridToolbarTemplateContext,
-    IgxGridValidationService,
     ISearchInfo
 } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
-import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxActionStripToken, IgxFlatTransactionFactory, IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { IgxActionStripToken, IGridResourceStrings } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IGridCreatedEventArgs } from './events';
 import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
-import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directives';
+import { IForOfState } from 'igniteui-angular/directives';
 
 /* blazorCopyInheritedMembers */
 /* blazorElement */
@@ -84,6 +69,9 @@ import { IForOfState, IgxTextHighlightService } from 'igniteui-angular/directive
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+    /* blazorSuppress */
+    public rowIslandAPI = inject(IgxRowIslandAPIService);
+
 
     /* blazorSuppress */
     /**
@@ -113,6 +101,22 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /* blazorInclude,wcInclude */
     public set childDataKey(value: string) {
         this.key = value;
+    }
+
+    /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses the root grid resources.
+     */
+    @Input()
+    public override set resourceStrings(value: IGridResourceStrings) {
+        super.resourceStrings = value;
+        this.updateGridsResources();
+    }
+
+    public override get resourceStrings() {
+        return super.resourceStrings ?? this.rootGrid.resourceStrings;
     }
 
     /**
@@ -267,6 +271,15 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     /** @hidden */
+    public override get pinnedStartColumns(): IgxColumnComponent[] {
+        return [];
+    }
+    /** @hidden */
+    public override get pinnedEndColumns(): IgxColumnComponent[] {
+        return [];
+    }
+
+    /** @hidden */
     public override get unpinnedColumns(): IgxColumnComponent[] {
         return [];
     }
@@ -372,52 +385,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         return lvl + 1;
     }
 
-    constructor(
-        validationService: IgxGridValidationService,
-        selectionService: IgxGridSelectionService,
-        colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
-        transactionFactory: IgxFlatTransactionFactory,
-        elementRef: ElementRef<HTMLElement>,
-        zone: NgZone,
-        @Inject(DOCUMENT) document,
-        cdr: ChangeDetectorRef,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        injector: Injector,
-        envInjector: EnvironmentInjector,
-        navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        textHighlightService: IgxTextHighlightService,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        public rowIslandAPI: IgxRowIslandAPIService,
-        @Inject(LOCALE_ID) localeId: string,
-        platform: PlatformUtil) {
-        super(
-            validationService,
-            selectionService,
-            colResizingService,
-            gridAPI,
-            transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            differs,
-            viewRef,
-            injector,
-            envInjector,
-            navigation,
-            filteringService,
-            textHighlightService,
-            overlayService,
-            summaryService,
-            localeId,
-            platform
-        );
-    }
-
     /**
      * @hidden
      */
@@ -499,6 +466,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                     grid.paginatorOutlet.createEmbeddedView(this.paginatorTemplate, { $implicit: grid });
                 });
         });
+        this.cdr.reattach();
     }
 
     /**
@@ -586,5 +554,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         });
         grid.childGridTemplates.clear();
         grid.onRowIslandChange();
+    }
+
+    private updateGridsResources() {
+        this.rowIslandAPI.getChildGrids().forEach((grid) => {
+            grid.resourceStrings = this.resourceStrings;
+        });
     }
 }

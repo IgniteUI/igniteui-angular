@@ -1,8 +1,9 @@
-import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IPivotConfiguration, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
+import { IGX_GRID_BASE, IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IPivotConfiguration, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
 import { IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
 import { PivotGridFunctions } from '../../../test-utils/pivot-grid-functions.spec';
 import { DATA } from 'src/app/shared/pivot-data';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from 'igniteui-angular/core';
+import { TestBed } from '@angular/core/testing';
 
 describe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;
@@ -15,6 +16,8 @@ describe('Pivot pipes #pivotGrid', () => {
     let cloneStrategy: IDataCloneStrategy;
 
     beforeEach(() => {
+
+
         data = [
             {
                 ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
@@ -62,9 +65,17 @@ describe('Pivot pipes #pivotGrid', () => {
             ],
             filters: null
         };
+        TestBed.configureTestingModule({
+            providers: [
+                IgxPivotRowPipe,
+                IgxPivotRowExpansionPipe,
+                { provide: IGX_GRID_BASE, useValue: null },
+            ]
+        });
+
         expansionStates = new Map<any, boolean>();
-        rowPipe = new IgxPivotRowPipe();
-        rowStatePipe = new IgxPivotRowExpansionPipe();
+        rowPipe = TestBed.inject(IgxPivotRowPipe);
+        rowStatePipe = TestBed.inject(IgxPivotRowExpansionPipe);
         columnPipe = new IgxPivotColumnPipe();
         autoTransformPipe = new IgxPivotAutoTransform();
         cloneStrategy = new DefaultDataCloneStrategy();
@@ -645,7 +656,7 @@ describe('Pivot pipes #pivotGrid', () => {
         let columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, cloneStrategy, new Map<any, boolean>());
         let rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
 
-        const date_prod_seller =  PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        const date_prod_seller = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         expect(rowStatePipeResult.length).toBe(42);
 
         const allPeriodsRecords = date_prod_seller.filter(x => x['AllPeriods'] === 'All Periods');
@@ -743,7 +754,7 @@ describe('Pivot pipes #pivotGrid', () => {
         columnPipeResult = columnPipe.transform(rowPipeResult, pivotConfig, cloneStrategy, new Map<any, boolean>());
         rowStatePipeResult = rowStatePipe.transform(columnPipeResult, pivotConfig, expansionStates, true);
         expect(rowStatePipeResult.length).toBe(42);
-        const seller_prod_date =  PivotGridFunctions.getDimensionValues(rowStatePipeResult);
+        const seller_prod_date = PivotGridFunctions.getDimensionValues(rowStatePipeResult);
         const stanleyRecords = seller_prod_date.filter(x => x['SellerName'] === 'Stanley');
         expect(stanleyRecords).toEqual([
             { SellerName: 'Stanley', AllProduct: 'All Products', AllPeriods: 'All Periods' },

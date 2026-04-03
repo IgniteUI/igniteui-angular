@@ -9,7 +9,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     DoCheck,
-    Inject
+    inject
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxSummaryCellComponent } from './summary-cell.component';
@@ -27,6 +27,10 @@ import { ColumnType, IgxSummaryResult, trackByIdentity } from 'igniteui-angular/
     imports: [NgTemplateOutlet, IgxGridForOfDirective, IgxSummaryCellComponent, IgxGridNotGroupedPipe]
 })
 export class IgxSummaryRowComponent implements DoCheck  {
+    public grid = inject<GridType>(IGX_GRID_BASE);
+    public element = inject<ElementRef<HTMLElement>>(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+
 
     @Input()
     public summaries: Map<string, IgxSummaryResult[]>;
@@ -68,10 +72,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
      */
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
     public virtDirRow: IgxGridForOfDirective<ColumnType, ColumnType[]>;
-
-    constructor(@Inject(IGX_GRID_BASE) public grid: GridType,
-                public element: ElementRef<HTMLElement>,
-                public cdr: ChangeDetectorRef) {}
 
     public ngDoCheck() {
         this.cdr.markForCheck();

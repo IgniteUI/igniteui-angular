@@ -2,14 +2,7 @@
 export * from './animation/angular-animation-player';
 export * from './animation/angular-animation-service';
 export * from './animation/animation';
-export * from './csv/csv-exporter';
-export * from './csv/csv-exporter-options';
-export * from './csv/char-separated-value-data';
 export { Direction as ɵDirection, DIR_DOCUMENT as ɵDIR_DOCUMENT, IgxDirectionality as ɵIgxDirectionality } from './direction/directionality';
-export * from './excel/excel-exporter';
-export * from './excel/excel-exporter-options';
-export * from './exporter-common/base-export-service';
-export * from './exporter-common/exporter-options-base';
 export * from './overlay/overlay';
 export * from './overlay/position';
 export * from './overlay/scroll';

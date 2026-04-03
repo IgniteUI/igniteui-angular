@@ -1,10 +1,4 @@
-import {
-    Component,
-    ViewChild,
-    OnDestroy,
-    HostBinding,
-    ChangeDetectorRef
-} from '@angular/core';
+import { Component, ViewChild, OnDestroy, HostBinding, ChangeDetectorRef, inject } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { BaseFilteringComponent } from './base-filtering.component';
@@ -21,6 +15,9 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleSortingComponent implements OnDestroy {
+    public esf = inject(BaseFilteringComponent);
+    private cdr = inject(ChangeDetectorRef);
+
     /**
      * @hidden @internal
      */
@@ -35,7 +32,7 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
 
     private destroy$ = new Subject<boolean>();
 
-    constructor(public esf: BaseFilteringComponent, private cdr: ChangeDetectorRef) {
+    constructor() {
         this.esf.sortingChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.updateSelectedButtons(this.esf.column.field);
         });

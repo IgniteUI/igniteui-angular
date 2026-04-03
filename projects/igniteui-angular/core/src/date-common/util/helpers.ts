@@ -7,6 +7,7 @@ import {
 } from "./model";
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { first, last, modulo } from '../../core/utils';
+import { getDateFormatter } from 'igniteui-i18n-core';
 
 interface IFormattedParts {
     value: string;
@@ -185,7 +186,7 @@ export function formatToParts(
     options: Intl.DateTimeFormatOptions,
     parts: string[],
 ): Record<string, any> {
-    const formatter = new Intl.DateTimeFormat(locale, options);
+    const formatter = getDateFormatter().getIntlFormatter(locale, options);
     const result: Record<string, any> = {
         date,
         full: formatter.format(date),

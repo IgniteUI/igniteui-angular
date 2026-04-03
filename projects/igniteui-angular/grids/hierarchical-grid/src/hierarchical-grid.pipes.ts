@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { GridType, IGX_GRID_BASE } from 'igniteui-angular/grids/core';
 import { cloneArray, columnFieldPath, DataUtil, resolveNestedPath } from 'igniteui-angular/core';
 
@@ -10,8 +10,7 @@ import { cloneArray, columnFieldPath, DataUtil, resolveNestedPath } from 'ignite
     standalone: true
 })
 export class IgxGridHierarchicalPipe implements PipeTransform {
-
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
     public transform(
         collection: any,
@@ -62,8 +61,8 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
     standalone: true
 })
 export class IgxGridHierarchicalPagingPipe implements PipeTransform {
+    private grid = inject<GridType>(IGX_GRID_BASE);
 
-    constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], enabled: boolean, page = 0, perPage = 15, _id: string, _pipeTrigger: number): any[] {
         if (!enabled || this.grid.pagingMode !== 'local') {

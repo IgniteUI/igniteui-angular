@@ -4,6 +4,8 @@ import { columnFieldPath, type ColumnType, resolveNestedPath } from 'igniteui-an
 
 export class IgxGridCell implements CellType {
 
+    
+
     /**
      * Returns the grid containing the cell.
      *

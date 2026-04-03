@@ -2,7 +2,7 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipMultipleTooltipsComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent } from '../../../../test-utils/tooltip-components.spec';
+import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent, IgxTooltipNestedTooltipsComponent } from '../../../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../../../core/src/services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
@@ -11,7 +11,9 @@ import { Placement, PositionsMap } from './tooltip.common';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
-const HIDE_DELAY = 180;
+const SHOW_DELAY = 200;
+const HIDE_DELAY = 300;
+const AUTO_HIDE_DELAY = 180;
 const TOOLTIP_ARROW_SELECTOR = '[data-arrow="true"]';
 
 describe('IgxTooltip', () => {
@@ -29,7 +31,8 @@ describe('IgxTooltip', () => {
                 IgxTooltipPlainStringComponent,
                 IgxTooltipWithToggleActionComponent,
                 IgxTooltipWithCloseButtonComponent,
-                IgxTooltipWithNestedContentComponent
+                IgxTooltipWithNestedContentComponent,
+                IgxTooltipNestedTooltipsComponent
             ]
         }).compileComponents();
         UIInteractions.clearOverlay();
@@ -172,7 +175,7 @@ describe('IgxTooltip', () => {
             flush();
 
             unhoverElement(button);
-            tick(HIDE_DELAY);
+            tick(AUTO_HIDE_DELAY);
             tick(400);
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
@@ -407,69 +410,126 @@ describe('IgxTooltip', () => {
             }));
         });
 
-        describe('Tooltip touch', () => {
-            it('IgxTooltip is shown/hidden when touching/untouching its target', fakeAsync(() => {
-                touchElement(button);
-                flush();
+        describe('Tooltip show/hide triggers', () => {
+            it('should override default triggers', fakeAsync(() => {
+                tooltipTarget.showTriggers = 'focus';
+                tooltipTarget.hideTriggers = 'keypress';
+                fix.detectChanges();
 
+                hoverElement(button);
+                flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+
+                simulateTriggerEvent(button, 'focus');
+                flush();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-                const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
-                touchElement(dummyDiv);
+                unhoverElement(button);
                 flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
+                simulateTriggerEvent(button, 'keypress');
+                flush();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
 
-            it('IgxTooltip is not shown when is disabled and touching its target', fakeAsync(() => {
+            it('should add multiple show triggers', fakeAsync(() => {
+                tooltipTarget.showTriggers = 'focus, keypress';
+                fix.detectChanges();
+
+                simulateTriggerEvent(button, 'focus');
+                flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
+                unhoverElement(button);
+                flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+
+                simulateTriggerEvent(button, 'keypress');
+                flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+            }));
+
+            it('should add multiple hide triggers', fakeAsync(() => {
+                tooltipTarget.showTriggers = 'focus';
+                tooltipTarget.hideTriggers = 'blur, keypress';
+                fix.detectChanges();
+
+                simulateTriggerEvent(button, 'focus');
+                flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+                simulateTriggerEvent(button, 'blur');
+                flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+
+                simulateTriggerEvent(button, 'focus');
+                flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+                simulateTriggerEvent(button, 'keypress');
+                flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+            }));
+
+            it('should respect showDelay and hideDelay', fakeAsync(() => {
+                tooltipTarget.showTriggers = tooltipTarget.hideTriggers = 'click';
+                fix.detectChanges();
+
+                simulateTriggerEvent(button, 'click');
+                tick(SHOW_DELAY - 1);
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+                tick(1);
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+
+                simulateTriggerEvent(button, 'click');
+                const totalHideDelay = HIDE_DELAY + AUTO_HIDE_DELAY - 1;
+                tick(totalHideDelay);
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+                tick(1);
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+            }));
+
+            it('should not be shown if the tooltip is disabled', fakeAsync(() => {
+                tooltipTarget.showTriggers = 'focus';
+                tooltipTarget.hideTriggers = 'blur';
                 tooltipTarget.tooltipDisabled = true;
                 fix.detectChanges();
 
-                touchElement(button);
+                simulateTriggerEvent(button, 'focus');
                 flush();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
 
                 tooltipTarget.tooltipDisabled = false;
                 fix.detectChanges();
 
-                touchElement(button);
+                simulateTriggerEvent(button, 'focus');
                 flush();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-            }));
 
-            it('IgxTooltip touch interaction respects showDelay', fakeAsync(() => {
-                tooltipTarget.showDelay = 900;
+                tooltipTarget.tooltipDisabled = true;
                 fix.detectChanges();
 
-                touchElement(button);
+                simulateTriggerEvent(button, 'blur');
+                flush();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-                tick(500);
+                tooltipTarget.tooltipDisabled = false;
+                fix.detectChanges();
+
+                simulateTriggerEvent(button, 'blur');
+                flush();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+            }));
 
+            it('should not open when pointer leaves before the show delay elapses', fakeAsync(() => {
+                tooltipTarget.showDelay = 500;
+                fix.detectChanges();
+
+                hoverElement(button);
                 tick(300);
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
 
-                tick(100);
-                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-            }));
-
-            it('IgxTooltip touch interaction respects hideDelay', fakeAsync(() => {
-                tooltipTarget.hideDelay = 700;
-                fix.detectChanges();
-
-                touchElement(button);
-                flush();
-
-                const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
-                touchElement(dummyDiv);
-                tick(HIDE_DELAY);
-                tick(400);
-                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-
-                tick(100);
-                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-
-                tick(200);
+                unhoverElement(button);
+                tick(300);
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
         });
@@ -530,6 +590,69 @@ describe('IgxTooltip', () => {
 
             const maxWidth = getComputedStyle(tooltipNativeElement).maxWidth;
             expect(maxWidth).toBe('none');
+        }));
+    });
+
+    describe('Nested tooltips', () => {
+        let tooltipTarget1: IgxTooltipTargetDirective;
+        let tooltipTarget2: IgxTooltipTargetDirective;
+        let tooltipTarget3: IgxTooltipTargetDirective;
+
+        let tooltip1: IgxTooltipDirective;
+        let tooltip2: IgxTooltipDirective;
+        let tooltip3: IgxTooltipDirective;
+
+        // Handles getting the left offset when tooltip placement is Bottom
+        const getArrowLeftOffset = (tooltip: IgxTooltipDirective) => {
+            const tooltipRect = tooltip.element.getBoundingClientRect();
+            const arrowRect = tooltip.arrow.getBoundingClientRect();
+
+            const offset = tooltipRect.width / 2 - arrowRect.width / 2;
+            return Math.round(offset);
+        };
+
+        const verifyTooltipArrowAlignment = (tooltip: IgxTooltipDirective) => {
+            const arrowClassName = 'igx-tooltip--bottom';
+            const arrowTopOffset = '-4px';
+            const arrowLeftOffset = getArrowLeftOffset(tooltip) + 'px';
+
+            expect(tooltip.arrow.classList.contains(arrowClassName)).toBeTrue();
+            expect(tooltip.arrow.style.top).toBe(arrowTopOffset);
+            expect(tooltip.arrow.style.left).toBe(arrowLeftOffset);
+        };
+
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxTooltipNestedTooltipsComponent);
+            fix.detectChanges();
+
+            tooltipTarget1 = fix.componentInstance.targetLevel1;
+            tooltipTarget2 = fix.componentInstance.targetLevel2;
+            tooltipTarget3 = fix.componentInstance.targetLevel3;
+
+            tooltip1 = fix.componentInstance.tooltipLevel1;
+            tooltip2 = fix.componentInstance.tooltipLevel2;
+            tooltip3 = fix.componentInstance.tooltipLevel3;
+        }));
+
+        it('should show arrow for each tooltip', fakeAsync(() => {
+            hoverElement(tooltipTarget1);
+            flush();
+            verifyTooltipVisibility(tooltip1.element, tooltipTarget1, true);
+            expect(tooltipTarget1.hasArrow).toBeTrue();
+            verifyTooltipArrowAlignment(tooltip1);
+
+            hoverElement(tooltipTarget2);
+            flush();
+            verifyTooltipVisibility(tooltip2.element, tooltipTarget2, true);
+            expect(tooltipTarget2.hasArrow).toBeTrue();
+            verifyTooltipArrowAlignment(tooltip2);
+
+            hoverElement(tooltipTarget3);
+            flush();
+            verifyTooltipVisibility(tooltip3.element, tooltipTarget3, true);
+            expect(tooltipTarget3.hasArrow).toBeTrue();
+            verifyTooltipArrowAlignment(tooltip3);
+
         }));
     });
 
@@ -637,21 +760,6 @@ describe('IgxTooltip', () => {
             verifyTooltipPosition(tooltipNativeElement, buttonOne, false);
         }));
 
-        it('Should not call `hideTooltip` multiple times on document:touchstart', fakeAsync(() => {
-            spyOn<any>(targetOne, '_hideOnInteraction').and.callThrough();
-            spyOn<any>(targetTwo, '_hideOnInteraction').and.callThrough();
-
-            touchElement(buttonOne);
-            tick(500);
-
-            const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
-            touchElement(dummyDiv);
-            flush();
-
-            expect(targetOne['_hideOnInteraction']).toHaveBeenCalledTimes(1);
-            expect(targetTwo['_hideOnInteraction']).not.toHaveBeenCalled();
-        }));
-
         it('should not emit tooltipHide event multiple times', fakeAsync(() => {
             spyOn(targetOne.tooltipHide, 'emit');
             spyOn(targetTwo.tooltipHide, 'emit');
@@ -676,23 +784,6 @@ describe('IgxTooltip', () => {
             expect(targetOne.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetOne);
             expect(targetTwo.tooltipHide.emit).toHaveBeenCalledOnceWith(tooltipHideArgsTargetTwo);
             flush();
-        }));
-
-
-        it('IgxTooltip hides when touch one target, then another, then outside', fakeAsync(() => {
-            touchElement(targetOne);
-            flush();
-            verifyTooltipVisibility(tooltipNativeElement, targetOne, true);
-            verifyTooltipPosition(tooltipNativeElement, targetOne, true);
-
-            touchElement(targetTwo);
-            flush();
-            verifyTooltipVisibility(tooltipNativeElement, targetTwo, true);
-            verifyTooltipPosition(tooltipNativeElement, targetTwo, true);
-
-            touchElement(fix.debugElement);
-            flush();
-            verifyTooltipVisibility(tooltipNativeElement, targetTwo, false);
         }));
 
         it('should show and remove close button depending on active sticky target', fakeAsync(() => {
@@ -873,36 +964,6 @@ describe('IgxTooltip', () => {
         }));
     });
 
-    describe('Multiple tooltips', () => {
-        let targetOne: IgxTooltipTargetDirective;
-
-        let tooltipOne: IgxTooltipDirective;
-        let tooltipTwo: IgxTooltipDirective;
-
-        beforeEach(waitForAsync(() => {
-            fix = TestBed.createComponent(IgxTooltipMultipleTooltipsComponent);
-            fix.detectChanges();
-            targetOne = fix.componentInstance.targetOne;
-            tooltipOne = fix.componentInstance.tooltipOne;
-            tooltipTwo = fix.componentInstance.tooltipTwo;
-        }));
-
-        it('should not add multiple document:touchstart event listeners when having multiple igxTooltip instances - #16100', fakeAsync(() => {
-            spyOn<any>(tooltipOne, 'onDocumentTouchStart').and.callThrough();
-            spyOn<any>(tooltipTwo, 'onDocumentTouchStart').and.callThrough();
-
-            touchElement(targetOne);
-            tick(500);
-
-            const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
-            touchElement(dummyDiv);
-            flush();
-
-            expect(tooltipOne['onDocumentTouchStart']).toHaveBeenCalledTimes(1);
-            expect(tooltipTwo['onDocumentTouchStart']).not.toHaveBeenCalled();
-        }));
-    });
-
     describe('Tooltip integration', () => {
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTooltipWithToggleActionComponent);
@@ -922,7 +983,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
             UIInteractions.simulateClickEvent(button.nativeElement);
-            tick(HIDE_DELAY);
+            tick(AUTO_HIDE_DELAY);
             tick(300);
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
@@ -1027,10 +1088,12 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false)
         }));
 
-        it('should correctly display a sticky tooltip on touchstart', fakeAsync(() => {
+        it('should correctly display a sticky tooltip on custom show trigger', fakeAsync(() => {
             tooltipTarget.sticky = true;
+            tooltipTarget.showTriggers = 'focus';
             fix.detectChanges();
-            touchElement(button);
+
+            simulateTriggerEvent(button, 'focus');
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
@@ -1106,11 +1169,11 @@ interface ElementRefLike {
     nativeElement: HTMLElement
 }
 
-const hoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
+const hoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('pointerenter'));
 
-const unhoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
+const unhoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('pointerleave'));
 
-const touchElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
+const simulateTriggerEvent = (element: ElementRefLike, event: string) => element.nativeElement.dispatchEvent(new Event(event, { bubbles: true }));
 
 const verifyTooltipVisibility = (tooltipNativeElement, tooltipTarget, shouldBeVisible: boolean) => {
     expect(tooltipNativeElement.classList.contains(TOOLTIP_CLASS)).toBe(shouldBeVisible);

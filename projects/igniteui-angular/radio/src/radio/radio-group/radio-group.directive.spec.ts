@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
@@ -817,6 +817,8 @@ class RadioGroupWithModelComponent {
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupReactiveFormsComponent {
+    private _formBuilder = inject(UntypedFormBuilder);
+
     public seasons = [
         'Winter',
         'Spring',
@@ -828,7 +830,7 @@ class RadioGroupReactiveFormsComponent {
     public model: Person = { name: 'Kirk', favoriteSeason: this.seasons[1] };
     public personForm: UntypedFormGroup;
 
-    constructor(private _formBuilder: UntypedFormBuilder) {
+    constructor() {
         this._createForm();
     }
 
@@ -871,6 +873,8 @@ class RadioGroupReactiveFormsComponent {
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupDeepProjectionComponent {
+    private _builder = inject(UntypedFormBuilder);
+
 
     @ViewChild(IgxRadioGroupDirective, { static: true })
     public radioGroup: IgxRadioGroupDirective;
@@ -878,7 +882,7 @@ class RadioGroupDeepProjectionComponent {
     public choices = [0, 1, 2];
     public group1: UntypedFormGroup;
 
-    constructor(private _builder: UntypedFormBuilder) {
+    constructor() {
         this._createForm();
     }
 

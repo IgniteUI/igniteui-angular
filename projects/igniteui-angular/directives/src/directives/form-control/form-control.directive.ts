@@ -1,13 +1,8 @@
-import {
-    Directive,
-    forwardRef,
-    ElementRef,
-    HostListener,
-    Renderer2
-} from '@angular/core';
+import { Directive, forwardRef, ElementRef, HostListener, Renderer2, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-@Directive({ 
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igc-rating[ngModel],igc-rating[formControlName]',
     providers: [
         {
@@ -19,14 +14,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     standalone: true
 })
 export class IgcFormControlDirective implements ControlValueAccessor {
+    private elementRef = inject(ElementRef);
+    private renderer = inject(Renderer2);
+
     /** @hidden @internal */
     private onChange: any = () => { };
     /** @hidden @internal */
     private onTouched: any = () => { };
-
-    constructor(
-        private elementRef: ElementRef,
-        private renderer: Renderer2) { }
 
     /** @hidden @internal */
     @HostListener('blur')

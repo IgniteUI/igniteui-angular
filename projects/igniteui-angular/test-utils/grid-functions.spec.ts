@@ -208,7 +208,7 @@ export class GridFunctions {
     }
 
     public static getMasterRowDetail(row) {
-        const nextSibling = row.element.nativeElement.nextElementSibling;
+        const nextSibling = row.element.nativeElement.parentElement.nextElementSibling.children[0];
         if (nextSibling &&
             nextSibling.tagName.toLowerCase() === 'div' &&
             nextSibling.getAttribute('detail') === 'true') {
@@ -252,8 +252,8 @@ export class GridFunctions {
 
     public static getMasterRowDetailDebug(fix: ComponentFixture<any>, row: IgxRowDirective) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
-        const detailDE = rowDE.parent.children
-            .find(el => el.attributes['detail'] === 'true' && el.attributes['data-rowindex'] === row.index + 1 + '');
+        const detailDE = rowDE.parent.parent.children
+            .find(el => el.children[0].attributes['detail'] === 'true' && el.children[0].attributes['data-rowindex'] === row.index + 1 + '');
         return detailDE;
     }
 
@@ -1404,7 +1404,7 @@ export class GridFunctions {
         input.click();
         fix.detectChanges();
 
-        const operators = fix.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex + 1];
+        const operators = fix.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex];
         const operator = operators.children[itemIndex].children[0];
         operator.click();
         tick();

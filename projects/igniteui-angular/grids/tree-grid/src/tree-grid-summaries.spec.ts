@@ -15,6 +15,7 @@ import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     const DEBOUNCETIME = 30;
@@ -31,6 +32,12 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 IgxTreeGridSummariesKeyScroliingComponent
             ]
         }).compileComponents();
+    }));
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
+        });
     }));
 
     describe('', () => {
@@ -1527,6 +1534,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         it('Should not change active summary cell when press Arrow Down and it is last summary row', async () => {
             treeGrid.expandAll();
             fix.detectChanges();
+            await wait(16);
 
             treeGrid.verticalScrollContainer.scrollTo(treeGrid.dataView.length - 1);
             await wait(100);
@@ -1706,7 +1714,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         fix.detectChanges();
         (treeGrid as any).scrollTo(23, 0, 0);
         fix.detectChanges();
-        await wait(30);
+        await wait(60);
         fix.detectChanges();
 
         let row = treeGrid.getRowByKey(15);

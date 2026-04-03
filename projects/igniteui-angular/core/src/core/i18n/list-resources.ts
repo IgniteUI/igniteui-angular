@@ -1,9 +1,11 @@
-export interface IListResourceStrings {
-    igx_list_no_items?: string;
-    igx_list_loading?: string;
-}
+import {
+    type IListResourceStrings as IAListResourceStrings,
+    type PrefixedResourceStrings,
+    ListResourceStringsEN as AListResourceStrings,
+    IGX_PREFIX,
+    prefixResource
+} from 'igniteui-i18n-core';
 
-export const ListResourceStringsEN: IListResourceStrings = {
-    igx_list_no_items: 'There are no items in the list.',
-    igx_list_loading: 'Loading data from the server...'
-};
+export type IListResourceStrings = PrefixedResourceStrings<IAListResourceStrings, typeof IGX_PREFIX>;
+
+export const ListResourceStringsEN: IListResourceStrings = prefixResource(IGX_PREFIX, AListResourceStrings);

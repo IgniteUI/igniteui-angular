@@ -1,4 +1,4 @@
-import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -145,7 +145,8 @@ describe('IgxSelection', () => {
     standalone: true
 })
 class IgxTestFocusDirective {
-    constructor(private element: ElementRef) { }
+    private element = inject(ElementRef);
+
 
     @HostListener('focus')
     public onFocus() {

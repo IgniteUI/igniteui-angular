@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
     cloneArray,
@@ -27,20 +27,17 @@ import { IgxColumnMovingService } from './moving/moving.service';
 @Injectable()
 export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
+    public crudService = inject(IgxGridCRUDService);
+    public cms = inject(IgxColumnMovingService)
 
     public grid: T;
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
-
-    constructor(
-        public crudService: IgxGridCRUDService,
-        public cms: IgxColumnMovingService
-    ) { }
 
     public get_column_by_name(name: string): ColumnType {
         return this.grid.columns.find((col: ColumnType) => col.field === name);
     }
 
-    public get_summary_data() {
+    public get_summary_data(): any[] | null {
         const grid = this.grid;
         let data = grid.filteredData;
         if (data && grid.hasPinnedRecords) {
@@ -292,7 +289,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     }
 
     public should_apply_number_style(column: ColumnType): boolean {
-        return column.dataType === GridColumnDataType.Number;
+        return column.dataType === GridColumnDataType.Number
+            || column.dataType === GridColumnDataType.Currency
+            || column.dataType === GridColumnDataType.Percent;
     }
 
     public get_data(): any[] {
@@ -322,6 +321,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             grid.transactions.add(transaction);
         } else {
             grid.data.push(rowData);
+            grid.data = cloneArray(grid.data);
         }
         grid.validation.markAsTouched(rowId);
         grid.validation.update(rowId, rowData);
@@ -337,6 +337,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                 grid.transactions.add(transaction, grid.data[index]);
             } else {
                 grid.data.splice(index, 1);
+                grid.data = cloneArray(grid.data);
             }
         } else {
             const state: State = grid.transactions.getState(rowID);

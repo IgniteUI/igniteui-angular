@@ -4,11 +4,10 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
-    Inject,
+    inject,
     Input,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
 } from '@angular/core';
 import { AbsoluteScrollStrategy, IgxOverlayOutletDirective } from 'igniteui-angular/core';
@@ -24,15 +23,11 @@ import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */
     id: string;
-    /** Provides reference to the owner component (from IBaseEventArgs) */
-    owner?: any;
     /* blazorSuppress */
     event?: Event;
 }
 
-export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs {
-    cancel: boolean;
-}
+export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs { }
 
 @Directive({
     exportAs: 'toggle',
@@ -46,6 +41,12 @@ export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, Canc
     }
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
+    private elementRef = inject(ElementRef);
+    private cdr = inject(ChangeDetectorRef);
+    protected overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    private navigationService = inject(IgxNavigationService, { optional: true });
+    private platform = inject(PlatformUtil, { optional: true });
+
     /**
      * Emits an event after the toggle container is opened.
      *
@@ -201,18 +202,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayClosingSub: Subscription;
     private _overlayClosedSub: Subscription;
     private _overlayContentAppendedSub: Subscription;
-
-    /**
-     * @hidden
-     */
-    constructor(
-        private elementRef: ElementRef,
-        private cdr: ChangeDetectorRef,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() private navigationService: IgxNavigationService,
-        @Optional() private platform?: PlatformUtil
-    ) {
-    }
 
     /**
      * Opens the toggle.
@@ -427,6 +416,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     standalone: true
 })
 export class IgxToggleActionDirective implements OnInit {
+    protected element = inject(ElementRef);
+    protected navigationService = inject(IgxNavigationService, { optional: true });
+
     /**
      * Provide settings that control the toggle overlay positioning, interaction and scroll behavior.
      * ```typescript
@@ -452,6 +444,10 @@ export class IgxToggleActionDirective implements OnInit {
      * <div igxToggleAction [igxToggleOutlet]="outlet"></div>
      * ```
      * Where `outlet` in an instance of `IgxOverlayOutletDirective` or an `ElementRef`
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
      */
     @Input('igxToggleOutlet')
     public outlet: IgxOverlayOutletDirective | ElementRef;
@@ -478,8 +474,6 @@ export class IgxToggleActionDirective implements OnInit {
 
     protected _overlayDefaults: OverlaySettings;
     protected _target: IToggleView | string;
-
-    constructor(private element: ElementRef, @Optional() private navigationService: IgxNavigationService) { }
 
     /**
      * @hidden

@@ -9,6 +9,7 @@ import { IgxPivotGridTestBaseComponent } from "../../../test-utils/pivot-grid-sa
 import { UIInteractions, wait } from "../../../test-utils/ui-interactions.spec";
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import {
+    IgxGridNavigationService,
     IPivotDimension,
     IPivotValue,
     PivotDimensionType,
@@ -46,6 +47,9 @@ describe("Pivot data selector integration", () => {
             imports: [
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }));

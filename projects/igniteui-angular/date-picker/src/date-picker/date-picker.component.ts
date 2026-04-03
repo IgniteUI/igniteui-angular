@@ -9,19 +9,17 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
-    Inject,
     Injector,
     Input,
-    LOCALE_ID,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     PipeTransform,
     Renderer2,
     ViewChild,
     ViewContainerRef,
-    booleanAttribute
+    booleanAttribute,
+    inject
 } from '@angular/core';
 import {
     AbstractControl,
@@ -37,7 +35,7 @@ import {
      IFormattingViews, IFormattingOptions
 } from 'igniteui-angular/calendar';
 import {
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective,
+    IgxLabelDirective, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective,
     IgxReadOnlyInputDirective
 } from 'igniteui-angular/input-group';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
@@ -65,7 +63,8 @@ import {
     DatePartDeltas,
     DatePart,
     isDateInRanges,
-    IgxOverlayOutletDirective
+    IgxOverlayOutletDirective,
+    I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -108,6 +107,13 @@ let NEXT_ID = 0;
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked, AfterContentChecked {
+    private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    private _injector = inject(Injector);
+    private _renderer = inject(Renderer2);
+    private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef);
+    private _i18nFormatter = inject(I18N_FORMATTER);
+
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -239,7 +245,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /**
      * Gets/Sets the container used for the popup element.
-     *
      * @remarks
      *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      * @example
@@ -249,6 +254,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * <igx-date-picker [outlet]="outlet"></igx-date-picker>
      * //..
      * ```
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead.
      */
     @Input()
     public override outlet: IgxOverlayOutletDirective | ElementRef;
@@ -456,7 +465,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private get inputGroupElement(): HTMLElement {
-        return this.inputGroup?.element.nativeElement;
+        return this.inputGroup?.element.nativeElement.querySelector('.igx-input-group__bundle');
     }
 
     private get dateValue(): Date {
@@ -522,16 +531,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _onTouchedCallback: () => void = noop;
     private _onValidatorChange: () => void = noop;
 
-    constructor(element: ElementRef<HTMLElement>,
-        @Inject(LOCALE_ID) _localeId: string,
-        @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        private _injector: Injector,
-        private _renderer: Renderer2,
-        private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
-        super(element, _localeId, _inputGroupType);
-        this.locale = this.locale || this._localeId;
+    constructor() {
+        super();
+        this.initLocale();
     }
 
     /** @hidden @internal */
@@ -774,8 +776,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
-
-        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
@@ -1009,5 +1009,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
         componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.selectToday());
+    }
+
+    protected override updateResources(): void {
+        this._resourceStrings = getCurrentResourceStrings(DatePickerResourceStringsEN, false, this._locale);
     }
 }

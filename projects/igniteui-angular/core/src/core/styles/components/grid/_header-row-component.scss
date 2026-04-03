@@ -65,11 +65,11 @@
         @extend %grid-cell-header !optional;
 
         @include e(expander) {
-            @extend %igx-grid-th__expander !optional
+            @extend %igx-grid-th__expander !optional;
         }
 
         @include e(group-title) {
-            @extend %igx-grid-th__group-title !optional
+            @extend %igx-grid-th__group-title !optional;
         }
 
         @include e(title) {

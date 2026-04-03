@@ -1,5 +1,4 @@
 import {
-    ChangeDetectorRef,
     Component,
     ContentChildren,
     ElementRef,
@@ -15,9 +14,7 @@ import {
     EventEmitter,
     SimpleChanges,
     booleanAttribute,
-    Inject,
-    DOCUMENT
-} from '@angular/core';
+    inject} from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBaseDirective } from './drop-down.base';
@@ -57,6 +54,8 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
     imports: [IgxToggleDirective]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
+    protected selection = inject(IgxSelectionAPIService);
+
     /**
      * @hidden
      * @internal
@@ -236,14 +235,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     protected destroy$ = new Subject<boolean>();
     protected _scrollPosition: number;
-
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        @Inject(DOCUMENT) document: any,
-        protected selection: IgxSelectionAPIService) {
-        super(elementRef, cdr, document);
-    }
 
     /**
      * Opens the dropdown

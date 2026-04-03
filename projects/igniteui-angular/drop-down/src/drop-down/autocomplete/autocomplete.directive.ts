@@ -1,20 +1,4 @@
-import {
-    ChangeDetectorRef,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Inject,
-    Input,
-    OnDestroy,
-    Optional,
-    Output,
-    Self,
-    AfterViewInit,
-    OnInit,
-    booleanAttribute
-} from '@angular/core';
+import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Output, AfterViewInit, OnInit, booleanAttribute, inject } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -48,7 +32,13 @@ export interface AutocompleteOverlaySettings {
     positionStrategy?: IPositionStrategy;
     /** Scroll strategy to use with this settings */
     scrollStrategy?: IScrollStrategy;
-    /** Set the outlet container to attach the overlay to */
+    /**
+     * Set the outlet container to attach the overlay to
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
+     */
     outlet?: IgxOverlayOutletDirective | ElementRef;
 }
 
@@ -75,6 +65,12 @@ export interface AutocompleteOverlaySettings {
     standalone: true
 })
 export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy, AfterViewInit, OnInit {
+    protected ngModel = inject<NgModel>(NgModel, { self: true, optional: true });
+    protected formControl = inject<FormControlName>(FormControlName, { self: true, optional: true });
+    protected group = inject(IgxInputGroupComponent, { optional: true });
+    protected elementRef = inject(ElementRef);
+    protected cdr = inject(ChangeDetectorRef);
+
     /**
      * Sets the target of the autocomplete directive
      *
@@ -216,14 +212,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private destroy$ = new Subject<void>();
     private defaultSettings: OverlaySettings;
 
-    constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
-        @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
-        @Optional() protected group: IgxInputGroupComponent,
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef) {
-        super(null);
-    }
-
     /** @hidden  @internal */
     @HostListener('input')
     public onInput() {
@@ -270,6 +258,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
                 case ' ':
                 case 'home':
                 case 'end':
+                case 'tab':
                     return;
                 default:
                     super.handleKeyDown(event);

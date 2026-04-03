@@ -1,4 +1,4 @@
-import { Directive, Inject } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxColumnActionsComponent } from './column-actions.component';
 import { ColumnType } from 'igniteui-angular/core';
@@ -8,11 +8,13 @@ import { ColumnType } from 'igniteui-angular/core';
     standalone: true
 })
 export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
+    protected columnActions = inject<IgxColumnActionsComponent>(IgxColumnActionsComponent);
 
-    constructor(
-        @Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent
-    ) {
+
+    constructor() {
         super();
+        const columnActions = this.columnActions;
+
         columnActions.actionsDirective = this;
     }
 

@@ -20,10 +20,6 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         this._target = target ? target : this.dropdown as IgxSelectBase;
     }
 
-    constructor() {
-        super(null);
-    }
-
     /** Captures keydown events and calls the appropriate handlers on the target component */
     public override handleKeyDown(event: KeyboardEvent) {
         if (!event) {

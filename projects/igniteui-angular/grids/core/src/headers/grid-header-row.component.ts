@@ -10,7 +10,8 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    booleanAttribute
+    booleanAttribute,
+    inject
 } from '@angular/core';
 import { GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
@@ -40,6 +41,9 @@ import { ColumnType, flatten, trackByIdentity } from 'igniteui-angular/core';
     imports: [IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderRowComponent implements DoCheck {
+    protected ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    protected cdr = inject(ChangeDetectorRef);
+
 
     /** The grid component containing this element. */
     @Input()
@@ -123,7 +127,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     * @internal
     */
     public get isLeafHeaderAriaHidden(): boolean {
-        return this.grid.navigation.activeNode.row === -1;
+        return this.grid.navigation.activeNode?.row === -1;
     }
 
     /** The virtualized part of the header row containing the unpinned header groups. */
@@ -195,11 +199,6 @@ export class IgxGridHeaderRowComponent implements DoCheck {
 
         return ctx;
     }
-
-    constructor(
-        protected ref: ElementRef<HTMLElement>,
-        protected cdr: ChangeDetectorRef
-    ) { }
 
     /**
      * This hook exists as a workaround for the unfortunate fact

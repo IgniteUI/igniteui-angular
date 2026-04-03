@@ -123,6 +123,27 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 3);
         });
 
+        it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', async () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
+
+            treeGrid.moving = true;
+
+            const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+            const headerRect = header.getBoundingClientRect();
+            const startX = headerRect.width / 2;
+            const startY = headerRect.height / 2;
+
+            UIInteractions.simulatePointerEvent('pointerdown', header, startX, startY);
+            await wait(16);
+            UIInteractions.simulatePointerEvent('pointermove', header, startX + headerRect.width, startY);
+            await wait(16);
+            UIInteractions.simulatePointerEvent('pointerup', header, startX + headerRect.width, startY);
+            await wait(16);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
+        });
+
         it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
 
@@ -130,23 +151,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             const targetColumn = treeGrid.columnList.filter(c => c.field === 'HireDate')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
-            fix.detectChanges();
-
-            TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
-        });
-
-        it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', async () => {
-            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
-
-            treeGrid.moving = true;
-
-            const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
-            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
-            UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
-            UIInteractions.simulatePointerEvent('pointerup', header, 490, 30);
-            await wait();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
@@ -303,6 +307,27 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
         });
 
+        it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', async () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
+
+            treeGrid.moving = true;
+
+            const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+            const headerRect = header.getBoundingClientRect();
+            const startX = headerRect.width / 2;
+            const startY = headerRect.height / 2;
+
+            UIInteractions.simulatePointerEvent('pointerdown', header, startX, startY);
+            await wait(16);
+            UIInteractions.simulatePointerEvent('pointermove', header, startX + headerRect.width, startY);
+            await wait(16);
+            UIInteractions.simulatePointerEvent('pointerup', header, startX + headerRect.width, startY);
+            await wait(16);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
+        });
+
         it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
@@ -310,24 +335,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const sourceColumn = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             const targetColumn = treeGrid.columnList.filter(c => c.field === 'JobTitle')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
-            fix.detectChanges();
-
-            TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
-        });
-
-        it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', async () => {
-            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
-
-            treeGrid.moving = true;
-            fix.detectChanges();
-
-            const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
-            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
-            UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
-            UIInteractions.simulatePointerEvent('pointerup', header, 490, 30);
-            await wait()
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
@@ -1380,17 +1387,21 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.moving = true;
             fix.detectChanges();
 
-            // const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__item'))[0].nativeElement;
-            const header = treeGrid.headerGroups[0].nativeElement;
+            const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__item'))[3].nativeElement;
+            // const header = treeGrid.headerGroups[0].nativeElement;
 
             UIInteractions.simulatePointerEvent('pointerdown', header, 100, 40);
-            await wait();
+            fix.detectChanges();
+            await wait(100);
+
             UIInteractions.simulatePointerEvent('pointermove', header, 106, 46);
-            await wait();
+            fix.detectChanges();
+            await wait(100);
+
             UIInteractions.simulatePointerEvent('pointermove', header, 700, 40);
-            await wait();
+            fix.detectChanges();
+            await wait(100);
             UIInteractions.simulatePointerEvent('pointerup', header, 700, 40);
-            await wait();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'HireDate', 4);

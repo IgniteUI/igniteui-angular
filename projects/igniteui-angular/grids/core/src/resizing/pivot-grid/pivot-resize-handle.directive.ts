@@ -1,9 +1,7 @@
 import {
     Directive,
-    ElementRef,
-    Input,
-    NgZone
-} from '@angular/core';
+    inject,
+    Input} from '@angular/core';
 import { IgxPivotColumnResizingService } from './pivot-resizing.service'
 import { IgxResizeHandleDirective } from '../resize-handle.directive';
 import { ColumnType } from 'igniteui-angular/core';
@@ -18,6 +16,8 @@ import { PivotRowHeaderGroupType } from '../../pivot-grid.interface';
     standalone: true
 })
 export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
+    public override colResizingService = inject(IgxPivotColumnResizingService);
+
 
     /**
      * @hidden
@@ -36,12 +36,6 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
      */
     @Input('igxPivotResizeHandleHeader')
     public rowHeaderGroup: PivotRowHeaderGroupType;
-
-    constructor(zone: NgZone,
-        element: ElementRef,
-        public override colResizingService: IgxPivotColumnResizingService) {
-        super(zone, element, colResizingService);
-    }
 
     /**
      * @hidden

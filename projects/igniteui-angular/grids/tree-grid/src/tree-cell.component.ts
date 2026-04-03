@@ -3,13 +3,13 @@ import {
     Component,
     Input
 } from '@angular/core';
-import { NgClass, NgStyle, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 
 import { IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { RowType } from 'igniteui-angular/grids/core';
 import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from 'igniteui-angular/grids/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HammerGesturesManager } from 'igniteui-angular/core';
+import { HammerGesturesManager, IgxNumberFormatterPipe, IgxPercentFormatterPipe, IgxCurrencyFormatterPipe, IgxDateFormatterPipe } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDateTimeEditorDirective, IgxFocusDirective, IgxTextHighlightDirective, IgxTextSelectionDirective, IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -29,10 +29,10 @@ import { IgxGridExpandableCellComponent } from 'igniteui-angular/grids/grid';
         NgClass,
         NgStyle,
         NgTemplateOutlet,
-        DecimalPipe,
-        PercentPipe,
-        CurrencyPipe,
-        DatePipe,
+        IgxNumberFormatterPipe,
+        IgxPercentFormatterPipe,
+        IgxCurrencyFormatterPipe,
+        IgxDateFormatterPipe,
         IgxChipComponent,
         IgxTextHighlightDirective,
         IgxIconComponent,

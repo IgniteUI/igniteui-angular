@@ -4,12 +4,7 @@ import { Directive } from '@angular/core';
  * @hidden
  */
 @Directive({
-    selector: 'igx-suffix,[igxSuffix],[igxEnd]',
+    selector: '[igxSuffix],[igxEnd],igx-suffix',
     standalone: true
 })
 export class IgxSuffixDirective { }
-
-/**
- * @hidden
- */
-

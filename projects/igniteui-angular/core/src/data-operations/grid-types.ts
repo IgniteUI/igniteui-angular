@@ -93,7 +93,7 @@ export enum ColumnPinningPosition {
 export interface GridTypeBase {
     primaryKey?: string;
     id?: string;
-    data?: any[];
+    data: any[] | null;
     [key: string]: any;
 }
 
@@ -325,12 +325,13 @@ export interface ColumnType extends FieldType {
      */
     topLevelParent?: ColumnType;
     /* alternateName: parentColumn */
+    /* blazorAlternateType: object */
     /**
      * Optional
      * The immediate parent (right above) column of this column (if any).
      * If there is no parent, that means the current column is the root parent
      */
-    parent?: ColumnType;
+    parent: ColumnType | null;
     pipeArgs: IColumnPipeArgs;
     hasNestedPath: boolean;
     additionalTemplateContext: any;
@@ -429,7 +430,7 @@ export interface IPathSegment {
     rowIslandKey: string;
 }
 
-/* tsPlainInterface *
+/* tsPlainInterface */
 /* marshalByValue */
 export interface ISummaryExpression {
     fieldName: string;

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild, inject } from '@angular/core';
 import { IgxColumnResizingService } from './resizing.service';
 import { IgxColumnResizerDirective } from './resizer.directive';
 
@@ -9,11 +9,11 @@ import { IgxColumnResizerDirective } from './resizer.directive';
     imports: [IgxColumnResizerDirective]
 })
 export class IgxGridColumnResizerComponent {
+    public colResizingService = inject(IgxColumnResizingService);
+
     @Input()
     public restrictResizerTop: number;
 
     @ViewChild(IgxColumnResizerDirective, { static: true })
     public resizer: IgxColumnResizerDirective;
-
-    constructor(public colResizingService: IgxColumnResizingService) { }
 }

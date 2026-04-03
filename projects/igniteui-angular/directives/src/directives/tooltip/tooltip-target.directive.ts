@@ -1,20 +1,20 @@
 import {
-    Directive, OnInit, OnDestroy, Output, ElementRef, Optional, ViewContainerRef, HostListener,
+    Directive, OnInit, OnDestroy, Output, ViewContainerRef,
     Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2,
     EnvironmentInjector,
     createComponent,
     AfterViewInit,
+    inject,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxNavigationService } from 'igniteui-angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { PositionSettings } from 'igniteui-angular/core';
 import { IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
-import { TooltipPositionSettings, TooltipPositionStrategy } from './tooltip.common';
+import { parseTriggers, TooltipPositionSettings, TooltipPositionStrategy } from './tooltip.common';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -233,6 +233,46 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public tooltipDisabled = false;
 
     /**
+     * Which event triggers will show the tooltip.
+     * Expects a comma-separated string of different event triggers.
+     * Defaults to `pointerenter`.
+     * ```html
+     * <igx-icon [igxTooltipTarget]="tooltipRef" [showTriggers]="'click,focus'">info</igx-icon>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
+    @Input()
+    public get showTriggers(): string {
+        return Array.from(this._showTriggers).join();
+    }
+
+    public set showTriggers(value: string) {
+        this._showTriggers = parseTriggers(value);
+        this.removeEventListeners();
+        this.addEventListeners();
+    }
+
+    /**
+     * Which event triggers will hide the tooltip.
+     * Expects a comma-separated string of different event triggers.
+     * Defaults to `pointerleave` and `click`.
+     * ```html
+     * <igx-icon [igxTooltipTarget]="tooltipRef" [hideTriggers]="'keypress,blur'">info</igx-icon>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
+    @Input()
+    public get hideTriggers(): string {
+        return Array.from(this._hideTriggers).join();
+    }
+
+    public set hideTriggers(value: string) {
+        this._hideTriggers = parseTriggers(value);
+        this.removeEventListeners();
+        this.addEventListeners();
+    }
+
+    /**
      * @hidden
      */
     @Input('igxTooltipTarget')
@@ -247,14 +287,17 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     public override get target(): any {
         if (typeof this._target === 'string') {
-            return this._navigationService.get(this._target);
+            return this.navigationService.get(this._target);
         }
         return this._target;
     }
 
     /**
-    * @hidden
-    */
+     * Specifies a plain text as tooltip content.
+     * ```html
+     * <igx-icon igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">info</igx-icon>
+     * ```
+     */
     @Input()
     public set tooltip(content: any) {
         if (!this.target && (typeof content === 'string' || content instanceof String)) {
@@ -273,7 +316,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * ```
      */
     public get nativeElement() {
-        return this._element.nativeElement;
+        return this.element.nativeElement;
     }
 
     /**
@@ -323,6 +366,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     @Output()
     public tooltipHide = new EventEmitter<ITooltipHideEventArgs>();
 
+    private _viewContainerRef = inject(ViewContainerRef);
+    private _renderer = inject(Renderer2);
+    private _envInjector = inject(EnvironmentInjector);
+
     private _destroy$ = new Subject<void>();
     private _autoHideDelay = 180;
     private _isForceClosed = false;
@@ -331,25 +378,21 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _closeTemplate: TemplateRef<any>;
     private _sticky = false;
     private _positionSettings: PositionSettings = TooltipPositionSettings;
+    private _showTriggers = new Set(['pointerenter']);
+    private _hideTriggers = new Set(['pointerleave', 'click']);
+    private _pendingShowTrigger: string | null = null;
 
-    constructor(
-        private _element: ElementRef,
-        @Optional() private _navigationService: IgxNavigationService,
-        private _viewContainerRef: ViewContainerRef,
-        private _renderer: Renderer2,
-        private _envInjector: EnvironmentInjector
-    ) {
-        super(_element, _navigationService);
-    }
+    private _abortController = new AbortController();
 
     /**
      * @hidden
      */
-    @HostListener('click')
     public override onClick() {
-        if (!this.target.collapsed) {
-            this._hideOnInteraction();
-        } else if (this.target.timeoutId) {
+        if (
+            this.target.timeoutId &&
+            this.target.collapsed &&
+            !this._showTriggers.has('click')
+        ) {
             clearTimeout(this.target.timeoutId);
             this.target.timeoutId = null;
         }
@@ -358,44 +401,25 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('mouseenter')
-    public onMouseEnter() {
-        this._checksBeforeShowing(() => this._showOnInteraction());
+    public onShow(event?: Event): void {
+        this._checksBeforeShowing(() => this._showOnInteraction(event));
     }
 
     /**
      * @hidden
      */
-    @HostListener('mouseleave')
-    public onMouseLeave() {
+    public onHide(event?: Event): void {
+        if (this.target.collapsed) {
+            this._cancelPendingShow(event);
+            return;
+        }
+
         if (this.tooltipDisabled) {
             return;
         }
 
         this._checkOutletAndOutsideClick();
         this._hideOnInteraction();
-    }
-
-    /**
-     * @hidden
-     */
-    public onTouchStart() {
-        this._checksBeforeShowing(() => this._showOnInteraction());
-    }
-
-    /**
-     * @hidden
-     */
-    public onDocumentTouchStart(event) {
-        if (this.tooltipDisabled || this?.target?.tooltipTarget !== this) {
-            return;
-        }
-
-        if (this.nativeElement !== event.target &&
-            !this.nativeElement.contains(event.target)
-        ) {
-            this._hideOnInteraction();
-        }
     }
 
     /**
@@ -421,7 +445,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             }
         });
 
-        this.nativeElement.addEventListener('touchstart', this.onTouchStart = this.onTouchStart.bind(this), { passive: true });
+        this.removeEventListeners();
+        this.addEventListeners();
     }
 
     /**
@@ -438,7 +463,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     public ngOnDestroy() {
         this.hideTooltip();
-        this.nativeElement.removeEventListener('touchstart', this.onTouchStart);
+        this.removeEventListeners();
         this._destroyCloseButton();
         this._destroy$.next();
         this._destroy$.complete();
@@ -468,6 +493,24 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     private get _mergedOverlaySettings() {
         return Object.assign({}, this._overlayDefaults, this.overlaySettings);
+    }
+
+    private addEventListeners(): void {
+        const options = { passive: true, signal: this._abortController.signal };
+
+        this.onShow = this.onShow.bind(this);
+        for (const each of this._showTriggers) {
+            this.nativeElement.addEventListener(each, this.onShow, options);
+        }
+        this.onHide = this.onHide.bind(this);
+        for (const each of this._hideTriggers) {
+            this.nativeElement.addEventListener(each, this.onHide, options);
+        }
+    }
+
+    private removeEventListeners(): void {
+        this._abortController.abort();
+        this._abortController = new AbortController();
     }
 
     private _checkOutletAndOutsideClick(): void {
@@ -501,7 +544,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }, withDelay ? this.hideDelay : 0);
     }
 
-    private _showTooltip(withDelay: boolean, withEvents: boolean): void {
+    private _showTooltip(withDelay: boolean, withEvents: boolean, triggerEvent?: Event): void {
         if (!this.target.collapsed && !this._isForceClosed) {
             return;
         }
@@ -518,17 +561,19 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
 
         this._evaluateStickyState();
+        this._pendingShowTrigger = triggerEvent?.type ?? null;
 
         this.target.timeoutId = setTimeout(() => {
             // Call open() of IgxTooltipDirective
+            this._pendingShowTrigger = null;
             this.target.open(this._mergedOverlaySettings);
         }, withDelay ? this.showDelay : 0);
     }
 
 
-    private _showOnInteraction(): void {
+    private _showOnInteraction(triggerEvent?: Event): void {
         this._stopTimeoutAndAnimation();
-        this._showTooltip(true, true);
+        this._showTooltip(true, true, triggerEvent);
     }
 
     private _hideOnInteraction(): void {
@@ -555,6 +600,26 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _stopTimeoutAndAnimation(): void {
         clearTimeout(this.target.timeoutId);
         this.target.stopAnimations();
+    }
+
+    /**
+     * Used when a hide trigger occurs before the tooltip opens.
+     * Clears the pending timeout and resets the tracked show trigger
+     * so the tooltip does not open after the user has already left the target.
+     */
+    private _cancelPendingShow(event?: Event): void {
+        if (!this.target.timeoutId) {
+            return;
+        }
+
+        // Keep same-event show/hide trigger combinations acting as toggle behavior.
+        if (event?.type && event.type === this._pendingShowTrigger) {
+            return;
+        }
+
+        clearTimeout(this.target.timeoutId);
+        this.target.timeoutId = null;
+        this._pendingShowTrigger = null;
     }
 
     /**

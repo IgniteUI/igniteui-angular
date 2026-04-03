@@ -1,17 +1,26 @@
-import { Component, Directive, HostBinding, TemplateRef } from '@angular/core';
+import { Component, Directive, HostBinding, TemplateRef, inject } from '@angular/core';
 import { GridType } from '../common/grid.interface';
 
-@Directive({ 
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[excelText],excel-text',
     standalone: true
 })
 export class IgxExcelTextDirective { }
 
-@Directive({ 
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[csvText],csv-text',
     standalone: true
 })
 export class IgxCSVTextDirective { }
+
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: '[pdfText],pdf-text',
+    standalone: true
+})
+export class IgxPdfTextDirective { }
 
 /* blazorElement */
 /* wcElementTag: igc-grid-toolbar-title */
@@ -86,7 +95,8 @@ export interface IgxGridToolbarTemplateContext {
     standalone: true
 })
 export class IgxGridToolbarDirective {
-    constructor(public template: TemplateRef<IgxGridToolbarTemplateContext>) {}
+    public template = inject<TemplateRef<IgxGridToolbarTemplateContext>>(TemplateRef);
+
 
     public static ngTemplateContextGuard(_dir: IgxGridToolbarDirective,
         ctx: unknown): ctx is IgxGridToolbarTemplateContext {

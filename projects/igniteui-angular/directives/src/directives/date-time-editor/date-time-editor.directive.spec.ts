@@ -1,6 +1,6 @@
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { formatDate, registerLocaleData } from '@angular/common';
-import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject, Renderer2, ElementRef } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -12,21 +12,21 @@ import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
 import { DatePart } from 'igniteui-angular/core';
+import { MaskParsingService } from '../mask/mask-parsing.service';
+import { removeUnicodeSpaces } from 'igniteui-angular/test-utils/helper-utils.spec';
 
 describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
-        const maskParsingService = jasmine.createSpyObj('MaskParsingService',
-            ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask', 'parseValueFromMask']);
-        const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
-        let locale = 'en';
-        let elementRef = { nativeElement: null };
+        let maskParsingService: jasmine.SpyObj<MaskParsingService>;
+        let renderer2: jasmine.SpyObj<Renderer2>;
+        let elementRef: ElementRef;
         let inputFormat: string;
         let displayFormat: string;
         let inputDate: string;
         const initializeDateTimeEditor = (_control?: NgControl) => {
             // const injector = { get: () => control };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, null, DOCUMENT, locale);
+            dateTimeEditor = TestBed.inject(IgxDateTimeEditorDirective);
             dateTimeEditor.inputFormat = inputFormat;
             dateTimeEditor.ngOnInit();
 
@@ -34,6 +34,26 @@ describe('IgxDateTimeEditor', () => {
             const changes: SimpleChanges = { inputFormat: change };
             dateTimeEditor.ngOnChanges(changes);
         };
+
+        beforeEach(() => {
+            const mockNativeEl = document.createElement("div");
+            (mockNativeEl as any).setSelectionRange = () => {};
+            maskParsingService = jasmine.createSpyObj('MaskParsingService',
+            ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask', 'parseValueFromMask']);
+            renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
+            elementRef = { nativeElement: mockNativeEl };
+
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: MaskParsingService, useValue: maskParsingService },
+                    { provide: Renderer2, useValue: renderer2 },
+                    { provide: ElementRef, useValue: elementRef },
+                    { provide: DOCUMENT, useValue: document },
+                    { provide: NgControl, useValue: null },
+                    IgxDateTimeEditorDirective,
+                ]
+            });
+        });
         describe('Properties & Events', () => {
             it('should emit valueChange event on clear()', () => {
                 inputFormat = 'dd/M/yy';
@@ -71,7 +91,6 @@ describe('IgxDateTimeEditor', () => {
             it('should set default inputFormat with parts for day, month, year based on locale', () => {
                 registerLocaleData(localeBg);
                 registerLocaleData(localeJa);
-                locale = 'en-US';
                 inputFormat = undefined;
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
@@ -108,7 +127,6 @@ describe('IgxDateTimeEditor', () => {
 
             it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', () => {
                 registerLocaleData(localeBg);
-                locale = 'en-US';
                 displayFormat = undefined;
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
@@ -446,15 +464,11 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditor.value).toEqual(new Date(2020, 5, 12, 23, 15, 14));
 
                 inputFormat = 'dd aa yyyy-MM mm-ss-hh';
-                inputDate = '12 AM 2020-06 14-15-11';
-                elementRef = { nativeElement: { value: inputDate } };
-                initializeDateTimeEditor();
 
                 dateTimeEditor.inputFormat = inputFormat;
                 expect(dateTimeEditor.mask).toEqual('00 LL 0000-00 00-00-00');
 
                 dateTimeEditor.value = new Date(2020, 5, 12, 11, 15, 14);
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
 
                 dateTimeEditor.increment(DatePart.AmPm);
                 expect(dateTimeEditor.value).toEqual(new Date(2020, 5, 12, 23, 15, 14));
@@ -781,7 +795,7 @@ describe('IgxDateTimeEditor', () => {
                 date = new Date(0, 0, 0, 1, 0, 0);
                 const shortTimeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
                 result = ControlsFunction.formatDate(date, shortTimeOptions);
-                expect(inputElement.nativeElement.value).toEqual(result);
+                expect(removeUnicodeSpaces(inputElement.nativeElement.value)).toEqual(result);
 
                 dateTimeEditorDirective.clear();
                 fixture.detectChanges();
@@ -796,7 +810,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 date = new Date(2000, 0, 1, 2, 0, 0);
                 result = formatDate(date, 'longTime', 'en-US').normalize("NFKD");
-                expect(inputElement.nativeElement.value).toEqual(result);
+                expect(removeUnicodeSpaces(inputElement.nativeElement.value)).toContain(result);
             });
             it('should be able to apply custom display format.', fakeAsync(() => {
                 // default format
@@ -1436,7 +1450,9 @@ class IgxDateTimeEditorFormComponent {
     public minDate: Date;
     public maxDate: Date;
 
-    constructor(fb: UntypedFormBuilder) {
+    constructor() {
+        const fb = inject(UntypedFormBuilder);
+
         this.reactiveForm = fb.group({
             dateEditor: ['', Validators.required]
         });

@@ -54,6 +54,22 @@
     .toggle-button {
         color: var(--ph-foreground);
     }
+
+    .locale-select {
+        --ig-size: var(--ig-size-small);
+        width: 100px;
+        cursor: pointer;
+
+        ::ng-deep {
+            input {
+                color: white !important;
+            }
+
+            input[readonly] {
+                cursor: pointer;
+            }
+        }
+    }
 }
 
 .header-actions__title {

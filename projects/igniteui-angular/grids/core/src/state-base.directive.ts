@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, Host, ViewContainerRef, Inject, createComponent, EnvironmentInjector, Injector } from '@angular/core';
+import { Directive, Input, ViewContainerRef, createComponent, EnvironmentInjector, Injector, inject } from '@angular/core';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { GridSelectionRange } from './common/types';
@@ -110,6 +110,12 @@ interface Feature {
 /* blazorIndirectRender */
 @Directive()
 export class IgxGridStateBaseDirective {
+    /* blazorSuppress */
+    public grid = inject<GridType>(IGX_GRID_BASE, { host: true, optional: true });
+    protected viewRef = inject(ViewContainerRef);
+    protected envInjector = inject(EnvironmentInjector);
+    protected injector = inject(Injector);
+
 
     private featureKeys: GridFeatures[] = [];
     private state: IGridState;
@@ -197,7 +203,7 @@ export class IgxGridStateBaseDirective {
                     dataType: c.dataType,
                     hasSummary: c.hasSummary,
                     field: c.field,
-                    width: c.width,
+                    width: ((c as IgxColumnComponent).widthSetByUser || context.currGrid.columnWidthSetByUser) ? c.width : undefined,
                     header: c.header,
                     resizable: c.resizable,
                     searchable: c.searchable,
@@ -220,6 +226,21 @@ export class IgxGridStateBaseDirective {
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IColumnState[]): void => {
                 const newColumns = [];
+                
+                // Helper to restore column state without auto-persisting widths
+                const restoreColumnState = (column: IgxColumnComponent | IgxColumnGroupComponent, colState: IColumnState) => {
+                    // Extract width to handle it separately
+                    const width = colState.width;
+                    delete colState.width;
+                    
+                    Object.assign(column, colState);
+                    
+                    // Only restore width if it was explicitly set by the user (not undefined)
+                    if (width !== undefined) {
+                        column.width = width;
+                    }
+                };
+                
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     const hasColumnLayouts = colState.columnLayout;
@@ -236,7 +257,9 @@ export class IgxGridStateBaseDirective {
                         } else {
                             ref1.children.reset([]);
                         }
-                        Object.assign(ref1, colState);
+                        
+                        restoreColumnState(ref1, colState);
+                        
                         ref1.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref1.parent));
@@ -253,7 +276,8 @@ export class IgxGridStateBaseDirective {
                             component.changeDetectorRef.detectChanges();
                         }
 
-                        Object.assign(ref, colState);
+                        restoreColumnState(ref, colState);
+                        
                         ref.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e =>  e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref.parent));
@@ -487,15 +511,6 @@ export class IgxGridStateBaseDirective {
             delete this._options.rowIslands;
         }
     }
-
-    /**
-     * @hidden
-     */
-    constructor(
-        @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
-        protected viewRef: ViewContainerRef,
-        protected envInjector: EnvironmentInjector,
-        protected injector: Injector) { }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.

@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import { IgxColumnMovingDragDirective } from 'igniteui-angular/grids/core';
+import { IgxColumnMovingDragDirective, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { take } from 'rxjs/operators';
 import {
@@ -40,6 +40,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
                 IgxHierarchicalGridWithTransactionProviderComponent,
                 IgxHierarchicalGridTestInputPaginatorComponent,
                 IgxHierarchicalGridTestInputToolbarComponent
+            ],
+            providers: [
+                IgxGridNavigationService
             ]
         }).compileComponents();
     }))
@@ -438,7 +441,11 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             const gridHeight = childGrid.nativeElement.offsetHeight;
             const childElements: HTMLElement[] = Array.from(childGrid.nativeElement.children) as HTMLElement [];
-            const elementsHeight = childElements.map(elem => elem.offsetHeight).reduce((total, height) => total + height, 0);
+            const elementsHeight = childElements
+                // skip the loading outlet element as it is positioned absolute and doesn't take part in the height calculation of the grid
+                .filter(elem => !elem.className.includes('igx-grid__loading-outlet'))
+                .map(elem => elem.offsetHeight)
+                .reduce((total, height) => total + height, 0);
 
             // Expect the combined height of all elements (header, body, footer etc) to equal the calculated height of the grid.
             expect(elementsHeight).toEqual(gridHeight);

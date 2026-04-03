@@ -1,4 +1,4 @@
-import { Directive, Optional, Self, Input, HostListener, Inject, HostBinding } from '@angular/core';
+import { Directive, Input, HostListener, inject, HostBinding } from '@angular/core';
 import { IGX_DROPDOWN_BASE } from './drop-down.common';
 import { IDropDownNavigationDirective } from './drop-down.common';
 import { IgxDropDownBaseDirective } from './drop-down.base';
@@ -12,10 +12,10 @@ import { DropDownActionKey } from './drop-down.common';
     standalone: true
 })
 export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDirective {
+    public dropdown = inject<IgxDropDownBaseDirective>(IGX_DROPDOWN_BASE, { self: true, optional: true });
+
 
     protected _target: IgxDropDownBaseDirective = null;
-
-    constructor(@Self() @Optional() @Inject(IGX_DROPDOWN_BASE) public dropdown: IgxDropDownBaseDirective) { }
 
     /**
      * Gets the target of the navigation directive;
@@ -71,8 +71,10 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
                 if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
                     return;
                 }
-                event.preventDefault();
-                event.stopPropagation();
+                if (key !== 'tab') { // Prevent default behavior for all keys except Tab
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
             } else { // If dropdown is closed, do nothing
                 return;
             }

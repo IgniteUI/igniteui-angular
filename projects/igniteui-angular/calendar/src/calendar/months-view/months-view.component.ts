@@ -4,7 +4,6 @@ import {
     HostBinding,
     ElementRef,
     booleanAttribute,
-    Inject,
     inject,
 } from "@angular/core";
 import { IgxCalendarMonthDirective } from "../calendar.directives";
@@ -14,7 +13,8 @@ import {
     DAY_INTERVAL_TOKEN,
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { CalendarDay, calendarRange, DayInterval, PlatformUtil } from 'igniteui-angular/core';
+import { getDateFormatter } from 'igniteui-i18n-core';
+import { CalendarDay, calendarRange, PlatformUtil } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -35,6 +35,8 @@ let NEXT_ID = 0;
     imports: [IgxCalendarMonthDirective, TitleCasePipe]
 })
 export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
+    public el = inject(ElementRef);
+
     #standalone = true;
     private platform = inject(PlatformUtil);
 
@@ -96,7 +98,6 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      */
     public set monthFormat(value: any) {
         this._monthFormat = value;
-        this.initFormatter();
     }
 
     /**
@@ -126,14 +127,14 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
     /**
      * @hidden
      */
-    private _monthFormat = "short";
-
-    constructor(
-        public el: ElementRef,
-        @Inject(DAY_INTERVAL_TOKEN) dayInterval: DayInterval,
-    ) {
-        super(dayInterval);
+    protected override get formatter() {
+        return getDateFormatter().getIntlFormatter(this.locale, { month: this.monthFormat });
     }
+
+    /**
+     * @hidden
+     */
+    private _monthFormat = "short";
 
     /**
      * @hidden
@@ -150,7 +151,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * @hidden
      */
     public formattedMonth(value: Date): { long: string; formatted: string } {
-        const rawFormatter = new Intl.DateTimeFormat(this.locale, {
+        const rawFormatter = getDateFormatter().getIntlFormatter(this.locale, {
             month: "long",
             year: "numeric",
         });
@@ -158,7 +159,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
         if (this.formatView) {
             return {
                 long: rawFormatter.format(value),
-                formatted: this._formatter.format(value),
+                formatted: this.formatter.format(value),
             };
         }
 
@@ -173,14 +174,5 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      */
     public monthTracker(_: number, item: Date): string {
         return `${item.getMonth()}}`;
-    }
-
-    /**
-     * @hidden
-     */
-    protected initFormatter() {
-        this._formatter = new Intl.DateTimeFormat(this._locale, {
-            month: this.monthFormat,
-        });
     }
 }

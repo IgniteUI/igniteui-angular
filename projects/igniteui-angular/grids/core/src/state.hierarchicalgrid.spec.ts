@@ -9,6 +9,7 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IColumnState, IGridState } from './state-base.directive';
 import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IGroupingExpression, IgxStringFilteringOperand, IPagingState, ISortingExpression, SortingDirection } from 'igniteui-angular/core';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { IgxGridNavigationService } from './grid-navigation.service';
 
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
@@ -16,7 +17,10 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent]
+            imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent],
+            providers: [
+                IgxGridNavigationService
+            ]
         }).compileComponents();
     }))
 

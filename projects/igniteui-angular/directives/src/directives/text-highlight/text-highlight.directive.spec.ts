@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, inject } from '@angular/core';
+import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
@@ -308,6 +308,84 @@ describe('IgxHighlight', () => {
 
         expect(() => component.highlight.activateIfNecessary()).not.toThrowError();
     });
+
+    it('Should not throw error when destroyed before ngAfterViewInit completes', () => {
+        // Create the component but do NOT call detectChanges()
+        // This simulates the directive being destroyed before ngAfterViewInit is called
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+
+        // Destroy the component without initializing it
+        expect(() => fix.destroy()).not.toThrowError();
+    });
+
+    describe('observe()', () => {
+        it('should create a MutationObserver and watch for DOM changes', fakeAsync(() => {
+            const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+            fix.detectChanges();
+            const component = fix.componentInstance;
+            const directive = component.highlight;
+
+            component.highlightText('a');
+            fix.detectChanges();
+
+            // Initially no observer
+            expect((directive as any)._observer).toBeNull();
+
+            // Replace window.MutationObserver to capture the callback synchronously,
+            // avoiding any real-timer dependency for deterministic testing.
+            let observerCallback: MutationCallback;
+            const disconnectSpy = jasmine.createSpy('disconnect');
+            const observeSpy = jasmine.createSpy('observe');
+            const originalMO = window.MutationObserver;
+            (window as any).MutationObserver = function(cb: MutationCallback) {
+                observerCallback = cb;
+                return { observe: observeSpy, disconnect: disconnectSpy };
+            };
+
+            try {
+            directive.observe();
+
+            // Observer is now attached
+            expect((directive as any)._observer).not.toBeNull();
+
+            // Calling observe() again should be a no-op (guard _observer !== null)
+            const existingObserver = (directive as any)._observer;
+            directive.observe();
+            expect((directive as any)._observer).toBe(existingObserver);
+
+            const parent = directive.parentElement as HTMLElement;
+            const container = (directive as any)._container as Node;
+
+            // Simulate container removal: remove from DOM then invoke the captured callback
+            parent.removeChild(container);
+            observerCallback([{
+                type: 'childList',
+                removedNodes: [container] as unknown as NodeList,
+                addedNodes: [] as unknown as NodeList,
+                target: parent, attributeName: null, attributeNamespace: null,
+                nextSibling: null, oldValue: null, previousSibling: null
+            } as MutationRecord], existingObserver as unknown as MutationObserver);
+
+            expect((directive as any)._nodeWasRemoved).toBeTrue();
+
+            // Simulate container re-insertion as firstElementChild, then invoke the callback
+            parent.insertBefore(container, parent.firstChild);
+            observerCallback([{
+                type: 'childList',
+                removedNodes: [] as unknown as NodeList,
+                addedNodes: [container] as unknown as NodeList,
+                target: parent, attributeName: null, attributeNamespace: null,
+                nextSibling: null, oldValue: null, previousSibling: null
+            } as MutationRecord], existingObserver as unknown as MutationObserver);
+
+            // Callback should have disconnected the observer and reset _observer to null
+            expect(disconnectSpy).toHaveBeenCalled();
+            expect((directive as any)._observer).toBeNull();
+            } finally {
+                (window as any).MutationObserver = originalMO;
+            }
+        }));
+    });
 });
 
 @Component({
@@ -319,6 +397,8 @@ describe('IgxHighlight', () => {
     imports: [IgxTextHighlightDirective]
 })
 class HighlightLoremIpsumComponent {
+    private highlightService = inject(IgxTextHighlightService);
+
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective, static: true })
     public highlight: IgxTextHighlightDirective;
 
@@ -327,8 +407,6 @@ class HighlightLoremIpsumComponent {
     public groupName = 'test';
 
     public html = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.';
-
-    constructor(private highlightService: IgxTextHighlightService) { }
 
     public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean) {
         return this.highlight.highlight(text, caseSensitive, exactMatch);

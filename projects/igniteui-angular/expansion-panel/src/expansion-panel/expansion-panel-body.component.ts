@@ -1,4 +1,4 @@
-import { Component, HostBinding, ElementRef, Input, ChangeDetectorRef, Inject } from '@angular/core';
+import { Component, HostBinding, ElementRef, Input, ChangeDetectorRef, inject } from '@angular/core';
 import { IgxExpansionPanelBase, IGX_EXPANSION_PANEL_COMPONENT } from './expansion-panel.common';
 
 @Component({
@@ -7,6 +7,10 @@ import { IgxExpansionPanelBase, IGX_EXPANSION_PANEL_COMPONENT } from './expansio
     standalone: true
 })
 export class IgxExpansionPanelBodyComponent {
+    public panel = inject<IgxExpansionPanelBase>(IGX_EXPANSION_PANEL_COMPONENT);
+    public element = inject(ElementRef);
+    public cdr = inject(ChangeDetectorRef);
+
     /**
      * @hidden
      */
@@ -34,10 +38,6 @@ export class IgxExpansionPanelBodyComponent {
 
     private _labelledBy = '';
     private _label = '';
-    constructor(
-        @Inject(IGX_EXPANSION_PANEL_COMPONENT) public panel: IgxExpansionPanelBase,
-        public element: ElementRef, public cdr: ChangeDetectorRef) {
-    }
 
     /**
      * Gets the `aria-label` attribute of the panel body

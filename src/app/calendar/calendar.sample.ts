@@ -19,6 +19,7 @@ import {
     DateRange,
     DateRangeDescriptor,
     DateRangeType,
+    IFormattingViews,
 } from 'igniteui-angular';
 import {
     Properties,
@@ -62,6 +63,12 @@ export class CalendarSampleComponent implements OnInit {
         year: 'numeric',
     };
 
+    protected formatViews: IFormattingViews = {
+        day: true,
+        month: true,
+        year: true
+    };
+
     public panelConfig: PropertyPanelConfig = {
         locale: {
             label: 'Change Locale',
@@ -87,6 +94,10 @@ export class CalendarSampleComponent implements OnInit {
                     {
                         value: 'ja-JP',
                         label: 'JP'
+                    },
+                    {
+                        value: 'zh-CN',
+                        label: 'CN'
                     }
                 ],
                 defaultValue: 'en-US'
@@ -141,7 +152,7 @@ export class CalendarSampleComponent implements OnInit {
             label: 'Show Week Numbers',
             control: {
                 type: 'boolean',
-                defaultValue: false
+                defaultValue: true
             }
         },
         monthsViewNumber: {
@@ -235,28 +246,45 @@ export class CalendarSampleComponent implements OnInit {
         };
     }
 
-    protected disabledDates = [
+    // DISABLED DATES
+    private _disabledRange: DateRange = {
+        start: new Date(this._today.getFullYear(), this._today.getMonth(), 15),
+        end: new Date(this._today.getFullYear(), this._today.getMonth(), 17),
+    };
+
+    protected set disabledRange(value: DateRange) {
+        this.disabledDates = value;
+        this._disabledRange = value;
+    }
+
+    protected get disabledRange(): DateRange {
+        return this._disabledRange;
+    }
+
+    private _disabledDates: DateRangeDescriptor[] = [
         {
-            type: DateRangeType.Specific,
+            type: DateRangeType.Between,
             dateRange: [
-                new Date(this._today.getFullYear(), this._today.getMonth(), 0),
-                new Date(this._today.getFullYear(), this._today.getMonth(), 20),
-                new Date(this._today.getFullYear(), this._today.getMonth(), 21),
+                this.disabledRange.start as Date,
+                this.disabledRange.end as Date,
             ],
         },
     ];
 
-    protected mySpecialDates = [
-        {
-            type: DateRangeType.Specific,
-            dateRange: [
-                new Date(this._today.getFullYear(), this._today.getMonth(), 1),
-                new Date(this._today.getFullYear(), this._today.getMonth(), 3),
-                new Date(this._today.getFullYear(), this._today.getMonth(), 7),
-            ],
-        },
-    ];
+    protected get disabledDates(): DateRangeDescriptor[] {
+        return this._disabledDates;
+    }
 
+    protected set disabledDates(dates: DateRange) {
+        this._disabledDates = [
+            {
+                type: DateRangeType.Between,
+                dateRange: [dates.start as Date, dates.end as Date]
+            }
+        ];
+    }
+
+    // SPECIAL DATES
     private _specialRange: DateRange = {
         start: new Date(this._today.getFullYear(), this._today.getMonth(), 8),
         end: new Date(this._today.getFullYear(), this._today.getMonth(), 10),

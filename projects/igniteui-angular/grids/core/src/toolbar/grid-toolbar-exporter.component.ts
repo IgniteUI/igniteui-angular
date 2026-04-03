@@ -1,21 +1,19 @@
-import { Component, Input, Output, EventEmitter, Inject, booleanAttribute } from '@angular/core';
+import { Component, Input, Output, EventEmitter, booleanAttribute, inject } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
-import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
-import {
-    CsvFileTypes,
-    IgxBaseExporter,
-    IgxCsvExporterOptions,
-    IgxCsvExporterService,
-    IgxExcelExporterOptions,
-    IgxExcelExporterService
-} from 'igniteui-angular/core';
+import { IgxExcelTextDirective, IgxCSVTextDirective, IgxPdfTextDirective } from './common';
 import { GridType } from '../common/grid.interface';
-import { IgxToolbarToken } from './token';
 import { IgxButtonDirective, IgxRippleDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { CsvFileTypes, IgxCsvExporterOptions } from '../services/csv/csv-exporter-options';
+import { IgxExcelExporterOptions } from '../services/excel/excel-exporter-options';
+import { IgxPdfExporterOptions } from '../services/pdf/pdf-exporter-options';
+import { IgxBaseExporter } from '../services/exporter-common/base-export-service';
+import { IgxExcelExporterService } from '../services/excel/excel-exporter';
+import { IgxCsvExporterService } from '../services/csv/csv-exporter';
+import { IgxPdfExporterService } from '../services/pdf/pdf-exporter';
 
-export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions;
+export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions | IgxPdfExporterOptions;
 
 /* jsonAPIComplexObject */
 /* wcAlternateName: ExporterEventArgs */
@@ -47,9 +45,12 @@ export interface IgxExporterEvent {
 @Component({
     selector: 'igx-grid-toolbar-exporter',
     templateUrl: './grid-toolbar-exporter.component.html',
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxToggleDirective, IgxExcelTextDirective, IgxCSVTextDirective]
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxToggleDirective, IgxExcelTextDirective, IgxCSVTextDirective, IgxPdfTextDirective]
 })
 export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
+    private excelExporter = inject(IgxExcelExporterService);
+    private csvExporter = inject(IgxCsvExporterService);
+    private pdfExporter = inject(IgxPdfExporterService);
 
     /**
      * Show entry for CSV export.
@@ -62,6 +63,12 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
      */
     @Input({ transform: booleanAttribute })
     public exportExcel = true;
+
+    /**
+     * Show entry for PDF export.
+     */
+    @Input({ transform: booleanAttribute })
+    public exportPDF = true;
 
     /**
      * The name for the exported file.
@@ -87,15 +94,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
      */
     protected isExporting = false;
 
-    constructor(
-        @Inject(IgxToolbarToken) toolbar: IgxToolbarToken,
-        private excelExporter: IgxExcelExporterService,
-        private csvExporter: IgxCsvExporterService,
-    ) {
-        super(toolbar);
-    }
-
-    protected exportClicked(type: 'excel' | 'csv', toggleRef?: IgxToggleDirective) {
+    protected exportClicked(type: 'excel' | 'csv' | 'pdf', toggleRef?: IgxToggleDirective) {
         toggleRef?.close();
         this.export(type);
     }
@@ -105,7 +104,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
      * Export the grid's data
      * @param type File type to export
      */
-    public export(type: 'excel' | 'csv'): void {
+    public export(type: 'excel' | 'csv' | 'pdf'): void {
         let options: IgxExporterOptions;
         let exporter: IgxBaseExporter;
 
@@ -117,6 +116,10 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
             case 'excel':
                 options = new IgxExcelExporterOptions(this.filename);
                 exporter = this.excelExporter;
+                break;
+            case 'pdf':
+                options = new IgxPdfExporterOptions(this.filename);
+                exporter = this.pdfExporter;
         }
 
         const args = { exporter, options, grid: this.grid, cancel: false } as IgxExporterEvent;

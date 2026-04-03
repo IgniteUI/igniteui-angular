@@ -1,4 +1,4 @@
-import { Component, Input, booleanAttribute } from '@angular/core';
+import { Component, Input, booleanAttribute, inject } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { NgClass } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -13,6 +13,8 @@ import { IgxIconButtonDirective } from 'igniteui-angular/directives';
     imports: [NgClass, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxExcelStyleHeaderComponent {
+    public esf = inject(BaseFilteringComponent);
+
     /**
      * Sets whether the column pinning icon should be shown in the header.
      * Default value is `false`.
@@ -48,6 +50,4 @@ export class IgxExcelStyleHeaderComponent {
      */
     @Input({ transform: booleanAttribute })
     public showHiding: boolean;
-
-    constructor(public esf: BaseFilteringComponent) { }
 }

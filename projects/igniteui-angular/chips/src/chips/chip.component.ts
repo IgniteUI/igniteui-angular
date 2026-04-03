@@ -13,7 +13,7 @@ import {
     OnDestroy,
     booleanAttribute,
     OnInit,
-    Inject,
+    inject,
     DOCUMENT
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from 'igniteui-angular/directives';
@@ -22,7 +22,7 @@ import { ChipResourceStringsEN, IChipResourceStrings } from 'igniteui-angular/co
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { getCurrentResourceStrings } from 'igniteui-angular/core';
+import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 
 export const IgxChipTypeVariant = {
     PRIMARY: 'primary',
@@ -87,6 +87,11 @@ let CHIP_ID = 0;
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {
+    public cdr = inject(ChangeDetectorRef);
+    private ref = inject<ElementRef<HTMLElement>>(ElementRef);
+    private renderer = inject(Renderer2);
+    public document = inject(DOCUMENT);
+
 
     /**
      * Sets/gets the variant of the chip.
@@ -347,7 +352,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IChipResourceStrings {
-        return this._resourceStrings;
+        return this._resourceStrings || this._defaultResourceStrings;
     }
 
     /**
@@ -603,13 +608,14 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
     protected computedStyles;
-    private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
+    private _resourceStrings: IChipResourceStrings = null;
+    private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
-    constructor(
-        public cdr: ChangeDetectorRef,
-        private ref: ElementRef<HTMLElement>,
-        private renderer: Renderer2,
-        @Inject(DOCUMENT) public document: any) { }
+    constructor() {
+        onResourceChangeHandle(this.destroy$, () => {
+            this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
+        }, this);
+    }
 
     /**
      * @hidden

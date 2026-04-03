@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, inject } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
@@ -181,6 +181,8 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
     ]
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
+    private cdr = inject(ChangeDetectorRef);
+
     @ViewChild(IgxColumnActionsComponent)
     public chooser: IgxColumnActionsComponent;
     public override width = '500px';
@@ -188,10 +190,6 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     public showInline = true;
     public hideFilter = false;
     public paging = false;
-
-    constructor(private cdr: ChangeDetectorRef) {
-        super();
-    }
 
     public get hiddenColumnsCount(): number {
         return this.chooser.columnItems.filter(c => c.checked).length;
@@ -220,9 +218,6 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 
     public hasGroupColumns = false;
     public override data = SampleTestData.contactInfoDataFull();
-    constructor(cdr: ChangeDetectorRef) {
-        super(cdr);
-    }
 }
 
 @Component({
@@ -238,16 +233,14 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent]
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
+    private cdr = inject(ChangeDetectorRef);
+
     @ViewChild(IgxColumnActionsComponent) public chooser: IgxColumnActionsComponent;
 
     public override height = '500px';
     public override width = '500px';
     public showInline = true;
     public hideFilter = false;
-
-    constructor(private cdr: ChangeDetectorRef) {
-        super();
-    }
 
     public ngOnInit() {
         this.data = SampleTestData.productInfoData();
@@ -292,8 +285,4 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
     public override data = SampleTestData.contactInfoDataFull();
-
-    constructor(cdr: ChangeDetectorRef) {
-        super(cdr);
-    }
 }

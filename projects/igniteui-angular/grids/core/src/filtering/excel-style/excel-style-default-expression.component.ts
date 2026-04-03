@@ -1,17 +1,9 @@
-import {
-    Component,
-    AfterViewInit,
-    Input,
-    Output,
-    EventEmitter,
-    ChangeDetectorRef,
-    ViewChild
-} from '@angular/core';
+import { Component, AfterViewInit, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExpressionUI } from './common';
-import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, IBaseEventArgs, IFilteringOperation, IgxOverlayOutletDirective, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, IBaseEventArgs, IFilteringOperation, IgxOverlayOutletDirective, IgxPercentFormatterPipe, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
 import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/select';
-import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective } from 'igniteui-angular/input-group';
+import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
@@ -30,9 +22,12 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
 @Component({
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html',
-    imports: [FormsModule, IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
+    imports: [FormsModule, IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective, IgxPercentFormatterPipe]
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
+    public cdr = inject(ChangeDetectorRef);
+    protected platform = inject(PlatformUtil);
+
     @Input()
     public column: ColumnType;
 
@@ -96,8 +91,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
     }
 
-    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
-
     public get conditions() {
         return this.column.filters.conditionList();
     }
@@ -140,8 +133,11 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public onConditionsChanged(eventArgs: any) {
         const value = (eventArgs.newSelection as IgxSelectComponent).value;
         this.expressionUI.expression.condition = this.getCondition(value);
+        this.expressionUI.expression.conditionName = value;
 
-        this.focus();
+        if (!this.expressionUI.expression.condition.isUnary) {
+            this.focus();
+        }
     }
 
     public getCondition(value: string): IFilteringOperation {

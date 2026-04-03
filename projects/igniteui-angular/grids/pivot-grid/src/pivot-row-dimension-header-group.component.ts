@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Inject, Input, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, inject, Input, NgZone, ViewChild } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
 
 import {
@@ -6,7 +6,6 @@ import {
     IgxColumnComponent,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
-    IgxFilteringService,
     IgxGridHeaderGroupComponent,
     IgxHeaderGroupStylePipe,
     IgxPivotColumnResizingService,
@@ -18,7 +17,6 @@ import {
 } from 'igniteui-angular/grids/core';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { PlatformUtil } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -30,6 +28,9 @@ import { PlatformUtil } from 'igniteui-angular/core';
     imports: [IgxIconComponent, IgxPivotRowDimensionHeaderComponent, NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxPivotResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    public override colResizingService = inject(IgxPivotColumnResizingService);
+    protected zone = inject(NgZone);
 
     /**
      * @hidden
@@ -42,16 +43,6 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      */
     public get role(): string {
         return 'rowheader';
-    }
-
-    constructor(private cdRef: ChangeDetectorRef,
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        private elementRef: ElementRef<HTMLElement>,
-        public override colResizingService: IgxPivotColumnResizingService,
-        filteringService: IgxFilteringService,
-        platform: PlatformUtil,
-        protected zone: NgZone) {
-        super(cdRef, grid, elementRef, colResizingService, filteringService, platform);
     }
 
     /**

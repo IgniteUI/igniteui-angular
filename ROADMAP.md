@@ -2,12 +2,11 @@
 
 # Current Milestone
 
-## Milestone 40, version 21 (Due by Nov, 2025)
-1. Support for Angular 21
-2. AI Chat UI component [#16094](https://github.com/IgniteUI/igniteui-angular/issues/16094)
-3. PDF Export feature on Angular Data Grid, Tree Grid, Hierarchical Grid and Pivot Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
-4. Multiple entry points library refactoring for code splitting support [#16325](https://github.com/IgniteUI/igniteui-angular/issues/16325)
-5. Grids filtering performance improvements
+## Milestone 41, version 21 (Due by Feb, 2026)
+1. Transition the library to signals
+2. Zoneless support
+3. Grids Performance
+4. MCP server
 
 ## Going down the road
 
@@ -15,6 +14,13 @@
 2. Zoneless support
 
 # Previous Milestone
+
+## Milestone 40, version 21 (Released Dec 3rd, 2025), [Release Blog 21.0](https://www.infragistics.com/blogs/ignite-ui-for-angular-21-0/)
+1. **[DONE]** Support for Angular 21
+2. **[DONE]** AI Chat UI component [#16094](https://github.com/IgniteUI/igniteui-angular/issues/16094)
+3. **[DONE]** PDF Export feature on Angular Data Grid, Tree Grid, Hierarchical Grid and Pivot Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
+4. **[DONE]** Multiple entry points library refactoring for code splitting support [#16325](https://github.com/IgniteUI/igniteui-angular/issues/16325)
+5. **[DONE]** Grids filtering performance improvements
 
 ## Milestone 39, version 20.1 (Released Sep  25th, 2025)
 1. **[DONE]** Grid cell merging feature [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)

@@ -1,0 +1,120 @@
+.sample-wrapper {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.sample-title {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.sample-description {
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.config-panel {
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: #333;
+    }
+}
+
+.config-row {
+    margin-bottom: 15px;
+    display: inline-block;
+    margin-right: 20px;
+    min-width: 200px;
+
+    igx-input-group {
+        width: 100%;
+    }
+}
+
+.grid-container {
+    margin-bottom: 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.grid-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    button {
+        background: white;
+        color: #667eea;
+        font-weight: 500;
+
+        &:hover {
+            background: #f0f0f0;
+        }
+    }
+}
+
+.info-section {
+    background: #e8f4f8;
+    border-left: 4px solid #2196F3;
+    padding: 20px;
+    border-radius: 4px;
+    margin-top: 30px;
+
+    h4 {
+        color: #1976D2;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    ol, ul {
+        line-height: 1.8;
+        color: #555;
+        
+        li {
+            margin-bottom: 8px;
+        }
+    }
+
+    strong {
+        color: #1976D2;
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .config-row {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+        min-width: unset;
+    }
+
+    .grid-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+
+        button {
+            width: 100%;
+        }
+    }
+}

@@ -14,32 +14,34 @@ import {
     OnDestroy,
     OnChanges,
     SimpleChanges,
-    Inject,
     ViewChildren,
     QueryList,
     AfterViewInit,
-    booleanAttribute
+    booleanAttribute,
+    inject
 } from '@angular/core';
-import { formatPercent, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { first, takeUntil, takeWhile } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import {
-    formatCurrency,
-    formatDate,
     PlatformUtil,
     AutoPositionStrategy,
     HorizontalAlignment,
     IgxOverlayService,
     GridColumnDataType,
-    ColumnType
+    ColumnType,
+    IgxNumberFormatterPipe,
+    IgxDateFormatterPipe,
+    IgxCurrencyFormatterPipe,
+    IgxPercentFormatterPipe
 } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from 'igniteui-angular/core';
 import { GridSelectionMode } from './common/enums';
-import { CellType, GridType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
+import { CellType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
@@ -82,10 +84,10 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
     imports: [
         NgClass,
         NgTemplateOutlet,
-        DecimalPipe,
-        PercentPipe,
-        CurrencyPipe,
-        DatePipe,
+        IgxNumberFormatterPipe,
+        IgxPercentFormatterPipe,
+        IgxCurrencyFormatterPipe,
+        IgxDateFormatterPipe,
         ReactiveFormsModule,
         IgxChipComponent,
         IgxTextHighlightDirective,
@@ -108,6 +110,15 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
     ]
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType, AfterViewInit {
+    protected selectionService = inject(IgxGridSelectionService);
+    public grid = inject(IGX_GRID_BASE);
+    protected overlayService = inject(IgxOverlayService);
+    public cdr = inject(ChangeDetectorRef);
+    private element = inject(ElementRef<HTMLElement>);
+    protected zone = inject(NgZone);
+    private touchManager = inject(HammerGesturesManager);
+    protected platformUtil = inject(PlatformUtil);
+
     private _destroy$ = new Subject<void>();
     /**
      * @hidden
@@ -422,16 +433,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         const args = this.column.pipeArgs;
         const locale = this.grid.locale;
+        const i18nFormatter = this.grid.i18nFormatter;
 
         switch (this.column.dataType) {
             case GridColumnDataType.Percent:
-                return formatPercent(this.value, locale, args.digitsInfo);
+                return i18nFormatter.formatPercent(this.value, locale, args.digitsInfo);
             case GridColumnDataType.Currency:
-                return formatCurrency(this.value, this.currencyCode, args.display, args.digitsInfo, locale);
+                return i18nFormatter.formatCurrency(this.value, locale, args.display, this.currencyCode, args.digitsInfo);
             case GridColumnDataType.Date:
             case GridColumnDataType.DateTime:
             case GridColumnDataType.Time:
-                return formatDate(this.value, args.format, locale, args.timezone);
+                return i18nFormatter.formatDate(this.value, args.format, locale, args.timezone);
         }
         return this.value;
     }
@@ -820,13 +832,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /** @hidden @internal */
     public get currencyCode(): string {
-        return this.column.pipeArgs.currencyCode ?
-            this.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
+        return this.grid.i18nFormatter.getCurrencyCode(this.grid.locale, this.column.pipeArgs.currencyCode);
     }
 
     /** @hidden @internal */
     public get currencyCodeSymbol(): string {
-        return getCurrencySymbol(this.currencyCode, 'wide', this.grid.locale);
+        return this.grid.i18nFormatter.getCurrencySymbol(this.currencyCode, this.grid.locale);
     }
 
     protected _lastSearchInfo: ISearchInfo;
@@ -834,16 +845,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
 
-    constructor(
-        protected selectionService: IgxGridSelectionService,
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public cdr: ChangeDetectorRef,
-        private element: ElementRef<HTMLElement>,
-        protected zone: NgZone,
-        private touchManager: HammerGesturesManager,
-        protected platformUtil: PlatformUtil
-    ) { }
+
 
     /**
      * @hidden

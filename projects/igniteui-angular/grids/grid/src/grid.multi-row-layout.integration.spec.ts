@@ -4,7 +4,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { ViewChild, Component, DebugElement } from '@angular/core';
-import { IgxColumnLayoutComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
+import { IgxColumnLayoutComponent, IgxGridMRLNavigationService, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
@@ -35,6 +35,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 ColumnLayoutHidingTestComponent,
                 ColumnLayoutGroupingTestComponent,
                 ColumnLayoutResizingTestComponent
+            ],
+            providers: [
+                IgxGridMRLNavigationService
             ]
         }).compileComponents();
     }));
@@ -847,6 +850,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
             fixture.detectChanges();
+            await wait(16);
 
             expect(grid.rowList.length).toEqual(8);
             expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
@@ -854,7 +858,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const lastIndex = grid.data.length + grid.groupsRecords.length - 1;
             grid.verticalScrollContainer.scrollTo(lastIndex);
-            await wait(16); // needed because of throttleTime on the resize observer
+            await wait(50); // needed because of throttleTime on scroll
             fixture.detectChanges();
 
             const scrollTop = grid.verticalScrollContainer.getScroll().scrollTop;
@@ -865,7 +869,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(scrolledToBottom).toBeTruthy();
 
             const lastRowOffset = grid.rowList.last.element.nativeElement.offsetTop +
-                grid.rowList.last.element.nativeElement.offsetHeight + parseInt(tbody.children[0].children[0].style.top, 10);
+                grid.rowList.last.element.nativeElement.offsetHeight + grid.navigation.containerTopOffset;
             expect(lastRowOffset).toEqual(tbody.scrollHeight);
         });
 

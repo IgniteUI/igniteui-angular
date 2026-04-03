@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute, signal } from '@angular/core';
+import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute, signal, inject } from '@angular/core';
 
 /**
  * Represents individual resizable/collapsible panes.
@@ -20,6 +20,8 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, boolea
     standalone: true
 })
 export class IgxSplitterPaneComponent {
+    private el = inject(ElementRef);
+
     private _minSize: string;
     private _maxSize: string;
     private _order = signal<number | null>(null);
@@ -230,9 +232,6 @@ export class IgxSplitterPaneComponent {
     private _size = 'auto';
     private _dragSize;
     private _collapsed = false;
-
-
-    constructor(private el: ElementRef) { }
 
     /**
      * Toggles the collapsed state of the pane.

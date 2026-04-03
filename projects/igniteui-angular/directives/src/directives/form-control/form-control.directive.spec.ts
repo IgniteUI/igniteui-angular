@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -17,6 +17,14 @@ describe('IgcFormControlDirective - ', () => {
 
         beforeEach(waitForAsync(() => {
             defineComponents(IgcRatingComponent);
+
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: ElementRef, useValue: elementRef },
+                    { provide: Renderer2, useValue: renderer2Mock },
+                    IgcFormControlDirective
+                ]
+            });
         }));
 
         const elementRef = { nativeElement: document.createElement('igc-rating') };
@@ -35,7 +43,7 @@ describe('IgcFormControlDirective - ', () => {
         ]);
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
-            directive = new IgcFormControlDirective(elementRef, renderer2Mock);
+            directive = TestBed.inject(IgcFormControlDirective);
             directive.registerOnChange(mockNgControl.registerOnChangeCb);
             directive.registerOnTouched(mockNgControl.registerOnTouchedCb);
 

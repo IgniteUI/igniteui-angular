@@ -5,6 +5,9 @@ import { useAnimation } from '@angular/animations';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 
 export const TooltipRegexes = Object.freeze({
+    /** Used for parsing the strings passed in the tooltip `show/hide-trigger` properties. */
+    triggers: /[,\s]+/,
+
     /** Matches horizontal `Placement` end positions. `left-end` | `right-end` */
     horizontalEnd: /^(left|right)-end$/,
 
@@ -185,7 +188,7 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
             return;
         }
 
-        const arrow = tooltip.querySelector('[data-arrow="true"]') as HTMLElement;
+        const arrow = Array.from(tooltip.children).find(el => el.matches('[data-arrow="true"]')) as HTMLElement;
 
         // If display is none -> tooltipTarget's hasArrow is false
         if (!arrow || arrow.style.display === 'none') {
@@ -330,3 +333,9 @@ export const PositionsMap = new Map<Placement, PositionSettings>([
         verticalStartPoint: VerticalAlignment.Bottom,
     }]
 ]);
+
+export function parseTriggers(triggers: string): Set<string> {
+    return new Set(
+        (triggers ?? '').split(TooltipRegexes.triggers).filter((s) => s.trim())
+    );
+}

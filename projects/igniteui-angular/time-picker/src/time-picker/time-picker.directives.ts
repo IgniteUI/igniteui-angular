@@ -9,12 +9,12 @@ import {
     ElementRef,
     HostBinding,
     HostListener,
-    Inject,
+    inject,
     Input,
     OnDestroy,
     OnInit
 } from '@angular/core';
-import { DateTimeUtil, HammerGesturesManager, HammerInput, HammerOptions } from 'igniteui-angular/core';
+import { DateTimeUtil, HammerGesturesManager, HammerInput, HammerOptions, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 
 /** @hidden */
@@ -24,6 +24,10 @@ import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.comm
     standalone: true
 })
 export class IgxItemListDirective implements OnInit, OnDestroy {
+    public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
+    private elementRef = inject(ElementRef);
+    private touchManager = inject(HammerGesturesManager);
+
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
@@ -39,12 +43,6 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * accumulates wheel scrolls and triggers a change action above SCROLL_THRESHOLD
      */
     private scrollAccumulator = 0;
-
-    constructor(
-        @Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase,
-        private elementRef: ElementRef,
-        private touchManager: HammerGesturesManager
-    ) { }
 
     @HostBinding('class.igx-time-picker__column')
     public get defaultCSS(): boolean {
@@ -246,6 +244,10 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
     standalone: true
 })
 export class IgxTimeItemDirective {
+    public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
+    private itemList = inject(IgxItemListDirective);
+    private _i18nFormatter = inject(I18N_FORMATTER);
+
     @Input('igxTimeItem')
     public value: string;
 
@@ -267,7 +269,7 @@ export class IgxTimeItemDirective {
     public get isSelectedTime(): boolean {
         const currentValue = this.value.length < 2 ? `0${this.value}` : this.value;
         const dateType = this.itemList.type;
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat, this._i18nFormatter);
         switch (dateType) {
             case 'hourList':
                 const hourPart = inputDateParts.find(element => element.type === 'hours');
@@ -286,7 +288,7 @@ export class IgxTimeItemDirective {
 
     public get minValue(): string {
         const dateType = this.itemList.type;
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat, this._i18nFormatter);
         switch (dateType) {
             case 'hourList':
                 return this.getHourPart(this.timePicker.minDropdownValue);
@@ -314,7 +316,7 @@ export class IgxTimeItemDirective {
 
     public get maxValue(): string {
         const dateType = this.itemList.type;
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat, this._i18nFormatter);
         switch (dateType) {
             case 'hourList':
                 return this.getHourPart(this.timePicker.maxDropdownValue);
@@ -357,10 +359,6 @@ export class IgxTimeItemDirective {
         return this.getHourPart(this.timePicker.selectedDate);
     }
 
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-    public timePicker: IgxTimePickerBase,
-        private itemList: IgxItemListDirective) { }
-
     @HostListener('click', ['value'])
     public onClick(item) {
         if (item !== '') {
@@ -370,7 +368,7 @@ export class IgxTimeItemDirective {
     }
 
     private getHourPart(date: Date): string {
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat, this._i18nFormatter);
         const hourPart = inputDateParts.find(element => element.type === 'hours');
         const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
         const hour = DateTimeUtil.getPartValue(date, hourPart, hourPart.format.length);

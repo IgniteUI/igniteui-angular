@@ -1,16 +1,14 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
-    Inject,
     OnChanges,
     QueryList,
     Renderer2,
     ViewChild,
     SimpleChanges,
     ViewChildren,
-    HostBinding
+    HostBinding,
+    inject
 } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
@@ -62,6 +60,9 @@ import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigati
         IgxPivotRowHeaderGroupComponent]
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnChanges {
+    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    protected renderer = inject(Renderer2);
+
     public aggregateList: IPivotAggregator[] = [];
 
     public value: IPivotValue;
@@ -152,15 +153,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         }
 
         return super.activeDescendant;
-    }
-
-    constructor(
-        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
-        ref: ElementRef<HTMLElement>,
-        cdr: ChangeDetectorRef,
-        protected renderer: Renderer2
-    ) {
-        super(ref, cdr);
     }
 
     /**

@@ -1,11 +1,25 @@
 import { Component, HostBinding, ViewChild } from '@angular/core';
-import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent } from 'igniteui-angular';
+import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
     styleUrls: ['grid-column-groups.sample.scss'],
     templateUrl: 'grid-column-groups.sample.html',
-    imports: [IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxButtonDirective, IgxButtonGroupComponent]
+    imports: [
+        IgxCollapsibleIndicatorTemplateDirective,
+        IgxIconComponent,
+        IgxGridComponent,
+        IgxGridToolbarComponent,
+        IgxGridToolbarActionsComponent,
+        IgxGridToolbarPinningComponent,
+        IgxGridToolbarHidingComponent,
+        IgxGridToolbarAdvancedFilteringComponent,
+        IgxGridToolbarExporterComponent,
+        IgxColumnComponent,
+        IgxColumnGroupComponent,
+        IgxButtonDirective,
+        IgxButtonGroupComponent
+    ]
 })
 export class GridColumnGroupsSampleComponent {
     @HostBinding('style.--ig-size')

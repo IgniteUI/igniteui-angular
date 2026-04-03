@@ -1,16 +1,17 @@
 import { AnimationBuilder } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
-import { ɵDirection } from 'igniteui-angular/core';
+import { IgxAngularAnimationService, PlatformUtil, ɵDirection } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
     HorizontalAnimationType,
+    IGX_STEPPER_COMPONENT,
     IgxStepperOrientation,
     IgxStepperTitlePosition,
     IgxStepType,
@@ -21,6 +22,7 @@ import {
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
+import { IgxDirectionality } from 'igniteui-angular/core/src/services/direction/directionality';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
@@ -83,7 +85,8 @@ describe('Rendering Tests', () => {
                 imports: [
                     NoopAnimationsModule,
                     IgxStepperSampleTestComponent,
-                    IgxStepperLinearComponent
+                    IgxStepperLinearComponent,
+                    IgxStepperIndicatorNoShrinkComponent
                 ]
             }).compileComponents();
         })
@@ -146,7 +149,7 @@ describe('Rendering Tests', () => {
             expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
         }));
 
-        it('should calculate disabled steps properly when the stepper is initially in linear mode', fakeAsync(()=>{
+        it('should calculate disabled steps properly when the stepper is initially in linear mode', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxStepperLinearComponent);
             fixture.detectChanges();
             const linearStepper = fixture.componentInstance.stepper;
@@ -720,6 +723,49 @@ describe('Rendering Tests', () => {
             stepper.horizontalAnimationType = 'fade';
             testAnimationBehavior('fade', fix, false);
         }));
+
+        it('should not shrink the step indicator in vertical orientation when titlePosition="end" and the title is very long', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
+            fixture.detectChanges();
+            tick();
+
+            const stepperInstance = fixture.componentInstance.stepper;
+            const indicator = stepperInstance.steps[0].nativeElement.querySelector(`.${STEP_INDICATOR_CLASS}`) as HTMLElement;
+
+            const { minWidth } = getComputedStyle(indicator);
+            const { width, height } = indicator.getBoundingClientRect();
+
+            expect(minWidth).not.toBe('0px');
+            expect(minWidth).not.toBe('auto');
+            expect(Math.abs(width - height)).toBeLessThan(1.5);
+            expect(Math.abs(width - parseFloat(minWidth))).toBeLessThan(1.5);
+        }));
+
+        it('should not shift step content horizontally when navigating between steps in vertical mode', fakeAsync(() => {
+            const indicatorFix = TestBed.createComponent(IgxStepperIndicatorNoShrinkComponent);
+            indicatorFix.detectChanges();
+            const indicatorStepper = indicatorFix.componentInstance.stepper;
+
+            const getContentWrapperStyles = (stepIndex: number) => {
+                const contentWrapper = indicatorStepper.steps[stepIndex].nativeElement.querySelector('.igx-stepper__step-content-wrapper') as HTMLElement;
+                const styles = window.getComputedStyle(contentWrapper);
+                return {
+                    paddingInlineStart: styles.paddingInlineStart || styles.paddingLeft,
+                    marginInlineStart: styles.marginInlineStart || styles.marginLeft
+                };
+            };
+
+            const step0ActiveStyles = getContentWrapperStyles(0);
+
+            indicatorStepper.navigateTo(1);
+            indicatorFix.detectChanges();
+            tick(500);
+
+            const step0InactiveStyles = getContentWrapperStyles(0);
+
+            expect(step0InactiveStyles.paddingInlineStart).toBe(step0ActiveStyles.paddingInlineStart);
+            expect(step0InactiveStyles.marginInlineStart).toBe(step0ActiveStyles.marginInlineStart);
+        }));
     });
 
     describe('Keyboard navigation', () => {
@@ -1010,11 +1056,29 @@ describe('Stepper service unit tests', () => {
         };
 
         stepperService = new IgxStepperService();
-        stepper = new IgxStepperComponent(mockCdr, mockAnimationService, stepperService, mockElementRef);
+
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxStepComponent],
+            providers: [
+                { provide: ChangeDetectorRef, useValue: mockCdr },
+                { provide: IgxAngularAnimationService, useValue: mockAnimationService },
+                { provide: ElementRef, useValue: mockElementRef },
+                { provide: IgxStepperService, useValue: stepperService },
+                { provide: IgxDirectionality, useValue: mockDir },
+                { provide: PlatformUtil, useValue: mockPlatform },
+                IgxStepperComponent,
+                { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
+                IgxStepComponent,
+                Renderer2
+            ]
+        });
+
+        stepper = TestBed.inject(IgxStepperComponent);
         steps = [];
         for (let index = 0; index < 4; index++) {
-            const newStep = new IgxStepComponent(stepper, mockCdr, null,
-                mockPlatform, stepperService, mockAnimationService, mockElementRef, mockDir);
+            const fixture = TestBed.createComponent(IgxStepComponent);
+            fixture.detectChanges();
+            const newStep = fixture.componentInstance;
             newStep._index = index;
             steps.push(newStep);
         }
@@ -1357,4 +1421,35 @@ export class IgxStepperSampleTestComponent {
 })
 export class IgxStepperLinearComponent {
     @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+}
+
+@Component({
+    template: `
+        <div>
+            <igx-stepper #stepper [orientation]="'vertical'" [titlePosition]="'end'">
+
+                <igx-step [active]="true">
+                    <span igxStepTitle>{{ longTitle }}</span>
+                    <div igxStepContent>Content</div>
+                </igx-step>
+
+                <igx-step>
+                    <span igxStepTitle>Short</span>
+                    <div igxStepContent>Content</div>
+                </igx-step>
+            </igx-stepper>
+        </div>
+    `,
+    imports: [
+        IgxStepperComponent,
+        IgxStepComponent,
+        IgxStepTitleDirective,
+        IgxStepContentDirective
+    ]
+})
+export class IgxStepperIndicatorNoShrinkComponent {
+    @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+
+    public longTitle =
+        'This is a very very very very very very very very very very very very very very very very very very very very very long step title that should not shrink the indicator';
 }

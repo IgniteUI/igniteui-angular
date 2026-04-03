@@ -25,7 +25,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
         return this.childRowIslands.get(key);
     }
 
-    public getChildGrid(path: Array<IPathSegment>) {
+    public getChildGrid(path: Array<IPathSegment>): GridType | undefined {
         const currPath = path;
         let grid;
         const pathElem = currPath.shift();

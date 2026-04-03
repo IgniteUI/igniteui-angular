@@ -104,6 +104,11 @@ Since the **IgxTooltip** directive extends the **IgxToggle** directive and there
 | hasArrow | boolean | Controls whether to display an arrow indicator for the tooltip. Defaults to `false`. |
 | sticky | boolean | When set to `true`, the tooltip renders a default close icon `x`. The tooltip remains visible until the user closes it via the close icon `x` or `Esc` key. Defaults to `false`. |
 | closeButtonTemplate | TemplateRef<any> | Allows templating the default close icon `x`. |
+| showTriggers | string | Which event triggers will show the tooltip. Expects a comma-separated string of different event triggers. Defaults to `pointerenter`. |
+| hideTriggers | string | Which event triggers will hide the tooltip. Expects a comma-separated string of different event triggers. Defaults to `pointerleave` and `click`. |
+
+
+> Note: Setting `showTriggers` and `hideTriggers` only has effect when interacting with the target, not the tooltip itself. Default event triggers for the tooltip are `pointerenter` and `pointerleave`.
 
 #### Templating the close button
 

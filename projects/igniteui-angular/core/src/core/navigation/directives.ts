@@ -1,4 +1,4 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, HostListener, Input, inject } from '@angular/core';
 import { IgxNavigationService } from './nav.service';
 
 /**
@@ -19,7 +19,9 @@ export class IgxNavigationToggleDirective {
 
     public state: IgxNavigationService;
 
-    constructor(nav: IgxNavigationService) {
+    constructor() {
+        const nav = inject(IgxNavigationService);
+
         this.state = nav;
     }
 
@@ -47,7 +49,9 @@ export class IgxNavigationCloseDirective {
 
     public state: IgxNavigationService;
 
-    constructor(nav: IgxNavigationService) {
+    constructor() {
+        const nav = inject(IgxNavigationService);
+
         this.state = nav;
     }
 

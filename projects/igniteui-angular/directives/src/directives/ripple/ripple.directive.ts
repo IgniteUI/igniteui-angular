@@ -1,11 +1,23 @@
-import { Directive, ElementRef, HostListener, Input, NgZone, Renderer2, booleanAttribute } from '@angular/core';
-import { AnimationBuilder, style, animate } from '@angular/animations';
+import {
+    Directive,
+    ElementRef,
+    HostListener,
+    Input,
+    NgZone,
+    Renderer2,
+    booleanAttribute,
+    inject
+} from '@angular/core';
 
 @Directive({
     selector: '[igxRipple]',
     standalone: true
 })
 export class IgxRippleDirective {
+    protected elementRef = inject(ElementRef);
+    protected renderer = inject(Renderer2);
+    private zone = inject(NgZone);
+
     /**
      * Sets/gets the ripple target.
      * ```html
@@ -95,22 +107,18 @@ export class IgxRippleDirective {
     private rippleHostClass = 'igx-ripple';
     private _centered = false;
     private animationQueue = [];
-
-    constructor(
-        protected builder: AnimationBuilder,
-        protected elementRef: ElementRef,
-        protected renderer: Renderer2,
-        private zone: NgZone) { }
     /**
      * @hidden
      */
     @HostListener('mousedown', ['$event'])
-    public onMouseDown(event) {
+    public onMouseDown(event: MouseEvent) {
         this.zone.runOutsideAngular(() => this._ripple(event));
     }
 
     private setStyles(rippleElement: HTMLElement, styleParams: any) {
         this.renderer.addClass(rippleElement, this.rippleElementClass);
+        // Set position absolute inline to ensure layout stability even when ripple CSS is excluded
+        this.renderer.setStyle(rippleElement, 'position', 'absolute');
         this.renderer.setStyle(rippleElement, 'width', `${styleParams.radius}px`);
         this.renderer.setStyle(rippleElement, 'height', `${styleParams.radius}px`);
         this.renderer.setStyle(rippleElement, 'top', `${styleParams.top}px`);
@@ -120,7 +128,7 @@ export class IgxRippleDirective {
         }
     }
 
-    private _ripple(event) {
+    private _ripple(event: MouseEvent) {
         if (this.rippleDisabled) {
             return;
         }
@@ -148,22 +156,25 @@ export class IgxRippleDirective {
         this.renderer.addClass(target, this.rippleHostClass);
         this.renderer.appendChild(target, rippleElement);
 
-        const animation = this.builder.build([
-            style({ opacity: 0.5, transform: 'scale(.3)' }),
-            animate(this.rippleDuration, style({ opacity: 0, transform: 'scale(2)' }))
-        ]).create(rippleElement);
+        const animation = rippleElement.animate(
+            [
+                { opacity: 0.5, transform: 'scale(.3)' },
+                { opacity: 0, transform: 'scale(2)' }
+            ],
+            {
+                duration: this.rippleDuration,
+                easing: 'ease-out'
+            }
+        );
 
         this.animationQueue.push(animation);
 
-        animation.onDone(() => {
+        animation.onfinish = () => {
             this.animationQueue.splice(this.animationQueue.indexOf(animation), 1);
             target.removeChild(rippleElement);
             if (this.animationQueue.length < 1) {
                 this.renderer.removeClass(target, this.rippleHostClass);
             }
-        });
-
-        animation.play();
-
+        };
     }
 }

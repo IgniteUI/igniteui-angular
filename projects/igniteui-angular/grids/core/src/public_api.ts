@@ -102,10 +102,10 @@ export * from './resizing/pivot-grid/pivot-resize-handle.directive';
 export * from './resizing/pivot-grid/pivot-resizer.component';
 export * from './resizing/pivot-grid/pivot-resizing.service';
 export * from './grid-navigation.service';
+export * from './grid-navigation-keys';
 export * from './grid-validation.service';
 export * from './grid.common';
 export { IgxGridCellComponent } from './cell.component';
-export * from './grouping/grid-group-by-area.component';
 export * from './grouping/group-by-area.directive';
 export * from './grid-mrl-navigation.service';
 export * from './api.service';
@@ -114,6 +114,17 @@ export * from './pivot-grid.interface';
 export * from './pivot-grid-dimensions';
 export * from './pivot-grid-aggregate';
 export * from './watch-changes';
+// Exporter services (moved from core)
+export * from './services/exporter-common/base-export-service';
+export * from './services/exporter-common/exporter-options-base';
+export * from './services/exporter-common/export-utilities';
+export * from './services/csv/csv-exporter';
+export * from './services/csv/csv-exporter-options';
+export * from './services/csv/char-separated-value-data';
+export * from './services/excel/excel-exporter';
+export * from './services/excel/excel-exporter-options';
+export * from './services/pdf/pdf-exporter';
+export * from './services/pdf/pdf-exporter-options';
 
 /*
 

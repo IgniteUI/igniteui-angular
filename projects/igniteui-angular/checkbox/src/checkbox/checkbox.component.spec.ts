@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -504,11 +504,11 @@ class CheckboxDisabledTransitionsComponent {
     imports: [IgxCheckboxComponent, ReactiveFormsModule]
 })
 class CheckboxFormGroupComponent {
+    private fb = inject(UntypedFormBuilder);
+
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 
     public myForm = this.fb.group({ checkbox: ['', Validators.required] });
-
-    constructor(private fb: UntypedFormBuilder) {}
 }
 @Component({
     template: `

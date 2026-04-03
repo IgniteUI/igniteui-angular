@@ -1,7 +1,4 @@
-import {
-    Injectable,
-    OnDestroy,
-} from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
@@ -11,7 +8,7 @@ import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { GridType } from '../common/grid.interface';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
-import { AbsoluteScrollStrategy, ColumnType, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, formatDate, IFilteringExpression, IFilteringExpressionsTree, IFilteringOperation, IgxOverlayService, isTree, OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, ColumnType, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, IFilteringExpression, IFilteringExpressionsTree, IFilteringOperation, IgxOverlayService, isTree, OverlayCancelableEventArgs, OverlayEventArgs, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { IForOfState } from 'igniteui-angular/directives';
 
@@ -21,6 +18,9 @@ import { IForOfState } from 'igniteui-angular/directives';
  */
 @Injectable()
 export class IgxFilteringService implements OnDestroy {
+    private iconService = inject(IgxIconService);
+    protected _overlayService = inject(IgxOverlayService);
+
     public isFilterRowVisible = false;
     public filteredColumn: ColumnType = null;
     public selectedExpression: IFilteringExpression = null;
@@ -46,11 +46,6 @@ export class IgxFilteringService implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
     protected lastActiveNode;
-
-    constructor(
-        private iconService: IgxIconService,
-        protected _overlayService: IgxOverlayService,
-    ) { }
 
     public ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -467,7 +462,7 @@ export class IgxFilteringService implements OnDestroy {
                 return formatter(expression.searchVal, undefined);
             }
             const pipeArgs = column.pipeArgs;
-            return formatDate(expression.searchVal, pipeArgs.format, this.grid.locale);
+            return this.grid.i18nFormatter.formatDate(expression.searchVal, pipeArgs.format, this.grid.locale);
         } else {
             return expression.searchVal;
         }

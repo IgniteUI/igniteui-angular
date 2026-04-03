@@ -1,7 +1,9 @@
-import { CancelableEventArgs, ColumnType, IBaseEventArgs, IFilteringExpressionsTree, IGroupingExpression, IgxBaseExporter, IgxExporterOptionsBase, ISortingExpression } from 'igniteui-angular/core';
+import { CancelableEventArgs, ColumnType, IBaseEventArgs, IFilteringExpressionsTree, IGroupingExpression, ISortingExpression } from 'igniteui-angular/core';
 import { GridKeydownTargetType } from './enums';
 import { CellType, GridType, RowType } from './grid.interface';
 import { IBaseSearchInfo } from 'igniteui-angular/directives';
+import { IgxBaseExporter } from '../services/exporter-common/base-export-service';
+import { IgxExporterOptionsBase } from '../services/exporter-common/exporter-options-base';
 
 /** The event arguments when data from a grid is being copied. */
 export interface IGridClipboardEvent {

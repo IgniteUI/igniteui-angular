@@ -7,7 +7,7 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { DataParent, SampleTestData } from '../../../test-utils/sample-test-data.spec';
 
 import { IgxGridComponent } from './grid.component';
-import { IgxColumnComponent } from 'igniteui-angular/grids/core';
+import { IgxColumnComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IgxDragIndicatorIconDirective, IgxRowDragDirective, IgxRowDragGhostDirective } from 'igniteui-angular/grids/core';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from 'igniteui-angular/grids/core';
 import { IgxDropDirective } from 'igniteui-angular/directives';
@@ -952,6 +952,9 @@ describe('Row Drag Tests', () => {
                     NoopAnimationsModule,
                     IgxHierarchicalGridTestComponent,
                     IgxHierarchicalGridCustomGhostTestComponent
+                ],
+                providers: [
+                    IgxGridNavigationService
                 ]
             }).compileComponents();
         }));

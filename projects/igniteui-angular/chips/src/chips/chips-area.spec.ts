@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
@@ -23,6 +23,8 @@ import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interaction
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipComponent {
+    public cdr = inject(ChangeDetectorRef);
+
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     public chipsArea: IgxChipsAreaComponent;
 
@@ -33,8 +35,6 @@ class TestChipComponent {
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: false },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true }
     ];
-
-    constructor(public cdr: ChangeDetectorRef) { }
 }
 
 @Component({
@@ -71,6 +71,8 @@ class TestChipSelectComponent extends TestChipComponent {
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipReorderComponent {
+    public cdr = inject(ChangeDetectorRef);
+
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     public chipsArea: IgxChipsAreaComponent;
 
@@ -83,8 +85,6 @@ class TestChipReorderComponent {
         { id: 'Town', text: 'Town' },
         { id: 'FirstName', text: 'First Name' },
     ];
-
-    constructor(public cdr: ChangeDetectorRef) { }
 
     public chipsOrderChanged(event) {
         const newChipList = [];

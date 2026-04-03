@@ -11,25 +11,18 @@ body {
     color: $foreground-color;
 }
 
+@include core();
+@include typography($font-family: $typeface, $type-scale: $type-scale);
+@include theme($palette: $palette, $schema: $schema);
+
 :root {
     --some-dynamic-color: hsl(#{math.random(360)}, 100%, 50%);
 }
 
-@include core();
-@include typography($font-family: $typeface, $type-scale: $type-scale);
-@include theme(
-    $palette: $palette,
-    $schema: $schema,
-);
-
-.dock {
-    @include css-vars(dock-manager-theme());
-}
-
 .nav-header {
     @if $variant == 'light' {
-        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg');
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg.png');
     } @else {
-        @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg');
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg.png');
     }
 }

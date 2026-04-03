@@ -1,15 +1,4 @@
-import {
-    Component,
-    Directive,
-    HostBinding,
-    Optional,
-    Inject,
-    Input,
-    OnInit,
-    OnChanges,
-    SimpleChanges,
-    booleanAttribute
-} from '@angular/core';
+import { Component, Directive, HostBinding, Input, OnInit, OnChanges, SimpleChanges, booleanAttribute, inject } from '@angular/core';
 
 let NEXT_ID = 0;
 
@@ -18,6 +7,7 @@ let NEXT_ID = 0;
  * Use it to wrap images and videos.
  */
 @Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-media',
     standalone: true
 })
@@ -129,7 +119,7 @@ export class IgxCardHeaderSubtitleDirective {
  * IgxCardContent is container for the card content.
  */
 @Directive({
-
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-content',
     standalone: true
 })
@@ -143,7 +133,7 @@ export class IgxCardContentDirective {
  * IgxCardFooter is container for the card footer
  */
 @Directive({
-
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-footer',
     standalone: true
 })
@@ -277,12 +267,13 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
  * IgxCardActions is container for the card actions.
  */
 @Component({
-
     selector: 'igx-card-actions',
     templateUrl: 'card-actions.component.html',
     standalone: true
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {
+    public card = inject<IgxCardComponent>(IgxCardComponent, { optional: true });
+
     /**
      * Sets the layout style of the actions.
      * You can justify the elements slotted in the igx-card-action container
@@ -316,8 +307,6 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     }
 
     private isVerticalSet = false;
-
-    constructor(@Optional() @Inject(IgxCardComponent) public card: IgxCardComponent) { }
 
     /**
      * @hidden

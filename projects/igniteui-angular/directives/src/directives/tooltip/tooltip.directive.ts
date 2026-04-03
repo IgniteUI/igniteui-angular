@@ -1,14 +1,12 @@
 import {
-    Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject,
-    OnDestroy, inject, DOCUMENT, HostListener,
+    Directive, Input, HostBinding,
+    OnDestroy, inject, HostListener,
     Renderer2,
     AfterViewInit,
 } from '@angular/core';
-import { IgxOverlayService, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
-import { IgxNavigationService } from 'igniteui-angular/core';
+import { OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
-import { Subject, takeUntil } from 'rxjs';
 
 let NEXT_ID = 0;
 /**
@@ -116,28 +114,8 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
 
     private _arrowEl: HTMLElement;
     private _role: 'tooltip' | 'status' = 'tooltip';
-    private _destroy$ = new Subject<boolean>();
-    private _document = inject(DOCUMENT);
     private _renderer = inject(Renderer2);
     private _platformUtil = inject(PlatformUtil);
-
-    /** @hidden */
-    constructor(
-        elementRef: ElementRef,
-        cdr: ChangeDetectorRef,
-        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
-        @Optional() navigationService: IgxNavigationService) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(elementRef, cdr, overlayService, navigationService);
-
-        this.onDocumentTouchStart = this.onDocumentTouchStart.bind(this);
-        this.opening.pipe(takeUntil(this._destroy$)).subscribe(() => {
-            this._document.addEventListener('touchstart', this.onDocumentTouchStart, { passive: true });
-        });
-        this.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
-            this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
-        });
-    }
 
     /** @hidden */
     public ngAfterViewInit(): void {
@@ -150,10 +128,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     public override ngOnDestroy() {
         super.ngOnDestroy();
 
-        this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
-        this._destroy$.next(true);
-        this._destroy$.complete();
-
         if (this.arrow) {
             this._removeArrow();
         }
@@ -162,17 +136,21 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     /**
      * @hidden
      */
-    @HostListener('mouseenter')
-    public onMouseEnter() {
-        this.tooltipTarget?.onMouseEnter();
+    @HostListener('pointerenter')
+    protected onPointerEnter() {
+        if (this.tooltipTarget) {
+            this.tooltipTarget.onShow();
+        }
     }
 
     /**
      * @hidden
      */
-    @HostListener('mouseleave')
-    public onMouseLeave() {
-        this.tooltipTarget?.onMouseLeave();
+    @HostListener('pointerleave')
+    protected onPointerLeave() {
+        if (this.tooltipTarget) {
+            this.tooltipTarget.onHide();
+        }
     }
 
     /**
@@ -227,9 +205,5 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     private _removeArrow(): void {
         this._arrowEl.remove();
         this._arrowEl = null;
-    }
-
-    private onDocumentTouchStart(event) {
-        this.tooltipTarget?.onDocumentTouchStart(event);
     }
 }
