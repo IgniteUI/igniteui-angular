@@ -1,0 +1,190 @@
+import { booleanAttribute, ChangeDetectionStrategy, Component, contentChild, CUSTOM_ELEMENTS_SCHEMA, Directive, effect, EmbeddedViewRef, inject, input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { ColumnConfiguration, ColumnSortConfiguration, IgcCellContext, IgcHeaderContext, Keys, DataType } from 'igniteui-grid-lite';
+
+/** Configuration object for grid columns. */
+export type IgxGridLiteColumnConfiguration<T extends object = any> = ColumnConfiguration<T>;
+
+export type IgxGridLiteColumnSortConfiguration<T extends object = any> = ColumnSortConfiguration<T>;
+
+
+/**
+ * Directive providing type information for header template contexts.
+ * Use this directive on ng-template elements that render header templates.
+ *
+ * @example
+ * ```html
+ * <ng-template igxGridLiteHeader let-column>
+ *   <div>{{column.header}}</div>
+ * </ng-template>
+ * ```
+ */
+@Directive({ selector: '[igxGridLiteHeader]' })
+export class IgxGridLiteHeaderTemplateDirective<T extends object = any> {
+    public template = inject<TemplateRef<IgxGridLiteHeaderTemplateContext<T>>>(TemplateRef);
+
+    public static ngTemplateContextGuard<T extends object = any>(_: IgxGridLiteHeaderTemplateDirective<T>, ctx: any): ctx is IgxGridLiteHeaderTemplateContext<T> {
+        return true;
+    }
+}
+
+/**
+ * Directive providing type information for cell template contexts.
+ * Use this directive on ng-template elements that render cell templates.
+ *
+ * @example
+ * ```html
+ * <ng-template igxGridLiteCell let-value let-column="column" let-rowIndex="rowIndex" let-data="data">
+ *   <div>{{value}}</div>
+ * </ng-template>
+ * ```
+ */
+@Directive({ selector: '[igxGridLiteCell]' })
+export class IgxGridLiteCellTemplateDirective<T extends object = any> {
+    public template = inject<TemplateRef<IgxGridLiteCellTemplateContext<T>>>(TemplateRef);
+
+    public static ngTemplateContextGuard<T extends object = any>(_: IgxGridLiteCellTemplateDirective<T>, ctx: unknown): ctx is IgxGridLiteCellTemplateContext<T> {
+        return true;
+    }
+}
+
+@Component({
+    selector: 'igx-grid-lite-column',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    templateUrl: './grid-lite-column.component.html'
+})
+export class IgxGridLiteColumnComponent<T extends object = any> {
+
+    //#region Internal state
+
+    private readonly _view = inject(ViewContainerRef);
+
+    /** Reference to the embedded view for the header template and its template function. */
+    private headerViewRef?: EmbeddedViewRef<IgxGridLiteHeaderTemplateContext<T>>;
+    protected headerTemplateFunc?: (ctx: IgcHeaderContext<T>) => Node[];
+
+    /** Reference to the embedded view for the cell template and its template function. */
+    private cellViewRefs? = new Map<T, EmbeddedViewRef<IgxGridLiteCellTemplateContext<T>>>();
+    protected cellTemplateFunc?: (ctx: IgcCellContext<T>) => Node[];
+
+    /** Template directives used for inline templating */
+    private readonly headerTemplateDirective = contentChild(IgxGridLiteHeaderTemplateDirective<T>);
+    private readonly cellTemplateDirective = contentChild(IgxGridLiteCellTemplateDirective<T>);
+
+    //#endregion
+
+    //#region Inputs
+
+    /** The field from the data for this column. */
+    public readonly field = input<Keys<T>>();
+
+    /** The data type of the column's values. */
+    public readonly dataType = input<DataType>('string');
+
+    /** The header text of the column. */
+    public readonly header = input<string>();
+
+    /** The width of the column. */
+    public readonly width = input<string>();
+
+    /** Indicates whether the column is hidden. */
+    public readonly hidden = input(false, { transform: booleanAttribute });
+
+    /** Indicates whether the column is resizable. */
+    public readonly resizable = input(false, { transform: booleanAttribute });
+
+    /** Indicates whether the column is sortable. */
+    public readonly sortable = input(false, { transform: booleanAttribute });
+
+    /** Whether sort operations will be case sensitive. */
+    public readonly sortingCaseSensitive = input(false, { transform: booleanAttribute });
+
+    /** Sort configuration for the column (e.g., custom comparer). */
+    public readonly sortConfiguration = input<IgxGridLiteColumnSortConfiguration<T>>();
+
+    /** Indicates whether the column is filterable. */
+    public readonly filterable = input(false, { transform: booleanAttribute });
+
+    /** Whether filter operations will be case sensitive. */
+    public readonly filteringCaseSensitive = input(false, { transform: booleanAttribute });
+
+    /** Custom header template for the column. */
+    public readonly headerTemplate = input<TemplateRef<IgxGridLiteHeaderTemplateContext<T>>>();
+
+    /** Custom cell template for the column. */
+    public readonly cellTemplate = input<TemplateRef<IgxGridLiteCellTemplateContext<T>>>();
+
+    //#endregion
+
+    constructor() {
+        effect((onCleanup) => {
+            const directive = this.headerTemplateDirective();
+            const template = this.headerTemplate() ?? directive?.template;
+            if (template) {
+                this.headerTemplateFunc = (ctx: IgcHeaderContext<T>) => {
+                    if (!this.headerViewRef) {
+                        const angularContext = {
+                            ...ctx,
+                            $implicit: ctx.column
+                        }
+                        this.headerViewRef = this._view.createEmbeddedView(template, angularContext);
+                    }
+                    return this.headerViewRef.rootNodes;
+                };
+            }
+            onCleanup(() => {
+                if (this.headerViewRef) {
+                    this.headerViewRef.destroy();
+                    this.headerViewRef = undefined;
+                }
+            })
+        });
+
+        effect((onCleanup) => {
+            const directive = this.cellTemplateDirective();
+            const template = this.cellTemplate() ?? directive?.template;
+            if (template) {
+                this.cellTemplateFunc = (ctx: IgcCellContext<T>) => {
+                    const oldViewRef = this.cellViewRefs.get(ctx.row.data);
+                    const angularContext = {
+                        ...ctx,
+                        $implicit: ctx.value,
+                    } as IgxGridLiteCellTemplateContext<T>;
+                    if (!oldViewRef) {
+                        const newViewRef = this._view.createEmbeddedView(template, angularContext);
+                        this.cellViewRefs.set(ctx.row.data, newViewRef);
+                        return newViewRef.rootNodes;
+                    }
+                    Object.assign(oldViewRef.context, angularContext);
+                    return oldViewRef.rootNodes;
+                };
+            }
+            onCleanup(() => {
+                this.cellViewRefs.forEach((viewRef) => {
+                    viewRef.destroy();
+                });
+                this.cellViewRefs?.clear();
+            });
+        });
+    }
+}
+
+/**
+ * Context provided to the header template.
+ */
+export type IgxGridLiteHeaderTemplateContext<T extends object = any> = IgcHeaderContext<T> & {
+    /**
+     * The current configuration for the column.
+     */
+    $implicit: IgcHeaderContext<T>['column'];
+}
+
+/**
+ * Context provided to the header template.
+ */
+export type IgxGridLiteCellTemplateContext<T extends object = any> = IgcCellContext<T> & {
+    /**
+     * The value from the data source for this cell.
+     */
+    $implicit: IgcCellContext<T>['value'];
+};

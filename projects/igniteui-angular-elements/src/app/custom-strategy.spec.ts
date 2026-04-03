@@ -1,4 +1,4 @@
-import { IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { html } from 'lit';
 import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
@@ -233,6 +233,23 @@ describe('Elements: ', () => {
 
             expect(grid.columns.length).toEqual(6);
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
+        });
+
+        it('should populate action strip actionButtons content query.', async () => {
+            const innerHtml = `
+            <igc-grid id="testGrid" auto-generate>
+            <igc-action-strip id="testStrip">
+                <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+            </igc-action-strip>
+            </igc-grid>`;
+            testContainer.innerHTML = innerHtml;
+
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+
+            const actionStrip = document.querySelector<IgcNgElement>('#testStrip');
+            const actionStripComponent = (await actionStrip.ngElementStrategy[ComponentRefKey]).instance as IgxActionStripComponent;
+            expect(actionStripComponent.actionButtons.toArray().length).toBeGreaterThan(0);
         });
 
         it('should not destroy action strip when row it is shown in is destroyed or cached.', async() => {

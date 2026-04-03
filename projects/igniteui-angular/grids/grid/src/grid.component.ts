@@ -109,6 +109,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     preserveWhitespaces: false,
     providers: [
         IgxGridCRUDService,
+        IgxGridMRLNavigationService,
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,

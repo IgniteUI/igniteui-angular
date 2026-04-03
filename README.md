@@ -39,6 +39,35 @@ There are many ways in which you can [participate](https://github.com/IgniteUI/i
  - Upvote [popular feature requests](https://github.com/IgniteUI/igniteui-angular/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Atoolbox%3A+feature-request%22)
  - [File an issue](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github)
  - Reach out to us [through Discord](https://discord.gg/sBwHs5cJ)
+
+### AI-Assisted Development
+
+This repository ships with **Copilot Skills** — structured knowledge files that teach AI coding assistants (GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to work with Ignite UI for Angular. The skill files live in the [`skills/`](skills/) directory:
+
+| Skill | Path | Description |
+|:------|:-----|:------------|
+| Components | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | UI Components (form controls, layout, data display, feedback/overlays, directives — Input Group, Combo, Select, Date/Time Pickers, Calendar, Tabs, Stepper, Accordion, List, Card, Dialog, Snackbar, Button, Ripple, Tooltip, Drag and Drop, Layout Manager, Dock Manager and Charts (Area Chart, Bar Chart, Column Chart, Stock/Financial Chart, Pie Chart)) |
+| Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) |
+| Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Theming & Styling (includes MCP server setup) |
+
+#### How It Works
+
+- **GitHub Copilot (VS Code / github.com)** — Skills should be discovered automatically via [`.github/copilot-instructions.md`](.github/copilot-instructions.md). No extra setup needed.
+- **Cursor** — Skills are picked up from the `skills/` directory. You can also reference them explicitly in `.cursorrules`.
+
+#### Manual Setup for Other IDEs
+
+If your editor doesn't auto-discover skill files, you can feed them to your AI assistant manually:
+
+1. **Copy the skill content** — Open the relevant `SKILL.md` file from the `skills/` folder and paste its contents into your AI assistant's system prompt or context window.
+2. **JetBrains IDEs (WebStorm, IntelliJ)** — Go to **Settings → Tools → AI Assistant → Project-level prompt** and paste the skill content there, or attach the files as context when chatting.
+3. **Claude Desktop / Claude Code** — Add the files to your project knowledge or include them as part of your CLAUDE.md project instructions.
+4. **Windsurf** — Reference the skill files in your `.windsurfrules` configuration or attach them as context in the chat.
+5. **Other editors** — Attach or paste the `SKILL.md` file contents into your AI assistant's context before asking questions about Ignite UI for Angular.
+
+#### Theming MCP Server
+
+The **Theming skill** includes setup instructions for the `igniteui-theming` MCP server, which gives AI assistants access to live theming tools (palette generation, component theme scaffolding, etc.). See [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) for configuration steps for VS Code, Cursor, Claude Desktop, and JetBrains IDEs.
  
 ## Browser Support
 

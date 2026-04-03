@@ -265,6 +265,20 @@
             "factory": "./update-21_1_0_import-migration",
             "recommended": true,
             "optional": true
+        },
+        "migration-53": {
+            "version": "21.1.0",
+            "description": "Migrates --igx-* CSS variables to --ig-* for better consistency between component frameworks",
+            "factory": "./update-21_1_0_css-migration",
+            "recommended": true,
+            "optional": true
+        },
+        "migration-54": {
+            "version": "21.1.0",
+            "description": "Add AI Agent skills for Ignite UI for Angular components and theming to the project.",
+            "factory": "./update-21_1_0_add-agent-skills",
+            "recommended": true,
+            "optional": true
         }
     }
 }

@@ -28,7 +28,6 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
     { name: 'igniteui-i18n-core', target: PackageTarget.REGULAR },
     { name: 'igniteui-theming', target: PackageTarget.NONE },
-    { name: 'igniteui-webcomponents', target: PackageTarget.NONE },
     // peerDependencies
     { name: '@angular/forms', target: PackageTarget.NONE },
     { name: '@angular/common', target: PackageTarget.NONE },
@@ -36,6 +35,8 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: '@angular/animations', target: PackageTarget.NONE },
     { name: 'hammerjs', target: PackageTarget.REGULAR },
     { name: '@types/hammerjs', target: PackageTarget.DEV },
+    { name: 'igniteui-webcomponents', target: PackageTarget.NONE },
+    { name: 'igniteui-grid-lite', target: PackageTarget.NONE },
     // igxDevDependencies
     { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];

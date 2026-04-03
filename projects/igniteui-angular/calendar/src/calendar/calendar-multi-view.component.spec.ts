@@ -1045,7 +1045,7 @@ describe('Multi-View Calendar - ', () => {
             tick(400);
             fixture.detectChanges();
 
-            let overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            let overlay = document.querySelector(HelperTestFunctions.CALENDAR_WRAPPER_CLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 3);
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [ymd('2019-09-16'), ymd('2019-10-16'), ymd('2019-11-16')]);
 
@@ -1064,7 +1064,7 @@ describe('Multi-View Calendar - ', () => {
             tick(400);
             fixture.detectChanges();
 
-            overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            overlay = document.querySelector(HelperTestFunctions.CALENDAR_WRAPPER_CLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 2);
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [ymd('2019-09-16'), ymd('2019-10-16')]);
 
@@ -1079,7 +1079,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             expect(datePicker.hideOutsideDays).toBe(true);
-            let overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            let overlay = document.querySelector(HelperTestFunctions.CALENDAR_WRAPPER_CLASS);
             expect(HelperTestFunctions.getHiddenDays(overlay, 0).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 0).length);
             expect(HelperTestFunctions.getHiddenDays(overlay, 1).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 1).length);
             expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 2).length);
@@ -1098,7 +1098,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             expect(datePicker.hideOutsideDays).toBe(false);
-            overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            overlay = document.querySelector(HelperTestFunctions.CALENDAR_WRAPPER_CLASS);
             expect(HelperTestFunctions.getHiddenDays(overlay, 0).length).toBe(12);
             expect(HelperTestFunctions.getHiddenDays(overlay, 1).length).toBe(11);
             expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(5);

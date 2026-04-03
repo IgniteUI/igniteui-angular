@@ -325,6 +325,7 @@ export interface ColumnType extends FieldType {
      */
     topLevelParent?: ColumnType;
     /* alternateName: parentColumn */
+    /* blazorAlternateType: object */
     /**
      * Optional
      * The immediate parent (right above) column of this column (if any).
