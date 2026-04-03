@@ -308,14 +308,9 @@ export class QueryBuilderFunctions {
         return buttonsContainers[buttonsIndex];
     }
 
-    public static getQueryBuilderOutlet(queryBuilderElement: HTMLElement) {
-        const outlet = queryBuilderElement.querySelector(':scope > .igx-query-builder__outlet');
-        return outlet;
-    }
-
     public static getQueryBuilderSelectDropdown(queryBuilderElement: HTMLElement, index = 0) {
-        const outlet = QueryBuilderFunctions.getQueryBuilderOutlet(queryBuilderElement);
-        const selectDropdown = outlet.querySelectorAll(`.${QueryBuilderSelectors.DROP_DOWN_LIST_SCROLL}`).item(index);
+        const selectDropdown = Array.from(document.querySelectorAll(`.${QueryBuilderSelectors.DROP_DOWN_LIST_SCROLL}`))
+            .filter(item => (item as HTMLElement).checkVisibility())[index];
         return selectDropdown;
     }
 
@@ -504,8 +499,8 @@ export class QueryBuilderFunctions {
      * Click 'add condition' or 'add group' item
      */
     public static clickQueryBuilderTreeAddOption(fix: ComponentFixture<any>, index: number) {
-        const outlet = Array.from(fix.debugElement.nativeElement.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
-        const item = Array.from((outlet as HTMLElement).querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
+        const dropdownList = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
+        const item = Array.from((dropdownList as HTMLElement).querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
         UIInteractions.simulateClickAndSelectEvent(item)
         tick(100);
         fix.detectChanges();
@@ -751,8 +746,8 @@ export class QueryBuilderFunctions {
         QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix, level);
         fix.detectChanges();
 
-        const outlet = Array.from(fix.debugElement.nativeElement.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
-        const item = Array.from((outlet as HTMLElement).querySelectorAll('.igx-drop-down__item'))[dropdownItemIndex] as HTMLElement;
+        const dropdownList = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
+        const item = Array.from((dropdownList as HTMLElement).querySelectorAll('.igx-drop-down__item'))[dropdownItemIndex] as HTMLElement;
         UIInteractions.simulateClickAndSelectEvent(item)
         tick();
         fix.detectChanges();
@@ -762,9 +757,9 @@ export class QueryBuilderFunctions {
         QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix, level);
         fix.detectChanges();
 
-        const outlet = Array.from(fix.debugElement.nativeElement.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
+        const dropdownList = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
         deselectItemIndexes.forEach(index => {
-            const item = Array.from((outlet as HTMLElement).querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
+            const item = Array.from((dropdownList as HTMLElement).querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
             UIInteractions.simulateClickAndSelectEvent(item)
             tick();
             fix.detectChanges();
