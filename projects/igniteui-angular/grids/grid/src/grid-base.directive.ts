@@ -131,12 +131,6 @@ interface IMatchInfoCache {
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
-// By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
-// In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
-// Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
-// More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height,
-// but in the same time we need to set row editing overlay outlet before opening the overlay itself.
-const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 /* blazorIndirectRender
    blazorComponent
@@ -1346,12 +1340,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef<HTMLElement>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden @internal
@@ -2686,20 +2674,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public get rowOutletDirective() {
-        return this.rowEditingOutletDirective;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get parentRowOutletDirective() {
-        return this.outlet;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get rowEditCustom(): TemplateRef<IgxGridRowEditTemplateContext> {
         if (this.rowEditCustomDirectives && this.rowEditCustomDirectives.first) {
             return this.rowEditCustomDirectives.first;
@@ -3323,7 +3297,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
-        outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
 
@@ -6377,7 +6350,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * TODO: MOVE to CRUD
      */
     public openRowOverlay(id) {
-        this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
+        this.configureRowEditingOverlay(id);
 
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler);
@@ -8133,13 +8106,12 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     // TODO: About to Move to CRUD
-    private configureRowEditingOverlay(rowID: any, useOuter = false) {
+    private configureRowEditingOverlay(rowID: any) {
         let settings = this.rowEditSettings;
         const overlay = this.overlayService.getOverlayById(this.rowEditingOverlay.overlayId);
         if (overlay) {
             settings = overlay.settings;
         }
-        settings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
         const targetRow = !pinned ?
