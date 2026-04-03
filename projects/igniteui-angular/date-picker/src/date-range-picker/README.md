@@ -116,7 +116,6 @@ With projected inputs:
 | mode             | PickerInteractionMode    | Sets whether `IgxDateRangePickerComponent` is in dialog or dropdown mode. Default is `dialog` |
 | minValue | Date \| string | The minimum value in a valid range. |
 | maxValue | Date \| string | The maximum value in a valid range. |
-| outlet | IgxOverlayOutletDirective \| ElementRef<any> | **Deprecated** Gets/Sets the container used for the popup element.
 | overlaySettings  | OverlaySettings    | Changes the default overlay settings used by the `IgxDateRangePickerComponent`. | 
 | placeholder      | string             | Sets the `placeholder` for single-input `IgxDateRangePickerComponent`. |
 | weekStart        | number             | Sets the start day of the week. Can be assigned to a numeric value or to `WEEKDAYS` enum value. |
