@@ -8,7 +8,13 @@
     }
 
     .igx-input-group:not(:has(.igx-input-group__label)) {
-        --_bundle-row: 1;
-        --_hint-row: 2;
+        --_bundle-row: 2;
+        --_hint-row: 3;
     }
+	
+	&:not(:has(.igx-input-group__label)) {
+		.igx-date-range-picker__label {
+			grid-row: 2;
+		}
+	}
 }

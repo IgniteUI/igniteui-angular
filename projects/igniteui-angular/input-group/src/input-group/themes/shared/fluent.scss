@@ -260,5 +260,10 @@ $_theme: $fluent;
             grid-row: var(--_bundle-row);
         }
     }
+	
+	&:not(:has(.igx-input-group__label)) {
+		--_bundle-row: 1;
+		--_hint-row: 2;
+	}
 }
 

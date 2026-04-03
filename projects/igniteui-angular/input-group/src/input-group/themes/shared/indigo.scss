@@ -271,4 +271,9 @@ $_theme: $indigo;
     @include e(bundle-main) {
         height: inherit;
     }
+	
+	&:not(:has(.igx-input-group__label)) {
+		--_bundle-row: 1;
+		--_hint-row: 2;
+	}
 }
