@@ -22,7 +22,7 @@ import { IgxIconService } from 'igniteui-angular/icon';
  * Provides a context-aware container component for UI operations for the grid components.
  *
  * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxTreeGridElementsComponent, IgxPivotGridComponent,
+ * @igxParent IgxGridComponent, IgxHierarchicalGridComponent, IgxTreeGridComponent, IgxPivotGridComponent,
  *
  */
 @Component({

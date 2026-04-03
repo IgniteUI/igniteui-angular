@@ -3,9 +3,9 @@ import {
   IgxPivotDataSelectorComponent,
   IgxPivotGridComponent,
 } from "../../../igniteui-angular/grids/pivot-grid";
-import { IgxGridElementsComponent } from "../lib/grids/grid.component";
-import { IgxHierarchicalGridElementsComponent } from "../lib/grids/hierarchical-grid.component";
-import { IgxTreeGridElementsComponent } from "../lib/grids/tree-grid.component";
+import { IgxGridComponent } from "../lib/grids/grid.component";
+import { IgxHierarchicalGridComponent } from "../lib/grids/hierarchical-grid.component";
+import { IgxTreeGridComponent } from "../lib/grids/tree-grid.component";
 import { IgxActionStripComponent } from "../../../igniteui-angular/action-strip/src/action-strip/action-strip.component";
 import { IgxActionStripToken } from "../../../igniteui-angular/core/src/grid-column-actions/token";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/paginator/src/paginator/paginator.component";
@@ -25,14 +25,13 @@ import { IgxToolbarToken } from "../../../igniteui-angular/grids/core/src/toolba
 import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-exporter.component";
 import { IgxGridToolbarHidingComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-hiding.component";
 import { IgxGridToolbarPinningComponent } from "../../../igniteui-angular/grids/core/src/toolbar/grid-toolbar-pinning.component";
-import { IgxRowIslandComponent } from "../../../igniteui-angular/grids/hierarchical-grid/src/row-island.component";
-import { IgxRowIslandElementsComponent } from "../lib/grids/row-island.component";
+import { IgxRowIslandComponent } from "../lib/grids/row-island.component";
 import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [
-  IgxGridElementsComponent,
-  IgxHierarchicalGridElementsComponent,
-  IgxTreeGridElementsComponent,
+  IgxGridComponent,
+  IgxHierarchicalGridComponent,
+  IgxTreeGridComponent,
   IgxPivotGridComponent,
   IgxPivotDataSelectorComponent,
   IgxQueryBuilderComponent,
@@ -44,10 +43,10 @@ export var registerConfig = [
     component: IgxActionStripComponent,
     selector: "igc-action-strip",
     parents: [
-      IgxGridElementsComponent,
-      IgxHierarchicalGridElementsComponent,
-      IgxTreeGridElementsComponent,
-      IgxRowIslandElementsComponent,
+      IgxGridComponent,
+      IgxHierarchicalGridComponent,
+      IgxTreeGridComponent,
+      IgxRowIslandComponent,
     ],
     contentQueries: [
       {
@@ -65,11 +64,11 @@ export var registerConfig = [
     component: IgxColumnComponent,
     selector: "igc-column",
     parents: [
-      IgxGridElementsComponent,
-      IgxHierarchicalGridElementsComponent,
-      IgxTreeGridElementsComponent,
+      IgxGridComponent,
+      IgxHierarchicalGridComponent,
+      IgxTreeGridComponent,
       IgxPivotGridComponent,
-      IgxRowIslandElementsComponent,
+      IgxRowIslandComponent,
       IgxColumnGroupComponent,
       IgxColumnLayoutComponent,
     ],
@@ -122,11 +121,11 @@ export var registerConfig = [
     component: IgxColumnGroupComponent,
     selector: "igc-column-group",
     parents: [
-      IgxGridElementsComponent,
-      IgxHierarchicalGridElementsComponent,
-      IgxTreeGridElementsComponent,
+      IgxGridComponent,
+      IgxHierarchicalGridComponent,
+      IgxTreeGridComponent,
       IgxColumnGroupComponent,
-      IgxRowIslandElementsComponent,
+      IgxRowIslandComponent,
     ],
     contentQueries: [
       {
@@ -183,7 +182,7 @@ export var registerConfig = [
   {
     component: IgxColumnLayoutComponent,
     selector: "igc-column-layout",
-    parents: [IgxGridElementsComponent],
+    parents: [IgxGridComponent],
     contentQueries: [
       {
         property: "children",
@@ -237,17 +236,7 @@ export var registerConfig = [
     provideAs: IgxColumnComponent,
   },
   {
-    component: IgxGridEditingActionsComponent,
-    selector: "igc-grid-editing-actions",
-    parents: [IgxActionStripComponent],
-    contentQueries: [],
-    additionalProperties: [{ name: "hasChildren" }],
-    methods: ["startEdit"],
-    boolProps: ["addRow", "editRow", "deleteRow", "addChild", "asMenuItems"],
-    provideAs: IgxActionStripActionsToken,
-  },
-  {
-    component: IgxGridElementsComponent,
+    component: IgxGridComponent,
     selector: "igc-grid",
     parents: [],
     contentQueries: [
@@ -419,6 +408,16 @@ export var registerConfig = [
     ],
   },
   {
+    component: IgxGridEditingActionsComponent,
+    selector: "igc-grid-editing-actions",
+    parents: [IgxActionStripComponent],
+    contentQueries: [],
+    additionalProperties: [{ name: "hasChildren" }],
+    methods: ["startEdit"],
+    boolProps: ["addRow", "editRow", "deleteRow", "addChild", "asMenuItems"],
+    provideAs: IgxActionStripActionsToken,
+  },
+  {
     component: IgxGridPinningActionsComponent,
     selector: "igc-grid-pinning-actions",
     parents: [IgxActionStripComponent],
@@ -432,9 +431,9 @@ export var registerConfig = [
     component: IgxGridStateComponent,
     selector: "igc-grid-state",
     parents: [
-      IgxGridElementsComponent,
-      IgxTreeGridElementsComponent,
-      IgxHierarchicalGridElementsComponent,
+      IgxGridComponent,
+      IgxTreeGridComponent,
+      IgxHierarchicalGridComponent,
       IgxPivotGridComponent,
     ],
     contentQueries: [],
@@ -466,9 +465,9 @@ export var registerConfig = [
     component: IgxGridToolbarComponent,
     selector: "igc-grid-toolbar",
     parents: [
-      IgxGridElementsComponent,
-      IgxHierarchicalGridElementsComponent,
-      IgxTreeGridElementsComponent,
+      IgxGridComponent,
+      IgxHierarchicalGridComponent,
+      IgxTreeGridComponent,
       IgxPivotGridComponent,
     ],
     contentQueries: [
@@ -517,18 +516,18 @@ export var registerConfig = [
     methods: [],
   },
   {
-    component: IgxHierarchicalGridElementsComponent,
+    component: IgxHierarchicalGridComponent,
     selector: "igc-hierarchical-grid",
     parents: [],
     contentQueries: [
       {
         property: "childLayoutList",
-        childType: IgxRowIslandElementsComponent,
+        childType: IgxRowIslandComponent,
         isQueryList: true,
       },
       {
         property: "allLayoutList",
-        childType: IgxRowIslandElementsComponent,
+        childType: IgxRowIslandComponent,
         isQueryList: true,
         descendants: true,
       },
@@ -697,9 +696,10 @@ export var registerConfig = [
     component: IgxPaginatorComponent,
     selector: "igc-paginator",
     parents: [
-      IgxGridElementsComponent,
-      IgxHierarchicalGridElementsComponent,
-      IgxTreeGridElementsComponent,
+      IgxGridComponent,
+      IgxHierarchicalGridComponent,
+      IgxTreeGridComponent,
+      IgxHierarchicalGridComponent,
       IgxPivotGridComponent,
     ],
     contentQueries: [],
@@ -875,145 +875,19 @@ export var registerConfig = [
     component: IgxRowIslandComponent,
     selector: "igc-row-island",
     parents: [
-      IgxGridElementsComponent,
-      IgxHierarchicalGridElementsComponent,
-      IgxRowIslandElementsComponent,
-    ],
-    contentQueries: [],
-    additionalProperties: [
-      { name: "rowIslandAPI", writable: true },
-      { name: "gridAPI", writable: true },
-      { name: "navigation", writable: true },
-      { name: "validation" },
-      { name: "cdr" },
-      { name: "shouldGenerate", writable: true },
-      { name: "rowList" },
-      { name: "dataRowList" },
-      { name: "transactions" },
-      { name: "nativeElement" },
-      { name: "defaultRowHeight" },
-      { name: "columns" },
-      { name: "pinnedRows" },
-    ],
-    methods: [
-      "isRecordPinnedByIndex",
-      "toggleColumnVisibility",
-      "expandAll",
-      "collapseAll",
-      "expandRow",
-      "collapseRow",
-      "toggleRow",
-      "getHeaderGroupWidth",
-      "getColumnByName",
-      "getColumnByVisibleIndex",
-      "recalculateAutoSizes",
-      "moveColumn",
-      "markForCheck",
-      "addRow",
-      "deleteRow",
-      "updateCell",
-      "updateRow",
-      "getRowData",
-      "sort",
-      "filter",
-      "filterGlobal",
-      "enableSummaries",
-      "disableSummaries",
-      "clearFilter",
-      "clearSort",
-      "pinColumn",
-      "unpinColumn",
-      "pinRow",
-      "unpinRow",
-      "findNext",
-      "findPrev",
-      "refreshSearch",
-      "clearSearch",
-      "getPinnedStartWidth",
-      "getPinnedEndWidth",
-      "selectRows",
-      "deselectRows",
-      "selectAllRows",
-      "deselectAllRows",
-      "clearCellSelection",
-      "selectRange",
-      "getSelectedRanges",
-      "getSelectedData",
-      "selectedColumns",
-      "selectColumns",
-      "deselectColumns",
-      "deselectAllColumns",
-      "selectAllColumns",
-      "getSelectedColumnsData",
-      "navigateTo",
-      "getNextCell",
-      "getPreviousCell",
-      "openAdvancedFilteringDialog",
-      "closeAdvancedFilteringDialog",
-      "endEdit",
-      "beginAddRowById",
-      "beginAddRowByIndex",
-    ],
-    templateProps: [
-      "toolbarTemplate",
-      "paginatorTemplate",
-      "emptyGridTemplate",
-      "addRowEmptyTemplate",
-      "loadingGridTemplate",
-      "dragGhostCustomTemplate",
-      "rowEditTextTemplate",
-      "rowAddTextTemplate",
-      "rowEditActionsTemplate",
-      "rowExpandedIndicatorTemplate",
-      "rowCollapsedIndicatorTemplate",
-      "headerExpandedIndicatorTemplate",
-      "headerCollapsedIndicatorTemplate",
-      "excelStyleHeaderIconTemplate",
-      "sortAscendingHeaderIconTemplate",
-      "sortDescendingHeaderIconTemplate",
-      "sortHeaderIconTemplate",
-      "headSelectorTemplate",
-      "rowSelectorTemplate",
-      "dragIndicatorIconTemplate",
-    ],
-    numericProps: [
-      "snackbarDisplayTime",
-      "summaryRowHeight",
-      "rowHeight",
-      "totalRecords",
-    ],
-    boolProps: [
-      "expandChildren",
-      "showExpandAll",
-      "autoGenerate",
-      "moving",
-      "hideRowSelectors",
-      "rowDraggable",
-      "rowEditable",
-      "isLoading",
-      "allowFiltering",
-      "allowAdvancedFiltering",
-      "showSummaryOnCollapse",
-      "selectRowOnClick",
-    ],
-  },
-  {
-    component: IgxRowIslandElementsComponent,
-    selector: "igc-row-island",
-    parents: [
-      IgxGridElementsComponent,
-      IgxHierarchicalGridElementsComponent,
-      IgxRowIslandElementsComponent,
+      IgxGridComponent,
+      IgxHierarchicalGridComponent,
+      IgxRowIslandComponent,
     ],
     contentQueries: [
       {
         property: "childLayoutList",
-        childType: IgxRowIslandElementsComponent,
+        childType: IgxRowIslandComponent,
         isQueryList: true,
       },
       {
         property: "children",
-        childType: IgxRowIslandElementsComponent,
+        childType: IgxRowIslandComponent,
         isQueryList: true,
       },
       {
@@ -1153,7 +1027,7 @@ export var registerConfig = [
     ],
   },
   {
-    component: IgxTreeGridElementsComponent,
+    component: IgxTreeGridComponent,
     selector: "igc-tree-grid",
     parents: [],
     contentQueries: [
