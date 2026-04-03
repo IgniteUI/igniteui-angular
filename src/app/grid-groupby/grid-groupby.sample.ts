@@ -1,12 +1,29 @@
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition, GroupMemberCountSortingStrategy, IRowSelectionEventArgs, ISortingExpression, ISortingOptions, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxSwitchComponent, IgxToggleActionDirective, SortingDirection } from 'igniteui-angular';
+import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition, GroupMemberCountSortingStrategy, IRowSelectionEventArgs, ISortingExpression, ISortingOptions, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxSwitchComponent, IgxToggleActionDirective, SortingDirection } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-sample',
     styleUrls: ['grid-groupby.sample.scss'],
     templateUrl: 'grid-groupby.sample.html',
-    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent]
+    imports: [
+        IgxSwitchComponent,
+        FormsModule,
+        IgxButtonDirective,
+        IgxToggleActionDirective,
+        IgxDropDownItemNavigationDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxButtonGroupComponent,
+        IgxGridComponent,
+        IgxColumnComponent,
+        IgxGridToolbarComponent,
+        IgxGridToolbarActionsComponent,
+        IgxGridToolbarPinningComponent,
+        IgxGridToolbarHidingComponent,
+        IgxGridToolbarAdvancedFilteringComponent,
+        IgxGridToolbarExporterComponent
+    ]
 })
 export class GridGroupBySampleComponent implements OnInit {
     @HostBinding('style.--ig-size')

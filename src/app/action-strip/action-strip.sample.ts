@@ -71,6 +71,7 @@ class User {
         IgxCellTemplateDirective,
         IgxGridEditingActionsComponent,
         IgxActionStripMenuItemDirective,
+        IgxButtonDirective,
         SizeSelectorComponent
     ]
 })

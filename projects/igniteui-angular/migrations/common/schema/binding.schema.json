@@ -43,8 +43,8 @@
         },
         "ElementType": {
             "enum": [
-                "component",
-                "directive"
+                "directive",
+                "component"
             ],
             "type": "string"
         },
