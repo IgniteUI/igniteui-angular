@@ -1,4 +1,4 @@
-import {Directive, HostBinding, Input} from '@angular/core';
+import {Directive, Input, signal} from '@angular/core';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
 /**
@@ -18,27 +18,16 @@ export type IgxIconButtonType = typeof IgxBaseButtonType[keyof typeof IgxBaseBut
  */
 @Directive({
     selector: '[igxIconButton]',
-    standalone: true
+    standalone: true,
+    host: {
+        'class': 'igx-icon-button',
+        '[class.igx-icon-button--flat]': '_type() === "flat"',
+        '[class.igx-icon-button--contained]': '_type() === "contained"',
+        '[class.igx-icon-button--outlined]': '_type() === "outlined"',
+    }
 })
 export class IgxIconButtonDirective extends IgxButtonBaseDirective {
-    private static ngAcceptInputType_type: IgxIconButtonType | '';
-
-    constructor() {
-        super();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-icon-button')
-    protected _cssClass = 'igx-icon-button';
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _type: IgxIconButtonType;
+    protected readonly _type = signal<IgxIconButtonType>(IgxBaseButtonType.Contained);
 
     /**
      * Sets the type of the icon button.
@@ -48,38 +37,8 @@ export class IgxIconButtonDirective extends IgxButtonBaseDirective {
      * <button type="button" igxIconButton="flat"></button>
      * ```
      */
-    @Input('igxIconButton')
+    @Input({ alias: 'igxIconButton', transform: (value: string) => value.trim() || IgxBaseButtonType.Contained })
     public set type(type: IgxIconButtonType) {
-        const t = type ? type : IgxBaseButtonType.Contained;
-        if (this._type !== t) {
-            this._type = t;
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-icon-button--flat')
-    public get flat(): boolean {
-        return this._type === IgxBaseButtonType.Flat;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-icon-button--contained')
-    public get contained(): boolean {
-        return this._type === IgxBaseButtonType.Contained;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-icon-button--outlined')
-    public get outlined(): boolean {
-        return this._type === IgxBaseButtonType.Outlined;
+        this._type.set(type);
     }
 }

@@ -1,25 +1,10 @@
-import {
-    Directive,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Input,
-    Output,
-    Renderer2,
-    booleanAttribute,
-    inject
-} from '@angular/core';
+import { Directive, EventEmitter, Input, Output, booleanAttribute, signal } from '@angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
-const IgxButtonType = {
-    ...IgxBaseButtonType,
-    FAB: 'fab'
-} as const;
+const IgxButtonType = { ...IgxBaseButtonType, FAB: 'fab' } as const;
 
-/**
- * Determines the Button type.
- */
+/** The type of the button. */
 export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
 
 /**
@@ -43,62 +28,27 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
  */
 @Directive({
     selector: '[igxButton]',
-    standalone: true
+    standalone: true,
+    host: {
+        'class': 'igx-button',
+        '[class.igx-button--flat]': '_type() === "flat"',
+        '[class.igx-button--contained]': '_type() === "contained"',
+        '[class.igx-button--outlined]': '_type() === "outlined"',
+        '[class.igx-button--fab]': '_type() === "fab"',
+        '[attr.aria-label]': '_label() || null',
+        '[attr.data-selected]': '_selected() ? "true" : "false"',
+        '(click)': 'buttonSelected.emit({ button: this })',
+    }
 })
 export class IgxButtonDirective extends IgxButtonBaseDirective {
-    private _renderer = inject(Renderer2);
+    protected readonly _type = signal<IgxButtonType>(IgxButtonType.Flat);
+    protected readonly _label = signal('');
+    protected readonly _selected = signal(false);
 
-    private static ngAcceptInputType_type: IgxButtonType | '';
-
-    /**
-     * Called when the button is selected.
-     */
+    /** Emitted when the button is selected. */
     @Output()
-    public buttonSelected = new EventEmitter<IButtonEventArgs>();
+    public readonly buttonSelected = new EventEmitter<IButtonEventArgs>();
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button')
-    public _cssClass = 'igx-button';
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _type: IgxButtonType;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _color: string;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _label: string;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _backgroundColor: string;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _selected = false;
-
-    @HostListener('click')
-    protected emitSelected() {
-        this.buttonSelected.emit({
-            button: this
-        });
-    }
 
     /**
      * Gets or sets whether the button is selected.
@@ -111,19 +61,13 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
      */
     @Input({ transform: booleanAttribute })
     public set selected(value: boolean) {
-        if (this._selected !== value) {
-            this._selected = value;
-            this._renderer.setAttribute(this.nativeElement, 'data-selected', value.toString());
-        }
+        this._selected.set(value);
     }
 
     public get selected(): boolean {
-        return this._selected;
+        return this._selected();
     }
 
-    constructor() {
-        super();
-    }
 
     /**
      * Sets the type of the button.
@@ -133,12 +77,9 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
      * <button type="button" igxButton="outlined"></button>
      * ```
      */
-    @Input('igxButton')
+    @Input({ alias: 'igxButton', transform: (value: string) => value.trim() || IgxButtonType.Flat })
     public set type(type: IgxButtonType) {
-        const t = type ? type : IgxButtonType.Flat;
-        if (this._type !== t) {
-            this._type = t;
-        }
+        this._type.set(type);
     }
 
     /**
@@ -149,63 +90,9 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
      * <button type="button" igxButton="flat" igxLabel="Label"></button>
      * ```
      */
-    @Input('igxLabel')
+    @Input({ alias: 'igxLabel' })
     public set label(value: string) {
-        this._label = value || this._label;
-        this._renderer.setAttribute(this.nativeElement, 'aria-label', this._label);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--flat')
-    public get flat(): boolean {
-        return this._type === IgxButtonType.Flat;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--contained')
-    public get contained(): boolean {
-        return this._type === IgxButtonType.Contained;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--outlined')
-    public get outlined(): boolean {
-        return this._type === IgxButtonType.Outlined;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--fab')
-    public get fab(): boolean {
-        return this._type === IgxButtonType.FAB;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public select() {
-        this.selected = true;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public deselect() {
-        this.selected = false;
-        this.focused = false;
+        this._label.set(value || '');
     }
 }
 

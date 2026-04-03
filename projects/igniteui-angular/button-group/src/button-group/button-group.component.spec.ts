@@ -106,7 +106,7 @@ describe('IgxButtonGroup', () => {
 
         expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
 
-        btnGroupInstance.buttons[1].select();
+        btnGroupInstance.buttons[1].selected = true;
         fixture.detectChanges();
 
         expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
@@ -126,8 +126,8 @@ describe('IgxButtonGroup', () => {
         fixture.detectChanges();
 
         const btnGroupInstance = fixture.componentInstance.buttonGroup;
-        btnGroupInstance.buttons[0].select();
-        btnGroupInstance.buttons[1].select();
+        btnGroupInstance.buttons[0].selected = true;
+        btnGroupInstance.buttons[1].selected = true;
         spyOn(btnGroupInstance.deselected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
@@ -135,7 +135,7 @@ describe('IgxButtonGroup', () => {
 
         expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
 
-        btnGroupInstance.buttons[1].deselect();
+        btnGroupInstance.buttons[1].selected = false;
         fixture.detectChanges();
 
         expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
