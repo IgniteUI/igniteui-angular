@@ -186,6 +186,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
+import { IgxGridPinningActionsComponent } from '../action-strip/grid-actions/grid-pinning-actions.component';
 
 interface IMatchInfoCache {
     row: any;
@@ -7838,9 +7839,18 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.disableTransitions = false;
 
         this.hideOverlays();
-        this.actionStrip?.hide();
-        if (this.actionStrip) {
-            this.actionStrip.context = null;
+        const context = this.actionStrip?.context;
+        const contextEl = context?.element?.nativeElement as HTMLElement;
+        const keepActionStrip =
+            !!context?.pinned &&
+            !!contextEl?.isConnected &&
+            !this.hasMenuPinningActions();
+
+        if (!keepActionStrip) {
+            if (this.actionStrip) {
+                this.actionStrip.hide();
+                this.actionStrip.context = null;
+            }
         }
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
@@ -7848,6 +7858,23 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
+    }
+
+    protected hasMenuPinningActions(): boolean {
+        const strip = this.actionStrip;
+        const actionButtons = strip?.actionButtons;
+
+        if (!actionButtons?.length) {
+            return false;
+        }
+
+        return actionButtons
+            .toArray()
+            .some(
+                (button) =>
+                    button instanceof IgxGridPinningActionsComponent &&
+                    button.asMenuItems
+            );
     }
 
     protected horizontalScrollHandler(event) {
