@@ -4233,7 +4233,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.paginator) {
                 this.paginator.totalRecords = this.totalRecords ? this.totalRecords : this.paginator.totalRecords;
-                this.paginator.overlaySettings = { outlet: this.outlet };
             }
             if (this.hasColumnsToAutosize) {
                 this.autoSizeColumnsInView();
