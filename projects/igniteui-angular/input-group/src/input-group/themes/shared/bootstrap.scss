@@ -536,7 +536,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
 
         igx-prefix,
         [igxPrefix],
-        igx-suffix:not(.igx-input-group__toggle-button),
+        igx-suffix:not(.igx-input-group__toggle-button, .igx-combo__toggle-button),
         [igxSuffix] {
             background: var-get($_theme, 'border-disabled-background');
             color: var-get($_theme, 'disabled-text-color');

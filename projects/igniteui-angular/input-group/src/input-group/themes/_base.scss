@@ -68,8 +68,8 @@ $transition-timing: .25s $out-cubic;
             cursor: default;
         }
 
-        igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
-        [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
+        igx-suffix:not(.igx-combo__toggle-button, .igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
+        [igxSuffix]:not(.igx-combo__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
             color: var-get($theme, 'input-suffix-color');
             background: var-get($theme, 'input-suffix-background');
             cursor: default;
@@ -397,8 +397,8 @@ $transition-timing: .25s $out-cubic;
                 background: var-get($theme, 'input-prefix-background--filled');
             }
 
-            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
-            [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
+            igx-suffix:not(.igx-combo__toggle-button, .igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
+            [igxSuffix]:not(.igx-combo__toggle-button, .igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
                 color: var-get($theme, 'input-suffix-color--filled');
                 background: var-get($theme, 'input-suffix-background--filled');
             }
@@ -425,8 +425,8 @@ $transition-timing: .25s $out-cubic;
                 background: var-get($theme, 'input-prefix-background--focused');
             }
 
-            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
-            [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
+            igx-suffix:not(.igx-combo__toggle-button, .igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon),
+            [igxSuffix]:not(.igx-combo__toggle-button, .igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__clear-button, .igx-input-group__case-icon) {
                 color: var-get($theme, 'input-suffix-color--focused');
                 background: var-get($theme, 'input-suffix-background--focused');
             }
@@ -467,8 +467,8 @@ $transition-timing: .25s $out-cubic;
 
             igx-prefix,
             [igxPrefix],
-            igx-suffix:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon),
-            [igxSuffix]:not(.igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon) {
+            igx-suffix:not(.igx-combo__toggle-button, .igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon),
+            [igxSuffix]:not(.igx-combo__toggle-button, .igx-input-group__toggle-button, .igx-input-group__clear-icon, .igx-input-group__case-icon) {
                 color: var-get($theme, 'disabled-text-color');
                 background: inherit;
             }

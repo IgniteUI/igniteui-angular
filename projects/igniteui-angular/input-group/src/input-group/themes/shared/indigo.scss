@@ -133,6 +133,7 @@ $_theme: $indigo;
             border-block-end-color: var-get($_theme, 'hover-bottom-line-color');
 
             .igx-input-group__toggle-button {
+            .igx-combo__toggle-button {
                 color: var(--toggle-button-foreground-focus);
             }
         }

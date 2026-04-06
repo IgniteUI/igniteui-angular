@@ -236,7 +236,7 @@ $_theme: $fluent;
     @include m(disabled) {
         igx-prefix,
         [igxPrefix],
-        igx-suffix:not(.igx-input-group__toggle-button),
+        igx-suffix:not(.igx-input-group__toggle-button, .igx-combo__toggle-button),
         [igxSuffix] {
             color: var-get($_theme, 'disabled-text-color');
         }
