@@ -75,6 +75,13 @@
 	overflow-y: auto;
     padding: var(--content-spacing);
 	color: var(--ig-gray-900);
+	
+	 > div {
+		max-width: 1200px;
+		width: 100%;
+		min-width: 320px;
+		margin: 0 auto;
+	}
 }
 
 .demos-filter {
