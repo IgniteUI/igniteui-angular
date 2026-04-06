@@ -1160,7 +1160,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /** @hidden @internal */
     @ContentChild(IgxActionStripToken)
-    public actionStripComponent: IgxActionStripToken;
+    protected actionStripComponent: IgxActionStripToken;
 
     /** @hidden @internal */
     public get actionStrip() {

@@ -45,7 +45,7 @@ import { IForOfState } from 'igniteui-angular/directives';
  * Row island
  *
  * @igxModule IgxHierarchicalGridModule
- * @igxParent IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent
+ * @igxParent IgxHierarchicalGridComponent, IgxRowIslandComponent
  *
  */
 @Component({

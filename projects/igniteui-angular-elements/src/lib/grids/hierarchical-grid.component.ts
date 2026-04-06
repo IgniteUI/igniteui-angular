@@ -125,6 +125,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGrid {
         });
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    /* blazorInclude */
     /* contentChildren */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: RowIslandCollection */

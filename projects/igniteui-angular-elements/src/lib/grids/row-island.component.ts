@@ -22,7 +22,7 @@ import { IgxActionStripToken } from 'igniteui-angular/core';
  * Row island
  *
  * @igxModule IgxHierarchicalGridModule
- * @igxParent IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent
+ * @igxParent IgxHierarchicalGridComponent, IgxRowIslandComponent
  *
  */
 @Component({

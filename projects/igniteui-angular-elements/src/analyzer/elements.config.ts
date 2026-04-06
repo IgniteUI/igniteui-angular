@@ -557,7 +557,6 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
-      { name: "childLayoutList", writable: true },
       { name: "foreignKey" },
       { name: "selectedCells" },
       { name: "gridAPI", writable: true },
@@ -874,11 +873,7 @@ export var registerConfig = [
   {
     component: IgxRowIslandComponent,
     selector: "igc-row-island",
-    parents: [
-      IgxGridComponent,
-      IgxHierarchicalGridComponent,
-      IgxRowIslandComponent,
-    ],
+    parents: [IgxHierarchicalGridComponent, IgxRowIslandComponent],
     contentQueries: [
       {
         property: "childLayoutList",
