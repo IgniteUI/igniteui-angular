@@ -52,6 +52,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
 @Component({
     selector: 'igx-simple-combo',
     templateUrl: 'simple-combo.component.html',
+    styleUrls: ['../../../combo/src/combo/combo.component.css'],
     providers: [
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxSimpleComboComponent },
