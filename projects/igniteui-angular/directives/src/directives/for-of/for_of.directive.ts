@@ -1538,8 +1538,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             scrollOffset = scroll && this.scrollComponent.size ?
             currentScroll - this.sizesCache[this.state.startIndex] : 0;
         }
-        const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
-        this.dc.instance._viewContainer.element.nativeElement.style[dir] = -(scrollOffset) + 'px';
+        const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'transform';
+        this.dc.instance._viewContainer.element.nativeElement.style[dir] = this.igxForScrollOrientation === 'horizontal' ?
+         -(scrollOffset) + 'px' :
+         `translateY(${-scrollOffset}px)`;
     }
 
     protected _adjustScrollPositionAfterSizeChange(sizeDiff) {
