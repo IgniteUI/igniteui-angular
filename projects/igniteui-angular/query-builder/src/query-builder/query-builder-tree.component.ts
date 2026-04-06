@@ -39,8 +39,7 @@ import {
     DEFAULT_LOCALE,
     onResourceChangeHandle,
     IgxDateFormatterPipe,
-    isTree,
-    IgxOverlayOutletDirective
+    isTree
 } from 'igniteui-angular/core';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
@@ -404,11 +403,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public pickerOutlet: IgxOverlayOutletDirective | ElementRef;
-
-    /**
-     * @hidden @internal
-     */
     public prevFocusedExpression: ExpressionOperandItem;
 
     /**
@@ -714,15 +708,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public get selectedField(): FieldType {
         return this._selectedField;
-    }
-
-    /**
-     * @hidden @internal
-     *
-     * used by the grid
-     */
-    public setPickerOutlet(outlet?: IgxOverlayOutletDirective | ElementRef) {
-        this.pickerOutlet = outlet;
     }
 
     /**
