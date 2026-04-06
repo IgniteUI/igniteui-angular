@@ -657,6 +657,7 @@ export interface GridType extends IGridDataBindable {
     expansionStates: Map<any, boolean>;
     parentVirtDir: any;
     tbody: any;
+    dragGhostHost: ElementRef<HTMLElement>;
     verticalScrollContainer: any;
     dataRowList: any;
     rowList: any;
