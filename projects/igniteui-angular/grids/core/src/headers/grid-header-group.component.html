@@ -58,7 +58,7 @@
             'igx-grid-th--selected': selected,
             'igx-grid-th--active': activeGroup}"
         [igxColumnMovingDrag]="column"
-        [ghostHost]="grid.dragGhostHost.nativeElement"
+        [ghostHost]="grid.dragGhostHost?.nativeElement"
         [attr.droppable]="true"
         [igxColumnMovingDrop]="column"
         (pointerdown)="pointerdown($event)"
@@ -108,7 +108,7 @@
         [ngClass]="column.headerClasses"
         [ngStyle]="column.headerStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
         [igxColumnMovingDrag]="column"
-        [ghostHost]="grid.dragGhostHost.nativeElement"
+        [ghostHost]="grid.dragGhostHost?.nativeElement"
         [attr.droppable]="true"
         (pointerdown)="activate()"
         [style.width]="column.resolvedWidth"
