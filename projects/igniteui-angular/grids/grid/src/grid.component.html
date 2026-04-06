@@ -177,7 +177,7 @@
     </div>
 
     <div class="igx-grid__loading-outlet">
-        <div igxToggle>
+        <div igxToggle #loadingOverlay>
             @if (shouldOverlayLoading) {
                 <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
             }

@@ -65,8 +65,7 @@
     </div>
     <div igxToggle #loadingOverlay>
         @if (shouldOverlayLoading) {
-            <igx-circular-bar [indeterminate]="true">
-            </igx-circular-bar>
+            <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
         }
     </div>
     @if (hasMovableColumns && columnInDrag) {
@@ -123,7 +122,6 @@
 @if (colResizingService.showResizer) {
     <igx-pivot-grid-column-resizer [restrictResizerTop]="calculateResizerTop()"></igx-pivot-grid-column-resizer>
 }
-<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxDragGhostHost></div>
 
