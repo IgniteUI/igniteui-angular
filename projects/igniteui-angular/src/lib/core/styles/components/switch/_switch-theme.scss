@@ -56,21 +56,21 @@
     ), $variant);
 
     $thumb-resting-shadow: map.get((
-        'material': var-get($theme, 'resting-shadow'),
+        'material': var-get($theme, 'resting-elevation'),
         'fluent': none,
         'bootstrap': none,
         'indigo': none
     ), $variant);
 
     $thumb-hover-shadow: map.get((
-        'material': var-get($theme, 'hover-shadow'),
+        'material': var-get($theme, 'hover-elevation'),
         'fluent': none,
         'bootstrap': none,
         'indigo': none
     ), $variant);
 
     $thumb-disabled-shadow: map.get((
-        'material': var-get($theme, 'disabled-shadow'),
+        'material': var-get($theme, 'disabled-elevation'),
         'fluent': none,
         'bootstrap': none,
         'indigo': none
@@ -130,14 +130,12 @@
     %switch-composite--hover {
         border-color: var-get($theme, 'border-hover-color');
 
-        @if $variant != 'material' {
-            %switch-thumb {
-                background: var-get($theme, 'thumb-off-hover-color');
-            }
+        %switch-thumb {
+            background: var-get($theme, 'thumb-off-hover-color');
+        }
 
-            %switch-thumb--x {
-                background: var-get($theme, 'thumb-on-color');
-            }
+        %switch-thumb--x {
+            background: var-get($theme, 'thumb-on-color');
         }
     }
 
@@ -153,10 +151,8 @@
         background: var-get($theme, 'track-on-hover-color');
         border-color: var-get($theme, 'border-on-hover-color');
 
-        @if $variant != 'material' {
-            %switch-thumb {
-                background: var-get($theme, 'thumb-on-color');
-            }
+        %switch-thumb {
+            background: var-get($theme, 'thumb-on-color');
         }
     }
 
@@ -259,7 +255,6 @@
 
         @if $variant == 'indigo' {
             %switch-composite {
-                border-radius: var-get($theme, 'border-radius-thumb');
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
             }
         }

@@ -5,7 +5,7 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
-import { DefaultSortingStrategy, ISortingExpression } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridType } from './grid.interface';
 
 const DATE_TYPE = 'date';
@@ -141,6 +141,9 @@ export class IgxSorting implements IGridSortingStrategy {
     private prepareExpressions(expressions: ISortingExpression[], grid: GridType): IGridInternalSortingExpression[] {
         const multipleSortingExpressions: IGridInternalSortingExpression[] = [];
         for (const expr of expressions) {
+            if (expr.dir === SortingDirection.None) {
+                continue;
+            }
             if (!expr.strategy) {
                 expr.strategy = DefaultSortingStrategy.instance();
             }

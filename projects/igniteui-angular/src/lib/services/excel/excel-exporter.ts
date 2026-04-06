@@ -77,6 +77,10 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         const firstDataElement = data[0];
         const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
         const isPivotGrid = firstDataElement?.type === ExportRecordType.PivotGridRecord;
+        const ownersKeys = Array.from(this._ownersMap.keys());
+        const firstKey = ownersKeys[0];
+        const isHierarchicalGridByMap = firstKey && typeof firstKey !== 'string';
+        const filterColumns = (columns) => columns.filter(col => col.field !== GRID_LEVEL_COL && !col.skip && col.headerType === ExportHeaderType.ColumnHeader);
 
         let rootKeys;
         let columnCount;
@@ -113,20 +117,30 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                 rootKeys = this._ownersMap.get(firstDataElement.owner).columns.filter(c => !c.skip).map(c => c.field);
                 defaultOwner = this._ownersMap.get(firstDataElement.owner);
             } else {
-                defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
-                const columns = defaultOwner.columns.filter(col => col.field !== GRID_LEVEL_COL && !col.skip && col.headerType === ExportHeaderType.ColumnHeader);
+                // Check if this is actually a hierarchical grid (when data only contains summary records)
+                defaultOwner = isHierarchicalGridByMap
+                    ? this._ownersMap.get(firstKey)
+                    : this._ownersMap.get(DEFAULT_OWNER) || this._ownersMap.get(firstKey);
 
-                columnWidths = defaultOwner.columnWidths;
-                indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
-                columnCount = isPivotGrid ? columns.length + this.pivotGridFilterFieldsCount : columns.length;
-                rootKeys = columns.map(c => c.field);
+                if (defaultOwner) {
+                    const columns = filterColumns(defaultOwner.columns);
+
+                    columnWidths = defaultOwner.columnWidths;
+                    indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
+                    columnCount = isPivotGrid ? columns.length + this.pivotGridFilterFieldsCount : columns.length;
+                    rootKeys = columns.map(c => c.field);
+                }
             }
         } else {
-            const ownersKeys = Array.from(this._ownersMap.keys());
+            // For hierarchical grids with empty data, use the grid instance; otherwise try DEFAULT_OWNER first
+            defaultOwner = isHierarchicalGridByMap
+                ? this._ownersMap.get(firstKey)
+                : this._ownersMap.get(DEFAULT_OWNER) || this._ownersMap.get(firstKey);
 
-            defaultOwner = this._ownersMap.get(ownersKeys[0]);
-            columnWidths = defaultOwner.columnWidths;
-            columnCount = defaultOwner.columns.filter(col => col.field !== GRID_LEVEL_COL && !col.skip && col.headerType === ExportHeaderType.ColumnHeader).length;
+            if (defaultOwner) {
+                columnWidths = defaultOwner.columnWidths;
+                columnCount = filterColumns(defaultOwner.columns).length;
+            }
         }
 
         const worksheetData =

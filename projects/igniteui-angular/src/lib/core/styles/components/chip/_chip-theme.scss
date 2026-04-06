@@ -540,7 +540,7 @@
         @extend %igx-chip;
 
         position: absolute;
-        box-shadow: var-get($theme, 'ghost-shadow');
+        box-shadow: var-get($theme, 'ghost-elevation');
         overflow: hidden;
         color: var-get($theme, 'focus-text-color');
         background: var-get($theme, 'ghost-background');

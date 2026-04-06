@@ -14,3 +14,15 @@
     justify-content: center;
     padding: 8px;
 }
+
+.custom-controls {
+   igx-switch {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+
+        label {
+            margin: 0;
+        }
+   }
+}

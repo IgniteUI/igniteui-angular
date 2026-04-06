@@ -254,8 +254,8 @@
                             <igx-pivot-row-header-group #rowDimensionHeaders
                                 [ngClass]="dimCol.headerGroupClasses"
                                 [ngStyle]="dimCol.headerGroupStyles | igxHeaderGroupStyle:dimCol:grid.pipeTrigger"
-                                [style.min-width]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
-                                [style.flex-basis]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
+                                [style.width.px]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
+                                [style.flex-basis.px]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"
                                 [column]="dimCol"
                                 [rootDimension]="grid.visibleRowDimensions[colIndex]"
                                 [dimWidth]="grid.rowDimensionWidthToPixels(this.grid.visibleRowDimensions[colIndex])"

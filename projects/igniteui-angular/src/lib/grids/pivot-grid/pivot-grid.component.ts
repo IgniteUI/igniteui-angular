@@ -2021,7 +2021,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected getPivotRowHeaderContentWidth(headerGroup: IgxPivotRowHeaderGroupComponent) {
-        const headerSizes = this.getHeaderCellWidth(headerGroup.header.refInstance.nativeElement);
+        const headerSizes = this.getHeaderCellWidth(headerGroup.nativeElement);
         return headerSizes.width + headerSizes.padding;
     }
 
@@ -2556,6 +2556,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (this.hasHorizontalLayout) {
             // Trigger pipes to recalc heights for the horizontal layout mrl rows.
             this.regroupTrigger++;
+        } else {
+            this.pipeTrigger++;
         }
     }
 

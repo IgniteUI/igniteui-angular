@@ -431,12 +431,18 @@ export class IgxOverlayService implements OnDestroy {
             }
         }
         this.updateSize(info);
+        const openAnimation = info.settings.positionStrategy.settings.openAnimation;
+        const closeAnimation = info.settings.positionStrategy.settings.closeAnimation;
         info.settings.positionStrategy.position(
             info.elementRef.nativeElement.parentElement,
             { width: info.initialSize.width, height: info.initialSize.height },
             this._document,
             true,
             info.settings.target);
+        if (openAnimation !== info.settings.positionStrategy.settings.openAnimation ||
+            closeAnimation !== info.settings.positionStrategy.settings.closeAnimation){
+                this.buildAnimationPlayers(info);
+            }
         this.addModalClasses(info);
         if (info.settings.positionStrategy.settings.openAnimation) {
             // TODO: should we build players again. This was already done in attach!!!

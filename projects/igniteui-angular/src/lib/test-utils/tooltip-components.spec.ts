@@ -149,3 +149,58 @@ export class IgxTooltipWithCloseButtonComponent {
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
     @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
 }
+
+@Component({
+    template: `
+    <button class="btn" [igxTooltipTarget]="tooltipRef">
+      Hover me
+    </button>
+
+    <div igxTooltip #tooltipRef="tooltip">
+      <div class="nested" style="background: red; width: 400px; color: white; padding: 4px;">
+        <span>Nested content</span>
+      </div>
+    </div>
+    `,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective],
+    standalone: true
+})
+export class IgxTooltipWithNestedContentComponent {
+    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip!: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget!: IgxTooltipTargetDirective;
+}
+
+@Component({
+    template: `
+    <button #targetLevel1 [igxTooltipTarget]="tooltipLevel1" [hasArrow]="true">
+      Parent
+    </button>
+    <!-- Level 1 Tooltip -->
+    <div #tooltipLevel1="tooltip" igxTooltip>
+      Parent tooltip
+      <button #targetLevel2 [igxTooltipTarget]="tooltipLevel2" [hasArrow]="true">
+        Child
+      </button>
+      <!-- Level 2 Tooltip -->
+      <div #tooltipLevel2="tooltip" igxTooltip>
+        Child tooltip
+        <button #targetLevel3 [igxTooltipTarget]="tooltipLevel3" [hasArrow]="true">
+            Grandchild
+        </button>
+        <!-- Level 3 Tooltip -->
+        <div #tooltipLevel3="tooltip" igxTooltip>Grandchild tooltip</div>
+      </div>
+    </div>
+    `,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective],
+    standalone: true
+})
+export class IgxTooltipNestedTooltipsComponent {
+    @ViewChild('targetLevel1', { read: IgxTooltipTargetDirective, static: true }) public targetLevel1: IgxTooltipTargetDirective;
+    @ViewChild('targetLevel2', { read: IgxTooltipTargetDirective, static: true }) public targetLevel2: IgxTooltipTargetDirective;
+    @ViewChild('targetLevel3', { read: IgxTooltipTargetDirective, static: true }) public targetLevel3: IgxTooltipTargetDirective;
+
+    @ViewChild('tooltipLevel1', { read: IgxTooltipDirective, static: true }) public tooltipLevel1: IgxTooltipDirective;
+    @ViewChild('tooltipLevel2', { read: IgxTooltipDirective, static: true }) public tooltipLevel2: IgxTooltipDirective;
+    @ViewChild('tooltipLevel3', { read: IgxTooltipDirective, static: true }) public tooltipLevel3: IgxTooltipDirective;
+}

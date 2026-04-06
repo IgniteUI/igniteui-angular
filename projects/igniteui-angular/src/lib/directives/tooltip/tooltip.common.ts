@@ -185,7 +185,7 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
             return;
         }
 
-        const arrow = tooltip.querySelector('[data-arrow="true"]') as HTMLElement;
+        const arrow = Array.from(tooltip.children).find(el => el.matches('[data-arrow="true"]')) as HTMLElement;
 
         // If display is none -> tooltipTarget's hasArrow is false
         if (!arrow || arrow.style.display === 'none') {

@@ -1,11 +1,57 @@
 <div class="columns-container">
     <article class="timepicker-column">
+        <h4 class="sample-title">Angular Time Picker with Reactive Form</h4>
+        <div class="preview" [igSize]="properties.size">
+            <form [formGroup]="reactiveForm">
+                <igx-time-picker
+                    #tpReactive
+                    formControlName="timePicker"
+                    [mode]="properties.mode"
+                    [type]="properties.type"
+                    [inputFormat]="properties.inputFormat"
+                    [displayFormat]="properties.displayFormat"
+                    [required]="properties.required"
+                    [readOnly]="properties.readonly"
+                    [disabled]="properties.disabled"
+                    [placeholder]="properties.placeholder"
+                >
+                    <label igxLabel>Select a Time</label>
+                    <span igxHint>Helper text</span>
+                </igx-time-picker>
+            </form>
+        </div>
+    </article>
+    <article class="timepicker-column">
         <h4 class="sample-title">Time Picker with Date value binding</h4>
         <p class="sample-description">{{showDate(date)}}</p>
-        <div class="preview">
-            <igx-time-picker #tp [value]="date" [minValue]="min" [maxValue]="max" [spinLoop]="spinLoop"  locale="FR"
-                [itemsDelta]="itemsDelta" [inputFormat]="format" displayFormat="longDate" (valueChange)="valueChanged($event)"
-                (validationFailed)="validationFailed($event)">
+        <div class="preview" [igSize]="properties.size">
+            <igx-time-picker
+            #tp
+            [mode]="properties.mode"
+            [type]="properties.type"
+            [value]="properties.value"
+            [minValue]="min"
+            [maxValue]="max"
+            [spinLoop]="spinLoop"
+            locale="FR"
+            [itemsDelta]="itemsDelta"
+            [inputFormat]="properties.inputFormat"
+            [displayFormat]="properties.displayFormat"
+            [readOnly]="properties.readonly"
+            [disabled]="properties.disabled"
+            [placeholder]="properties.placeholder"
+            (valueChange)="valueChanged($event)"
+            (validationFailed)="validationFailed($event)"
+            >
+                @if (hasLabel) {
+                    <label igxLabel>It's a Label</label>
+                } @if (hasPrefix) {
+                <igx-icon igxPrefix>face</igx-icon>
+                } @if (hasSuffix) {
+                <igx-icon igxSuffix>face</igx-icon>
+                } @if (hasHint) {
+                    <span igxHint>It's a hint</span>
+                }
             </igx-time-picker>
         </div>
     </article>
@@ -77,4 +123,24 @@
             </igx-time-picker>
         </div>
     </article>
+
+    <ng-template #customControls>
+        <div class="custom-controls">
+            <igx-switch id="addPrefix" [(ngModel)]="hasPrefix">
+                <label for="addPrefix">Add prefix</label>
+            </igx-switch>
+
+            <igx-switch id="addSuffix" [(ngModel)]="hasSuffix">
+                <label for="addSuffix">Add suffix</label>
+            </igx-switch>
+
+            <igx-switch id="addLabel" [(ngModel)]="hasLabel">
+                <label for="addLabel">Add Label</label>
+            </igx-switch>
+
+            <igx-switch id="addHint" [(ngModel)]="hasHint">
+                <label for="addHint">Add Hint</label>
+            </igx-switch>
+        </div>
+    </ng-template>
 </div>

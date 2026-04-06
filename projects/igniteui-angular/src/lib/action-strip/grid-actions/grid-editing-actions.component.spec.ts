@@ -15,6 +15,7 @@ import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IRowDataCancelableEventArgs, IgxColumnComponent } from '../../grids/public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -272,6 +273,59 @@ describe('igxGridEditingActions #grid ', () => {
             UIInteractions.simulateMouseEvent('mouseleave', grid.nativeElement, 0, 0);
             fixture.detectChanges();
 
+            expect(actionStrip.hidden).toBeTrue();
+        });
+
+        it('should auto-hide on delete action click.', () => {
+            const row = grid.rowList.toArray()[0];
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeFalse();
+
+            const deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
+            expect(deleteIcon.nativeElement.innerText).toBe('delete');
+            deleteIcon.parent.triggerEventHandler('click', new Event('click'));
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeTrue();
+
+        });
+
+        it('should auto-hide if context row is destroyed.', () => {
+            const row = grid.rowList.toArray()[0];
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeFalse();
+
+            // bind to no data, which removes all rows.
+            grid.data = [];
+            grid.cdr.detectChanges();
+
+            expect((row.cdr as any).destroyed).toBeTrue();
+            expect(actionStrip.hidden).toBeTrue();
+        });
+
+        it('should auto-hide if context row is cached.', () => {
+            // create group rows
+            grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false });
+            fixture.detectChanges();
+
+            // show for first data row
+            const row = grid.dataRowList.toArray()[0];
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            // collapse all groups to cache data rows
+            grid.toggleAllGroupRows();
+            fixture.detectChanges();
+
+            // not destroyed, but not in DOM anymore
+            expect((row.cdr as any).destroyed).toBeFalse();
+            expect(row.element.nativeElement.isConnected).toBe(false);
+
+            // action strip should be hidden
             expect(actionStrip.hidden).toBeTrue();
         });
     });

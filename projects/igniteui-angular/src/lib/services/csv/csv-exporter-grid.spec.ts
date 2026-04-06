@@ -12,7 +12,8 @@ import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
         ColumnsAddedOnInitComponent,
-        EmptyGridComponent } from '../../test-utils/grid-samples.spec';
+        EmptyGridComponent,
+        GridCustomSummaryComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -24,6 +25,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotGridComponent } from '../../grids/pivot-grid/pivot-grid.component';
 import { IgxPivotGridTestBaseComponent } from '../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotNumericAggregate } from '../../grids/pivot-grid/pivot-grid-aggregate';
+import { OneGroupThreeColsGridComponent } from '../../test-utils/grid-mch-sample.spec';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -39,7 +41,8 @@ describe('CSV Grid Exporter', () => {
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
                 ColumnsAddedOnInitComponent,
-                EmptyGridComponent
+                EmptyGridComponent,
+                GridCustomSummaryComponent
             ]
         }).compileComponents();
     }));
@@ -389,6 +392,44 @@ describe('CSV Grid Exporter', () => {
         exporter.export(grid, options);
 
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+    });
+
+    it('should print column headers when available when column groups are present.', async () => {
+        const fix = TestBed.createComponent(OneGroupThreeColsGridComponent);
+        fix.componentInstance.data = [];
+        fix.detectChanges();
+
+        fix.componentInstance.grid.getColumnByName('City').header = 'Test Header';
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        const wrapper = await getExportedData(grid, options);
+        wrapper.verifyData('Country,Region,Test Header', 'Only headers should be exported.');
+    });
+
+    it('should export grid with summaries correctly, not as [object Object]', async () => {
+        const fix = TestBed.createComponent(GridCustomSummaryComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        const wrapper = await getExportedData(grid, options);
+        const exportedData = wrapper['_data'];
+
+        expect(exportedData.includes('[object Object]')).toBe(false, 'CSV export should not contain [object Object]');
+
+        const lines = exportedData.split('\r\n');
+
+        // Skip header line and data lines, check summary lines at the end
+        const summaryLines = lines.slice(-4);
+
+        // Verify at least one summary line contains proper formatting (label: value pattern)
+        const hasProperlySummary = summaryLines.some(line =>
+            line.includes(':') && !line.includes('[object Object]')
+        );
+
+        expect(hasProperlySummary).toBe(true, 'Summary data should be formatted as "label: value"');
     });
 
     describe('Tree Grid CSV export', () => {

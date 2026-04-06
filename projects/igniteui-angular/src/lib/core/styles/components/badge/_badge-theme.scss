@@ -6,12 +6,15 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin badge($theme) {
     @include css-vars($theme);
-
+    $theme-variant: map.get($theme, '_meta', 'variant');
     $variant: map.get($theme, '_meta', 'theme');
 
     %igx-badge-display {
-        --size: #{rem(22px)};
-        --_badge-size: var(--size);
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --badge-size: var(--component-size);
+        --_badge-size: #{var-get($theme, 'size')};
 
         display: inline-flex;
         justify-content: center;
@@ -21,22 +24,22 @@
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background-color');
         border-radius: calc(var(--size) / 2);
-        box-shadow: var-get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
 
         igx-icon {
-            --size: var(--igx-icon-size, calc(var(--_badge-size) / 2));
+            --size: var(--igx-icon-size, #{sizable(rem(12px), rem(14px), rem(16px))});
+            --component-size: var(--badge-size);
 
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            font-weight: 400;
             color: var-get($theme, 'icon-color');
         }
 
         @if $variant == 'indigo' {
             igx-icon {
-                $icon-size: rem(12px);
+                $icon-size: sizable(rem(8px), rem(10px), rem(12px));
 
                 --ig-icon-size: #{$icon-size};
                 --igx-icon-size: #{$icon-size};
@@ -45,7 +48,7 @@
     }
 
     %igx-badge--outlined {
-        box-shadow: inset 0 0 0 rem(if($variant != 'bootstrap', 2px, 1px)) var-get($theme, 'border-color');
+        box-shadow: 0 0 0 rem(2px) var-get($theme, 'border-color');
     }
 
     %igx-badge--square {
@@ -54,23 +57,57 @@
 
     %igx-badge-value {
         white-space: nowrap;
-        padding-inline: pad-inline(rem(4px));
+        padding-inline: pad-inline(rem(4px), rem(6px), if($variant == 'indigo', rem(6px), rem(8px)));
     }
 
     %igx-badge--success {
-        background: color($color: 'success');
+        background: color($color: 'success', $variant: if($variant != 'material', if($variant == 'indigo', 700, 500), 900));
     }
 
     %igx-badge--info {
-        background: color($color: 'info');
+        background: color($color: 'info', $variant: if($variant != 'material', if($variant == 'fluent', 700, 500), 800));
     }
 
     %igx-badge--warn {
         background: color($color: 'warn');
+
+        @if $variant == 'indigo' and $theme-variant == 'light' {
+            color: color($color: 'gray', $variant: 900);
+
+            igx-icon {
+                color: color($color: 'gray', $variant: 900);
+            }
+        } @else if $variant == 'indigo' and $theme-variant == 'dark' {
+            color: color($color: 'gray', $variant: 50);
+
+            igx-icon {
+                color: color($color: 'gray', $variant: 50);
+            }
+        } @else {
+            color: contrast-color($color: 'warn', $variant: 500);
+
+            igx-icon {
+                color: contrast-color($color: 'warn', $variant: 500);
+            }
+        }
     }
 
     %igx-badge--error {
-        background: color($color: 'error');
+        background: color($color: 'error', $variant: if($variant == 'material', 700, 500));
+        color: contrast-color($color: 'error', $variant: if($variant == 'bootstrap', 100, 900));
+    }
+
+    %igx-badge--dot {
+        --_dot-size: #{var-get($theme, 'dot-size')};
+
+        min-width: var(--_dot-size);
+        min-height: var(--_dot-size);
+        padding: 0;
+
+        igx-icon,
+        > * {
+            display: none;
+        }
     }
 
     %igx-badge--hidden {
@@ -79,15 +116,28 @@
 }
 
 /// Adds typography styles for the igx-badge component.
-/// Uses the 'caption' category from the typographic scale.
+/// Uses 'caption' and 'body-2' categories from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(text: 'caption')] - The categories from the typographic scale used for type styles.
-@mixin badge-typography($categories: (text: 'caption')) {
+@mixin badge-typography($categories: (text: null), $theme: null) {
     $text: map.get($categories, 'text');
 
     %igx-badge-display {
-        @include type-style($text) {
-            margin: 0;
+        @if $text {
+            @include type-style($text);
+        } @else {
+            @if $theme == 'indigo' {
+                @include type-style('button', false) {
+                    font-size: sizable(rem(9px), rem(10px), var(--ig-button-font-size));
+                    line-height: sizable(rem(12px), rem(14px), var(--ig-button-line-height));
+                }
+            } @else {
+                font-size: sizable(var(--ig-caption-font-size), var(--ig-body-2-font-size), var(--ig-body-2-font-size));
+                font-weight: sizable(var(--ig-caption-font-weight), var(--ig-body-2-font-weight), var(--ig-body-2-font-weight));
+                line-height: sizable(var(--ig-caption-line-height), var(--ig-body-2-line-height), var(--ig-body-2-line-height));
+                letter-spacing: sizable(var(--ig-caption-letter-spacing), var(--ig-body-2-letter-spacing), var(--ig-body-2-letter-spacing));
+                text-transform: sizable(var(--ig-caption-text-transform), var(--ig-body-2-text-transform), var(--ig-body-2-text-transform));
+            }
         }
     }
 }

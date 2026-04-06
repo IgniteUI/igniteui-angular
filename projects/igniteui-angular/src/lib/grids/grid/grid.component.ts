@@ -415,7 +415,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.validation.updateAll(this._data);
         }
 
-        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data) && this.gridAPI.grid) {
             this.setupColumns();
         }
 
@@ -1302,6 +1302,17 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
         super.onColumnsAddedOrRemoved();
+    }
+
+    /**
+     * @hidden
+     */
+    protected override onColumnsChanged(change: QueryList<IgxColumnComponent>) {
+        super.onColumnsChanged(change);
+
+        if (this.hasColumnLayouts && !(this.navigation instanceof IgxGridMRLNavigationService)) {
+            this._setupNavigationService();
+        }
     }
 
     /**

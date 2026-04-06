@@ -133,6 +133,10 @@
             }
 
             &:hover {
+                @include e(label) {
+                    @extend %radio-label--invalid--hover !optional;
+                }
+
                 @include e(ripple) {
                     @extend %radio-ripple--hover !optional;
                     @extend %radio-ripple--hover-invalid !optional;

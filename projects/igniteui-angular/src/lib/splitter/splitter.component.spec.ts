@@ -490,27 +490,22 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
         const minSize = parseInt(pane1.minSize);
         spyOn(splitter, 'onMoveEnd').and.callThrough();
 
-        pane1.size = (splitter.getTotalSize() - parseInt(pane2.size)) + 'px';
-        fixture.detectChanges();
-
         splitterBarComponent.moveStart.emit(pane1);
         fixture.detectChanges();
         splitterBarComponent.movingEnd.emit(splitter.getTotalSize() -minSize);
         fixture.detectChanges();
 
         splitter.elementRef.nativeElement.style.width = '500px';
-        pane2.size = (splitter.getTotalSize() - minSize) + 'px';
         fixture.detectChanges();
 
         splitterBarComponent.moveStart.emit(pane1);
         fixture.detectChanges();
-        splitterBarComponent.movingEnd.emit(-400);
+        splitterBarComponent.movingEnd.emit(-200);
         fixture.detectChanges();
 
-        const isFullSize = pane1.size === '100%' || pane1.size === (splitter.getTotalSize() + 'px');
-
         expect(splitter.onMoveEnd).toHaveBeenCalled();
-        expect(isFullSize).toBeTruthy();
+        expect(pane1.size).toEqual('80%');
+        expect(pane2.size).toEqual('100px');
     });
 });
 

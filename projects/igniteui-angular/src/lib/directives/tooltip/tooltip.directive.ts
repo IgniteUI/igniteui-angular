@@ -1,12 +1,16 @@
 import {
     Directive, ElementRef, Input, ChangeDetectorRef, Optional, HostBinding, Inject,
     OnDestroy, inject, DOCUMENT, HostListener,
+    Renderer2,
+    AfterViewInit,
 } from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
+import { OverlaySettings } from '../../services/overlay/utilities';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective } from '../toggle/toggle.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 import { Subject, takeUntil } from 'rxjs';
+import { PlatformUtil } from '../../core/utils';
 
 let NEXT_ID = 0;
 /**
@@ -28,7 +32,7 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]',
     standalone: true
 })
-export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy {
+export class IgxTooltipDirective extends IgxToggleDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
@@ -116,6 +120,8 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
     private _role: 'tooltip' | 'status' = 'tooltip';
     private _destroy$ = new Subject<boolean>();
     private _document = inject(DOCUMENT);
+    private _renderer = inject(Renderer2);
+    private _platformUtil = inject(PlatformUtil);
 
     /** @hidden */
     constructor(
@@ -133,8 +139,13 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
         this.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
             this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
         });
+    }
 
-        this._createArrow();
+    /** @hidden */
+    public ngAfterViewInit(): void {
+        if (this._platformUtil.isBrowser) {
+            this._createArrow();
+        }
     }
 
     /** @hidden */
@@ -144,7 +155,10 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
         this._document.removeEventListener('touchstart', this.onDocumentTouchStart);
         this._destroy$.next(true);
         this._destroy$.complete();
-        this._removeArrow();
+
+        if (this.arrow) {
+            this._removeArrow();
+        }
     }
 
     /**
@@ -165,37 +179,51 @@ export class IgxTooltipDirective extends IgxToggleDirective implements OnDestroy
 
     /**
      * If there is an animation in progress, this method will reset it to its initial state.
-     * Optional `force` parameter that ends the animation.
+     * Allows hovering over the tooltip while an open/close animation is running.
+     * Stops the animation and immediately shows the tooltip.
      *
      * @hidden
-     * @param force if set to `true`, the animation will be ended.
      */
-    public stopAnimations(force: boolean = false): void {
+    public stopAnimations(): void {
         const info = this.overlayService.getOverlayById(this._overlayId);
 
         if (!info) return;
 
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
-            if (force) {
-                info.openAnimationPlayer.finish();
-                info.openAnimationPlayer = null;
-            }
         }
         if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
-            if (force) {
-                info.closeAnimationPlayer.finish();
-                info.closeAnimationPlayer = null;
-            }
+        }
+    }
+
+    /**
+     * If there is a close animation in progress, this method will end it.
+     * If there is no close animation in progress, this method will close the tooltip with no animation.
+     *
+     * @param overlaySettings settings to use for closing the tooltip
+     * @hidden
+     */
+    public forceClose(overlaySettings: OverlaySettings) {
+        const info = this.overlayService.getOverlayById(this._overlayId);
+
+        if (info && info.closeAnimationPlayer) {
+            info.closeAnimationPlayer.finish();
+            info.closeAnimationPlayer.reset();
+            info.closeAnimationPlayer = null;
+        } else if (!this.collapsed) {
+            const animation = overlaySettings.positionStrategy.settings.closeAnimation;
+            overlaySettings.positionStrategy.settings.closeAnimation = null;
+            this.close();
+            overlaySettings.positionStrategy.settings.closeAnimation = animation;
         }
     }
 
     private _createArrow(): void {
-        this._arrowEl = document.createElement('span');
-        this._arrowEl.style.position = 'absolute';
-        this._arrowEl.setAttribute('data-arrow', 'true');
-        this.element.appendChild(this._arrowEl);
+        this._arrowEl = this._renderer.createElement('span');
+        this._renderer.setStyle(this._arrowEl, 'position', 'absolute');
+        this._renderer.setAttribute(this._arrowEl, 'data-arrow', 'true');
+        this._renderer.appendChild(this.element, this._arrowEl);
     }
 
     private _removeArrow(): void {

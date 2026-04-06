@@ -291,9 +291,9 @@ export class CSVWrapper {
 
     public get pivotGridData() {
         return `ProductCategory${this._delimiter}Bulgaria${this._delimiter}USA${this._delimiter}Uruguay${this._eor}` +
-        `Accessories${this._delimiter}${this._delimiter}293${this._delimiter}${this._eor}` +
-        `Bikes${this._delimiter}${this._delimiter}${this._delimiter}68${this._eor}` +
         `Clothing${this._delimiter}774${this._delimiter}296${this._delimiter}456${this._eor}` +
+        `Bikes${this._delimiter}${this._delimiter}${this._delimiter}68${this._eor}` +
+        `Accessories${this._delimiter}${this._delimiter}293${this._delimiter}${this._eor}` +
         `Components${this._delimiter}${this._delimiter}240${this._delimiter}${this._eor}`;
     }
 }
