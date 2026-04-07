@@ -246,7 +246,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
-/* blazorAlternateName: HierarchicalGridBase */
+/* wcAlternateName: HierarchicalGridBase */
 /* blazorIndirectRender
    blazorComponent
    omitModule
