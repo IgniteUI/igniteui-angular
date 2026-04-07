@@ -1317,10 +1317,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     public tbody: ElementRef;
 
     /** @hidden @internal */
-    @ViewChild('igxDragGhostHost', { read: ElementRef, static: true })
-    public dragGhostHost?: ElementRef<HTMLElement>;
-
-    /** @hidden @internal */
     @ViewChild("bodyViewContainerRef", { read: ViewContainerRef, static: true })
     public bodyViewContainerRef?: ViewContainerRef;
 

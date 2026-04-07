@@ -20,7 +20,7 @@
         [ngClass]="column.headerClasses"
         [ngStyle]="column.headerStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
         [igxColumnMovingDrag]="column"
-        [ghostHost]="grid.dragGhostHost?.nativeElement"
+        [ghostHost]="grid.outlet.nativeElement"
         [attr.droppable]="true"
         (pointerdown)="pointerdown($event)"
         [igxColumnMovingDrop]="column"
