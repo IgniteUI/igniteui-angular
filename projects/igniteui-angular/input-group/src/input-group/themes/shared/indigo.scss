@@ -123,20 +123,21 @@ $_theme: $indigo;
     }
 
     @include e(bundle) {
-        transition: all .25s $out-cubic;
-        border-block-end: rem(1px) solid var-get($_theme, 'idle-bottom-line-color');
-        border-start-start-radius: var-get($_theme, 'box-border-radius');
-        border-start-end-radius: var-get($_theme, 'box-border-radius');
-
-        &:hover {
-            background: var-get($_theme, 'box-background-hover');
-            border-block-end-color: var-get($_theme, 'hover-bottom-line-color');
-
-            .igx-input-group__toggle-button {
-            .igx-combo__toggle-button {
-                color: var(--toggle-button-foreground-focus);
-            }
-        }
+	    transition: all .25s $out-cubic;
+	    border-block-end: rem(1px) solid var-get($_theme, 'idle-bottom-line-color');
+	    border-start-start-radius: var-get($_theme, 'box-border-radius');
+	    border-start-end-radius: var-get($_theme, 'box-border-radius');
+	    
+	    &:hover {
+		    background: var-get($_theme, 'box-background-hover');
+		    border-block-end-color: var-get($_theme, 'hover-bottom-line-color');
+		    
+		    .igx-input-group__toggle-button {
+			    .igx-combo__toggle-button {
+				    color: var(--toggle-button-foreground-focus);
+			    }
+		    }
+	    }
     }
 
     @include m(file) {
