@@ -12,7 +12,6 @@ import { IgxActionStripToken } from 'igniteui-angular/core';
 /* blazorIndirectRender */
 /* jsonAPIManageCollectionInMarkup */
 /* jsonAPIManageItemInMarkup */
-/* blazorAlternateName: RowIsland */
 /* mustUseNGParentAnchor */
 /* additionalIdentifier: ChildDataKey */
 /* contentParent: RowIsland */

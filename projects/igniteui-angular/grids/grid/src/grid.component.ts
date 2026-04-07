@@ -70,7 +70,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
-/* blazorAlternateName: GridBase */
+/* wcAlternateName: GridBase */
 /* blazorIndirectRender
    blazorComponent
    omitModule

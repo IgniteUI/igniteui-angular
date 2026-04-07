@@ -54,7 +54,7 @@ import { IgxTreeGridGroupByAreaComponent } from './tree-grid-group-by-area.compo
 
 let NEXT_ID = 0;
 
-/* blazorAlternateName: TreeGridBase */
+/* wcAlternateName: TreeGridBase */
 /* blazorIndirectRender
    blazorComponent
    omitModule

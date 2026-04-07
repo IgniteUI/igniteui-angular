@@ -36,7 +36,7 @@ import { IGridCreatedEventArgs } from './events';
 import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
 import { IForOfState } from 'igniteui-angular/directives';
 
-/* blazorAlternateName: RowIslandBase */
+/* wcAlternateName: RowIslandBase */
 /* blazorIndirectRender
    blazorComponent
    omitModule
