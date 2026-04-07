@@ -89,8 +89,7 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Input Group | `igniteui-angular/input-group` |
 | Combo / Simple Combo | `igniteui-angular/combo` |
 | Select | `igniteui-angular/select` |
-| Date Picker | `igniteui-angular/date-picker` |
-| Date Range Picker | `igniteui-angular/date-range-picker` |
+| Date Picker / Date Range Picker | `igniteui-angular/date-picker` |
 | Time Picker | `igniteui-angular/time-picker` |
 | Calendar | `igniteui-angular/calendar` |
 | Checkbox | `igniteui-angular/checkbox` |

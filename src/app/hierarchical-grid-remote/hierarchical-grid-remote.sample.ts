@@ -55,9 +55,9 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit, AfterViewI
                             fields: [
                                 { field: 'orderId', dataType: 'number' }, // first field will be treated as foreign key
                                 { field: 'productId', dataType: 'number' },
-                                { field: 'unitPrice', dataType: 'number' },
+                                { field: 'unitPrice', dataType: 'currency' },
                                 { field: 'quantity', dataType: 'number' },
-                                { field: 'discount', dataType: 'number' }
+                                { field: 'discount', dataType: 'percent' }
                             ]
                         }
                     ]
@@ -131,7 +131,7 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit, AfterViewI
             console.log('data', data);
             event.grid.data = Object.values(data);
             event.grid.isLoading = false;
-            this.cdr.detectChanges(); 
+            this.cdr.detectChanges();
         });
     }
 
