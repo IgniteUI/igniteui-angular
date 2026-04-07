@@ -2438,6 +2438,54 @@ export class IgxAddRowComponent implements OnInit {
 }
 
 @Component({
+    template: `
+<igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    @for (c of columns; track c.field) {
+        <igx-column [field]="c.field" [header]="c.field" [width]="c.width"></igx-column>
+    }
+
+    @if (showActionStrip) {
+        <igx-action-strip #actionStrip>
+            <igx-grid-editing-actions [addRow]='true'></igx-grid-editing-actions>
+        </igx-action-strip>
+    }
+</igx-grid>
+`,
+    imports: [
+        IgxGridComponent,
+        IgxColumnComponent,
+        IgxActionStripComponent,
+        IgxGridEditingActionsComponent
+    ]
+})
+export class GridDynamicActionStripComponent implements OnInit {
+    @ViewChild('actionStrip', { read: IgxActionStripComponent })
+    public actionStrip: IgxActionStripComponent;
+
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    public data: any[];
+    public columns: any[];
+    public showActionStrip = false;
+
+    public ngOnInit() {
+        this.columns = [
+            { field: 'ID', width: '200px' },
+            { field: 'CompanyName', width: '200px' },
+            { field: 'ContactName', width: '200px' }
+        ];
+
+        this.data = [
+            { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders' },
+            { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo' },
+            { ID: 'ANTON', CompanyName: 'Antonio Moreno Taquería', ContactName: 'Antonio Moreno' }
+        ];
+    }
+}
+
+@Component({
     template: GridTemplateStrings.declareGrid(` [hideGroupedColumns]="true"`, '', ColumnDefinitions.exportGroupedDataColumns),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
@@ -2811,4 +2859,27 @@ export class IgxGridRowEditingDefinedColumnsComponent extends BasicGridComponent
     imports: [IgxGridComponent, IgxColumnComponent, IgxExcelStyleConditionalFilterComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleFilterOperationsTemplateDirective]
 })
 export class IgxGridConditionalFilteringComponent extends IgxGridFilteringComponent {
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" width="600px">
+        <igx-column-group header="Customer Information" [collapsible]="true" [expanded]="false">
+            <igx-column field="CompanyName" width="100px" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column field="ContactName" width="100px" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="ContactTitle" width="100px" [visibleWhenCollapsed]="false"></igx-column>
+        </igx-column-group>
+        <igx-column field="ID" width="200px"></igx-column>
+        <igx-column field="Address" width="200px"></igx-column>
+        <igx-column field="City" width="200px"></igx-column>
+        <igx-column field="Country" width="200px"></igx-column>
+        <igx-column field="Phone" width="200px"></igx-column>
+    </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
+})
+export class CollapsibleGroupWithExplicitChildWidthsComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+    public data = SampleTestData.contactInfoDataFull();
 }
