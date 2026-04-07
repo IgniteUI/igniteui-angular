@@ -96,7 +96,7 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
             closeOnEscape: false,
             closeOnOutsideClick: false,
             modal: false,
-            outlet: this.outlet,
+            outlet: this.outlet
         };
 
         super.open(overlaySettings);
