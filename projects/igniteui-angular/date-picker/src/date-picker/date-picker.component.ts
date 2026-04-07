@@ -580,6 +580,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         if (this.isDropdown && this.inputGroupElement) {
             overlaySettings.target = this.inputGroupElement;
         }
+        if (this.outlet) {
+            overlaySettings.outlet = this.outlet;
+        }
         this._overlayId = this._overlayService
             .attach(IgxCalendarContainerComponent, this.viewContainerRef, overlaySettings);
         this._overlayService.show(this._overlayId);

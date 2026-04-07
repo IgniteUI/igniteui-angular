@@ -472,13 +472,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _defaultDialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true,
-        closeOnEscape: true
+        closeOnEscape: true,
+        outlet: this.outlet
     };
     private _defaultDropDownOverlaySettings: OverlaySettings = {
         modal: false,
         closeOnOutsideClick: true,
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new AutoPositionStrategy()
+        positionStrategy: new AutoPositionStrategy(),
+        outlet: this.outlet
     };
 
 

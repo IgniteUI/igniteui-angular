@@ -418,6 +418,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
+        this._checkOutletAndOutsideClick();
         this._hideOnInteraction();
     }
 
@@ -512,6 +513,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._abortController = new AbortController();
     }
 
+    private _checkOutletAndOutsideClick(): void {
+        if (this.outlet) {
+            this._overlayDefaults.outlet = this.outlet;
+        }
+    }
+
     /**
      * A guard method that performs precondition checks before showing the tooltip.
      * It ensures that the tooltip is not disabled and not already shown in sticky mode.
@@ -521,6 +528,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         if (this.tooltipDisabled) return;
         if (!this.target.collapsed && this.target?.tooltipTarget?.sticky) return;
 
+        this._checkOutletAndOutsideClick();
         this._checkTooltipForMultipleTargets();
         action();
     }
