@@ -3869,7 +3869,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), throttleTime(30), destructor).subscribe(() => {
-            this.notifyChanges(true);
+            this.onContentSizeChange();
         });
 
         this.verticalScrollContainer.chunkPreload.pipe(filter(() => !this._init), destructor).subscribe(() => {
@@ -8227,6 +8227,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!oldData || !oldData.length) return true;
         if (!newData || !newData.length) return false;
         return Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
+    }
+
+    protected onContentSizeChange() {
+        this.notifyChanges(true);
     }
 
     /**
