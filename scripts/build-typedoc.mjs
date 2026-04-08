@@ -21,7 +21,11 @@ function entryPoints() {
         return ROOT("dist", "igniteui-angular", "docs", "typescript-exported", "igniteui-angular.json");
     }
 
-    return ROOT("projects", "igniteui-angular", "src", "public_api.ts");
+    return [
+        ROOT("projects", "igniteui-angular", "src", "public_api.ts"),
+        ROOT("projects", "igniteui-angular", "chat", "src", "chat.component.ts"),
+        ROOT("projects", "igniteui-angular", "grids", "lite", "src", "grid-lite.component.ts"),
+    ];
 }
 
 /*
