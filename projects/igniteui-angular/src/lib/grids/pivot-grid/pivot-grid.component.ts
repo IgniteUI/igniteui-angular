@@ -2135,6 +2135,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this._dataView = data;
     }
 
+    protected override onContentSizeChange() {
+        super.onContentSizeChange();
+        this.updateDefaultRowHeight();
+    }
+
     /**
      * @hidden @internal
      */
@@ -2556,6 +2561,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (this.hasHorizontalLayout) {
             // Trigger pipes to recalc heights for the horizontal layout mrl rows.
             this.regroupTrigger++;
+        } else {
+            this.pipeTrigger++;
         }
     }
 
