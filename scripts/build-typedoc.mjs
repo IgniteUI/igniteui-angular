@@ -23,8 +23,8 @@ function entryPoints() {
 
     return [
         ROOT("projects", "igniteui-angular", "src", "public_api.ts"),
-        ROOT("projects", "igniteui-angular", "chat", "src", "chat.component.ts"),
-        ROOT("projects", "igniteui-angular", "grids", "lite", "src", "grid-lite.component.ts"),
+        ROOT("projects", "igniteui-angular", "chat", "src", "public_api.ts"),
+        ROOT("projects", "igniteui-angular", "grids", "lite", "src", "public_api.ts"),
     ];
 }
 
