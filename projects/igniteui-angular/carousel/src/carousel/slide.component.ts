@@ -30,7 +30,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * <igx-carousel>
      * ```
      *
-     * @memberOf slide
+     * @memberOf IgxSlideComponent
      */
     @Input() public index: number;
 
@@ -42,7 +42,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * <igx-carousel>
      * ```
      *
-     * @memberOf slide
+     * @memberOf IgxSlideComponent
      */
     @Input() public direction: CarouselAnimationDirection;
 
@@ -55,7 +55,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * let tabIndex =  this.carousel.tabIndex;
      * ```
      *
-     * @memberof slide
+     * @memberof IgxSlideComponent
      * @deprecated in version 19.2.0.
      */
     @HostBinding('attr.tabindex')
@@ -73,7 +73,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * Returns the `role` of the slide component.
      * By default is set to `tabpanel`
      *
-     * @memberof slide
+     * @memberof IgxSlideComponent
      */
     @HostBinding('attr.role')
     public tab = 'tabpanel';
@@ -88,7 +88,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * let class =  this.slide.cssClass;
      * ```
      *
-     * @memberof slide
+     * @memberof IgxSlideComponent
      */
     @HostBinding('class.igx-slide')
     public cssClass = 'igx-slide';
@@ -108,7 +108,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * <igx-carousel>
      * ```
      *
-     * @memberof slide
+     * @memberof IgxSlideComponent
      */
     @HostBinding('class.igx-slide--current')
     @Input({ transform: booleanAttribute })
@@ -138,7 +138,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * let nativeElement =  this.slide.nativeElement;
      * ```
      *
-     * @memberof slide
+     * @memberof IgxSlideComponent
      */
     public get nativeElement() {
         return this.elementRef.nativeElement;

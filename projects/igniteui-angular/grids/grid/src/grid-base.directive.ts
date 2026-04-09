@@ -405,7 +405,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid #grid [data]="Data" [rowClasses] = "rowClasses" [autoGenerate]="true"></igx-grid>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public rowClasses: any;
@@ -425,7 +425,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid #grid [data]="Data" [rowStyles]="styles" [autoGenerate]="true"></igx-grid>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public rowStyles = null;

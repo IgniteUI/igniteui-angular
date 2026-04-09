@@ -192,7 +192,7 @@ export class IgxExpansionPanelHeaderComponent {
      * let panelHeaderId =  this.panel.header.id;
      * ```
      *
-     * @memberof expansion panel
+     * @memberof IgxExpansionPanelComponent
      */
     public id = '';
 

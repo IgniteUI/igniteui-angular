@@ -11,7 +11,7 @@ export class IgxPdfExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.pageOrientation = 'portrait';
      * ```
      *
-     * @memberof pdf exporter options
+     * @memberof IgxPdfExporterOptions
      */
     public pageOrientation: 'portrait' | 'landscape' = 'landscape';
 
@@ -22,7 +22,7 @@ export class IgxPdfExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.pageSize = 'letter';
      * ```
      *
-     * @memberof pdf exporter options
+     * @memberof IgxPdfExporterOptions
      */
     public pageSize: string = 'a4';
 
@@ -33,7 +33,7 @@ export class IgxPdfExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.showTableBorders = false;
      * ```
      *
-     * @memberof pdf exporter options
+     * @memberof IgxPdfExporterOptions
      */
     public showTableBorders = true;
 
@@ -44,7 +44,7 @@ export class IgxPdfExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.fontSize = 12;
      * ```
      *
-     * @memberof pdf exporter options
+     * @memberof IgxPdfExporterOptions
      */
     public fontSize = 10;
 
@@ -106,7 +106,7 @@ export class IgxPdfExporterOptions extends IgxExporterOptionsBase {
      * - Arial Unicode MS: Comprehensive Unicode coverage
      * - Source Han Sans: Excellent CJK (Chinese, Japanese, Korean) support
      *
-     * @memberof pdf exporter options
+     * @memberof IgxPdfExporterOptions
      */
     public customFont?: PdfUnicodeFont;
 

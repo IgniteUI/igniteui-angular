@@ -89,7 +89,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     /**
      * Gets whether the header group is stored in a pinned column.
      *
-     * @memberof grid header group
+     * @memberof IgxGridHeaderGroupComponent
      */
     public get isPinned(): boolean {
         return this.column.pinned;

@@ -96,7 +96,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * ```html
 	 * <igx-calendar id="my-first-calendar"></igx-calendar>
 	 * ```
-	 * @memberof calendar
+	 * @memberof IgxCalendarComponent
 	 */
 	@HostBinding('attr.id')
 	@Input()
@@ -265,7 +265,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * ```typescript
 	 * let headerTitleTemplate = this.calendar.headerTitleTeamplate;
 	 * ```
-	 * @memberof calendar
+	 * @memberof IgxCalendarComponent
 	 */
 	public get headerTitleTemplate(): any {
 		if (this.headerTitleTemplateDirective) {
@@ -281,7 +281,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * ```html
 	 * <igx-calendar headerTitleTemplateDirective="igxCalendarHeaderTitle"></igx-calendar>
 	 * ```
-	 * @memberof calendar
+	 * @memberof IgxCalendarComponent
 	 */
 	public set headerTitleTemplate(directive: any) {
 		this.headerTitleTemplateDirective = directive;
@@ -294,7 +294,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * ```typescript
 	 * let headerTemplate =  this.calendar.headerTeamplate;
 	 * ```
-	 * @memberof calendar
+	 * @memberof IgxCalendarComponent
 	 */
 	public get headerTemplate(): any {
 		if (this.headerTemplateDirective) {
@@ -310,7 +310,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * ```html
 	 * <igx-calendar headerTemplateDirective="igxCalendarHeader"></igx-calendar>
 	 * ```
-	 * @memberof calendar
+	 * @memberof IgxCalendarComponent
 	 */
 	public set headerTemplate(directive: any) {
 		this.headerTemplateDirective = directive;
@@ -338,7 +338,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * ```html
 	 * <igx-calendar subheaderTemplate="igxCalendarSubheader"></igx-calendar>
 	 * ```
-	 * @memberof calendar
+	 * @memberof IgxCalendarComponent
 	 */
 	public set subheaderTemplate(directive: any) {
 		this.subheaderTemplateDirective = directive;

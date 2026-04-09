@@ -13,7 +13,7 @@ export class IgxSummaryOperand {
      * IgxSummaryOperand.count(dataSource);
      * ```
      *
-     * @memberof summary operand
+     * @memberof IgxSummaryOperand
      */
     public static count(data: any[]): number {
         return data.length;
@@ -46,7 +46,7 @@ export class IgxSummaryOperand {
      * this.grid.getColumnByName('ColumnName').summaries = CustomSummary;
      * ```
      *
-     * @memberof summary operand
+     * @memberof IgxSummaryOperand
      */
     public operate(data: any[] = [], _allData: any[] = [], _fieldName?: string, _groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         return [{
@@ -68,7 +68,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * IgxNumberSummaryOperand.min(data);
      * ```
      *
-     * @memberof number summary operand
+     * @memberof IgxNumberSummaryOperand
      */
     public static min(data: any[]): number {
         return data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => Math.min(a, b)) : 0;
@@ -80,7 +80,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * IgxNumberSummaryOperand.max(data);
      * ```
      *
-     * @memberof number summary operand
+     * @memberof IgxNumberSummaryOperand
      */
     public static max(data: any[]): number {
         return data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => Math.max(a, b)) : 0;
@@ -92,7 +92,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * IgxNumberSummaryOperand.sum(data);
      * ```
      *
-     * @memberof number summary operand
+     * @memberof IgxNumberSummaryOperand
      */
     public static sum(data: any[]): number {
         return data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => +a + +b) : 0;
@@ -104,7 +104,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * IgxSummaryOperand.average(data);
      * ```
      *
-     * @memberof number summary operand
+     * @memberof IgxNumberSummaryOperand
      */
     public static average(data: any[]): number {
         return data.length && data.filter(clear).length ? this.sum(data) / this.count(data) : 0;
@@ -142,7 +142,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * this.grid.getColumnByName('ColumnName').summaries = CustomNumberSummary;
      * ```
      *
-     * @memberof number summary operand
+     * @memberof IgxNumberSummaryOperand
      */
     public override operate(data: any[] = [], allData: any[] = [], fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, groupRecord);
@@ -184,7 +184,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * IgxDateSummaryOperand.latest(data);
      * ```
      *
-     * @memberof date summary operand
+     * @memberof IgxDateSummaryOperand
      */
     public static latest(data: any[]) {
         return data.length && data.filter(clear).length ?
@@ -197,7 +197,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * IgxDateSummaryOperand.earliest(data);
      * ```
      *
-     * @memberof date summary operand
+     * @memberof IgxDateSummaryOperand
      */
     public static earliest(data: any[]) {
         return data.length && data.filter(clear).length ?
@@ -231,7 +231,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * this.grid.getColumnByName('ColumnName').summaries = CustomDateSummary;
      * ```
      *
-     * @memberof date summary operand
+     * @memberof IgxDateSummaryOperand
      */
     public override operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, groupRecord);
@@ -261,7 +261,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
      * IgxTimeSummaryOperand.latestTime(data);
      * ```
      *
-     * @memberof time summary operand
+     * @memberof IgxTimeSummaryOperand
      */
     public static latestTime(data: any[]) {
         return data.length && data.filter(clear).length ?
@@ -277,7 +277,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
      * IgxTimeSummaryOperand.earliestTime(data);
      * ```
      *
-     * @memberof time summary operand
+     * @memberof IgxTimeSummaryOperand
      */
     public static earliestTime(data: any[]) {
         return data.length && data.filter(clear).length ?
@@ -285,7 +285,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
             new Date().setHours(a.getHours(), a.getMinutes(), a.getSeconds()))) : undefined;
     }
     /**
-     * @memberof time summary operand
+     * @memberof IgxTimeSummaryOperand
      */
     public override operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, groupRecord);

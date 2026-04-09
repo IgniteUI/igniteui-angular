@@ -48,7 +48,7 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      * let snackbarId = this.snackbar.id;
      * ```
      *
-     * @memberof snackbar
+     * @memberof IgxSnackbarComponent
      */
     @HostBinding('attr.id')
     @Input()

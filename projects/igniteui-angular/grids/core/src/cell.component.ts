@@ -156,7 +156,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      *  let cellColumn = this.cell.column;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @Input()
     public column: ColumnType;
@@ -195,7 +195,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let cellRow = this.cell.row;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @Input()
     public get row(): RowType {
@@ -208,7 +208,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let rowData = this.cell.rowData;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @Input()
     public rowData: any;
@@ -240,7 +240,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let template =  this.cell.cellTemplate;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @Input()
     public cellTemplate: TemplateRef<any>;
@@ -260,7 +260,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let cellValue = this.cell.value;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @Input()
     public value: any;
@@ -271,7 +271,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let cellForamatter = this.cell.formatter;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @Input()
     public formatter: (value: any, rowData?: any, columnData?: any) => any;
@@ -282,7 +282,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      *  let context = this.cell.context();
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public get context(): IgxCellTemplateContext {
         const getCellType = () => this.getCellType(true);
@@ -312,7 +312,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let template = this.cell.template;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public get template(): TemplateRef<any> {
         if (this.isPlaceholder) {
@@ -337,7 +337,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let template = this.cell.pinnedIndicatorTemplate;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public get pinnedIndicatorTemplate() {
         if (this.pinnedIndicator) {
@@ -352,7 +352,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let gridId = this.cell.gridID;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public get gridID(): any {
         return this.intRow.gridID;
@@ -365,7 +365,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let rowIndex = this.cell.rowIndex;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.data-rowIndex')
     public get rowIndex(): number {
@@ -378,7 +378,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let columnIndex = this.cell.columnIndex;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public get columnIndex(): number {
         return this.column.index;
@@ -390,7 +390,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let visibleColumnIndex = this.cell.visibleColumnIndex;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.data-visibleIndex')
     @Input()
@@ -408,7 +408,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let cellID = this.cell.cellID;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public get cellID() {
         const primaryKey = this.grid.primaryKey;
@@ -459,7 +459,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let cellNativeElement = this.cell.nativeElement;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public get nativeElement(): HTMLElement {
         return this.element.nativeElement;
@@ -531,7 +531,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let cellRole = this.cell.role;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.role')
     public role = 'gridcell';
@@ -542,7 +542,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let isCellReadonly = this.cell.readonly;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.aria-readonly')
     public get readonly(): boolean {
@@ -624,7 +624,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let cellWidth = this.cell.width;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @Input()
     public width = '';
@@ -647,7 +647,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let isSelected = this.cell.selected;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @HostBinding('class.igx-grid__td--selected')
     public get selected() {
@@ -660,7 +660,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * this.cell.selected = true.
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public set selected(val: boolean) {
         const node = this.selectionNode;
@@ -678,7 +678,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let isCellColumnSelected = this.cell.columnSelected;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     @HostBinding('class.igx-grid__td--column-selected')
     public get columnSelected() {
@@ -692,7 +692,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * this.cell.editValue = value;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public set editValue(value) {
         if (this.grid.crudService.cellInEditMode) {
@@ -707,7 +707,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * let editValue = this.cell.editValue;
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public get editValue() {
         if (this.grid.crudService.cellInEditMode) {
@@ -802,7 +802,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * this.cell.highlightClass = 'igx-cell-highlight';
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public highlightClass = 'igx-highlight';
 
@@ -816,7 +816,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * this.cell.activeHighlightClass = 'igx-cell-highlight_active';
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public activeHighlightClass = 'igx-highlight__active';
 
@@ -1018,7 +1018,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * this.cell.update('New Value');
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     // TODO: Refactor
     public update(val: any) {
@@ -1189,7 +1189,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * this.cell.highlightText('Cell Value', true);
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
         return this.highlight && this.column.searchable ? this.highlight.highlight(text, caseSensitive, exactMatch) : 0;
@@ -1201,7 +1201,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * this.cell.clearHighLight();
      * ```
      *
-     * @memberof grid cell
+     * @memberof IgxGridCellComponent
      */
     public clearHighlight() {
         if (this.highlight && this.column.searchable) {

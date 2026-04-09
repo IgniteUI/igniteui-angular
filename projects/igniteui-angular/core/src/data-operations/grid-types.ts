@@ -455,7 +455,7 @@ export interface IgxSummaryResult {
      * }
      * ```
      *
-     * @memberof summary result
+     * @memberof IgxSummaryResult
      */
     defaultFormatting?: boolean;
 }

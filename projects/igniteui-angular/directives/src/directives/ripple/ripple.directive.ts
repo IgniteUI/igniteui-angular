@@ -35,7 +35,7 @@ export class IgxRippleDirective {
      * </div>
      * ```
      *
-     * @memberof ripple
+     * @memberof IgxRippleDirective
      */
     @Input('igxRippleTarget')
     public rippleTarget = '';
@@ -50,7 +50,7 @@ export class IgxRippleDirective {
      * let rippleColor = this.ripple.rippleColor;
      * ```
      *
-     * @memberof ripple
+     * @memberof IgxRippleDirective
      */
     @Input('igxRipple')
     public rippleColor: string;
@@ -66,7 +66,7 @@ export class IgxRippleDirective {
      * let rippleDuration = this.ripple.rippleDuration;
      * ```
      *
-     * @memberof ripple
+     * @memberof IgxRippleDirective
      */
     @Input('igxRippleDuration')
     public rippleDuration = 600;
@@ -76,7 +76,7 @@ export class IgxRippleDirective {
      * <button type="button" #rippleContainer igxButton igxRipple [igxRippleCentered]="true"></button>
      * ```
      *
-     * @memberof ripple
+     * @memberof IgxRippleDirective
      */
     @Input({ alias: 'igxRippleCentered', transform: booleanAttribute })
     public set centered(value: boolean) {
@@ -94,7 +94,7 @@ export class IgxRippleDirective {
      * let isRippleDisabled = this.ripple.rippleDisabled;
      * ```
      *
-     * @memberof ripple
+     * @memberof IgxRippleDirective
      */
     @Input({ alias: 'igxRippleDisabled', transform: booleanAttribute })
     public rippleDisabled = false;

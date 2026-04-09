@@ -154,7 +154,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [autoGenerate]="true"></igx-tree-grid>
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     @Input()
     public childDataKey: string;
@@ -166,7 +166,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * </igx-tree-grid>
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     @Input()
     public foreignKey: string;
@@ -181,7 +181,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * </igx-tree-grid>
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     @Input()
     public hasChildrenKey: string;
@@ -194,7 +194,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * </igx-tree-grid>
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     @Input({ transform: booleanAttribute })
     public cascadeOnDelete = true;
@@ -212,7 +212,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * }
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     @Input()
     public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
@@ -229,7 +229,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * <igx-tree-grid [id]="'igx-tree-grid-1'"></igx-tree-grid>
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     @HostBinding('attr.id')
     @Input()
@@ -277,7 +277,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * const states = this.grid.rootRecords[2];
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     public rootRecords: ITreeGridRecord[];
 
@@ -289,7 +289,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * const states = this.grid.records.get(2);
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     public records: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
@@ -300,7 +300,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * const states = this.grid.processedRootRecords[2];
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     public processedRootRecords: ITreeGridRecord[];
 
@@ -312,7 +312,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * const states = this.grid.processedRecords.get(2);
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
@@ -335,7 +335,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * <igx-tree-grid [data]="Data" [autoGenerate]="true"></igx-tree-grid>
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     @Input()
     public get data(): any[] | null {
@@ -381,7 +381,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" expansionDepth="1" [autoGenerate]="true"></igx-tree-grid>
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     @Input()
     public get expansionDepth(): number {
@@ -406,7 +406,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * </igx-tree-grid>
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     @Input()
     public get rowLoadingIndicatorTemplate(): TemplateRef<void> {
@@ -528,7 +528,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * this.grid.expandAll();
      * ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     public override expandAll() {
         this._expansionDepth = Infinity;
@@ -542,7 +542,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * this.grid.collapseAll();
      *  ```
      *
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     public override collapseAll() {
         this._expansionDepth = 0;
@@ -577,7 +577,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *
      * @param data
      * @param parentRowID
-     * @memberof tree grid
+     * @memberof IgxTreeGridComponent
      */
     // TODO: remove evt emission
     public override addRow(data: any, parentRowID?: any) {

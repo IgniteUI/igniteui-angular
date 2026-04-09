@@ -50,7 +50,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * let monthsViewId =  this.monthsView.id;
      * ```
      *
-     * @memberof months view
+     * @memberof IgxMonthsViewComponent
      */
     @HostBinding("attr.id")
     @Input()
@@ -94,7 +94,7 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
      * <igx-months-view> [monthFormat]="short'"</igx-months-view>
      * ```
      *
-     * @memberof months view
+     * @memberof IgxMonthsViewComponent
      */
     public set monthFormat(value: any) {
         this._monthFormat = value;

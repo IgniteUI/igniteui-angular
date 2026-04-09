@@ -43,7 +43,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
      * });
      * ```
      *
-     * @memberof pdf exporter
+     * @memberof IgxPdfExporterService
      */
     public override exportEnded = new EventEmitter<IPdfExportEndedEventArgs>();
 

@@ -262,7 +262,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * let detailTemplate = this.grid.detailTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input('detailTemplate')
     public get detailTemplate(): TemplateRef<IgxGridMasterDetailContext> {
@@ -284,7 +284,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid.detailTemplate = this.detailTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set detailTemplate(template: TemplateRef<IgxGridMasterDetailContext>) {
         this._detailTemplate = template;

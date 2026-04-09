@@ -82,7 +82,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * let panelId =  this.panel.id;
      * ```
      *
-     * @memberof expansion panel
+     * @memberof IgxExpansionPanelComponent
      */
     @HostBinding('attr.id')
     @Input()

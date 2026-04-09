@@ -6,7 +6,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.ignoreColumnsVisibility = true;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public ignoreColumnsVisibility = false;
 
@@ -17,7 +17,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.ignoreFiltering = true;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public ignoreFiltering = false;
 
@@ -28,7 +28,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.ignoreColumnsOrder = true;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public ignoreColumnsOrder = false;
 
@@ -41,7 +41,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.ignoreSorting = true;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public ignoreSorting = false;
 
@@ -52,7 +52,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.ignoreGrouping = true;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public ignoreGrouping = false;
 
@@ -63,7 +63,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.ignoreMultiColumnHeaders = true;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public ignoreMultiColumnHeaders = false;
 
@@ -74,7 +74,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.exportSummaries = true;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public exportSummaries = true;
 
@@ -85,7 +85,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.freezeHeaders = true;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public freezeHeaders = false;
 
@@ -96,7 +96,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.alwaysExportHeaders = false;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
      public alwaysExportHeaders = true;
 
@@ -116,7 +116,7 @@ export abstract class IgxExporterOptionsBase {
      * let fileName = this.exportOptions.fileName;
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public get fileName() {
         return this._fileName;
@@ -128,7 +128,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.fileName = 'exportedData01';
      * ```
      *
-     * @memberof exporter options base
+     * @memberof IgxExporterOptionsBase
      */
     public set fileName(value) {
         this.setFileName(value);

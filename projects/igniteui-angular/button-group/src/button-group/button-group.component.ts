@@ -323,7 +323,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
      * }
      * ```
      *
-     * @memberOf {@link button group}
+     * @memberOf {@link IgxButtonGroupComponent}
      */
     public selectButton(index: number) {
         if (index >= this.buttons.length || index < 0) {
@@ -391,7 +391,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
      * }
      * ```
      *
-     * @memberOf {@link button group}
+     * @memberOf {@link IgxButtonGroupComponent}
      */
     public deselectButton(index: number) {
         if (index >= this.buttons.length || index < 0) {

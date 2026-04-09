@@ -22,7 +22,7 @@ export class IgxHintDirective implements OnInit {
      * let isHintPositionStart = this.igxHint.isPositionStart;
      * ```
      *
-     * @memberof hint
+     * @memberof IgxHintDirective
      */
     @HostBinding('class.igx-input-group__hint-item--start')
     public isPositionStart = false;
@@ -38,7 +38,7 @@ export class IgxHintDirective implements OnInit {
      * let isHintPositionEnd = this.igxHint.isPositionEnd;
      * ```
      *
-     * @memberof hint
+     * @memberof IgxHintDirective
      */
     @HostBinding('class.igx-input-group__hint-item--end')
     public isPositionEnd = false;
@@ -53,7 +53,7 @@ export class IgxHintDirective implements OnInit {
      * </igx-input-group>
      * ```
      *
-     * @memberof hint
+     * @memberof IgxHintDirective
      */
     @Input()
     public set position(value: string) {
@@ -71,7 +71,7 @@ export class IgxHintDirective implements OnInit {
      * let hintPosition =  this.igxHint.position;
      * ```
      *
-     * @memberof hint
+     * @memberof IgxHintDirective
      */
     public get position() {
         return this._position.toString();

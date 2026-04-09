@@ -84,7 +84,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * </igx-hierarchical-grid>
      * ```
      *
-     * @memberof row island
+     * @memberof IgxRowIslandComponent
      */
     @Input()
     public key: string;
@@ -201,7 +201,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * </igx-hierarchical-grid>
      * ```
      *
-     * @memberof row island
+     * @memberof IgxRowIslandComponent
      */
     @Output()
     public gridCreated = new EventEmitter<IGridCreatedEventArgs>();
@@ -217,7 +217,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * </igx-hierarchical-grid>
      * ```
      *
-     * @memberof row island
+     * @memberof IgxRowIslandComponent
      */
     @Output()
     public gridInitialized = new EventEmitter<IGridCreatedEventArgs>();
@@ -328,7 +328,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * </igx-hierarchical-grid>
      * ```
      *
-     * @memberof row island
+     * @memberof IgxRowIslandComponent
      */
     @Input({ transform: booleanAttribute })
     public set expandChildren(value: boolean) {
@@ -351,7 +351,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * const expanded = this.rowIsland.expandChildren;
      * ```
      *
-     * @memberof row island
+     * @memberof IgxRowIslandComponent
      */
     public get expandChildren(): boolean {
         return this._defaultExpandState;

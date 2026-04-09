@@ -72,7 +72,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [field] = "'ID'"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public set field(value: string) {
@@ -123,7 +123,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [header] = "'ID'"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -138,7 +138,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [title] = "'Some column tooltip'"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -154,7 +154,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [sortable] = "true"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
@@ -165,7 +165,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let columnSelectable = this.column.selectable;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input()
@@ -180,7 +180,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [selectable] = "false"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set selectable(value: boolean) {
         this._selectable = value;
@@ -196,7 +196,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [groupable] = "true"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
     @WatchColumnChanges()
@@ -215,7 +215,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let isEditable = this.column.editable;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
@@ -244,7 +244,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [editable] = "true"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set editable(editable: boolean) {
         this._editable = editable;
@@ -259,7 +259,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [filterable] = "false"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -275,7 +275,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [resizable] = "true"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
@@ -292,7 +292,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [resizable] = "true"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
@@ -304,7 +304,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let hasSummary = this.column.hasSummary;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
     @WatchColumnChanges()
@@ -319,7 +319,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [hasSummary] = "true"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set hasSummary(value) {
         this._hasSummary = value;
@@ -334,7 +334,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let isHidden = this.column.hidden;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
     @WatchColumnChanges()
@@ -354,7 +354,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [(hidden)] = "model.isHidden"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set hidden(value: boolean) {
         if (this._hidden !== value) {
@@ -380,7 +380,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let isSelected = this.column.selected;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public get selected(): boolean {
         return this.grid.selectionService.isColumnSelected(this.field);
@@ -393,7 +393,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.selected = true;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set selected(value: boolean) {
         if (this.selectable && value !== this.selected) {
@@ -448,7 +448,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let isHidingDisabled =  this.column.disableHiding;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -460,7 +460,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let isPinningDisabled =  this.column.disablePinning;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -473,7 +473,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let columnWidth = this.column.width;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
     @WatchColumnChanges()
@@ -502,7 +502,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [(width)]="model.columns[0].width"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set width(value: string) {
         if (value) {
@@ -537,7 +537,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [maxWidth] = "'150px'"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input()
@@ -558,7 +558,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [headerClasses] = "'column-header'"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -579,7 +579,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [headerStyles]="styles"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -595,7 +595,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [headerGroupClasses] = "'column-group-header'"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -616,7 +616,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [headerGroupStyles]="styles"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -639,7 +639,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [cellClasses] = "{'class1' : true }"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -662,7 +662,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [cellStyles]="styles"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -702,7 +702,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * column.formatter = addressFormatter;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -735,7 +735,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * }
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -752,7 +752,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [filteringIgnoreCase] = "false"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
@@ -767,7 +767,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [sortingIgnoreCase] = "false"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
@@ -782,7 +782,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *  <igx-column [searchable] = "false"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -798,7 +798,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [dataType] = "'number'"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public dataType: GridColumnDataType = GridColumnDataType.String;
@@ -816,7 +816,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column-layout>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public rowEnd: number;
@@ -830,7 +830,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column-layout>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public colEnd: number;
@@ -843,7 +843,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column-layout>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public rowStart: number;
@@ -856,7 +856,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column-layout>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public colStart: number;
@@ -872,7 +872,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public additionalTemplateContext: any;
@@ -1004,7 +1004,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [minWidth] = "'100px'"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -1036,7 +1036,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let columnIndex = this.column.index;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public get index(): number {
         return (this.grid as any)._columns.indexOf(this);
@@ -1071,7 +1071,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let isPinned = this.column.pinned;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input({ transform: booleanAttribute })
@@ -1090,7 +1090,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [(pinned)] = "model.columns[0].isPinned"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set pinned(value: boolean) {
         if (this._pinned !== value) {
@@ -1118,7 +1118,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let columnSummaries = this.column.summaries;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
     @WatchColumnChanges()
@@ -1134,7 +1134,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.summaries = IgxNumberSummaryOperand;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set summaries(classRef: any) {
         if (isConstructor(classRef)) {
@@ -1158,7 +1158,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column [disabledSummaries]="['min', 'max', 'average']"></igx-column>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @WatchColumnChanges()
     @Input()
@@ -1184,7 +1184,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let columnFilters = this.column.filters'
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public get filters(): IgxFilteringOperand {
@@ -1196,7 +1196,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.filters = IgxBooleanFilteringOperand.instance().
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set filters(instance: IgxFilteringOperand) {
         this._filters = instance;
@@ -1207,7 +1207,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let sortStrategy = this.column.sortStrategy
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public get sortStrategy(): ISortingStrategy {
@@ -1220,7 +1220,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * class CustomSortingStrategy extends SortingStrategy {...}
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
@@ -1257,7 +1257,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let groupingComparer = this.column.groupingComparer'
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @Input()
     public get groupingComparer(): (a: any, b: any, currRec?: any, groupRec?: any) => number {
@@ -1272,7 +1272,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.groupingComparer = (a: any, b: any, currRec?: any, groupRec?: any) => { return a === b ? 0 : -1; }
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set groupingComparer(funcRef: (a: any, b: any, currRec?: any, groupRec?: any) => number) {
         this._groupingComparer = funcRef;
@@ -1299,7 +1299,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let summaryTemplate = this.column.summaryTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -1321,7 +1321,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.summaryTemplate = this.summaryTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set summaryTemplate(template: TemplateRef<IgxSummaryTemplateContext>) {
         this._summaryTemplate = template;
@@ -1333,7 +1333,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let bodyTemplate = this.column.bodyTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -1356,7 +1356,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.bodyTemplate = this.bodyTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set bodyTemplate(template: TemplateRef<IgxCellTemplateContext>) {
         this._bodyTemplate = template;
@@ -1367,7 +1367,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let headerTemplate = this.column.headerTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -1391,7 +1391,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.headerTemplate = this.headerTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set headerTemplate(template: TemplateRef<IgxColumnTemplateContext>) {
         this._headerTemplate = template;
@@ -1402,7 +1402,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let inlineEditorTemplate = this.column.inlineEditorTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -1423,7 +1423,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.inlineEditorTemplate = this.inlineEditorTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set inlineEditorTemplate(template: TemplateRef<IgxCellTemplateContext>) {
         this._inlineEditorTemplate = template;
@@ -1466,7 +1466,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let filterCellTemplate = this.column.filterCellTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -1487,7 +1487,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.filterCellTemplate = this.filterCellTemplate;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public set filterCellTemplate(template: TemplateRef<IgxColumnTemplateContext>) {
         this._filterCellTemplate = template;
@@ -1569,7 +1569,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let columnGroup =  this.column.columnGroup;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public get columnGroup() {
         return false;
@@ -1582,7 +1582,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let columnGroup =  this.column.columnGroup;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public get columnLayout() {
         return false;
@@ -1594,7 +1594,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let columnLayoutChild =  this.column.columnLayoutChild;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public get columnLayoutChild(): boolean {
         return this.parent && this.parent.columnLayout;
@@ -1619,7 +1619,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let columnLevel =  this.column.level;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public get level() {
         let ptr = this.parent;
@@ -1661,7 +1661,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * </igx-column-group>
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
     @Input({ transform: booleanAttribute })
@@ -1696,7 +1696,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * <igx-column dataType="date" [pipeArgs]="pipeArgs"></igx-column>
      * <igx-column dataType="number" [pipeArgs]="pipeArgs"></igx-column>
      * ```
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -1724,7 +1724,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```html
      * <igx-column dataType="date" [editorOptions]="editorOptions"></igx-column>
      * ```
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -1788,7 +1788,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let tree =  this.column.filteringExpressionsTree;
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public get filteringExpressionsTree(): FilteringExpressionsTree {
         return ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, this.field) as FilteringExpressionsTree;
@@ -2234,7 +2234,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let success = this.column.pin();
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public pin(index?: number, pinningPosition?: ColumnPinningPosition): boolean {
         // TODO: Probably should the return type of the old functions
@@ -2344,7 +2344,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let success = this.column.unpin();
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public unpin(index?: number): boolean {
         const grid = (this.grid as any);
@@ -2429,7 +2429,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * column.move(index);
      * ```
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public move(index: number) {
         let target;
@@ -2537,7 +2537,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * column.autosize();
      * ```
      *
-     * @memberof column
+     * @memberof IgxColumnComponent
      * @param byHeaderOnly Set if column should be autosized based only on the header content.
      */
     public autosize(byHeaderOnly = false) {
@@ -2604,7 +2604,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
      * let size = column.getLargestCellWidth();
      * ```
-     * @memberof column
+     * @memberof IgxColumnComponent
      */
     public getLargestCellWidth(): string {
         const range = this.grid.document.createRange();

@@ -43,7 +43,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      * });
      * ```
      *
-     * @memberof csv exporter
+     * @memberof IgxCsvExporterService
      */
     public override exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 

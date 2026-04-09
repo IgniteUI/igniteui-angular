@@ -38,7 +38,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
      * let delimiter = this.exportOptions.valueDelimiter;
      * ```
      *
-     * @memberof csv exporter options
+     * @memberof IgxCsvExporterOptions
      */
     public get valueDelimiter() {
         return this._valueDelimiter;
@@ -50,7 +50,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.valueDelimiter = '|';
      * ```
      *
-     * @memberof csv exporter options
+     * @memberof IgxCsvExporterOptions
      */
     public set valueDelimiter(value) {
         this.setDelimiter(value);
@@ -62,7 +62,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
      * let filetype = this.exportOptions.fileType;
      * ```
      *
-     * @memberof csv exporter options
+     * @memberof IgxCsvExporterOptions
      */
     public get fileType() {
         return this._fileType;
@@ -74,7 +74,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.fileType = CsvFileTypes.TAB;
      * ```
      *
-     * @memberof csv exporter options
+     * @memberof IgxCsvExporterOptions
      */
     public set fileType(value) {
         this.setFileType(value);

@@ -12,7 +12,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.ignorePinning = true;
      * ```
      *
-     * @memberof excel exporter options
+     * @memberof IgxExcelExporterOptions
      */
     public ignorePinning = false;
 
@@ -23,7 +23,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.exportAsTable = false;
      * ```
      *
-     * @memberof excel exporter options
+     * @memberof IgxExcelExporterOptions
      */
     public exportAsTable = true;
 
@@ -41,7 +41,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * let width = this.exportOptions.columnWidth;
      * ```
      *
-     * @memberof excel exporter options
+     * @memberof IgxExcelExporterOptions
      */
     public get columnWidth(): number {
         return this._columnWidth;
@@ -54,7 +54,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.columnWidth = 55;
      * ```
      *
-     * @memberof excel exporter options
+     * @memberof IgxExcelExporterOptions
      */
     public set columnWidth(value: number) {
         if (value < 0) {
@@ -70,7 +70,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * let height = this.exportOptions.rowHeight;
      * ```
      *
-     * @memberof excel exporter options
+     * @memberof IgxExcelExporterOptions
      */
     public get rowHeight(): number {
         return this._rowHeight;
@@ -83,7 +83,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.rowHeight = 25;
      * ```
      *
-     * @memberof excel exporter options
+     * @memberof IgxExcelExporterOptions
      */
     public set rowHeight(value: number) {
         if (value < 0) {
@@ -99,7 +99,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * let worksheetName = this.exportOptions.worksheetName;
      * ```
      *
-     * @memberof excel exporter options
+     * @memberof IgxExcelExporterOptions
      */
     public get worksheetName(): string {
         if (this._worksheetName === undefined || this._worksheetName === null) {
@@ -115,7 +115,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * this.exportOptions.worksheetName = "Worksheet";
      * ```
      *
-     * @memberof excel exporter options
+     * @memberof IgxExcelExporterOptions
      */
     public set worksheetName(value: string) {
         this._worksheetName = value;

@@ -184,7 +184,7 @@ export abstract class IgxBaseExporter {
      * });
      * ```
      *
-     * @memberof base exporter
+     * @memberof IgxBaseExporter
      */
     public rowExporting = new EventEmitter<IRowExportingEventArgs>();
 
@@ -196,7 +196,7 @@ export abstract class IgxBaseExporter {
      * });
      * ```
      *
-     * @memberof base exporter
+     * @memberof IgxBaseExporter
      */
     public columnExporting = new EventEmitter<IColumnExportingEventArgs>();
 
@@ -223,7 +223,7 @@ export abstract class IgxBaseExporter {
      * this.exporterService.export(this.igxGridForExport, this.exportOptions);
      * ```
      *
-     * @memberof base exporter
+     * @memberof IgxBaseExporter
      */
     public export(grid: any, options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {
@@ -282,7 +282,7 @@ export abstract class IgxBaseExporter {
      * this.exporterService.exportData(this.arrayForExport, this.exportOptions);
      * ```
      *
-     * @memberof base exporter
+     * @memberof IgxBaseExporter
      */
     public exportData(data: any[], options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {

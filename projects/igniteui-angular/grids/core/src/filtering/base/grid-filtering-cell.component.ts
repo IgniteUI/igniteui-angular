@@ -133,7 +133,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     /**
      * Gets the context passed to the filter template.
      *
-     * @memberof grid filtering cell
+     * @memberof IgxGridFilteringCellComponent
      */
     public get context() {
         return { $implicit: this.column, column: this.column};

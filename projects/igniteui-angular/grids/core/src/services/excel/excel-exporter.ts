@@ -52,7 +52,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
      * });
      * ```
      *
-     * @memberof excel exporter
+     * @memberof IgxExcelExporterService
      */
     public override exportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
 

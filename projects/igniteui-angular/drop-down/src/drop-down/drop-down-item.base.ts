@@ -31,7 +31,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * let itemId =  this.item.id;
      * ```
      *
-     * @memberof select item
+     * @memberof IgxSelectItemComponent
      */
     @HostBinding('attr.id')
     @Input()

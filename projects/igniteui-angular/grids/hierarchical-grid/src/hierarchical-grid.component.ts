@@ -466,7 +466,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
      * ```
      *
-     * @memberof hierarchical grid
+     * @memberof IgxHierarchicalGridComponent
      */
     @Input()
     public set data(value: any[] | null) {
@@ -481,7 +481,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * let filteredData = this.grid.filteredData;
      * ```
      *
-     * @memberof hierarchical grid
+     * @memberof IgxHierarchicalGridComponent
      */
     public get data(): any[] | null {
         return this._data;
@@ -528,7 +528,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" [expandChildren]="true"></igx-hierarchical-grid>
      * ```
      *
-     * @memberof hierarchical grid
+     * @memberof IgxHierarchicalGridComponent
      */
     @Input({ transform: booleanAttribute })
     public set expandChildren(value: boolean) {
@@ -543,7 +543,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * const expanded = this.grid.expandChildren;
      * ```
      *
-     * @memberof hierarchical grid
+     * @memberof IgxHierarchicalGridComponent
      */
     public get expandChildren(): boolean {
         return this._defaultExpandState;
@@ -605,7 +605,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * const foreignKey = this.grid.foreignKey;
      * ```
      *
-     * @memberof hierarchical grid
+     * @memberof IgxHierarchicalGridComponent
      */
     public get foreignKey() {
         if (!this.parent) {
