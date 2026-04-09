@@ -211,7 +211,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.cdr.detectChanges();
     }
 
-    private setupEventEmitters() {
+    protected setupEventEmitters() {
         const destructor = takeUntil(this.hGrid.destroy$);
 
         const mirror = reflectComponentType(IgxGridComponent);
@@ -237,7 +237,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 
 
-    private _handleLayoutChanges(changes: SimpleChanges) {
+    protected _handleLayoutChanges(changes: SimpleChanges) {
         for (const change in changes) {
             if (changes.hasOwnProperty(change)) {
                 this.hGrid[change] = changes[change].currentValue;
