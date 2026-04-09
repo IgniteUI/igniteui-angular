@@ -14,4 +14,13 @@ $_theme: $fluent;
     @include e(header) {
         @include type-style(subtitle-2);
     }
+
+    @include e(group) {
+        pointer-events: auto;
+
+        label {
+            @include type-style(subtitle-2);
+        }
+    }
 }
+

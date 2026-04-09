@@ -165,6 +165,7 @@ $_theme: $material;
             pointer-events: auto;
 
             label {
+                @extend %item;
                 @extend %header;
             }
         }
