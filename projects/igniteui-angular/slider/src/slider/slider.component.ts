@@ -22,6 +22,12 @@ let NEXT_ID = 0;
  * can be defined as continuous or stepped, and you can choose between single and range slider types.
  *
  * Example:
+ * ```html
+ * <igx-slider id="slider"
+ *            [minValue]="0" [maxValue]="100"
+ *            [continuous]=true [(ngModel)]="volume">
+ * </igx-slider>
+ * ```
  */
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
@@ -98,6 +104,9 @@ export class IgxSliderComponent implements
     /**
      * Sets the value of the `id` attribute.
      * If not provided it will be automatically generated.
+     * ```html
+     * <igx-slider [id]="'igx-slider-32'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -105,6 +114,9 @@ export class IgxSliderComponent implements
 
     /**
      * Sets the duration visibility of thumbs labels. The default value is 750 milliseconds.
+     * ```html
+     * <igx-slider #slider [thumbLabelVisibilityDuration]="3000" [(ngModel)]="task.percentCompleted" [step]="5">
+     * ```
      */
     @Input()
     public thumbLabelVisibilityDuration = 750;
@@ -120,6 +132,12 @@ export class IgxSliderComponent implements
     /**
      * Gets the type of the `IgxSliderComponent`.
      * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let type = this.slider.type;
+     * }
      */
     @Input()
     public get type() {
@@ -129,6 +147,12 @@ export class IgxSliderComponent implements
     /**
      * Sets the type of the `IgxSliderComponent`.
      * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
+     * ```typescript
+     * sliderType: IgxSliderType = IgxSliderType.RANGE;
+     * ```
+     * ```html
+     * <igx-slider #slider2 [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
+     * ```
      */
     public set type(type: IgxSliderType) {
         this._type = type;
@@ -171,6 +195,13 @@ export class IgxSliderComponent implements
     /**
      * Returns the template context corresponding
      * to {@link IgxThumbFromTemplateDirective} and {@link IgxThumbToTemplateDirective} templates.
+     *
+     * ```typescript
+     * return {
+     *  $implicit // returns the value of the label,
+     *  labels // returns the labels collection the user has passed.
+     * }
+     * ```
      */
     public get context(): any {
         return {
@@ -182,6 +213,9 @@ export class IgxSliderComponent implements
     /**
      * Sets the incremental/decremental step of the value when dragging the thumb.
      * The default step is 1, and step should not be less or equal than 0.
+     * ```html
+     * <igx-slider #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * ```
      */
     @Input()
     public set step(step: number) {
@@ -198,6 +232,13 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the incremental/decremental dragging step of the {@link IgxSliderComponent}.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let step = this.slider.step;
+     * }
+     * ```
      */
     public get step() {
         return this.labelsViewEnabled ? 1 : this._step;
@@ -205,6 +246,13 @@ export class IgxSliderComponent implements
 
     /**
      * Returns if the {@link IgxSliderComponent} is disabled.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let isDisabled = this.slider.disabled;
+     * }
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public get disabled(): boolean {
@@ -213,6 +261,9 @@ export class IgxSliderComponent implements
 
     /**
      * Disables the component.
+     * ```html
+     * <igx-slider #slider [disabled]="true" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+     * ```
      */
     public set disabled(disable: boolean) {
         this._disabled = disable;
@@ -224,6 +275,13 @@ export class IgxSliderComponent implements
 
     /**
      * Returns if the {@link IgxSliderComponent} is set as continuous.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let continuous = this.slider.continuous;
+     * }
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public get continuous(): boolean {
@@ -235,6 +293,9 @@ export class IgxSliderComponent implements
      * By default is considered that the {@link IgxSliderComponent} is discrete.
      * Discrete {@link IgxSliderComponent} slider has step indicators over the track and visible thumb labels during interaction.
      * Continuous {@link IgxSliderComponent} does not have ticks and does not show bubble labels for values.
+     * ```html
+     * <igx-slider #slider [continuous]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+     * ```
      */
     public set continuous(continuous: boolean) {
         this._continuous = continuous;
@@ -245,6 +306,13 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the minimal displayed track value of the `IgxSliderComponent`.
+     * ```typescript
+     *  @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let sliderMin = this.slider.minValue;
+     * }
+     * ```
      */
     public get minValue(): number {
         if (this.labelsViewEnabled) {
@@ -257,6 +325,9 @@ export class IgxSliderComponent implements
     /**
      * Sets the minimal displayed track value for the `IgxSliderComponent`.
      * The default minimal value is 0.
+     * ```html
+     * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="100">
+     * ```
      */
     @Input()
     public set minValue(value: number) {
@@ -283,6 +354,13 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the maximum displayed track value for the {@link IgxSliderComponent}.
+     * ```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let sliderMax = this.slider.maxValue;
+     * }
+     *  ```
      */
     public get maxValue(): number {
         return this.labelsViewEnabled ?
@@ -293,6 +371,9 @@ export class IgxSliderComponent implements
     /**
      * Sets the maximal displayed track value for the `IgxSliderComponent`.
      * The default maximum value is 100.
+     * ```html
+     * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="256">
+     * ```
      */
     @Input()
     public set maxValue(value: number) {
@@ -320,6 +401,13 @@ export class IgxSliderComponent implements
     /**
      * Returns the lower boundary of settable values of the `IgxSliderComponent`.
      * If not set, will return `minValue`.
+     * ```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let sliderLowBound = this.slider.lowerBound;
+     * }
+     * ```
      */
     public get lowerBound(): number {
         if (!Number.isNaN(this._lowerBound) && this._lowerBound !== undefined) {
@@ -332,6 +420,9 @@ export class IgxSliderComponent implements
     /**
      * Sets the lower boundary of settable values of the `IgxSliderComponent`.
      * If not set is the same as min value.
+     * ```html
+     * <igx-slider [step]="5" [lowerBound]="20">
+     * ```
      */
     @Input()
     public set lowerBound(value: number) {
@@ -349,6 +440,13 @@ export class IgxSliderComponent implements
     /**
      * Returns the upper boundary of settable values of the `IgxSliderComponent`.
      * If not set, will return `maxValue`
+     * ```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *    let sliderUpBound = this.slider.upperBound;
+     * }
+     * ```
      */
     public get upperBound(): number {
         if (!Number.isNaN(this._upperBound) && this._upperBound !== undefined) {
@@ -361,6 +459,9 @@ export class IgxSliderComponent implements
     /**
      * Sets the upper boundary of the `IgxSliderComponent`.
      * If not set is the same as max value.
+     * ```html
+     * <igx-slider [step]="5" [upperBound]="20">
+     * ```
      */
     @Input()
     public set upperBound(value: number) {
@@ -378,6 +479,13 @@ export class IgxSliderComponent implements
      * Returns the slider value. If the slider is of type {@link IgxSliderType.SLIDER} the returned value is number.
      * If the slider type is {@link IgxSliderType.RANGE}.
      * The returned value represents an object of {@link lowerValue} and {@link upperValue}.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * public sliderValue(event){
+     *     let sliderVal = this.slider.value;
+     * }
+     * ```
      */
     public get value(): number | IRangeSliderValue {
         if (this.isRange) {
@@ -397,6 +505,15 @@ export class IgxSliderComponent implements
      * If the slider type is {@link IgxSliderType.RANGE} the argument
      * represents an object of {@link lowerValue} and {@link upperValue} properties.
      * By default the object is associated with the {@link lowerBound} and {@link upperBound} property values.
+     * ```typescript
+     * rangeValue = {
+     *   lower: 30,
+     *   upper: 60
+     * };
+     * ```
+     * ```html
+     * <igx-slider [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="56" [maxValue]="256">
+     * ```
      */
     @Input()
     public set value(value: number | IRangeSliderValue) {
@@ -410,6 +527,9 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the number of the presented primary ticks.
+     * ```typescript
+     * const primaryTicks = this.slider.primaryTicks;
+     * ```
      */
     @Input()
     public get primaryTicks() {
@@ -422,6 +542,9 @@ export class IgxSliderComponent implements
     /**
      * Sets the number of primary ticks. If {@link @labels} is enabled, this property won't function.
      * Insted enable ticks by {@link showTicks} property.
+     * ```typescript
+     * this.slider.primaryTicks = 5;
+     * ```
      */
     public set primaryTicks(val: number) {
         if (val <= 1) {
@@ -433,6 +556,9 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the number of the presented secondary ticks.
+     * ```typescript
+     * const secondaryTicks = this.slider.secondaryTicks;
+     * ```
      */
     @Input()
     public get secondaryTicks() {
@@ -442,6 +568,9 @@ export class IgxSliderComponent implements
     /**
      * Sets the number of secondary ticks. The property functions even when {@link labels} is enabled,
      * but all secondary ticks won't present any tick labels.
+     * ```typescript
+     * this.slider.secondaryTicks = 5;
+     * ```
      */
     public set secondaryTicks(val: number) {
         if (val < 1) {
@@ -453,18 +582,27 @@ export class IgxSliderComponent implements
 
     /**
      * Show/hide slider ticks
+     * ```html
+     * <igx-slier [showTicks]="true" [primaryTicks]="5"></igx-slier>
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public showTicks = false;
 
     /**
      * show/hide primary tick labels
+     * ```html
+     * <igx-slider [primaryTicks]="5" [primaryTickLabels]="false"></igx-slider>
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public primaryTickLabels = true;
 
     /**
      * show/hide secondary tick labels
+     * ```html
+     * <igx-slider [secondaryTicks]="5" [secondaryTickLabels]="false"></igx-slider>
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public secondaryTickLabels = true;
@@ -474,6 +612,9 @@ export class IgxSliderComponent implements
      * bottom - The default orienation, below the slider track.
      * top - Above the slider track
      * mirror - combines top and bottom orientation.
+     * ```html
+     * <igx-slider [primaryTicks]="5" [ticksOrientation]="ticksOrientation"></igx-slider>
+     * ```
      */
     @Input()
     public ticksOrientation: TicksOrientation = TicksOrientation.Bottom;
@@ -483,6 +624,9 @@ export class IgxSliderComponent implements
      * horizontal - The default rotation
      * toptobottom - Rotates tick labels vertically to 90deg
      * bottomtotop - Rotate tick labels vertically to -90deg
+     * ```html
+     * <igx-slider [primaryTicks]="5" [secondaryTicks]="3" [tickLabelsOrientation]="tickLabelsOrientaiton"></igx-slider>
+     * ```
      */
     @Input()
     public tickLabelsOrientation: TickLabelsOrientation = TickLabelsOrientation.Horizontal;
@@ -497,24 +641,56 @@ export class IgxSliderComponent implements
 
     /**
      * This event is emitted every time the value is changed.
+     * ```typescript
+     * public change(event){
+     *    alert("The value has been changed!");
+     * }
+     * ```
+     * ```html
+     * <igx-slider (valueChange)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * ```
      */
     @Output()
     public valueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
     /**
      * This event is emitted every time the lower value of a range slider is changed.
+     * ```typescript
+     * public change(value){
+     *    alert(`The lower value has been changed to ${value}`);
+     * }
+     * ```
+     * ```html
+     * <igx-slider [(lowerValue)]="model.lowervalue" (lowerValueChange)="change($event)" [step]="5">
+     * ```
      */
     @Output()
     public lowerValueChange = new EventEmitter<number>();
 
     /**
      * This event is emitted every time the upper value of a range slider is changed.
+     * ```typescript
+     * public change(value){
+     *    alert(`The upper value has been changed to ${value}`);
+     * }
+     * ```
+     * ```html
+     * <igx-slider [(upperValue)]="model.uppervalue" (upperValueChange)="change($event)" [step]="5">
+     * ```
      */
     @Output()
     public upperValueChange = new EventEmitter<number>();
 
     /**
      * This event is emitted at the end of every slide interaction.
+     * ```typescript
+     * public change(event){
+     *    alert("The value has been changed!");
+     * }
+     * ```
+     * ```html
+     * <igx-slider (dragFinished)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * ```
      */
     @Output()
     public dragFinished = new EventEmitter<number | IRangeSliderValue>();
@@ -593,6 +769,13 @@ export class IgxSliderComponent implements
 
     /**
      * Returns whether the `IgxSliderComponent` type is RANGE.
+     * ```typescript
+     *  @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let sliderRange = this.slider.isRange;
+     * }
+     * ```
      */
     public get isRange(): boolean {
         return this.type === IgxSliderType.RANGE;
@@ -600,6 +783,13 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the lower value of a RANGE `IgxSliderComponent`.
+     * ```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * public lowValue(event){
+     *    let sliderLowValue = this.slider.lowerValue;
+     * }
+     * ```
      */
     public get lowerValue(): number {
         if (!Number.isNaN(this._lowerValue) && this._lowerValue !== undefined && this._lowerValue >= this.lowerBound) {
@@ -611,6 +801,13 @@ export class IgxSliderComponent implements
 
     /**
      * Sets the lower value of a RANGE `IgxSliderComponent`.
+     * ```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * public lowValue(event){
+     *    this.slider.lowerValue = value;
+     * }
+     * ```
      */
     @Input()
     public set lowerValue(value: number) {
@@ -625,6 +822,13 @@ export class IgxSliderComponent implements
     /**
      * Returns the upper value of a RANGE `IgxSliderComponent`.
      * Returns `value` of a SLIDER `IgxSliderComponent`
+     * ```typescript
+     *  @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * public upperValue(event){
+     *     let upperValue = this.slider.upperValue;
+     * }
+     * ```
      */
     public get upperValue() {
         if (!Number.isNaN(this._upperValue) && this._upperValue !== undefined && this._upperValue <= this.upperBound) {
@@ -636,6 +840,13 @@ export class IgxSliderComponent implements
 
     /**
      * Sets the upper value of a RANGE `IgxSliderComponent`.
+     * ```typescript
+     *  @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * public upperValue(event){
+     *     this.slider.upperValue = value;
+     * }
+     * ```
      */
     @Input()
     public set upperValue(value: number) {
@@ -649,6 +860,11 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the value corresponding the lower label.
+     * ```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * let label = this.slider.lowerLabel;
+     * ```
      */
     public get lowerLabel() {
         return this.labelsViewEnabled ? this.labels[this.lowerValue] : this.lowerValue;
@@ -656,6 +872,11 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the value corresponding the upper label.
+     * ```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * let label = this.slider.upperLabel;
+     * ```
      */
     public get upperLabel() {
         return this.labelsViewEnabled ? this.labels[this.upperValue] : this.upperValue;
@@ -664,6 +885,11 @@ export class IgxSliderComponent implements
     /**
      * Returns if label view is enabled.
      * If the {@link labels} is set, the view is automatically activated.
+     * ```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * let labelView = this.slider.labelsViewEnabled;
+     * ```
      */
     public get labelsViewEnabled(): boolean {
         return !!(this.labels && this.labels.length > 1);

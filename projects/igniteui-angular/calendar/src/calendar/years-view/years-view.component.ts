@@ -76,6 +76,9 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
 
     /**
      * Gets the year format option of the years view.
+     * ```typescript
+     * let yearFormat = this.yearsView.yearFormat.
+     * ```
      */
     @Input()
     public get yearFormat(): any {
@@ -84,6 +87,9 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
 
     /**
      * Sets the year format option of the years view.
+     * ```html
+     * <igx-years-view [yearFormat]="numeric"></igx-years-view>
+     * ```
      *
      * @memberof IgxYearsViewComponent
      */

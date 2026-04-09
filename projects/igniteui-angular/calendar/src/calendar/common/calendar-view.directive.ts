@@ -148,6 +148,9 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * Gets/sets the selected date of the view.
      * By default it's the current date.
+     * ```typescript
+     * let date = this.view.date;
+     * ```
      *
      * @memberof IgxYearsViewComponent
      */
@@ -165,6 +168,9 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * Gets the `locale` of the view.
      * Default value is `"en"`.
+     * ```typescript
+     * let locale = this.view.locale;
+     * ```
      *
      * @memberof IgxCalendarViewDirective
      */

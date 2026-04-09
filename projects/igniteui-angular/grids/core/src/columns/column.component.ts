@@ -44,6 +44,8 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  * The Ignite UI Column is used within an `igx-grid` element to define what data the column will show. Features such as sorting,
  * filtering & editing are enabled at the column level.  You can also provide a template containing custom content inside
  * the column using `ng-template` which will be used for all cells within the column.
+ *
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, IgxRowIslandComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,6 +65,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Sets/gets the `field` value.
+     * ```typescript
+     * let columnField = this.column.field;
+     * ```
+     * ```html
+     * <igx-column [field] = "'ID'"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -77,6 +85,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Sets/gets whether to merge cells in this column.
+     * ```html
+     * <igx-column [merge]="true"></igx-column>
+     * ```
+     *
      */
     @Input()
     public get merge() {
@@ -104,6 +116,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Sets/gets the `header` value.
+     * ```typescript
+     * let columnHeader = this.column.header;
+     * ```
+     * ```html
+     * <igx-column [header] = "'ID'"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -113,6 +131,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public header = '';
     /**
      * Sets/gets the `title` value.
+     * ```typescript
+     * let title = this.column.title;
+     * ```
+     * ```html
+     * <igx-column [title] = "'Some column tooltip'"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -123,6 +147,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets whether the column is sortable.
      * Default value is `false`.
+     * ```typescript
+     * let isSortable = this.column.sortable;
+     * ```
+     * ```html
+     * <igx-column [sortable] = "true"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -131,6 +161,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public sortable = false;
     /**
      * Returns if the column is selectable.
+     * ```typescript
+     * let columnSelectable = this.column.selectable;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -143,6 +176,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets if the column is selectable.
      * Default value is `true`.
+     * ```html
+     * <igx-column [selectable] = "false"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -153,6 +189,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets whether the column is groupable.
      * Default value is `false`.
+     * ```typescript
+     * let isGroupable = this.column.groupable;
+     * ```
+     * ```html
+     * <igx-column [groupable] = "true"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -169,6 +211,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Gets whether the column is editable.
      * Default value is `false`.
+     * ```typescript
+     * let isEditable = this.column.editable;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -192,6 +237,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Sets whether the column is editable.
+     * ```typescript
+     * this.column.editable = true;
+     * ```
+     * ```html
+     * <igx-column [editable] = "true"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -201,6 +252,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets whether the column is filterable.
      * Default value is `true`.
+     * ```typescript
+     * let isFilterable = this.column.filterable;
+     * ```
+     * ```html
+     * <igx-column [filterable] = "false"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -211,6 +268,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets whether the column is resizable.
      * Default value is `false`.
+     * ```typescript
+     * let isResizable = this.column.resizable;
+     * ```
+     * ```html
+     * <igx-column [resizable] = "true"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -222,6 +285,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Sets/gets whether the column header is included in autosize logic.
      * Useful when template for a column header is sized based on parent, for example a default `div`.
      * Default value is `false`.
+     * ```typescript
+     * let isResizable = this.column.resizable;
+     * ```
+     * ```html
+     * <igx-column [resizable] = "true"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -231,6 +300,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Gets a value indicating whether the summary for the column is enabled.
+     * ```typescript
+     * let hasSummary = this.column.hasSummary;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -243,6 +315,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets a value indicating whether the summary for the column is enabled.
      * Default value is `false`.
+     * ```html
+     * <igx-column [hasSummary] = "true"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -255,6 +330,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Gets whether the column is hidden.
+     * ```typescript
+     * let isHidden = this.column.hidden;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -267,8 +345,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets the column hidden property.
      * Default value is `false`.
+     * ```html
+     * <igx-column [hidden] = "true"></igx-column>
+     * ```
      *
      * Two-way data binding.
+     * ```html
+     * <igx-column [(hidden)] = "model.isHidden"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -292,6 +376,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Returns if the column is selected.
+     * ```typescript
+     * let isSelected = this.column.selected;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -302,6 +389,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Select/deselect a column.
      * Default value is `false`.
+     * ```typescript
+     * this.column.selected = true;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -318,12 +408,24 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Emitted when the column is hidden or shown.
+     *
+     * ```html
+     * <igx-column (hiddenChange)="hiddenChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
 
     /**
      * Emitted when the column expanded or collapsed.
+     *
+     * ```html
+     * <igx-column (expandedChange)="expandedChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public expandedChange = new EventEmitter<boolean>();
@@ -342,6 +444,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Gets whether the hiding is disabled.
+     * ```typescript
+     * let isHidingDisabled =  this.column.disableHiding;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -351,6 +456,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public disableHiding = false;
     /**
      * Gets whether the pinning is disabled.
+     * ```typescript
+     * let isPinningDisabled =  this.column.disablePinning;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -361,6 +469,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Gets the `width` of the column.
+     * ```typescript
+     * let columnWidth = this.column.width;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -382,8 +493,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Sets the `width` of the column.
+     * ```html
+     * <igx-column [width] = "'25%'"></igx-column>
+     * ```
      *
      * Two-way data binding.
+     * ```html
+     * <igx-column [(width)]="model.columns[0].width"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -413,6 +530,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Sets/gets the maximum `width` of the column.
+     * ```typescript
+     * let columnMaxWidth = this.column.width;
+     * ```
+     * ```html
+     * <igx-column [maxWidth] = "'150px'"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -428,6 +551,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Sets/gets the class selector of the column header.
+     * ```typescript
+     * let columnHeaderClass = this.column.headerClasses;
+     * ```
+     * ```html
+     * <igx-column [headerClasses] = "'column-header'"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -440,6 +569,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Sets conditional style properties on the column header.
      * Similar to `ngStyle` it accepts an object literal where the keys are
      * the style properties and the value is the expression to be evaluated.
+     * ```typescript
+     * styles = {
+     *  background: 'royalblue',
+     *  color: (column) => column.pinned ? 'red': 'inherit'
+     * }
+     * ```
+     * ```html
+     * <igx-column [headerStyles]="styles"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -450,6 +588,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Sets/gets the class selector of the column group header.
+     * ```typescript
+     * let columnHeaderClass = this.column.headerGroupClasses;
+     * ```
+     * ```html
+     * <igx-column [headerGroupClasses] = "'column-group-header'"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -462,6 +606,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Sets conditional style properties on the column header group wrapper.
      * Similar to `ngStyle` it accepts an object literal where the keys are
      * the style properties and the value is the expression to be evaluated.
+     * ```typescript
+     * styles = {
+     *  background: 'royalblue',
+     *  color: (column) => column.pinned ? 'red': 'inherit'
+     * }
+     * ```
+     * ```html
+     * <igx-column [headerGroupStyles]="styles"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -477,6 +630,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * where the key is the name of the CSS class, while the
      * value is either a callback function that returns a boolean,
      * or boolean, like so:
+     * ```typescript
+     * callback = (rowData, columnKey, cellValue, rowIndex) => { return rowData[columnKey] > 6; }
+     * cellClasses = { 'className' : this.callback };
+     * ```
+     * ```html
+     * <igx-column [cellClasses] = "cellClasses"></igx-column>
+     * <igx-column [cellClasses] = "{'class1' : true }"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -491,6 +652,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Similar to `ngStyle` it accepts an object literal where the keys are
      * the style properties and the value is the expression to be evaluated.
      * As with `cellClasses` it accepts a callback function.
+     * ```typescript
+     * styles = {
+     *  background: 'royalblue',
+     *  color: (rowData, columnKey, cellValue, rowIndex) => value.startsWith('Important') ? 'red': 'inherit'
+     * }
+     * ```
+     * ```html
+     * <igx-column [cellStyles]="styles"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -508,8 +678,29 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Note: As the formatter is used in places like the Excel style filtering dialog, in certain
      * scenarios (remote filtering for example), the row data argument can be `undefined`.
      *
+     *
      * In this example, we check to see if the column name is Salary, and then provide a method as the column formatter
      * to format the value into a currency string.
+     *
+     * @example
+     * ```typescript
+     * columnInit(column: IgxColumnComponent) {
+     *   if (column.field == "Salary") {
+     *     column.formatter = (salary => this.format(salary));
+     *   }
+     * }
+     *
+     * format(value: number) : string {
+     *   return formatCurrency(value, "en-us", "$");
+     * }
+     * ```
+     *
+     * @example
+     * ```typescript
+     * const column = this.grid.getColumnByName('Address');
+     * const addressFormatter = (address: string, rowData: any) => data.privacyEnabled ? 'unknown' : address;
+     * column.formatter = addressFormatter;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -527,6 +718,23 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * In this example, we check to see if the column name is OrderDate, and then provide a method as the summaryFormatter
      * to change the locale for the dates to 'fr-FR'. The summaries with the count key are skipped so they are displayed as numbers.
      *
+     * ```typescript
+     * columnInit(column: IgxColumnComponent) {
+     *   if (column.field == "OrderDate") {
+     *     column.summaryFormatter = this.summaryFormat;
+     *   }
+     * }
+     *
+     * summaryFormat(summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand): string {
+     *   const result = summary.summaryResult;
+     *   if(summaryResult.key !== 'count' && result !== null && result !== undefined) {
+     *      const pipe = new DatePipe('fr-FR');
+     *      return pipe.transform(result,'mediumDate');
+     *   }
+     *   return result;
+     * }
+     * ```
+     *
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
@@ -537,6 +745,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.
+     * ```typescript
+     * let filteringIgnoreCase = this.column.filteringIgnoreCase;
+     * ```
+     * ```html
+     * <igx-column [filteringIgnoreCase] = "false"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -546,6 +760,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets whether the column sorting should be case sensitive.
      * Default value is `true`.
+     * ```typescript
+     * let sortingIgnoreCase = this.column.sortingIgnoreCase;
+     * ```
+     * ```html
+     * <igx-column [sortingIgnoreCase] = "false"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -555,6 +775,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets whether the column is `searchable`.
      * Default value is `true`.
+     * ```typescript
+     * let isSearchable =  this.column.searchable';
+     * ```
+     * ```html
+     *  <igx-column [searchable] = "false"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -565,6 +791,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets the data type of the column values.
      * Default value is `string`.
+     * ```typescript
+     * let columnDataType = this.column.dataType;
+     * ```
+     * ```html
+     * <igx-column [dataType] = "'number'"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -578,6 +810,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Row index where the current field should end.
      * The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [rowEnd]="2" [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -587,6 +824,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Column index where the current field should end.
      * The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [colEnd]="3" [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -595,6 +837,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Row index from which the field is starting.
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -603,6 +850,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Column index from which the field is starting.
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [colStart]="1" [rowStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -612,6 +864,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets custom properties provided in additional template context.
      *
+     * ```html
+     * <igx-column [additionalTemplateContext]="contextObject">
+     *   <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+     *      {{ props }}
+     *   </ng-template>
+     * </igx-column>
+     * ```
+     *
      * @memberof IgxColumnComponent
      */
     @Input()
@@ -619,12 +879,24 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Emitted when the column width changes.
+     *
+     * ```html
+     * <igx-column (widthChange)="widthChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public widthChange = new EventEmitter<string>();
 
     /**
      * Emitted when the column is pinned/unpinned.
+     *
+     * ```html
+     * <igx-column (pinnedChange)="pinnedChange($event)">
+     * </igx-column>
+     * ```
+     *
      */
     @Output()
     public pinnedChange = new EventEmitter<boolean>();
@@ -725,6 +997,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets the minimum `width` of the column.
      * Default value is `88`;
+     * ```typescript
+     * let columnMinWidth = this.column.minWidth;
+     * ```
+     * ```html
+     * <igx-column [minWidth] = "'100px'"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -754,6 +1032,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Gets the column index.
+     * ```typescript
+     * let columnIndex = this.column.index;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -764,6 +1045,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /* mustCoerceToInt */
     /**
      * Gets the pinning position of the column.
+     * ```typescript
+     * let pinningPosition = this.column.pinningPosition;
      */
     @WatchColumnChanges()
     @Input()
@@ -774,6 +1057,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Sets the pinning position of the column.
+     *```html
+     * <igx-column [pinningPosition]="1"></igx-column>
+     * ```
      */
     public set pinningPosition(value: ColumnPinningPosition) {
         this._pinningPosition = value;
@@ -781,6 +1067,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Gets whether the column is `pinned`.
+     * ```typescript
+     * let isPinned = this.column.pinned;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -792,8 +1081,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets whether the column is pinned.
      * Default value is `false`.
+     * ```html
+     * <igx-column [pinned] = "true"></igx-column>
+     * ```
      *
      * Two-way data binding.
+     * ```html
+     * <igx-column [(pinned)] = "model.columns[0].isPinned"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -819,6 +1114,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /* treatAsRef */
     /**
      * Gets the column `summaries`.
+     * ```typescript
+     * let columnSummaries = this.column.summaries;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -832,6 +1130,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /* treatAsRef */
     /**
      * Sets the column `summaries`.
+     * ```typescript
+     * this.column.summaries = IgxNumberSummaryOperand;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -850,6 +1151,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets/gets the summary operands to exclude from display.
      * Accepts an array of string keys representing the summary types to disable, such as 'Min', 'Max', 'Count' etc.
+     * ```typescript
+     * let disabledSummaries = this.column.disabledSummaries;
+     * ```
+     * ```html
+     * <igx-column [disabledSummaries]="['min', 'max', 'average']"></igx-column>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -873,6 +1180,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Gets the column `filters`.
+     * ```typescript
+     * let columnFilters = this.column.filters'
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -882,6 +1192,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Sets the column `filters`.
+     * ```typescript
+     * this.column.filters = IgxBooleanFilteringOperand.instance().
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -890,6 +1203,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Gets the column `sortStrategy`.
+     * ```typescript
+     * let sortStrategy = this.column.sortStrategy
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -899,6 +1215,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Sets the column `sortStrategy`.
+     * ```typescript
+     * this.column.sortStrategy = new CustomSortingStrategy().
+     * class CustomSortingStrategy extends SortingStrategy {...}
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -909,6 +1229,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /* blazorSuppress */
     /**
      * Gets the function that compares values for merging.
+     * ```typescript
+     * let mergingComparer = this.column.mergingComparer'
+     * ```
      */
     @Input()
     public get mergingComparer(): (prevRecord: any, record: any, field: string) => boolean {
@@ -918,6 +1241,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /* blazorSuppress */
     /**
      * Sets a custom function to compare values for merging.
+     * ```typescript
+     * this.column.mergingComparer = (prevRecord: any, record: any, field: string) => { return prevRecord[field] === record[field]; }
+     * ```
      */
     public set mergingComparer(funcRef: (prevRecord: any, record: any, field: string) => boolean) {
         this._mergingComparer = funcRef;
@@ -927,6 +1253,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /* blazorSuppress */
     /**
      * Gets the function that compares values for grouping.
+     * ```typescript
+     * let groupingComparer = this.column.groupingComparer'
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -939,6 +1268,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets a custom function to compare values for grouping.
      * Subsequent values in the sorted data that the function returns 0 for are grouped.
+     * ```typescript
+     * this.column.groupingComparer = (a: any, b: any, currRec?: any, groupRec?: any) => { return a === b ? 0 : -1; }
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -963,6 +1295,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Returns a reference to the `summaryTemplate`.
+     * ```typescript
+     * let summaryTemplate = this.column.summaryTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -974,6 +1309,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Sets the summary template.
+     * ```html
+     * <ng-template #summaryTemplate igxSummary let-summaryResults>
+     *    <p>{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</p>
+     *    <p>{{ summaryResults[1].label }}: {{ summaryResults[1].summaryResult }}</p>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'summaryTemplate'", {read: TemplateRef })
+     * public summaryTemplate: TemplateRef<any>;
+     * this.column.summaryTemplate = this.summaryTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -983,6 +1329,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Returns a reference to the `bodyTemplate`.
+     * ```typescript
+     * let bodyTemplate = this.column.bodyTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -994,6 +1343,18 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Sets the body template.
+     * ```html
+     * <ng-template #bodyTemplate igxCell let-val>
+     *    <div style = "background-color: yellowgreen" (click) = "changeColor(val)">
+     *       <span> {{val}} </span>
+     *    </div>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'bodyTemplate'", {read: TemplateRef })
+     * public bodyTemplate: TemplateRef<any>;
+     * this.column.bodyTemplate = this.bodyTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1002,6 +1363,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Returns a reference to the header template.
+     * ```typescript
+     * let headerTemplate = this.column.headerTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1014,6 +1378,18 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Sets the header template.
      * Note that the column header height is fixed and any content bigger than it will be cut off.
+     * ```html
+     * <ng-template #headerTemplate>
+     *   <div style = "background-color:black" (click) = "changeColor(val)">
+     *       <span style="color:red" >{{column.field}}</span>
+     *   </div>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'headerTemplate'", {read: TemplateRef })
+     * public headerTemplate: TemplateRef<any>;
+     * this.column.headerTemplate = this.headerTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1022,6 +1398,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Returns a reference to the inline editor template.
+     * ```typescript
+     * let inlineEditorTemplate = this.column.inlineEditorTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1033,6 +1412,16 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Sets the inline editor template.
+     * ```html
+     * <ng-template #inlineEditorTemplate igxCellEditor let-cell="cell">
+     *     <input type="string" [(ngModel)]="cell.value"/>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'inlineEditorTemplate'", {read: TemplateRef })
+     * public inlineEditorTemplate: TemplateRef<any>;
+     * this.column.inlineEditorTemplate = this.inlineEditorTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1042,6 +1431,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Returns a reference to the validation error template.
+     * ```typescript
+     * let errorTemplate = this.column.errorTemplate;
+     * ```
      */
     @notifyChanges()
     @WatchColumnChanges()
@@ -1051,6 +1443,18 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Sets the error template.
+     * ```html
+     * <ng-template igxCellValidationError let-cell="cell" #errorTemplate >
+     *     <div *ngIf="cell.validation.errors?.['forbiddenName']">
+     *      This name is forbidden.
+     *     </div>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'errorTemplate'", {read: TemplateRef })
+     * public errorTemplate: TemplateRef<any>;
+     * this.column.errorTemplate = this.errorTemplate;
+     * ```
      */
     public set errorTemplate(template: TemplateRef<IgxCellTemplateContext>) {
         this._errorTemplate = template;
@@ -1058,6 +1462,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Returns a reference to the `filterCellTemplate`.
+     * ```typescript
+     * let filterCellTemplate = this.column.filterCellTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1069,6 +1476,16 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
     /**
      * Sets the quick filter template.
+     * ```html
+     * <ng-template #filterCellTemplate IgxFilterCellTemplate let-column="column">
+     *    <input (input)="onInput()">
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'filterCellTemplate'", {read: TemplateRef })
+     * public filterCellTemplate: TemplateRef<any>;
+     * this.column.filterCellTemplate = this.filterCellTemplate;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1107,6 +1524,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Gets the column visible index.
      * If the column is not visible, returns `-1`.
+     * ```typescript
+     * let visibleColumnIndex =  this.column.visibleIndex;
+     * ```
      */
     public get visibleIndex(): number {
         if (!isNaN(this._vIndex)) {
@@ -1145,6 +1565,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /* blazorCSSuppress - Blazor doesn't carry over the ColumnType interface + should translate as static bool value */
     /**
      * Returns a boolean indicating if the column is a `ColumnGroup`.
+     * ```typescript
+     * let columnGroup =  this.column.columnGroup;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1155,6 +1578,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /* blazorCSSuppress - Blazor doesn't carry over the ColumnType interface + should translate as static bool value */
     /**
      * Returns a boolean indicating if the column is a `ColumnLayout` for multi-row layout.
+     * ```typescript
+     * let columnGroup =  this.column.columnGroup;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1164,6 +1590,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
+     * ```typescript
+     * let columnLayoutChild =  this.column.columnLayoutChild;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1186,6 +1615,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Returns the level of the column in a column group.
      * Returns `0` if the column doesn't have a `parent`.
+     * ```typescript
+     * let columnLevel =  this.column.level;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1223,6 +1655,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Indicates whether the column will be visible when its parent is collapsed.
+     * ```html
+     * <igx-column-group>
+     *   <igx-column [visibleWhenCollapsed]="true"></igx-column>
+     * </igx-column-group>
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1247,6 +1684,18 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Pass optional parameters for DatePipe and/or DecimalPipe to format the display value for date and numeric columns.
      * Accepts an `IColumnPipeArgs` object with any of the `format`, `timezone` and `digitsInfo` properties.
      * For more details see https://angular.io/api/common/DatePipe and https://angular.io/api/common/DecimalPipe
+     * @example
+     * ```typescript
+     * const pipeArgs: IColumnPipeArgs = {
+     *      format: 'longDate',
+     *      timezone: 'UTC',
+     *      digitsInfo: '1.1-2'
+     * }
+     * ```
+     * ```html
+     * <igx-column dataType="date" [pipeArgs]="pipeArgs"></igx-column>
+     * <igx-column dataType="number" [pipeArgs]="pipeArgs"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
@@ -1266,6 +1715,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Pass optional properties for the default column editors.
      * @remarks
      * Options may be applicable only to specific column type editors.
+     * @example
+     * ```typescript
+     * const editorOptions: IColumnEditorOptions = {
+     *      dateTimeFormat: 'MM/dd/YYYY',
+     * }
+     * ```
+     * ```html
+     * <igx-column dataType="date" [editorOptions]="editorOptions"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
@@ -1326,6 +1784,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Returns the filteringExpressionsTree of the column.
+     * ```typescript
+     * let tree =  this.column.filteringExpressionsTree;
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1338,12 +1799,21 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     // We need that because Blazor cannot handle the type correctly.
     /**
      * Sets/gets the parent column.
+     * ```typescript
+     * let parentColumn = this.column.parent;
+     * ```
+     * ```typescript
+     * this.column.parent = higherLevelColumn;
+     * ```
      */
     public parent: ColumnType | null = null;
 
     /* blazorSuppress */
     /**
      * Sets/gets the children columns.
+     * ```typescript
+     * let columnChildren = this.column.children;
+     * ```
      *
      * @deprecated in version 18.1.0. Use the `childColumns` property instead.
      */
@@ -1760,6 +2230,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Column cannot be pinned if:
      * - Is already pinned
      * - index argument is out of range
+     * ```typescript
+     * let success = this.column.pin();
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1867,6 +2340,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Column cannot be unpinned if:
      * - Is already unpinned
      * - index argument is out of range
+     * ```typescript
+     * let success = this.column.unpin();
+     * ```
      *
      * @memberof IgxColumnComponent
      */
@@ -1949,6 +2425,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * If passed index is invalid, or if column would receive a different visible index after moving, moving is not performed.
      * If passed index would move the column to a different column group. moving is not performed.
      *
+     * @example
+     * ```typescript
+     * column.move(index);
+     * ```
      * @memberof IgxColumnComponent
      */
     public move(index: number) {
@@ -2016,6 +2496,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Returns a reference to the top level parent column.
+     * ```typescript
+     * let topLevelParent =  this.column.topLevelParent;
+     * ```
      */
     public get topLevelParent(): ColumnType | undefined {
         let parent = this.parent;
@@ -2048,6 +2531,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * Autosize the column to the longest currently visible cell value, including the header cell.
+     * ```typescript
+     * @ViewChild('grid') grid: IgxGridComponent;
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * column.autosize();
+     * ```
      *
      * @memberof IgxColumnComponent
      * @param byHeaderOnly Set if column should be autosized based only on the header content.
@@ -2110,6 +2598,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      * Returns the size (in pixels) of the longest currently visible cell, including the header cell.
+     * ```typescript
+     * @ViewChild('grid') grid: IgxGridComponent;
+     *
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * let size = column.getLargestCellWidth();
+     * ```
      * @memberof IgxColumnComponent
      */
     public getLargestCellWidth(): string {

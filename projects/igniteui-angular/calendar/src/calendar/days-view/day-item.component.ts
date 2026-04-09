@@ -25,6 +25,7 @@ export class IgxDayItemComponent {
 
     /**
      * Returns boolean indicating if the day is selected
+     *
      */
     @Input()
     public get selected(): any {

@@ -34,8 +34,35 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     private elementRef = inject(ElementRef);
 
     /**
-     * Sets/gets the animation settings of the expansion panel component.
-     * Open and Close animation should be passed.
+     * Sets/gets the animation settings of the expansion panel component
+     * Open and Close animation should be passed
+     *
+     * Get
+     * ```typescript
+     *  const currentAnimations = this.panel.animationSettings;
+     * ```
+     * Set
+     * ```typescript
+     *  import { slideInLeft, slideOutRight } from 'igniteui-angular';
+     *  ...
+     *  this.panel.animationsSettings = {
+     *      openAnimation: slideInLeft,
+     *      closeAnimation: slideOutRight
+     * };
+     * ```
+     * or via template
+     * ```typescript
+     *  import { slideInLeft, slideOutRight } from 'igniteui-angular';
+     *  ...
+     *  myCustomAnimationObject = {
+     *      openAnimation: slideInLeft,
+     *      closeAnimation: slideOutRight
+     * };
+     * ```html
+     *  <igx-expansion-panel [animationSettings]='myCustomAnimationObject'>
+     *  ...
+     *  </igx-expansion-panel>
+     * ```
      */
     @Input()
     public override get animationSettings(): ToggleAnimationSettings {
@@ -48,6 +75,12 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     /**
      * Sets/gets the `id` of the expansion panel component.
      * If not set, `id` will have value `"igx-expansion-panel-0"`;
+     * ```html
+     * <igx-expansion-panel id = "my-first-expansion-panel"></igx-expansion-panel>
+     * ```
+     * ```typescript
+     * let panelId =  this.panel.id;
+     * ```
      *
      * @memberof IgxExpansionPanelComponent
      */
@@ -78,9 +111,18 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     /**
      * Gets/sets whether the component is collapsed (its content is hidden)
      * Get
+     * ```typescript
+     *  const myPanelState: boolean = this.panel.collapsed;
+     * ```
      * Set
+     * ```html
+     *  this.panel.collapsed = true;
+     * ```
      *
      * Two-way data binding:
+     * ```html
+     * <igx-expansion-panel [(collapsed)]="model.isCollapsed"></igx-expansion-panel>
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public collapsed = true;
@@ -93,24 +135,56 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
 
     /**
      * Emitted when the expansion panel starts collapsing
+     * ```typescript
+     *  handleCollapsing(event: IExpansionPanelCancelableEventArgs)
+     * ```
+     * ```html
+     *  <igx-expansion-panel (contentCollapsing)="handleCollapsing($event)">
+     *      ...
+     *  </igx-expansion-panel>
+     * ```
      */
     @Output()
     public contentCollapsing = new EventEmitter<IExpansionPanelCancelableEventArgs>();
 
     /**
      * Emitted when the expansion panel finishes collapsing
+     * ```typescript
+     *  handleCollapsed(event: IExpansionPanelEventArgs)
+     * ```
+     * ```html
+     *  <igx-expansion-panel (contentCollapsed)="handleCollapsed($event)">
+     *      ...
+     *  </igx-expansion-panel>
+     * ```
      */
     @Output()
     public contentCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
 
     /**
      * Emitted when the expansion panel starts expanding
+     * ```typescript
+     *  handleExpanding(event: IExpansionPanelCancelableEventArgs)
+     * ```
+     * ```html
+     *  <igx-expansion-panel (contentExpanding)="handleExpanding($event)">
+     *      ...
+     *  </igx-expansion-panel>
+     * ```
      */
     @Output()
     public contentExpanding = new EventEmitter<IExpansionPanelCancelableEventArgs>();
 
     /**
      * Emitted when the expansion panel finishes expanding
+     * ```typescript
+     *  handleExpanded(event: IExpansionPanelEventArgs)
+     * ```
+     * ```html
+     *  <igx-expansion-panel (contentExpanded)="handleExpanded($event)">
+     *      ...
+     *  </igx-expansion-panel>
+     * ```
      */
     @Output()
     public contentExpanded = new EventEmitter<IExpansionPanelEventArgs>();
@@ -154,6 +228,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
 
     /**
      * Collapses the panel
+     *
+     * ```html
+     *  <igx-expansion-panel #myPanel>
+     *      ...
+     *  </igx-expansion-panel>
+     *  <button type="button" igxButton (click)="myPanel.collapse($event)">Collpase Panel</button>
+     * ```
      */
     public collapse(evt?: Event) {
         // If expansion panel is already collapsed or is collapsing, do nothing
@@ -179,6 +260,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
 
     /**
      * Expands the panel
+     *
+     * ```html
+     *  <igx-expansion-panel #myPanel>
+     *      ...
+     *  </igx-expansion-panel>
+     *  <button type="button" igxButton (click)="myPanel.expand($event)">Expand Panel</button>
+     * ```
      */
     public expand(evt?: Event) {
         if (!this.collapsed && !this.closeAnimationPlayer) { // Check if the panel is currently collapsing or already expanded
@@ -203,6 +291,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
 
     /**
      * Toggles the panel
+     *
+     * ```html
+     *  <igx-expansion-panel #myPanel>
+     *      ...
+     *  </igx-expansion-panel>
+     *  <button type="button" igxButton (click)="myPanel.toggle($event)">Expand Panel</button>
+     * ```
      */
     public toggle(evt?: Event) {
         if (this.collapsed) {

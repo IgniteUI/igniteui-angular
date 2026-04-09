@@ -26,10 +26,39 @@ import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 /**
  * IgxStepper provides a wizard-like workflow by dividing content into logical steps.
  *
+ * @igxModule IgxStepperModule
+ *
+ * @igxKeywords stepper
+ *
+ * @igxGroup Layouts
+ *
  * @remarks
  * The Ignite UI for Angular Stepper component allows the user to navigate between multiple steps.
  * It supports horizontal and vertical orientation as well as keyboard navigation and provides API methods to control the active step.
  * The component offers keyboard navigation and API to control the active step.
+ *
+ * @example
+ * ```html
+ * <igx-stepper>
+ *  <igx-step [active]="true">
+ *      <igx-icon igxStepIndicator>home</igx-icon>
+ *      <p igxStepTitle>Home</p>
+ *      <div igxStepContent>
+ *         ...
+ *      </div>
+ *  </igx-step>
+ *  <igx-step [optional]="true">
+ *      <div igxStepContent>
+ *          ...
+ *      </div>
+ *  </igx-step>
+ *  <igx-step>
+ *      <div igxStepContent>
+ *          ...
+ *      </div>
+ *  </igx-step>
+ * </igx-stepper>
+ * ```
  */
 @Component({
     selector: 'igx-stepper',
@@ -50,6 +79,11 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      *
      * @remarks
      * Default value is `grow`. Other possible values are `fade` and `none`.
+     *
+     * ```html
+     * <igx-stepper verticalAnimationType="none">
+     * <igx-stepper>
+     * ```
      */
     @Input()
     public get verticalAnimationType(): VerticalAnimationType {
@@ -79,6 +113,11 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      *
      * @remarks
      * Default value is `grow`. Other possible values are `fade` and `none`.
+     *
+     * ```html
+     * <igx-stepper animationType="none">
+     * <igx-stepper>
+     * ```
      */
     @Input()
     public get horizontalAnimationType(): HorizontalAnimationType {
@@ -93,6 +132,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /**
      * Get/Set the animation duration.
+     * ```html
+     * <igx-stepper [animationDuration]="500">
+     * <igx-stepper>
+     * ```
      */
     @Input()
     public get animationDuration(): number {
@@ -112,6 +155,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      *
      * @remarks
      * If the stepper is in linear mode and if the active step is valid only then the user is able to move forward.
+     *
+     * ```html
+     * <igx-stepper [linear]="true"></igx-stepper>
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public get linear(): boolean {
@@ -132,6 +179,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /**
      * Get/Set the stepper orientation.
+     *
+     * ```typescript
+     * this.stepper.orientation = IgxStepperOrientation.Vertical;
+     * ```
      */
     @HostBinding('attr.aria-orientation')
     @Input()
@@ -153,6 +204,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /**
      * Get/Set the type of the steps.
+     *
+     * ```typescript
+     * this.stepper.stepType = IgxStepType.Indicator;
+     * ```
      */
     @Input()
     public stepType: IgxStepType = IgxStepType.Full;
@@ -162,6 +217,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      *
      * @remarks
      * Default value is `false` and the content is below the steps.
+     *
+     * ```typescript
+     * this.stepper.contentTop = true;
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public contentTop = false;
@@ -172,6 +231,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      * @remarks
      * The default value when the stepper is horizontally orientated is `bottom`.
      * In vertical layout the default title position is `end`.
+     *
+     * ```typescript
+     * this.stepper.titlePosition = IgxStepperTitlePosition.Top;
+     * ```
      */
     @Input()
     public titlePosition: IgxStepperTitlePosition = null;
@@ -192,12 +255,30 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /**
      * Emitted when the stepper's active step is changing.
+     *
+     *```html
+     * <igx-stepper (activeStepChanging)="handleActiveStepChanging($event)">
+     * </igx-stepper>
+     * ```
+     *
+     *```typescript
+     * public handleActiveStepChanging(event: IStepChangingEventArgs) {
+     *  if (event.newIndex < event.oldIndex) {
+     *      event.cancel = true;
+     *  }
+     * }
+     *```
      */
     @Output()
     public activeStepChanging = new EventEmitter<IStepChangingEventArgs>();
 
     /**
      * Emitted when the active step is changed.
+     *
+     * @example
+     * ```
+     * <igx-stepper (activeStepChanged)="handleActiveStepChanged($event)"></igx-stepper>
+     * ```
      */
     @Output()
     public activeStepChanged = new EventEmitter<IStepChangedEventArgs>();
@@ -220,6 +301,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /**
      * Get all steps.
+     *
+     * ```typescript
+     * const steps: IgxStepComponent[] = this.stepper.steps;
+     * ```
      */
     public get steps(): IgxStepComponent[] {
         return this._steps?.toArray() || [];
@@ -301,6 +386,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /**
      * Activates the step at a given index.
+     *
+     *```typescript
+     * this.stepper.navigateTo(1);
+     *```
      */
     public navigateTo(index: number): void {
         const step = this.steps[index];
@@ -312,6 +401,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /**
      * Activates the next enabled step.
+     *
+     *```typescript
+     * this.stepper.next();
+     *```
      */
     public next(): void {
         this.moveToNextStep();
@@ -319,6 +412,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /**
      * Activates the previous enabled step.
+     *
+     *```typescript
+     * this.stepper.prev();
+     *```
      */
     public prev(): void {
         this.moveToNextStep(false);
@@ -329,6 +426,9 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      *
      * @remarks
      * The steps' content will not be automatically reset.
+     *```typescript
+     * this.stepper.reset();
+     *```
      */
     public reset(): void {
         this.stepperService.visitedSteps.clear();

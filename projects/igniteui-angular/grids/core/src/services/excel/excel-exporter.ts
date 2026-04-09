@@ -26,6 +26,18 @@ const EXCEL_MAX_COLS = 16384;
  * (array) or from an `IgxGrid`.
  *
  * Example:
+ * ```typescript
+ * public localData = [
+ *   { Name: "Eric Ridley", Age: "26" },
+ *   { Name: "Alanis Brook", Age: "22" },
+ *   { Name: "Jonathan Morris", Age: "23" }
+ * ];
+ *
+ * constructor(private excelExportService: IgxExcelExporterService) {
+ * }
+ *
+ * this.excelExportService.exportData(this.localData, new IgxExcelExporterOptions("FileName"));
+ * ```
  */
 @Injectable({
     providedIn: 'root',
@@ -34,6 +46,11 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
     /**
      * This event is emitted when the export process finishes.
+     * ```typescript
+     * this.exporterService.exportEnded.subscribe((args: IExcelExportEndedEventArgs) => {
+     * // put event handler code here
+     * });
+     * ```
      *
      * @memberof IgxExcelExporterService
      */

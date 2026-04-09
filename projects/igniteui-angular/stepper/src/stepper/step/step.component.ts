@@ -14,6 +14,21 @@ let NEXT_ID = 0;
 /**
  * The IgxStepComponent is used within the `igx-stepper` element and it holds the content of each step.
  * It also supports custom indicators, title and subtitle.
+ *
+ * @igxModule IgxStepperModule
+ *
+ * @igxKeywords step
+ *
+ * @example
+ * ```html
+ *  <igx-stepper>
+ *  ...
+ *    <igx-step [active]="true" [completed]="true">
+ *      ...
+ *    </igx-step>
+ *  ...
+ *  </igx-stepper>
+ * ```
  */
 @Component({
     selector: 'igx-step',
@@ -36,6 +51,12 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     /**
      * Get/Set the `id` of the step component.
      * Default value is `"igx-step-0"`;
+     * ```html
+     * <igx-step id="my-first-step"></igx-step>
+     * ```
+     * ```typescript
+     * const stepId = this.step.id;
+     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -43,6 +64,18 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
 
     /**
      * Get/Set whether the step is interactable.
+     *
+     * ```html
+     * <igx-stepper>
+     * ...
+     *     <igx-step [disabled]="true"></igx-step>
+     * ...
+     * </igx-stepper>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].disabled = true;
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public set disabled(value: boolean) {
@@ -61,6 +94,18 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      *
      * @remarks
      * When set to `true` the following separator is styled `solid`.
+     *
+     * ```html
+     * <igx-stepper>
+     * ...
+     *     <igx-step [completed]="true"></igx-step>
+     * ...
+     * </igx-stepper>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].completed = true;
+     * ```
      */
     @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-stepper__step--completed')
@@ -68,6 +113,16 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
 
     /**
      * Get/Set whether the step is valid.
+     *```html
+     * <igx-step [isValid]="form.form.valid">
+     *      ...
+     *      <div igxStepContent>
+     *          <form #form="ngForm">
+     *              ...
+     *          </form>
+     *      </div>
+     * </igx-step>
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public get isValid(): boolean {
@@ -87,12 +142,27 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * @remarks
      * Optional steps validity does not affect the default behavior when the stepper is in linear mode i.e.
      * if optional step is invalid the user could still move to the next step.
+     *
+     * ```html
+     * <igx-step [optional]="true"></igx-step>
+     * ```
+     * ```typescript
+     * this.stepper.steps[1].optional = true;
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public optional = false;
 
     /**
      * Get/Set the active state of the step
+     *
+     * ```html
+     * <igx-step [active]="true"></igx-step>
+     * ```
+     *
+     * ```typescript
+     * this.stepper.steps[1].active = true;
+     * ```
      *
      * @param value: boolean
      */
@@ -153,6 +223,16 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
 
     /**
      * Emitted when the step's `active` property changes. Can be used for two-way binding.
+     *
+     * ```html
+     * <igx-step [(active)]="this.isActive">
+     * </igx-step>
+     * ```
+     *
+     * ```typescript
+     * const step: IgxStepComponent = this.stepper.step[0];
+     * step.activeChange.subscribe((e: boolean) => console.log("Step active state change to ", e))
+     * ```
      */
     @Output()
     public activeChange = new EventEmitter<boolean>();
@@ -179,6 +259,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
 
     /**
      * Get the step index inside of the stepper.
+     *
+     * ```typescript
+     * const step = this.stepper.steps[1];
+     * const stepIndex: number = step.index;
+     * ```
      */
     public get index(): number {
         return this._index;

@@ -52,6 +52,14 @@ export class IgxSelectFooterDirective {
  * The `igxSelect` provides an input with dropdown list allowing selection of a single item.
  *
  * Example:
+ * ```html
+ * <igx-select #select1 [placeholder]="'Pick One'">
+ *   <label igxLabel>Select Label</label>
+ *   <igx-select-item *ngFor="let item of items" [value]="item.field">
+ *     {{ item.field }}
+ *   </igx-select-item>
+ * </igx-select>
+ * ```
  */
 @Component({
     selector: 'igx-select',
@@ -98,17 +106,24 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * Sets input placeholder.
+     *
      */
     @Input() public placeholder;
 
 
     /**
      * Disables the component.
+     * ```html
+     * <igx-select [disabled]="'true'"></igx-select>
+     * ```
      */
     @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
      * Sets custom OverlaySettings `IgxSelectComponent`.
+     * ```html
+     * <igx-select [overlaySettings] = "customOverlaySettings"></igx-select>
+     * ```
      */
     @Input()
     public overlaySettings: OverlaySettings;
@@ -119,42 +134,107 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * Emitted before the dropdown is opened
+     *
+     * ```html
+     * <igx-select opening='handleOpening($event)'></igx-select>
+     * ```
      */
     @Output()
     public override opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
+     *
+     * ```html
+     * <igx-select (opened)='handleOpened($event)'></igx-select>
+     * ```
      */
     @Output()
     public override opened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted before the dropdown is closed
+     *
+     * ```html
+     * <igx-select (closing)='handleClosing($event)'></igx-select>
+     * ```
      */
     @Output()
     public override closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
+     *
+     * ```html
+     * <igx-select (closed)='handleClosed($event)'></igx-select>
+     * ```
      */
     @Output()
     public override closed = new EventEmitter<IBaseEventArgs>();
 
     /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.select.toggleIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-select #select>
+     *      ...
+     *      <ng-template igxSelectToggleIcon let-collapsed>
+     *          <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+     *      </ng-template>
+     *  </igx-select>
+     * ```
      */
     @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering the HEADER for the select items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.select.headerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-select #select>
+     *      ...
+     *      <ng-template igxSelectHeader>
+     *          <div class="select__header">
+     *              This is a custom header
+     *          </div>
+     *      </ng-template>
+     *  </igx-select>
+     * ```
      */
     @ContentChild(IgxSelectHeaderDirective, { read: TemplateRef, static: false })
     public headerTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering the FOOTER for the select items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.select.footerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-select #select>
+     *      ...
+     *      <ng-template igxSelectFooter>
+     *          <div class="select__footer">
+     *              This is a custom footer
+     *          </div>
+     *      </ng-template>
+     *  </igx-select>
+     * ```
      */
     @ContentChild(IgxSelectFooterDirective, { read: TemplateRef, static: false })
     public footerTemplate: TemplateRef<any> = null;
@@ -180,6 +260,19 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * Gets/Sets the component value.
+     *
+     * ```typescript
+     * // get
+     * let selectValue = this.select.value;
+     * ```
+     *
+     * ```typescript
+     * // set
+     * this.select.value = 'London';
+     * ```
+     * ```html
+     * <igx-select [value]="value"></igx-select>
+     * ```
      */
     @Input()
     public get value(): any {
@@ -196,6 +289,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /**
      * Sets how the select will be styled.
      * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
+     * ```html
+     * <igx-select [type]="'box'"></igx-select>
+     * ```
      */
     @Input()
     public get type(): IgxInputGroupType {
@@ -286,6 +382,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * Opens the select
+     *
+     * ```typescript
+     * this.select.open();
+     * ```
      */
     public override open(overlaySettings?: OverlaySettings) {
         if (this.disabled || this.items.length === 0) {

@@ -19,6 +19,11 @@ export class IgxCardMediaDirective {
     /**
      * Sets the `width` and `min-width` style property
      * of the media container. If not provided it will be set to `auto`.
+     *
+     * @example
+     * ```html
+     * <igx-card-media width="300px"></igx-card-media>
+     * ```
      */
     @HostBinding('style.width')
     @HostBinding('style.min-width')
@@ -28,6 +33,11 @@ export class IgxCardMediaDirective {
     /**
      * Sets the `height` style property of the media container.
      * If not provided it will be set to `auto`.
+     *
+     * @example
+     * ```html
+     * <igx-card-media height="50%"></igx-card-media>
+     * ```
      */
     @HostBinding('style.height')
     @Input()
@@ -57,6 +67,11 @@ export class IgxCardHeaderComponent {
     /**
      * Sets the layout style of the header.
      * By default the header elements(thumbnail and title/subtitle) are aligned horizontally.
+     *
+     * @example
+     * ```html
+     * <igx-card-header [vertical]="true"></igx-card-header>
+     * ```
      */
     @HostBinding('class.igx-card-header--vertical')
     @Input({ transform: booleanAttribute })
@@ -126,6 +141,11 @@ export class IgxCardFooterDirective {
     /**
      * Sets the value of the `role` attribute of the card footer.
      * By default the value is set to `footer`.
+     *
+     * @example
+     * ```html
+     * <igx-card-footer role="footer"></igx-card-footer>
+     * ```
      */
     @HostBinding('attr.role')
     @Input()
@@ -135,9 +155,31 @@ export class IgxCardFooterDirective {
 /**
  * Card provides a way to display organized content in appealing way.
  *
+ * @igxModule IgxCardModule
+ *
+ * @igxTheme igx-card-theme, igx-icon-theme, igx-button-theme
+ *
+ * @igxKeywords card, button, avatar, icon
+ *
+ * @igxGroup Layouts
+ *
  * @remarks
  * The Ignite UI Card serves as a container that allows custom content to be organized in an appealing way. There are
  * five sections in a card that you can use to organize your content. These are header, media, content, actions, and footer.
+ *
+ * @example
+ * ```html
+ * <igx-card>
+ *   <igx-card-header>
+ *     <h3 igxCardHeaderTitle>{{title}}</h3>
+ *     <h5 igxCardHeaderSubtitle>{{subtitle}}</h5>
+ *   </igx-card-header>
+ *   <igx-card-actions>
+ *       <button type="button" igxButton igxRipple>Share</button>
+ *       <button type="button" igxButton igxRipple>Play Album</button>
+ *   </igx-card-actions>
+ * </igx-card>
+ * ```
  */
 
 @Component({
@@ -149,6 +191,14 @@ export class IgxCardComponent {
     /**
      * Sets/gets the `id` of the card.
      * If not set, `id` will have value `"igx-card-0"`;
+     *
+     * @example
+     * ```html
+     * <igx-card id="my-first-card"></igx-card>
+     * ```
+     * ```typescript
+     * let cardId =  this.card.id;
+     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -166,6 +216,11 @@ export class IgxCardComponent {
     /**
      * Sets the value of the `role` attribute of the card.
      * By default the value is set to `group`.
+     *
+     * @example
+     * ```html
+     * <igx-card role="group"></igx-card>
+     * ```
      */
     @HostBinding('attr.role')
     @Input()
@@ -174,6 +229,14 @@ export class IgxCardComponent {
     /**
      * Sets/gets whether the card is elevated.
      * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-card elevated></igx-card>
+     * ```
+     * ```typescript
+     * let cardElevation = this.card.elevated;
+     * ```
      */
     @Input({transform: booleanAttribute})
     @HostBinding('class.igx-card--elevated')
@@ -183,6 +246,11 @@ export class IgxCardComponent {
      * Sets the value of the `horizontal` attribute of the card.
      * Setting this to `true` will make the different card sections align horizontally,
      * essentially flipping the card to the side.
+     *
+     * @example
+     * ```html
+     * <igx-card [horizontal]="true"></igx-card>
+     * ```
      */
     @HostBinding('class.igx-card--horizontal')
     @Input({ transform: booleanAttribute })
@@ -211,6 +279,11 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * You can justify the elements slotted in the igx-card-action container
      * so that they are positioned equally from one another taking up all the
      * space available along the card actions axis.
+     *
+     * @example
+     * ```html
+     * <igx-card-actions layout="justify"></igx-card-actions>
+     * ```
      */
     @HostBinding('class.igx-card-actions')
     @Input()

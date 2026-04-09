@@ -100,6 +100,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     /**
      * Sets the data to be rendered.
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>
+     * ```
      */
     @Input()
     public get igxForOf(): U & T[] | null {
@@ -122,12 +125,31 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * Specifies the scroll orientation.
      * Scroll orientation can be "vertical" or "horizontal".
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>
+     * ```
      */
     @Input()
     public igxForScrollOrientation = 'vertical';
 
     /**
      * Optionally pass the parent `igxFor` instance to create a virtual template scrolling both horizontally and vertically.
+     * ```html
+     * <ng-template #scrollContainer igxFor let-rowData [igxForOf]="data"
+     *       [igxForScrollOrientation]="'vertical'"
+     *       [igxForContainerSize]="'500px'"
+     *       [igxForItemSize]="'50px'"
+     *       let-rowIndex="index">
+     *       <div [style.display]="'flex'" [style.height]="'50px'">
+     *           <ng-template #childContainer igxFor let-item [igxForOf]="data"
+     *               [igxForScrollOrientation]="'horizontal'"
+     *               [igxForScrollContainer]="parentVirtDir"
+     *               [igxForContainerSize]="'500px'">
+     *                   <div [style.min-width]="'50px'">{{rowIndex}} : {{item.text}}</div>
+     *           </ng-template>
+     *       </div>
+     * </ng-template>
+     * ```
      */
     @Input()
     public igxForScrollContainer: any;
@@ -135,6 +157,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * Sets the px-affixed size of the container along the axis of scrolling.
      * For "horizontal" orientation this value is the width of the container and for "vertical" is the height.
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data" [igxForContainerSize]="'500px'"
+     *      [igxForScrollOrientation]="'horizontal'">
+     * </ng-template>
+     * ```
      */
     @Input()
     public igxForContainerSize: any;
@@ -150,12 +177,23 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * Sets the px-affixed size of the item along the axis of scrolling.
      * For "horizontal" orientation this value is the width of the column and for "vertical" is the height or the row.
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" [igxForItemSize]="'50px'"></ng-template>
+     * ```
      */
     @Input()
     public igxForItemSize: any;
 
     /**
      * An event that is emitted after a new chunk has been loaded.
+     * ```html
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (chunkLoad)="loadChunk($event)"></ng-template>
+     * ```
+     * ```typescript
+     * loadChunk(e){
+     * alert("chunk loaded!");
+     * }
+     * ```
      */
     @Output()
     public chunkLoad = new EventEmitter<IForOfState>();
@@ -182,6 +220,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     /**
      * An event that is emitted after data has been changed.
+     * ```html
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (dataChanged)="dataChanged($event)"></ng-template>
+     * ```
+     * ```typescript
+     * dataChanged(e){
+     * alert("data changed!");
+     * }
+     * ```
      */
     @Output()
     public dataChanged = new EventEmitter<IForOfDataChangeEventArgs>();
@@ -192,6 +238,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * An event that is emitted on chunk loading to emit the current state information - startIndex, endIndex, totalCount.
      * Can be used for implementing remote load on demand for the igxFor data.
+     * ```html
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (chunkPreload)="chunkPreload($event)"></ng-template>
+     * ```
+     * ```typescript
+     * chunkPreload(e){
+     * alert("chunk is loading!");
+     * }
+     * ```
      */
     @Output()
     public chunkPreload = new EventEmitter<IForOfState>();
@@ -206,6 +260,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * state.startIndex - The index of the item at which the current visible chunk begins.
      * state.chunkSize - The number of items the current visible chunk holds.
      * These options can be used when implementing remote virtualization as they provide the necessary state information.
+     * ```typescript
+     * const gridState = this.parentVirtDir.state;
+     * ```
      */
     public state: IForOfState = {
         startIndex: 0,
@@ -249,6 +306,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * The total count of the virtual data items, when using remote service.
      * Similar to the property totalItemCount, but this will allow setting the data count into the template.
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data | async" [igxForTotalItemCount]="count | async"
+     *  [igxForContainerSize]="'500px'" [igxForItemSize]="'50px'"></ng-template>
+     * ```
      */
     @Input()
     public get igxForTotalItemCount(): number {
@@ -260,6 +321,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     /**
      * The total count of the virtual data items, when using remote service.
+     * ```typescript
+     * this.parentVirtDir.totalItemCount = data.Count;
+     * ```
      */
     public get totalItemCount() {
         return this._totalItemCount;
@@ -298,6 +362,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      *
      * Gets/Sets the scroll position.
+     * ```typescript
+     * const position = directive.scrollPosition;
+     * directive.scrollPosition = value;
+     * ```
      */
     public get scrollPosition(): number {
         return this.scrollComponent.scrollAmount;
@@ -550,6 +618,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     /**
      * Shifts the scroll thumb position.
+     * ```typescript
+     * this.parentVirtDir.addScroll(5);
+     * ```
      *
      * @param addTop negative value to scroll up and positive to scroll down;
      */
@@ -559,6 +630,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     /**
      * Shifts the scroll thumb position.
+     * ```typescript
+     * this.parentVirtDir.addScroll(5);
+     * ```
      *
      * @param add negative value to scroll previous and positive to scroll next;
      */
@@ -608,6 +682,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     /**
      * Scrolls to the specified index.
+     * ```typescript
+     * this.parentVirtDir.scrollTo(5);
+     * ```
      *
      * @param index
      */
@@ -634,6 +711,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * Scrolls by one item into the appropriate next direction.
      * For "horizontal" orientation that will be the right column and for "vertical" that is the lower row.
+     * ```typescript
+     * this.parentVirtDir.scrollNext();
+     * ```
      */
     public scrollNext() {
         const scr = Math.abs(Math.ceil(this.scrollPosition));
@@ -644,6 +724,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * Scrolls by one item into the appropriate previous direction.
      * For "horizontal" orientation that will be the left column and for "vertical" that is the upper row.
+     * ```typescript
+     * this.parentVirtDir.scrollPrev();
+     * ```
      */
     public scrollPrev() {
         this.scrollTo(this.state.startIndex - 1);
@@ -652,6 +735,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * Scrolls by one page into the appropriate next direction.
      * For "horizontal" orientation that will be one view to the right and for "vertical" that is one view to the bottom.
+     * ```typescript
+     * this.parentVirtDir.scrollNextPage();
+     * ```
      */
     public scrollNextPage() {
         this.addScroll(parseFloat(this.igxForContainerSize));
@@ -660,6 +746,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * Scrolls by one page into the appropriate previous direction.
      * For "horizontal" orientation that will be one view to the left and for "vertical" that is one view to the top.
+     * ```typescript
+     * this.parentVirtDir.scrollPrevPage();
+     * ```
      */
     public scrollPrevPage() {
         const containerSize = (parseFloat(this.igxForContainerSize));
@@ -675,6 +764,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     /**
      * Returns the total number of items that are fully visible.
+     * ```typescript
+     * this.parentVirtDir.getItemCountInView();
+     * ```
      */
     public getItemCountInView() {
         let startIndex = this.getIndexAt(this.scrollPosition, this.sizesCache);
@@ -689,12 +781,18 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * Returns a reference to the scrollbar DOM element.
      * This is either a vertical or horizontal scrollbar depending on the specified igxForScrollOrientation.
+     * ```typescript
+     * dir.getScroll();
+     * ```
      */
     public getScroll() {
         return this.scrollComponent?.nativeElement;
     }
     /**
      * Returns the size of the element at the specified index.
+     * ```typescript
+     * this.parentVirtDir.getSizeAt(1);
+     * ```
      */
     public getSizeAt(index: number) {
         return this.sizesCache[index + 1] - this.sizesCache[index];
@@ -710,6 +808,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     /**
      * Returns the scroll offset of the element at the specified index.
+     * ```typescript
+     * this.parentVirtDir.getScrollForIndex(1);
+     * ```
      */
     public getScrollForIndex(index: number, bottom?: boolean) {
         const containerSize = parseFloat(this.igxForContainerSize);
@@ -719,12 +820,18 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     /**
      * Returns the index of the element at the specified offset.
+     * ```typescript
+     * this.parentVirtDir.getIndexAtScroll(100);
+     * ```
      */
     public getIndexAtScroll(scrollOffset: number) {
         return this.getIndexAt(scrollOffset, this.sizesCache);
     }
     /**
      * Returns whether the target index is outside the view.
+     * ```typescript
+     * this.parentVirtDir.isIndexOutsideView(10);
+     * ```
      */
     public isIndexOutsideView(index: number) {
         const targetNode = index >= this.state.startIndex && index <= this.state.startIndex + this.state.chunkSize ?
@@ -1079,6 +1186,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * value that can be used for the comparison instead of the object ref or if you have some other property values
      * in the item object that should be tracked for changes.
      * This option is similar to ngForTrackBy.
+     * ```typescript
+     * const trackFunc = this.parentVirtDir.igxForTrackBy;
+     * ```
      */
     @Input()
     public get igxForTrackBy(): TrackByFunction<T> {
@@ -1090,6 +1200,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * This function can be set in scenarios where you want to optimize or
      * customize the tracking of changes for the items in the collection.
      * The igxForTrackBy function takes the index and the current item as arguments and needs to return the unique identifier for this item.
+     * ```typescript
+     * this.parentVirtDir.igxForTrackBy = (index, item) => {
+     *      return item.id + item.width;
+     * };
+     * ```
      */
     public set igxForTrackBy(fn: TrackByFunction<T>) {
         this._trackByFn = fn;

@@ -10,6 +10,7 @@ import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angu
 /* singleInstanceIdentifier */
 /* contentParent: QueryBuilder */
 /**
+* @igxParent IgxQueryBuilderComponent
 */
 @Component({
     selector: 'igx-query-builder-header',
@@ -30,6 +31,11 @@ export class IgxQueryBuilderHeaderComponent {
 
     /**
      * Sets the title of the `IgxQueryBuilderHeaderComponent`.
+     *
+     * @example
+     * ```html
+     * <igx-query-builder-header title="Sample Query Builder"></igx-query-builder-header>
+     * ```
      */
     @Input()
     public title: string;
@@ -37,6 +43,10 @@ export class IgxQueryBuilderHeaderComponent {
     /**
      * Show/hide the legend.
      *
+     * @example
+     * ```html
+     * <igx-query-builder-header [showLegend]="false"></igx-query-builder-header>
+     * ```
      * @deprecated in version 19.1.0.
      */
     @Input()

@@ -44,12 +44,22 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
     /**
      * Returns reference to the native checkbox element.
+     *
+     * @example
+     * ```typescript
+     * let checkboxElement =  this.component.checkboxElement;
+     * ```
      */
     @ViewChild('checkbox', { static: true })
     public nativeInput: ElementRef;
 
     /**
      * Returns reference to the native label element.
+     * ```typescript
+     *
+     * @example
+     * let labelElement =  this.component.nativeLabel;
+     * ```
      */
     @ViewChild('label', { static: true })
     public nativeLabel: ElementRef;
@@ -75,6 +85,11 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
     /**
      * Returns reference to the `nativeElement` of the igx-checkbox/igx-switch.
+     *
+     * @example
+     * ```typescript
+     * let nativeElement = this.component.nativeElement;
+     * ```
      */
     public get nativeElement() {
         return this.nativeInput.nativeElement;
@@ -82,6 +97,11 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
     /**
      * Returns reference to the label placeholder element.
+     * ```typescript
+     *
+     * @example
+     * let labelPlaceholder =  this.component.placeholderLabel;
+     * ```
      */
     @ViewChild('placeholderLabel', { static: true })
     public placeholderLabel: ElementRef;
@@ -89,6 +109,14 @@ export class CheckboxBaseDirective implements AfterViewInit {
     /**
      * Sets/gets the `id` of the checkbox component.
      * If not set, the `id` of the first checkbox component will be `"igx-checkbox-0"`.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox id="my-first-checkbox"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let checkboxId =  this.checkbox.id;
+     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -97,27 +125,67 @@ export class CheckboxBaseDirective implements AfterViewInit {
     /**
      * Sets/gets the id of the `label` element.
      * If not set, the id of the `label` in the first checkbox component will be `"igx-checkbox-0-label"`.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox labelId="Label1"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let labelId =  this.component.labelId;
+     * ```
      */
     @Input() public labelId = `${this.id}-label`;
 
     /**
      * Sets/gets the `value` attribute.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox [value]="'CheckboxValue'"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let value =  this.checkbox.value;
+     * ```
      */
     @Input() public value: any;
 
     /**
      * Sets/gets the `name` attribute.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox name="Checkbox1"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let name =  this.checkbox.name;
+     * ```
      */
     @Input() public name: string;
 
     /**
      * Sets/gets the value of the `tabindex` attribute.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox [tabindex]="1"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let tabIndex =  this.checkbox.tabindex;
+     * ```
      */
     @Input() public tabindex: number = null;
 
     /**
      *  Sets/gets the position of the `label`.
      *  If not set, the `labelPosition` will have value `"after"`.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox labelPosition="before"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let labelPosition =  this.checkbox.labelPosition;
+     * ```
      */
     @Input()
     public labelPosition: LabelPosition | string = LabelPosition.AFTER;
@@ -125,6 +193,14 @@ export class CheckboxBaseDirective implements AfterViewInit {
     /**
      * Enables/Disables the ripple effect.
      * If not set, `disableRipple` will have value `false`.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox [disableRipple]="true"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let isRippleDisabled = this.checkbox.desableRipple;
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public disableRipple = false;
@@ -132,12 +208,28 @@ export class CheckboxBaseDirective implements AfterViewInit {
     /**
      * Sets/gets the `aria-labelledby` attribute.
      * If not set, the `aria-labelledby` will be equal to the value of `labelId` attribute.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox aria-labelledby="Checkbox1"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let ariaLabelledBy = this.checkbox.ariaLabelledBy;
+     * ```
      */
     @Input('aria-labelledby')
     public ariaLabelledBy = this.labelId;
 
     /**
      * Sets/gets the value of the `aria-label` attribute.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox aria-label="Checkbox1"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let ariaLabel = this.checkbox.ariaLabel;
+     * ```
      */
     @Input('aria-label')
     public ariaLabel: string | null = null;
@@ -162,6 +254,14 @@ export class CheckboxBaseDirective implements AfterViewInit {
     /**
      * Sets/gets whether the checkbox is required.
      * If not set, `required` will have value `false`.
+     *
+     * @example
+     * ```html
+     * <igx-checkbox required></igx-checkbox>
+     * ```
+     * ```typescript
+     * let isRequired = this.checkbox.required;
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public get required(): boolean {

@@ -92,6 +92,11 @@ export interface IRowExportingEventArgs extends IBaseEventArgs {
 
 /**
  * columnExporting event arguments
+ * ```typescript
+ * this.exporterService.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
+ * // set args properties here
+ * });
+ * ```
  */
 export interface IColumnExportingEventArgs extends IBaseEventArgs {
     /**
@@ -173,6 +178,11 @@ export abstract class IgxBaseExporter {
 
     /**
      * This event is emitted when a row is exported.
+     * ```typescript
+     * this.exporterService.rowExporting.subscribe((args: IRowExportingEventArgs) => {
+     * // put event handler code here
+     * });
+     * ```
      *
      * @memberof IgxBaseExporter
      */
@@ -180,6 +190,11 @@ export abstract class IgxBaseExporter {
 
     /**
      * This event is emitted when a column is exported.
+     * ```typescript
+     * this.exporterService.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
+     * // put event handler code here
+     * });
+     * ```
      *
      * @memberof IgxBaseExporter
      */
@@ -204,6 +219,9 @@ export abstract class IgxBaseExporter {
     /* alternateName: exportGrid */
     /**
      * Method for exporting IgxGrid component's data.
+     * ```typescript
+     * this.exporterService.export(this.igxGridForExport, this.exportOptions);
+     * ```
      *
      * @memberof IgxBaseExporter
      */
@@ -260,6 +278,9 @@ export abstract class IgxBaseExporter {
 
     /**
      * Method for exporting any kind of array data.
+     * ```typescript
+     * this.exporterService.exportData(this.arrayForExport, this.exportOptions);
+     * ```
      *
      * @memberof IgxBaseExporter
      */

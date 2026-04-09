@@ -70,6 +70,9 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
 
     /**
      * Returns whether the row is expanded.
+     * ```typescript
+     * const RowExpanded = this.grid1.rowList.first.expanded;
+     * ```
      */
     public override get expanded() {
         return this.grid.gridAPI.get_row_expansion_state(this.data);
@@ -105,6 +108,9 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
 
     /**
      * Toggles the hierarchical row.
+     * ```typescript
+     * this.grid1.rowList.first.toggle()
+     * ```
      */
     public toggle() {
         if (this.added) {

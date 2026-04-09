@@ -8,6 +8,13 @@ export type IgxIconButtonType = typeof IgxBaseButtonType[keyof typeof IgxBaseBut
 
 /**
  * The IgxIconButtonDirective provides a way to use an icon as a fully functional button.
+ *
+ * @example
+ * ```html
+ * <button type="button" igxIconButton="outlined">
+ *      <igx-icon>home</igx-icon>
+ * </button>
+ * ```
  */
 @Directive({
     selector: '[igxIconButton]',
@@ -35,6 +42,11 @@ export class IgxIconButtonDirective extends IgxButtonBaseDirective {
 
     /**
      * Sets the type of the icon button.
+     *
+     * @example
+     * ```html
+     * <button type="button" igxIconButton="flat"></button>
+     * ```
      */
     @Input('igxIconButton')
     public set type(type: IgxIconButtonType) {

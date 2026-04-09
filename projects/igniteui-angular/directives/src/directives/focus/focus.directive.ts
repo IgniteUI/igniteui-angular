@@ -17,6 +17,11 @@ export class IgxFocusDirective {
 
     /**
      * Returns the state of the igxFocus.
+     * ```typescript
+     * @ViewChild('focusContainer', {read: IgxFocusDirective})
+     * public igxFocus: IgxFocusDirective;
+     * let isFocusOn = this.igxFocus.focused;
+     * ```
      *
      * @memberof IgxFocusDirective
      */
@@ -27,6 +32,11 @@ export class IgxFocusDirective {
 
     /**
      * Sets the state of the igxFocus.
+     * ```html
+     * <igx-input-group >
+     *  <input #focusContainer igxInput [igxFocus]="true"/>
+     * </igx-input-group>
+     * ```
      *
      * @memberof IgxFocusDirective
      */
@@ -37,6 +47,11 @@ export class IgxFocusDirective {
 
     /**
      * Gets the native element of the igxFocus.
+     * ```typescript
+     * @ViewChild('focusContainer', {read: IgxFocusDirective})
+     * public igxFocus: IgxFocusDirective;
+     * let igxFocusNativeElement = this.igxFocus.nativeElement;
+     * ```
      *
      * @memberof IgxFocusDirective
      */
@@ -54,6 +69,11 @@ export class IgxFocusDirective {
 
     /**
      * Triggers the igxFocus state.
+     * ```typescript
+     * @ViewChild('focusContainer', {read: IgxFocusDirective})
+     * public igxFocus: IgxFocusDirective;
+     * this.igxFocus.trigger();
+     * ```
      *
      * @memberof IgxFocusDirective
      */

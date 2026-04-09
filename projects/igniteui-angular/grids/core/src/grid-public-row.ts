@@ -25,6 +25,10 @@ abstract class BaseRow implements RowType {
      * A row in the grid is identified either by:
      * - primaryKey data value,
      * - the whole rowData, if the primaryKey is omitted.
+     *
+     * ```typescript
+     * let rowKey = row.key;
+     * ```
      */
     public get key(): any {
         const data = this._data ?? this.grid.dataView[this.index];
@@ -34,6 +38,10 @@ abstract class BaseRow implements RowType {
 
     /**
      * Gets if this represents add row UI
+     *
+     * ```typescript
+     * let isAddRow = row.addRowUI;
+     * ```
      */
     public get addRowUI(): boolean {
         return !!this.grid.crudService.row &&
@@ -42,6 +50,10 @@ abstract class BaseRow implements RowType {
     }
 
     /** Gets the validation status and errors, if any.
+    * ```typescript
+    * let validation = row.validation;
+    * let errors = validation.errors;
+    * ```
     */
     public get validation(): IGridValidationState {
         const formGroup = this.grid.validation.getFormGroup(this.key);
@@ -50,6 +62,10 @@ abstract class BaseRow implements RowType {
 
     /**
      * The data record that populates the row.
+     *
+     * ```typescript
+     * let rowData = row.data;
+     * ```
      */
     public get data(): any {
         if (this.inEditMode) {
@@ -79,6 +95,9 @@ abstract class BaseRow implements RowType {
     /**
      * Gets whether the row is pinned.
      * Default value is `false`.
+     * ```typescript
+     * const isPinned = row.pinned;
+     * ```
      */
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.data);
@@ -87,6 +106,9 @@ abstract class BaseRow implements RowType {
     /**
      * Sets whether the row is pinned.
      * Default value is `false`.
+     * ```typescript
+     * row.pinned = !row.pinned;
+     * ```
      */
     public set pinned(val: boolean) {
         if (val) {
@@ -98,6 +120,10 @@ abstract class BaseRow implements RowType {
 
     /**
      * Gets the row expanded/collapsed state.
+     *
+     * ```typescript
+     * const isExpanded = row.expanded;
+     * ```
      */
     public get expanded(): boolean {
         return this.grid.gridAPI.get_row_expansion_state(this.data);
@@ -105,6 +131,10 @@ abstract class BaseRow implements RowType {
 
     /**
      * Expands/collapses the row.
+     *
+     * ```typescript
+     * row.expanded = true;
+     * ```
      */
     public set expanded(val: boolean) {
         this.grid.gridAPI.set_row_expansion_state(this.key, val);
@@ -113,6 +143,9 @@ abstract class BaseRow implements RowType {
     /**
      * Gets whether the row is selected.
      * Default value is `false`.
+     * ```typescript
+     * row.selected = true;
+     * ```
      */
     public get selected(): boolean {
         return this.grid.selectionService.isRowSelected(this.key);
@@ -121,6 +154,9 @@ abstract class BaseRow implements RowType {
     /**
      * Sets whether the row is selected.
      * Default value is `false`.
+     * ```typescript
+     * row.selected = !row.selected;
+     * ```
      */
     public set selected(val: boolean) {
         if (val) {
@@ -168,6 +204,11 @@ abstract class BaseRow implements RowType {
     /**
      * Pins the specified row.
      * This method emits `onRowPinning` event.
+     *
+     * ```typescript
+     * // pin the selected row from the grid
+     * this.grid.selectedRows[0].pin();
+     * ```
      */
     public pin(): boolean {
         return this.grid.pinRow(this.key, this.index);
@@ -176,6 +217,11 @@ abstract class BaseRow implements RowType {
     /**
      * Unpins the specified row.
      * This method emits `onRowPinning` event.
+     *
+     * ```typescript
+     * // unpin the selected row from the grid
+     * this.grid.selectedRows[0].unpin();
+     * ```
      */
     public unpin(): boolean {
         return this.grid.unpinRow(this.key);
@@ -183,6 +229,12 @@ abstract class BaseRow implements RowType {
 
     /**
      * Updates the specified row object and the data source record with the passed value.
+     *
+     * ```typescript
+     * // update the second selected row's value
+     * let newValue = "Apple";
+     * this.grid.selectedRows[1].update(newValue);
+     * ```
      */
     public update(value: any): void {
         const crudService = this.grid.crudService;
@@ -197,6 +249,11 @@ abstract class BaseRow implements RowType {
     /**
      * Removes the specified row from the grid's data source.
      * This method emits `onRowDeleted` event.
+     *
+     * ```typescript
+     * // delete the third selected row from the grid
+     * this.grid.selectedRows[2].delete();
+     * ```
      */
     public delete(): void {
         this.grid.deleteRowById(this.key);
@@ -313,6 +370,10 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
 
     /**
      *  The data passed to the row component.
+     *
+     * ```typescript
+     * let selectedRowData = this.grid.selectedRows[0].data;
+     * ```
      */
     public override get data(): any {
         if (this.inEditMode) {
@@ -363,6 +424,10 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
 
     /**
      * The `ITreeGridRecord` with metadata about the row in the context of the tree grid.
+     *
+     * ```typescript
+     * const rowParent = this.treeGrid.getRowByKey(1).treeRow.parent;
+     * ```
      */
     public get treeRow(): ITreeGridRecord {
         return this._treeRow ?? this.grid.records.get(this.key);
@@ -370,6 +435,10 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
 
     /**
      * Gets whether the row is pinned.
+     *
+     * ```typescript
+     * let isPinned = row.pinned;
+     * ```
      */
     public override get pinned(): boolean {
         return this.grid.isRecordPinned(this);
@@ -378,6 +447,9 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     /**
      * Sets whether the row is pinned.
      * Default value is `false`.
+     * ```typescript
+     * row.pinned = !row.pinned;
+     * ```
      */
     public override set pinned(val: boolean) {
         if (val) {
@@ -389,6 +461,10 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
 
     /**
      * Gets whether the row is expanded.
+     *
+     * ```typescript
+     * let esExpanded = row.expanded;
+     * ```
      */
     public override get expanded(): boolean {
         return this.grid.gridAPI.get_row_expansion_state(this.treeRow);
@@ -396,6 +472,10 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
 
     /**
      * Expands/collapses the row.
+     *
+     * ```typescript
+     * row.expanded = true;
+     * ```
      */
     public override set expanded(val: boolean) {
         this.grid.gridAPI.set_row_expansion_state(this.key, val);
@@ -550,6 +630,9 @@ export class IgxGroupByRow implements RowType {
     /**
      * Gets whether the row is selected.
      * Default value is `false`.
+     * ```typescript
+     * row.selected = true;
+     * ```
      */
     public get selected(): boolean {
         return this.children.every(row => row.selected);
@@ -558,6 +641,9 @@ export class IgxGroupByRow implements RowType {
     /**
      * Sets whether the row is selected.
      * Default value is `false`.
+     * ```typescript
+     * row.selected = !row.selected;
+     * ```
      */
     public set selected(val: boolean) {
         if (val) {
@@ -574,6 +660,9 @@ export class IgxGroupByRow implements RowType {
 
     /**
      * Gets/sets whether the group row is expanded.
+     * ```typescript
+     * const groupRowExpanded = groupRow.expanded;
+     * ```
      */
     public get expanded(): boolean {
         return this.grid.isExpandedGroup(this.groupRow);
@@ -589,6 +678,9 @@ export class IgxGroupByRow implements RowType {
 
     /**
      * Toggles the group row expanded/collapsed state.
+     * ```typescript
+     * groupRow.toggle()
+     * ```
      */
     public toggle(): void {
         this.grid.toggleGroup(this.groupRow);

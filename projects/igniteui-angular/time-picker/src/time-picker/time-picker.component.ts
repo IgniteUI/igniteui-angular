@@ -98,6 +98,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /**
      * Sets the value of the `id` attribute.
+     * ```html
+     * <igx-time-picker [id]="'igx-time-picker-5'" [displayFormat]="h:mm tt" ></igx-time-picker>
+     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -108,6 +111,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * Uses Angular's `DatePipe`.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker displayFormat="mm:ss"></igx-time-picker>
+     * ```
+     *
      */
     @Input()
     public override set displayFormat(value: string) {
@@ -123,6 +132,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * Default is `hh:mm tt`
+     *
+     * @example
+     * ```html
+     * <igx-time-picker inputFormat="HH:mm"></igx-time-picker>
+     * ```
      */
     @Input()
     public override set inputFormat(value: string) {
@@ -135,6 +149,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker mode="dialog"></igx-time-picker>
+     * ```
      */
     @Input()
     public override mode: PickerInteractionMode = PickerInteractionMode.DropDown;
@@ -144,6 +163,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * If a `string` value is passed in, it must be in ISO format.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker [minValue]="18:00:00"></igx-time-picker>
+     * ```
      */
     @Input()
     public set minValue(value: Date | string) {
@@ -164,6 +188,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /**
      * Gets if the dropdown/dialog is collapsed
+     *
+     * ```typescript
+     * let isCollapsed = this.timePicker.collapsed;
+     * ```
      */
     public override get collapsed(): boolean {
         return this.toggleRef?.collapsed;
@@ -174,6 +202,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * If a `string` value is passed in, it must be in ISO format.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker [maxValue]="20:30:00"></igx-time-picker>
+     * ```
      */
     @Input()
     public set maxValue(value: Date | string) {
@@ -195,12 +228,20 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /**
      * Sets whether the seconds, minutes and hour spinning will loop back around when end value is reached.
      * By default it's set to true.
+     * ```html
+     * <igx-time-picker [spinLoop]="false"></igx-time-picker>
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public spinLoop = true;
 
     /**
      * Gets/Sets a custom formatter function on the selected or passed date.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker [value]="date" [formatter]="formatter"></igx-time-picker>
+     * ```
      */
     @Input()
     public formatter: (val: Date) => string;
@@ -211,6 +252,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /**
      * Emitted after a selection has been done.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker (selected)="onSelection($event)"></igx-time-picker>
+     * ```
      */
     @Output()
     public selected = new EventEmitter<Date>();
@@ -220,12 +266,22 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * Used for `two-way` bindings.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker [(value)]="date"></igx-time-picker>
+     * ```
      */
     @Output()
     public valueChange = new EventEmitter<Date | string>();
 
     /**
      * Emitted when the user types/spins invalid time in the time-picker editor.
+     *
+     *  @example
+     * ```html
+     * <igx-time-picker (validationFailed)="onValidationFailed($event)"></igx-time-picker>
+     * ```
      */
     @Output()
     public validationFailed = new EventEmitter<IgxTimePickerValidationFailedEventArgs>();
@@ -433,6 +489,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * The current value is of type `Date`
+     *
+     * @example
+     * ```typescript
+     * const newValue: Date = new Date(2000, 2, 2, 10, 15, 15);
+     * this.timePicker.value = newValue;
+     * ```
      */
     public get value(): Date | string {
         return this._value;
@@ -440,6 +502,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /**
      * An accessor that allows you to set a time using the `value` input.
+     * ```html
+     * public date: Date = new Date(Date.now());
+     *  //...
+     * <igx-time-picker [value]="date" format="h:mm tt"></igx-time-picker>
+     * ```
      */
     @Input()
     public set value(value: Date | string) {
@@ -482,6 +549,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * Defaults to the value from resource strings, `"OK"` for the built-in EN.
+     *
+     * ```html
+     * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
+     * ```
      */
     @Input()
     public set okButtonLabel(value: string) {
@@ -502,6 +573,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * Overrides the default text of the **Cancel** button.
      * @remarks
      * Defaults to the value from resource strings, `"Cancel"` for the built-in EN.
+     * ```html
+     * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm tt"></igx-time-picker>
+     * ```
      */
     @Input()
     public set cancelButtonLabel(value: string) {
@@ -522,6 +596,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * Delta values used to increment or decrement each editor date part on spin actions and
      * to display time portions in the dropdown/dialog.
      * By default `itemsDelta` is set to `{hour: 1, minute: 1, second: 1}`
+     * ```html
+     * <igx-time-picker [itemsDelta]="{hour:3, minute:5, second:10}" id="time-picker"></igx-time-picker>
+     * ```
      */
     @Input()
     public set itemsDelta(value: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'>) {
@@ -681,6 +758,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * Opens the picker's dialog UI.
      *
      * @param settings OverlaySettings - the overlay settings to use for positioning the drop down or dialog container according to
+     * ```html
+     * <igx-time-picker #picker [value]="date"></igx-time-picker>
+     * <button type="button" igxButton (click)="picker.open()">Open Dialog</button>
+     * ```
      */
     public open(settings?: OverlaySettings): void {
         if (this.disabled || !this.toggleRef.collapsed || this.readOnly) {
@@ -702,6 +783,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /**
      * Closes the dropdown/dialog.
+     * ```html
+     * <igx-time-picker #timePicker></igx-time-picker>
+     * ```
+     * ```typescript
+     * @ViewChild('timePicker', { read: IgxTimePickerComponent }) picker: IgxTimePickerComponent;
+     * picker.close();
+     * ```
      */
     public close(): void {
         this.toggleRef.close();
@@ -717,6 +805,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /**
      * Clears the time picker value if it is a `string` or resets the time to `00:00:00` if the value is a Date object.
+     *
+     * @example
+     * ```typescript
+     * this.timePicker.clear();
+     * ```
      */
     public clear(): void {
         if (this.disabled || this.readOnly) {
@@ -744,6 +837,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /**
      * Selects time from the igxTimePicker.
      *
+     * @example
+     * ```typescript
+     * this.timePicker.select(date);
+     *
      * @param date Date object containing the time to be selected.
      */
     public select(date: Date | string): void {
@@ -755,6 +852,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @param datePart The optional DatePart to increment. Defaults to Hour.
      * @param delta The optional delta to increment by. Overrides `itemsDelta`.
+     * @example
+     * ```typescript
+     * this.timePicker.increment(DatePart.Hours);
+     * ```
      */
     public increment(datePart?: DatePart, delta?: number): void {
         this.dateTimeEditor.increment(datePart, delta);
@@ -765,6 +866,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @param datePart The optional DatePart to decrement. Defaults to Hour.
      * @param delta The optional delta to decrement by. Overrides `itemsDelta`.
+     * @example
+     * ```typescript
+     * this.timePicker.decrement(DatePart.Seconds);
+     * ```
      */
     public decrement(datePart?: DatePart, delta?: number): void {
         this.dateTimeEditor.decrement(datePart, delta);

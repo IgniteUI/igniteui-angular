@@ -4,6 +4,18 @@ import { IgxStepperService } from './stepper.service';
 
 /**
  * Allows a custom element to be added as an active step indicator.
+ *
+ * @igxModule IgxStepperModule
+ * @igxTheme igx-stepper-theme
+ * @igxKeywords stepper 
+ * @igxGroup Layouts
+ *
+ * @example
+ * <igx-stepper>
+ *     <ng-template igxStepActiveIndicator>
+ *          <igx-icon>edit</igx-icon>
+ *       </ng-template>
+ * </igx-stepper>
  */
 @Directive({
     selector: '[igxStepActiveIndicator]',
@@ -13,6 +25,18 @@ export class IgxStepActiveIndicatorDirective { }
 
 /**
  * Allows a custom element to be added as a complete step indicator.
+ *
+ * @igxModule IgxStepperModule
+ * @igxTheme igx-stepper-theme
+ * @igxKeywords stepper 
+ * @igxGroup Layouts
+ *
+ * @example
+ * <igx-stepper>
+ *     <ng-template igxStepCompletedIndicator>
+ *          <igx-icon>check</igx-icon>
+ *       </ng-template>
+ * </igx-stepper>
  */
 @Directive({
     selector: '[igxStepCompletedIndicator]',
@@ -22,6 +46,18 @@ export class IgxStepCompletedIndicatorDirective { }
 
 /**
  * Allows a custom element to be added as an invalid step indicator.
+ *
+ * @igxModule IgxStepperModule
+ * @igxTheme igx-stepper-theme
+ * @igxKeywords stepper 
+ * @igxGroup Layouts
+ *
+ * @example
+ * <igx-stepper>
+ *     <ng-template igxStepInvalidIndicator>
+ *          <igx-icon>error</igx-icon>
+ *       </ng-template>
+ * </igx-stepper>
  */
 @Directive({
     selector: '[igxStepInvalidIndicator]',
@@ -31,6 +67,18 @@ export class IgxStepInvalidIndicatorDirective { }
 
 /**
  * Allows a custom element to be added as a step indicator.
+ *
+ * @igxModule IgxStepperModule
+ * @igxTheme igx-stepper-theme
+ * @igxKeywords stepper 
+ * @igxGroup Layouts
+ *
+ * @example
+ * <igx-stepper>
+ *     <igx-step>
+ *         <igx-icon igxStepIndicator>home</igx-icon>
+ *     </igx-step>
+ * </igx-stepper>
  */
 @Directive({
     selector: '[igxStepIndicator]',
@@ -40,6 +88,18 @@ export class IgxStepIndicatorDirective { }
 
 /**
  * Allows a custom element to be added as a step title.
+ *
+ * @igxModule IgxStepperModule
+ * @igxTheme igx-stepper-theme
+ * @igxKeywords stepper 
+ * @igxGroup Layouts
+ *
+ * @example
+ * <igx-stepper>
+ *     <igx-step>
+ *         <p igxStepTitle>Home</p>
+ *     </igx-step>
+ * </igx-stepper>
  */
 @Directive({
     selector: '[igxStepTitle]',
@@ -52,6 +112,18 @@ export class IgxStepTitleDirective {
 
 /**
  * Allows a custom element to be added as a step subtitle.
+ *
+ * @igxModule IgxStepperModule
+ * @igxTheme igx-stepper-theme
+ * @igxKeywords stepper 
+ * @igxGroup Layouts
+ *
+ * @example
+ * <igx-stepper>
+ *     <igx-step>
+ *         <p igxStepSubtitle>Home Subtitle</p>
+ *     </igx-step>
+ * </igx-stepper>
  */
 @Directive({
     selector: '[igxStepSubtitle]',
@@ -64,6 +136,18 @@ export class IgxStepSubtitleDirective {
 
 /**
  * Allows a custom element to be added as a step content.
+ *
+ * @igxModule IgxStepperModule
+ * @igxTheme igx-stepper-theme
+ * @igxKeywords stepper 
+ * @igxGroup Layouts
+ *
+ * @example
+ * <igx-stepper>
+ *     <igx-step>
+ *         <div igxStepContent>...</div>
+ *     </igx-step>
+ * </igx-stepper>
  */
 @Directive({
     selector: '[igxStepContent]',

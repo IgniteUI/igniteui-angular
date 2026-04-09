@@ -12,6 +12,16 @@ import { IFilteringExpressionsTree, isTree, OverlaySettings } from 'igniteui-ang
 /* singleInstanceIdentifier */
 /**
  * Provides a pre-configured button to open the advanced filtering dialog of the grid.
+ *
+ *
+ * @igxModule IgxGridToolbarModule
+ * @igxParent IgxGridToolbarComponent, IgxGridToolbarActionsComponent
+ *
+ * @example
+ * ```html
+ * <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+ * <igx-grid-toolbar-advanced-filtering>Custom text</igx-grid-toolbar-advanced-filtering>
+ * ```
  */
 @Component({
     selector: 'igx-grid-toolbar-advanced-filtering',

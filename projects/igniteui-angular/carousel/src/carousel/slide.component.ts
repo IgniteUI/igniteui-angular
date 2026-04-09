@@ -6,6 +6,12 @@ import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-ba
  * A slide component that usually holds an image and/or a caption text.
  * IgxSlideComponent is usually a child component of an IgxCarouselComponent.
  *
+ * ```
+ * <igx-slide [input bindings] >
+ *    <ng-content></ng-content>
+ * </igx-slide>
+ * ```
+ *
  * @export
  */
 @Component({
@@ -18,6 +24,11 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     /**
      * Gets/sets the `index` of the slide inside the carousel.
+     * ```html
+     * <igx-carousel>
+     *  <igx-slide index="1"></igx-slide>
+     * <igx-carousel>
+     * ```
      *
      * @memberOf IgxSlideComponent
      */
@@ -25,6 +36,11 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     /**
      * Gets/sets the target `direction` for the slide.
+     * ```html
+     * <igx-carousel>
+     *  <igx-slide direction="NEXT"></igx-slide>
+     * <igx-carousel>
+     * ```
      *
      * @memberOf IgxSlideComponent
      */
@@ -35,6 +51,9 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     /**
      * Returns the `tabIndex` of the slide component.
+     * ```typescript
+     * let tabIndex =  this.carousel.tabIndex;
+     * ```
      *
      * @memberof IgxSlideComponent
      * @deprecated in version 19.2.0.
@@ -65,6 +84,9 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     /**
      * Returns the class of the slide component.
+     * ```typescript
+     * let class =  this.slide.cssClass;
+     * ```
      *
      * @memberof IgxSlideComponent
      */
@@ -73,8 +95,18 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     /**
      * Gets/sets the `active` state of the slide.
+     * ```html
+     * <igx-carousel>
+     *  <igx-slide [active] ="false"></igx-slide>
+     * <igx-carousel>
+     * ```
      *
      * Two-way data binding.
+     * ```html
+     * <igx-carousel>
+     *  <igx-slide [(active)] ="model.isActive"></igx-slide>
+     * <igx-carousel>
+     * ```
      *
      * @memberof IgxSlideComponent
      */
@@ -102,6 +134,9 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     /**
      * Returns a reference to the carousel element in the DOM.
+     * ```typescript
+     * let nativeElement =  this.slide.nativeElement;
+     * ```
      *
      * @memberof IgxSlideComponent
      */

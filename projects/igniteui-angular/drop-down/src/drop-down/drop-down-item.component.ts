@@ -5,8 +5,8 @@ import {
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 
 /**
- * The drop-down item is a container intended for row items in
- * a drop-down container.
+ * The `<igx-drop-down-item>` is a container intended for row items in
+ * a `<igx-drop-down>` container.
  */
 @Component({
     selector: 'igx-drop-down-item',
@@ -16,6 +16,10 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     /**
      * Sets/gets if the given item is focused
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemFocused = mySelectedItem.focused;
+     * ```
      */
     public override get focused(): boolean {
         let focusedState = this._focused;
@@ -29,6 +33,10 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
 
     /**
      * Sets/gets if the given item is focused
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemFocused = mySelectedItem.focused;
+     * ```
      */
     public override set focused(value: boolean) {
         this._focused = value;
@@ -36,7 +44,15 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     /**
      * Sets/Gets if the item is the currently selected one in the dropdown
      *
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemSelected = mySelectedItem.selected; // true
+     * ```
+     *
      * Two-way data binding
+     * ```html
+     * <igx-drop-down-item [(selected)]='model.isSelected'></igx-drop-down-item>
+     * ```
      */
     public override get selected(): boolean {
         if (this.hasIndex) {
@@ -48,6 +64,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
 
     /**
      * Sets/Gets if the item is the currently selected one in the dropdown
+     *
      */
     public override set selected(value: boolean) {
         if (this.isHeader) {

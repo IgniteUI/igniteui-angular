@@ -65,6 +65,16 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
+ * ```typescript
+ * @ViewChild('grid', { read: IgxGridComponent })
+ *  public grid: IgxGridComponent;
+ * ```
+ * ```typescript
+ *  let column = this.grid.columnList.first;
+ * ```
+ * ```typescript
+ *  let cell = column.cells[0];
+ * ```
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -142,6 +152,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the column of the cell.
+     * ```typescript
+     *  let cellColumn = this.cell.column;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -178,6 +191,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the row of the cell.
+     * ```typescript
+     * let cellRow = this.cell.row;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -188,6 +204,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the data of the row of the cell.
+     * ```typescript
+     * let rowData = this.cell.rowData;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -203,6 +222,23 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Sets/gets the template of the cell.
+     * ```html
+     * <ng-template #cellTemplate igxCell let-value>
+     *   <div style="font-style: oblique; color:blueviolet; background:red">
+     *       <span>{{value}}</span>
+     *   </div>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild('cellTemplate',{read: TemplateRef})
+     * cellTemplate: TemplateRef<any>;
+     * ```
+     * ```typescript
+     * this.cell.cellTemplate = this.cellTemplate;
+     * ```
+     * ```typescript
+     * let template =  this.cell.cellTemplate;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -217,6 +253,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Sets/gets the cell value.
+     * ```typescript
+     * this.cell.value = "Cell Value";
+     * ```
+     * ```typescript
+     * let cellValue = this.cell.value;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -225,6 +267,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the cell formatter.
+     * ```typescript
+     * let cellForamatter = this.cell.formatter;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -233,6 +278,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the cell template context object.
+     * ```typescript
+     *  let context = this.cell.context();
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -260,6 +308,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the cell template.
+     * ```typescript
+     * let template = this.cell.template;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -282,6 +333,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the pinned indicator template.
+     * ```typescript
+     * let template = this.cell.pinnedIndicatorTemplate;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -294,6 +348,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the `id` of the grid in which the cell is stored.
+     * ```typescript
+     * let gridId = this.cell.gridID;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -304,6 +361,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the `index` of the row where the cell is stored.
+     * ```typescript
+     * let rowIndex = this.cell.rowIndex;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -314,6 +374,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the `index` of the cell column.
+     * ```typescript
+     * let columnIndex = this.cell.columnIndex;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -323,6 +386,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Returns the column visible index.
+     * ```typescript
+     * let visibleColumnIndex = this.cell.visibleColumnIndex;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -338,6 +404,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the ID of the cell.
+     * ```typescript
+     * let cellID = this.cell.cellID;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -386,6 +455,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Returns a reference to the nativeElement of the cell.
+     * ```typescript
+     * let cellNativeElement = this.cell.nativeElement;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -452,6 +524,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /**
      * Sets/get the `role` property of the cell.
      * Default value is `"gridcell"`.
+     * ```typescript
+     * this.cell.role = 'grid-cell';
+     * ```
+     * ```typescript
+     * let cellRole = this.cell.role;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -460,6 +538,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets whether the cell is editable.
+     * ```typescript
+     * let isCellReadonly = this.cell.readonly;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -539,6 +620,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets the width of the cell.
+     * ```typescript
+     * let cellWidth = this.cell.width;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -559,6 +643,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets whether the cell is selected.
+     * ```typescript
+     * let isSelected = this.cell.selected;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -569,6 +656,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Selects/deselects the cell.
+     * ```typescript
+     * this.cell.selected = true.
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -584,6 +674,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Gets whether the cell column is selected.
+     * ```typescript
+     * let isCellColumnSelected = this.cell.columnSelected;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -595,6 +688,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /**
      * Sets the current edit value while a cell is in edit mode.
      * Only for cell editing mode.
+     * ```typescript
+     * this.cell.editValue = value;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -607,6 +703,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /**
      * Gets the current edit value while a cell is in edit mode.
      * Only for cell editing mode.
+     * ```typescript
+     * let editValue = this.cell.editValue;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -696,6 +795,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /**
      * Sets/gets the highlight class of the cell.
      * Default value is `"igx-highlight"`.
+     * ```typescript
+     * let highlightClass = this.cell.highlightClass;
+     * ```
+     * ```typescript
+     * this.cell.highlightClass = 'igx-cell-highlight';
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -704,6 +809,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /**
      * Sets/gets the active highlight class class of the cell.
      * Default value is `"igx-highlight__active"`.
+     * ```typescript
+     * let activeHighlightClass = this.cell.activeHighlightClass;
+     * ```
+     * ```typescript
+     * this.cell.activeHighlightClass = 'igx-cell-highlight_active';
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -880,6 +991,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Starts/ends edit mode for the cell.
+     *
+     * ```typescript
+     * cell.setEditMode(true);
+     * ```
      */
     public setEditMode(value: boolean): void {
         if (this.intRow.deleted) {
@@ -899,6 +1014,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Sets new value to the cell.
+     * ```typescript
+     * this.cell.update('New Value');
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -1067,6 +1185,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * If the provided string matches the text in the cell, the text gets highlighted.
+     * ```typescript
+     * this.cell.highlightText('Cell Value', true);
+     * ```
      *
      * @memberof IgxGridCellComponent
      */
@@ -1076,6 +1197,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     /**
      * Clears the highlight of the text in the cell.
+     * ```typescript
+     * this.cell.clearHighLight();
+     * ```
      *
      * @memberof IgxGridCellComponent
      */

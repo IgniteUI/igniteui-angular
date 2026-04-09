@@ -77,6 +77,9 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
 
     /**
      * Gets the row of the cell.
+     * ```typescript
+     * let cellRow = this.cell.row;
+     * ```
      *
      * @memberof IgxGridCellComponent
      */

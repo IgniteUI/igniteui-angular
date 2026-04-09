@@ -16,6 +16,7 @@ export class BlockScrollStrategy extends ScrollStrategy {
 
     /**
      * Initializes the strategy. Should be called once
+     *
      */
     public initialize(document: Document) {
         if (this._initialized) {
@@ -28,6 +29,9 @@ export class BlockScrollStrategy extends ScrollStrategy {
 
     /**
      * Attaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.attach();
+     * ```
      */
     public attach(): void {
         this._document.addEventListener('scroll', this.onScroll, true);
@@ -35,6 +39,9 @@ export class BlockScrollStrategy extends ScrollStrategy {
 
     /**
      * Detaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.detach();
+     * ```
      */
     public detach(): void {
         this._document.removeEventListener('scroll', this.onScroll, true);

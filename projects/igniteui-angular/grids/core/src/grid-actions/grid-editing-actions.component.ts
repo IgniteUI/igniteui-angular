@@ -11,6 +11,8 @@ import { IgxActionStripActionsToken, showMessage } from 'igniteui-angular/core';
 /* singleInstanceIdentifier */
 /**
  * Grid Editing Actions for the Action Strip
+ *
+ * @igxParent IgxActionStripComponent
  */
 @Component({
     selector: 'igx-grid-editing-actions',
@@ -101,6 +103,11 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Enter row or cell edit mode depending the grid rowEditable option
+     *
+     * @example
+     * ```typescript
+     * this.gridEditingActions.startEdit();
+     * ```
      */
     public startEdit(event?): void {
         if (event) {

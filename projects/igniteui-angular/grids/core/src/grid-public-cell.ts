@@ -35,6 +35,9 @@ export class IgxGridCell implements CellType {
 
     /**
      * Returns the row containing the cell.
+     * ```typescript
+     * let row = this.cell.row;
+     * ```
      *
      * @memberof IgxGridCell
      */
@@ -44,6 +47,9 @@ export class IgxGridCell implements CellType {
 
     /**
      * Returns the column of the cell.
+     * ```typescript
+     * let column = this.cell.column;
+     * ```
      *
      * @memberof IgxGridCell
      */
@@ -53,6 +59,9 @@ export class IgxGridCell implements CellType {
 
     /**
      * Gets the current edit value while a cell is in edit mode.
+     * ```typescript
+     * let editValue = this.cell.editValue;
+     * ```
      *
      * @memberof IgxGridCell
      */
@@ -65,6 +74,9 @@ export class IgxGridCell implements CellType {
     /**
      * Sets the current edit value while a cell is in edit mode.
      * Only for cell editing mode.
+     * ```typescript
+     * this.cell.editValue = value;
+     * ```
      *
      * @memberof IgxGridCell
      */
@@ -76,6 +88,10 @@ export class IgxGridCell implements CellType {
 
     /**
      * Gets the validation status and errors, if any.
+     * ```typescript
+     * let validation = this.cell.validation;
+     * let errors = validation.errors;
+     * ```
      */
 
     public get validation(): IGridValidationState {
@@ -94,6 +110,9 @@ export class IgxGridCell implements CellType {
 
     /**
      * Gets the width of the cell.
+     * ```typescript
+     * let cellWidth = this.cell.width;
+     * ```
      *
      * @memberof IgxGridCell
      */
@@ -130,6 +149,10 @@ export class IgxGridCell implements CellType {
      * - rowIndex - the row index
      * - columnID - column index
      *
+     * ```typescript
+     * let cellID = cell.id;
+     * ```
+     *
      * @memberof IgxGridCell
      */
     public get id(): any {
@@ -150,6 +173,10 @@ export class IgxGridCell implements CellType {
     /**
      * Starts/ends edit mode for the cell.
      *
+     * ```typescript
+     * cell.editMode  = !cell.editMode;
+     * ```
+     *
      * @memberof IgxGridCell
      */
     public set editMode(value: boolean) {
@@ -169,6 +196,10 @@ export class IgxGridCell implements CellType {
 
     /**
      * Gets whether the cell is selected.
+     * ```typescript
+     * let isSelected = this.cell.selected;
+     * ```
+     *
      *
      * @memberof IgxGridCell
      */
@@ -178,6 +209,10 @@ export class IgxGridCell implements CellType {
 
     /**
      * Selects/deselects the cell.
+     * ```typescript
+     * this.cell.selected = true.
+     * ```
+     *
      *
      * @memberof IgxGridCell
      */
@@ -199,6 +234,10 @@ export class IgxGridCell implements CellType {
 
     /**
      * Updates the cell value.
+     *
+     * ```typescript
+     * cell.update(newValue);
+     * ```
      *
      * @memberof IgxGridCell
      */

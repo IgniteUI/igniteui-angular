@@ -29,6 +29,9 @@ export class CloseScrollStrategy extends ScrollStrategy {
      * @param document reference to Document object.
      * @param overlayService IgxOverlay service to use in this strategy.
      * @param id Unique id for this strategy.
+     * ```typescript
+     * settings.scrollStrategy.initialize(document, overlay, id);
+     * ```
      */
     public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
@@ -43,6 +46,9 @@ export class CloseScrollStrategy extends ScrollStrategy {
 
     /**
      * Attaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.attach();
+     * ```
      */
     public attach(): void {
         if (this._scrollContainer) {
@@ -55,6 +61,9 @@ export class CloseScrollStrategy extends ScrollStrategy {
 
     /**
      * Detaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.detach();
+     * ```
      */
     public detach(): void {
         // TODO: check why event listener removes only on first call and remains on each next!!!

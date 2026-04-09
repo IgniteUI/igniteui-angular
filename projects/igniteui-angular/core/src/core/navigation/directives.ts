@@ -5,6 +5,9 @@ import { IgxNavigationService } from './nav.service';
  * Directive that can toggle targets through provided NavigationService.
  *
  * Usage:
+ * ```
+ * <button type="button" igxNavToggle="ID">Toggle</button>
+ * ```
  * Where the `ID` matches the ID of compatible `IToggleView` component.
  */
 @Directive({
@@ -32,6 +35,9 @@ export class IgxNavigationToggleDirective {
  * Directive that can close targets through provided NavigationService.
  *
  * Usage:
+ * ```
+ * <button type="button" igxNavClose="ID">Close</button>
+ * ```
  * Where the `ID` matches the ID of compatible `IToggleView` component.
  */
 @Directive({

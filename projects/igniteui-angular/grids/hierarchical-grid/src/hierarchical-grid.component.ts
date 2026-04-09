@@ -75,6 +75,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 
     /**
      *  The data passed to the row component.
+     *
+     * ```typescript
+     * // get the row data for the first selected row
+     * let selectedRowData = this.grid.selectedRows[0].data;
+     * ```
      */
     @Input()
     public get data(): any {
@@ -90,6 +95,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 
     /**
      * The index of the row.
+     *
+     * ```typescript
+     * // get the index of the second selected row
+     * let selectedRowIndex = this.grid.selectedRows[1].index;
+     * ```
      */
     @Input()
     public index: number;
@@ -106,6 +116,20 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     /* blazorSuppress */
     /**
      * Get a reference to the grid that contains the selected row.
+     *
+     * ```typescript
+     * handleRowSelection(event) {
+     *  // the grid on which the rowSelected event was triggered
+     *  const grid = event.row.grid;
+     * }
+     * ```
+     *
+     * ```html
+     *  <igx-grid
+     *    [data]="data"
+     *    (rowSelected)="handleRowSelection($event)">
+     *  </igx-grid>
+     * ```
      */
     // TODO: Refactor
     public get parentGrid(): IgxHierarchicalGridComponent {
@@ -119,6 +143,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 
     /**
      * The native DOM element representing the row. Could be null in certain environments.
+     *
+     * ```typescript
+     * // get the nativeElement of the second selected row
+     * let selectedRowNativeElement = this.grid.selectedRows[1].nativeElement;
+     * ```
      */
     public get nativeElement() {
         return this.element.nativeElement;
@@ -126,6 +155,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 
     /**
      * Returns whether the row is expanded.
+     * ```typescript
+     * const RowExpanded = this.grid1.rowList.first.expanded;
+     * ```
      */
     public expanded = false;
 
@@ -233,6 +265,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 /* blazorIndirectRender */
 /**
  * Hierarchical grid
+ *
+ * @igxModule IgxHierarchicalGridModule
+ *
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -410,6 +445,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      *
      * @remarks
      * If not provided it will be automatically generated.
+     * @example
+     * ```html
+     * <igx-hierarchical-grid [id]="'igx-hgrid-1'" [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
+     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -423,6 +462,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /* treatAsRef */
     /**
      * Gets/Sets the array of data that populates the component.
+     * ```html
+     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
+     * ```
      *
      * @memberof IgxHierarchicalGridComponent
      */
@@ -435,6 +477,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * Returns an array of data set to the `IgxHierarchicalGridComponent`.
+     * ```typescript
+     * let filteredData = this.grid.filteredData;
+     * ```
      *
      * @memberof IgxHierarchicalGridComponent
      */
@@ -461,6 +506,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      *
      * @remarks
      * This property is required for remote grid virtualization to function when it is bound to remote data.
+     * @example
+     * ```typescript
+     * const itemCount = this.grid1.totalItemCount;
+     * this.grid1.totalItemCount = 55;
+     * ```
      */
     @Input()
     public set totalItemCount(count) {
@@ -474,6 +524,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * Sets if all immediate children of the `IgxHierarchicalGridComponent` should be expanded/collapsed.
      * Default value is false.
+     * ```html
+     * <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" [expandChildren]="true"></igx-hierarchical-grid>
+     * ```
      *
      * @memberof IgxHierarchicalGridComponent
      */
@@ -486,6 +539,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * Gets if all immediate children of the `IgxHierarchicalGridComponent` previously have been set to be expanded/collapsed.
      * If previously set and some rows have been manually expanded/collapsed it will still return the last set value.
+     * ```typescript
+     * const expanded = this.grid.expandChildren;
+     * ```
      *
      * @memberof IgxHierarchicalGridComponent
      */
@@ -501,6 +557,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @param {EntityType[]} entities - An array of EntityType objects representing the grid's schema.
      * @remarks
      * This property is required in remote data filtering scenarios.
+     * @example
+     * ```typescript
+     * const schema = this.grid.schema;
+     * this.grid.schema = [{ name: 'Products', fields: [...], childEntities: [...] }];
+     * ```
      */
     @Input()
     public set schema(entities: EntityType[]) {
@@ -540,6 +601,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * Gets the unique identifier of the parent row. It may be a `string` or `number` if `primaryKey` of the
      * parent grid is set or an object reference of the parent record otherwise.
+     * ```typescript
+     * const foreignKey = this.grid.foreignKey;
+     * ```
      *
      * @memberof IgxHierarchicalGridComponent
      */
@@ -682,6 +746,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * Returns the `RowType` by index.
      *
+     * @example
+     * ```typescript
+     * const myRow = this.grid1.getRowByIndex(1);
+     * ```
      * @param index
      */
     public getRowByIndex(index: number): RowType {
@@ -694,6 +762,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * Returns the `RowType` by key.
      *
+     * @example
+     * ```typescript
+     * const myRow = this.grid1.getRowByKey(1);
+     * ```
      * @param key
      */
     public getRowByKey(key: any): RowType {
@@ -727,6 +799,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * Returns an array of the selected `IgxGridCell`s.
+     *
+     * @example
+     * ```typescript
+     * const selectedCells = this.grid.selectedCells;
+     * ```
      */
     public get selectedCells(): CellType[] {
         return this.dataRows().map((row) => row.cells.filter((cell) => cell.selected))
@@ -736,6 +813,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * Returns a `CellType` object that matches the conditions.
      *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumn(2, "UnitPrice");
+     * ```
      * @param rowIndex
      * @param columnField
      */
@@ -752,6 +833,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      *
      * @remarks
      * Requires that the primaryKey property is set.
+     * @example
+     * ```typescript
+     * grid.getCellByKey(1, 'index');
+     * ```
      * @param rowSelector match any rowID
      * @param columnField
      */

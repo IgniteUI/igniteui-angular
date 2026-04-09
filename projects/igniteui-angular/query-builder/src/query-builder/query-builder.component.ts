@@ -27,6 +27,12 @@ import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component
  * A component used for operating with complex filters by creating or editing conditions
  * and grouping them using AND/OR logic.
  * It is used internally in the Advanced Filtering of the Grid.
+ *
+ * @example
+ * ```html
+ * <igx-query-builder [entities]="this.entities">
+ * </igx-query-builder>
+ * ```
  */
 @Component({
     selector: 'igx-query-builder',
@@ -74,6 +80,20 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * Each entity should be an {@link EntityType} object describing the fields and optionally child entities.
      *
      * Example:
+     * ```ts
+     * [
+     *   {
+     *     name: 'Orders',
+     *     fields: [{ field: 'OrderID', dataType: 'number' }],
+     *     childEntities: [
+     *       {
+     *         name: 'OrderDetails',
+     *         fields: [{ field: 'ProductID', dataType: 'number' }]
+     *       }
+     *     ]
+     *   }
+     * ]
+     * ```
      *
      * @param entities - The array of entities to set.
      */
@@ -188,6 +208,10 @@ export class IgxQueryBuilderComponent implements OnDestroy {
 
     /**
      * Event fired as the expression tree is changed.
+     *
+     * ```html
+     *  <igx-query-builder (expressionTreeChange)='onExpressionTreeChange()'></igx-query-builder>
+     * ```
      */
     @Output()
     public expressionTreeChange = new EventEmitter<IExpressionTree>();

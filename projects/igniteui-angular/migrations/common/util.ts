@@ -248,6 +248,7 @@ export const flatten = (list: Node[]) => {
 class SerializerVisitor implements Visitor {
 
     /**
+     *
      */
     constructor(private getHtmlTagDefinition: (tagName: string) => HtmlTagDefinition) { }
 

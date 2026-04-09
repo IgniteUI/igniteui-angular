@@ -38,6 +38,16 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
  * The Ignite UI Banner provides a highly template-able and easy to use banner that can be shown in your application.
  *
  * Usage:
+ *
+ * ```html
+ * <igx-banner #banner>
+ *   Our privacy settings have changed.
+ *  <igx-banner-actions>
+ *      <button type="button" igxButton="contained">Read More</button>
+ *      <button type="button" igxButton="contained">Accept and Continue</button>
+ *  </igx-banner-actions>
+ * </igx-banner>
+ * ```
  */
 @Component({
     selector: 'igx-banner',
@@ -55,24 +65,56 @@ export class IgxBannerComponent implements IToggleView {
 
     /**
      * Fires after the banner shows up
+     * ```typescript
+     * public handleOpened(event) {
+     *  ...
+     * }
+     * ```
+     * ```html
+     * <igx-banner (opened)="handleOpened($event)"></igx-banner>
+     * ```
      */
     @Output()
     public opened = new EventEmitter<BannerEventArgs>();
 
     /**
      * Fires before the banner shows up
+     * ```typescript
+     * public handleOpening(event) {
+     *  ...
+     * }
+     * ```
+     * ```html
+     * <igx-banner (opening)="handleOpening($event)"></igx-banner>
+     * ```
      */
     @Output()
     public opening = new EventEmitter<BannerCancelEventArgs>();
 
     /**
      * Fires after the banner hides
+     * ```typescript
+     * public handleClosed(event) {
+     *  ...
+     * }
+     * ```
+     * ```html
+     * <igx-banner (closed)="handleClosed($event)"></igx-banner>
+     * ```
      */
     @Output()
     public closed = new EventEmitter<BannerEventArgs>();
 
     /**
      * Fires before the banner hides
+     * ```typescript
+     * public handleClosing(event) {
+     *  ...
+     * }
+     * ```
+     * ```html
+     * <igx-banner (closing)="handleClosing($event)"></igx-banner>
+     * ```
      */
     @Output()
     public closing = new EventEmitter<BannerCancelEventArgs>();
@@ -84,6 +126,11 @@ export class IgxBannerComponent implements IToggleView {
 
     /**
      * Set the animation settings used by the banner open/close methods
+     * ```typescript
+     * import { slideInLeft, slideOutRight } from 'igniteui-angular';
+     * ...
+     * banner.animationSettings: ToggleAnimationSettings = { openAnimation: slideInLeft, closeAnimation: slideOutRight };
+     * ```
      */
     public set animationSettings(settings: ToggleAnimationSettings) {
         this._animationSettings = settings;
@@ -91,6 +138,9 @@ export class IgxBannerComponent implements IToggleView {
 
     /**
      * Get the animation settings used by the banner open/close methods
+     * ```typescript
+     * let currentAnimations: ToggleAnimationSettings = banner.animationSettings
+     * ```
      */
     @Input()
     public get animationSettings(): ToggleAnimationSettings {
@@ -116,6 +166,18 @@ export class IgxBannerComponent implements IToggleView {
      * Gets/Sets whether the banner is expanded (visible) or collapsed (hidden).
      * Defaults to `false`.
      * Setting to `true` opens the banner, while `false` closes it.
+     *
+     * @example
+     * // Expand the banner
+     * banner.expanded = true;
+     *
+     * @example
+     * // Collapse the banner
+     * banner.expanded = false;
+     *
+     * @example
+     * // Check if the banner is expanded
+     * const isExpanded = banner.expanded;
      */
     @Input()
     public get expanded(): boolean {
@@ -139,6 +201,10 @@ export class IgxBannerComponent implements IToggleView {
 
     /**
      * Gets whether the banner is collapsed.
+     *
+     * ```typescript
+     * const isCollapsed: boolean = banner.collapsed;
+     * ```
      */
     public get collapsed(): boolean {
         return this._expansionPanel.collapsed;
@@ -146,6 +212,9 @@ export class IgxBannerComponent implements IToggleView {
 
     /**
      * Returns the native element of the banner component
+     * ```typescript
+     *  const myBannerElement: HTMLElement = banner.element;
+     * ```
      */
     public get element() {
         return this.elementRef.nativeElement;
@@ -184,6 +253,17 @@ export class IgxBannerComponent implements IToggleView {
 
     /**
      * Opens the banner
+     *
+     * ```typescript
+     *  myBanner.open();
+     * ```
+     *
+     * ```html
+     * <igx-banner #banner>
+     * ...
+     * </igx-banner>
+     * <button type="button" (click)="banner.open()">Open Banner</button>
+     * ```
      */
     public open(event?: Event) {
         this._bannerEvent = { owner: this, event };
@@ -203,6 +283,17 @@ export class IgxBannerComponent implements IToggleView {
 
     /**
      * Closes the banner
+     *
+     * ```typescript
+     *  myBanner.close();
+     * ```
+     *
+     * ```html
+     * <igx-banner #banner>
+     * ...
+     * </igx-banner>
+     * <button type="button" (click)="banner.close()">Close Banner</button>
+     * ```
      */
     public close(event?: Event) {
         this._bannerEvent = { owner: this, event};
@@ -222,6 +313,17 @@ export class IgxBannerComponent implements IToggleView {
 
     /**
      * Toggles the banner
+     *
+     * ```typescript
+     *  myBanner.toggle();
+     * ```
+     *
+     * ```html
+     * <igx-banner #banner>
+     * ...
+     * </igx-banner>
+     * <button type="button" (click)="banner.toggle()">Toggle Banner</button>
+     * ```
      */
     public toggle(event?: Event) {
         if (this.collapsed) {

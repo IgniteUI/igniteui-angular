@@ -202,6 +202,7 @@ export class IgxGridSelectionService {
     }
 
     /**
+     *
      */
     public keyboardStateOnKeydown(node: ISelectionNode, shift: boolean, shiftTab: boolean): void {
         this.keyboardState.active = true;

@@ -14,6 +14,15 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 /* singleInstanceIdentifier */
 /**
  * Provides a pre-configured column hiding component for the grid.
+ *
+ *
+ * @igxModule IgxGridToolbarModule
+ * @igxParent IgxGridToolbarComponent, IgxGridToolbarActionsComponent
+ *
+ * @example
+ * ```html
+ *  <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+ * ```
  */
 @Component({
     selector: 'igx-grid-toolbar-hiding',
