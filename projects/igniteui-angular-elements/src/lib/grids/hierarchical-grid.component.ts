@@ -198,18 +198,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGrid {
     /**
      * @hidden
      */
-    public override ngAfterContentInit() {
-        this.actionStripComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.actionStrip) {
-                this.actionStrip.menuOverlaySettings.outlet = this.outlet;
-            }
-        });
-        super.ngAfterContentInit();
-    }
-
-    /**
-     * @hidden
-     */
     @ViewChildren(IgxChildGridRowComponent)
     public override hierarchicalRows: QueryList<IgxChildGridRowComponent>;
 
