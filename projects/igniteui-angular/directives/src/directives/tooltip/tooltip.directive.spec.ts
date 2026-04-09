@@ -519,6 +519,19 @@ describe('IgxTooltip', () => {
                 flush();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
+
+            it('should not open when pointer leaves before the show delay elapses', fakeAsync(() => {
+                tooltipTarget.showDelay = 500;
+                fix.detectChanges();
+
+                hoverElement(button);
+                tick(300);
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+
+                unhoverElement(button);
+                tick(300);
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+            }));
         });
     });
 

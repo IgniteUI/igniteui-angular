@@ -158,6 +158,7 @@
 
         <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
+        <ng-container #bodyViewContainerRef></ng-container>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
     <div igxToggle #loadingOverlay>
@@ -179,11 +180,10 @@
     </div>
 
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
 
-    <div #igxBodyOverlayOutlet="overlay-outlet" igxOverlayOutlet></div>
-    <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
+    <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet></div>
 </div>
 
 
