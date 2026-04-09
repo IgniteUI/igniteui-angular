@@ -280,14 +280,14 @@ export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
     grid: GridType;
     /**
      * The `exporter` is a base service.
-     * The type (an abstract class `IgxBaseExporter`) has it's own properties and methods
+     * The type (an abstract class base exporter) has it's own properties and methods
      * It is used to define the format and options of the export, the exported element
      * and methods for preparing the data from the elements for exporting
      */
     exporter: IgxBaseExporter;
     /**
      * Represents the different settings, that can be given to an export
-     * The type (an abstract class `IgxExporterOptionsBase`) has properties for column settings
+     * The type (an abstract class exporter options base) has properties for column settings
      * (whether they should be ignored) as well as method for generating a file name
      */
     options: IgxExporterOptionsBase;
@@ -461,7 +461,7 @@ export interface IGridScrollEventArgs extends IBaseEventArgs {
 
 /**
  * Event emitted when a checkbox in the checkbox
- * list of an IgxColumnActions component is clicked.
+ * list of an column actions component is clicked.
  */
 export interface IColumnToggledEventArgs extends IBaseEventArgs {
     /** The column that is toggled. */

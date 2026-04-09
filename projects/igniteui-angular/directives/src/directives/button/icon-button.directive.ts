@@ -7,7 +7,7 @@ import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 export type IgxIconButtonType = typeof IgxBaseButtonType[keyof typeof IgxBaseButtonType];
 
 /**
- * The IgxIconButtonDirective provides a way to use an icon as a fully functional button.
+ * The icon button provides a way to use an icon as a fully functional button.
  *
  * @example
  * ```html

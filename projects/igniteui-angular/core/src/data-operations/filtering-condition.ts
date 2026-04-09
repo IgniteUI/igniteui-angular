@@ -148,7 +148,7 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
     /**
      * Splits a Date object into parts
      *
-     * @memberof IgxDateFilteringOperand
+     * @memberof date filtering operand
      */
     public static getDateParts(date: Date, dateFormat?: string): IDateParts {
         const res = {
@@ -884,7 +884,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
     /**
      * Applies case sensitivity on strings if provided
      *
-     * @memberof IgxStringFilteringOperand
+     * @memberof string filtering operand
      */
     public static applyIgnoreCase(a: string, ignoreCase: boolean): string {
         a = a ?? '';

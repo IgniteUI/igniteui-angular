@@ -1,5 +1,5 @@
 /**
- * This file contains all the directives used by the @link IgxTimePickerComponent.
+ * This file contains all the directives used by the @link time picker.
  * You should generally not use them directly.
  *
  * @preferred

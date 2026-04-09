@@ -75,7 +75,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel id="my-first-carousel"></igx-carousel>
      * ```
      *
-     * @memberof IgxCarouselComponent
+     * @memberof carousel
      */
     @HostBinding('attr.id')
     @Input()
@@ -86,7 +86,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let carouselRole =  this.carousel.role;
      * ```
      *
-     * @memberof IgxCarouselComponent
+     * @memberof carousel
      */
     @HostBinding('attr.role') public role = 'region';
 
@@ -112,7 +112,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let class =  this.carousel.cssClass;
      * ```
      *
-     * @memberof IgxCarouselComponent
+     * @memberof carousel
      */
     @HostBinding('class.igx-carousel')
     public cssClass = 'igx-carousel';
@@ -135,7 +135,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel [loop]="false"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Input({ transform: booleanAttribute }) public loop = true;
 
@@ -146,7 +146,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *  <igx-carousel [pause]="false"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Input({ transform: booleanAttribute }) public pause = true;
 
@@ -157,7 +157,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel [navigation]="false"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Input({ transform: booleanAttribute }) public navigation = true;
 
@@ -168,7 +168,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel [indicators]="false"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Input({ transform: booleanAttribute }) public indicators = true;
 
@@ -180,7 +180,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel [vertical]="true"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Input({ transform: booleanAttribute }) public override vertical = false;
 
@@ -191,7 +191,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel [gesturesSupport]="false"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Input({ transform: booleanAttribute }) public gesturesSupport = true;
 
@@ -202,7 +202,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel [maximumIndicatorsCount]="5"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Input() public maximumIndicatorsCount = 10;
 
@@ -214,7 +214,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.end;
 
@@ -226,7 +226,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Input() public override animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
@@ -304,63 +304,63 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let slides: QueryList<IgxSlideComponent> = this.carousel.slides;
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @ContentChildren(IgxSlideComponent)
     public slides: QueryList<IgxSlideComponent>;
 
     /**
      * An event that is emitted after a slide transition has happened.
-     * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
+     * Provides references to the carousel and slide as event arguments.
      * ```html
      * <igx-carousel (slideChanged)="slideChanged($event)"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Output() public slideChanged = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been added to the carousel.
-     * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
+     * Provides references to the carousel and slide as event arguments.
      * ```html
      * <igx-carousel (slideAdded)="slideAdded($event)"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Output() public slideAdded = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been removed from the carousel.
-     * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
+     * Provides references to the carousel and slide as event arguments.
      * ```html
      * <igx-carousel (slideRemoved)="slideRemoved($event)"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Output() public slideRemoved = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after the carousel has been paused.
-     * Provides a reference to the `IgxCarouselComponent` as an event argument.
+     * Provides a reference to the carousel as an event argument.
      * ```html
      * <igx-carousel (carouselPaused)="carouselPaused($event)"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Output() public carouselPaused = new EventEmitter<IgxCarouselComponent>();
 
     /**
      * An event that is emitted after the carousel has resumed transitioning between `slides`.
-     * Provides a reference to the `IgxCarouselComponent` as an event argument.
+     * Provides a reference to the carousel as an event argument.
      * ```html
      * <igx-carousel (carouselPlaying)="carouselPlaying($event)"></igx-carousel>
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     @Output() public carouselPlaying = new EventEmitter<IgxCarouselComponent>();
 
@@ -465,7 +465,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let slideCount =  this.carousel.total;
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public get total(): number {
         return this.slides?.length;
@@ -477,7 +477,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let currentSlideNumber =  this.carousel.current;
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public get current(): number {
         return !this.currentItem ? 0 : this.currentItem.index;
@@ -489,7 +489,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let isPlaying =  this.carousel.isPlaying;
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public get isPlaying(): boolean {
         return this.playing;
@@ -501,7 +501,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let isDestroyed =  this.carousel.isDestroyed;
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public get isDestroyed(): boolean {
         return this.destroyed;
@@ -512,7 +512,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let nativeElement =  this.carousel.nativeElement;
      * ```
      *
-     * @memberof IgxCarouselComponent
+     * @memberof carousel
      */
     public get nativeElement(): any {
         return this.element.nativeElement;
@@ -524,7 +524,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let timeInterval = this.carousel.interval;
      * ```
      *
-     * @memberof IgxCarouselComponent
+     * @memberof carousel
      */
     @Input()
     public get interval(): number {
@@ -538,7 +538,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel [interval]="1000"></igx-carousel>
      * ```
      *
-     * @memberof IgxCarouselComponent
+     * @memberof carousel
      */
     public set interval(value: number) {
         this._interval = +value;
@@ -752,7 +752,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * let slide1 =  this.carousel.get(1);
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public get(index: number): IgxSlideComponent {
         return this.slides.find((slide) => slide.index === index);
@@ -764,7 +764,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * this.carousel.add(newSlide);
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public add(slide: IgxSlideComponent) {
         const newSlides = this.slides.toArray();
@@ -779,7 +779,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * this.carousel.remove(slide);
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public remove(slide: IgxSlideComponent) {
         if (slide && slide === this.get(slide.index)) { // check if the requested slide for delete is present in the carousel
@@ -797,7 +797,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * this.carousel.select(slide, CarouselAnimationDirection.NEXT);
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public select(slide: IgxSlideComponent, direction?: CarouselAnimationDirection): void;
     /**
@@ -806,7 +806,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * this.carousel.select(2, CarouselAnimationDirection.NEXT);
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public select(index: number, direction?: CarouselAnimationDirection): void;
     public select(slideOrIndex: IgxSlideComponent | number, direction: CarouselAnimationDirection = CarouselAnimationDirection.NONE): void {
@@ -826,7 +826,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * this.carousel.next();
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public next() {
         const index = this.getNextIndex();
@@ -844,7 +844,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * this.carousel.prev();
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public prev() {
         const index = this.getPrevIndex();
@@ -864,7 +864,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * }
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public play() {
         if (!this.playing) {
@@ -883,7 +883,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * }
      * ```
      *
-     * @memberOf IgxCarouselComponent
+     * @memberOf carousel
      */
     public stop() {
         if (this.pause) {

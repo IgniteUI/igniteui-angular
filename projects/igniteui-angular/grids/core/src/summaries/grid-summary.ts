@@ -13,13 +13,13 @@ export class IgxSummaryOperand {
      * IgxSummaryOperand.count(dataSource);
      * ```
      *
-     * @memberof IgxSummaryOperand
+     * @memberof summary operand
      */
     public static count(data: any[]): number {
         return data.length;
     }
     /**
-     * Executes the static `count` method and returns `IgxSummaryResult[]`.
+     * Executes the static `count` method and returns summary result[]`.
      * ```typescript
      * interface IgxSummaryResult {
      *   key: string;
@@ -46,7 +46,7 @@ export class IgxSummaryOperand {
      * this.grid.getColumnByName('ColumnName').summaries = CustomSummary;
      * ```
      *
-     * @memberof IgxSummaryOperand
+     * @memberof summary operand
      */
     public operate(data: any[] = [], _allData: any[] = [], _fieldName?: string, _groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         return [{
@@ -68,7 +68,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * IgxNumberSummaryOperand.min(data);
      * ```
      *
-     * @memberof IgxNumberSummaryOperand
+     * @memberof number summary operand
      */
     public static min(data: any[]): number {
         return data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => Math.min(a, b)) : 0;
@@ -80,7 +80,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * IgxNumberSummaryOperand.max(data);
      * ```
      *
-     * @memberof IgxNumberSummaryOperand
+     * @memberof number summary operand
      */
     public static max(data: any[]): number {
         return data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => Math.max(a, b)) : 0;
@@ -92,7 +92,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * IgxNumberSummaryOperand.sum(data);
      * ```
      *
-     * @memberof IgxNumberSummaryOperand
+     * @memberof number summary operand
      */
     public static sum(data: any[]): number {
         return data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => +a + +b) : 0;
@@ -104,13 +104,13 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * IgxSummaryOperand.average(data);
      * ```
      *
-     * @memberof IgxNumberSummaryOperand
+     * @memberof number summary operand
      */
     public static average(data: any[]): number {
         return data.length && data.filter(clear).length ? this.sum(data) / this.count(data) : 0;
     }
     /**
-     * Executes the static methods and returns `IgxSummaryResult[]`.
+     * Executes the static methods and returns summary result[]`.
      * ```typescript
      * interface IgxSummaryResult {
      *   key: string;
@@ -142,7 +142,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * this.grid.getColumnByName('ColumnName').summaries = CustomNumberSummary;
      * ```
      *
-     * @memberof IgxNumberSummaryOperand
+     * @memberof number summary operand
      */
     public override operate(data: any[] = [], allData: any[] = [], fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, groupRecord);
@@ -184,7 +184,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * IgxDateSummaryOperand.latest(data);
      * ```
      *
-     * @memberof IgxDateSummaryOperand
+     * @memberof date summary operand
      */
     public static latest(data: any[]) {
         return data.length && data.filter(clear).length ?
@@ -197,14 +197,14 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * IgxDateSummaryOperand.earliest(data);
      * ```
      *
-     * @memberof IgxDateSummaryOperand
+     * @memberof date summary operand
      */
     public static earliest(data: any[]) {
         return data.length && data.filter(clear).length ?
             last(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())) : undefined;
     }
     /**
-     * Executes the static methods and returns `IgxSummaryResult[]`.
+     * Executes the static methods and returns summary result[]`.
      * ```typescript
      * interface IgxSummaryResult {
      *   key: string;
@@ -231,7 +231,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * this.grid.getColumnByName('ColumnName').summaries = CustomDateSummary;
      * ```
      *
-     * @memberof IgxDateSummaryOperand
+     * @memberof date summary operand
      */
     public override operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, groupRecord);
@@ -261,7 +261,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
      * IgxTimeSummaryOperand.latestTime(data);
      * ```
      *
-     * @memberof IgxTimeSummaryOperand
+     * @memberof time summary operand
      */
     public static latestTime(data: any[]) {
         return data.length && data.filter(clear).length ?
@@ -277,7 +277,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
      * IgxTimeSummaryOperand.earliestTime(data);
      * ```
      *
-     * @memberof IgxTimeSummaryOperand
+     * @memberof time summary operand
      */
     public static earliestTime(data: any[]) {
         return data.length && data.filter(clear).length ?
@@ -285,7 +285,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
             new Date().setHours(a.getHours(), a.getMinutes(), a.getSeconds()))) : undefined;
     }
     /**
-     * @memberof IgxTimeSummaryOperand
+     * @memberof time summary operand
      */
     public override operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, groupRecord);

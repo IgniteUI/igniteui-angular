@@ -80,7 +80,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * Gets the column of the header group.
      *
-     * @memberof IgxGridHeaderGroupComponent
+     * @memberof grid header group
      */
     @Input()
     public column: ColumnType;
@@ -118,7 +118,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * Gets the width of the header group.
      *
-     * @memberof IgxGridHeaderGroupComponent
+     * @memberof grid header group
      */
     public get width() {
         return this.grid.getHeaderGroupWidth(this.column);
@@ -158,7 +158,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * Gets whether the header group belongs to a column that is filtered.
      *
-     * @memberof IgxGridHeaderGroupComponent
+     * @memberof grid header group
      */
     public get isFiltered(): boolean {
         return this.filteringService.filteredColumn === this.column;
@@ -167,7 +167,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * Gets whether the header group is stored in the last column in the pinned area.
      *
-     * @memberof IgxGridHeaderGroupComponent
+     * @memberof grid header group
      */
     public get isLastPinned(): boolean {
         return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
@@ -188,7 +188,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * Gets whether the header group is stored in a pinned column.
      *
-     * @memberof IgxGridHeaderGroupComponent
+     * @memberof grid header group
      */
     public get isPinned(): boolean {
         return this.column.pinned;
@@ -197,7 +197,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * Gets whether the header group belongs to a column that is moved.
      *
-     * @memberof IgxGridHeaderGroupComponent
+     * @memberof grid header group
      */
     public get isHeaderDragged(): boolean {
         return this.grid.columnInDrag === this.column;

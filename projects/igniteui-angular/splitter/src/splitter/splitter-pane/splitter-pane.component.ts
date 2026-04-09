@@ -142,7 +142,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * @hidden @internal
-     * Gets/Sets the `maxHeight` properties of the current `IgxSplitterPaneComponent`.
+     * Gets/Sets the `maxHeight` properties of the current splitter pane.
      */
     @HostBinding('style.max-height')
     public maxHeight = '100%';
@@ -194,7 +194,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * @hidden @internal
-     * Gets the `flex` property of the current `IgxSplitterPaneComponent`.
+     * Gets the `flex` property of the current splitter pane.
      */
     @HostBinding('style.flex')
     public get flex() {

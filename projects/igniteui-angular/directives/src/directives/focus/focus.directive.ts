@@ -23,7 +23,7 @@ export class IgxFocusDirective {
      * let isFocusOn = this.igxFocus.focused;
      * ```
      *
-     * @memberof IgxFocusDirective
+     * @memberof focus
      */
     @Input({ alias: 'igxFocus', transform: booleanAttribute })
     public get focused(): boolean {
@@ -38,7 +38,7 @@ export class IgxFocusDirective {
      * </igx-input-group>
      * ```
      *
-     * @memberof IgxFocusDirective
+     * @memberof focus
      */
     public set focused(val: boolean) {
         this.focusState = val;
@@ -53,7 +53,7 @@ export class IgxFocusDirective {
      * let igxFocusNativeElement = this.igxFocus.nativeElement;
      * ```
      *
-     * @memberof IgxFocusDirective
+     * @memberof focus
      */
     public get nativeElement() {
         if (this.comp && this.comp[0] && this.comp[0].getEditElement) {
@@ -75,7 +75,7 @@ export class IgxFocusDirective {
      * this.igxFocus.trigger();
      * ```
      *
-     * @memberof IgxFocusDirective
+     * @memberof focus
      */
     public trigger() {
         if (this.focusState) {

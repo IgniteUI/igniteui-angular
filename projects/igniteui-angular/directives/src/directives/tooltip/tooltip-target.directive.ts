@@ -635,7 +635,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-     * Creates (if not already created) an instance of the IgxTooltipCloseButtonComponent,
+     * Creates (if not already created) an instance of the tooltip close button,
      * and assigns it the provided custom template.
      */
     private _createCloseTemplate(template?: TemplateRef<any> | undefined): void {

@@ -66,7 +66,7 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      * let toastRole = this.toast.role;
      * ```
      *
-     * @memberof IgxToastComponent
+     * @memberof toast
      */
     @HostBinding('attr.role')
     @Input()
@@ -127,7 +127,7 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      * let nativeElement = this.toast.element;
      * ```
      *
-     * @memberof IgxToastComponent
+     * @memberof toast
      */
     public override get element() {
         return this._element.nativeElement;

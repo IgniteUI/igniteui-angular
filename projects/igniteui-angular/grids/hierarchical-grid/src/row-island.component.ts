@@ -84,7 +84,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * </igx-hierarchical-grid>
      * ```
      *
-     * @memberof IgxRowIslandComponent
+     * @memberof row island
      */
     @Input()
     public key: string;
@@ -201,7 +201,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * </igx-hierarchical-grid>
      * ```
      *
-     * @memberof IgxRowIslandComponent
+     * @memberof row island
      */
     @Output()
     public gridCreated = new EventEmitter<IGridCreatedEventArgs>();
@@ -217,7 +217,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * </igx-hierarchical-grid>
      * ```
      *
-     * @memberof IgxRowIslandComponent
+     * @memberof row island
      */
     @Output()
     public gridInitialized = new EventEmitter<IGridCreatedEventArgs>();
@@ -319,7 +319,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     private _paginatorTemplate: TemplateRef<IgxGridPaginatorTemplateContext>;
 
     /**
-     * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
+     * Sets if all immediate children of the grids for this row island should be expanded/collapsed.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
      *      <igx-row-island [key]="'childData'" [expandChildren]="true" #rowIsland>
@@ -328,7 +328,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * </igx-hierarchical-grid>
      * ```
      *
-     * @memberof IgxRowIslandComponent
+     * @memberof row island
      */
     @Input({ transform: booleanAttribute })
     public set expandChildren(value: boolean) {
@@ -346,12 +346,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     /**
-     * Gets if all immediate children of the grids for this `IgxRowIslandComponent` have been set to be expanded/collapsed.
+     * Gets if all immediate children of the grids for this row island have been set to be expanded/collapsed.
      * ```typescript
      * const expanded = this.rowIsland.expandChildren;
      * ```
      *
-     * @memberof IgxRowIslandComponent
+     * @memberof row island
      */
     public get expandChildren(): boolean {
         return this._defaultExpandState;

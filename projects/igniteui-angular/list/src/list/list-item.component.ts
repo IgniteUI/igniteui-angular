@@ -63,7 +63,7 @@ export class IgxListItemComponent implements IListChild {
      * let isHeader =  this.listItem.isHeader;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     @Input({ transform: booleanAttribute })
     public isHeader: boolean;
@@ -78,7 +78,7 @@ export class IgxListItemComponent implements IListChild {
      * let isHidden =  this.listItem.hidden;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     @Input({ transform: booleanAttribute })
     public hidden = false;
@@ -92,7 +92,7 @@ export class IgxListItemComponent implements IListChild {
      * let itemAriaLabel = this.listItem.ariaLabel;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     @HostBinding('attr.aria-label')
     public ariaLabel: string;
@@ -135,7 +135,7 @@ export class IgxListItemComponent implements IListChild {
      * let itemPanState =  this.listItem.panState;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     public get panState(): IgxListPanState {
         return this._panState;
@@ -147,7 +147,7 @@ export class IgxListItemComponent implements IListChild {
      * let itemIndex =  this.listItem.index;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     @Input()
     public get index(): number {
@@ -160,7 +160,7 @@ export class IgxListItemComponent implements IListChild {
      * this.listItem.index = index;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     public set index(value: number) {
         this._index = value;
@@ -172,7 +172,7 @@ export class IgxListItemComponent implements IListChild {
      * let listItemElement =  this.listItem.element.
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     public get element() {
         return this.elementRef.nativeElement;
@@ -184,7 +184,7 @@ export class IgxListItemComponent implements IListChild {
      * let listItemContainer =  this.listItem.contentElement.
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     public get contentElement() {
         const candidates = this.element.getElementsByClassName('igx-list__item-content');
@@ -193,7 +193,7 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Returns the `context` object which represents the `template context` binding into the `list item container`
-     * by providing the `$implicit` declaration which is the `IgxListItemComponent` itself.
+     * by providing the `$implicit` declaration which is the list item itself.
      * ```typescript
      * let listItemComponent = this.listItem.context;
      * ```
@@ -210,7 +210,7 @@ export class IgxListItemComponent implements IListChild {
      * let itemWidth = this.listItem.width;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     public get width() {
         if (this.element) {
@@ -224,7 +224,7 @@ export class IgxListItemComponent implements IListChild {
      * let maxLeft = this.listItem.maxLeft;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     public get maxLeft() {
         return -this.width;
@@ -236,7 +236,7 @@ export class IgxListItemComponent implements IListChild {
      * let maxRight = this.listItem.maxRight;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     public get maxRight() {
         return this.width;
@@ -258,7 +258,7 @@ export class IgxListItemComponent implements IListChild {
      * let itemRole =  this.listItem.role;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     @HostBinding('attr.role')
     @Input()
@@ -282,7 +282,7 @@ export class IgxListItemComponent implements IListChild {
      * this.listItem.selected = true;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     @HostBinding('class.igx-list__item-base--selected')
     @Input({ transform: booleanAttribute })
@@ -300,7 +300,7 @@ export class IgxListItemComponent implements IListChild {
      * let headerStyle =  this.listItem.headerStyle;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     @HostBinding('class.igx-list__header')
     public get headerStyle(): boolean {
@@ -313,7 +313,7 @@ export class IgxListItemComponent implements IListChild {
      * let innerStyle =  this.listItem.innerStyle;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     @HostBinding('class.igx-list__item-base')
     public get innerStyle(): boolean {
@@ -326,7 +326,7 @@ export class IgxListItemComponent implements IListChild {
      * let isHidden = this.listItem.display;
      * ```
      *
-     * @memberof IgxListItemComponent
+     * @memberof list item
      */
     @HostBinding('style.display')
     public get display(): string {

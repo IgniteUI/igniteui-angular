@@ -615,7 +615,7 @@ export class IgxGridStateBaseDirective {
 
     /**
      * This method restores complex objects in the pivot dimensions
-     * Like the IgxPivotDateDimension and filters.
+     * Like the pivot date dimension and filters.
      */
     private restoreDimensions(config: IPivotConfiguration) {
         const collections = [config.rows, config.columns, config.filters];
@@ -635,7 +635,7 @@ export class IgxGridStateBaseDirective {
 
 
     /**
-     * This method restores the IgxPivotDateDimension with its default functions and resource strings.
+     * This method restores the pivot date dimension with its default functions and resource strings.
      */
     private restoreDateDimension(dim: IgxPivotDateDimension) {
         const dateDim = new IgxPivotDateDimension((dim as any)._baseDimension, (dim as any)._options);
@@ -652,7 +652,7 @@ export class IgxGridStateBaseDirective {
     }
 
     /**
-     * Returns if this is a IgxPivotDateDimension.
+     * Returns if this is a pivot date dimension.
      */
     private isDateDimension(dim: IPivotDimension) {
         return (dim as any)._baseDimension;

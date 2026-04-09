@@ -551,7 +551,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * Asserts the correct type of the context for the template that `igxForOf` will render.
      *
      * The presence of this method is a signal to the Ivy template type-check compiler that the
-     * `IgxForOf` structural directive renders its template with a specific context type.
+     * For of structural directive renders its template with a specific context type.
      */
     public static ngTemplateContextGuard<T, U extends T[]>(dir: IgxForOfDirective<T, U>, ctx: any):
         ctx is IgxForOfContext<T, U> {
@@ -1657,10 +1657,10 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
     /**
      * @hidden @internal
-     * Asserts the correct type of the context for the template that `IgxGridForOfDirective` will render.
+     * Asserts the correct type of the context for the template that grid for of will render.
      *
      * The presence of this method is a signal to the Ivy template type-check compiler that the
-     * `IgxGridForOfDirective` structural directive renders its template with a specific context type.
+     * Grid for of structural directive renders its template with a specific context type.
      */
     public static override ngTemplateContextGuard<T, U extends T[]>(dir: IgxGridForOfDirective<T, U>, ctx: any):
         ctx is IgxGridForOfContext<T, U> {

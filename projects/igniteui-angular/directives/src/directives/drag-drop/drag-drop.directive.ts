@@ -193,7 +193,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * <div [igxDrag]="{ source: myElement }"></div>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input('igxDrag')
     public set data(value: any) {
@@ -213,7 +213,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * </div>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input()
     public dragTolerance = 5;
@@ -230,7 +230,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * public dragDir = DragDirection.HORIZONTAL;
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input()
     public dragDirection = DragDirection.BOTH;
@@ -247,7 +247,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * </div>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input()
     public dragChannel: number | string | number[] | string[];
@@ -262,7 +262,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * </div>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input({ transform: booleanAttribute })
     public ghost = true;
@@ -275,7 +275,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * </div>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input()
     public ghostClass = '';
@@ -288,7 +288,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * </div>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input()
     public ghostStyle = {};
@@ -307,7 +307,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * </ng-template>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input()
     public ghostTemplate: TemplateRef<any>;
@@ -322,7 +322,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * </div>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input()
     public ghostHost;
@@ -346,7 +346,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Output()
     public dragStart = new EventEmitter<IDragStartEventArgs>();
@@ -364,7 +364,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Output()
     public dragMove = new EventEmitter<IDragMoveEventArgs>();
@@ -382,7 +382,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Output()
     public dragEnd = new EventEmitter<IDragBaseEventArgs>();
@@ -400,7 +400,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Output()
     public dragClick = new EventEmitter<IDragBaseEventArgs>();
@@ -418,7 +418,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Output()
     public ghostCreate = new EventEmitter<IDragGhostBaseEventArgs>();
@@ -436,7 +436,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Output()
     public ghostDestroy = new EventEmitter<IDragGhostBaseEventArgs>();
@@ -454,7 +454,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Output()
     public transitioned = new EventEmitter<IDragBaseEventArgs>();
@@ -653,7 +653,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * </div>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input()
     public set ghostOffsetX(value) {
@@ -674,7 +674,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * </div>
      * ```
      *
-     * @memberof IgxDragDirective
+     * @memberof drag
      */
     @Input()
     public set ghostOffsetY(value) {
@@ -1617,7 +1617,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * <div [igxDrop]="{ source: myElement }"></div>
      * ```
      *
-     * @memberof IgxDropDirective
+     * @memberof drop
      */
     @Input('igxDrop')
     public set data(v: any) {
@@ -1640,18 +1640,18 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * </div>
      * ```
      *
-     * @memberof IgxDropDirective
+     * @memberof drop
      */
     @Input()
     public dropChannel: number | string | number[] | string[];
 
     /**
-     * Sets a drop strategy type that will be executed when an `IgxDrag` element is released inside
+     * Sets a drop strategy type that will be executed when an drag element is released inside
      *  the current drop area. The provided strategies are:
-     *  - IgxDefaultDropStrategy - This is the default base strategy and it doesn't perform any actions.
-     *  - IgxAppendDropStrategy - Appends the dropped element to last position as a direct child to the `igxDrop`.
-     *  - IgxPrependDropStrategy - Prepends the dropped element to first position as a direct child to the `igxDrop`.
-     *  - IgxInsertDropStrategy - If the dropped element is released above a child element of the `igxDrop`, it will be inserted
+     *  - default drop strategy - This is the default base strategy and it doesn't perform any actions.
+     *  - append drop strategy - Appends the dropped element to last position as a direct child to the `igxDrop`.
+     *  - prepend drop strategy - Prepends the dropped element to first position as a direct child to the `igxDrop`.
+     *  - insert drop strategy - If the dropped element is released above a child element of the `igxDrop`, it will be inserted
      *      at that position. Otherwise the dropped element will be appended if released outside any child of the `igxDrop`.
      * ```html
      * <div igxDrag>
@@ -1669,7 +1669,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDropDirective
+     * @memberof drop
      */
     @Input()
     public set dropStrategy(classRef: any) {
@@ -1692,7 +1692,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDropDirective
+     * @memberof drop
      */
     @Output()
     public enter = new EventEmitter<IDropBaseEventArgs>();
@@ -1709,7 +1709,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDropDirective
+     * @memberof drop
      */
     @Output()
     public over = new EventEmitter<IDropBaseEventArgs>();
@@ -1726,7 +1726,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDropDirective
+     * @memberof drop
      */
     @Output()
     public leave = new EventEmitter<IDropBaseEventArgs>();
@@ -1745,7 +1745,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * }
      * ```
      *
-     * @memberof IgxDropDirective
+     * @memberof drop
      */
     @Output()
     public dropped = new EventEmitter<IDropDroppedEventArgs>();

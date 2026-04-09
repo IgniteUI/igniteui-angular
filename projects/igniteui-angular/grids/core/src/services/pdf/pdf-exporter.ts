@@ -14,7 +14,7 @@ export interface IPdfExportEndedEventArgs extends IBaseEventArgs {
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter_pdf.html)
  *
  * The Ignite UI for Angular PDF Exporter service can export data in PDF format from both raw data
- * (array) or from an `IgxGrid`.
+ * (array) or from an grid.
  *
  * Example:
  * ```typescript
@@ -43,7 +43,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
      * });
      * ```
      *
-     * @memberof IgxPdfExporterService
+     * @memberof pdf exporter
      */
     public override exportEnded = new EventEmitter<IPdfExportEndedEventArgs>();
 

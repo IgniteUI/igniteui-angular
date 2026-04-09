@@ -84,7 +84,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * Emits an event when a selection is made in the view.
      * Provides reference the `date` property in the component.
-     * @memberof IgxCalendarViewDirective
+     * @memberof calendar view
      */
     @Output()
     public selected = new EventEmitter<Date>();
@@ -92,7 +92,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * Emits an event when a page changes in the view.
      * Provides reference the `date` property in the component.
-     * @memberof IgxCalendarViewDirective
+     * @memberof calendar view
      * @hidden @internal
      */
     @Output()
@@ -100,7 +100,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
 
     /**
      * Emits an event when the active date has changed.
-     * @memberof IgxCalendarViewDirective
+     * @memberof calendar view
      * @hidden @internal
      */
     @Output()
@@ -152,7 +152,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * let date = this.view.date;
      * ```
      *
-     * @memberof IgxYearsViewComponent
+     * @memberof years view
      */
     @Input()
     public set date(value: Date) {
@@ -172,7 +172,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * let locale = this.view.locale;
      * ```
      *
-     * @memberof IgxCalendarViewDirective
+     * @memberof calendar view
      */
     @Input()
     public get locale(): string {
@@ -184,7 +184,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * Expects a valid BCP 47 language tag.
      * Default value is `"en"`.
      *
-     * @memberof IgxCalendarViewDirective
+     * @memberof calendar view
      */
     public set locale(value: string) {
         this._locale = value;

@@ -150,7 +150,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * Identifier which is registered into `IgxNavigationService`
+     * Identifier which is registered into navigation
      *
      * ```typescript
      * let myToggleId = this.toggle.id;
@@ -443,7 +443,7 @@ export class IgxToggleActionDirective implements OnInit {
      * <!--set-->
      * <div igxToggleAction [igxToggleOutlet]="outlet"></div>
      * ```
-     * Where `outlet` in an instance of `IgxOverlayOutletDirective` or an `ElementRef`
+     * Where `outlet` in an instance of overlay outlet or an `ElementRef`
      */
     @Input('igxToggleOutlet')
     public outlet: IgxOverlayOutletDirective | ElementRef;

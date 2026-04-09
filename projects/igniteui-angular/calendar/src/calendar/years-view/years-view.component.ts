@@ -91,7 +91,7 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
      * <igx-years-view [yearFormat]="numeric"></igx-years-view>
      * ```
      *
-     * @memberof IgxYearsViewComponent
+     * @memberof years view
      */
     public set yearFormat(value: any) {
         this._yearFormat = value;

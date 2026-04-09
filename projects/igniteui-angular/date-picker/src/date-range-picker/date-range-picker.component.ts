@@ -355,7 +355,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
+     * Sets the `placeholder` for single-input date range picker.
      *
      *   @example
      * ```html
@@ -369,7 +369,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * Gets/Sets the container used for the popup element.
      *
      * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
+     *  `outlet` is an instance of overlay outlet or an `ElementRef`.
      * @example
      * ```html
      * <div igxOverlayOutlet #outlet="overlay-outlet"></div>

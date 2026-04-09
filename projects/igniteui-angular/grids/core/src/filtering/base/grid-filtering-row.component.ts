@@ -737,7 +737,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     /**
      * @hidden
      * Resets the chips area
-     * @memberof IgxGridFilteringRowComponent
+     * @memberof grid filtering row
      */
     public resetChipsArea() {
         this.chipAreaScrollOffset = 0;

@@ -24,7 +24,7 @@ import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 // TODO: common interface between IgxCarouselComponentBase and ToggleAnimationPlayer?
 
 /**
- * IgxStepper provides a wizard-like workflow by dividing content into logical steps.
+ * Stepper provides a wizard-like workflow by dividing content into logical steps.
  *
  * @igxModule IgxStepperModule
  *

@@ -61,7 +61,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Property that enables/disables the auto-generated class of the `IgxInputGroupComponent`.
+     * Property that enables/disables the auto-generated class of the input group.
      * By default applied the class is applied.
      * ```typescript
      *  @ViewChild("MyInputGroup")
@@ -88,8 +88,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * @hidden @internal
-     * When truthy, disables the `IgxInputGroupComponent`.
-     * Controlled by the underlying `IgxInputDirective`.
+     * When truthy, disables the input group.
+     * Controlled by the underlying input.
      * ```html
      * <igx-input-group [disabled]="true"></igx-input-group>
      * ```
@@ -173,7 +173,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Sets how the input will be styled.
-     * Allowed values of type IgxInputGroupType.
+     * Allowed values of type input group type.
      * ```html
      * <igx-input-group [type]="'search'">
      * ```
@@ -184,7 +184,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns the type of the `IgxInputGroupComponent`. How the input is styled.
+     * Returns the type of the input group. How the input is styled.
      * The default is `line`.
      * ```typescript
      * @ViewChild("MyInputGroup")
@@ -200,7 +200,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Sets the theme of the input.
-     * Allowed values of type IgxInputGroupTheme.
+     * Allowed values of type input group theme.
      * ```typescript
      * @ViewChild("MyInputGroup")
      * public inputGroup: IgxInputGroupComponent;
@@ -215,7 +215,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns the theme of the input.
-     * The returned value is of type IgxInputGroupType.
+     * The returned value is of type input group type.
      * ```typescript
      * @ViewChild("MyInputGroup")
      * public inputGroup: IgxInputGroupComponent;
@@ -267,7 +267,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` has hints.
+     * Returns whether the input group has hints.
      * ```typescript
      * @ViewChild("MyInputGroup")
      * public inputGroup: IgxInputGroupComponent;
@@ -303,7 +303,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` has border.
+     * Returns whether the input group has border.
      * ```typescript
      * @ViewChild("MyInputGroup")
      * public inputGroup: IgxInputGroupComponent;
@@ -320,7 +320,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is line.
+     * Returns whether the input group type is line.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -334,7 +334,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is box.
+     * Returns whether the input group type is box.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -389,7 +389,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is border.
+     * Returns whether the input group type is border.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -404,7 +404,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns true if the `IgxInputGroupComponent` theme is Fluent.
+     * Returns true if the input group theme is Fluent.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -419,7 +419,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns true if the `IgxInputGroupComponent` theme is Bootstrap.
+     * Returns true if the input group theme is Bootstrap.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -434,7 +434,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns true if the `IgxInputGroupComponent` theme is Indigo.
+     * Returns true if the input group theme is Indigo.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -449,7 +449,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is search.
+     * Returns whether the input group type is search.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;

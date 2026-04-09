@@ -1,5 +1,5 @@
 /**
- * IgxHierarchicalGrid - Hierarchical grid component for parent-child data
+ * Hierarchical grid - Hierarchical grid component for parent-child data
  *
  * Import hierarchical-grid-specific components and re-export core grid functionality
  */

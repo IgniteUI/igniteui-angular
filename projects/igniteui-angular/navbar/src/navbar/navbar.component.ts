@@ -12,7 +12,7 @@ import {
 import { IgxIconComponent } from 'igniteui-angular/icon';
 
 /**
- * IgxActionIcon is a container for the action nav icon of the IgxNavbar.
+ * Action icon is a container for the action nav icon of the navbar.
  */
 @Directive({
     selector: '[igxNavbarAction],igx-navbar-action',
@@ -69,7 +69,7 @@ export class IgxNavbarComponent {
     public id = `igx-navbar-${NEXT_ID++}`;
 
     /**
-     * Sets the icon of the `IgxNavbarComponent`.
+     * Sets the icon of the navbar.
      * ```html
      * <igx-navbar [title]="currentView" actionButtonIcon="arrow_back"></igx-navbar>
      * ```
@@ -77,7 +77,7 @@ export class IgxNavbarComponent {
     @Input() public actionButtonIcon: string;
 
     /**
-     * Sets the title of the `IgxNavbarComponent`.
+     * Sets the title of the navbar.
      * ```html
      * <igx-navbar title="Sample App" actionButtonIcon="menu">
      * ```
@@ -86,7 +86,7 @@ export class IgxNavbarComponent {
 
     /**
      * The event that will be thrown when the action is executed,
-     * provides reference to the `IgxNavbar` component as argument
+     * provides reference to the navbar component as argument
      * ```typescript
      * public actionExc(event){
      *     alert("Action Execute!");
@@ -100,7 +100,7 @@ export class IgxNavbarComponent {
     @Output() public action = new EventEmitter<IgxNavbarComponent>();
 
     /**
-     * Sets the titleId of the `IgxNavbarComponent`. If not set it will be automatically generated.
+     * Sets the titleId of the navbar. If not set it will be automatically generated.
      * ```html
      * <igx-navbar [titleId]="'igx-navbar-7'" title="Sample App" actionButtonIcon="menu">
      * ```
@@ -123,7 +123,7 @@ export class IgxNavbarComponent {
     private isVisible = true;
 
     /**
-     * Sets whether the action button of the `IgxNavbarComponent` is visible.
+     * Sets whether the action button of the navbar is visible.
      * ```html
      * <igx-navbar [title]="currentView" [isActionButtonVisible]="'false'"></igx-navbar>
      * ```
@@ -133,7 +133,7 @@ export class IgxNavbarComponent {
     }
 
     /**
-     * Returns whether the `IgxNavbarComponent` action button is visible, true/false.
+     * Returns whether the navbar action button is visible, true/false.
      * ```typescript
      *  @ViewChild("MyChild")
      * public navBar: IgxNavbarComponent;

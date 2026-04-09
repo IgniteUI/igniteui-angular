@@ -120,7 +120,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
-     * Sets custom OverlaySettings `IgxSelectComponent`.
+     * Sets custom OverlaySettings select.
      * ```html
      * <igx-select [overlaySettings] = "customOverlaySettings"></igx-select>
      * ```

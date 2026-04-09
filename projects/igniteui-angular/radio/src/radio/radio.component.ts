@@ -51,7 +51,7 @@ export class IgxRadioComponent
      * let radioClass = this.radio.cssClass;
      * ```
      *
-     * @memberof IgxRadioComponent
+     * @memberof radio
      */
     @HostBinding('class.igx-radio')
     public override cssClass = 'igx-radio';
@@ -66,7 +66,7 @@ export class IgxRadioComponent
      * let isChecked =  this.radio.checked;
      * ```
      *
-     * @memberof IgxRadioComponent
+     * @memberof radio
      */
     @HostBinding('class.igx-radio--checked')
     @Input({ transform: booleanAttribute })
@@ -87,7 +87,7 @@ export class IgxRadioComponent
      * let isDisabled =  this.radio.disabled;
      * ```
      *
-     * @memberof IgxRadioComponent
+     * @memberof radio
      */
     @HostBinding('class.igx-radio--disabled')
     @Input({ transform: booleanAttribute })
@@ -103,7 +103,7 @@ export class IgxRadioComponent
      * let isInvalid =  this.radio.invalid;
      * ```
      *
-     * @memberof IgxRadioComponent
+     * @memberof radio
      */
     @HostBinding('class.igx-radio--invalid')
     @Input({ transform: booleanAttribute })
@@ -119,7 +119,7 @@ export class IgxRadioComponent
      * let isFocused =  this.radio.focused;
      * ```
      *
-     * @memberof IgxRadioComponent
+     * @memberof radio
      */
     @HostBinding('class.igx-radio--focused')
     public override focused = false;
@@ -149,7 +149,7 @@ export class IgxRadioComponent
      * this.radio.select();
      * ```
      *
-     * @memberof IgxRadioComponent
+     * @memberof radio
      */
     public select() {
         if (!this.checked) {
@@ -169,7 +169,7 @@ export class IgxRadioComponent
      * this.radio.deselect();
      * ```
      *
-     * @memberof IgxRadioComponent
+     * @memberof radio
      */
     public deselect() {
         this.checked = false;

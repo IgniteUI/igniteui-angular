@@ -62,7 +62,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public showEntityChangeDialog = true;
 
     /**
-     * Gets the list of entities available for the IgxQueryBuilderComponent.
+     * Gets the list of entities available for the query builder.
      *
      * Each entity describes a logical group of fields that can be used in queries.
      * An entity can optionally have child entities, allowing nested sub-queries.
@@ -74,7 +74,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     /**
-     * Sets the list of entities for the IgxQueryBuilderComponent.
+     * Sets the list of entities for the query builder.
      * If the `expressionTree` is defined, it will be recreated with the new entities.
      *
      * Each entity should be an {@link EntityType} object describing the fields and optionally child entities.

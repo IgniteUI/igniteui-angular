@@ -270,7 +270,7 @@ export abstract class BaseProgressDirective {
     }
 
     /**
-     * Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
+     * Returns the linear progress bar/circular progress bar value in percentage.
      * ```typescript
      * @ViewChild("MyProgressBar")
      * public progressBar: IgxLinearProgressBarComponent / IgxCircularProgressBarComponent
@@ -286,7 +286,7 @@ export abstract class BaseProgressDirective {
     }
 
     /**
-     * Returns value that indicates the current `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` position.
+     * Returns value that indicates the current linear progress bar/circular progress bar position.
      * ```typescript
      * @ViewChild("MyProgressBar")
      * public progressBar: IgxLinearProgressBarComponent / IgxCircularProgressBarComponent;
@@ -329,7 +329,7 @@ export abstract class BaseProgressDirective {
     }
 
     /**
-     * Set value that indicates the current `IgxLinearProgressBarComponent / IgxCircularProgressBarComponent` position.
+     * Set value that indicates the current linear progress bar / circular progress bar position.
      * ```html
      * <igx-linear-bar [value]="50"></igx-linear-bar>
      * <igx-circular-bar [value]="50"></igx-circular-bar>
@@ -378,7 +378,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     public cssClass = 'igx-linear-bar';
 
     /**
-     * Set `IgxLinearProgressBarComponent` to have striped style. By default it is set to false.
+     * Set linear progress bar to have striped style. By default it is set to false.
      * ```html
      * <igx-linear-bar [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
      * ```
@@ -434,7 +434,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 
     /**
      * Set the position that defines where the text is aligned.
-     * Possible options - `IgxTextAlign.START` (default), `IgxTextAlign.CENTER`, `IgxTextAlign.END`.
+     * Possible options - text align.START` (default), text align.CENTER`, text align.END`.
      * ```typescript
      * public positionCenter: IgxTextAlign;
      * public ngOnInit() {
@@ -468,7 +468,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     public textTop = false;
 
     /**
-     * Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `error`.
+     * Set type of the linear progress bar. Possible options - `default`, `success`, `info`, `warning`, and `error`.
      * ```html
      * <igx-linear-bar [type]="'error'"></igx-linear-bar>
      * ```
@@ -601,7 +601,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     }
 
     /**
-     * Set type of the `IgxCircularProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `error`.
+     * Set type of the circular progress bar. Possible options - `default`, `success`, `info`, `warning`, and `error`.
      * ```html
      * <igx-circular-bar [type]="'error'"></igx-circular-bar>
      * ```

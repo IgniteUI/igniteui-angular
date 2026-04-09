@@ -9,7 +9,7 @@ export class IgxPivotAggregate {
      * IgxPivotAggregate.aggregators();
      * ```
      *
-     * @memberof IgxPivotAggregate
+     * @memberof pivot aggregate
      */
     public static aggregators(): Array<IPivotAggregator> {
         return [{
@@ -25,7 +25,7 @@ export class IgxPivotAggregate {
      * IgxSummaryOperand.count(dataSource);
      * ```
      *
-     * @memberof IgxPivotAggregate
+     * @memberof pivot aggregate
      */
     public static count(members: number[]): number {
         return members.length;
@@ -40,7 +40,7 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
      * IgxPivotAggregate.aggregators();
      * ```
      *
-     * @memberof IgxPivotAggregate
+     * @memberof pivot aggregate
      */
     public static override aggregators() {
         let result: IPivotAggregator[] = [];
@@ -77,7 +77,7 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
      * IgxPivotNumericAggregate.min(members, data);
      * ```
      *
-     * @memberof IgxPivotNumericAggregate
+     * @memberof pivot numeric aggregate
      */
     public static min(members: number[]): number {
         return IgxNumberSummaryOperand.min(members);
@@ -90,7 +90,7 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
      * IgxPivotNumericAggregate.max(data);
      * ```
      *
-     * @memberof IgxPivotNumericAggregate
+     * @memberof pivot numeric aggregate
      */
     public static max(members: number[]): number {
         return IgxNumberSummaryOperand.max(members);
@@ -103,7 +103,7 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
      * IgxPivotNumericAggregate.sum(data);
      * ```
      *
-     * @memberof IgxPivotNumericAggregate
+     * @memberof pivot numeric aggregate
      */
     public static sum(members: number[]): number {
         return IgxNumberSummaryOperand.sum(members);
@@ -116,7 +116,7 @@ export class IgxPivotNumericAggregate extends IgxPivotAggregate {
      * IgxPivotNumericAggregate.average(data);
      * ```
      *
-     * @memberof IgxPivotNumericAggregate
+     * @memberof pivot numeric aggregate
      */
     public static average(members: number[]): number {
         return IgxNumberSummaryOperand.average(members);
@@ -130,7 +130,7 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
      * IgxPivotDateAggregate.aggregators();
      * ```
      *
-     * @memberof IgxPivotAggregate
+     * @memberof pivot aggregate
      */
     public static override aggregators() {
         let result: IPivotAggregator[] = [];
@@ -154,7 +154,7 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
      * IgxPivotDateAggregate.latest(data);
      * ```
      *
-     * @memberof IgxPivotDateAggregate
+     * @memberof pivot date aggregate
      */
     public static latest(members: any[]) {
         return IgxDateSummaryOperand.latest(members);
@@ -167,7 +167,7 @@ export class IgxPivotDateAggregate extends IgxPivotAggregate {
      * IgxPivotDateAggregate.earliest(data);
      * ```
      *
-     * @memberof IgxPivotDateAggregate
+     * @memberof pivot date aggregate
      */
     public static earliest(members: any[]) {
         return IgxDateSummaryOperand.earliest(members);
@@ -181,7 +181,7 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
      * IgxPivotTimeAggregate.aggregators();
      * ```
      *
-     * @memberof IgxPivotAggregate
+     * @memberof pivot aggregate
      */
     public static override aggregators() {
         let result: IPivotAggregator[] = [];
@@ -206,7 +206,7 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
      * IgxPivotTimeAggregate.latestTime(data);
      * ```
      *
-     * @memberof IgxPivotTimeAggregate
+     * @memberof pivot time aggregate
      */
     public static latestTime(members: any[]) {
         return IgxTimeSummaryOperand.latestTime(members);
@@ -219,7 +219,7 @@ export class IgxPivotTimeAggregate extends IgxPivotAggregate {
      * IgxPivotTimeAggregate.earliestTime(data);
      * ```
      *
-     * @memberof IgxPivotTimeAggregate
+     * @memberof pivot time aggregate
      */
     public static earliestTime(members: any[]) {
         return IgxTimeSummaryOperand.earliestTime(members);

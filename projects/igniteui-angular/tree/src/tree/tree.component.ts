@@ -38,7 +38,7 @@ export class IgxTreeExpandIndicatorDirective {
 }
 
 /**
- * IgxTreeComponent allows a developer to show a set of nodes in a hierarchical fashion.
+ * Tree allows a developer to show a set of nodes in a hierarchical fashion.
  *
  * @igxModule IgxTreeModule
  * @igxKeywords tree
@@ -93,7 +93,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      *
      * @remarks
      * By default the tree selection mode is 'None'
-     * @param selectionMode: IgxTreeSelectionType
+     * @param selectionMode: tree selection type
      */
     @Input()
     public get selection() {
@@ -366,7 +366,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      *  ];
      *  this.tree.deselectAll(arr);
      * ```
-     * @param nodes: IgxTreeNodeComponent<any>[]
+     * @param nodes: tree node<any>[]
      */
     public deselectAll(nodes?: IgxTreeNodeComponent<any>[]) {
         this.selectionService.deselectNodesWithNoEvent(nodes);

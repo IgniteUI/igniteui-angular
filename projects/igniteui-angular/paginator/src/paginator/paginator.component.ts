@@ -143,7 +143,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      * let page = this.paginator.page;
      * ```
      *
-     * @memberof IgxPaginatorComponent
+     * @memberof paginator
      */
     @Input()
     public get page() {
@@ -174,7 +174,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      * let itemsPerPage = this.paginator.perPage;
      * ```
      *
-     * @memberof IgxPaginatorComponent
+     * @memberof paginator
      */
     @Input()
     public get perPage() {
@@ -200,7 +200,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      * let totalRecords = this.paginator.totalRecords;
      * ```
      *
-     * @memberof IgxPaginatorComponent
+     * @memberof paginator
      */
     @Input()
     public get totalRecords() {
@@ -222,7 +222,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      * let options = this.paginator.selectOptions;
      * ```
      *
-     * @memberof IgxPaginatorComponent
+     * @memberof paginator
      */
     @Input()
     public get selectOptions() {
@@ -316,12 +316,12 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     }
 
     /**
-     * Goes to the next page of the `IgxPaginatorComponent`, if the paginator is not already at the last page.
+     * Goes to the next page of the paginator, if the paginator is not already at the last page.
      * ```typescript
      * this.paginator.nextPage();
      * ```
      *
-     * @memberof IgxPaginatorComponent
+     * @memberof paginator
      */
     public nextPage(): void {
         if (!this.isLastPage) {
@@ -329,12 +329,12 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
         }
     }
     /**
-     * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
+     * Goes to the previous page of the paginator, if the paginator is not already at the first page.
      * ```typescript
      * this.paginator.previousPage();
      * ```
      *
-     * @memberof IgxPaginatorComponent
+     * @memberof paginator
      */
     public previousPage(): void {
         if (!this.isFirstPage) {
@@ -348,7 +348,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      * ```
      *
      * @param val
-     * @memberof IgxPaginatorComponent
+     * @memberof paginator
      */
     public paginate(val: number): void {
         if (val < 0 || val > this.totalPages - 1) {

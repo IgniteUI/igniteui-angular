@@ -39,7 +39,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * let columnGroupWidth = this.columnGroup.width;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override get width(): any {
         const width = this.getFilledChildColumnSizes(this.children).reduce((acc, val) => acc + parseFloat(val), 0);
@@ -74,7 +74,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * let visibleColumnIndex =  this.column.visibleIndex;
      * ```
      *
-     * @memberof IgxColumnComponent
+     * @memberof column
      */
     public override get visibleIndex(): number {
         if (!isNaN(this._vIndex)) {
@@ -109,7 +109,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * <igx-column-layout [hidden] = "true"></igx-column->
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override set hidden(value: boolean) {
         this._hidden = value;

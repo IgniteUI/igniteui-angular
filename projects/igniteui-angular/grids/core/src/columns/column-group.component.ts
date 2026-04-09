@@ -57,7 +57,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *  <igx-column-group [collapsible] = "true"></igx-column-group>
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     @Input({ transform: booleanAttribute })
     public override set collapsible(value: boolean) {
@@ -84,7 +84,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *  <igx-column-group [(expand)] = "state"></igx-column-group>
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     @Input({ transform: booleanAttribute })
     public override set expanded(value: boolean) {
@@ -107,7 +107,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * let columnGroupSummaries = this.columnGroup.summaries;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     @Input()
     public override get summaries(): any {
@@ -121,7 +121,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * this.columnGroup.summaries = IgxNumberSummaryOperand;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override set summaries(classRef: any) { }
 
@@ -136,7 +136,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *  <igx-column-group [searchable] = "false"></igx-column-group>
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     @Input({ transform: booleanAttribute })
     public override searchable = true;
@@ -146,7 +146,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * let columnGroupFilters = this.columnGroup.filters;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     @Input()
     public override get filters(): any {
@@ -160,7 +160,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * this.columnGroup.filters = IgxStringFilteringOperand;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override set filters(classRef: any) { }
 
@@ -170,7 +170,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * let columnGroupSelectable = this.columnGroup.selectable;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override get selectable(): boolean {
         return this.children && this.children.some(child => child.selectable);
@@ -195,7 +195,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /**
      * Allows you to define a custom template for expand/collapse indicator
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     @Input()
     public override collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
@@ -222,7 +222,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * let isHidden = this.columnGroup.hidden;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     @Input({ transform: booleanAttribute })
     public override get hidden() {
@@ -241,7 +241,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * <igx-column [(hidden)] = "model.columns[0].isHidden"></igx-column>
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override set hidden(value: boolean) {
         this._hidden = value;
@@ -264,7 +264,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * let isSelected = this.columnGroup.selected;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override get selected(): boolean {
         const selectableChildren = this.allChildren.filter(c => !c.columnGroup && c.selectable && !c.hidden);
@@ -278,7 +278,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * this.columnGroup.selected = true;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override set selected(value: boolean) {
         if (this.selectable) {
@@ -358,7 +358,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * let isColumnGroup =  this.columnGroup.columnGroup
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override get columnGroup() {
         return true;
@@ -369,7 +369,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * let columnGroup =  this.column.columnGroup;
      * ```
      *
-     * @memberof IgxColumnComponent
+     * @memberof column
      */
     public override get columnLayout() {
         return false;
@@ -380,7 +380,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * let columnGroupWidth = this.columnGroup.width;
      * ```
      *
-     * @memberof IgxColumnGroupComponent
+     * @memberof column group
      */
     public override get width() {
         const width = `${this.children.reduce((acc, val) => {

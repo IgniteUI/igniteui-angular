@@ -81,7 +81,7 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
      * let cellRow = this.cell.row;
      * ```
      *
-     * @memberof IgxGridCellComponent
+     * @memberof grid cell
      */
     @Input()
     public override get row(): RowType {

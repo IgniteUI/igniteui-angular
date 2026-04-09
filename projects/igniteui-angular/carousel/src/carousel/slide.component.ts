@@ -4,7 +4,7 @@ import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-ba
 
 /**
  * A slide component that usually holds an image and/or a caption text.
- * IgxSlideComponent is usually a child component of an IgxCarouselComponent.
+ * Slide is usually a child component of an carousel.
  *
  * ```
  * <igx-slide [input bindings] >
@@ -30,7 +30,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * <igx-carousel>
      * ```
      *
-     * @memberOf IgxSlideComponent
+     * @memberOf slide
      */
     @Input() public index: number;
 
@@ -42,7 +42,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * <igx-carousel>
      * ```
      *
-     * @memberOf IgxSlideComponent
+     * @memberOf slide
      */
     @Input() public direction: CarouselAnimationDirection;
 
@@ -55,7 +55,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * let tabIndex =  this.carousel.tabIndex;
      * ```
      *
-     * @memberof IgxSlideComponent
+     * @memberof slide
      * @deprecated in version 19.2.0.
      */
     @HostBinding('attr.tabindex')
@@ -73,7 +73,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * Returns the `role` of the slide component.
      * By default is set to `tabpanel`
      *
-     * @memberof IgxSlideComponent
+     * @memberof slide
      */
     @HostBinding('attr.role')
     public tab = 'tabpanel';
@@ -88,7 +88,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * let class =  this.slide.cssClass;
      * ```
      *
-     * @memberof IgxSlideComponent
+     * @memberof slide
      */
     @HostBinding('class.igx-slide')
     public cssClass = 'igx-slide';
@@ -108,7 +108,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * <igx-carousel>
      * ```
      *
-     * @memberof IgxSlideComponent
+     * @memberof slide
      */
     @HostBinding('class.igx-slide--current')
     @Input({ transform: booleanAttribute })
@@ -138,7 +138,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * let nativeElement =  this.slide.nativeElement;
      * ```
      *
-     * @memberof IgxSlideComponent
+     * @memberof slide
      */
     public get nativeElement() {
         return this.elementRef.nativeElement;

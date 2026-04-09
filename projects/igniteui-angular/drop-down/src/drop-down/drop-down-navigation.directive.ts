@@ -5,7 +5,7 @@ import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey } from './drop-down.common';
 
 /**
- * Navigation Directive that handles keyboard events on its host and controls a targeted IgxDropDownBaseDirective component
+ * Navigation Directive that handles keyboard events on its host and controls a targeted drop down base component
  */
 @Directive({
     selector: '[igxDropDownItemNavigation]',

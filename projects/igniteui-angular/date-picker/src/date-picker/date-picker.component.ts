@@ -247,7 +247,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * Gets/Sets the container used for the popup element.
      *
      * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
+     *  `outlet` is an instance of overlay outlet or an `ElementRef`.
      * @example
      * ```html
      * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
@@ -275,7 +275,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     //#region calendar members
 
     /**
-     * Gets/Sets the format views of the `IgxDatePickerComponent`.
+     * Gets/Sets the format views of the date picker.
      *
      * @example
      * ```typescript
@@ -323,7 +323,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
 
     /**
-     * Gets/Sets the format options of the `IgxDatePickerComponent`.
+     * Gets/Sets the format options of the date picker.
      *
      * @example
      * ```typescript

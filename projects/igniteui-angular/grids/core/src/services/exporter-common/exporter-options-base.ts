@@ -6,7 +6,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.ignoreColumnsVisibility = true;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public ignoreColumnsVisibility = false;
 
@@ -17,23 +17,23 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.ignoreFiltering = true;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public ignoreFiltering = false;
 
     /**
-     * Specifies if the exporter should ignore the current column order in the IgxGrid.
+     * Specifies if the exporter should ignore the current column order in the grid.
      * ```typescript
      * let ignoreColumnsOrder = this.exportOptions.ignoreColumnsOrder;
      * this.exportOptions.ignoreColumnsOrder = true;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public ignoreColumnsOrder = false;
 
     /**
-     * Specifies whether the exported data should be sorted as in the provided IgxGrid.
+     * Specifies whether the exported data should be sorted as in the provided grid.
      * When you export grouped data, setting ignoreSorting to true will cause
      * the grouping to fail because it relies on the sorting of the records.
      * ```typescript
@@ -41,29 +41,29 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.ignoreSorting = true;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public ignoreSorting = false;
 
     /**
-     * Specifies whether the exported data should be grouped as in the provided IgxGrid.
+     * Specifies whether the exported data should be grouped as in the provided grid.
      * ```typescript
      * let ignoreGrouping = this.exportOptions.ignoreGrouping;
      * this.exportOptions.ignoreGrouping = true;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public ignoreGrouping = false;
 
     /**
-     * Specifies whether the exported data should include multi column headers as in the provided IgxGrid.
+     * Specifies whether the exported data should include multi column headers as in the provided grid.
      * ```typescript
      * let ignoreMultiColumnHeaders = this.exportOptions.ignoreMultiColumnHeaders;
      * this.exportOptions.ignoreMultiColumnHeaders = true;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public ignoreMultiColumnHeaders = false;
 
@@ -74,7 +74,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.exportSummaries = true;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public exportSummaries = true;
 
@@ -85,7 +85,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.freezeHeaders = true;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public freezeHeaders = false;
 
@@ -96,7 +96,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.alwaysExportHeaders = false;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
      public alwaysExportHeaders = true;
 
@@ -116,7 +116,7 @@ export abstract class IgxExporterOptionsBase {
      * let fileName = this.exportOptions.fileName;
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public get fileName() {
         return this._fileName;
@@ -128,7 +128,7 @@ export abstract class IgxExporterOptionsBase {
      * this.exportOptions.fileName = 'exportedData01';
      * ```
      *
-     * @memberof IgxExporterOptionsBase
+     * @memberof exporter options base
      */
     public set fileName(value) {
         this.setFileName(value);

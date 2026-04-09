@@ -30,7 +30,7 @@ export class IgxQueryBuilderHeaderComponent {
     }
 
     /**
-     * Sets the title of the `IgxQueryBuilderHeaderComponent`.
+     * Sets the title of the query builder header.
      *
      * @example
      * ```html

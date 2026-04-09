@@ -9,7 +9,7 @@ export class IgxGridCell implements CellType {
     /**
      * Returns the grid containing the cell.
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public grid: GridType;
     private _row: RowType;
@@ -39,7 +39,7 @@ export class IgxGridCell implements CellType {
      * let row = this.cell.row;
      * ```
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public get row(): RowType {
         return this._row || this.grid.createRow(this._rowIndex);
@@ -51,7 +51,7 @@ export class IgxGridCell implements CellType {
      * let column = this.cell.column;
      * ```
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public get column(): ColumnType {
         return this._column;
@@ -63,7 +63,7 @@ export class IgxGridCell implements CellType {
      * let editValue = this.cell.editValue;
      * ```
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public get editValue(): any {
         if (this.isCellInEditMode()) {
@@ -78,7 +78,7 @@ export class IgxGridCell implements CellType {
      * this.cell.editValue = value;
      * ```
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public set editValue(value: any) {
         if (this.isCellInEditMode()) {
@@ -102,7 +102,7 @@ export class IgxGridCell implements CellType {
     /**
      * Returns whether the cell is editable..
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public get editable(): boolean {
         return this.column.editable && !this.row?.disabled;
@@ -114,7 +114,7 @@ export class IgxGridCell implements CellType {
      * let cellWidth = this.cell.width;
      * ```
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public get width(): string {
         return this.column.width;
@@ -123,7 +123,7 @@ export class IgxGridCell implements CellType {
     /**
      * Returns the cell value.
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public get value(): any {
         // will return undefined for a column layout, because getCellByColumnVisibleIndex may return the column layout at that index.
@@ -136,7 +136,7 @@ export class IgxGridCell implements CellType {
     /**
      * Updates the cell value.
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public set value(val: any) {
         this.update(val);
@@ -153,7 +153,7 @@ export class IgxGridCell implements CellType {
      * let cellID = cell.id;
      * ```
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public get id(): any {
         const primaryKey = this.grid.primaryKey;
@@ -164,7 +164,7 @@ export class IgxGridCell implements CellType {
     /**
      * Returns if the row is currently in edit mode.
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public get editMode(): boolean {
         return this.isCellInEditMode();
@@ -177,7 +177,7 @@ export class IgxGridCell implements CellType {
      * cell.editMode  = !cell.editMode;
      * ```
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public set editMode(value: boolean) {
         const isInEditMode = this.isCellInEditMode();
@@ -201,7 +201,7 @@ export class IgxGridCell implements CellType {
      * ```
      *
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public get selected(): boolean {
         return this.grid.selectionService.selected(this.selectionNode);
@@ -214,7 +214,7 @@ export class IgxGridCell implements CellType {
      * ```
      *
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public set selected(val: boolean) {
         const node = this.selectionNode;
@@ -239,7 +239,7 @@ export class IgxGridCell implements CellType {
      * cell.update(newValue);
      * ```
      *
-     * @memberof IgxGridCell
+     * @memberof grid cell
      */
     public update(val: any): void {
         if (this.row?.deleted) {
