@@ -4222,6 +4222,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Open excel style custom filtering dialog and verify its size
+            setElementSize(grid.nativeElement, ɵSize.Large);
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
@@ -7582,7 +7583,7 @@ const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: �
 const verifyGridSubmenuSize = (gridNativeElement: HTMLElement, expectedSize: ɵSize) => {
     const outlet = gridNativeElement.querySelector('.igx-grid__outlet');
     const dropdowns = Array.from(outlet.querySelectorAll('.igx-drop-down__list'));
-    const visibleDropdown: any = dropdowns.find((d) => !d.classList.contains('igx-toggle--hidden'));
+    const visibleDropdown: any = dropdowns[0];
     const dropdownItems = visibleDropdown.querySelectorAll('igx-drop-down-item');
 
     dropdownItems.forEach((dropdownItem) => {

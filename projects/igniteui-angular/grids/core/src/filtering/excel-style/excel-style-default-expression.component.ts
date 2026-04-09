@@ -135,7 +135,9 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.expressionUI.expression.condition = this.getCondition(value);
         this.expressionUI.expression.conditionName = value;
 
-        this.focus();
+        if (!this.expressionUI.expression.condition.isUnary) {
+            this.focus();
+        }
     }
 
     public getCondition(value: string): IFilteringOperation {
