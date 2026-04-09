@@ -1,0 +1,69 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-radio, fluent) {
+    --size: #{rem(20px)};
+    --label-margin: #{rem(8px)};
+    --scale: scale(0.5);
+    --border-width: #{rem(1px)};
+
+    @include e(label) {
+        @include type-style(body-2) {
+            margin-block: 0;
+        }
+    }
+
+    &:hover {
+        @include e(composite) {
+            &::before {
+                transform: scale(0.5);
+            }
+        }
+    }
+
+    @include m(focused) {
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: rem(-2px);
+            box-shadow: 0 0 0 rem(1px) var-get($_theme, 'focus-outline-color');
+        }
+    }
+
+    @include m(invalid) {
+        &:hover {
+            @include e(composite) {
+                &::after {
+                    border-color: var-get($_theme, 'error-color-hover');
+                }
+            }
+        }
+    }
+
+    @include mx(checked, invalid, focused) {
+        &:hover {
+            @include e(composite) {
+                &::before {
+                    background: var-get($_theme, 'error-color-hover');
+                    border-color: var-get($_theme, 'error-color-hover');
+                }
+
+                &::after {
+                    border-color: var-get($_theme, 'error-color-hover');
+                }
+            }
+        }
+    }
+}
+
+@include themed-block(igx-radio-group, fluent) {
+    --horizontal-group-margin: #{rem(12px)};
+    --vertical-group-margin: #{rem(8px)};
+}

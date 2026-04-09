@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
 import { GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
@@ -49,15 +49,6 @@ export class GridAutoSizeSampleComponent implements OnInit {
             { field: 'Contract', width: 'auto', resizable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'boolean' }
         ];
         this.selectionMode = GridSelectionMode.multiple;
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
-    }
-
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
     }
 
     public checkCols(): void {

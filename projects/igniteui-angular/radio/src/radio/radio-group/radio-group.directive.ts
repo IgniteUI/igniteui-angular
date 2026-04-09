@@ -111,6 +111,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     public get name(): string {
         return this._name;
     }
+
     public set name(newValue: string) {
         if (this._name !== newValue) {
             this._name = newValue;

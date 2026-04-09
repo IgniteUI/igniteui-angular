@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, HostBinding, Input } from '@angular/core';
+import { booleanAttribute, Component, HostBinding, Input, ViewEncapsulation } from '@angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 
 let NEXT_ID = 0;
@@ -38,7 +38,9 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
  */
 @Component({
     selector: 'igx-badge',
+    styleUrl: 'badge.component.css',
     templateUrl: 'badge.component.html',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxIconComponent]
 })
 export class IgxBadgeComponent {

@@ -1,43 +1,50 @@
-%f-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-container {
-    @extend %f-column;
-
-    gap: 24px;
-
-    form {
-        @extend %f-column;
-
-        justify-content: center;
-        gap: 24px;
-    }
-
-    span {
-        font-size: 24px;
-    }
-
-    section {
-        display: flex;
-        gap: 6px;
-    }
-
-    form > div {
-        @extend %f-column;
-
-        align-items: flex-start;
-        justify-content: center;
-        gap: 8px;
-
-        div {
-            display: flex;
-            gap: 6px;
-        }
-    }
-
-    input {
-        margin: 0;
-    }
+:host {
+	fieldset {
+		border: 1px solid var(--ig-gray-200);
+		border-radius: .5rem;
+		padding: var(--content-spacing);
+	}
+	
+	form {
+		display: grid;
+		gap: var(--demos-gap);
+	}
+	
+	.demo-form-group {
+		display: flex;
+		align-items: center;
+		gap: .5rem;
+	}
+	
+	.demo-form-group--column {
+		flex-direction: column;
+		align-items: start;
+	}
+	
+	.demo-color-input {
+		border: 2px solid var(--ig-gray-100);
+		width: 1.5rem;
+		height: 1.5rem;
+		overflow: hidden;
+		position: relative;
+	}
+	
+	input[type="color"] {
+		-webkit-appearance: none;
+		border: none;
+		inset: 0;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		background: transparent;
+	}
+	
+	input[type="color"]::-webkit-color-swatch-wrapper {
+		padding: 0;
+	}
+	input[type="color"]::-webkit-color-swatch {
+		border: none;
+	}
 }

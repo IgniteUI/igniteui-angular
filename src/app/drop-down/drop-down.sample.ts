@@ -12,7 +12,6 @@ import {
     CloseScrollStrategy,
     ConnectedPositioningStrategy,
     HorizontalAlignment,
-    IgSizeDirective,
     IgxButtonDirective,
     IgxButtonGroupComponent,
     IgxDropDownComponent,
@@ -80,7 +79,6 @@ icons.forEach((icon) => {
         IgxRippleDirective,
         IgxOverlayOutletDirective,
         IgxIconComponent,
-        IgSizeDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -98,12 +96,6 @@ export class DropDownSampleComponent implements OnInit {
     public foods = foods;
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large']
-            }
-        },
         placement: {
             control: {
                 type: 'select',

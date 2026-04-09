@@ -1,0 +1,137 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $base;
+
+@include layer(base) {
+    $panel-padding: rem(16px) rem(24px);
+
+    %ellipsis {
+        @include ellipsis();
+    }
+
+    @include b(igx-expansion-panel) {
+        display: flex;
+        flex-direction: column;
+        border-radius: var-get($theme, 'border-radius');
+        overflow: hidden;
+        transition: margin 350ms $ease-out-quad;
+
+        @include e(title-wrapper) {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1 0 0%;
+            overflow: hidden;
+        }
+
+        @include e(header-inner) {
+            display: flex;
+            align-items: center;
+            padding: $panel-padding;
+            cursor: pointer;
+            background: var-get($theme, 'header-background');
+
+            &:focus,
+            &:active {
+                background: var-get($theme, 'header-focus-background');
+                outline: transparent;
+            }
+        }
+
+        @include e(header-title) {
+            @extend %ellipsis;
+
+            color: var-get($theme, 'header-title-color');
+            margin-inline-end: rem(16px, 16px);
+        }
+
+        @include e(header-description) {
+            @extend %ellipsis;
+
+            color: var-get($theme, 'header-description-color');
+        }
+
+        @include e(header-icon) {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            user-select: none;
+
+            color: var-get($theme, 'header-icon-color');
+
+            igx-icon {
+                --component-size: 3;
+                color: var-get($theme, 'header-icon-color');
+            }
+        }
+
+        @include e(header-icon, $m: start) {
+            order: -1;
+            margin-inline-end: rem(16px, 16px);
+        }
+
+        @include e(header-icon, $m: end) {
+            order: 1;
+            margin-inline-start: rem(16px, 16px);
+        }
+
+        @include e(header-icon, $m: none) {
+            display: none;
+        }
+
+        @include e(body) {
+            color: var-get($theme, 'body-color');
+            background: var-get($theme, 'body-background');
+            overflow: hidden;
+            padding: $panel-padding;
+        }
+
+        @include m(disabled) {
+            pointer-events: none;
+
+            @include e(header-title) {
+                color: var-get($theme, 'disabled-text-color');
+            }
+
+            @include e(header-description) {
+                color: var-get($theme, 'disabled-description-color');
+            }
+
+            @include e(header-icon) {
+                igx-icon {
+                    color: var-get($theme, 'disabled-text-color');
+                }
+            }
+        }
+
+        @include m(expanded) {
+            margin: var-get($theme, 'expanded-margin') 0;
+
+            &:first-of-type {
+                margin-top: 0;
+            }
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    @include b(igx-accordion) {
+        box-sizing: content-box;
+        overflow-y: auto;
+
+        // WARN: This breaks BEM principles
+        .igx-expansion-panel__header-title {
+            @include line-clamp(4, true, true);
+
+            white-space: initial;
+            word-wrap: break-word;
+        }
+    }
+}

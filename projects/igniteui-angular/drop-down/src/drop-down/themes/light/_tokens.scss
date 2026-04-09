@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/drop-down' as *;
+
+$base: digest-schema($light-drop-down);
+$material: digest-schema($material-drop-down);
+$bootstrap: digest-schema($bootstrap-drop-down);
+$fluent: digest-schema($fluent-drop-down);
+$indigo: digest-schema($indigo-drop-down);

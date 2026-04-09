@@ -1,4 +1,14 @@
-import { Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, booleanAttribute, inject } from '@angular/core';
+import {
+    Component,
+    ContentChild,
+    ElementRef,
+    HostBinding,
+    Input,
+    OnDestroy,
+    ViewEncapsulation,
+    booleanAttribute,
+    inject
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarActionsComponent } from './common';
@@ -28,6 +38,8 @@ import { IgxIconService } from 'igniteui-angular/icon';
 @Component({
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html',
+    styleUrl: 'grid-toolbar.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }],
     imports: [IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
 })

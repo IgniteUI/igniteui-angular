@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
 import {
     IgxRowIslandComponent,
@@ -19,10 +19,6 @@ import {
     imports: [GridSearchBoxComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxIconComponent, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     public columnsReady = false;
     public layoutsReady = false;
     @ViewChild('layout1', { static: true })
@@ -44,11 +40,6 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     public columns;
     public childColumns;
     public toolbarTitle = 'Child Grid 1';
-
-    public evenCondition = (row: RowType) =>  parseInt(row.data['ID'], 0) % 2 === 0;
-    public rowClasses = {
-        activeRow: this.evenCondition,
-    };
 
     constructor(private cdr: ChangeDetectorRef) {
         this.sizes = [
@@ -158,10 +149,6 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     }
 
     public testApis() {}
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
-    }
 
     public cellClick($evt: IGridCellEventArgs) {
         console.log('Cell Click', $evt);

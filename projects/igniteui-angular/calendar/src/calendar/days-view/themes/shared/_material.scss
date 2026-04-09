@@ -1,0 +1,48 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-days-row, material) {
+    &:nth-child(2) {
+        @include e(day, $m: week-number) {
+            border-start-start-radius: var-get($_theme, 'week-number-border-radius');
+            border-start-end-radius: var-get($_theme, 'week-number-border-radius');
+        }
+    }
+}
+
+@include themed-block(igx-day-item, material) {
+    @include mx('selected', 'first', 'last') {
+        @include e(inner) {
+            &::after {
+                width: var(--_date-inner-size);
+                height: var(--_date-inner-size);
+            }
+        }
+    }
+}
+
+@include themed-block(igx-day-label, material) {
+    $date-view-row-gap: rem(4px);
+
+    @include m(week-number) {
+        span {
+            color: var-get($_theme, 'week-number-foreground');
+            background: var-get($_theme, 'week-number-background');
+
+            &::before {
+                content: '';
+                position: absolute;
+                background: var-get($_theme, 'week-number-background');
+                border-inline: rem(1px) solid var-get($_theme, 'week-number-background');
+                inset-block-start: 100%;
+                height: calc($date-view-row-gap + rem(2px));
+                width: var(--_date-size);
+            }
+        }
+    }
+}

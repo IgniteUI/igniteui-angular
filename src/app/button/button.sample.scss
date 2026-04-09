@@ -1,14 +1,18 @@
-.columns-container{
-    margin: 24px 16px;
-}
+:host {
+	display: flex;
+	flex-wrap: wrap;
+	gap: calc(var(--demos-gap) * 3);
+	padding: var(--content-spacing);
+	justify-content: center;
+	text-align: center;
 
-.title, .buttons-sample {
-    columns: 2 1vw;
-    justify-items: center;
-}
-
-.custom-controls {
-    display: grid;
-    row-gap: 1rem;
+	.button-demo {
+		min-width: 200px;
+	}
+	
+	.button-demo__title {
+		font-size: 1.2rem;
+		margin-block-end: 0.5rem;
+	}
 }
 

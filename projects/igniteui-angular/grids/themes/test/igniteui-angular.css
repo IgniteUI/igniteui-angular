@@ -1,0 +1,5077 @@
+igx-grid,
+igx-hierarchical-grid,
+igx-tree-grid,
+igx-pivot-grid,
+igx-advanced-filtering-dialog,
+igx-grid-excel-style-filtering,
+.igx-excel-filter__secondary {
+  --grid-elevation: var(--igx-grid-grid-elevation, var(--ig-elevation-2));
+  --drag-elevation: var(--igx-grid-drag-elevation, var(--ig-elevation-5));
+  --grouparea-color: var(--igx-grid-grouparea-color, var(--ig-gray-500));
+  --grouparea-background: var(
+    --igx-grid-grouparea-background,
+    var(--ig-gray-100)
+  );
+  --drop-area-text-color: var(
+    --igx-grid-drop-area-text-color,
+    var(--ig-gray-700)
+  );
+  --drop-area-icon-color: var(
+    --igx-grid-drop-area-icon-color,
+    var(--ig-gray-500)
+  );
+  --drop-area-background: var(
+    --igx-grid-drop-area-background,
+    var(--ig-gray-200)
+  );
+  --drop-area-on-drop-background: var(
+    --igx-grid-drop-area-on-drop-background,
+    var(--ig-gray-200)
+  );
+  --header-background: var(--igx-grid-header-background, var(--ig-gray-100));
+  --sortable-header-icon-hover-color: var(
+    --igx-grid-sortable-header-icon-hover-color,
+    var(--ig-secondary-500)
+  );
+  --sorted-header-icon-color: var(
+    --igx-grid-sorted-header-icon-color,
+    var(--ig-secondary-500)
+  );
+  --header-border-width: var(--igx-grid-header-border-width, 1px);
+  --header-border-style: var(--igx-grid-header-border-style, solid);
+  --header-border-color: var(
+    --igx-grid-header-border-color,
+    hsl(from var(--ig-gray-400) h s l/0.38)
+  );
+  --ghost-header-background: var(
+    --igx-grid-ghost-header-background,
+    var(--ig-gray-50)
+  );
+  --ghost-header-text-color: var(
+    --igx-grid-ghost-header-text-color,
+    var(--ig-gray-700)
+  );
+  --ghost-header-icon-color: var(
+    --igx-grid-ghost-header-icon-color,
+    var(--ig-gray-600)
+  );
+  --excel-filtering-header-foreground: var(
+    --igx-grid-excel-filtering-header-foreground,
+    var(--ig-gray-700)
+  );
+  --excel-filtering-subheader-foreground: var(
+    --igx-grid-excel-filtering-subheader-foreground,
+    var(--ig-gray-700)
+  );
+  --excel-filtering-actions-foreground: var(
+    --igx-grid-excel-filtering-actions-foreground,
+    var(--ig-gray-700)
+  );
+  --excel-filtering-actions-hover-foreground: var(
+    --igx-grid-excel-filtering-actions-hover-foreground,
+    var(--ig-gray-700)
+  );
+  --excel-filtering-actions-disabled-foreground: var(
+    --igx-grid-excel-filtering-actions-disabled-foreground,
+    var(--ig-gray-400)
+  );
+  --grid-border-color: var(--igx-grid-grid-border-color, transparent);
+  --content-background: var(--igx-grid-content-background, var(--ig-gray-50));
+  --content-text-color: var(--igx-grid-content-text-color, var(--ig-gray-800));
+  --row-odd-background: var(--igx-grid-row-odd-background, var(--ig-gray-50));
+  --row-even-background: var(--igx-grid-row-even-background, var(--ig-gray-50));
+  --row-odd-text-color: var(--igx-grid-row-odd-text-color, inherit);
+  --row-even-text-color: var(--igx-grid-row-even-text-color, inherit);
+  --tree-selected-filtered-row-text-color: var(
+    --igx-grid-tree-selected-filtered-row-text-color,
+    var(--ig-secondary-300)
+  );
+  --row-selected-text-color: var(
+    --igx-grid-row-selected-text-color,
+    var(--ig-secondary-50-contrast)
+  );
+  --row-hover-background: var(
+    --igx-grid-row-hover-background,
+    var(--ig-gray-200)
+  );
+  --row-hover-text-color: var(
+    --igx-grid-row-hover-text-color,
+    var(--ig-gray-200-contrast)
+  );
+  --row-border-color: var(
+    --igx-grid-row-border-color,
+    hsl(from var(--ig-gray-300) h s l/0.38)
+  );
+  --row-drag-color: var(--igx-grid-row-drag-color, var(--ig-gray-200));
+  --pinned-border-width: var(--igx-grid-pinned-border-width, 2px);
+  --pinned-border-style: var(--igx-grid-pinned-border-style, solid);
+  --pinned-border-color: var(
+    --igx-grid-pinned-border-color,
+    var(--ig-gray-400)
+  );
+  --cell-active-border-color: var(
+    --igx-grid-cell-active-border-color,
+    var(--ig-secondary-500)
+  );
+  --cell-selected-background: var(
+    --igx-grid-cell-selected-background,
+    var(--ig-gray-200)
+  );
+  --tree-selected-filtered-cell-text-color: var(
+    --igx-grid-tree-selected-filtered-cell-text-color,
+    var(--ig-secondary-500)
+  );
+  --cell-selected-text-color: var(
+    --igx-grid-cell-selected-text-color,
+    var(--ig-gray-200-contrast)
+  );
+  --cell-editing-background: var(
+    --igx-grid-cell-editing-background,
+    var(--ig-gray-50)
+  );
+  --cell-editing-foreground: var(
+    --igx-grid-cell-editing-foreground,
+    var(--ig-gray-900)
+  );
+  --cell-editing-focus-foreground: var(
+    --igx-grid-cell-editing-focus-foreground,
+    var(--ig-gray-900)
+  );
+  --edit-mode-color: var(--igx-grid-edit-mode-color, var(--ig-secondary-500));
+  --edited-row-indicator: var(
+    --igx-grid-edited-row-indicator,
+    var(--ig-gray-400)
+  );
+  --cell-new-color: var(--igx-grid-cell-new-color, inherit);
+  --cell-edited-value-color: var(
+    --igx-grid-cell-edited-value-color,
+    var(--ig-gray-600)
+  );
+  --cell-disabled-color: var(
+    --igx-grid-cell-disabled-color,
+    var(--ig-gray-500)
+  );
+  --resize-line-color: var(
+    --igx-grid-resize-line-color,
+    var(--ig-secondary-500)
+  );
+  --drop-indicator-color: var(
+    --igx-grid-drop-indicator-color,
+    var(--ig-secondary-500)
+  );
+  --group-label-column-name-text: var(
+    --igx-grid-group-label-column-name-text,
+    var(--ig-primary-500)
+  );
+  --group-label-icon: var(--igx-grid-group-label-icon, var(--ig-primary-500));
+  --group-label-text: var(--igx-grid-group-label-text, var(--ig-gray-800));
+  --expand-all-icon-color: var(
+    --igx-grid-expand-all-icon-color,
+    var(--ig-gray-600)
+  );
+  --expand-all-icon-hover-color: var(
+    --igx-grid-expand-all-icon-hover-color,
+    var(--ig-gray-800)
+  );
+  --expand-icon-color: var(--igx-grid-expand-icon-color, var(--ig-gray-600));
+  --expand-icon-hover-color: var(
+    --igx-grid-expand-icon-hover-color,
+    var(--ig-gray-700)
+  );
+  --active-expand-icon-color: var(
+    --igx-grid-active-expand-icon-color,
+    var(--ig-gray-500)
+  );
+  --active-expand-icon-hover-color: var(
+    --igx-grid-active-expand-icon-hover-color,
+    var(--ig-primary-500)
+  );
+  --group-count-background: var(
+    --igx-grid-group-count-background,
+    var(--ig-gray-200)
+  );
+  --group-count-text-color: var(
+    --igx-grid-group-count-text-color,
+    var(--ig-gray-600)
+  );
+  --group-row-background: var(
+    --igx-grid-group-row-background,
+    var(--ig-gray-100)
+  );
+  --group-row-selected-background: var(
+    --igx-grid-group-row-selected-background,
+    var(--ig-gray-200)
+  );
+  --filtering-header-background: var(
+    --igx-grid-filtering-header-background,
+    var(--ig-gray-50)
+  );
+  --filtering-header-text-color: var(
+    --igx-grid-filtering-header-text-color,
+    var(--ig-gray-800)
+  );
+  --filtering-row-background: var(
+    --igx-grid-filtering-row-background,
+    var(--ig-gray-50)
+  );
+  --filtering-row-text-color: var(
+    --igx-grid-filtering-row-text-color,
+    var(--ig-gray-800)
+  );
+  --tree-filtered-text-color: var(
+    --igx-grid-tree-filtered-text-color,
+    var(--ig-gray-500)
+  );
+  --row-highlight: var(--igx-grid-row-highlight, var(--ig-secondary-500));
+  --row-ghost-background: var(
+    --igx-grid-row-ghost-background,
+    var(--ig-primary-50)
+  );
+  --drop-area-border-radius: var(
+    --igx-grid-drop-area-border-radius,
+    clamp(0rem, calc(var(--ig-radius-factor, 1) * 1rem), 1rem)
+  );
+  --header-size: var(
+    --igx-grid-header-size,
+    max(
+      var(--is-large, 1) * max(3.125rem, -1 * 3.125rem),
+      var(--is-medium, 1) * max(2.5rem, -1 * 2.5rem),
+      var(--is-small, 1) * max(2rem, -1 * 2rem)
+    )
+  );
+  --drop-area-size: var(
+    --igx-grid-drop-area-size,
+    max(
+      var(--is-large, 1) * max(2rem, -1 * 2rem),
+      var(--is-medium, 1) * max(1.5rem, -1 * 1.5rem),
+      var(--is-small, 1) * max(1.5rem, -1 * 1.5rem)
+    )
+  );
+  --group-area-size: var(
+    --igx-grid-group-area-size,
+    max(
+      var(--is-large, 1) * max(3.5625rem, -1 * 3.5625rem),
+      var(--is-medium, 1) * max(3.0625rem, -1 * 3.0625rem),
+      var(--is-small, 1) * max(2.5625rem, -1 * 2.5625rem)
+    )
+  );
+  --summaries-patch-background: var(
+    --igx-grid-summaries-patch-background,
+    var(--ig-gray-300)
+  );
+  --header-text-color: var(
+    --igx-grid-header-text-color,
+    hsl(from var(--ig-gray-800) h s l/0.7)
+  );
+  --header-selected-background: var(
+    --igx-grid-header-selected-background,
+    var(--ig-secondary-100)
+  );
+  --header-selected-text-color: var(
+    --igx-grid-header-selected-text-color,
+    var(--ig-secondary-100-contrast)
+  );
+  --row-selected-background: var(
+    --igx-grid-row-selected-background,
+    var(--ig-secondary-50)
+  );
+  --cell-selected-within-background: var(
+    --igx-grid-cell-selected-within-background,
+    var(--ig-secondary-200)
+  );
+  --cell-selected-within-text-color: var(
+    --igx-grid-cell-selected-within-text-color,
+    var(--ig-secondary-200-contrast)
+  );
+  --row-selected-hover-background: var(
+    --igx-grid-row-selected-hover-background,
+    var(--ig-secondary-100)
+  );
+  --row-selected-hover-text-color: var(
+    --igx-grid-row-selected-hover-text-color,
+    var(--ig-secondary-100-contrast)
+  );
+  --grid-shadow: var(--igx-grid-grid-shadow, var(--ig-elevation-2));
+  --drag-shadow: var(--igx-grid-drag-shadow, var(--ig-elevation-5));
+  --ig-theme: material;
+}
+
+.igx-grid__filtering-row igx-input-group {
+  width: 100%;
+  max-width: 12.5rem;
+  min-width: 8.75rem;
+  border: 0.0625rem solid var(--ig-gray-300);
+  --size: calc(
+    max(
+        var(--is-large, 1) * max(3.125rem, -1 * 3.125rem),
+        var(--is-medium, 1) * max(2.5rem, -1 * 2.5rem),
+        var(--is-small, 1) * max(2rem, -1 * 2rem)
+      ) -
+      0.5rem
+  );
+}
+
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle,
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle-start,
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle-end,
+.igx-grid__filtering-row igx-input-group igx-prefix,
+.igx-grid__filtering-row igx-input-group igx-suffix {
+  background: rgba(0, 0, 0, 0);
+  border-radius: 0;
+}
+
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle:hover,
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle-start:hover,
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle-end:hover,
+.igx-grid__filtering-row igx-input-group igx-prefix:hover,
+.igx-grid__filtering-row igx-input-group igx-suffix:hover {
+  background: rgba(0, 0, 0, 0);
+}
+
+.igx-grid__filtering-row igx-input-group igx-prefix,
+.igx-grid__filtering-row igx-input-group igx-suffix {
+  height: 100% !important;
+  padding: 0
+    max(
+      var(--is-large, 1) * max(0.5rem, -1 * 0.5rem),
+      var(--is-medium, 1) * max(0.375rem, -1 * 0.375rem),
+      var(--is-small, 1) * max(0.25rem, -1 * 0.25rem)
+    );
+}
+
+.igx-grid__filtering-row igx-input-group .igx-input-group__input {
+  font-size: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem),
+    var(--is-medium, 1) * max(0.875rem, -1 * 0.875rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: 0;
+  padding-block: 0;
+  height: 100%;
+}
+
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle,
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle-start,
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle-end,
+.igx-grid__filtering-row igx-input-group .igx-input-group__input {
+  border: 0;
+}
+
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle:hover,
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle-start:hover,
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle-end:hover,
+.igx-grid__filtering-row igx-input-group .igx-input-group__input:hover {
+  border: 0;
+  box-shadow: none;
+}
+
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle::after {
+  display: none;
+}
+
+.igx-grid__filtering-row igx-input-group .igx-input-group__bundle-main {
+  padding-inline-start: 0;
+}
+
+.igx-grid__filtering-row igx-input-group {
+  color: var(--filtering-row-text-color);
+}
+
+.igx-grid__filtering-row igx-input-group:hover {
+  color: var(--filtering-row-text-color);
+  border-color: var(--ig-primary-500);
+}
+
+.igx-grid__filtering-row .igx-input-group--focused {
+  border-color: var(--ig-primary-500);
+  border-width: 0.0625rem;
+  color: var(--filtering-row-text-color);
+}
+
+.igx-grid__filtering-row .igx-input-group--focused .igx-input-group__bundle,
+.igx-grid__filtering-row
+  .igx-input-group--focused
+  .igx-input-group__bundle-start,
+.igx-grid__filtering-row .igx-input-group--focused .igx-input-group__bundle-end,
+.igx-grid__filtering-row .igx-input-group--focused .igx-input-group__input {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.igx-grid__filtering-row
+  .igx-input-group--focused
+  .igx-input-group__bundle-main,
+.igx-grid__filtering-row
+  .igx-input-group--focused
+  .igx-input-group__bundle-start,
+.igx-grid__filtering-row
+  .igx-input-group--focused
+  .igx-input-group__bundle-end {
+  margin: 0 !important;
+}
+
+.igx-grid__filtering-row .igx-input-group--focused .igx-input-group__bundle,
+.igx-grid__filtering-row
+  .igx-input-group--focused
+  .igx-input-group__bundle-start,
+.igx-grid__filtering-row .igx-input-group--focused .igx-input-group__bundle-end,
+.igx-grid__filtering-row .igx-input-group--focused igx-prefix,
+.igx-grid__filtering-row .igx-input-group--focused igx-suffix {
+  background: rgba(0, 0, 0, 0) !important;
+  border-radius: 0;
+}
+
+.igx-grid__filtering-row .igx-input-group__line {
+  display: none;
+}
+
+.igx-grid__filtering-row igx-prefix:focus {
+  color: var(--ig-secondary-500);
+}
+
+.igx-grid__filtering-row igx-suffix igx-icon {
+  outline-style: none;
+}
+
+.igx-grid__filtering-row igx-suffix igx-icon:focus {
+  color: var(--ig-secondary-500);
+}
+
+.igx-grid__filtering-row igx-suffix igx-icon + igx-icon {
+  margin-inline-start: 0.25rem;
+}
+
+igx-grid,
+igx-hierarchical-grid,
+igx-pivot-grid,
+igx-tree-grid {
+  --igx-chip-disabled-text-color: var(--ig-gray-500);
+  --igx-chip-disabled-background: var(--ig-gray-300);
+  --igx-chip-disabled-border-color: var(--ig-gray-300);
+}
+
+.igx-grid__tbody-content:focus,
+.igx-grid__tfoot:focus,
+.igx-grid-thead__wrapper:focus {
+  outline: 0;
+}
+
+.igx-grid {
+  --is-large: clamp(
+    0,
+    (var(--component-size, 1) + 1) - var(--ig-size-large, 3),
+    1
+  );
+  --is-medium: min(
+    clamp(0, (var(--component-size, 1) + 1) - var(--ig-size-medium, 2), 1),
+    clamp(0, var(--ig-size-large, 3) - var(--component-size, 1), 1)
+  );
+  --is-small: clamp(0, var(--ig-size-medium) - var(--component-size, 1), 1);
+  --component-size: var(--ig-size, var(--ig-size-large));
+  --grid-size: var(--component-size);
+}
+
+.igx-grid {
+  --header-size: max(
+    var(--is-large, 1) * max(3.125rem, -1 * 3.125rem),
+    var(--is-medium, 1) * max(2.5rem, -1 * 2.5rem),
+    var(--is-small, 1) * max(2rem, -1 * 2rem)
+  );
+  --grouparea-size: max(
+    var(--is-large, 1) * max(3.5625rem, -1 * 3.5625rem),
+    var(--is-medium, 1) * max(3.0625rem, -1 * 3.0625rem),
+    var(--is-small, 1) * max(2.5625rem, -1 * 2.5625rem)
+  );
+  --igx-tree-indent-size: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto auto;
+  grid-template-columns: 100%;
+  overflow: hidden;
+  box-shadow: var(--grid-shadow);
+  outline-style: none;
+  z-index: 1;
+}
+
+.igx-grid .igx-checkbox {
+  min-width: 1.25rem;
+}
+
+.igx-grid .igx-checkbox .igx-checkbox__composite-wrapper {
+  padding: 0;
+}
+
+.igx-grid .igx-checkbox .igx-checkbox__label {
+  margin-inline-start: 0.75rem;
+}
+
+.igx-grid .igx-checkbox .igx-checkbox__label--before {
+  margin-inline-end: 0.75rem;
+}
+
+.igx-grid .igx-checkbox .igx-checkbox__label--before:empty,
+.igx-grid .igx-checkbox .igx-checkbox__label:empty {
+  margin: 0;
+}
+
+.igx-grid__caption {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  line-height: 2rem;
+  padding: 1rem 1.5rem;
+  grid-row: 1;
+}
+
+.igx-grid-thead__wrapper,
+.igx-grid__tfoot {
+  position: relative;
+  display: flex;
+  background: var(--header-background);
+  color: var(--header-text-color);
+  overflow: hidden;
+  outline-style: none;
+}
+
+.igx-grid-thead__wrapper .igx-grid__tr,
+.igx-grid__tfoot .igx-grid__tr {
+  position: relative;
+  background: inherit;
+  color: inherit;
+  z-index: 2;
+}
+
+.igx-grid-thead__wrapper .igx-grid__tr:hover,
+.igx-grid__tfoot .igx-grid__tr:hover {
+  background: inherit;
+  color: inherit;
+}
+
+.igx-grid-thead__wrapper > [aria-activedescendant],
+.igx-grid__tfoot > [aria-activedescendant] {
+  outline-style: none;
+}
+
+.igx-grid-thead__wrapper {
+  border-bottom: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+  z-index: 2;
+}
+
+.igx-grid-thead__wrapper .igx-grid__cbx-selection--push {
+  align-items: flex-start;
+  padding-block-start: max(
+    var(--is-large, 1) * max(0.9375rem, -1 * 0.9375rem) *
+      var(--ig-spacing-block-large, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-medium, 1) * max(0.625rem, -1 * 0.625rem) *
+      var(--ig-spacing-block-medium, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.375rem, -1 * 0.375rem) *
+      var(--ig-spacing-block-small, var(--ig-spacing-block, var(--ig-spacing)))
+  );
+}
+
+.igx-grid-thead__wrapper .igx-grid__tr {
+  border-bottom: none;
+}
+
+.igx-grid-thead {
+  grid-row: 3;
+  display: flex;
+  overflow: hidden;
+}
+
+.igx-grid-thead .igx-grid__header-indentation igx-icon {
+  --component-size: 3;
+}
+
+.igx-grid-thead .igx-grid__drag-indicator {
+  cursor: default;
+}
+
+.igx-grid-thead .igx-grid__tr--mrl .igx-grid__hierarchical-expander--header,
+.igx-grid-thead .igx-grid__tr--mrl .igx-grid__hierarchical-expander,
+.igx-grid-thead .igx-grid__tr--mrl .igx-grid__hierarchical-expander--empty,
+.igx-grid-thead .igx-grid__tr--mrl .igx-grid__header-indentation,
+.igx-grid-thead .igx-grid__tr--mrl .igx-grid__row-indentation,
+.igx-grid-thead .igx-grid__tr--mrl .igx-grid__cbx-selection {
+  border-bottom: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+}
+
+.igx-grid-thead:focus-visible {
+  outline-color: rgba(0, 0, 0, 0);
+}
+
+.igx-grid-thead__title {
+  flex-basis: auto !important;
+  align-items: center !important;
+  border-bottom: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+  height: var(--header-size);
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block: 0;
+}
+
+.igx-grid-thead__title--pinned-last {
+  border-inline-end: var(--pinned-border-width) var(--pinned-border-style)
+    var(--pinned-border-color) !important;
+}
+
+.igx-grid-thead__group {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.igx-grid-thead__item {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.igx-grid-thead__item .igx-grid-thead__group {
+  flex: 1 1 auto;
+}
+
+.igx-grid-thead__item .igx-grid-thead__title,
+.igx-grid-thead__item .igx-grid-th {
+  flex: 1 1 auto;
+}
+
+.igx-grid-thead__item .igx-grid-thead__title {
+  flex: 0 0 auto;
+}
+
+.igx-grid-thead__item,
+.igx-grid-thead__subgroup {
+  position: relative;
+}
+
+.igx-grid__tfoot {
+  grid-row: 5;
+  border-top: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+  z-index: 10001;
+}
+
+.igx-grid__footer {
+  grid-row: 7;
+}
+
+.igx-grid-thead__wrapper igx-display-container {
+  width: 100%;
+  overflow: visible;
+}
+
+.igx-grid__tr igx-display-container,
+.igx-grid__summaries igx-display-container,
+.igx-grid__summaries--body igx-display-container {
+  width: 100%;
+  overflow: visible;
+  flex: 1;
+  min-width: 0;
+}
+
+.igx-grid__mrl-block {
+  display: grid;
+  background: inherit;
+  position: relative;
+}
+
+.igx-grid__mrl-block .igx-grid-thead__item {
+  display: flex;
+}
+
+.igx-grid__mrl-block .igx-grid-thead__title,
+.igx-grid__mrl-block .igx-grid-th {
+  align-items: center;
+  flex-grow: 1;
+  border-bottom: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+}
+
+.igx-grid__mrl-block .igx-grid__td,
+.igx-grid__mrl-block .igx-grid-thead__title,
+.igx-grid__mrl-block .igx-grid-th {
+  border-inline-end: 0.0625rem solid var(--header-border-color);
+  border-bottom: 0.0625rem solid var(--header-border-color);
+}
+
+.igx-grid__tr--mrl.igx-grid__tr {
+  border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.igx-grid__tr--mrl .igx-grid__cbx-selection,
+.igx-grid__tr--mrl .igx-grid__hierarchical-expander,
+.igx-grid__tr--mrl .igx-grid__hierarchical-expander--empty,
+.igx-grid__tr--mrl .igx-grid__row-indentation,
+.igx-grid__tr--mrl .igx-grid__drag-indicator {
+  border-bottom: 0.0625rem solid var(--row-border-color);
+}
+
+.igx-grid__tbody-content {
+  position: relative;
+  background: var(--content-background);
+  color: var(--content-text-color);
+  overflow: hidden;
+  z-index: 1;
+  outline-style: none;
+}
+
+.igx-grid__tbody {
+  position: relative;
+  display: flex;
+  grid-row: 4;
+  overflow: hidden;
+}
+
+.igx-grid__tbody-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: var(--content-text-color);
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.igx-grid__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 6.25rem;
+}
+
+.igx-grid__scroll {
+  grid-row: 6;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  background: var(--header-background);
+  z-index: 10001;
+}
+
+.igx-grid-thead__thumb {
+  background: var(--header-background);
+  border-inline-start: 0.0625rem solid var(--header-border-color);
+}
+
+.igx-grid__tfoot-thumb {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  background: var(--header-background);
+  border-inline-start: 0.0625rem solid var(--header-border-color);
+}
+
+.igx-grid__tbody-scrollbar {
+  background: var(--content-background);
+  border-inline-start: 0.0625rem solid var(--row-border-color);
+  position: relative;
+}
+
+.igx-grid__tbody-scrollbar-start {
+  background: var(--header-background);
+}
+
+.igx-grid__tbody-scrollbar-main {
+  position: relative;
+}
+
+.igx-grid__tbody-scrollbar-end {
+  background: var(--header-background);
+}
+
+.igx-grid__scroll-start {
+  background: var(--header-background);
+}
+
+.igx-grid__scroll-main igx-display-container {
+  height: 0;
+}
+
+.igx-grid__scroll-main igx-horizontal-virtual-helper {
+  height: 100%;
+}
+
+.igx-grid__tr {
+  display: flex;
+  background: var(--content-background);
+  border-bottom: 0.0625rem solid var(--row-border-color);
+  outline-style: none;
+  position: relative;
+  background-clip: content-box !important;
+}
+
+.igx-grid__tr:hover {
+  background: var(--row-hover-background);
+  color: var(--row-hover-text-color);
+}
+
+.igx-grid__tr:hover .igx-grid__td--column-selected {
+  color: var(--row-selected-hover-text-color);
+  background: var(--row-selected-hover-background);
+}
+
+.igx-grid__tr:hover .igx-grid__td--selected.igx-grid__td--column-selected {
+  color: var(--cell-selected-within-text-color);
+  background: var(--cell-selected-within-background);
+}
+
+.igx-grid__tr.igx-grid__tr--ghost {
+  background: var(--row-ghost-background);
+  color: var(--row-drag-color);
+  z-index: 10002;
+}
+
+.igx-grid__tr.igx-grid__tr--ghost,
+.igx-grid__tr.igx-grid__tr--ghost igx-grid-row {
+  --row-ghost-background: var(
+    --igx-grid-row-row-ghost-background,
+    var(--ig-primary-50)
+  );
+  --row-drag-color: var(--igx-grid-row-row-drag-color,);
+}
+
+.igx-grid__drag-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  min-height: max(
+    var(--is-large, 1) * max(3.125rem, -1 * 3.125rem),
+    var(--is-medium, 1) * max(2.5rem, -1 * 2.5rem),
+    var(--is-small, 1) * max(2rem, -1 * 2rem)
+  );
+  padding-block: 0;
+  flex: 0 0 auto;
+  background: inherit;
+  z-index: 4;
+  cursor: move;
+  border-inline-end: 0.0625rem solid rgba(0, 0, 0, 0);
+  background-clip: border-box;
+}
+
+.igx-grid__drag-indicator igx-icon {
+  --component-size: 3;
+}
+
+.igx-grid__drag-indicator--header {
+  border-inline-end: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+}
+
+.igx-grid__drag-indicator--off {
+  color: var(--row-drag-color);
+}
+
+.igx-grid__tr--drag {
+  opacity: 0.5;
+}
+
+.igx-grid__tr--odd {
+  background: var(--row-odd-background);
+  color: var(--row-odd-text-color);
+}
+
+.igx-grid__tr--even {
+  background: var(--row-even-background);
+  color: var(--row-even-text-color);
+}
+
+.igx-grid__tr--expanded {
+  border-bottom: none;
+}
+
+.igx-grid__tr--pinned {
+  position: relative;
+  background: inherit;
+  z-index: 10000;
+}
+
+.igx-grid__tr--pinned .igx-grid__hierarchical-expander--empty {
+  border-inline-end: 0.0625rem solid var(--header-border-color);
+}
+
+.igx-grid__tr--pinned-top {
+  border-bottom: var(--pinned-border-width) var(--pinned-border-style)
+    var(--pinned-border-color) !important;
+}
+
+.igx-grid__tr--pinned-bottom {
+  border-top: var(--pinned-border-width) var(--pinned-border-style)
+    var(--pinned-border-color) !important;
+  position: absolute;
+  bottom: 0;
+}
+
+.igx-grid__td--bool,
+.igx-grid__td--image {
+  justify-content: center;
+}
+
+.igx-grid__td--bool {
+  display: flex;
+  flex-grow: 1;
+}
+
+.igx-grid__td--bool igx-icon {
+  --component-size: 1;
+}
+
+.igx-grid__td--bool .igx-icon--error {
+  color: var(--ig-gray-500);
+}
+
+.igx-grid__td--bool-true .igx-icon--success {
+  color: var(--ig-gray-700);
+}
+
+.igx-grid__tr--edit {
+  border-bottom: 0.0625rem solid var(--edit-mode-color);
+  position: relative;
+}
+
+.igx-grid__tr--edit::after {
+  content: '';
+  position: absolute;
+  height: 0.0625rem;
+  width: 100%;
+  top: -0.0625rem;
+  inset-inline-start: 0;
+  background: var(--edit-mode-color);
+}
+
+.igx-grid__tr--edit.igx-grid__tr {
+  border-bottom: 0.0625rem solid var(--edit-mode-color);
+}
+
+.igx-grid__tr--edit .igx-grid__td--editing {
+  border: none;
+}
+
+.igx-grid__tr--edit
+  .igx-grid__td--editing
+  .igx-input-group--focused
+  .igx-input-group__bundle,
+.igx-input-group--focused
+  .igx-grid__tr--edit
+  .igx-grid__td--editing
+  .igx-input-group__bundle {
+  caret-color: var(--edit-mode-color) !important;
+}
+
+.igx-grid__tr--edit [aria-readonly='true'] {
+  color: var(--cell-disabled-color);
+}
+
+.igx-grid__tr--edit [aria-readonly='true'] igx-icon {
+  color: var(--cell-disabled-color);
+}
+
+.igx-grid__tr--inner {
+  display: flex;
+  background: inherit;
+}
+
+.igx-grid__tr--header {
+  display: flex;
+  align-items: center;
+}
+
+.igx-grid__tr--header igx-icon {
+  --component-size: 3;
+}
+
+.igx-grid__tr--add-animate {
+  animation: scale-in-ver-center 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.igx-grid__tr--mrl.igx-grid__tr--edit:first-of-type::after {
+  top: 0;
+  z-index: 5;
+}
+
+.igx-grid__tr--edited::before {
+  content: '';
+  position: absolute;
+  width: 0.125rem;
+  height: 100%;
+  z-index: 10000;
+  background: var(--edited-row-indicator);
+}
+
+.igx-grid__tr--group {
+  position: relative;
+  background: var(--header-background) !important;
+}
+
+.igx-grid__tr--filtered .igx-grid__td-text {
+  color: var(--tree-filtered-text-color);
+}
+
+.igx-grid__tr--filtered .igx-grid__tree-grouping-indicator {
+  color: var(--tree-filtered-text-color);
+}
+
+.igx-grid__tr--filtered .igx-grid__tree-grouping-indicator:hover {
+  color: var(--tree-filtered-text-color);
+}
+
+.igx-grid__tr--filtered .igx-grid__td--selected .igx-grid__td-text {
+  color: var(--tree-selected-filtered-cell-text-color);
+}
+
+.igx-grid__tr--filtered
+  .igx-grid__td--selected
+  .igx-grid__tree-grouping-indicator {
+  color: var(--tree-selected-filtered-cell-text-color);
+}
+
+.igx-grid__tr--filtered
+  .igx-grid__td--selected
+  .igx-grid__tree-grouping-indicator:hover {
+  color: var(--tree-selected-filtered-cell-text-color);
+}
+
+.igx-grid__tr--selected.igx-grid__tr--filtered .igx-grid__td-text {
+  color: var(--tree-selected-filtered-row-text-color);
+}
+
+.igx-grid__tr--selected.igx-grid__tr--filtered
+  .igx-grid__tree-grouping-indicator {
+  color: var(--tree-selected-filtered-row-text-color);
+}
+
+.igx-grid__tr--selected.igx-grid__tr--filtered
+  .igx-grid__tree-grouping-indicator:hover {
+  color: var(--tree-selected-filtered-row-text-color);
+}
+
+.igx-grid__tr--selected.igx-grid__tr--filtered
+  .igx-grid__td--selected
+  .igx-grid__td-text {
+  color: var(--tree-selected-filtered-cell-text-color);
+}
+
+.igx-grid__tr--selected.igx-grid__tr--filtered
+  .igx-grid__td--selected
+  .igx-grid__tree-grouping-indicator {
+  color: var(--tree-selected-filtered-cell-text-color);
+}
+
+.igx-grid__tr--selected.igx-grid__tr--filtered
+  .igx-grid__td--selected
+  .igx-grid__tree-grouping-indicator:hover {
+  color: var(--tree-selected-filtered-cell-text-color);
+}
+
+.igx-grid__tree-grouping-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  outline-style: none;
+  margin-inline-end: 0.5rem;
+  cursor: pointer;
+  color: var(--expand-icon-color);
+}
+
+.igx-grid__tree-grouping-indicator:hover {
+  color: var(--expand-icon-hover-color);
+}
+
+[dir='rtl'] .igx-grid__tree-grouping-indicator {
+  transform: scaleX(-1);
+}
+
+.igx-grid__tree-grouping-indicator igx-icon {
+  --component-size: 3;
+}
+
+.igx-grid__tree-loading-indicator {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-inline-end: 0.5rem;
+}
+
+.igx-grid__td,
+.igx-grid-thead__title,
+.igx-grid-th {
+  position: relative;
+  display: flex;
+  flex: 1 1 0%;
+  align-items: center;
+  outline-style: none;
+  padding-inline: max( var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block: 0;
+  color: inherit;
+  text-align: start;
+  background-clip: border-box !important;
+  font-size: 0.8125rem;
+  line-height: 1rem;
+  min-height: max(
+    var(--is-large, 1) * max(3.125rem, -1 * 3.125rem),
+    var(--is-medium, 1) * max(2.5rem, -1 * 2.5rem),
+    var(--is-small, 1) * max(2rem, -1 * 2rem)
+  );
+}
+
+.igx-grid__td-text {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.igx-grid__td--fw,
+.igx-grid-th--fw {
+  flex-grow: 0;
+  outline-style: none;
+}
+
+.igx-grid__tr-container--active,
+.igx-grid__group-row--active,
+.igx-grid-summary--active,
+.igx-grid-th--active .igx-grid-th--selected,
+.igx-grid-th--active .igx-grid-th--selectable,
+.igx-grid-th--active,
+.igx-grid__td--active {
+  box-shadow: inset 0 0 0 0.0625rem var(--cell-active-border-color);
+}
+
+.igx-grid__tr-container--active > .igx-grid__filtering-cell,
+.igx-grid__group-row--active > .igx-grid__filtering-cell,
+.igx-grid-summary--active > .igx-grid__filtering-cell,
+.igx-grid-th--active .igx-grid-th--selected > .igx-grid__filtering-cell,
+.igx-grid-th--active .igx-grid-th--selectable > .igx-grid__filtering-cell,
+.igx-grid-th--active > .igx-grid__filtering-cell,
+.igx-grid__td--active > .igx-grid__filtering-cell,
+.igx-grid__tr-container--active > .igx-grid__filtering-cell--selected,
+.igx-grid__group-row--active > .igx-grid__filtering-cell--selected,
+.igx-grid-summary--active > .igx-grid__filtering-cell--selected,
+.igx-grid-th--active .igx-grid-th--selected > .igx-grid__filtering-cell--selected,
+.igx-grid-th--active .igx-grid-th--selectable > .igx-grid__filtering-cell--selected,
+.igx-grid-th--active > .igx-grid__filtering-cell--selected,
+.igx-grid__td--active > .igx-grid__filtering-cell--selected,
+.igx-grid__tr-container--active > .igx-grid-thead__title,
+.igx-grid__group-row--active > .igx-grid-thead__title,
+.igx-grid-summary--active > .igx-grid-thead__title,
+.igx-grid-th--active .igx-grid-th--selected > .igx-grid-thead__title,
+.igx-grid-th--active .igx-grid-th--selectable > .igx-grid-thead__title,
+.igx-grid-th--active > .igx-grid-thead__title,
+.igx-grid__td--active > .igx-grid-thead__title,
+.igx-grid__tr-container--active > .igx-grid-th,
+.igx-grid__group-row--active > .igx-grid-th,
+.igx-grid-summary--active > .igx-grid-th,
+.igx-grid-th--active .igx-grid-th--selected > .igx-grid-th,
+.igx-grid-th--active .igx-grid-th--selectable > .igx-grid-th,
+.igx-grid-th--active > .igx-grid-th,
+.igx-grid__td--active > .igx-grid-th {
+  border-inline-end-color: var(--cell-active-border-color);
+  border-bottom-color: var(--cell-active-border-color);
+}
+
+.igx-grid__td--invalid {
+  padding-inline-end: 0.25rem !important;
+}
+
+.igx-grid__td--invalid > igx-icon {
+  color: var(--ig-error-500);
+  width: var(--igx-icon-size, 1.125rem);
+  height: var(--igx-icon-size, 1.125rem);
+  font-size: var(--igx-icon-size, 1.125rem);
+}
+
+.igx-grid__td--invalid .igx-grid__td-text {
+  width: 100%;
+}
+
+.igx-grid__td--invalid .igx-input-group__bundle:focus-within::after {
+  border: none !important;
+}
+
+.igx-grid__td--valid {
+  box-shadow: inset 0 0 0 0.125rem var(--ig-success-500) !important;
+}
+
+.igx-grid__td--pinned.igx-grid__td--selected,
+.igx-grid__td--selected {
+  color: var(--cell-selected-text-color);
+  background: var(--cell-selected-background);
+}
+
+.igx-grid__td--selected .igx-grid__tree-grouping-indicator:hover {
+  color: var(--cell-selected-text-color);
+}
+
+.igx-grid__tr--selected {
+  color: var(--row-selected-text-color);
+  background: var(--row-selected-background);
+}
+
+.igx-grid__tr--selected .igx-grid__td--selected {
+  color: var(--cell-selected-within-text-color);
+  background: var(--cell-selected-within-background);
+}
+
+.igx-grid__tr--selected:hover {
+  background: var(--row-selected-hover-background);
+  color: var(--row-selected-hover-text-color);
+}
+
+.igx-grid__tr--selected:hover .igx-grid__td--column-selected {
+  color: var(--row-selected-hover-text-color);
+  background: var(--row-selected-hover-background);
+}
+
+.igx-grid__tr--selected .igx-grid__tree-grouping-indicator {
+  color: var(--row-selected-text-color);
+}
+
+.igx-grid__tr--selected .igx-grid__tree-grouping-indicator:hover {
+  color: var(--row-selected-text-color);
+}
+
+.igx-grid__td--column-selected {
+  color: var(--row-selected-text-color);
+  background: var(--row-selected-background);
+}
+
+.igx-grid__td--selected.igx-grid__td--column-selected {
+  color: var(--cell-selected-within-text-color);
+  background: var(--cell-selected-within-background);
+}
+
+.igx-grid__td--new {
+  color: var(--cell-new-color);
+}
+
+.igx-grid__td--edited .igx-grid__td-text {
+  font-style: italic;
+  color: var(--cell-edited-value-color);
+  padding: 0 0.0625rem;
+}
+
+.igx-grid__tr--merged {
+  border-block-end: 0;
+}
+
+.igx-grid__tr--merged-top {
+  position: absolute;
+  width: 100%;
+}
+
+.igx-grid__td--merged {
+  z-index: 1;
+  grid-row: 1/-1;
+}
+
+.igx-grid__td--merged-selected {
+  color: var(--row-selected-text-color);
+  background: var(--row-selected-background) !important;
+}
+
+.igx-grid__td--merged-hovered {
+  background: var(--row-hover-background) !important;
+  color: var(--row-hover-text-color);
+}
+
+.igx-grid__td--merged-selected.igx-grid__td--merged-hovered {
+  background: var(--row-selected-hover-background) !important;
+  color: var(--row-selected-hover-text-color);
+}
+
+.igx-grid__tr--deleted .igx-grid__td-text {
+  font-style: italic;
+  color: var(--ig-error-500);
+  text-decoration: line-through;
+}
+
+.igx-grid__tr--disabled .igx-grid__td-text {
+  color: var(--cell-disabled-color);
+}
+
+.igx-grid__td--invalid.igx-grid__td--editing {
+  box-shadow: inset 0 0 0 0.125rem var(--ig-error-500) !important;
+}
+
+.igx-grid__td--editing.igx-grid__td--number,
+.igx-grid__td--editing.igx-grid-th--number {
+  justify-content: flex-start !important;
+}
+
+.igx-grid__td--pinned,
+.igx-grid__td--pinned-last,
+.igx-grid__td--pinned-first,
+.igx-grid-th--pinned {
+  position: relative;
+  background: inherit;
+  z-index: 9999;
+}
+
+.igx-grid__td--pinned.igx-grid__td--column-selected {
+  color: var(--row-selected-text-color);
+  background: var(--row-selected-background);
+}
+
+.igx-grid__td--pinned.igx-grid__td--column-selected:hover {
+  background: var(--row-selected-hover-background);
+  color: var(--row-selected-text-color);
+}
+
+.igx-grid__td--pinned-last,
+.igx-grid-th--pinned-last {
+  border-inline-end: var(--pinned-border-width) var(--pinned-border-style)
+    var(--pinned-border-color) !important;
+}
+
+.igx-grid__td--pinned-last .igx-grid__filtering-cell,
+.igx-grid-th--pinned-last .igx-grid__filtering-cell,
+.igx-grid__td--pinned-last .igx-grid__filtering-cell--selected,
+.igx-grid-th--pinned-last .igx-grid__filtering-cell--selected,
+.igx-grid__td--pinned-last .igx-grid-thead__title,
+.igx-grid-th--pinned-last .igx-grid-thead__title,
+.igx-grid__td--pinned-last .igx-grid-th,
+.igx-grid-th--pinned-last .igx-grid-th {
+  border-inline-end: none;
+}
+
+.igx-grid__td--pinned-first,
+.igx-grid-th--pinned-first {
+  border-inline-start: var(--pinned-border-width) var(--pinned-border-style)
+    var(--pinned-border-color) !important;
+}
+
+.igx-grid__td--row-pinned-first {
+  overflow: hidden;
+}
+
+.igx-grid__td--pinned-chip {
+  margin-inline-end: max(
+    var(--is-large, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid-thead__title,
+.igx-grid-th {
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  min-width: 0;
+  padding-block: 0;
+  border-inline-end: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+  min-height: var(--header-size);
+  outline-style: none;
+  overflow: hidden;
+  transition: color 250ms ease-in-out;
+}
+
+.igx-grid-th--filtering {
+  background: var(--filtering-header-background);
+  color: var(--filtering-header-text-color);
+  z-index: 3;
+}
+
+.igx-grid-th__title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: 600;
+  min-width: 3ch;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: initial;
+  flex-grow: 1;
+  line-height: var(--header-size);
+  transition: color 250ms ease-in-out;
+}
+
+.igx-grid-th__icons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  min-width: 1.875rem;
+  height: var(--header-size);
+  align-self: flex-end;
+}
+
+.igx-grid-th__icons:empty {
+  min-width: 0;
+}
+
+.igx-grid-th__icons .sort-icon {
+  position: relative;
+  display: flex;
+}
+
+.igx-grid-th__icons .sort-icon igx-icon {
+  --size: var(--igx-icon-size, 0.9375rem);
+}
+
+.igx-grid-th__icons .sort-icon::after {
+  content: attr(data-sortIndex);
+  position: absolute;
+  top: -0.3125rem;
+  inset-inline-end: -0.0625rem;
+  font-size: 0.625rem;
+  text-align: end;
+  font-family: sans-serif;
+  line-height: 0.625rem;
+}
+
+.igx-grid-th__expander {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-end: 0.5rem;
+  cursor: pointer;
+}
+
+.igx-grid-th__expander igx-icon {
+  color: var(--expand-icon-color);
+}
+
+.igx-grid-th__expander:hover igx-icon {
+  color: var(--expand-icon-hover-color);
+}
+
+.igx-grid-th__group-title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.igx-grid-th--collapsible {
+  justify-content: normal;
+}
+
+.igx-grid-th--selectable {
+  opacity: 0.75;
+}
+
+.igx-grid-th--selectable.igx-grid__drag-ghost-image {
+  opacity: 1;
+}
+
+.igx-grid-th--selectable .sort-icon {
+  color: var(--header-selected-text-color);
+}
+
+.igx-grid-th--selectable .sort-icon ::after {
+  background: var(--header-selected-background);
+}
+
+.igx-grid-th--selected .sort-icon::after {
+  background: var(--header-selected-background);
+}
+
+.igx-grid-th--selectable,
+.igx-grid-th--selected {
+  color: var(--header-selected-text-color);
+  background: var(--header-selected-background);
+}
+
+.igx-grid-th--selectable.igx-grid-th--sorted .sort-icon,
+.igx-grid-th--selected.igx-grid-th--sorted .sort-icon {
+  color: var(--header-selected-text-color);
+}
+
+.igx-grid-th--selectable.igx-grid-th--sorted .sort-icon > igx-icon,
+.igx-grid-th--selected.igx-grid-th--sorted .sort-icon > igx-icon {
+  color: inherit;
+}
+
+.igx-grid-th--selectable.igx-grid-th--sorted .sort-icon:focus,
+.igx-grid-th--selectable.igx-grid-th--sorted .sort-icon:hover,
+.igx-grid-th--selected.igx-grid-th--sorted .sort-icon:focus,
+.igx-grid-th--selected.igx-grid-th--sorted .sort-icon:hover {
+  color: var(--header-selected-text-color);
+}
+
+.igx-grid-th--selectable.igx-grid-th--sorted .sort-icon:focus > igx-icon,
+.igx-grid-th--selectable.igx-grid-th--sorted .sort-icon:hover > igx-icon,
+.igx-grid-th--selected.igx-grid-th--sorted .sort-icon:focus > igx-icon,
+.igx-grid-th--selected.igx-grid-th--sorted .sort-icon:hover > igx-icon {
+  color: inherit;
+}
+
+.igx-grid-th--sortable .sort-icon {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.igx-grid-th--sortable .sort-icon:hover {
+  opacity: 1;
+}
+
+.igx-grid-th--sorted .sort-icon {
+  opacity: 1;
+  color: var(--sorted-header-icon-color);
+}
+
+.igx-grid-th--sorted .sort-icon > igx-icon {
+  color: inherit;
+}
+
+.igx-grid-th--sorted .sort-icon:hover {
+  color: var(--sortable-header-icon-hover-color);
+}
+
+.igx-grid-th--sorted .sort-icon:hover > igx-icon {
+  color: inherit;
+}
+
+.igx-grid-th--filtrable .igx-grid-th__title {
+  opacity: 0.7;
+}
+
+.igx-grid-th--filtrable.igx-grid-th--sortable .sort-icon {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.igx-grid-th--filtrable.igx-grid-th--sortable .sort-icon:hover {
+  opacity: 1;
+}
+
+.igx-excel-filter__icon--filtered,
+.igx-excel-filter__icon,
+.sort-icon {
+  transition: all 250ms ease-in-out;
+}
+
+.igx-grid__td--number,
+.igx-grid-th--number {
+  text-align: end;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.igx-grid__td--number .igx-grid-th__icons,
+.igx-grid-th--number .igx-grid-th__icons {
+  justify-content: flex-start;
+  order: -1;
+}
+
+.igx-grid__td--number .igx-grid-th__icons .sort-icon,
+.igx-grid-th--number .igx-grid-th__icons .sort-icon {
+  order: 1;
+}
+
+.igx-grid__cbx-selection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: inherit;
+  z-index: 4;
+  background-clip: border-box;
+}
+
+.igx-grid__cbx-padding {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid-th__resize-handle {
+  position: absolute;
+  width: 0.25rem;
+  top: 0;
+  inset-inline-end: -0.125rem;
+  height: 100%;
+  z-index: 2;
+}
+
+.igx-grid-th__resize-line {
+  position: absolute;
+  cursor: col-resize;
+  width: 0.25rem;
+  background: var(--resize-line-color);
+  z-index: 2;
+}
+
+.igx-grid-th__resize-line::before,
+.igx-grid-th__resize-line::after {
+  position: absolute;
+  content: '';
+  height: 100%;
+  width: 6rem;
+}
+
+.igx-grid-th__resize-line::before {
+  inset-inline-end: 100%;
+}
+
+.igx-grid-th__resize-line::after {
+  inset-inline-start: 100%;
+}
+
+.igx-grid__summaries,
+.igx-grid__summaries--body {
+  display: flex;
+  overflow: hidden;
+  outline-style: none;
+  background-color: var(--summaries-patch-background);
+}
+
+.igx-grid__summaries--body {
+  --summaries-patch-background: var(--ig-gray-100);
+  border-bottom: 0.0625rem dashed var(--row-border-color);
+  background-color: var(--summaries-patch-background);
+}
+
+.igx-grid__summaries--body:last-of-type {
+  border-bottom: none;
+}
+
+.igx-grid__summaries--body .igx-grid-summary {
+  --background-color: inherit;
+  --result-color: hsla(
+    from color(from var(--background-color) var(--y-contrast)) h 0 l/1
+  );
+}
+
+.igx-grid__summaries-patch {
+  position: relative;
+  background: inherit;
+  border-inline-end: 0.0625rem solid var(--header-border-color);
+  z-index: 1;
+}
+
+.igx-grid-th__drop-indicator-left,
+.igx-grid-th__drop-indicator-right {
+  position: absolute;
+  width: 0.0625rem;
+  height: 100%;
+  top: 0;
+  z-index: 1;
+}
+
+.igx-grid-th__drop-indicator-left {
+  inset-inline-start: -0.0625rem;
+}
+
+.igx-grid-th__drop-indicator-right {
+  inset-inline-end: -0.0625rem;
+}
+
+.igx-grid-th__drop-indicator--active.igx-grid-th__drop-indicator-left,
+.igx-grid-th__drop-indicator--active.igx-grid-th__drop-indicator-right {
+  border-inline-end: 0.0625rem solid var(--drop-indicator-color);
+}
+
+.igx-grid-th__drop-indicator--active::after,
+.igx-grid-th__drop-indicator--active::before {
+  position: absolute;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  inset-inline-start: -0.1875rem;
+}
+
+.igx-grid-th__drop-indicator--active::before {
+  bottom: 0;
+  border-width: 0 0.25rem 0.25rem;
+  border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) var(--drop-indicator-color);
+}
+
+.igx-grid-th__drop-indicator--active::after {
+  top: 0;
+  border-width: 0.25rem 0.25rem 0;
+  border-color: var(--drop-indicator-color) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+}
+
+.igx-grid__scroll-on-drag-left,
+.igx-grid__scroll-on-drag-right {
+  position: absolute;
+  width: 0.9375rem;
+  top: 0;
+  height: 100%;
+  z-index: 25;
+}
+
+.igx-grid__scroll-on-drag-left {
+  inset-inline-start: 0;
+}
+
+.igx-grid__scroll-on-drag-right {
+  inset-inline-end: 0;
+}
+
+.igx-grid__scroll-on-drag-pinned {
+  position: absolute;
+  width: 0.9375rem;
+  height: 100%;
+  top: 0;
+  z-index: 25;
+}
+
+.igx-grid__drag-ghost-image {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  background: var(--ghost-header-background);
+  color: var(--ghost-header-text-color);
+  min-width: 10.5rem;
+  max-width: 20rem;
+  height: var(--header-size);
+  min-height: var(--header-size);
+  top: -6249.9375rem;
+  inset-inline-start: -6249.9375rem;
+  border: none;
+  box-shadow: var(--drag-shadow);
+  overflow: hidden;
+  z-index: 20;
+}
+
+.igx-grid__drag-ghost-image .igx-grid-th__title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex: 1 0 0;
+  text-align: end;
+}
+
+.igx-grid__drag-ghost-image .igx-grid-th__icons {
+  display: none;
+}
+
+.igx-grid__drag-ghost-image .igx-grid-thead__title {
+  border: none;
+}
+
+.igx-grid__drag-ghost-image-icon {
+  color: var(--ghost-header-icon-color);
+  margin-inline-end: 0.75rem;
+}
+
+.igx-grid__drag-ghost-image-icon-group {
+  color: var(--ghost-header-icon-color);
+  padding: 1.5rem;
+  padding-inline-end: 0;
+  margin-inline-end: 0.5rem;
+}
+
+.igx-grid__drag-col-header {
+  background: var(--header-background);
+}
+
+.igx-grid__drag-col-header .igx-grid-thead__title > *,
+.igx-grid__drag-col-header .igx-grid-th > * {
+  opacity: 0.4;
+}
+
+.igx-grid__group-row {
+  background: var(--group-row-background);
+  display: flex;
+  outline-style: none;
+  border-bottom: 0.0625rem solid var(--row-border-color);
+  min-height: var(--header-size);
+}
+
+.igx-grid__group-row .igx-grid__drag-indicator {
+  cursor: default;
+  flex-grow: 0;
+}
+
+.igx-grid__group-row .igx-grid__cbx-selection {
+  background: initial;
+}
+
+.igx-grid__group-row--active {
+  background: var(--group-row-selected-background);
+}
+
+.igx-grid__group-row--active .igx-grid__grouping-indicator {
+  color: var(--expand-icon-color);
+}
+
+.igx-grid__group-row--active .igx-grid__drag-indicator {
+  border: 0.0625rem solid var(--cell-active-border-color);
+  border-inline-start-width: 0;
+  border-inline-end-width: 0;
+  box-shadow: inset 0.0625rem 0 0 0 var(--cell-active-border-color);
+}
+
+.igx-grid__group-row--active:hover {
+  background: var(--group-row-selected-background);
+}
+
+.igx-group-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  line-height: 1rem;
+  gap: 0.25rem;
+}
+
+igx-icon.igx-group-label__icon {
+  --component-size: 1;
+  color: var(--group-label-icon);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.igx-group-label__column-name {
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--group-label-column-name-text);
+}
+
+.igx-group-label__count-badge {
+  --background-color: var(--group-count-background);
+  --text-color: var(--group-count-text-color);
+}
+
+.igx-group-label__count-badge > span {
+  font-size: 0.75rem;
+}
+
+.igx-group-label__text {
+  font-size: 0.8125rem;
+  color: var(--group-label-text);
+}
+
+[dir='rtl'] .igx-group-label > * {
+  margin-inline-start: 0.25rem;
+}
+
+[dir='rtl'] .igx-group-label > *:last-child {
+  margin-inline-start: 0;
+}
+
+.igx-grid__group-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1 1 auto;
+  padding-inline-start: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  min-height: max(
+    var(--is-large, 1) * max(3.125rem, -1 * 3.125rem),
+    var(--is-medium, 1) * max(2.5rem, -1 * 2.5rem),
+    var(--is-small, 1) * max(2rem, -1 * 2rem)
+  );
+}
+
+.igx-grid__group-content:focus {
+  outline: rgba(0, 0, 0, 0);
+}
+
+.igx-grid__row-indentation {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-inline-start: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-inline-end: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  border-inline-end: 0.0625rem solid var(--header-border-color);
+  background: inherit;
+  z-index: 1;
+  background-clip: border-box;
+}
+
+.igx-grid__row-indentation::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 0.0625rem;
+  bottom: -0.0625rem;
+  inset-inline-start: 0;
+  background: rgba(0, 0, 0, 0);
+}
+
+.igx-grid__row-indentation .igx-icon-button {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--expand-all-icon-color);
+}
+
+.igx-grid__row-indentation:focus .igx-icon-button,
+.igx-grid__row-indentation:hover .igx-icon-button {
+  color: var(--expand-all-icon-hover-color);
+}
+
+.igx-grid-grouparea {
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  border-bottom: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+  background: var(--grouparea-background);
+  color: var(--grouparea-color);
+  min-height: var(--grouparea-size);
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block: 0;
+  z-index: 2;
+  height: 100%;
+  overflow: hidden;
+}
+
+.igx-grid-grouparea:focus {
+  outline-style: none;
+}
+
+.igx-grid-grouparea .igx-chip {
+  margin-block: max(
+    var(--is-large, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-block-large, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-block-medium, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(--ig-spacing-block-small, var(--ig-spacing-block, var(--ig-spacing)))
+  );
+}
+
+.igx-grid-grouparea__connector {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0.25rem;
+}
+
+.igx-grid-grouparea__connector igx-icon {
+  width: var(--igx-icon-size, 1rem);
+  height: var(--igx-icon-size, 1rem);
+  font-size: var(--igx-icon-size, 1rem);
+}
+
+[dir='rtl'] .igx-grid-grouparea__connector {
+  transform: scaleX(-1);
+}
+
+.igx-drop-area {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 5rem;
+  height: max(
+    var(--is-large, 1) * max(2rem, -1 * 2rem),
+    var(--is-medium, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-small, 1) * max(1.5rem, -1 * 1.5rem)
+  );
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block: 0;
+  flex: 1 0 0%;
+  background: var(--drop-area-background);
+  border-radius: var(--drop-area-border-radius);
+}
+
+.igx-drop-area .igx-drop-area__icon {
+  color: var(--drop-area-icon-color);
+  width: 1rem;
+  height: 1rem;
+  font-size: 1rem;
+  margin-inline-end: 0.5rem;
+}
+
+.igx-drop-area--hover {
+  background: var(--drop-area-on-drop-background);
+}
+
+.igx-drop-area__text {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: var(--drop-area-text-color);
+  font-size: 0.8125rem;
+}
+
+.igx-grid__grouping-indicator {
+  position: relative;
+  display: flex;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  cursor: pointer;
+  padding-inline-end: 0.75rem;
+  margin-inline-start: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  min-height: var(--header-size);
+}
+
+.igx-grid__grouping-indicator igx-icon {
+  --component-size: 3;
+  color: var(--expand-icon-color);
+}
+
+.igx-grid__grouping-indicator:hover,
+.igx-grid__grouping-indicator:focus {
+  outline-style: none;
+}
+
+.igx-grid__grouping-indicator:hover igx-icon,
+.igx-grid__grouping-indicator:focus igx-icon {
+  color: var(--expand-icon-hover-color);
+}
+
+[dir='rtl'] .igx-grid__grouping-indicator {
+  transform: scaleX(-1);
+}
+
+.igx-grid__header-indentation {
+  position: relative;
+  padding-inline-end: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  border-inline-end: 0.0625rem solid var(--header-border-color);
+  background: var(--header-background);
+  z-index: 4;
+}
+
+.igx-grid__header-indentation igx-icon {
+  --component-size: 3;
+}
+
+.igx-grid__group-expand-btn {
+  position: absolute;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  inset-block-start: calc(50% - 1.5rem / 2);
+  inset-inline-start: var(--indicator-inline-inset);
+}
+
+.igx-grid__group-expand-btn:hover {
+  color: var(--expand-icon-hover-color);
+}
+
+.igx-grid__group-expand-btn.igx-grid__group-expand-btn--push {
+  inset-block-start: max(
+    var(--is-large, 1) * max(0.8125rem, -1 * 0.8125rem),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem)
+  );
+}
+
+.igx-grid__row-indentation--level-1 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) *
+      max(calc(1.5rem + 1.5rem), -1 * calc(1.5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(1rem + 1.5rem), -1 * calc(1rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(0.75rem + 1.5rem), -1 * calc(0.75rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-1 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__row-indentation--level-2 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) * max(calc(3rem + 1.5rem), -1 * calc(3rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(2rem + 1.5rem), -1 * calc(2rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(1.5rem + 1.5rem), -1 * calc(1.5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-2 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(3rem, -1 * 3rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(2rem, -1 * 2rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__row-indentation--level-3 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) *
+      max(calc(4.5rem + 1.5rem), -1 * calc(4.5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(3rem + 1.5rem), -1 * calc(3rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(2.25rem + 1.5rem), -1 * calc(2.25rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-3 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(4.5rem, -1 * 4.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(3rem, -1 * 3rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(2.25rem, -1 * 2.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__row-indentation--level-4 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) * max(calc(6rem + 1.5rem), -1 * calc(6rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(4rem + 1.5rem), -1 * calc(4rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(calc(3rem + 1.5rem), -1 * calc(3rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-4 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(6rem, -1 * 6rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(4rem, -1 * 4rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(3rem, -1 * 3rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__row-indentation--level-5 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) *
+      max(calc(7.5rem + 1.5rem), -1 * calc(7.5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(5rem + 1.5rem), -1 * calc(5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(3.75rem + 1.5rem), -1 * calc(3.75rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-5 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(7.5rem, -1 * 7.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(5rem, -1 * 5rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(3.75rem, -1 * 3.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__row-indentation--level-6 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) * max(calc(9rem + 1.5rem), -1 * calc(9rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(6rem + 1.5rem), -1 * calc(6rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(4.5rem + 1.5rem), -1 * calc(4.5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-6 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(9rem, -1 * 9rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(6rem, -1 * 6rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(4.5rem, -1 * 4.5rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__row-indentation--level-7 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) *
+      max(calc(10.5rem + 1.5rem), -1 * calc(10.5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(7rem + 1.5rem), -1 * calc(7rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(5.25rem + 1.5rem), -1 * calc(5.25rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-7 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(10.5rem, -1 * 10.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(7rem, -1 * 7rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(5.25rem, -1 * 5.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__row-indentation--level-8 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) * max(calc(12rem + 1.5rem), -1 * calc(12rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(8rem + 1.5rem), -1 * calc(8rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(calc(6rem + 1.5rem), -1 * calc(6rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-8 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(12rem, -1 * 12rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(8rem, -1 * 8rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(6rem, -1 * 6rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__row-indentation--level-9 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) *
+      max(calc(13.5rem + 1.5rem), -1 * calc(13.5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(9rem + 1.5rem), -1 * calc(9rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(6.75rem + 1.5rem), -1 * calc(6.75rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-9 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(13.5rem, -1 * 13.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(9rem, -1 * 9rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(6.75rem, -1 * 6.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__row-indentation--level-10 {
+  --indicator-inline-inset: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  padding-inline-start: max(
+    var(--is-large, 1) * max(calc(15rem + 1.5rem), -1 * calc(15rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(10rem + 1.5rem), -1 * calc(10rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(7.5rem + 1.5rem), -1 * calc(7.5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__group-row--padding-level-10 .igx-grid__grouping-indicator {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(15rem, -1 * 15rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(10rem, -1 * 10rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(7.5rem, -1 * 7.5rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__outlet {
+  --ig-size: var(--grid-size);
+  z-index: 10002;
+  position: fixed;
+}
+
+.igx-grid__loading-outlet {
+  z-index: 10003;
+}
+
+.igx-grid__loading-outlet > .igx-overlay__wrapper--modal {
+  background: none;
+}
+
+.igx-grid__row-editing-outlet {
+  z-index: 10000;
+  position: absolute;
+}
+
+.igx-grid__row-editing-outlet .igx-overlay__wrapper,
+.igx-grid__row-editing-outlet .igx-overlay__wrapper--modal,
+.igx-grid__row-editing-outlet .igx-overlay__wrapper--flex,
+.igx-grid__row-editing-outlet .igx-overlay__wrapper--flex-container {
+  position: absolute;
+}
+
+.igx-grid__addrow-snackbar {
+  position: absolute;
+  z-index: 5;
+  bottom: 1.5rem;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+}
+
+.igx-grid__filtering-cell,
+.igx-grid__filtering-cell--selected {
+  display: flex;
+  align-items: center;
+  border-inline-end: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+  border-top: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+  height: var(--header-size);
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block: 0;
+  overflow: hidden;
+}
+
+.igx-grid__filtering-cell igx-chips-area,
+.igx-grid__filtering-cell--selected igx-chips-area {
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-wrap: nowrap;
+}
+
+.igx-grid__filtering-cell igx-chips-area .igx-filtering-chips__connector,
+.igx-grid__filtering-cell--selected
+  igx-chips-area
+  .igx-filtering-chips__connector {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin: 0 0.5rem;
+}
+
+.igx-grid__filtering-cell--selected {
+  color: var(--header-selected-text-color);
+  background: var(--header-selected-background);
+}
+
+.igx-grid__filtering-cell-indicator,
+.igx-grid__filtering-cell-indicator--hidden {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline-end: 0.5rem;
+  margin-inline-start: 0.5rem;
+  cursor: pointer;
+  visibility: visible;
+}
+
+.igx-grid__filtering-cell-indicator igx-icon,
+.igx-grid__filtering-cell-indicator--hidden igx-icon {
+  --component-size: 1;
+}
+
+.igx-grid__filtering-cell-indicator .igx-badge,
+.igx-grid__filtering-cell-indicator--hidden .igx-badge {
+  --size: 0.875rem;
+  --font-size: 0.75rem;
+  line-height: 0;
+  position: absolute;
+  inset-inline-end: 0;
+}
+
+.igx-grid__filtering-cell-indicator--hidden {
+  visibility: hidden;
+}
+
+.igx-grid__filtering-row {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: max(
+    var(--is-large, 1) * max(3.125rem, -1 * 3.125rem),
+    var(--is-medium, 1) * max(2.5rem, -1 * 2.5rem),
+    var(--is-small, 1) * max(2rem, -1 * 2rem)
+  );
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  align-items: center;
+  justify-content: space-between;
+  background: var(--filtering-row-background);
+  color: var(--filtering-row-text-color);
+  inset-inline-start: 0;
+  bottom: 0;
+  z-index: 3;
+}
+
+.igx-grid__filtering-row::after {
+  display: block;
+  position: absolute;
+  content: '';
+  background: inherit;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  top: 0;
+  bottom: 0;
+  box-shadow:
+    0 0.0625rem 0 var(--filtering-row-background),
+    0 0.25rem 0.625rem rgba(0, 0, 0, 0.12);
+  z-index: -1;
+}
+
+.igx-grid__filtering-row igx-input-group {
+  --ig-size: var(--grid-size) !important;
+}
+
+.igx-grid__filtering-row [igxIconButton] {
+  --ig-size: 1;
+}
+
+.igx-grid__filtering-dropdown-items {
+  display: flex;
+  align-items: center;
+}
+
+.igx-grid__filtering-dropdown-text {
+  margin-inline-start: 1rem;
+}
+
+.igx-grid__filtering-row-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  max-width: calc(100% - 176px);
+  min-width: 3.5rem;
+}
+
+.igx-grid__filtering-row-main igx-chips-area {
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-wrap: nowrap;
+  margin-inline: 0.5rem;
+  gap: 0.25rem;
+}
+
+.igx-grid__filtering-row-main igx-chip {
+  margin: 0 0.25rem;
+}
+
+.igx-grid__filtering-row-main [igxButton] igx-icon {
+  position: absolute;
+  inset-inline-start: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.igx-grid__filtering-row-main [igxButton] span {
+  margin-inline-start: 1rem;
+}
+
+.igx-grid__filtering-row-scroll-start::after {
+  display: block;
+  position: absolute;
+  width: 0.625rem;
+  content: '';
+  inset-block: -0.125rem;
+  background: linear-gradient(
+    to right,
+    var(--filtering-row-background),
+    transparent
+  );
+  inset-inline-start: calc(100% + 6px);
+}
+
+[dir='rtl'] .igx-grid__filtering-row-scroll-start::before {
+  display: block;
+  position: absolute;
+  width: 0.625rem;
+  content: '';
+  inset-block: -0.125rem;
+  background: linear-gradient(
+    to right,
+    var(--filtering-row-background),
+    transparent
+  );
+  inset-inline-end: calc(100% + 6px);
+}
+
+.igx-grid__filtering-row-scroll-end::before {
+  display: block;
+  position: absolute;
+  width: 0.625rem;
+  content: '';
+  inset-block: -0.125rem;
+  background: linear-gradient(
+    to left,
+    var(--filtering-row-background),
+    transparent
+  );
+  inset-inline-end: calc(100% + 6px);
+}
+
+[dir='rtl'] .igx-grid__filtering-row-scroll-end::after {
+  display: block;
+  position: absolute;
+  width: 0.625rem;
+  content: '';
+  inset-block: -0.125rem;
+  background: linear-gradient(
+    to left,
+    var(--filtering-row-background),
+    transparent
+  );
+  inset-inline-start: calc(100% + 6px);
+}
+
+.igx-grid__filtering-row-scroll-start,
+.igx-grid__filtering-row-scroll-end {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: relative;
+  overflow: visible;
+  margin: 0.5rem;
+  z-index: 1;
+}
+
+[dir='rtl'] .igx-grid__filtering-row-scroll-start,
+[dir='rtl'] .igx-grid__filtering-row-scroll-end {
+  transform: scaleX(-1);
+}
+
+[dir='rtl'] .igx-grid__filtering-row-scroll-start::after,
+[dir='rtl'] .igx-grid__filtering-row-scroll-end::after {
+  content: initial;
+}
+
+.igx-grid__tr--highlighted {
+  position: relative;
+}
+
+.igx-grid__tr--highlighted::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  width: 0.25rem;
+  height: 100%;
+  background: var(--row-highlight);
+  z-index: 3;
+}
+
+.igx-grid__tr--highlighted .igx-grid__tr--edited::before {
+  inset-inline-start: 0.25rem;
+}
+
+.igx-grid__tr--highlighted::before {
+  inset-inline-start: 0.25rem;
+}
+
+.igx-grid__tr-container {
+  overflow: auto;
+  width: 100%;
+  border-bottom: 0.0625rem solid var(--row-border-color);
+}
+
+.igx-grid__hierarchical-expander,
+.igx-grid__hierarchical-expander--empty {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  background: inherit;
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  color: var(--expand-icon-color);
+  background-clip: border-box;
+}
+
+.igx-grid__hierarchical-expander:focus,
+.igx-grid__hierarchical-expander--empty:focus {
+  outline: none;
+}
+
+.igx-grid__hierarchical-expander:focus igx-icon,
+.igx-grid__hierarchical-expander--empty:focus igx-icon {
+  color: var(--expand-icon-hover-color);
+}
+
+.igx-grid__hierarchical-expander:hover igx-icon,
+.igx-grid__hierarchical-expander--empty:hover igx-icon {
+  color: var(--expand-icon-hover-color);
+}
+
+.igx-grid__hierarchical-expander igx-icon,
+.igx-grid__hierarchical-expander--empty igx-icon {
+  --component-size: 3;
+  color: var(--expand-icon-color);
+  max-width: 1.5rem;
+  min-width: min-content;
+}
+
+[dir='rtl'] .igx-grid__hierarchical-expander,
+[dir='rtl'] .igx-grid__hierarchical-expander--empty {
+  transform: scaleX(-1);
+}
+
+.igx-grid__hierarchical-expander--empty {
+  cursor: default;
+  pointer-events: none;
+}
+
+.igx-grid__hierarchical-expander--header {
+  background: inherit;
+  border-inline-end: 0.0625rem solid var(--header-border-color);
+  z-index: 3;
+  background-clip: border-box;
+}
+
+.igx-grid__hierarchical-expander--header igx-icon {
+  display: flex;
+  align-items: center;
+}
+
+.igx-grid__hierarchical-expander--push {
+  align-items: flex-start;
+}
+
+.igx-grid__hierarchical-expander--push igx-icon {
+  min-height: var(--header-size);
+  max-height: var(--header-size);
+}
+
+.igx-grid__header-indentation--no-border {
+  border-inline-end: 0.0625rem solid rgba(0, 0, 0, 0);
+}
+
+.igx-grid__hierarchical-indent {
+  display: flex;
+  margin-inline-start: max(
+    var(--is-large, 1) *
+      max(calc(2 * 1.5rem + 1.5rem), -1 * calc(2 * 1.5rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) *
+      max(calc(2 * 1rem + 1.5rem), -1 * calc(2 * 1rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(2 * 0.75rem + 1.5rem), -1 * calc(2 * 0.75rem + 1.5rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  margin-inline-end: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  margin-block: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(--ig-spacing-block-large, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(--ig-spacing-block-medium, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(--ig-spacing-block-small, var(--ig-spacing-block, var(--ig-spacing)))
+  );
+}
+
+.igx-grid__hierarchical-indent--scroll {
+  margin-inline-end: max(
+    var(--is-large, 1) * max(calc(1.5rem + 18px), -1 * calc(1.5rem + 18px)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(calc(1rem + 18px), -1 * calc(1rem + 18px)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(calc(0.75rem + 18px), -1 * calc(0.75rem + 18px)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__tr-action:last-of-type {
+  border-inline-end: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+  min-height: max(
+    var(--is-large, 1) * max(3.125rem, -1 * 3.125rem),
+    var(--is-medium, 1) * max(2.5rem, -1 * 2.5rem),
+    var(--is-small, 1) * max(2rem, -1 * 2rem)
+  );
+}
+
+igx-child-grid-row igx-child-grid-row .igx-grid__tr-action {
+  border-inline-end: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+}
+
+.igx-grid__pivot--super-compact {
+  --ig-size: 1 !important;
+}
+
+.igx-grid__pivot--super-compact .igx-grid__td,
+.igx-grid__pivot--super-compact .igx-grid-thead__title,
+.igx-grid__pivot--super-compact .igx-grid-th {
+  padding: 0 0.25rem !important;
+  min-height: 1.5rem !important;
+  height: 1.5rem;
+}
+
+.igx-grid__pivot--super-compact .igx-grid-thead__title > *,
+.igx-grid__pivot--super-compact .igx-grid-th > * {
+  line-height: normal;
+  align-self: initial;
+  max-height: 100%;
+}
+
+.igx-grid__pivot--super-compact .igx-grid__tr-pivot--row-area {
+  padding-bottom: 0.25rem;
+}
+
+.igx-grid-thead--pivot {
+  display: flex;
+}
+
+.igx-grid-thead--pivot .igx-grid-thead--virtualizationWrapper {
+  border-inline-start: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+}
+
+.igx-grid-thead--virtualizationWrapper {
+  height: 100%;
+}
+
+.igx-grid-thead--virtualizationContainer {
+  overflow: visible;
+  height: 100%;
+}
+
+.igx-grid__tr-pivot {
+  display: flex;
+  align-items: center;
+  background: inherit;
+  overflow: hidden;
+  z-index: 3;
+  height: var(--header-size);
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block: 0;
+  background-clip: border-box !important;
+  border-inline-start: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+  border-bottom: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+}
+
+.igx-grid__tr-pivot igx-chips-area {
+  flex-wrap: nowrap;
+  width: auto;
+}
+
+.igx-grid__tr-pivot igx-chips-area > * {
+  margin-inline-end: 0.25rem;
+}
+
+.igx-grid__tr-pivot igx-chips-area:last-child {
+  margin-inline-end: 0;
+}
+
+.igx-grid__pivot-filter-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.igx-grid__pivot-filter-toggle > igx-badge {
+  position: absolute;
+  top: -0.25rem;
+  inset-inline-start: 60%;
+  width: 1.125rem;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  font-size: 0.625rem;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.igx-grid__pivot-empty-chip-area {
+  line-height: normal;
+  font-size: 0.875rem;
+  margin-inline-end: 0 !important;
+}
+
+.igx-grid__tr-pivot--row-area {
+  height: auto !important;
+  align-items: flex-end;
+  padding-bottom: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(--ig-spacing-block-large, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(--ig-spacing-block-medium, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(--ig-spacing-block-small, var(--ig-spacing-block, var(--ig-spacing)))
+  );
+  border-inline-start: 0;
+  border-bottom: 0;
+}
+
+.igx-grid__tr-pivot--filter-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.igx-grid__tr-pivot--chip_drop_indicator {
+  width: 0.125rem;
+  background: var(--resize-line-color);
+  visibility: hidden;
+}
+
+.igx-grid__tr-pivot--drop-row-area {
+  flex-grow: 1;
+}
+
+.igx-grid__tr-pivot--filter {
+  height: var(--header-size);
+  border-inline-start: 0;
+  border-inline-end: 0;
+  border-bottom: var(--header-border-width) var(--header-border-style)
+    var(--header-border-color);
+}
+
+.igx-grid-thead__wrapper--pivot {
+  border-bottom: 0;
+}
+
+.igx-grid__tr-pivot-group {
+  flex: 1;
+}
+
+.igx-grid__tr-pivot-toggle-icons {
+  display: inline-flex !important;
+}
+
+.igx-grid__tr-pivot--columnDimensionLeaf {
+  box-shadow: none;
+}
+
+.igx-grid__tr-pivot--columnDimensionLeaf igx-grid-header {
+  border: none;
+}
+
+.igx-grid__tr-pivot--columnMultiRowSpan igx-grid-header > * {
+  visibility: hidden;
+}
+
+.igx-grid__tr-header-row
+  igx-pivot-row-dimension-header-group
+  igx-pivot-row-dimension-header {
+  align-items: center;
+}
+
+.igx-grid__tr-header-row igx-pivot-row-header-group {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-grid__tr-header-row
+  igx-pivot-row-header-group
+  igx-pivot-row-dimension-header {
+  align-items: center;
+}
+
+.igx-grid__tr-header-row
+  igx-pivot-row-header-group
+  igx-pivot-row-dimension-header
+  .igx-grid-th__icons {
+  padding-inline-end: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  align-self: center;
+}
+
+.igx-grid__tr-header-row
+  igx-pivot-row-header-group:last-of-type
+  igx-pivot-row-dimension-header {
+  border-inline-end: 0;
+}
+
+.igx-pivot-grid-row-filler__wrapper .igx-grid-thead__wrapper {
+  height: 100%;
+  border-bottom: initial;
+}
+
+.igx-pivot-grid-row-filler__wrapper .igx-grid-thead__wrapper .igx-grid-th {
+  height: 100%;
+}
+
+.igx-grid__tbody-pivot-mrl-dimension .igx-grid-th {
+  border-bottom: none;
+}
+
+/* Excel Style Filter Component Styles */
+.igx-excel-filter {
+  --component-size: var(--ig-size, var(--ig-size-large));
+  display: block;
+  width: 20rem;
+  height: 100%;
+  flex-grow: 1;
+  box-shadow: var(--ig-elevation-12);
+  overflow: auto;
+  min-width: 20rem;
+}
+
+.igx-excel-filter__sizing {
+  --is-large: clamp(
+    0,
+    (var(--component-size, 1) + 1) - var(--ig-size-large, 3),
+    1
+  );
+  --is-medium: min(
+    clamp(0, (var(--component-size, 1) + 1) - var(--ig-size-medium, 2), 1),
+    clamp(0, var(--ig-size-large, 3) - var(--component-size, 1), 1)
+  );
+  --is-small: clamp(0, var(--ig-size-medium) - var(--component-size, 1), 1);
+  min-height: max(
+    var(--is-large, 1) * max(40.3125rem, -1 * 40.3125rem),
+    var(--is-medium, 1) * max(29.0625rem, -1 * 29.0625rem),
+    var(--is-small, 1) * max(20.625rem, -1 * 20.625rem)
+  );
+  max-height: max(
+    var(--is-large, 1) * max(48.4375rem, -1 * 48.4375rem),
+    var(--is-medium, 1) * max(35.3125rem, -1 * 35.3125rem),
+    var(--is-small, 1) * max(25.3125rem, -1 * 25.3125rem)
+  );
+}
+
+.igx-excel-filter--inline {
+  box-shadow: none;
+  width: 100%;
+}
+
+.igx-excel-filter__loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.igx-excel-filter__icon,
+.igx-excel-filter__icon--filtered {
+  display: flex;
+  cursor: pointer;
+}
+
+.igx-excel-filter__icon igx-icon,
+.igx-excel-filter__icon--filtered igx-icon {
+  --size: var(--igx-icon-size, 0.9375rem);
+}
+
+.igx-excel-filter__icon--filtered {
+  opacity: 1;
+}
+
+.igx-excel-filter__icon--filtered igx-icon {
+  color: var(--ig-secondary-500);
+}
+
+.igx-excel-filter__menu {
+  --is-large: clamp(
+    0,
+    (var(--component-size, 1) + 1) - var(--ig-size-large, 3),
+    1
+  );
+  --is-medium: min(
+    clamp(0, (var(--component-size, 1) + 1) - var(--ig-size-medium, 2), 1),
+    clamp(0, var(--ig-size-large, 3) - var(--component-size, 1), 1)
+  );
+  --is-small: clamp(0, var(--ig-size-medium) - var(--component-size, 1), 1);
+  --component-size: var(--ig-size, var(--ig-size-large));
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: clamp(
+    0rem,
+    calc(var(--ig-radius-factor, 1) * 0.25rem),
+    0.25rem
+  );
+  background: var(--filtering-row-background);
+}
+
+.igx-excel-filter__menu .igx-button-group {
+  --shadow: none;
+  --item-background: var(--filtering-row-background);
+  --item-hover-background: var(--ig-gray-100);
+  --item-selected-background: var(--ig-gray-100);
+  --item-text-color: var(--ig-gray-700);
+  --item-icon-color: var(--ig-gray-700);
+  --item-hover-text-color: var(--ig-gray-800);
+  --item-hover-icon-color: var(--ig-gray-800);
+  --item-selected-text-color: var(--ig-secondary-500);
+  --item-selected-icon-color: var(--ig-secondary-500);
+  --item-selected-hover-icon-color: var(--ig-gray-50-contrast);
+  --item-border-color: transparent;
+  --item-hover-border-color: transparent;
+  --item-focused-border-color: transparent;
+  --item-selected-border-color: transparent;
+  --item-selected-hover-border-color: transparent;
+  --item-disabled-border: transparent;
+  --disabled-selected-border-color: transparent;
+}
+
+.igx-excel-filter__menu,
+.igx-excel-filter__menu igx-tree-node,
+.igx-excel-filter__menu igx-tree-item {
+  --background: var(--igx-tree-background, var(--ig-surface-500));
+  --foreground: var(--igx-tree-foreground, var(--ig-surface-500-contrast));
+  --icon-color: var(--igx-tree-icon-color, var(--ig-surface-500-contrast));
+  --background-selected: var(
+    --igx-tree-background-selected,
+    var(--ig-surface-500)
+  );
+  --background-active: var(--igx-tree-background-active, var(--ig-surface-500));
+  --foreground-active: var(
+    --igx-tree-foreground-active,
+    var(--ig-surface-500-contrast)
+  );
+  --background-disabled: var(
+    --igx-tree-background-disabled,
+    color-mix(in hsl, var(--background), transparent 50%)
+  );
+  --foreground-disabled: var(
+    --igx-tree-foreground-disabled,
+    hsla(from color(from var(--background-disabled) var(--y-contrast)) h 0 l/1)
+  );
+  --drop-area-color: var(--igx-tree-drop-area-color, var(--ig-secondary-500));
+  --hover-color: var(
+    --igx-tree-hover-color,
+    hsla(
+      from hsla(from color(from var(--background) var(--y-contrast)) h 0 l/1) h
+        s l/0.1
+    )
+  );
+  --hover-selected-color: var(
+    --igx-tree-hover-selected-color,
+    lch(
+      from var(--background-selected)
+        calc(l + (50 - l) * 0.1 + sign(50 - l) * 5) c h
+    )
+  );
+  --size: var(
+    --igx-tree-size,
+    max(
+      var(--is-large, 1) * max(3.125rem, -1 * 3.125rem),
+      var(--is-medium, 1) * max(2.5rem, -1 * 2.5rem),
+      var(--is-small, 1) * max(2rem, -1 * 2rem)
+    )
+  );
+  --default-size: var(--igx-tree-default-size, 2);
+  --foreground-selected: var(
+    --igx-tree-foreground-selected,
+    var(--ig-surface-500-contrast)
+  );
+  --background-active-selected: var(
+    --igx-tree-background-active-selected,
+    var(--ig-surface-500)
+  );
+  --foreground-active-selected: var(
+    --igx-tree-foreground-active-selected,
+    var(--ig-surface-500-contrast)
+  );
+  --border-color: var(--igx-tree-border-color, var(--ig-secondary-500));
+  --ig-theme: material;
+}
+
+.igx-excel-filter__menu .igx-tree {
+  display: block;
+  z-index: 0;
+  overflow-y: auto;
+}
+
+.igx-excel-filter__menu .igx-tree-node,
+.igx-excel-filter__menu .igx-tree-node__wrapper,
+.igx-excel-filter__menu .igx-tree-node__toggle-button,
+.igx-excel-filter__menu .igx-tree-node__content,
+.igx-excel-filter__menu .igx-tree-node__select {
+  display: flex;
+}
+
+.igx-excel-filter__menu .igx-tree-node {
+  --is-large: clamp(
+    0,
+    (var(--component-size, 1) + 1) - var(--ig-size-large, 3),
+    1
+  );
+  --is-medium: min(
+    clamp(0, (var(--component-size, 1) + 1) - var(--ig-size-medium, 2), 1),
+    clamp(0, var(--ig-size-large, 3) - var(--component-size, 1), 1)
+  );
+  --is-small: clamp(0, var(--ig-size-medium) - var(--component-size, 1), 1);
+  --component-size: var(--ig-size, var(--default-size));
+  --tree-size: var(--component-size);
+  flex-direction: column;
+}
+
+.igx-excel-filter__menu .igx-tree-node .igx-checkbox__composite-wrapper {
+  padding: 0;
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper,
+.igx-excel-filter__menu .igx-tree-node__toggle-button,
+.igx-excel-filter__menu .igx-tree-node__select {
+  align-items: center;
+}
+
+.igx-excel-filter__menu .igx-tree-node__toggle-button,
+.igx-excel-filter__menu .igx-tree-node__select {
+  margin-inline-end: 0.25rem;
+}
+
+.igx-excel-filter__menu .igx-tree-node__select {
+  margin-inline: 0.625rem 0.875rem;
+}
+
+.igx-excel-filter__menu .igx-tree-node__content,
+.igx-excel-filter__menu .igx-tree-node__toggle-button,
+.igx-excel-filter__menu .igx-tree-node__select {
+  z-index: 1;
+}
+
+.igx-excel-filter__menu .igx-tree-node__toggle-button--hidden {
+  visibility: hidden;
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper {
+  min-height: var(--size);
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block: 0;
+  position: relative;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper igx-icon {
+  --component-size: 3;
+}
+
+[dir='rtl'] .igx-excel-filter__menu .igx-tree-node__wrapper igx-icon {
+  transform: scaleX(-1);
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+  z-index: 0;
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper:hover::after {
+  background: var(--hover-color);
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper:focus {
+  outline-width: 0;
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper igx-circular-bar {
+  --diameter: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(calc(1.5rem - 4px), -1 * calc(1.5rem - 4px)),
+    var(--is-small, 1) * max(calc(1.5rem - 6px), -1 * calc(1.5rem - 6px))
+  );
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper--selected {
+  background: var(--background-selected);
+  color: var(--foreground-selected);
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper--selected:hover::after {
+  background: var(--hover-selected-color);
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper--active {
+  background: var(--background-active);
+  color: var(--foreground-active);
+}
+
+.igx-excel-filter__menu
+  .igx-tree-node__wrapper--active.igx-tree-node__wrapper--selected {
+  background: var(--background-active-selected);
+  color: var(--foreground-active-selected);
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper--focused {
+  box-shadow: inset 0 0 0 0.0625rem var(--border-color);
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper--disabled {
+  background: var(--background-disabled) !important;
+  color: var(--foreground-disabled) !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper--disabled::after {
+  display: none;
+}
+
+.igx-excel-filter__menu
+  .igx-tree-node__wrapper--disabled
+  .igx-tree-node__toggle-button {
+  color: var(--foreground-disabled) !important;
+}
+
+.igx-excel-filter__menu .igx-tree-node__spacer {
+  --component-size: var(--tree-size);
+  --spacer: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem)
+  );
+  width: var(--spacer);
+  display: inline-block;
+}
+
+.igx-excel-filter__menu .igx-tree-node__content {
+  display: block;
+  align-items: center;
+  flex: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.igx-excel-filter__menu .igx-tree-node__toggle-button {
+  justify-content: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  min-width: 1.5rem;
+}
+
+.igx-excel-filter__menu .igx-tree-node__drop-indicator {
+  display: flex;
+  visibility: hidden;
+  position: absolute;
+  inset-inline-end: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(--ig-spacing-large, var(--ig-spacing, var(--ig-spacing))),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(--ig-spacing-medium, var(--ig-spacing, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.75rem, -1 * 0.75rem) *
+      var(--ig-spacing-small, var(--ig-spacing, var(--ig-spacing)))
+  );
+  bottom: 0;
+  width: max(
+    var(--is-large, 1) *
+      max(
+        calc(100% - (1.5rem * 2 + 1.5rem + 0.25rem)),
+        -1 * calc(100% - (1.5rem * 2 + 1.5rem + 0.25rem))
+      ) *
+      var(--ig-spacing-large, var(--ig-spacing, var(--ig-spacing))),
+    var(--is-medium, 1) *
+      max(
+        calc(100% - (1rem * 2 + 1.5rem + 0.25rem)),
+        -1 * calc(100% - (1rem * 2 + 1.5rem + 0.25rem))
+      ) *
+      var(--ig-spacing-medium, var(--ig-spacing, var(--ig-spacing))),
+    var(--is-small, 1) *
+      max(
+        calc(100% - (0.75rem * 2 + 1.5rem + 0.25rem)),
+        -1 * calc(100% - (0.75rem * 2 + 1.5rem + 0.25rem))
+      ) *
+      var(--ig-spacing-small, var(--ig-spacing, var(--ig-spacing)))
+  );
+}
+
+.igx-excel-filter__menu .igx-tree-node__drop-indicator > div {
+  flex: 1;
+  height: 0.0625rem;
+  background: var(--drop-area-color);
+}
+
+.igx-excel-filter__menu .igx-tree-node__group {
+  overflow: hidden;
+}
+
+.igx-excel-filter__menu .igx-tree-node__wrapper {
+  padding: 0;
+}
+
+.igx-excel-filter__menu igx-chips-area {
+  padding-inline: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block-start: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(--ig-spacing-block-large, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-block-medium, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(--ig-spacing-block-small, var(--ig-spacing-block, var(--ig-spacing)))
+  );
+  padding-block-end: 0;
+  gap: max(
+    var(--is-large, 1) * max(0.5rem, -1 * 0.5rem),
+    var(--is-medium, 1) * max(0.25rem, -1 * 0.25rem),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem)
+  );
+}
+
+.igx-excel-filter__menu-header,
+.igx-excel-filter__secondary-header {
+  display: flex;
+  align-items: center;
+  padding: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(--ig-spacing-large, var(--ig-spacing, var(--ig-spacing))),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-medium, var(--ig-spacing, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(--ig-spacing-small, var(--ig-spacing, var(--ig-spacing)))
+  );
+  color: var(--excel-filtering-header-foreground);
+}
+
+.igx-excel-filter__menu-header-actions {
+  display: flex;
+  margin-inline-start: auto;
+}
+
+.igx-excel-filter__menu-header-actions [igxButton] + [igxButton] {
+  margin-inline-start: 0.25rem;
+}
+
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-pin,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-pin--disabled,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-unpin,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-hide,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-select,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-selected,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-filter,
+.igx-excel-filter__menu-header-actions
+  .igx-excel-filter__actions-filter--active,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-clear,
+.igx-excel-filter__menu-header-actions
+  .igx-excel-filter__actions-clear--disabled {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-pin,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-pin--disabled,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-unpin,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-hide,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-select,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-selected,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-filter,
+.igx-excel-filter__menu-header-actions
+  .igx-excel-filter__actions-filter--active,
+.igx-excel-filter__menu-header-actions .igx-excel-filter__actions-clear,
+.igx-excel-filter__menu-header-actions
+  .igx-excel-filter__actions-clear--disabled {
+  justify-content: center;
+}
+
+.igx-excel-filter__menu-footer,
+.igx-excel-filter__secondary-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.igx-excel-filter__menu-footer .igx-excel-filter__apply,
+.igx-excel-filter__secondary-footer .igx-excel-filter__apply,
+.igx-excel-filter__menu-footer .igx-excel-filter__cancel,
+.igx-excel-filter__secondary-footer .igx-excel-filter__cancel {
+  flex-grow: 1;
+}
+
+.igx-excel-filter__menu-footer .igx-excel-filter__apply [igxButton],
+.igx-excel-filter__secondary-footer .igx-excel-filter__apply [igxButton],
+.igx-excel-filter__menu-footer .igx-excel-filter__cancel [igxButton],
+.igx-excel-filter__secondary-footer .igx-excel-filter__cancel [igxButton] {
+  width: 100%;
+}
+
+.igx-excel-filter__clear {
+  flex-grow: 1;
+}
+
+.igx-excel-filter__cancel + .igx-excel-filter__apply {
+  margin-inline-start: 1rem;
+}
+
+.igx-excel-filter__sort,
+.igx-excel-filter__move {
+  display: block;
+  padding-block: max(
+    var(--is-large, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-block-large, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-block-medium, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(--ig-spacing-block-small, var(--ig-spacing-block, var(--ig-spacing)))
+  );
+  padding-inline: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-excel-filter__sort header,
+.igx-excel-filter__move header {
+  color: var(--excel-filtering-subheader-foreground);
+  margin-block-end: 0.25rem;
+}
+
+.igx-excel-filter__sort igx-icon,
+.igx-excel-filter__move igx-icon {
+  --component-size: 1;
+  display: initial;
+  width: var(--size) !important;
+  height: var(--size) !important;
+  font-size: var(--size) !important;
+}
+
+.igx-excel-filter__menu--compact .igx-excel-filter__sort,
+.igx-excel-filter__menu--compact .igx-excel-filter__move {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.igx-excel-filter__menu--compact .igx-excel-filter__sort header,
+.igx-excel-filter__menu--compact .igx-excel-filter__move header {
+  margin-inline-end: auto;
+}
+
+.igx-excel-filter__actions {
+  padding-block: max(
+    var(--is-large, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-block-large, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-block-medium, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(--ig-spacing-block-small, var(--ig-spacing-block, var(--ig-spacing)))
+  );
+  padding-inline: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-excel-filter__actions-selected igx-icon {
+  color: var(--ig-secondary-500);
+}
+
+[dir='rtl'] .igx-excel-filter__move .igx-button-group {
+  flex-direction: row-reverse;
+}
+
+[dir='rtl'] .igx-excel-filter__move .igx-button-group igx-icon,
+[dir='rtl'] .igx-excel-filter__move .igx-button-group [igxButton] {
+  direction: ltr;
+}
+
+[dir='rtl'] .igx-excel-filter__sort .igx-button-group {
+  flex-direction: row-reverse;
+}
+
+[dir='rtl'] .igx-excel-filter__sort .igx-button-group igx-icon,
+[dir='rtl'] .igx-excel-filter__sort .igx-button-group [igxButton] {
+  direction: ltr;
+}
+
+.igx-excel-filter__actions-pin,
+.igx-excel-filter__actions-pin--disabled,
+.igx-excel-filter__actions-unpin,
+.igx-excel-filter__actions-hide,
+.igx-excel-filter__actions-select,
+.igx-excel-filter__actions-selected,
+.igx-excel-filter__actions-filter,
+.igx-excel-filter__actions-filter--active,
+.igx-excel-filter__actions-clear,
+.igx-excel-filter__actions-clear--disabled {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: max(
+    var(--is-large, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-block-large, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-block-medium, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(--ig-spacing-block-small, var(--ig-spacing-block, var(--ig-spacing)))
+  );
+  padding-inline: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  cursor: pointer;
+  color: var(--excel-filtering-actions-foreground);
+  outline-style: none;
+}
+
+.igx-excel-filter__actions-pin:hover,
+.igx-excel-filter__actions-pin--disabled:hover,
+.igx-excel-filter__actions-unpin:hover,
+.igx-excel-filter__actions-hide:hover,
+.igx-excel-filter__actions-select:hover,
+.igx-excel-filter__actions-selected:hover,
+.igx-excel-filter__actions-filter:hover,
+.igx-excel-filter__actions-filter--active:hover,
+.igx-excel-filter__actions-clear:hover,
+.igx-excel-filter__actions-clear--disabled:hover,
+.igx-excel-filter__actions-pin:focus,
+.igx-excel-filter__actions-pin--disabled:focus,
+.igx-excel-filter__actions-unpin:focus,
+.igx-excel-filter__actions-hide:focus,
+.igx-excel-filter__actions-select:focus,
+.igx-excel-filter__actions-selected:focus,
+.igx-excel-filter__actions-filter:focus,
+.igx-excel-filter__actions-filter--active:focus,
+.igx-excel-filter__actions-clear:focus,
+.igx-excel-filter__actions-clear--disabled:focus {
+  color: var(--excel-filtering-actions-hover-foreground);
+  background: var(--ig-gray-100);
+}
+
+[dir='rtl'] .igx-excel-filter__actions-pin igx-icon,
+[dir='rtl'] .igx-excel-filter__actions-pin--disabled igx-icon,
+[dir='rtl'] .igx-excel-filter__actions-unpin igx-icon,
+[dir='rtl'] .igx-excel-filter__actions-hide igx-icon,
+[dir='rtl'] .igx-excel-filter__actions-select igx-icon,
+[dir='rtl'] .igx-excel-filter__actions-selected igx-icon,
+[dir='rtl'] .igx-excel-filter__actions-filter igx-icon,
+[dir='rtl'] .igx-excel-filter__actions-filter--active igx-icon,
+[dir='rtl'] .igx-excel-filter__actions-clear igx-icon,
+[dir='rtl'] .igx-excel-filter__actions-clear--disabled igx-icon {
+  transform: scaleX(-1);
+}
+
+.igx-excel-filter__actions-filter--active {
+  background: var(--ig-gray-100);
+  color: var(--excel-filtering-actions-hover-foreground);
+}
+
+.igx-excel-filter__actions-pin--disabled,
+.igx-excel-filter__actions-clear--disabled {
+  color: var(--excel-filtering-actions-disabled-foreground);
+  pointer-events: none;
+}
+
+.igx-excel-filter__empty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+
+.igx-excel-filter__menu-main {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+  padding: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(--ig-spacing-large, var(--ig-spacing, var(--ig-spacing))),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(--ig-spacing-medium, var(--ig-spacing, var(--ig-spacing))),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(--ig-spacing-small, var(--ig-spacing, var(--ig-spacing)))
+  );
+  gap: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem)
+  );
+}
+
+.igx-excel-filter__menu-main igx-list {
+  flex-grow: 1;
+  overflow: hidden;
+  margin-inline: calc(
+    max(
+        var(--is-large, 1) * max(-1rem, -1 * -1rem),
+        var(--is-medium, 1) * max(-0.5rem, -1 * -0.5rem),
+        var(--is-small, 1) * max(-0.25rem, -1 * -0.25rem)
+      ) *
+      -1
+  );
+  border: 0;
+  border-top: 0.0625rem dashed var(--ig-gray-300);
+  border-bottom: 0.0625rem dashed var(--ig-gray-300);
+}
+
+.igx-excel-filter__menu-main .igx-excel-filter__tree {
+  background: var(--ig-surface-500);
+  overflow-y: auto;
+  margin-inline: calc(
+    max(
+        var(--is-large, 1) * max(-1rem, -1 * -1rem) *
+          var(
+            --ig-spacing-inline-large,
+            var(--ig-spacing-inline, var(--ig-spacing))
+          ),
+        var(--is-medium, 1) * max(-0.5rem, -1 * -0.5rem) *
+          var(
+            --ig-spacing-inline-medium,
+            var(--ig-spacing-inline, var(--ig-spacing))
+          ),
+        var(--is-small, 1) * max(-0.25rem, -1 * -0.25rem) *
+          var(
+            --ig-spacing-inline-small,
+            var(--ig-spacing-inline, var(--ig-spacing))
+          )
+      ) *
+      -1
+  );
+  margin-block: 0;
+  flex: 1;
+  border-top: 0.0625rem dashed var(--ig-gray-300);
+  border-bottom: 0.0625rem dashed var(--ig-gray-300);
+}
+
+.igx-excel-filter__menu-main .igx-excel-filter__tree igx-icon {
+  width: var(--igx-icon-size, 1.25rem);
+  height: var(--igx-icon-size, 1.25rem);
+  font-size: var(--igx-icon-size, 1.25rem);
+}
+
+.igx-excel-filter__menu-main .igx-excel-filter__tree > igx-checkbox,
+.igx-excel-filter__menu-main .igx-excel-filter__tree .igx-tree-node__wrapper {
+  height: max(
+    var(--is-large, 1) * max(2.5rem, -1 * 2.5rem),
+    var(--is-medium, 1) * max(2rem, -1 * 2rem),
+    var(--is-small, 1) * max(1.5rem, -1 * 1.5rem)
+  );
+  min-height: max(
+    var(--is-large, 1) * max(2.5rem, -1 * 2.5rem),
+    var(--is-medium, 1) * max(2rem, -1 * 2rem),
+    var(--is-small, 1) * max(1.5rem, -1 * 1.5rem)
+  );
+}
+
+.igx-excel-filter__menu-main
+  .igx-excel-filter__tree
+  .igx-tree-node__toggle-button {
+  min-width: 1.25rem;
+  margin-inline-start: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  margin-inline-end: max(
+    var(--is-large, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-excel-filter__menu-main .igx-excel-filter__tree .igx-tree {
+  overflow-y: hidden;
+}
+
+.igx-excel-filter__menu-main .igx-excel-filter__tree-alike {
+  background: var(--ig-surface-500);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.igx-excel-filter__menu-main .igx-excel-filter__tree-alike-item {
+  display: flex;
+  align-items: center;
+  height: max(
+    var(--is-large, 1) * max(2.5rem, -1 * 2.5rem),
+    var(--is-medium, 1) * max(2rem, -1 * 2rem),
+    var(--is-small, 1) * max(1.5rem, -1 * 1.5rem)
+  );
+  background: var(--ig-surface-500);
+}
+
+.igx-excel-filter__menu-main .igx-excel-filter__tree-alike-item:hover,
+.igx-excel-filter__menu-main .igx-excel-filter__tree-alike-item:focus {
+  background: var(--ig-gray-200);
+}
+
+.igx-excel-filter__menu-main .igx-excel-filter__tree-alike-item > igx-checkbox {
+  margin-inline-start: max(
+    var(--is-large, 1) *
+      max(calc(1rem + 1.25rem + 0.5rem), -1 * calc(1rem + 1.25rem + 0.5rem)) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) *
+      max(calc(0.5rem * 2 + 1.25rem), -1 * calc(0.5rem * 2 + 1.25rem)) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) *
+      max(calc(0.25rem * 2 + 1.25rem), -1 * calc(0.25rem * 2 + 1.25rem)) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-excel-filter__menu--cosy .igx-excel-filter__menu-header,
+.igx-excel-filter__menu--cosy .igx-excel-filter__secondary-header {
+  justify-content: space-between;
+}
+
+.igx-excel-filter__menu--compact .igx-excel-filter__menu-header,
+.igx-excel-filter__menu--compact .igx-excel-filter__secondary-header {
+  justify-content: space-between;
+}
+
+.igx-excel-filter__menu--compact .igx-excel-filter__sort igx-buttongroup,
+.igx-excel-filter__menu--compact .igx-excel-filter__move igx-buttongroup {
+  width: 13rem;
+}
+
+.igx-excel-filter__menu--compact .igx-excel-filter__move {
+  margin-bottom: 0;
+}
+
+.igx-excel-filter__secondary {
+  width: 32.5rem;
+  min-width: 32.5rem;
+  background: var(--filtering-row-background);
+  box-shadow: var(--ig-elevation-12);
+  border-radius: clamp(
+    0rem,
+    calc(var(--ig-radius-factor, 1) * 0.25rem),
+    0.25rem
+  );
+}
+
+.igx-excel-filter__condition {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-inline: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block: 0;
+}
+
+.igx-excel-filter__condition igx-select {
+  flex-grow: 1;
+  flex-basis: 40%;
+  margin: 1rem 0;
+}
+
+.igx-excel-filter__condition igx-select ~ igx-input-group,
+.igx-excel-filter__condition igx-select ~ igx-date-picker,
+.igx-excel-filter__condition igx-select ~ igx-time-picker {
+  margin-inline-start: 1rem;
+}
+
+.igx-excel-filter__condition igx-buttongroup {
+  min-width: 30%;
+}
+
+.igx-excel-filter__condition [igxIconButton] {
+  --component-size: var(--grid-size);
+  margin-inline-start: 1rem;
+}
+
+.igx-excel-filter__add-filter {
+  margin-inline: max(
+    var(--is-large, 1) * max(1rem, -1 * 1rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.25rem, -1 * 0.25rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  margin-block-start: 0;
+}
+
+.igx-excel-filter__add-filter igx-icon {
+  width: var(--igx-icon-size, 1.125rem);
+  height: var(--igx-icon-size, 1.125rem);
+  font-size: var(--igx-icon-size, 1.125rem);
+}
+
+.igx-excel-filter__secondary-header {
+  border-bottom: 0.0625rem solid var(--ig-gray-300);
+}
+
+.igx-excel-filter__secondary-main {
+  height: 14.5rem;
+  overflow: auto;
+}
+
+.igx-excel-filter__secondary-footer {
+  --ig-size: 2;
+  padding-inline: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+  padding-block-end: max(
+    var(--is-large, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(--ig-spacing-block-large, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-medium, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(--ig-spacing-block-medium, var(--ig-spacing-block, var(--ig-spacing))),
+    var(--is-small, 1) * max(1.5rem, -1 * 1.5rem) *
+      var(--ig-spacing-block-small, var(--ig-spacing-block, var(--ig-spacing)))
+  );
+}
+
+.igx-excel-filter__secondary-footer .igx-excel-filter__apply,
+.igx-excel-filter__secondary-footer .igx-excel-filter__cancel {
+  flex-grow: 0;
+}
+
+.igx-excel-filter__filter-results {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+igx-excel-style-filter-operations,
+[igxExcelStyleFilterOperations] {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.igx-advanced-filter {
+  background: var(--ig-surface-500);
+  box-shadow: var(--ig-elevation-24);
+  border-radius: 0.25rem;
+}
+
+.igx-advanced-filter igx-query-builder {
+  box-shadow: none;
+  border: none;
+  border-radius: inherit;
+}
+
+.igx-advanced-filter igx-query-builder-header {
+  cursor: grab;
+}
+
+.igx-grid__filtering-row-editing-buttons--small,
+.igx-grid__filtering-row-editing-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.igx-grid__filtering-row-editing-buttons--small button,
+.igx-grid__filtering-row-editing-buttons button {
+  transition: none;
+}
+
+.igx-grid__filtering-row-editing-buttons--small
+  button:not([disabled])
+  igx-icon {
+  color: var(--sorted-header-icon-color);
+}
+
+
+/* Query Builder Component Styles */
+igx-query-builder {
+  --elevation: var(--igx-query-builder-elevation, var(--ig-elevation-0));
+  --background: var(--igx-query-builder-background, var(--ig-surface-500));
+  --header-background: var(
+    --igx-query-builder-header-background,
+    var(--ig-surface-500)
+  );
+  --header-foreground: var(
+    --igx-query-builder-header-foreground,
+    var(--ig-gray-900)
+  );
+  --header-border: var(--igx-query-builder-header-border, transparent);
+  --color-expression-group-and: var(
+    --igx-query-builder-color-expression-group-and,
+    #9c27b0
+  );
+  --color-expression-group-or: var(
+    --igx-query-builder-color-expression-group-or,
+    #007254
+  );
+  --border-radius: var(--igx-query-builder-border-radius, 0.25rem);
+  --subquery-header-background: var(
+    --igx-query-builder-subquery-header-background,
+    var(--ig-gray-100)
+  );
+  --subquery-border-color: var(
+    --igx-query-builder-subquery-border-color,
+    var(--ig-gray-300)
+  );
+  --subquery-border-radius: var(
+    --igx-query-builder-subquery-border-radius,
+    0.75rem
+  );
+  --separator-color: var(
+    --igx-query-builder-separator-color,
+    var(--ig-gray-500)
+  );
+  --label-foreground: var(
+    --igx-query-builder-label-foreground,
+    var(--ig-gray-700)
+  );
+  --ig-theme: material;
+}
+
+.igx-query-builder {
+  --is-large: clamp(
+    0,
+    (var(--component-size, 1) + 1) - var(--ig-size-large, 3),
+    1
+  );
+  --is-medium: min(
+    clamp(0, (var(--component-size, 1) + 1) - var(--ig-size-medium, 2), 1),
+    clamp(0, var(--ig-size-large, 3) - var(--component-size, 1), 1)
+  );
+  --is-small: clamp(0, var(--ig-size-medium) - var(--component-size, 1), 1);
+  --_tree-scrollbar-gutter: 1rem;
+  --query-builder-outer-padding: 1.5rem;
+  width: auto;
+  min-width: 41.25rem;
+  background-color: var(--background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--elevation);
+  overflow: hidden;
+}
+
+.igx-query-builder:has(:not(igx-query-builder-header)) {
+  padding-block-start: var(--query-builder-outer-padding);
+}
+
+.igx-query-builder:has(:not(igx-query-builder-header))
+  .igx-query-builder-tree--level-0 {
+  padding-block: 0 var(--query-builder-outer-padding);
+}
+
+.igx-query-builder:has(igx-query-builder-header) {
+  padding-block-start: 0;
+}
+
+.igx-query-builder:has(igx-query-builder-header)
+  .igx-query-builder-tree--level-0 {
+  padding-block: 0 var(--query-builder-outer-padding);
+}
+
+.igx-query-builder .igx-chip__ghost {
+  position: relative;
+}
+
+.igx-query-builder-tree {
+  background: var(--background);
+}
+
+.igx-query-builder-tree .igx-query-builder-tree {
+  border-radius: var(--subquery-border-radius);
+}
+
+.igx-query-builder-tree--level-0 {
+  display: block;
+  width: 100%;
+  padding-inline: var(--query-builder-outer-padding);
+}
+
+.igx-query-builder-tree--level-0 > .igx-query-builder__main {
+  gap: 1rem;
+}
+
+.igx-query-builder-tree--level-0
+  > .igx-query-builder__main
+  > .igx-filter-tree__section {
+  --sb-size: 0.625rem;
+  max-height: 35.625rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-inline-end: var(--_tree-scrollbar-gutter);
+}
+
+.igx-filter-tree__subquery {
+  max-width: 60rem;
+}
+
+.igx-filter-tree__subquery:has(> .igx-filter-tree__inputs) {
+  background: var(--subquery-header-background);
+  border: 0.0625rem solid var(--subquery-border-color);
+  border-radius: var(--subquery-border-radius);
+}
+
+.igx-filter-tree__subquery:has(
+    > [style='display: none;'].igx-query-builder-tree
+  ) {
+  display: none;
+}
+
+.igx-filter-tree__subquery > .igx-filter-tree__inputs {
+  padding: 0.75rem;
+  border-radius: inherit;
+}
+
+.igx-filter-tree__subquery > .igx-filter-tree__inputs > igx-input-group,
+.igx-filter-tree__subquery > .igx-filter-tree__inputs > igx-date-picker,
+.igx-filter-tree__subquery > .igx-filter-tree__inputs > igx-time-picker {
+  flex-grow: 1;
+}
+
+.igx-filter-tree__subquery .igx-filter-tree__buttons {
+  margin-block-start: 0.5rem;
+}
+
+.igx-filter-tree__subquery .igx-query-builder-tree {
+  border-block-start: 0.0625rem dashed var(--separator-color);
+  padding: 0.75rem;
+}
+
+.igx-filter-tree__subquery:empty {
+  display: none;
+}
+
+.igx-filter-tree__details-button {
+  margin-inline-start: auto;
+}
+
+.igx-query-builder-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 19.375rem;
+}
+
+.igx-query-builder-dialog > * {
+  margin: 0 !important;
+}
+
+.igx-query-builder__header {
+  display: flex;
+  align-items: center;
+  background-color: var(--header-background);
+  color: var(--header-foreground);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  margin-bottom: 0;
+  border-block-end: 0.0625rem solid var(--header-border);
+  padding-inline: var(--query-builder-outer-padding);
+  padding-block: var(--query-builder-outer-padding) 1rem;
+}
+
+.igx-query-builder__title:empty {
+  display: none;
+}
+
+.igx-query-builder__main {
+  display: grid;
+  gap: 1rem;
+}
+
+.igx-query-builder__root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.igx-query-builder__root > * {
+  flex-grow: 1;
+}
+
+.igx-query-builder__root-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+}
+
+.igx-query-builder__outlet igx-select-item > igx-icon {
+  width: var(--igx-icon-size, 1.125rem);
+  height: var(--igx-icon-size, 1.125rem);
+  font-size: var(--igx-icon-size, 1.125rem);
+  margin-inline-end: 0.5rem;
+}
+
+.igx-filter-tree {
+  display: flex;
+  width: 100%;
+}
+
+.igx-filter-tree .igx-filter-tree {
+  margin-block: 0.5rem;
+}
+
+.igx-filter-tree__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.igx-filter-tree__section > .igx-filter-tree {
+  margin-block: 0;
+}
+
+.igx-filter-tree__expression-context-menu {
+  display: flex;
+  width: 100%;
+}
+
+.igx-filter-tree__expression-context-menu [igxbutton='flat'] {
+  --ig-size: 1;
+  border: none;
+  min-width: auto;
+}
+
+.igx-filter-tree__line {
+  width: 0.125rem;
+  background-color: #fff;
+  margin-inline-end: 0.375rem;
+  outline-style: none;
+}
+
+.igx-filter-tree__line--and {
+  background: var(--color-expression-group-and);
+}
+
+.igx-filter-tree__line--or {
+  background: var(--color-expression-group-or);
+}
+
+[igxButton='flat'].igx-filter-tree__button--and {
+  --focus-hover-background: hsl(
+    from var(--color-expression-group-and) h s l / 0.24
+  );
+  --focus-visible-background: hsl(
+    from var(--color-expression-group-and) h s l / 0.16
+  );
+  --focus-background: hsl(from var(--color-expression-group-and) h s l / 0.16);
+  --active-background: hsl(from var(--color-expression-group-and) h s l / 0.16);
+  --hover-background: hsl(from var(--color-expression-group-and) h s l / 0.08);
+  --background: transparent;
+  --foreground: var(--color-expression-group-and);
+  --focus-visible-foreground: var(--color-expression-group-and);
+  --icon-color: var(--color-expression-group-and);
+  --focus-foreground: var(--color-expression-group-and);
+  --hover-foreground: var(--color-expression-group-and);
+  --icon-color-hover: var(--color-expression-group-and);
+  --focus-hover-foreground: var(--color-expression-group-and);
+  --active-foreground: var(--color-expression-group-and);
+}
+
+[igxButton='flat'].igx-filter-tree__button--or {
+  --focus-hover-background: hsl(
+    from var(--color-expression-group-or) h s l / 0.24
+  );
+  --focus-visible-background: hsl(
+    from var(--color-expression-group-or) h s l / 0.16
+  );
+  --focus-background: hsl(from var(--color-expression-group-or) h s l / 0.16);
+  --active-background: hsl(from var(--color-expression-group-or) h s l / 0.16);
+  --hover-background: hsl(from var(--color-expression-group-or) h s l / 0.08);
+  --background: transparent;
+  --foreground: var(--color-expression-group-or);
+  --focus-visible-foreground: var(--color-expression-group-or);
+  --icon-color: var(--color-expression-group-or);
+  --focus-foreground: var(--color-expression-group-or);
+  --hover-foreground: var(--color-expression-group-or);
+  --icon-color-hover: var(--color-expression-group-or);
+  --focus-hover-foreground: var(--color-expression-group-or);
+  --active-foreground: var(--color-expression-group-or);
+}
+
+.igx-filter-tree__expressions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+  gap: 0.5rem;
+}
+
+.igx-filter-tree__expression-section {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 1rem);
+  gap: 0.5rem;
+  margin-inline-start: 1rem;
+}
+
+.igx-filter-tree__expression-section:empty {
+  display: none;
+}
+
+.igx-filter-tree__expression-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.igx-filter-tree__expression-item igx-chip {
+  --ig-size: 3;
+}
+
+.igx-filter-tree__expression-item igx-chip igx-icon {
+  --component-size: 1;
+}
+
+.igx-filter-tree__expression-item
+  > igx-chip
+  .igx-filter-tree__expression-column {
+  padding-inline: max(
+    var(--is-large, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.375rem, -1 * 0.375rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.1875rem, -1 * 0.1875rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-filter-tree__expression-item
+  > igx-chip
+  .igx-filter-tree__expression-condition {
+  padding-inline-start: max(
+    var(--is-large, 1) * max(0.5rem, -1 * 0.5rem) *
+      var(
+        --ig-spacing-inline-large,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-medium, 1) * max(0.375rem, -1 * 0.375rem) *
+      var(
+        --ig-spacing-inline-medium,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      ),
+    var(--is-small, 1) * max(0.1875rem, -1 * 0.1875rem) *
+      var(
+        --ig-spacing-inline-small,
+        var(--ig-spacing-inline, var(--ig-spacing))
+      )
+  );
+}
+
+.igx-filter-tree__expression-item > igx-chip igx-prefix {
+  display: flex;
+}
+
+.igx-filter-tree__expression-item > igx-chip .igx-chip__end {
+  gap: max(
+    var(--is-large, 1) * max(0.5rem, -1 * 0.5rem),
+    var(--is-medium, 1) * max(0.375rem, -1 * 0.375rem),
+    var(--is-small, 1) * max(0.1875rem, -1 * 0.1875rem)
+  );
+}
+
+.igx-filter-tree__expression-item-drop-ghost .igx-chip__item {
+  font-family: var(--ig-body-2-font-family, var(--ig-font-family));
+  font-size: var(--ig-body-2-font-size);
+  font-weight: var(--ig-body-2-font-weight);
+  font-style: var(--ig-body-2-font-style);
+  line-height: var(--ig-body-2-line-height);
+  letter-spacing: var(--ig-body-2-letter-spacing);
+  text-transform: var(--ig-body-2-text-transform);
+  margin-top: var(--ig-body-2-margin-top);
+  margin-bottom: var(--ig-body-2-margin-bottom);
+  --ig-body-2-text-transform: unset;
+  padding-inline: 2rem;
+  color: var(--ig-gray-600);
+  border: 0.0625rem dashed var(--ig-gray-600);
+  background: rgba(0, 0, 0, 0);
+}
+
+.igx-filter-tree__expression-item-keyboard-ghost .igx-chip__item {
+  box-shadow: var(--ghost-shadow);
+  background: var(--ghost-background);
+  color: var(--focus-text-color);
+}
+
+.igx-filter-tree__expression-item-keyboard-ghost
+  .igx-chip:hover
+  .igx-chip__item {
+  box-shadow: var(--ghost-shadow);
+  background: var(--ghost-background);
+  color: var(--focus-text-color);
+}
+
+.igx-filter-tree__expression-column {
+  padding: 0 0.5rem;
+}
+
+.igx-filter-tree__expression-actions {
+  display: inline-flex;
+  gap: 1rem;
+}
+
+.igx-filter-tree__expression-actions span {
+  display: inline-flex;
+}
+
+.igx-filter-tree__expression-actions .igx-icon-button {
+  --ig-size: 2;
+}
+
+.igx-filter-tree__expression-condition {
+  opacity: 0.6;
+}
+
+.igx-filter-tree__buttons {
+  --ig-size: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.igx-filter-tree__buttons [igxbutton='flat'] {
+  padding-block: 0;
+  border: none;
+}
+
+.igx-filter-tree__inputs {
+  --ig-size: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  width: 100%;
+  border-radius: inherit;
+}
+
+.igx-filter-tree__inputs:empty {
+  display: none;
+}
+
+.igx-filter-tree__inputs-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 15.625rem;
+  width: 100%;
+}
+
+.igx-query-builder__label {
+  font-family: var(--ig-body-2-font-family, var(--ig-font-family));
+  font-size: var(--ig-body-2-font-size);
+  font-weight: var(--ig-body-2-font-weight);
+  font-style: var(--ig-body-2-font-style);
+  line-height: var(--ig-body-2-line-height);
+  letter-spacing: var(--ig-body-2-letter-spacing);
+  text-transform: var(--ig-body-2-text-transform);
+  margin-top: var(--ig-body-2-margin-top);
+  margin-bottom: var(--ig-body-2-margin-bottom);
+  color: var(--label-foreground);
+}
+
+.igx-filter-tree__inputs-actions {
+  --ig-size: 2;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: auto;
+  align-self: center;
+}
+
+.igx-filter-tree__inputs-actions [igxIconButton] {
+  transition: none;
+}
+
+.igx-query-builder--inline {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  height: inherit;
+  max-height: inherit;
+  min-width: 30rem;
+  box-shadow: none;
+}
+
+.igx-query-builder--inline .igx-query-builder__main {
+  min-height: initial;
+  max-height: initial;
+  flex-grow: 1;
+}

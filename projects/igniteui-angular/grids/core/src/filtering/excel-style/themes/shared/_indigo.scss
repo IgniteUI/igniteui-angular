@@ -1,0 +1,182 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+
+// TODO type style is throwing an error
+
+@include themed-block(igx-excel-filter, indigo) {
+    %grid-excel-actions__action {
+        padding-block: pad-block(rem(4px), rem(6px), rem(8px));
+        padding-inline: pad-inline(rem(12px));
+        margin-inline: rem(8px);
+        margin-block-end: rem(4px);
+        border-radius: rem(4px);
+
+        &:hover,
+        &:focus {
+            background: color($color: 'gray', $variant: 200);
+
+            igx-icon {
+                color: color($color: 'gray', $variant: 700);
+            }
+        }
+
+
+        igx-icon {
+            --component-size: 2;
+
+            color: color($color: 'gray', $variant: 600);
+        }
+    }
+
+    @include e(actions-pin) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-pin, $m: disabled) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-unpin) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-hide) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-select) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-selected) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-filter) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-filter, $m: active) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-clear) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-clear, $m: disabled) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    %grid-excel-sort-move {
+        padding-inline: pad-inline(rem(16px));
+
+        header {
+            margin-block-end: sizable(rem(0), rem(4px), rem(4px)) !important;
+            text-transform: capitalize !important;
+        }
+
+        igx-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(menu) {
+         background: contrast-color($color: 'gray', $variant: 900);
+
+        .igx-button-group__item {
+            &:not(:nth-child(1)) {
+                margin: 0;
+            }
+        }
+
+        .igx-button-group {
+            --item-background: transparent !important;
+            --border-color: transparent !important;
+            --item-border-color: transparent !important;
+            --item-focused-border-color: transparent !important;
+            --item-hover-border-color: transparent !important;
+            --item-selected-border-color: transparent !important;
+            --item-selected-hover-border-color: transparent !important;
+            --item-disabled-border: transparent !important;
+            --disabled-selected-border-color: transparent !important;
+            --elevation: none !important;
+            --item-selected-text-color: contrast-color($color: 'surface') !important;
+            --item-selected-icon-color: contrast-color($color: 'surface') !important;
+        }
+    }
+
+    @include e(menu-header) {
+        padding: pad-block(rem(16px)) pad-inline(rem(16px)) pad-block(sizable(rem(8px), rem(12px), rem(16px)));
+    }
+
+    @include e(menu-main) {
+        padding: pad(rem(16px));
+        gap: sizable(rem(16px));
+
+        igx-list {
+            --background: #{color($color: 'surface', $variant: 500)};
+
+            margin-inline: calc(#{sizable(rem(-16px))} * -1);
+
+            // This is the only way to take the gap from the list,
+            // otherwise we have to hardcode it here
+            > div {
+                gap: inherit;
+            }
+
+            igx-display-container {
+                display: flex;
+                flex-direction: column;
+                gap: inherit;
+                padding: pad(rem(8px));
+            }
+        }
+    }
+
+    @include e(actions-filter) {
+        margin-block-end: 0;
+    }
+
+    @include e(actions-pin, $m: disabled) {
+        igx-icon {
+            // TODO MOVE excel-filtering-actions-disabled-foreground TO THE FILTERING SCHEMA and use it here.
+            //color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
+            color: color($color: 'gray', $variant: 900, $opacity: .2);
+        }
+    }
+
+    @include e(actions-clear, $m: disabled) {
+        igx-icon {
+            // TODO MOVE excel-filtering-actions-disabled-foreground TO THE FILTERING SCHEMA and use it here.
+            //color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
+            color: color($color: 'gray', $variant: 900, $opacity: .2);
+        }
+    }
+
+    @include e(sort) {
+        @extend %grid-excel-sort-move !optional;
+
+        padding-block-end: 0;
+    }
+
+    @include e(move) {
+        @extend %grid-excel-sort-move !optional;
+
+        margin-block-end: sizable(rem(12px), rem(16px), rem(16px));
+    }
+
+    .igx-excel-filter__sort + igx-excel-filter__move {
+        margin-block-start: sizable(rem(4px), rem(8px), rem(8px));
+    }
+
+    .ig-typography .igx-excel-filter__menu--compact {
+        .igx-excel-filter__menu-header {
+            > h4 {
+                @include type-style('h6')
+            }
+        }
+    }
+}

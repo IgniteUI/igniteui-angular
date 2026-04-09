@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/date-range-picker' as *;
+
+$material: digest-schema($dark-material-date-range-picker);
+$bootstrap: digest-schema($dark-bootstrap-date-range-picker);
+$fluent: digest-schema($dark-fluent-date-range-picker);
+$indigo: digest-schema($dark-indigo-date-range-picker);

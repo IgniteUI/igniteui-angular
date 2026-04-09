@@ -1,21 +1,19 @@
 <div class="sample-column">
     <h4 class="sample-title">igxGrid</h4>
-    <div class="sample-wrapper">
-        <div class="sample-buttons">
-            <button igxButton="contained" (click)="togglePinning(grid, true, index, key)">Pin Row by index</button>
-            <button igxButton="contained" (click)="togglePinning(grid, false, index, key)">Pin Row by key</button>
-            <button igxButton="contained" (click)="deleteRow(grid, index)">Delete</button>
-            <button igxButton="contained" (click)="toggle(grid, index)">Expand/collapse</button>
-            <button igxButton="contained" (click)="select(grid, index)">Select</button>
-            <button igxButton="contained" (click)="selectChildren(grid, index)">Select Children</button>
-            <button igxButton="contained" (click)="selectParent(grid, index)">Select Parent</button>
-            <button igxButton="contained" (click)="logState(grid, index, gridLogger)">Log row state</button>
-        </div>
-        <div style="margin-right: 5px;">
-            <input name="index" type="number" [(ngModel)]="index" />
-            <br />
-            <input name="key" [(ngModel)]="key" />
-        </div>
+    <div class="sample-buttons">
+        <button igxButton="contained" (click)="togglePinning(grid, true, index, key)">Pin Row by index</button>
+        <button igxButton="contained" (click)="togglePinning(grid, false, index, key)">Pin Row by key</button>
+        <button igxButton="contained" (click)="deleteRow(grid, index)">Delete</button>
+        <button igxButton="contained" (click)="toggle(grid, index)">Expand/collapse</button>
+        <button igxButton="contained" (click)="select(grid, index)">Select</button>
+        <button igxButton="contained" (click)="selectChildren(grid, index)">Select Children</button>
+        <button igxButton="contained" (click)="selectParent(grid, index)">Select Parent</button>
+        <button igxButton="contained" (click)="logState(grid, index, gridLogger)">Log row state</button>
+    </div>
+    <div style="margin-right: 5px;">
+        <input name="index" type="number" [(ngModel)]="index" />
+        <br />
+        <input name="key" [(ngModel)]="key" />
     </div>
     <div class="grid-wrapper">
         <igx-grid #grid [rowDraggable]="true" (rowDragStart)="onRowDragStart()" (onRowDragEnd)="onRowDragEnd($event)"
@@ -65,7 +63,7 @@
 
 <div class="sample-column">
     <h4 class="sample-title">IgxTreeGrid Hierarchical Data</h4>
-    <div class="sample-wrapper">
+
         <div class="sample-buttons">
             <button igxButton="contained" (click)="togglePinning(treeGridHier, true, tHIndex, tHKey)">Pin Row by index</button>
             <button igxButton="contained" (click)="togglePinning(treeGridHier, false, tHIndex, tHKey)">Pin Row by key</button>
@@ -81,7 +79,7 @@
             <br />
             <input name="tHKey" [(ngModel)]="tHKey" />
         </div>
-    </div>
+
     <div class="grid-wrapper">
         <igx-tree-grid #treeGridHier id="testTreeGrid" [pinning]="pinningConfig" [width]="'670px'" [height]="'500px'"
             [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
@@ -118,23 +116,21 @@
 
 <div class="sample-column">
     <h4 class="sample-title">IgxTreeGrid Flat Data</h4>
-    <div class="sample-wrapper">
-        <div class="sample-buttons">
-            <button igxButton="contained" (click)="togglePinning(treeGrid, true, tIndex, tKey)">Pin Row by index</button>
-            <br />
-            <button igxButton="contained" (click)="togglePinning(treeGrid, false, tIndex, tKey)">Pin Row by key</button>
-            <button igxButton="contained" (click)="deleteRow(treeGrid, tIndex)">Delete Row by Index</button>
-            <button igxButton="contained" (click)="toggle(treeGrid, tIndex)">Expand/collapse</button>
-            <button igxButton="contained" (click)="select(treeGrid, tIndex)">Select</button>
-            <button igxButton="contained" (click)="selectChildren(treeGrid, tIndex)">Select Children</button>
-            <button igxButton="contained" (click)="selectParent(treeGrid, tIndex)">Select Parent</button>
-            <button igxButton="contained" (click)="logState(treeGrid, tIndex, tGridLogger)">Log row state</button>
-        </div>
-        <div style="margin-right: 5px;">
-            <input name="tIndex" type="number" [(ngModel)]="tIndex" />
-            <br />
-            <input name="tKey" [(ngModel)]="tKey" />
-        </div>
+    <div class="sample-buttons">
+        <button igxButton="contained" (click)="togglePinning(treeGrid, true, tIndex, tKey)">Pin Row by index</button>
+        <br />
+        <button igxButton="contained" (click)="togglePinning(treeGrid, false, tIndex, tKey)">Pin Row by key</button>
+        <button igxButton="contained" (click)="deleteRow(treeGrid, tIndex)">Delete Row by Index</button>
+        <button igxButton="contained" (click)="toggle(treeGrid, tIndex)">Expand/collapse</button>
+        <button igxButton="contained" (click)="select(treeGrid, tIndex)">Select</button>
+        <button igxButton="contained" (click)="selectChildren(treeGrid, tIndex)">Select Children</button>
+        <button igxButton="contained" (click)="selectParent(treeGrid, tIndex)">Select Parent</button>
+        <button igxButton="contained" (click)="logState(treeGrid, tIndex, tGridLogger)">Log row state</button>
+    </div>
+    <div style="margin-right: 5px;">
+        <input name="tIndex" type="number" [(ngModel)]="tIndex" />
+        <br />
+        <input name="tKey" [(ngModel)]="tKey" />
     </div>
     <div class="grid-wrapper">
         <igx-tree-grid #treeGrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID"
@@ -170,7 +166,7 @@
 
 <div class="sample-column">
     <h4 class="sample-title">igxHierarchicalGrid</h4>
-    <div class="sample-wrapper">
+
         <div class="sample-buttons">
             <button igxButton="contained" (click)="togglePinning(hGrid, true, hIndex, hKey)">Pin Row by index</button>
             <br />
@@ -185,7 +181,6 @@
             <br />
             <input name="hKey" [(ngModel)]="hKey" />
         </div>
-    </div>
     <div class="grid-wrapper">
         <igx-hierarchical-grid #hGrid [width]="'670px'" [height]="'600px'" [primaryKey]='"ID"' [allowFiltering]='true'
             [showExpandAll]='true' [data]="hierarchicalData" [rowSelection]="'multiple'">

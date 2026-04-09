@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/tabs' as *;
+
+$base: digest-schema($light-tabs);
+$material: digest-schema($material-tabs);
+$bootstrap: digest-schema($bootstrap-tabs);
+$fluent: digest-schema($fluent-tabs);
+$indigo: digest-schema($indigo-tabs);

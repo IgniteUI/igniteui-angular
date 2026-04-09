@@ -1,13 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
-import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxButtonGroupComponent, IgxIconComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
-
+import {
+  IGX_BUTTON_GROUP_DIRECTIVES,
+  IGX_TABS_DIRECTIVES,
+  IgxIconComponent,
+  IgxTabHeaderComponent,
+  IgxTabItemComponent,
+  IgxTabsComponent,
+  ITabsSelectedItemChangeEventArgs
+} from 'igniteui-angular';
 
 @Component({
     selector: 'app-tabs-routing-sample',
     styleUrls: ['tabs-routing.sample.scss'],
     templateUrl: 'tabs-routing.sample.html',
-    imports: [IgxButtonGroupComponent, IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, RouterOutlet]
+    imports: [IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, RouterOutlet, IGX_TABS_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 export class TabsRoutingSampleComponent {
     public contacts: any[] = [{
@@ -40,8 +47,7 @@ export class TabsRoutingSampleComponent {
         text: 'Lisa Landers'
     }];
 
-    constructor(private router: Router) {
-    }
+    public router = inject(Router);
 
     public clickHandler0() {
         this.router.navigateByUrl('/tabs-routing');

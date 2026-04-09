@@ -59,15 +59,8 @@ export class InputGroupShowcaseSampleComponent {
     private pcs = inject(PropertyChangeService);
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium'
-            }
-        },
         inputType: {
-            label: 'Input Group Type (Only Material theme has border/box and line types)',
+            label: 'Group Type',
             control: {
                 type: 'button-group',
                 options: ['box', 'border', 'line', 'search'],
@@ -83,12 +76,14 @@ export class InputGroupShowcaseSampleComponent {
             }
         },
         label: {
+            label: 'Label value',
             control: {
                 type: 'text',
                 defaultValue: 'Label text'
             }
         },
         hint: {
+            label: 'Hint value',
             control: {
                 type: 'text',
                 defaultValue: 'Hint text'
@@ -97,10 +92,11 @@ export class InputGroupShowcaseSampleComponent {
         value: {
             control: {
                 type: 'text',
-                defaultValue: ''
+                defaultValue: 'Hello input group',
             }
         },
         placeholder: {
+            label: 'Placeholder value',
             control: {
                 type: 'text',
                 defaultValue:

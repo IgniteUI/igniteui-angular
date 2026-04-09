@@ -1,25 +1,25 @@
-<div #headerContainer class="igx-tabs__header">
-    <button #scrollPrevButton type="button" igxIconButton="flat" igxRipple tabindex="-1" class="igx-tabs__header-button" (click)="scrollPrev()">
+<div #headerContainer class="igx-tabs-header">
+    <button #scrollPrevButton type="button" igxIconButton="flat" igxRipple tabindex="-1" class="igx-tabs-header-button" (click)="scrollPrev()">
         <igx-icon family="default" name="prev"></igx-icon>
     </button>
-    <div #viewPort class="igx-tabs__header-content">
-        <div #itemsWrapper class="igx-tabs__header-wrapper" role="tablist">
-            <div #itemsContainer class="igx-tabs__header-scroll" [ngClass]="resolveHeaderScrollClasses()">
+    <div #viewPort class="igx-tabs-header__content">
+        <div #itemsWrapper class="igx-tabs-header__wrapper" role="tablist">
+            <div #itemsContainer class="igx-tabs-header-scroll" [ngClass]="resolveHeaderScrollClasses()">
                 @for (tab of items; track tab; let i = $index) {
                     <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
                 }
             </div>
             @if (items.length > 0) {
-                <div #selectedIndicator class="igx-tabs__header-active-indicator">
+                <div #selectedIndicator class="igx-tabs-header__active-indicator">
                 </div>
             }
         </div>
     </div>
-    <button #scrollNextButton type="button" igxIconButton="flat" igxRipple tabindex="-1" class="igx-tabs__header-button" (click)="scrollNext()">
+    <button #scrollNextButton type="button" igxIconButton="flat" igxRipple tabindex="-1" class="igx-tabs-header-button" (click)="scrollNext()">
         <igx-icon family="default" name="next"></igx-icon>
     </button>
 </div>
-<div class="igx-tabs__panels">
+<div class="igx-tabs-content">
     @for (tab of items; track tab; let i = $index) {
         <ng-container *ngTemplateOutlet="tab.panelTemplate"></ng-container>
     }

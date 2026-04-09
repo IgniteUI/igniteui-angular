@@ -1,56 +1,148 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, ElementRef, HostBinding, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, ContentChild, createComponent, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, OnChanges, SimpleChanges, inject } from '@angular/core';
-import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import {
+    AfterContentInit,
+    AfterViewInit,
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    ContentChild,
+    createComponent,
+    CUSTOM_ELEMENTS_SCHEMA,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    inject,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    ViewEncapsulation,
+} from '@angular/core';
+import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 
 import { first, take, takeUntil } from 'rxjs/operators';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
-import { IgxGridSelectionService } from 'igniteui-angular/grids/core';
-import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
-import { IgxGridCRUDService } from 'igniteui-angular/grids/core';
-import { IgxGridSummaryService } from 'igniteui-angular/grids/core';
-import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
-import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
-import { IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { FilterMode, GridPagingMode, GridSummaryPosition } from 'igniteui-angular/grids/core';
-import { WatchChanges } from 'igniteui-angular/grids/core';
-import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, resizeObservable, ɵSize, SortingDirection, IgxOverlayOutletDirective } from 'igniteui-angular/core';
 import {
-    IGridEditEventArgs,
+    DEFAULT_PIVOT_KEYS,
+    DimensionValuesFilteringStrategy,
+    DropPosition,
+    FilterMode,
+    GridBaseAPIService,
+    GridPagingMode,
+    GridSummaryPosition,
+    GridType,
     ICellPosition,
-    IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
+    IColumnMovingEndEventArgs,
+    IColumnMovingEventArgs,
+    IColumnMovingStartEventArgs,
     IColumnVisibilityChangedEventArgs,
+    IDimensionsChange,
     IGridEditDoneEventArgs,
+    IGridEditEventArgs,
     IGridToolbarExportEventArgs,
+    IGX_GRID_BASE,
+    IGX_GRID_SERVICE_BASE,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnMovingDropDirective,
+    IgxColumnResizingService,
+    IgxColumnTemplateContext,
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleFilterOperationsTemplateDirective,
+    IgxExcelStyleSearchComponent,
+    IgxFilteringService,
+    IgxGridBodyDirective,
+    IgxGridCRUDService,
+    IgxGridDragSelectDirective,
+    IgxGridExcelStyleFilteringComponent,
+    IgxGridNavigationService,
+    IgxGridRowClassesPipe,
+    IgxGridRowStylesPipe,
+    IgxGridSelectionService,
+    IgxGridSummaryService,
+    IgxGridValidationService,
+    IgxPivotColumnResizingService,
+    IgxPivotDateDimension,
+    IgxPivotGridColumnResizerComponent,
+    IgxPivotGridValueTemplateContext,
     IPinColumnCancellableEventArgs,
     IPinColumnEventArgs,
     IPinRowEventArgs,
+    IPivotConfiguration,
+    IPivotConfigurationChangedEventArgs,
+    IPivotDimension,
+    IPivotUISettings,
+    IPivotValue,
     IRowDataCancelableEventArgs,
     IRowDataEventArgs,
     IRowDragEndEventArgs,
-    IRowDragStartEventArgs
+    IRowDragStartEventArgs,
+    IValuesChange,
+    NoopPivotDimensionsStrategy,
+    PivotDimensionType,
+    PivotGridType,
+    PivotRowLayoutType,
+    PivotSummaryPosition,
+    PivotUtil,
+    RowType,
+    WatchChanges,
 } from 'igniteui-angular/grids/core';
-import { DropPosition } from 'igniteui-angular/grids/core';
-import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
-import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from 'igniteui-angular/grids/core';
+import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
+import {
+    cloneArray,
+    ColumnType,
+    DataUtil,
+    DefaultDataCloneStrategy,
+    GridColumnDataType,
+    GridSummaryCalculationMode,
+    IDataCloneStrategy,
+    IFilteringExpressionsTree,
+    IFilteringOperation,
+    IFilteringStrategy,
+    IgxOverlayOutletDirective,
+    ISortingExpression,
+    onResourceChangeHandle,
+    OverlaySettings,
+    resizeObservable,
+    SortingDirection,
+    State,
+    Transaction,
+    TransactionService,
+    ɵSize,
+} from 'igniteui-angular/core';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
-import { IgxPivotColumnResizingService } from 'igniteui-angular/grids/core';
-import { State, Transaction, TransactionService, onResourceChangeHandle } from 'igniteui-angular/core';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
-import { GridBaseAPIService } from 'igniteui-angular/grids/core';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
-import { IgxPivotGridColumnResizerComponent } from 'igniteui-angular/grids/core';
 import { PivotSortUtil } from './pivot-sort-util';
-import { IgxPivotRowDimensionHeaderTemplateDirective, IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
-import { IgxPivotRowPipe, IgxPivotRowExpansionPipe, IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotGridFilterPipe, IgxPivotGridSortingPipe, IgxPivotGridColumnSortingPipe, IgxPivotCellMergingPipe, IgxPivotGridHorizontalRowGrouping } from './pivot-grid.pipes';
-import { IgxGridRowClassesPipe, IgxGridRowStylesPipe } from 'igniteui-angular/grids/core';
-import { IgxExcelStyleSearchComponent } from 'igniteui-angular/grids/core';
+import {
+    IgxPivotRowDimensionHeaderTemplateDirective,
+    IgxPivotValueChipTemplateDirective,
+} from './pivot-grid.directives';
+import {
+    IgxPivotAutoTransform,
+    IgxPivotCellMergingPipe,
+    IgxPivotColumnPipe,
+    IgxPivotGridColumnSortingPipe,
+    IgxPivotGridFilterPipe,
+    IgxPivotGridHorizontalRowGrouping,
+    IgxPivotGridSortingPipe,
+    IgxPivotRowExpansionPipe,
+    IgxPivotRowPipe,
+} from './pivot-grid.pipes';
 import { IgxPivotRowComponent } from './pivot-row.component';
-import { IgxColumnMovingDropDirective } from 'igniteui-angular/grids/core';
-import { IgxGridDragSelectDirective } from 'igniteui-angular/grids/core';
-import { IgxGridBodyDirective } from 'igniteui-angular/grids/core';
-import { IgxColumnResizingService } from 'igniteui-angular/grids/core';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
-import { IForOfDataChangingEventArgs, IgxForOfScrollSyncService, IgxForOfSyncService, IgxGridForOfDirective, IgxTemplateOutletDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import {
+    IForOfDataChangingEventArgs,
+    IgxForOfScrollSyncService,
+    IgxForOfSyncService,
+    IgxGridForOfDirective,
+    IgxTemplateOutletDirective,
+    IgxToggleDirective,
+} from 'igniteui-angular/directives';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -98,6 +190,8 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
     preserveWhitespaces: false,
     selector: 'igx-pivot-grid',
     templateUrl: 'pivot-grid.component.html',
+    styleUrl: 'pivot-grid.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxGridCRUDService,
         IgxGridValidationService,

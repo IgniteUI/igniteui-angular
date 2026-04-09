@@ -1,92 +1,107 @@
-<div class="display-density-actions">
-    <size-selector #sizeSelector></size-selector>
-</div>
-
-<div class="sample-column">
-    <div class="parent" (mouseenter)="showActions()" (mouseleave)="hideActions()">
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
-        @if (isVisible) {
-            <igx-action-strip
-                [hidden]="false"
-                class="my-action-strip" #actionstrip
-                [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
-            >
-                <igx-icon (click)="doSomeAction()">alarm</igx-icon>
-                <button igxButton="outlined" (click)="doSomeAction()">Action</button>
-            </igx-action-strip>
-        }
-    </div>
-</div>
-<div class="sample-column">
-    <p>{{result}}</p>
-</div>
-
-<div class="sample-column">
-    <h5>Grid Pinning Action</h5>
-    <igx-grid #grid1 [data]="userData" [width]="'800px'" [height]="'500px'" [dataCloneStrategy]="myClone" [batchEditing]="true"
-        [rowEditable]="true" [primaryKey]="'Id'" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
-      >
-      <igx-column [sortable]="true" field="Id"></igx-column>
-      <igx-column [sortable]="true" field="Name"></igx-column>
-      <igx-column [sortable]="true" field="Age"></igx-column>
-
-        <igx-action-strip #actionstrip1 [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
-            <igx-grid-pinning-actions></igx-grid-pinning-actions>
-        </igx-action-strip>
-    </igx-grid>
-</div>
-<button igxButton="outlined" (click)="grid1.transactions.commit(grid1.data)">Commit</button>
-
-<div class="sample-column">
-    <h5>Grid Pinning and Editing Actions</h5>
-    <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="'multiple'"
-        [rowEditable]="true" [primaryKey]="'ID'" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
-        (mouseleave)="onMouseLeave(actionstrip2)"
-        (rowDelete)="rowDelete($event)"
-        (rowDeleted)="rowDeleted($event)"
-        (rowAdd)="rowAdd($event)"
-        (rowAdded)="rowAdded($event)"
+<div class="standalone-action-strip" (mouseenter)="showActions()" (mouseleave)="hideActions()">
+    <span>Standalone action strip. <strong>Hover</strong> the mouse over this area to see the action strip.</span>
+    @if (isVisible) {
+        <igx-action-strip
+            [hidden]="false"
+            class="my-action-strip" #actionstrip
         >
-        @for (c of columns; track c) {
-            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
-                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-                <ng-template igxCell let-cell="cell" let-val>
-                    <div class="cell-template">
-                        <span>{{val}}</span>
-                    </div>
-                </ng-template>
-            </igx-column>
-        }
-
-        <igx-action-strip #actionstrip2 [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
-            <igx-grid-pinning-actions></igx-grid-pinning-actions>
-            <igx-grid-editing-actions [addRow]="true" [editRow]="true" [deleteRow]="true"></igx-grid-editing-actions>
+            <div class="action-strip-template">
+                <igx-icon (click)="doSomeAction()">alarm</igx-icon>
+                <button igxButton="contained" (click)="doSomeAction()">Action</button>
+            </div>
         </igx-action-strip>
-    </igx-grid>
+    }
 </div>
 
-<div class="sample-column">
-    <h5>Actions in menu</h5>
-    <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="'multiple'"
-        [rowEditable]="true" [primaryKey]="'ID'" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
+<igx-grid #grid1
+      [data]="userData"
+      [height]="'500px'"
+      [dataCloneStrategy]="myClone"
+      [batchEditing]="true"
+      [rowEditable]="true"
+      [primaryKey]="'Id'"
     >
-        @for (c of columns; track c) {
-            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
-                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-            </igx-column>
+    <igx-grid-toolbar>
+        <igx-grid-toolbar-title>Grid Pinning Action</igx-grid-toolbar-title>
+        <igx-grid-toolbar-actions>
+            <span
+                class="commit-tooltip-target"
+                igxTooltipTarget
+                [tooltip]="'Edit, add, or delete a row to enable Commit.'"
+                [tooltipDisabled]="grid1.transactions.canUndo"
+            >
+                <button igxButton="outlined" [disabled]="!grid1.transactions.canUndo" (click)="grid1.transactions.commit(grid1.data)">Commit</button>
+            </span>
+        </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
+
+  <igx-column [sortable]="true" field="Id"></igx-column>
+  <igx-column [sortable]="true" field="Name"></igx-column>
+  <igx-column [sortable]="true" field="Age"></igx-column>
+
+    <igx-action-strip>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+    </igx-action-strip>
+</igx-grid>
+
+<igx-grid
+    [data]="data"
+    [height]="'500px'"
+    [rowSelection]="'multiple'"
+    [rowEditable]="true" [primaryKey]="'ID'"
+    (mouseleave)="onMouseLeave(actionstrip2)"
+    (rowDelete)="rowDelete($event)"
+    (rowDeleted)="rowDeleted($event)"
+    (rowAdd)="rowAdd($event)"
+    (rowAdded)="rowAdded($event)"
+    >
+
+    <igx-grid-toolbar>
+        <igx-grid-toolbar-title>Grid Pinning and Editing Actions</igx-grid-toolbar-title>
+    </igx-grid-toolbar>
+
+    @for (c of columns; track c) {
+        <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+            <ng-template igxCell let-cell="cell" let-val>
+                <div class="cell-template">
+                    <span>{{val}}</span>
+                </div>
+            </ng-template>
+        </igx-column>
+    }
+
+    <igx-action-strip #actionstrip2>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+        <igx-grid-editing-actions [addRow]="true" [editRow]="true" [deleteRow]="true"></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
+
+<igx-grid
+        [data]="data"
+        [height]="'500px'"
+        [rowSelection]="'multiple'"
+        [rowEditable]="true"
+        [primaryKey]="'ID'"
+    >
+    @for (c of columns; track c) {
+        <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+        </igx-column>
+    }
+    <igx-grid-toolbar>
+        <igx-grid-toolbar-title>Actions in menu</igx-grid-toolbar-title>
+        <igx-grid-toolbar-actions>
+            <button igxButton="outlined" (click)='customItem = !customItem'>Toggle extra submenu item</button>
+        </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
+    <igx-action-strip #actionstrip3>
+        @if (customItem) {
+            <igx-icon *igxActionStripMenuItem (click)="doSomeAction()">alarm</igx-icon>
         }
+        <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
+        <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
 
-        <igx-action-strip #actionstrip3 [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
-            @if (customItem) {
-                <igx-icon *igxActionStripMenuItem (click)="doSomeAction()">alarm</igx-icon>
-            }
-            <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
-            <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
-        </igx-action-strip>
-    </igx-grid>
-</div>
-<button igxButton="outlined" (click)='customItem = !customItem'>Toggle extra submenu item</button>
-
+<igx-toast #toast></igx-toast>

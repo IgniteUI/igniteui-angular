@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/pagination' as *;
+
+$base: digest-schema($light-pagination);
+$material: digest-schema($material-pagination);
+$bootstrap: digest-schema($bootstrap-pagination);
+$fluent: digest-schema($fluent-pagination);
+$indigo: digest-schema($indigo-pagination);

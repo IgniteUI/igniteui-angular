@@ -1,0 +1,59 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-calendar, material) {
+    @include e(header) {
+        padding: rem(16px) rem(24px);
+        gap: rem(28px);
+    }
+
+    @include e(pickers, $m: 'vertical') {
+        .igx-calendar-picker__prev,
+        .igx-calendar-picker__next, {
+            transform: rotate(90deg)
+        }
+    }
+
+    @include e(pickers, $m: 'days') {
+        gap: rem(40px);
+    }
+
+    @include e(body) {
+        &:not(.igx-calendar__body--vertical) {
+            .igx-days-view + .igx-days-view {
+                padding-inline-start: rem(22px);
+            }
+
+            .igx-days-view:first-child,
+            .igx-days-view:nth-child(even) {
+                padding-inline-end: rem(22px);
+            }
+
+            .igx-days-view:last-child {
+                padding-inline-end: pad-block(rem(12px));
+            }
+        }
+    }
+
+    @include e(header-year) {
+        @include type-style(overline);
+        margin: 0;
+    }
+
+    @include e(header-date) {
+        @include type-style(h4);
+        margin: 0;
+    }
+
+    @include m(vertical) {
+        @include e(header) {
+            min-width: rem(168px);
+            width: rem(168px);
+        }
+    }
+}

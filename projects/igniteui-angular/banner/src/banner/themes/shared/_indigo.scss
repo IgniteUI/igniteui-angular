@@ -1,0 +1,23 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$theme: $indigo;
+
+@include themed-block(igx-banner, indigo) {
+    box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'banner-border-color');
+    padding: rem(16px);
+
+    igc-icon,
+    igx-icon,
+    igc-button,
+    [igxButton] {
+        --component-size: var(--ig-size, var(--ig-size-medium));
+    }
+
+    @include e(message) {
+        gap: rem(8px);
+        padding: initial;
+    }
+}

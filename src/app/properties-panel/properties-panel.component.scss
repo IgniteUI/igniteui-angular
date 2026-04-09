@@ -1,7 +1,9 @@
 @use 'igniteui-theming/sass/bem' as *;
 
 @include b(properties-panel) {
-    padding: 0.5rem;
+    isolation: isolate;
+    contain: layout paint content;
+    min-width: fit-content;
 
     igx-input-group {
         --ig-size: var(--ig-size-small);
@@ -14,6 +16,9 @@
     @include e(property-label) {
         display: inline-block;
         margin-bottom: 0.5rem;
+	    color: var(--ig-primary-300);
+	    font-size: 14px;
+	    line-height: 1.5;
     }
 
     @include e(switch-container) {
@@ -29,6 +34,21 @@
     }
 
     @include e(title) {
-        margin-block: 0.5rem 1.5rem;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        font-size: 1rem;
+        gap: .5rem;
+        padding-bottom: 1rem;
+
+        igx-icon {
+            --size: 2rem;
+            --color: var(--ig-gray-400);
+        }
     }
+}
+
+.custom-controls {
+    display: grid;
+    gap: 1rem;
 }

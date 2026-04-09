@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/avatar' as *;
+
+$material: digest-schema($dark-material-avatar);
+$bootstrap: digest-schema($dark-bootstrap-avatar);
+$fluent: digest-schema($dark-fluent-avatar);
+$indigo: digest-schema($dark-indigo-avatar);

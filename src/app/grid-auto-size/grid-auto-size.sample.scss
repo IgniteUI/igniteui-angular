@@ -1,13 +1,7 @@
-.sample-buttons {
-    margin-top: 24px;
-}
-
-[igxButton] {
-    margin-right: 8px;
-    margin-bottom: 8px;
-}
-
-.density-chooser {
-    margin-bottom: 16px;
-    max-width: 900px;
+:host {
+	display: grid;
+	gap: var(--demos-gap);
+	grid-template-rows: auto 1fr;
+	height: 100%;
+	align-items: start;
 }

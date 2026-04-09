@@ -12,7 +12,9 @@
     place-items: center;
     max-width: 350px;
     margin-right: 16px;
-    border: 1px solid #999;
+    border: 1px solid var(--ig-gray-400);
+    background: var(--ig-surface-500);
+    color: var(--ig-gray-700);
 }
 
 

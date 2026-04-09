@@ -1,4 +1,14 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, inject } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnInit,
+    Output,
+    ViewEncapsulation,
+    inject
+} from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import {
     HorizontalAlignment,
@@ -31,7 +41,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-toast',
     templateUrl: 'toast.component.html',
-    standalone: true
+    styleUrl: 'toast.component.css',
+    encapsulation: ViewEncapsulation.None
 })
 export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {
     private _element = inject(ElementRef);

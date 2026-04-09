@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/slider' as *;
+
+$base: digest-schema($light-slider);
+$material: digest-schema($material-slider);
+$bootstrap: digest-schema($bootstrap-slider);
+$fluent: digest-schema($fluent-slider);
+$indigo: digest-schema($indigo-slider);

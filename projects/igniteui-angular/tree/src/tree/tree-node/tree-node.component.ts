@@ -1,4 +1,23 @@
-import { ChangeDetectorRef, Component, ContentChildren, Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, booleanAttribute, inject } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    booleanAttribute,
+    ViewEncapsulation,
+    inject
+} from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import {
     IgxTree,
@@ -125,6 +144,8 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
 @Component({
     selector: 'igx-tree-node',
     templateUrl: 'tree-node.component.html',
+    styleUrl: 'tree-node.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ],

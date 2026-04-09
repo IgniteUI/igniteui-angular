@@ -66,7 +66,7 @@
 
 <!-- PICKER IN MONTHS -->
 <ng-template #calendarYearPicker>
-    <section class="igx-calendar-picker">
+    <section class="igx-calendar-picker igx-calendar-picker--standalone">
         <div class="igx-calendar-picker__dates">
             <ng-container
                 *ngTemplateOutlet="defaultYear; context: getContext(0)">
@@ -81,7 +81,7 @@
 
 <!-- PICKER IN YEARS -->
 <ng-template #calendarDecadePicker>
-    <section class="igx-calendar-picker">
+    <section class="igx-calendar-picker igx-calendar-picker--standalone">
         <div class="igx-calendar-picker__dates" aria-live="polite">
             <ng-container
                     *ngTemplateOutlet="defaultDecade;">

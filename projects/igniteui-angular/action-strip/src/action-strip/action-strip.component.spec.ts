@@ -7,7 +7,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
-const DROP_DOWN_LIST = 'igx-drop-down__list';
+const DROP_DOWN_LIST = 'igx-drop-down';
 
 describe('igxActionStrip', () => {
     let fixture;

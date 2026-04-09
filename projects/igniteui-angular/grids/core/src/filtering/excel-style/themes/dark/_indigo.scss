@@ -1,0 +1,81 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/elevations' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-excel-filter, indigo, dark) {
+    %grid-excel-actions__action {
+        background: contrast-color($color: 'gray', $variant: 50, $opacity: .1);
+
+        &:hover,
+        &:focus {
+            igx-icon {
+                color: contrast-color($color: 'gray', $variant: 50, $opacity: .8);
+
+            }
+        }
+
+        igx-icon {
+            color: contrast-color($color: 'gray', $variant: 50, $opacity: .6);
+        }
+    }
+
+    @include e(actions-pin) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-pin, $m: disabled) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-unpin) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-hide) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-select) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-selected) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-filter) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-filter, $m: active) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-clear) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-clear, $m: disabled) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(menu) {
+        background: color($color: 'gray', $variant: 50);
+
+        .igx-button-group {
+            --item-text-color: #{contrast-color($color: 'surface', $variant: 500)};
+        }
+    }
+
+    @include e(menu-main) {
+        border-block: rem(1px) dashed color($color: 'gray', $variant: 100);
+    }
+
+    @include e(tree) {
+        %igx-excel-filter__tree {
+            border-block: rem(1px) dashed color($color: 'gray', $variant: 100);
+        }
+    }
+}

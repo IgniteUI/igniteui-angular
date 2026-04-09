@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-toast, bootstrap) {
+    --_padding: #{rem(12px)};
+}

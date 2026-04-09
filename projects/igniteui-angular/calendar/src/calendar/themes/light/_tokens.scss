@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/calendar' as *;
+
+$base: digest-schema($light-calendar);
+$material: digest-schema($material-calendar);
+$bootstrap: digest-schema($bootstrap-calendar);
+$fluent: digest-schema($fluent-calendar);
+$indigo: digest-schema($indigo-calendar);

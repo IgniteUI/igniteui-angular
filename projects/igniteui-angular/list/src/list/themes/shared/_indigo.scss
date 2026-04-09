@@ -1,0 +1,57 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-list, indigo) {
+    gap: rem(4px);
+}
+
+@include themed-block(igx-list-item, indigo) {
+    --_padding-block: #{pad-block(rem(4px), rem(6px), rem(8px))};
+    --_padding-inline: #{pad-block(rem(8px), rem(12px), rem(16px))};
+
+    igx-avatar {
+        --ig-size: 2;
+    }
+
+    @include e(lines) {
+        @include type-style(body-2) {
+            margin: 0;
+        }
+    }
+
+    @include e(title) {
+        @include type-style(body-2) {
+            margin: 0;
+        }
+    }
+
+    @include e(subtitle) {
+        @include type-style(body-2) {
+            margin: 0;
+        }
+    }
+
+    @include e(thumbnail) {
+        > igx-icon,
+        > igc-icon {
+            --component-size: 2;
+        }
+    }
+
+    @include e(content) {
+        gap: rem(8px);
+    }
+
+    @include e(actions) {
+        gap: sizable(rem(4px), rem(6px), rem(8px));
+
+        > * {
+            --component-size: 2;
+        }
+    }
+
+    @include m(header) {
+        min-height: sizable(rem(24px), rem(28px), rem(32px));
+    }
+}

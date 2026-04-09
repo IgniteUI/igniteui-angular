@@ -5,6 +5,7 @@ import {
     HostBinding,
     HostListener,
     Input,
+    ViewEncapsulation,
     booleanAttribute,
     OnDestroy,
     inject
@@ -35,8 +36,11 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
         multi: true
     }],
     templateUrl: 'radio.component.html',
+    styleUrl: 'radio.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxRippleDirective]
 })
+
 export class IgxRadioComponent
     extends CheckboxBaseDirective
     implements AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {

@@ -1,42 +1,42 @@
-<div class="form-container">
-    <span>Igx Label on native form elements</span>
-
+<fieldset>
+<legend>Label directive in alongside native form html elements</legend>
     <form>
-        <div>
+        <div class="demo-form-group">
             <label for="text_field" igxLabel>Input</label>
             <input id="text_field" type="text">
         </div>
 
-        <section>
+        <div class="demo-form-group">
             <input id="check_box" type="checkbox">
             <label for="check_box" igxLabel>Checkbox</label>
-        </section>
+        </div>
 
-        <div>
-            <div>
+        <div class="demo-form-group demo-form-group--column">
+            <div class="demo-form-group">
                 <input id="one" type="radio" name="count" checked>
                 <label for="one" igxLabel>Radio one</label>
             </div>
 
-            <div>
+            <div class="demo-form-group">
                 <input id="two" type="radio" name="count">
                 <label for="two" igxLabel>Radio two</label>
             </div>
 
-            <div>
+            <div class="demo-form-group">
                 <input id="three" type="radio" name="count">
                 <label for="three" igxLabel>Radio three</label>
             </div>
         </div>
 
-        <div>
+        <div class="demo-form-group">
             <label for="range" igxLabel>Range picker</label>
             <input id="range" type="range">
         </div>
 
-        <div>
+        <div class="demo-form-group">
             <label for="color" igxLabel>Color picker</label>
-            <input id="color" type="color">
+            <div class="demo-color-input"><input id="color" type="color"></div>
         </div>
-    </form>
-</div>
+</form>
+</fieldset>
+

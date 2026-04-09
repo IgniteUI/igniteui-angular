@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/splitter' as *;
+
+$material: digest-schema($dark-material-splitter);
+$bootstrap: digest-schema($dark-bootstrap-splitter);
+$fluent: digest-schema($dark-fluent-splitter);
+$indigo: digest-schema($dark-indigo-splitter);
