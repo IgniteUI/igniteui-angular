@@ -236,7 +236,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGrid {
     /* blazorCollectionItemName: ActionStrip */
     /* ngQueryListName: actionStripComponents */
     @ContentChildren(IgxActionStripToken)
-    public actionStripComponents: QueryList<IgxActionStripToken>;
+    public override actionStripComponents: QueryList<IgxActionStripToken>;
 
     protected override autogenerateColumns() {
         super.autogenerateColumns();

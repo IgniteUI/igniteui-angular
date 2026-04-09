@@ -62,7 +62,7 @@ export class IgxRowIslandComponent extends IgxRowIsland {
     /* blazorCollectionItemName: ActionStrip */
     /* ngQueryListName: actionStripComponents */
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected actionStripComponents: QueryList<IgxActionStripToken>;
+    protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     protected override autogenerateColumns() {
         super.autogenerateColumns();

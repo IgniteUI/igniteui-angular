@@ -1612,6 +1612,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._sortAscendingHeaderIconTemplate;
     }
 
+    /** @hidden @internal */
+    @ContentChildren(IgxActionStripToken)
+    public actionStripComponents: QueryList<IgxActionStripToken>;
+
     /**
      * Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in asc order.
      *```html
