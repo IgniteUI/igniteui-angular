@@ -4,7 +4,8 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
 import {
-    IgxAddRowComponent, IgxGridRowEditingDefinedColumnsComponent, IgxGridRowEditingTransactionComponent
+    IgxAddRowComponent, IgxGridRowEditingDefinedColumnsComponent, IgxGridRowEditingTransactionComponent,
+    GridDynamicActionStripComponent
 } from '../../../test-utils/grid-samples.spec';
 
 import { By } from '@angular/platform-browser';
@@ -45,7 +46,8 @@ describe('IgxGrid - Row Adding #grid', () => {
                 IgxGridRowEditingTransactionComponent,
                 IgxGridRowEditingDefinedColumnsComponent,
                 ColumnLayoutTestComponent,
-                DefaultGridMasterDetailComponent
+                DefaultGridMasterDetailComponent,
+                GridDynamicActionStripComponent
             ],
             providers: [
                 IgxGridMRLNavigationService
@@ -1119,6 +1121,34 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.rowChangesCount).toEqual(3);
+        });
+    });
+
+    describe('ActionStrip - Dynamic Addition', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(GridDynamicActionStripComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+        });
+
+        it('Should set outlet for actionstrip menu when added post-init', async () => {
+            // Verify no actionstrip initially
+            expect(fixture.componentInstance.actionStrip).toBeUndefined();
+            expect(grid.actionStrip).toBeUndefined();
+
+            // Add the actionstrip dynamically
+            fixture.componentInstance.showActionStrip = true;
+            fixture.detectChanges();
+            await wait(16);
+
+            // Get reference to the actionstrip
+            actionStrip = fixture.componentInstance.actionStrip;
+            expect(actionStrip).toBeDefined();
+            expect(grid.actionStrip).toBeDefined();
+
+            // Verify that the outlet is properly set
+            expect(actionStrip.menuOverlaySettings.outlet).toBeDefined();
+            expect(actionStrip.menuOverlaySettings.outlet).toBe(grid.outlet);
         });
     });
 });
