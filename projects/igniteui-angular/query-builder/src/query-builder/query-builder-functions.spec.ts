@@ -309,8 +309,8 @@ export class QueryBuilderFunctions {
     }
 
     public static getQueryBuilderSelectDropdown(queryBuilderElement: HTMLElement, index = 0) {
-        const selectDropdown = Array.from(document.querySelectorAll(`.${QueryBuilderSelectors.DROP_DOWN_LIST_SCROLL}`))
-            .filter(item => (item as HTMLElement).checkVisibility())[index];
+        const overlayContent = queryBuilderElement.querySelectorAll('.igx-overlay__content')[index];
+        const selectDropdown = overlayContent!.querySelector(`.${QueryBuilderSelectors.DROP_DOWN_LIST_SCROLL}`);
         return selectDropdown;
     }
 
