@@ -1,0 +1,391 @@
+@use 'sass:map';
+@use '../../base' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
+
+/// Applies all sub-component token overrides used by the grid.
+/// @access private
+/// @param {Map} $theme - The grid theme map.
+@mixin grid-theme-builder($theme) {
+    $variant: map.get($theme, '_meta', 'theme');
+    $theme-variant: map.get($theme, '_meta', 'variant');
+
+    $schema: map.get(
+        (
+            'light-material': $light-material-schema,
+            'light-bootstrap': $light-bootstrap-schema,
+            'light-fluent': $light-fluent-schema,
+            'light-indigo': $light-indigo-schema,
+            'dark-material': $dark-material-schema,
+            'dark-bootstrap': $dark-bootstrap-schema,
+            'dark-fluent': $dark-fluent-schema,
+            'dark-indigo': $dark-indigo-schema,
+        ),
+        '#{$theme-variant}-#{$variant}'
+    );
+
+    igx-grid,
+    igc-grid,
+    igx-tree-grid,
+    igc-tree-grid,
+    igx-hierarchical-grid,
+    igc-hierarchical-grid,
+    igx-pivot-grid,
+    igc-pivot-grid,
+    igx-grid-lite,
+    igc-grid-lite {
+        --_grid-background: var(--background, var(--ig-grid-background));
+        --_grid-foreground: var(--foreground, var(--ig-grid-foreground));
+        --_grid-accent-color: var(--accent-color, var(--ig-grid-accent-color));
+
+        @include tokens(
+            action-strip-theme(
+                $schema: $schema,
+                $background: color-mix(in srgb, var(--_grid-accent-color) 12%, transparent),
+                $actions-background: color-mix(in srgb, var(--_grid-accent-color) 12%, var(--_grid-background)),
+                $icon-color: var(--_grid-accent-color),
+            )
+        );
+
+        @include tokens(
+            badge-theme(
+                $schema: $schema,
+                $background-color: var(--_grid-accent-color),
+            )
+        );
+
+        @include tokens(
+            banner-theme(
+                $schema: $schema,
+                $banner-background: var(--_grid-background),
+                $banner-message-color: var(--_grid-foreground),
+                $banner-illustration-color: var(--_grid-foreground),
+                $banner-border-color: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background))
+            )
+        );
+
+        .igx-excel-filter__menu .igx-button-group,
+        .igx-button-group {
+            --ig-btn-group-selected-bg: color-mix(in srgb, var(--_grid-accent-color) 8%, var(--_grid-background));
+
+            @include tokens(
+                button-group-theme(
+                    $schema: $schema,
+                    $item-background: var(--_grid-background, #{var-get($theme, if($variant == 'indigo', 'filtering-dialog-background', 'filtering-row-background'))}),
+                    $item-border-color: transparent,
+                    $item-text-color: var(--_grid-foreground, #{color($color: 'gray', $variant: 700)}),
+                    $item-selected-background: if(
+                        $variant == 'indigo',
+                        var(--ig-btn-group-selected-bg, var(--ig-primary-500)),
+                        var(--ig-btn-group-selected-bg, #{color($color: 'gray', $variant: 100)}),
+                    ),
+                    $item-hover-background: var(--item-selected-background),
+                    $item-selected-text-color: var(--_grid-accent-color, #{if(
+                        $variant == 'indigo',
+                        contrast-color($color: 'primary'),
+                        if($variant == 'material',
+                            color($color: 'secondary', $variant: 500),
+                            color($color: 'primary', $variant: 500)
+                        )
+                    )}),
+                    $item-selected-hover-text-color: var(--_grid-accent-color, #{if(
+                        $variant == 'indigo',
+                        contrast-color($color: 'primary'),
+                        if($variant == 'material',
+                            color($color: 'secondary', $variant: 500),
+                            color($color: 'primary', $variant: 500)
+                        )
+                    )}),
+                    $item-selected-hover-background: dynamic-shade(var(--item-hover-background), $offset: 3),
+                    $shadow: none
+                ),
+                $mode: 'scoped'
+            );
+        }
+
+        @include tokens(
+            contained-button-theme(
+                $schema: $schema,
+                $background: var(--_grid-accent-color),
+                $disabled-background: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+                $disabled-foreground: color-mix(in srgb, var(--_grid-foreground) 50%, var(--_grid-background)),
+            )
+        );
+
+        @include tokens(
+            flat-button-theme(
+                $schema: $schema,
+                $foreground: var(--_grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+            )
+        );
+
+        @include tokens(
+            outlined-button-theme(
+                $schema: $schema,
+                $foreground: var(--_grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+            )
+        );
+
+        @include tokens(
+            calendar-theme(
+                $header-background: var(--_grid-accent-color),
+                $content-background: var(--_grid-background),
+                $content-foreground: var(--_grid-foreground),
+            )
+        );
+
+        @include tokens(
+            checkbox-theme(
+                $schema: $schema,
+                $empty-color: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
+                $empty-fill-color: var(--_grid-background),
+                $tick-color-hover: color-mix(in srgb, var(--_grid-foreground) 40%, var(--_grid-background)),
+                $fill-color: var(--_grid-accent-color),
+                $label-color: var(--_grid-foreground),
+                $disabled-color: color-mix(in srgb, var(--_grid-foreground) 50%, var(--_grid-background)),
+            )
+        );
+
+        @include tokens(
+            chip-theme(
+                $schema: $schema,
+                $background: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
+                $text-color: var(--_grid-foreground),
+                $ghost-background: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
+                $ghost-text-color: var(--_grid-foreground),
+                $disabled-background: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
+                $disabled-text-color: color-mix(in srgb, var(--_grid-foreground) 50%, var(--_grid-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_grid-foreground) 24%, var(--_grid-background)),
+            )
+        );
+
+        @include tokens(
+            column-actions-theme(
+                $schema: $schema,
+                $background-color: var(--_grid-background),
+                $title-color: var(--_grid-accent-color)
+            )
+        );
+
+        @include tokens(
+            drop-down-theme(
+                $schema: $schema,
+                $background-color: var(--_grid-background),
+                $item-text-color: var(--_grid-foreground),
+                $border-color: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
+                $hover-item-background: color-mix(in srgb, var(--_grid-accent-color) 8%, var(--_grid-background)),
+                $focused-item-background: color-mix(in srgb, var(--_grid-accent-color) 12%, var(--_grid-background)),
+                $selected-item-background: color-mix(in srgb, var(--_grid-accent-color) 12%, var(--_grid-background)),
+                $selected-hover-item-background: color-mix(in srgb, var(--_grid-accent-color) 16%, var(--_grid-background)),
+                $selected-focus-item-background: color-mix(in srgb, var(--_grid-accent-color) 24%, var(--_grid-background)),
+            )
+        );
+
+        @include tokens(
+            grid-summary-theme(
+                $schema: $schema,
+                $background-color: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
+                $border-color: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background)),
+                $pinned-border-color: color-mix(in srgb, var(--_grid-foreground) 30%, var(--_grid-background)),
+                $label-color: var(--_grid-accent-color),
+                $result-color: var(--_grid-foreground)
+            )
+        );
+
+        @include tokens(
+            grid-toolbar-theme(
+                $schema: $schema,
+                $background-color: var(--_grid-background),
+                $title-text-color: var(--_grid-foreground),
+                $dropdown-background: var(--_grid-background),
+                $item-text-color: var(--_grid-foreground),
+                $item-hover-background: color-mix(in srgb, var(--_grid-accent-color) 8%, var(--_grid-background)),
+                $item-hover-text-color: var(--_grid-foreground),
+                $item-focus-background: color-mix(in srgb, var(--_grid-accent-color) 12%, var(--_grid-background)),
+                $item-focus-text-color: var(--_grid-foreground),
+                $border-color: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background))
+            )
+        );
+
+        @include tokens(
+            highlight-theme(
+                $schema: $schema,
+                $resting-background: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
+                $active-background: var(--_grid-accent-color)
+            )
+        );
+
+        @include tokens(
+            flat-icon-button-theme(
+                $schema: $schema,
+                $foreground: var(--_grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+            )
+        );
+
+        @include tokens(
+            outlined-icon-button-theme(
+                $schema: $schema,
+                $foreground: var(--_grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background))
+            )
+        );
+
+        @if $variant == 'material' {
+            @include tokens(
+                input-group-theme(
+                    $schema: $schema,
+                    $box-background: var(--_grid-background),
+                    $search-background: color-mix(in srgb, var(--_grid-foreground) 6%, var(--_grid-background)),
+                    $idle-bottom-line-color: var(--_grid-accent-color),
+                    $idle-secondary-color: var(--_grid-foreground),
+                    $focused-secondary-color: var(--_grid-accent-color),
+                    $border-color: var(--_grid-accent-color),
+                    $idle-text-color: var(--_grid-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
+                )
+            );
+        } @else if $variant == 'indigo' {
+            @include tokens(
+                input-group-theme(
+                    $schema: $schema,
+                    $idle-bottom-line-color: var(--_grid-accent-color),
+                    $idle-text-color: var(--_grid-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
+                )
+            );
+        } @else {
+            @include tokens(
+                input-group-theme(
+                    $schema: $schema,
+                    $border-color: var(--_grid-accent-color),
+                    $idle-text-color: var(--_grid-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
+                    $input-prefix-background: var(--_grid-accent-color),
+                    $border-disabled-background: transparent,
+                    $disabled-border-color: color-mix(in srgb, var(--_grid-accent-color) 50%, transparent),
+                )
+            );
+        }
+
+        @include tokens(
+            list-theme(
+                $schema: $schema,
+                $background: var(--_grid-background),
+                $item-background-hover: color-mix(in srgb, var(--_grid-accent-color) 8%, var(--_grid-background))
+            )
+        );
+
+        @include tokens(
+            paginator-theme(
+                $schema: $schema,
+                $background-color: var(--_grid-background),
+                $text-color: var(--_grid-foreground),
+                $border-color: color-mix(in srgb, var(--_grid-foreground) 16%, var(--_grid-background)),
+            )
+        );
+
+        @include tokens(
+            progress-circular-theme(
+                $schema: $schema,
+                $base-circle-color: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
+                $fill-color-default: var(--_grid-accent-color),
+                $text-color: var(--_grid-foreground)
+            )
+        );
+
+        @include tokens(
+            progress-linear-theme(
+                $schema: $schema,
+                $track-color: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
+                $fill-color-default: var(--_grid-accent-color),
+                $text-color: var(--_grid-foreground)
+            ),
+        );
+
+        @if $variant == 'bootstrap' {
+            @include tokens(
+                query-builder-theme(
+                    $schema: $schema,
+                    $background: var(--_grid-background),
+                    $header-foreground: var(--_grid-foreground),
+                    $header-border: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background)),
+                )
+            );
+        } @else {
+            @include tokens(
+                query-builder-theme(
+                    $schema: $schema,
+                    $background: var(--_grid-background),
+                    $header-foreground: var(--_grid-foreground),
+                )
+            );
+        }
+
+        $scrollbar-theme: digest-schema(map.get($schema, 'scrollbar'));
+        $scrollbar-bg-color: map.get($scrollbar-theme, 'sb-track-bg-color');
+        $scrollbar-thumb-color: map.get($scrollbar-theme, 'sb-thumb-bg-color');
+        $scrollbar-track-border-color: map.get($scrollbar-theme, 'sb-track-border-color');
+
+        --_scrollbar-thumb-color: color-mix(in srgb, var(--_grid-foreground) 50%, var(--_grid-background));
+        --_scrollbar-track-border-color: color-mix(in srgb, var(--_grid-foreground) 16%, var(--_grid-background));
+
+        @include tokens(
+            scrollbar-theme(
+                $schema: $schema,
+                $sb-track-bg-color: var(--_grid-background, $scrollbar-bg-color),
+                $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
+                $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
+            ),
+            $mode: 'scoped'
+        );
+
+        @if $variant == 'indigo' {
+            @include tokens(
+                select-theme(
+                    $schema: $schema,
+                    $toggle-button-foreground: var(--_grid-accent-color),
+                    $toggle-button-foreground-disabled: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+                )
+            );
+        } @else {
+            @include tokens(
+                select-theme(
+                    $schema: $schema,
+                    $toggle-button-background: var(--_grid-accent-color),
+                )
+            );
+        }
+
+        @include tokens(
+            tooltip-theme(
+                $schema: $schema,
+                $background: hsl(from var(--_grid-foreground) h s l / 80%)
+            ),
+        );
+
+        @include tokens(
+            tree-theme(
+                $schema: $schema,
+                $background: var(--_grid-background)
+            ),
+        );
+
+        @include tokens(
+            watermark-theme(
+                $schema: $schema,
+                $base-color: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+                $color: var(--_grid-foreground),
+                $border-color: color-mix(in srgb, var(--_grid-accent-color) 16%, var(--_grid-background))
+            )
+        );
+
+    }
+}
