@@ -1308,6 +1308,30 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
         }));
 
+        it('should account for CSS border widths in body height calculation when height is percent #16640', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.outerHeight = 600;
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const calcHeightNoBorder = grid.calcHeight;
+            expect(calcHeightNoBorder).not.toBeNull();
+
+            // Apply a 2px border (top and bottom) to the grid's native element
+            grid.nativeElement.style.borderTop = '2px solid black';
+            grid.nativeElement.style.borderBottom = '2px solid black';
+
+            // Trigger height recalculation
+            grid.reflow();
+            fix.detectChanges();
+
+            // The fix ensures border widths are included in the rendered height calculation,
+            // reducing the available body height accordingly and preventing continuous reflow growth
+            expect(grid.calcHeight).toBe(calcHeightNoBorder - 4);
+        }));
+
         it('should keep auto-sizing if initial data is empty then set to a new array', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             tick();
