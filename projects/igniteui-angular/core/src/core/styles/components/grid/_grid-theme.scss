@@ -2507,6 +2507,7 @@
         display: flex;
         flex: 1;
         overflow: hidden;
+        position: relative;
         max-width: calc(100% - 176px);
         min-width: rem(56px);
 
@@ -2538,48 +2539,41 @@
         }
     }
 
-    %igx-grid__filtering-scroll-start {
-        &::after {
-            @include _filtering-scroll-mask($theme, right);
-            inset-inline-start: calc(100% + 6px);
-        }
-
-        [dir='rtl'] & {
-            &::before {
-                @include _filtering-scroll-mask($theme, right);
-                inset-inline-end: calc(100% + 6px);
-            }
-        }
-    }
-
-    %igx-grid__filtering-scroll-end {
-        &::before {
-            @include _filtering-scroll-mask($theme, left);
-            inset-inline-end: calc(100% + 6px);
-        }
-
-        [dir='rtl'] & {
-            &::after {
-                @include _filtering-scroll-mask($theme, left);
-                inset-inline-start: calc(100% + 6px);
-            }
-        }
-    }
-
     %igx-grid__filtering-scroll-start,
     %igx-grid__filtering-scroll-end {
         width: rem(24px);
         height: rem(24px);
         position: relative;
-        overflow: visible;
         margin: if($variant == 'indigo', rem(12px), rem(8px));
         z-index: 1;
 
         [dir='rtl'] & {
             transform: scaleX(-1);
+        }
+    }
+
+    .igx-grid__filtering-row-scroll-start + .igx-grid__filtering-row-main {
+        &::before {
+            @include _filtering-scroll-mask($theme, right);
+            inset-inline-start: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        &::after {
+            @include _filtering-scroll-mask($theme, left);
+            inset-inline-end: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        [dir='rtl'] & {
+            &::before {
+                background: linear-gradient(to left, var-get($theme, 'filtering-row-background'), transparent);
+            }
 
             &::after {
-                content: initial;
+                background: linear-gradient(to right, var-get($theme, 'filtering-row-background'), transparent);
             }
         }
     }
