@@ -327,25 +327,19 @@ export class IgxQueryBuilderComponent implements OnDestroy {
         this.queryTree.setAddButtonFocus();
     }
 
-    private serializeExpressionTreeCallback(key: string, val: unknown): unknown {
-        if (key === 'externalObject') {
-            return undefined;
-        }
-        if (key === 'searchVal' && val instanceof Set) {
-            // Ensure Set-based search values (e.g. for "in" conditions) are serialized correctly
-            // JSON.stringify(new Set([...])) => '{}' by default, so convert to an array first
-            return Array.from(val);
-        }
+    private stripExternalObject(tree: IExpressionTree): void {
+        for (const operand of tree?.filteringOperands ?? []) {
+            if ('operator' in operand) {
+                this.stripExternalObject(operand);
+                continue;
+            }
 
-        return val;
-    }
+            delete (operand.condition as any)?.externalObject;
 
-    private getSerializableExpressionTree(tree: IExpressionTree): IExpressionTree {
-        if (!tree) {
-            return tree;
+            if (operand.searchTree) {
+                this.stripExternalObject(operand.searchTree);
+            }
         }
-
-        return JSON.parse(JSON.stringify(tree, this.serializeExpressionTreeCallback));
     }
 
     protected onExpressionTreeChange(tree: IExpressionTree) {
@@ -355,7 +349,8 @@ export class IgxQueryBuilderComponent implements OnDestroy {
             this._expressionTree = tree;
         }
         if (this._shouldEmitTreeChange) {
-            this.expressionTreeChange.emit(this.getSerializableExpressionTree(this._expressionTree));
+            this.stripExternalObject(this._expressionTree);
+            this.expressionTreeChange.emit(this._expressionTree);
         }
     }
 

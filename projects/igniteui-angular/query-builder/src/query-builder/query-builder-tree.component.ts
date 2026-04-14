@@ -670,7 +670,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             this._editedExpression = null;
             if (!this.parentExpression) {
-                this.emitExpressionTreeChange();
+                this.expressionTreeChange.emit(this._expressionTree);
             }
 
             this.rootGroup = null;
@@ -699,7 +699,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             if (this._expressionTree && !this.parentExpression) {
                 this._expressionTree.returnFields = value.length === this.fields.length ? ['*'] : value;
-                this.emitExpressionTreeChange();
+                this.expressionTreeChange.emit(this._expressionTree);
             }
         }
     }
@@ -892,7 +892,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, this.selectedEntity?.name, this.selectedReturnFields);
         if (!this.parentExpression) {
-            this.emitExpressionTreeChange();
+            this.expressionTreeChange.emit(this._expressionTree);
         }
     }
 
@@ -933,7 +933,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         if (!this.parentExpression && !skipEmit) {
-            this.emitExpressionTreeChange();
+            this.expressionTreeChange.emit(this._expressionTree);
         }
     }
 
@@ -1523,7 +1523,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         if (!this.parentExpression) {
-            this.emitExpressionTreeChange();
+            this.expressionTreeChange.emit(this._expressionTree);
         }
     }
 
@@ -1712,10 +1712,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this._focusDelay = DEFAULT_CHIP_FOCUS_DELAY;
             }
         }, this._focusDelay);
-    }
-
-    private emitExpressionTreeChange(): void {
-        this.expressionTreeChange.emit(this._expressionTree);
     }
 
     private init() {
