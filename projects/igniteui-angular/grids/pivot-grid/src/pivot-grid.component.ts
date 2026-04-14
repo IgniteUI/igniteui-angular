@@ -2053,6 +2053,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this._dataView = data;
     }
 
+    protected override onContentSizeChange() {
+        super.onContentSizeChange();
+        this.updateDefaultRowHeight();
+    }
+
     /**
      * @hidden @internal
      */
