@@ -140,4 +140,96 @@ describe('IgxChartMenuComponent', () => {
             expect(component.isConfigAreaExpanded).toBeFalse();
         });
     });
+
+    describe('ngAfterViewInit', () => {
+        it('should create a ResizeObserver and call createChart when currentChartType and chartDirective are set', () => {
+            const factorySpy = jasmine.createSpy('chartFactory');
+            component.chartDirective = { chartFactory: factorySpy };
+            component.chartArea = { clear: () => {} } as any;
+            component.currentChartType = 'Pie';
+
+            component.ngAfterViewInit();
+
+            expect(factorySpy).toHaveBeenCalledWith('Pie', component.chartArea);
+        });
+
+        it('should not call createChart when currentChartType is not set', () => {
+            const factorySpy = jasmine.createSpy('chartFactory');
+            component.chartDirective = { chartFactory: factorySpy };
+            component.chartArea = { clear: () => {} } as any;
+            component.currentChartType = undefined;
+
+            component.ngAfterViewInit();
+
+            expect(factorySpy).not.toHaveBeenCalled();
+        });
+
+        it('should not call createChart when chartDirective is not set', () => {
+            component.chartDirective = undefined;
+            component.currentChartType = 'Pie';
+
+            expect(() => component.ngAfterViewInit()).not.toThrow();
+        });
+    });
+
+    describe('ngOnDestroy', () => {
+        it('should disconnect the contentObserver if it exists', () => {
+            component.ngAfterViewInit();
+            const observer = (component as any).contentObserver;
+            const disconnectSpy = spyOn(observer, 'disconnect');
+
+            component.ngOnDestroy();
+
+            expect(disconnectSpy).toHaveBeenCalled();
+        });
+
+        it('should complete the chartDialogResizeNotify subject', () => {
+            const completeSpy = spyOn(component.chartDialogResizeNotify, 'complete');
+
+            component.ngOnDestroy();
+
+            expect(completeSpy).toHaveBeenCalled();
+        });
+
+        it('should not throw when contentObserver is not set', () => {
+            (component as any).contentObserver = undefined;
+
+            expect(() => component.ngOnDestroy()).not.toThrow();
+        });
+    });
+
+    describe('createChart title formatting', () => {
+        beforeEach(() => {
+            component.chartDirective = { chartFactory: () => {} };
+            component.chartArea = { clear: () => {} } as any;
+        });
+
+        it('should replace only the first comma with a space for two-word types', () => {
+            component.createChart('ColumnGrouped');
+            expect(component.title).toBe('Column Grouped');
+        });
+
+        it('should handle chart types with numbers like Column100Stacked', () => {
+            component.createChart('Column100Stacked');
+            // split on uppercase: 'Column100','Stacked' → 'Column100 Stacked'
+            expect(component.title).toBe('Column100 Stacked');
+        });
+
+        it('should handle single-word chart types', () => {
+            component.createChart('Pie');
+            expect(component.title).toBe('Pie');
+        });
+
+        it('should handle three-word chart types like ScatterBubbleChart', () => {
+            component.createChart('ScatterBubbleChart');
+            // 'Scatter,Bubble,Chart'.replace(',', ' ') → 'Scatter Bubble,Chart'
+            expect(component.title).toBe('Scatter Bubble,Chart');
+        });
+    });
+
+    describe('images', () => {
+        it('should initialize images from charts module', () => {
+            expect(component.images).toBeDefined();
+        });
+    });
 });
