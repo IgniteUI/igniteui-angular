@@ -1147,7 +1147,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     @ViewChild('loadingOverlay', { read: IgxToggleDirective, static: true })
-    public loadingOverlay?: IgxToggleDirective;
+    public loadingOverlay!: IgxToggleDirective;
 
     /* reactContentChildren */
     /* blazorInclude */
@@ -6723,9 +6723,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                 closeOnOutsideClick: false,
                 positionStrategy: new ContainerPositionStrategy()
             };
-            this.loadingOverlay?.open(overlaySettings);
+            this.loadingOverlay.open(overlaySettings);
         } else {
-            this.loadingOverlay?.close();
+            this.loadingOverlay.close();
         }
     }
 
