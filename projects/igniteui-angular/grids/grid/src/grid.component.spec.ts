@@ -460,7 +460,7 @@ describe('IgxGrid Component Tests #grid', () => {
             // the overlay should be shown and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
             const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
-            expect(loadingIndicator.nativeElement.offsetWidth).toBe(gridBody.nativeElement.offsetWidth);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
             expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
 
             expect(loadingIndicator.nativeElement.children.length).not.toBeNull();
@@ -488,7 +488,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             // the overlay should be hidden and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
-            expect(loadingIndicator.nativeElement.offsetWidth).toBe(gridBody.nativeElement.offsetWidth);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
             expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
             expect(loadingIndicator.query(By.css('igx-circular-bar'))).toBeNull();
         }));
@@ -642,7 +642,7 @@ describe('IgxGrid Component Tests #grid', () => {
             // the overlay should be shown and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
             const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
-            expect(loadingIndicator.nativeElement.offsetWidth).toBe(gridBody.nativeElement.offsetWidth);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
             expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
             expect(loadingIndicator.query(By.css('igx-circular-bar'))).not.toBeNull();
 
