@@ -6,8 +6,8 @@
 
 @mixin _filtering-scroll-mask($theme, $dir) {
     display: block;
-    position: absolute;
-    width: rem(10px);
+    position: sticky;
+    min-width: rem(10px);
     content: '';
     inset-block: rem(-2px);
     background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
@@ -2529,9 +2529,6 @@
                 igx-icon {
                     position: absolute;
                     inset-inline-start: rem(12px);
-                    // IE fix for vertical alignment
-                    top: 50%;
-                    transform: translateY(-50%);
                 }
 
                 span {
@@ -2557,6 +2554,7 @@
     .igx-grid__filtering-row-scroll-start + .igx-grid__filtering-row-main {
         &::before {
             @include _filtering-scroll-mask($theme, right);
+
             inset-inline-start: 0;
             pointer-events: none;
             z-index: 1;
@@ -2564,6 +2562,7 @@
 
         &::after {
             @include _filtering-scroll-mask($theme, left);
+
             inset-inline-end: 0;
             pointer-events: none;
             z-index: 1;
