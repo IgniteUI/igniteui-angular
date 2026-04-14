@@ -126,6 +126,7 @@
         }
 
         &[igxButton].igx-button--focused {
+            z-index: 2;
             color: var-get($theme, 'item-focused-text-color');
             background: var-get($theme, 'item-focused-background');
             border-color: var-get($theme, 'item-focused-border-color');
@@ -139,7 +140,6 @@
             }
 
             @if $variant == 'bootstrap' {
-                z-index: 1;
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'idle-shadow-color');
             }
 
@@ -160,7 +160,6 @@
 
             @if $variant == 'indigo' {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'idle-shadow-color');
-                z-index: 2;
             }
 
             &:hover {
@@ -212,7 +211,6 @@
         background: var-get($theme, 'item-selected-background');
         border-color: var-get($theme, 'item-selected-border-color');
         position: relative;
-        z-index: 3;
 
         &[igxButton] {
             border-color: var-get($theme, 'item-selected-border-color');
@@ -262,7 +260,10 @@
             @if $variant == 'indigo' {
                 border-color: var-get($theme, 'item-selected-border-color');
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
-                z-index: 2;
+            }
+
+            @if $variant == 'bootstrap' {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'selected-shadow-color');
             }
 
             &:hover {
