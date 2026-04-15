@@ -8,6 +8,7 @@ tools:
   - execute/runTests
   - read/problems
   - read/terminalLastCommand
+  - web
 ---
 
 # Migration Schematic Agent
@@ -25,6 +26,12 @@ You create **`ng update` migration schematics** for breaking changes in Ignite U
 - Default behavior changed in an incompatible way
 
 **Do NOT create migrations** for new additive features or deprecations (deprecations are warnings, not removals).
+
+---
+
+## What You Do NOT Do
+
+- Do not modify dependency manifests or lock files (`package.json`, `package-lock.json`, etc.). Ask for approval first if a dependency change is truly required.
 
 ---
 
@@ -114,6 +121,7 @@ Before finishing:
 3. Run:
    - `npm run test:schematics`
    - `npm run build:migrations`
+   - `npm run lint:lib`
 4. Confirm the migration updates the old API and leaves unrelated code unchanged.
 
 ### 7. Commit

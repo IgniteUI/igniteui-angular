@@ -8,6 +8,7 @@ tools:
   - read/problems
   - execute/runTests
   - read/terminalLastCommand
+  - web
 ---
 
 # Implementer — GREEN + REFACTOR Phases
@@ -118,6 +119,7 @@ Update component agent skills if you need to guide other agents on how to use th
 - Do not update `README.md` — the `component-readme-agent` handles that.
 - Do not create migration schematics — the `migration-agent` handles that.
 - Do not update `CHANGELOG.md` — the `changelog-agent` handles that.
+- Do not modify dependency manifests or lock files (`package.json`, `package-lock.json`, etc.). Ask for approval first if a dependency change is truly required.
 
 ---
 

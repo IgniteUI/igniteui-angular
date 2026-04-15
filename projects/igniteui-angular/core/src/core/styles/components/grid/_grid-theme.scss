@@ -6,8 +6,8 @@
 
 @mixin _filtering-scroll-mask($theme, $dir) {
     display: block;
-    position: absolute;
-    width: rem(10px);
+    position: sticky;
+    min-width: rem(10px);
     content: '';
     inset-block: rem(-2px);
     background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
@@ -306,7 +306,7 @@
         %filtering-row-input-overrides {
             igx-input-group {
                 width: 100%;
-                max-width: rem(200px);
+                max-width: rem(240px);
                 min-width: rem(140px);
 
                 @if $variant != 'fluent' {
@@ -2482,6 +2482,16 @@
                 margin: rem(4px);
             }
         }
+
+        .igx-grid__filtering-row-percent-hint {
+            display: inline-block;
+            max-width: rem(56px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+            flex-shrink: 1;
+        }
     }
 
     %igx-grid__filtering-dropdown-items {
@@ -2497,6 +2507,7 @@
         display: flex;
         flex: 1;
         overflow: hidden;
+        position: relative;
         max-width: calc(100% - 176px);
         min-width: rem(56px);
 
@@ -2516,9 +2527,6 @@
                 igx-icon {
                     position: absolute;
                     inset-inline-start: rem(12px);
-                    // IE fix for vertical alignment
-                    top: 50%;
-                    transform: translateY(-50%);
                 }
 
                 span {
@@ -2528,48 +2536,43 @@
         }
     }
 
-    %igx-grid__filtering-scroll-start {
-        &::after {
-            @include _filtering-scroll-mask($theme, right);
-            inset-inline-start: calc(100% + 6px);
-        }
-
-        [dir='rtl'] & {
-            &::before {
-                @include _filtering-scroll-mask($theme, right);
-                inset-inline-end: calc(100% + 6px);
-            }
-        }
-    }
-
-    %igx-grid__filtering-scroll-end {
-        &::before {
-            @include _filtering-scroll-mask($theme, left);
-            inset-inline-end: calc(100% + 6px);
-        }
-
-        [dir='rtl'] & {
-            &::after {
-                @include _filtering-scroll-mask($theme, left);
-                inset-inline-start: calc(100% + 6px);
-            }
-        }
-    }
-
     %igx-grid__filtering-scroll-start,
     %igx-grid__filtering-scroll-end {
         width: rem(24px);
         height: rem(24px);
         position: relative;
-        overflow: visible;
         margin: if($variant == 'indigo', rem(12px), rem(8px));
         z-index: 1;
 
         [dir='rtl'] & {
             transform: scaleX(-1);
+        }
+    }
+
+    .igx-grid__filtering-row-scroll-start + .igx-grid__filtering-row-main {
+        &::before {
+            @include _filtering-scroll-mask($theme, right);
+
+            inset-inline-start: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        &::after {
+            @include _filtering-scroll-mask($theme, left);
+
+            inset-inline-end: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        [dir='rtl'] & {
+            &::before {
+                background: linear-gradient(to left, var-get($theme, 'filtering-row-background'), transparent);
+            }
 
             &::after {
-                content: initial;
+                background: linear-gradient(to right, var-get($theme, 'filtering-row-background'), transparent);
             }
         }
     }
