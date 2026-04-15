@@ -37,8 +37,7 @@ import {
     DateTimeUtil,
     IgxPickerActionsDirective,
     isDateInRanges,
-    PickerCalendarOrientation,
-    IgxOverlayOutletDirective
+    PickerCalendarOrientation
 } from 'igniteui-angular/core';
 import { IgxCalendarContainerComponent } from '../date-picker/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-picker/picker-base.directive';
@@ -111,7 +110,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _injector = inject(Injector);
     private _cdr = inject(ChangeDetectorRef);
     private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
-
 
     /**
      * The number of displayed month views.
@@ -366,22 +364,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public override placeholder = '';
 
     /**
-     * Gets/Sets the container used for the popup element.
-     *
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-date-range-picker [outlet]="outlet"></igx-date-range-picker>
-     * //..
-     * ```
-     */
-    @Input()
-    public override outlet: IgxOverlayOutletDirective | ElementRef<any>;
-
-    /**
      * Show/hide week numbers
      *
      * @remarks
@@ -435,7 +417,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @HostBinding('class.igx-date-range-picker')
     public cssClass = 'igx-date-range-picker';
 
-    @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
+    @ViewChild("container", { read: ViewContainerRef })
     private viewContainerRef: ViewContainerRef;
 
     /** @hidden @internal */
