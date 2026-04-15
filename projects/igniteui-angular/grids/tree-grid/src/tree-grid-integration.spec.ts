@@ -582,8 +582,10 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(idCell.editMode).toBeFalsy();
             expect(ageCell.editMode).toBeTruthy();
 
-            const cancelBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[0] as DebugElement;
-            const doneBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[1];
+            // the first button element is in the add row snackbar, so we need to get
+            // the second and third one which are Cancel and Done buttons in the row edit banner
+            const cancelBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[1];
+            const doneBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[2];
             spyOn(cancelBtn.nativeElement, 'focus').and.callThrough();
             spyOn<any>(grid.rowEditTabs.first, 'move').and.callThrough();
             spyOn<any>(grid.rowEditTabs.last, 'move').and.callThrough();

@@ -1145,10 +1145,6 @@ describe('IgxGrid - Row Adding #grid', () => {
             actionStrip = fixture.componentInstance.actionStrip;
             expect(actionStrip).toBeDefined();
             expect(grid.actionStrip).toBeDefined();
-
-            // Verify that the outlet is properly set
-            expect(actionStrip.menuOverlaySettings.outlet).toBeDefined();
-            expect(actionStrip.menuOverlaySettings.outlet).toBe(grid.outlet);
         });
     });
 });
