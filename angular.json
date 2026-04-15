@@ -22,7 +22,7 @@
             },
             "index": "src/index.html",
             "polyfills": [
-                "zone.js"
+              "zone.js"
             ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
@@ -31,7 +31,12 @@
               "src/web.config"
             ],
             "styles": [
-              "src/styles/styles.scss"
+              "src/styles/styles.scss",
+              {
+                "input": "src/styles/grid-cell-merging-alternate-theme.scss",
+                "bundleName": "grid-cell-merging-alternate-theme",
+                "inject": false
+              }
             ],
             "scripts": [],
             "extractLicenses": false,
@@ -206,8 +211,8 @@
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular/karma.conf.js",
             "exclude": [
-                "migrations",
-                "schematics"
+              "migrations",
+              "schematics"
             ]
           }
         },
@@ -292,11 +297,19 @@
               "projects/igniteui-angular-elements/src/styles.scss"
             ],
             "scripts": [
-                { "input": "./node_modules/lit-html/lit-html.js", "inject": false },
-                { "input": "./node_modules/lit-html/development/directive.js", "inject": false }
+              {
+                "input": "./node_modules/lit-html/lit-html.js",
+                "inject": false
+              },
+              {
+                "input": "./node_modules/lit-html/development/directive.js",
+                "inject": false
+              }
             ],
             "stylePreprocessorOptions": {
-                "includePaths": ["node_modules"]
+              "includePaths": [
+                "node_modules"
+              ]
             },
             "browser": "projects/igniteui-angular-elements/src/main.ts"
           },
@@ -328,7 +341,10 @@
               ],
               "outputHashing": "none",
               "optimization": true,
-              "externalDependencies": ["lit", "igniteui-i18n-core"]
+              "externalDependencies": [
+                "lit",
+                "igniteui-i18n-core"
+              ]
             },
             "development": {
               "optimization": false,
@@ -337,8 +353,8 @@
               "namedChunks": true
             },
             "dev-app": {
-                "browser": "projects/igniteui-angular-elements/src/main.app.ts",
-                "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json"
+              "browser": "projects/igniteui-angular-elements/src/main.app.ts",
+              "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json"
             }
           },
           "defaultConfiguration": "production"
@@ -365,7 +381,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "main": "projects/igniteui-angular-elements/src/test.ts",
-            "polyfills":  [
+            "polyfills": [
               "projects/igniteui-angular-elements/src/polyfills.ts"
             ],
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
@@ -379,7 +395,9 @@
               "projects/igniteui-angular-elements/src/styles.scss"
             ],
             "stylePreprocessorOptions": {
-                "includePaths": ["node_modules"]
+              "includePaths": [
+                "node_modules"
+              ]
             },
             "scripts": []
           }
@@ -518,7 +536,9 @@
               "projects/igniteui-angular-performance/src/styles.scss"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["node_modules"]
+              "includePaths": [
+                "node_modules"
+              ]
             }
           },
           "configurations": {
