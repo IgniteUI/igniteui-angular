@@ -15,7 +15,7 @@
     $chip-padding: (
         comfortable: rem(if($variant != 'indigo', 20px, 16px)),
         cosy: rem(12px),
-        compact: rem(if($variant != 'indigo', 5px, 3px))
+        compact: rem(if($variant != 'indigo', 5px, 7px))
     );
 
     $box-shadow-focus: map.get((
