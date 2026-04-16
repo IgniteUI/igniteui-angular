@@ -116,13 +116,12 @@
             </igx-grid-summary-row>
         </ng-template>
         <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
-        <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
+        <ng-container #bodyViewContainerRef></ng-container>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
     <div igxToggle #loadingOverlay>
         @if (shouldOverlayLoading) {
-            <igx-circular-bar [indeterminate]="true">
-            </igx-circular-bar>
+            <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
         }
     </div>
     @if (moving && columnInDrag) {
@@ -250,7 +249,6 @@
 @if (colResizingService.showResizer) {
     <igx-grid-column-resizer></igx-grid-column-resizer>
 }
-<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 @if (platform.isElements) {
     <div #sink style="display: none;"></div>

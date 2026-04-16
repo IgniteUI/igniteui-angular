@@ -2,7 +2,7 @@ import { IExcelFile } from './excel-interfaces';
 import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
 
-import { strToU8 } from 'fflate';
+import { strToU8 } from 'fflate/browser';
 import { ExportHeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 import { yieldingLoop } from '../exporter-common/yielding-loop';
 
