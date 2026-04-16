@@ -156,10 +156,10 @@ export class IgxGridStateBaseDirective {
                 const filteringState = context.currGrid.filteringExpressionsTree;
                 if (filteringState) {
                     const copy: IFilteringExpressionsTree = { ...filteringState };
-                    delete (copy as any).owner;
+                    delete copy.owner;
                     copy.filteringOperands = filteringState.filteringOperands.map(item => {
                         const operandCopy = { ...(item as IFilteringExpressionsTree) };
-                        delete (operandCopy as any).owner;
+                        delete operandCopy.owner;
                         return operandCopy;
                     });
                     return { filtering: copy };
@@ -177,10 +177,10 @@ export class IgxGridStateBaseDirective {
                 let advancedFiltering: any;
                 if (filteringState) {
                     const copy: IFilteringExpressionsTree = { ...filteringState };
-                    delete (copy as any).owner;
+                    delete copy.owner;
                     copy.filteringOperands = filteringState.filteringOperands.map(item => {
                         const operandCopy = { ...(item as IFilteringExpressionsTree) };
-                        delete (operandCopy as any).owner;
+                        delete operandCopy.owner;
                         return operandCopy;
                     });
                     advancedFiltering = copy;
