@@ -27,6 +27,7 @@
         box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
         padding-inline: pad-inline(rem(4px), rem(6px), if($variant == 'indigo', rem(6px), rem(8px)));
+        gap: rem(2px);
 
         &:has(igx-icon:only-child) {
             padding-inline: 0;
