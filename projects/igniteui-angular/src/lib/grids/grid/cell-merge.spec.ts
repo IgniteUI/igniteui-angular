@@ -5,7 +5,7 @@ import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrat
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
 import { hasClass, setElementSize } from '../../test-utils/helper-utils.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { IgxHierarchicalGridTestBaseComponent } from '../hierarchical-grid/hierarchical-grid.spec';
@@ -301,6 +301,27 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         });
 
+        describe('Summaries', () => {
+            it('should merge correctly when summary row is shown.', () => {
+                grid.groupBy({
+                    fieldName: 'ProductName', dir: SortingDirection.Desc,
+                    ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+                });
+                fix.detectChanges();
+
+                const col = grid.getColumnByName('ProductName');
+                col.hasSummary = true;
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(grid, col, [
+                    { value: 'NetAdvantage', span: 2 },
+                    { value: 'Ignite UI for JavaScript', span: 3 },
+                    { value: 'Ignite UI for Angular', span: 3 },
+                    { value: null, span: 1 }
+                ]);
+            });
+        });
+
         describe('Master-Detail', () => {
 
             it('should interrupt merge sequence if a master-detail row is expanded.', () => {
@@ -451,8 +472,10 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 UIInteractions.simulateClickAndSelectEvent(row1.cells.toArray()[1].nativeElement);
                 await wait(1);
+                (grid as any)._activeRowIndexes = null;
                 fix.detectChanges();
 
+                expect((grid as any).activeRowIndexes).toEqual([0, 0]);
                 GridFunctions.verifyColumnMergedState(grid, col, [
                     { value: 'Ignite UI for JavaScript', span: 1 },
                     { value: 'Ignite UI for JavaScript', span: 1 },
@@ -461,6 +484,212 @@ describe('IgxGrid - Cell merging #grid', () => {
                     { value: 'Ignite UI for Angular', span: 2 },
                     { value: null, span: 1 },
                     { value: 'NetAdvantage', span: 2 }
+                ]);
+            });
+
+            it('should interrupt merge sequence correctly when there are multiple overlapping merge groups affected.', async () => {
+                const col1 = grid.getColumnByName('ProductName');
+                const col2 = grid.getColumnByName('Downloads');
+                const col3 = grid.getColumnByName('Released');
+                const col4 = grid.getColumnByName('ReleaseDate');
+
+                col1.merge = true;
+                col2.merge = true;
+                col3.merge = true;
+                col4.merge = true;
+
+                fix.detectChanges();
+
+                const data = [
+                    {
+                        Downloads: 1000,
+                        ID: 1,
+                        ProductName: 'Ignite UI for JavaScript',
+                        ReleaseDate: fix.componentInstance.today,
+                        Released: true
+                    },
+                    {
+                        Downloads: 1000,
+                        ID: 2,
+                        ProductName: 'Ignite UI for JavaScript',
+                        ReleaseDate: fix.componentInstance.today,
+                        Released: true
+                    },
+                    {
+                        Downloads: 1000,
+                        ID: 3,
+                        ProductName: 'Ignite UI for Angular',
+                        ReleaseDate: fix.componentInstance.today,
+                        Released: true
+                    },
+                    {
+                        Downloads: 1000,
+                        ID: 4,
+                        ProductName: 'Ignite UI for JavaScript',
+                        ReleaseDate: fix.componentInstance.prevDay,
+                        Released: true
+                    },
+                    {
+                        Downloads: 100,
+                        ID: 5,
+                        ProductName: 'Ignite UI for Angular',
+                        ReleaseDate: fix.componentInstance.prevDay,
+                        Released: true
+                    },
+                    {
+                        Downloads: 1000,
+                        ID: 6,
+                        ProductName: 'Ignite UI for Angular',
+                        ReleaseDate: null,
+                        Released: true
+                    },
+                    {
+                        Downloads: 0,
+                        ID: 7,
+                        ProductName: null,
+                        ReleaseDate: fix.componentInstance.prevDay,
+                        Released: true
+                    },
+                    {
+                        Downloads: 1000,
+                        ID: 8,
+                        ProductName: 'NetAdvantage',
+                        ReleaseDate: fix.componentInstance.prevDay,
+                        Released: true
+                    },
+                    {
+                        Downloads: 1000,
+                        ID: 9,
+                        ProductName: 'NetAdvantage',
+                        ReleaseDate: null,
+                        Released: true
+                    }
+                ];
+                fix.componentInstance.data = data;
+                fix.detectChanges();
+
+                const row1 = grid.rowList.toArray()[0];
+                UIInteractions.simulateClickAndSelectEvent(row1.cells.toArray()[1].nativeElement);
+                await wait(1);
+                (grid as any)._activeRowIndexes = null;
+                fix.detectChanges();
+
+                expect((grid as any).activeRowIndexes).toEqual([0, 0]);
+                GridFunctions.verifyColumnMergedState(grid, col1, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                GridFunctions.verifyColumnMergedState(grid, col2, [
+                    { value: 1000, span: 1 },
+                    { value: 1000, span: 3 },
+                    { value: 100, span: 1 },
+                    { value: 1000, span: 1 },
+                    { value: 0, span: 1 },
+                    { value: 1000, span: 2 }
+                ]);
+
+                GridFunctions.verifyColumnMergedState(grid, col3, [
+                    { value: true, span: 1 },
+                    { value: true, span: 8 }
+                ]);
+
+                GridFunctions.verifyColumnMergedState(grid, col4, [
+                    { value: fix.componentInstance.today, span: 1 },
+                    { value: fix.componentInstance.today, span: 2 },
+                    { value: fix.componentInstance.prevDay, span: 2 },
+                    { value: null, span: 1 },
+                    { value: fix.componentInstance.prevDay, span: 2 },
+                    { value: null, span: 1 }
+                ]);
+
+                const row2 = grid.rowList.toArray()[1];
+                UIInteractions.simulateClickAndSelectEvent(row2.cells.toArray()[1].nativeElement);
+                await wait(1);
+                (grid as any)._activeRowIndexes = null;
+                fix.detectChanges();
+
+                expect((grid as any).activeRowIndexes).toEqual([1, 1]);
+                GridFunctions.verifyColumnMergedState(grid, col1, [
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                GridFunctions.verifyColumnMergedState(grid, col2, [
+                    { value: 1000, span: 1 },
+                    { value: 1000, span: 1 },
+                    { value: 1000, span: 2 },
+                    { value: 100, span: 1 },
+                    { value: 1000, span: 1 },
+                    { value: 0, span: 1 },
+                    { value: 1000, span: 2 }
+                ]);
+
+                GridFunctions.verifyColumnMergedState(grid, col3, [
+                    { value: true, span: 1 },
+                    { value: true, span: 1 },
+                    { value: true, span: 7 }
+                ]);
+
+                GridFunctions.verifyColumnMergedState(grid, col4, [
+                    { value: fix.componentInstance.today, span: 1 },
+                    { value: fix.componentInstance.today, span: 1 },
+                    { value: fix.componentInstance.today, span: 1 },
+                    { value: fix.componentInstance.prevDay, span: 2 },
+                    { value: null, span: 1 },
+                    { value: fix.componentInstance.prevDay, span: 2 },
+                    { value: null, span: 1 }
+                ]);
+
+                const row3 = grid.rowList.toArray()[2];
+                UIInteractions.simulateClickAndSelectEvent(row3.cells.toArray()[1].nativeElement);
+                await wait(1);
+                (grid as any)._activeRowIndexes = null;
+                fix.detectChanges();
+
+                expect((grid as any).activeRowIndexes).toEqual([2, 2]);
+                GridFunctions.verifyColumnMergedState(grid, col1, [
+                    { value: 'Ignite UI for JavaScript', span: 2 },
+                    { value: 'Ignite UI for Angular', span: 1 },
+                    { value: 'Ignite UI for JavaScript', span: 1 },
+                    { value: 'Ignite UI for Angular', span: 2 },
+                    { value: null, span: 1 },
+                    { value: 'NetAdvantage', span: 2 }
+                ]);
+
+                GridFunctions.verifyColumnMergedState(grid, col2, [
+                    { value: 1000, span: 2 },
+                    { value: 1000, span: 1 },
+                    { value: 1000, span: 1 },
+                    { value: 100, span: 1 },
+                    { value: 1000, span: 1 },
+                    { value: 0, span: 1 },
+                    { value: 1000, span: 2 }
+                ]);
+
+                GridFunctions.verifyColumnMergedState(grid, col3, [
+                    { value: true, span: 2 },
+                    { value: true, span: 1 },
+                    { value: true, span: 6 }
+                ]);
+
+                GridFunctions.verifyColumnMergedState(grid, col4, [
+                    { value: fix.componentInstance.today, span: 2 },
+                    { value: fix.componentInstance.today, span: 1 },
+                    { value: fix.componentInstance.prevDay, span: 2 },
+                    { value: null, span: 1 },
+                    { value: fix.componentInstance.prevDay, span: 2 },
+                    { value: null, span: 1 }
                 ]);
             });
 
@@ -873,6 +1102,68 @@ describe('IgxGrid - Cell merging #grid', () => {
                     { value: 'Product B', span: 2 },
                     { value: 'Product C', span: 1 },
                     { value: 'Product B', span: 1 }
+                ]);
+            });
+
+            it('should remerge child grid cells when focus moves to parent grid.', async () => {
+                const ri = fix.componentInstance.rowIsland;
+                ri.cellMergeMode = 'always';
+                ri.getColumnByName('ProductName').merge = true;
+                fix.detectChanges();
+
+                const firstRow = grid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+                firstRow.toggle();
+                fix.detectChanges();
+
+                const childGrid = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+                expect(childGrid).toBeDefined();
+
+                const childCol = childGrid.getColumnByName('ProductName');
+                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
+                ]);
+
+                await wait(1);
+                fix.detectChanges();
+
+                const allGrids = fix.debugElement.queryAll(By.directive(IgxHierarchicalGridComponent));
+                const childGridDE = allGrids.find(x => x.componentInstance === childGrid);
+                expect(childGridDE).toBeDefined();
+                const childRows = childGridDE.queryAll(By.css(CSS_CLASS_GRID_ROW));
+                childRows.shift();
+                const childRowDE = childRows[0];
+                const childCells = childRowDE.queryAll(By.css('.igx-grid__td'));
+                const childCellDE = childCells[1];
+                UIInteractions.simulateClickAndSelectEvent(childCellDE.nativeElement);
+                await wait(1);
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                    { value: 'Product A', span: 1 },
+                    { value: 'Product A', span: 1 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
+                ]);
+
+                const rootGridDE = allGrids.find(x => x.componentInstance === grid);
+                expect(rootGridDE).toBeDefined();
+                const parentRows = rootGridDE.queryAll(By.css(CSS_CLASS_GRID_ROW));
+                parentRows.shift();
+                const parentRowDE = parentRows[0];
+                const parentCells = parentRowDE.queryAll(By.css('.igx-grid__td'));
+                const parentCellDE = parentCells[1];
+                const activeChange = waitForActiveNodeChange(childGrid);
+                UIInteractions.simulateClickAndSelectEvent(parentCellDE.nativeElement);
+                await activeChange;
+                await wait(20);
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
                 ]);
             });
 

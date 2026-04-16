@@ -6,6 +6,7 @@ import { UIInteractions } from "../../test-utils/ui-interactions.spec";
 import { CalendarDay } from "../common/model";
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-webcomponents';
 import { ScrollDirection } from "../calendar";
+import { DayDigitPipe } from "../day-digit.pipe";
 
 const TODAY = new Date(2024, 6, 12);
 
@@ -108,6 +109,37 @@ describe("Days View Component", () => {
         if (initialTrailing.length > 0) {
             expect(trailing.length).toEqual(0);
         }
+    });
+
+    it("should format date correctly for zh-CN locale programmatically vs template pipe", () => {
+        const fixture = TestBed.createComponent(InitDaysViewComponent);
+        const daysView = fixture.componentInstance.instance;
+        const pipe = new DayDigitPipe();
+        const date = new Date(2020, 10, 25); // Nov 25
+
+        // Initialize component
+        daysView.formatViews = { day: true, month: true, year: true };
+        fixture.detectChanges();
+
+        // Mock the formatter behavior
+        // Simulate a locale (like zh-CN) that adds a suffix to the day number.
+        // Cast to 'any' to overwrite the protected 'formatterDay' property used by formattedDate()
+        (daysView as any).formatterDay = {
+            format: () => '25日',
+        } as Intl.DateTimeFormat;
+
+        // 1. Verify Programmatic Access (formattedDate method)
+        // Should return the raw formatted string from the formatter (with suffix)
+        const programmaticResult = daysView.formattedDate(date);
+        expect(programmaticResult).toBe('25日', 'Programmatic API should return the full locale string (including suffix, in this case 日)');
+
+        // 2. Verify Pipe Logic
+        // The pipe takes the formatted string "25日" and strips non-digits to return "25"
+        const pipeResult = pipe.transform(programmaticResult, daysView.formatViews);
+        expect(pipeResult).toBe('25', 'Pipe should strip non-numeric characters from the input string');
+
+        // 3. Confirm the difference implies the pipe did its job
+        expect(programmaticResult).not.toEqual(pipeResult);
     });
 
     describe("Keyboard navigation", () => {

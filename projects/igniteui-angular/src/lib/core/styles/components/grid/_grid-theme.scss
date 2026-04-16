@@ -211,7 +211,8 @@
             min-height: 100% !important;
             border: none !important;
 
-            .igx-input-group__filler {
+            .igx-input-group__filler,
+            .igx-input-group__notch {
                 border: none !important;
             }
 
@@ -510,6 +511,7 @@
         grid-template-rows: auto auto auto 1fr auto auto;
         grid-template-columns: 100%;
         overflow: hidden;
+        contain: inline-size;
         box-shadow: $grid-shadow;
 
         @if $variant == 'fluent' {
@@ -1266,7 +1268,7 @@
         outline-style: none;
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 3)};
+            --ig-size: #{if($variant == 'indigo', 2, 3)};
         }
     }
 
@@ -1373,6 +1375,7 @@
     }
 
     %igx-grid__tr--merged {
+        border-bottom: 0;
         border-block-end: 0;
     }
 

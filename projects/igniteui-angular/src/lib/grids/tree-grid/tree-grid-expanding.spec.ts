@@ -45,6 +45,15 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             treeGrid = fix.componentInstance.treeGrid;
         });
 
+        it('should return boolean for expand state of row without children using getRowByKey()', () => {
+            treeGrid.primaryKey = "ID";
+            treeGrid.childDataKey = "";
+            fix.detectChanges();
+
+            const testRow = treeGrid.getRowByKey(147);
+            expect(testRow.expanded).toEqual(false);
+        });
+
         it('check row expanding and collapsing are changing rows count (UI)', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(4);

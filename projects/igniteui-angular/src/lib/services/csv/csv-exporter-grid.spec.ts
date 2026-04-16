@@ -12,7 +12,8 @@ import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
         ColumnsAddedOnInitComponent,
-        EmptyGridComponent } from '../../test-utils/grid-samples.spec';
+        EmptyGridComponent,
+        GridCustomSummaryComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -40,7 +41,8 @@ describe('CSV Grid Exporter', () => {
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
                 ColumnsAddedOnInitComponent,
-                EmptyGridComponent
+                EmptyGridComponent,
+                GridCustomSummaryComponent
             ]
         }).compileComponents();
     }));
@@ -404,6 +406,30 @@ describe('CSV Grid Exporter', () => {
 
         const wrapper = await getExportedData(grid, options);
         wrapper.verifyData('Country,Region,Test Header', 'Only headers should be exported.');
+    });
+
+    it('should export grid with summaries correctly, not as [object Object]', async () => {
+        const fix = TestBed.createComponent(GridCustomSummaryComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        const wrapper = await getExportedData(grid, options);
+        const exportedData = wrapper['_data'];
+
+        expect(exportedData.includes('[object Object]')).toBe(false, 'CSV export should not contain [object Object]');
+
+        const lines = exportedData.split('\r\n');
+
+        // Skip header line and data lines, check summary lines at the end
+        const summaryLines = lines.slice(-4);
+
+        // Verify at least one summary line contains proper formatting (label: value pattern)
+        const hasProperlySummary = summaryLines.some(line =>
+            line.includes(':') && !line.includes('[object Object]')
+        );
+
+        expect(hasProperlySummary).toBe(true, 'Summary data should be formatted as "label: value"');
     });
 
     describe('Tree Grid CSV export', () => {

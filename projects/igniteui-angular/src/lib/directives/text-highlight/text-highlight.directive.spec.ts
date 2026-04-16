@@ -308,6 +308,15 @@ describe('IgxHighlight', () => {
 
         expect(() => component.highlight.activateIfNecessary()).not.toThrowError();
     });
+
+    it('Should not throw error when destroyed before ngAfterViewInit completes', () => {
+        // Create the component but do NOT call detectChanges()
+        // This simulates the directive being destroyed before ngAfterViewInit is called
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+
+        // Destroy the component without initializing it
+        expect(() => fix.destroy()).not.toThrowError();
+    });
 });
 
 @Component({

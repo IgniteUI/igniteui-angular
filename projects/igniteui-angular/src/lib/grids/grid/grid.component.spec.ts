@@ -1301,6 +1301,30 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
         }));
 
+        it('should account for CSS border widths in body height calculation when height is percent #16640', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.outerHeight = 600;
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const calcHeightNoBorder = grid.calcHeight;
+            expect(calcHeightNoBorder).not.toBeNull();
+
+            // Apply a 2px border (top and bottom) to the grid's native element
+            grid.nativeElement.style.borderTop = '2px solid black';
+            grid.nativeElement.style.borderBottom = '2px solid black';
+
+            // Trigger height recalculation
+            grid.reflow();
+            fix.detectChanges();
+
+            // The fix ensures border widths are included in the rendered height calculation,
+            // reducing the available body height accordingly and preventing continuous reflow growth
+            expect(grid.calcHeight).toBe(calcHeightNoBorder - 4);
+        }));
+
         it('should keep auto-sizing if initial data is empty then set to a new array', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             tick();
@@ -2179,6 +2203,38 @@ describe('IgxGrid Component Tests #grid', () => {
 
                 // first column takes new min
                 expect(col1.calcPixelWidth).toBe(500);
+            });
+
+            it('in columns with no width and min-widths should recalculate and re-apply constraints to all cols.', () => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 3 cols
+                fix.componentInstance.initColumnsRows(5, 3);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                grid.columns[0].minWidth = "80px";
+                grid.columns[1].minWidth = "90px";
+                grid.columns[2].minWidth = "130px";
+
+                grid.width = "300px";
+                fix.detectChanges();
+
+                expect(grid.columns[0].calcWidth).toBe(80);
+                expect(grid.columns[1].calcWidth).toBe(90);
+                expect(grid.columns[2].calcWidth).toBe(130);
+
+                expect(grid.hasHorizontalScroll()).toBe(false);
+                expect(grid.isHorizontalScrollHidden).toBe(true);
+
+                grid.width = "290px";
+                fix.detectChanges();
+
+                expect(grid.columns[0].calcWidth).toBe(80);
+                expect(grid.columns[1].calcWidth).toBe(90);
+                expect(grid.columns[2].calcWidth).toBe(130);
+
+                expect(grid.hasHorizontalScroll()).toBe(true);
+                expect(grid.isHorizontalScrollHidden).toBe(false);
             });
         });
 

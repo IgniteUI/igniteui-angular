@@ -221,6 +221,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         }
         const nextLayout = this.layout(colIndex);
         const newLayout = key.includes('up') || key.includes('down') ? {rowStart: nextLayout.rowStart} : {colStart: nextLayout.colStart};
+        if (!this.activeNode.layout) {
+            this.activeNode.layout = this.layout(this.activeNode.column || 0);
+        }
         Object.assign(this.activeNode.layout, newLayout, {rowEnd: nextLayout.rowEnd});
 
         if (ctrl && (key === 'home' || key === 'end')) {
@@ -355,7 +358,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     private hasNextVerticalPosition(prev = false) {
         if ((prev && this.activeNode.row === 0 && (!this.isDataRow(this.activeNode.row) || this.activeNode.layout.rowStart === 1)) ||
-            (!prev && this.activeNode.row >= this.grid.dataView.length - 1 && this.activeNode.column === this.lastColIndexPerMRLBlock())) {
+            (!prev && this.activeNode.row >= this.grid.dataView.length - 1 &&
+                this.activeNode.layout.rowStart === this.lastRowStartPerBlock())) {
             return false;
         }
         return true;

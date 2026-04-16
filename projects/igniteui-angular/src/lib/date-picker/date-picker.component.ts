@@ -451,7 +451,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private get inputGroupElement(): HTMLElement {
-        return this.inputGroup?.element.nativeElement;
+        return this.inputGroup?.element.nativeElement.querySelector('.igx-input-group__bundle');
     }
 
     private get dateValue(): Date {
