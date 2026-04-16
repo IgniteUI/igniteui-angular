@@ -56,16 +56,16 @@ chartComponent.itemsSource = dataArray;
 ```
 
 ### Chart Type Selection
-- **Category Chart**: `chartType` property (Area, Bar, Column, Line, etc.)
+- **Category Chart**: `chartType` property (Auto, Area, Column, Line, Point, etc.)
 - **Financial Chart**: `chartType` property (Line, Candlestick, OHLC Bar)
-- **Data Chart**: Configure explicit series (IgxAreaSeriesComponent, IgxBarSeriesComponent, etc.)
+- **Data Chart**: Configure explicit series (IgxAreaSeriesComponent, IgxBarSeriesComponent, IgxBarSeries, etc.)
 - **Pie Chart**: No chartType needed; inherent pie structure
 
 ### Required Properties
 
 **IgxCategoryChartComponent** (simplest API; auto-detects numeric & string columns):
 - `dataSource` — Data array (required)
-- `chartType` — Chart type (Area, Bar, Column, Line, etc.)
+- `chartType` — Chart type (Auto, Area, Column, Line, Point, etc.)
 - Component auto-detects: first string column → X-axis labels, numeric columns → Y-axis data
 
 **IgxDataChartComponent** (advanced; requires explicit configuration):
@@ -233,7 +233,7 @@ chartComponent.itemsSource = dataArray;
 ```typescript
 // Required
 dataSource: any[];           // Data array (auto-detects numeric fields)
-chartType: ChartType;        // Area, Bar, Column, Line, Waterfall, etc.
+chartType: ChartType;        // Auto, Area, Column, Line, Point, etc.
 
 // Common optional inputs
 xAxisTitle: string;          // X-axis label
