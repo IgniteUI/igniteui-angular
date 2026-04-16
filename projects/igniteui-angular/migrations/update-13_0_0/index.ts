@@ -1,4 +1,4 @@
-import type { Element, Text } from '@angular/compiler';
+import type { Element, Text } from '@angular/compiler' with { "resolution-mode": "import" };
 import type {
     Rule,
     SchematicContext,
@@ -7,8 +7,6 @@ import type {
 import type { Options } from '../../schematics/interfaces/options';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
-// use bare specifier to escape the schematics encapsulation for the dynamic import:
-import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
 
 const version = '13.0.0';
 
@@ -27,7 +25,8 @@ export default (options: Options): Rule =>
         '[exportExcel]', 'exportExcel', '[exportExcelText]', 'exportExcelText',
         '[exportCsv]', 'exportCsv', '[exportCsvText]', 'exportCsvText', '[exportText]', 'exportText'];
         const actionsLeft = ['igx-grid-toolbar-advanced-filtering'];
-        const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
+        // bare specifier escapes schematics encapsulation for the compiler dynamic import:
+        const { HtmlParser } = await import('@angular/compiler');
 
         const moduleTsFiles = tsFiles.filter(x => x.endsWith('.module.ts'));
         for (const path of moduleTsFiles) {
