@@ -97,17 +97,17 @@ export interface OutOfViewPort {
 }
 
 export interface PositionSettings {
-    /** Direction in which the component should show */
     /* mustCoerceToInt */
+    /** Direction in which the component should show */
     horizontalDirection?: HorizontalAlignment;
+    /* mustCoerceToInt */
     /** Direction in which the component should show */
-    /* mustCoerceToInt */
     verticalDirection?: VerticalAlignment;
-    /** Target's starting point */
     /* mustCoerceToInt */
+    /** Target's starting point */
     horizontalStartPoint?: HorizontalAlignment;
-    /** Target's starting point */
     /* mustCoerceToInt */
+    /** Target's starting point */
     verticalStartPoint?: VerticalAlignment;
     /* blazorSuppress */
     /** Animation applied while overlay opens */
