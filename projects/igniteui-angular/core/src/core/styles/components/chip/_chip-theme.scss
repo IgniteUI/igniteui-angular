@@ -162,13 +162,6 @@
         [igxSuffix] {
             @extend %igx-chip__suffix;
         }
-
-        igx-prefix + igx-prefix,
-        [igxPrefix] + [igxPrefix],
-        igx-suffix + igx-suffix,
-        [igxSuffix] + [igxSuffix] {
-            gap: sizable(rem(3px), rem(6px), rem(8px));
-        }
     }
 
     %igx-chip__item--selected {
@@ -416,6 +409,8 @@
     }
 
     %igx-chip__start {
+        gap: sizable(rem(3px), rem(6px), rem(8px));
+
         > igx-avatar,
         > igx-circular-bar {
             &:first-child {
@@ -443,6 +438,8 @@
     }
 
     %igx-chip__end {
+        gap: sizable(rem(3px), rem(6px), rem(8px));
+
         > igx-avatar,
         > igx-circular-bar {
             &:last-child {
