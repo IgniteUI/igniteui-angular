@@ -19,7 +19,7 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 
-fdescribe('IgxGridState - input properties #grid', () => {
+describe('IgxGridState - input properties #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
