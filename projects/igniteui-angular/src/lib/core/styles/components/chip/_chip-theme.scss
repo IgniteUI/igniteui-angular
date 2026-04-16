@@ -13,9 +13,9 @@
     $theme-variant: map.get($theme, '_meta', 'variant');
 
     $chip-padding: (
-        comfortable: rem(if($variant != 'indigo', 12px, 7px)),
-        cosy: rem(if($variant != 'indigo', 6px, 5px)),
-        compact: rem(if($variant != 'indigo', 2px, 3px))
+        comfortable: rem(if($variant != 'indigo', 20px, 16px)),
+        cosy: rem(12px),
+        compact: rem(if($variant != 'indigo', 5px, 3px))
     );
 
     $box-shadow-focus: map.get((
