@@ -19,7 +19,7 @@ import type {
     Node,
     Text,
     Visitor
-} from '@angular/compiler';
+} from '@angular/compiler' with { "resolution-mode": "import" };
 
 const configPaths = ['/.angular.json', '/angular.json'];
 
