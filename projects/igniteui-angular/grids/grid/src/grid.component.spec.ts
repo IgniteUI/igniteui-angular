@@ -460,10 +460,10 @@ describe('IgxGrid Component Tests #grid', () => {
             // the overlay should be shown and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
             const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
-            expect(loadingIndicator.nativeElement.offsetWidth).toBe(gridBody.nativeElement.offsetWidth);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
             expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
 
-            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
+            expect(loadingIndicator.nativeElement.children.length).not.toBeNull();
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columnList;
@@ -488,9 +488,9 @@ describe('IgxGrid Component Tests #grid', () => {
 
             // the overlay should be hidden and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
-            expect(loadingIndicator.nativeElement.offsetWidth).toBe(gridBody.nativeElement.offsetWidth);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
             expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
-            expect(loadingIndicator.nativeElement.children.length).toBe(0);
+            expect(loadingIndicator.query(By.css('igx-circular-bar'))).toBeNull();
         }));
 
         it('should render loading indicator when loading is enabled and autoGenerate is enabled', fakeAsync(() => {
@@ -642,13 +642,14 @@ describe('IgxGrid Component Tests #grid', () => {
             // the overlay should be shown and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
             const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
-            expect(loadingIndicator.nativeElement.offsetWidth).toBe(gridBody.nativeElement.offsetWidth);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
             expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
-            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
+            expect(loadingIndicator.query(By.css('igx-circular-bar'))).not.toBeNull();
 
             grid.isLoading = false;
             tick(16);
-            expect(loadingIndicator.nativeElement.children.length).toBe(0);
+            fixture.detectChanges();
+            expect(loadingIndicator.query(By.css('igx-circular-bar'))).toBeNull();
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();

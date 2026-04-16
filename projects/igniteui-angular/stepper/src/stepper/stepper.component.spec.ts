@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
-import { IgxAngularAnimationService, PlatformUtil, ɵDirection } from 'igniteui-angular/core';
+import { IgxAngularAnimationService, PlatformUtil } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
@@ -22,7 +22,6 @@ import {
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
-import { IgxDirectionality } from 'igniteui-angular/core/src/services/direction/directionality';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
@@ -977,7 +976,6 @@ describe('Stepper service unit tests', () => {
     let mockAnimationService: any;
     let mockPlatform: any;
     let mockDocument: any;
-    let mockDir: any;
 
     let steps: IgxStepComponent[] = [];
     let stepper: IgxStepperComponent;
@@ -1041,12 +1039,6 @@ describe('Stepper service unit tests', () => {
             removeEventListener: (_type: string, _listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
         };
 
-        mockDir = {
-            value: (): ɵDirection => 'rtl',
-            document: () => mockDocument,
-            rtl: () => true
-        };
-
         mockCdr = {
             markForCheck: (): void => { },
             detach: (): void => { },
@@ -1064,7 +1056,6 @@ describe('Stepper service unit tests', () => {
                 { provide: IgxAngularAnimationService, useValue: mockAnimationService },
                 { provide: ElementRef, useValue: mockElementRef },
                 { provide: IgxStepperService, useValue: stepperService },
-                { provide: IgxDirectionality, useValue: mockDir },
                 { provide: PlatformUtil, useValue: mockPlatform },
                 IgxStepperComponent,
                 { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
