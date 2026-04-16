@@ -155,17 +155,7 @@ export class IgxGridStateBaseDirective {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const filteringState = context.currGrid.filteringExpressionsTree;
                 if (filteringState) {
-                    const copy: IFilteringExpressionsTree = { ...filteringState };
-                    delete copy.owner;
-                    copy.filteringOperands = filteringState.filteringOperands.map(item => {
-                        if ('filteringOperands' in item) {
-                            const operandCopy = { ...item };
-                            delete operandCopy.owner;
-                            return operandCopy;
-                        }
-                        return { ...item };
-                    });
-                    return { filtering: copy };
+                    return { filtering: context.cloneFilteringTree(filteringState) };
                 }
                 return { filtering: filteringState };
             },
@@ -177,22 +167,7 @@ export class IgxGridStateBaseDirective {
         advancedFiltering: {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const filteringState = context.currGrid.advancedFilteringExpressionsTree;
-                let advancedFiltering: any;
-                if (filteringState) {
-                    const copy: IFilteringExpressionsTree = { ...filteringState };
-                    delete copy.owner;
-                    copy.filteringOperands = filteringState.filteringOperands.map(item => {
-                        if ('filteringOperands' in item) {
-                            const operandCopy = { ...item };
-                            delete operandCopy.owner;
-                            return operandCopy;
-                        }
-                        return { ...item };
-                    });
-                    advancedFiltering = copy;
-                } else {
-                    advancedFiltering = {};
-                }
+                const advancedFiltering: any = filteringState ? context.cloneFilteringTree(filteringState) : {};
                 return { advancedFiltering };
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IFilteringExpressionsTree): void => {
@@ -690,6 +665,22 @@ export class IgxGridStateBaseDirective {
                 }
             }
         }
+    }
+
+    /**
+     * Recursively clones a filtering expression tree, stripping the `owner` property
+     * from each cloned node so the live tree is never mutated.
+     */
+    private cloneFilteringTree(tree: IFilteringExpressionsTree): IFilteringExpressionsTree {
+        const copy: IFilteringExpressionsTree = { ...tree };
+        delete copy.owner;
+        copy.filteringOperands = tree.filteringOperands.map(item => {
+            if ('filteringOperands' in item) {
+                return this.cloneFilteringTree(item as IFilteringExpressionsTree);
+            }
+            return { ...item };
+        });
+        return copy;
     }
 
     /**
