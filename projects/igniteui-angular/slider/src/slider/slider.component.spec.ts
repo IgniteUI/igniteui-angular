@@ -3,7 +3,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angul
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ɵDIR_DOCUMENT, ɵIgxDirectionality } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
@@ -24,16 +23,8 @@ const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-slider__tick-label--hidden';
 const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom';
 const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 
-interface FakeDoc {
-    body: { dir?: string };
-    documentElement: { dir?: string };
-}
-
 describe('IgxSlider', () => {
-    let fakeDoc: FakeDoc;
     beforeEach(waitForAsync(() => {
-        fakeDoc = { body: {}, documentElement: {} };
-
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule,
@@ -49,9 +40,6 @@ describe('IgxSlider', () => {
                 SliderTemplateFormComponent,
                 SliderReactiveFormComponent,
                 SliderWithValueAdjustmentComponent
-            ],
-            providers: [
-                { provide: ɵDIR_DOCUMENT, useFactory: () => fakeDoc }
             ]
         }).compileComponents();
     }));
@@ -1732,14 +1720,6 @@ describe('IgxSlider', () => {
     });
 
     describe('Slider RTL', () => {
-        beforeEach(() => {
-            fakeDoc.documentElement.dir = 'rtl';
-        });
-
-        afterEach(() => {
-            fakeDoc.documentElement.dir = 'ltr';
-        });
-
         it('should reflect on the right instead of the left css property of the slider handlers', () => {
             const fix = TestBed.createComponent(SliderRtlComponent);
             fix.detectChanges();
@@ -1747,8 +1727,6 @@ describe('IgxSlider', () => {
             const inst = fix.componentInstance;
             const thumbs = fix.debugElement.queryAll(By.css(THUMB_TAG));
             const labels = fix.debugElement.queryAll(By.css(THUMB_LABEL));
-
-            expect(inst.dir.rtl).toEqual(true);
 
             expect(thumbs[0].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.lower}%`);
             expect(thumbs[1].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.upper}%`);
@@ -2061,13 +2039,11 @@ describe('IgxSlider', () => {
 @Component({
     selector: 'igx-slider-rtl',
     template: `
-        <igx-slider [type]="type" [value]="value"></igx-slider>
+        <div dir="rtl"><igx-slider [type]="type" [value]="value"></igx-slider></div>
     `,
     imports: [IgxSliderComponent]
 })
 export class SliderRtlComponent {
-    public dir = inject(ɵIgxDirectionality);
-
     @ViewChild(IgxSliderComponent)
     public slider: IgxSliderComponent;
 
