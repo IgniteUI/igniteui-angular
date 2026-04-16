@@ -26,9 +26,10 @@
         border-radius: calc(var(--size) / 2);
         box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
+        padding-inline: pad-inline(rem(4px), rem(6px), if($variant == 'indigo', rem(6px), rem(8px)));
 
-        &:not(:has(igx-icon)) {
-            padding-inline: pad-inline(rem(4px), rem(6px), if($variant == 'indigo', rem(6px), rem(8px)));
+        &:has(igx-icon:only-child) {
+            padding-inline: 0;
         }
 
         igx-icon {
@@ -104,10 +105,7 @@
 
         min-width: var(--_dot-size);
         min-height: var(--_dot-size);
-
-        &:not(:has(igx-icon)) {
-            padding: 0;
-        }
+        padding: 0;
 
         igx-icon,
         > * {
