@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     DefaultTreeGridMergeStrategy,
@@ -56,7 +57,10 @@ import { INVOICE_DATA } from '../shared/invoiceData';
         IgxIconButtonDirective
     ]
 })
-export class GridCellMergingComponent {
+export class GridCellMergingComponent implements OnDestroy {
+    private readonly document = inject(DOCUMENT);
+    public themeLoaded = signal(false);
+    private readonly THEME_LINK_ID = 'grid-cell-merging-alternate-theme';
     public hierarchicalData = HIERARCHICAL_DATA.concat(HIERARCHICAL_DATA).concat(HIERARCHICAL_DATA);
     public treeData = HIERARCHICAL_SAMPLE_DATA;
     public treeGridMergeStrategy =  new ByLevelTreeGridMergeStrategy();
@@ -75,6 +79,25 @@ export class GridCellMergingComponent {
         }
 
         this.data = allData;
+    }
+
+    public ngOnDestroy(): void {
+        this.document.getElementById(this.THEME_LINK_ID)?.remove();
+    }
+
+    public toggleTheme(): void {
+        const existing = this.document.getElementById(this.THEME_LINK_ID);
+        if (existing) {
+            existing.remove();
+            this.themeLoaded.set(false);
+        } else {
+            const link = this.document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'grid-cell-merging-alternate-theme.css';
+            link.id = this.THEME_LINK_ID;
+            this.document.head.appendChild(link);
+            this.themeLoaded.set(true);
+        }
     }
 
     public toggleStrategy() {
