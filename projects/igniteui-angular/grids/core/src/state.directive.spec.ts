@@ -810,16 +810,19 @@ describe('IgxGridState - input properties #grid', () => {
         const state = fix.componentInstance.state;
 
         const customStrategy = DefaultSortingStrategy.instance();
+        const owner = {} as any;
         grid.sortingExpressions = [
-            { fieldName: 'ProductID', dir: SortingDirection.Asc, ignoreCase: false, strategy: customStrategy }
+            { fieldName: 'ProductID', dir: SortingDirection.Asc, ignoreCase: false, strategy: customStrategy, owner }
         ];
         fix.detectChanges();
 
         expect(grid.sortingExpressions[0].strategy).toBe(customStrategy, 'strategy should be set before getState');
+        expect(grid.sortingExpressions[0].owner).toBe(owner, 'owner should be set before getState');
 
         state.getState(false, 'sorting');
 
         expect(grid.sortingExpressions[0].strategy).toBe(customStrategy, 'strategy should not be removed from live expressions after getState');
+        expect(grid.sortingExpressions[0].owner).toBe(owner, 'owner should not be removed from live expressions after getState');
     });
 
     it('getState should not mutate live groupBy expressions (strategy)', () => {
@@ -855,16 +858,21 @@ describe('IgxGridState - input properties #grid', () => {
             fieldName: 'InStock',
             ignoreCase: true
         });
+        (productFilteringTree as IFilteringExpressionsTree).owner = 'nestedOwner';
         filteringTree.filteringOperands.push(productFilteringTree);
-        (filteringTree as any).owner = 'testOwner';
+        (filteringTree as IFilteringExpressionsTree).owner = 'rootOwner';
         grid.filteringExpressionsTree = filteringTree;
         fix.detectChanges();
 
-        expect((grid.filteringExpressionsTree as any).owner).toBe('testOwner', 'owner should be set before getState');
+        expect(grid.filteringExpressionsTree.owner).toBe('rootOwner', 'root owner should be set before getState');
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
+            .toBe('nestedOwner', 'nested owner should be set before getState');
 
         state.getState(false, 'filtering');
 
-        expect((grid.filteringExpressionsTree as any).owner).toBe('testOwner', 'owner should not be removed from live filtering tree after getState');
+        expect(grid.filteringExpressionsTree.owner).toBe('rootOwner', 'root owner should not be removed from live filtering tree after getState');
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
+            .toBe('nestedOwner', 'nested owner should not be removed from live filtering operand after getState');
     });
 
     it('should preserve column widths when restoring state with all columns hidden', () => {
