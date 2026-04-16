@@ -82,6 +82,7 @@ After choosing the grid type, **you must still complete Steps 2–4 from the man
 Replace `igniteui-angular` with `@infragistics/igniteui-angular` for the licensed package — entry-point paths are identical.
 
 > **AGENT INSTRUCTION — Documentation URL Pattern**: For grid-specific topics (sorting, filtering, editing, paging, etc.), docs URLs follow this naming pattern per grid type:
+> - Grid Lite: `.../components/grid-lite/{topic}`
 > - Flat Grid: `.../components/grid/{topic}`
 > - Tree Grid: `.../components/treegrid/{topic}`
 > - Hierarchical Grid: `.../components/hierarchicalgrid/{topic}`
