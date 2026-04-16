@@ -105,10 +105,16 @@ export class IgxGridNavigationService {
             this.grid.selectionService.keyboardStateOnKeydown(this.activeNode, shift, shift && key === 'tab');
         }
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
+        const shouldNotifyVirtualizedKeyboardSelection =
+            ctrl && (key === 'arrowup' || key === 'up' || key === 'arrowdown' || key === 'down') &&
+            this.shouldPerformVerticalScroll(position.rowIndex, position.colIndex);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
             this.navigateInBody(position.rowIndex, position.colIndex, (obj) => {
                 obj.target.activate(event);
+                if (shouldNotifyVirtualizedKeyboardSelection) {
+                    this.grid.notifyChanges();
+                }
             });
         }
     }
