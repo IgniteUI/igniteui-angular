@@ -27,6 +27,10 @@
         box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
 
+        &:not(:has(igx-icon)) {
+            padding-inline: pad-inline(rem(4px), rem(6px), if($variant == 'indigo', rem(6px), rem(8px)));
+        }
+
         igx-icon {
             --size: var(--ig-icon-size, #{sizable(rem(12px), rem(14px), rem(16px))});
             --component-size: var(--badge-size);
@@ -56,7 +60,6 @@
 
     %igx-badge-value {
         white-space: nowrap;
-        padding-inline: pad-inline(rem(4px), rem(6px), if($variant == 'indigo', rem(6px), rem(8px)));
     }
 
     %igx-badge--success {
@@ -101,7 +104,10 @@
 
         min-width: var(--_dot-size);
         min-height: var(--_dot-size);
-        padding: 0;
+
+        &:not(:has(igx-icon)) {
+            padding: 0;
+        }
 
         igx-icon,
         > * {
