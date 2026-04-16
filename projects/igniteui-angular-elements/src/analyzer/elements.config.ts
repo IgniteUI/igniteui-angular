@@ -45,7 +45,13 @@ export var registerConfig = [
       IgxHierarchicalGridComponent,
       IgxRowIslandComponent,
     ],
-    contentQueries: [],
+    contentQueries: [
+      {
+        property: "actionButtons",
+        childType: IgxActionStripActionsToken,
+        isQueryList: true,
+      },
+    ],
     additionalProperties: [{ name: "cdr", writable: true }],
     methods: ["show", "hide"],
     boolProps: ["hidden"],
@@ -874,8 +880,6 @@ export var registerConfig = [
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
       { name: "columns" },
-      { name: "pinnedStartColumns" },
-      { name: "pinnedEndColumns" },
       { name: "pinnedRows" },
     ],
     methods: [

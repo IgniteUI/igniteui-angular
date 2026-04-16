@@ -611,6 +611,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     public onConditionsChanged(eventArgs) {
         const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expression.condition = this.getCondition(value);
+        this.expression.conditionName = value;
         if (this.expression.condition.isUnary) {
             // update grid's filtering on the next cycle to ensure the drop-down is closed
             // if the drop-down is not closed this event handler will be invoked multiple times

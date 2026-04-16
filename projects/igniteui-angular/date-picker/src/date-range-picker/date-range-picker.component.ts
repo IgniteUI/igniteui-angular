@@ -1239,10 +1239,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private configPositionStrategy(): void {
         this._positionSettings = {
             openAnimation: fadeIn,
-            closeAnimation: fadeOut
+            closeAnimation: fadeOut,
+            offset: 1
         };
         this._dropDownOverlaySettings.positionStrategy = new AutoPositionStrategy(this._positionSettings);
-        this._dropDownOverlaySettings.target = this.element.nativeElement;
+
+        const bundle = this.hasProjectedInputs
+            ? this.projectedInputs.first?.nativeElement.querySelector('.igx-input-group__bundle')
+            : this.element.nativeElement.querySelector('.igx-input-group__bundle');
+        this._dropDownOverlaySettings.target = bundle || this.element.nativeElement;
     }
 
     private configOverlaySettings(): void {

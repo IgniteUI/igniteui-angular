@@ -110,6 +110,7 @@ interface Feature {
 /* blazorIndirectRender */
 @Directive()
 export class IgxGridStateBaseDirective {
+    /* blazorSuppress */
     public grid = inject<GridType>(IGX_GRID_BASE, { host: true, optional: true });
     protected viewRef = inject(ViewContainerRef);
     protected envInjector = inject(EnvironmentInjector);

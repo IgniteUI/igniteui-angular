@@ -52,7 +52,7 @@
     $text: map.get($categories, 'text');
 
     %igx-toast-display,
-    %igx-toast-display > * {
+    %igx-toast-display > *:not(igx-icon) {
         @include type-style($text) {
             margin: 0;
         }

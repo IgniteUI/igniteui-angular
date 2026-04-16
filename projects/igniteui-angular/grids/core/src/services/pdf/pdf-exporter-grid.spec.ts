@@ -372,6 +372,46 @@ describe('PDF Grid Exporter', () => {
         exporter.export(hGrid, options);
     });
 
+    it('should export hierarchical grid with expanded rows when using primaryKey', (done) => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
+        fix.detectChanges();
+
+        const hGrid = fix.componentInstance.hGrid;
+
+        // Set primary key on the grid
+        hGrid.primaryKey = 'Artist';
+        fix.detectChanges();
+
+        // Limit data for test performance
+        hGrid.data = hGrid.data.slice(0, 1);
+        fix.detectChanges();
+
+        const firstRowData = hGrid.data[0];
+
+        hGrid.toggleRow(firstRowData['Artist']);
+        fix.detectChanges();
+
+        expect(hGrid.expansionStates.get(firstRowData['Artist'])).toBe(true);
+
+        const childGrids = hGrid.gridAPI.getChildGrids(false) as any[];
+        expect(childGrids.length).toBeGreaterThan(0);
+
+        const firstChildGrid = childGrids[0];
+        expect(firstChildGrid.data.length).toBeGreaterThan(0);
+
+        // Spy on drawDataRow to count exported rows
+        const drawDataRowSpy = spyOn<any>(exporter as any, 'drawDataRow').and.callThrough();
+
+        exporter.exportEnded.pipe(first()).subscribe(() => {
+            const minExpectedRows = 1 + firstChildGrid.data.length;
+            expect(drawDataRowSpy.calls.count()).toBeGreaterThanOrEqual(minExpectedRows,
+                'Child rows should be exported when parent is expanded via toggleRow with primaryKey');
+            done();
+        });
+
+        exporter.export(hGrid, options);
+    });
+
     it('should export tree grid with hierarchical data', (done) => {
         TestBed.configureTestingModule({
             imports: [

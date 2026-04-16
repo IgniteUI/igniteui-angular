@@ -185,12 +185,12 @@
         igx-input-group {
             background: var-get($theme, 'cell-editing-background');
 
-            input {
+            .igx-input-group__input {
                 height: 100%;
                 color: var-get($theme, 'cell-editing-foreground');
             }
 
-            input:focus {
+            .igx-input-group__input:focus {
                 color: var-get($theme, 'cell-editing-focus-foreground');
             }
         }
@@ -211,7 +211,8 @@
             min-height: 100% !important;
             border: none !important;
 
-            .igx-input-group__filler {
+            .igx-input-group__filler,
+            .igx-input-group__notch {
                 border: none !important;
             }
 
@@ -269,6 +270,8 @@
 
         .igx-input-group__input {
             padding-inline: sizable(rem(4px), rem(6px), rem(8px)) !important;
+            margin: 0 auto;
+            max-width: 100%;
         }
 
         igx-date-range-picker {
@@ -277,11 +280,6 @@
 
         igx-time-picker [igxLabel] {
             display: none;
-        }
-
-        input {
-            margin: 0 auto;
-            max-width: 100%;
         }
 
         %form-group-input {
@@ -510,6 +508,7 @@
         grid-template-rows: auto auto auto 1fr auto auto;
         grid-template-columns: 100%;
         overflow: hidden;
+        contain: inline-size;
         box-shadow: $grid-shadow;
 
         @if $variant == 'fluent' {
@@ -1266,7 +1265,7 @@
         outline-style: none;
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 3)};
+            --ig-size: #{if($variant == 'indigo', 2, 3)};
         }
     }
 

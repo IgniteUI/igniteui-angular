@@ -76,11 +76,11 @@
     "dompurify": "^3.3.0",
     "express": "^5.1.0",
     "fflate": "^0.8.1",
-    "igniteui-theming": "^24.0.0",
+    "igniteui-theming": "^24.1.1",
     "igniteui-trial-watermark": "^3.1.0",
-    "jspdf": "^3.0.4",
+    "jspdf": "^4.0.0",
     "lodash-es": "^4.17.21",
-    "marked": "^16.4.0",
+    "marked": "^17.0.1",
     "marked-shiki": "^1.2.1",
     "rxjs": "^7.8.2",
     "shiki": "^3.13.0",
@@ -154,5 +154,12 @@
     "typedoc": "^0.28.14",
     "typedoc-plugin-localization": "^3.1.0",
     "typescript": "5.9.3"
+  },
+  "overrides": {
+    "igniteui-sassdoc-theme": {
+      "astro": {
+        "zod": "~3.25.0"
+      }
+    }
   }
 }

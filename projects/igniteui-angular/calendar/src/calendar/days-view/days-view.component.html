@@ -81,7 +81,7 @@
                 (mouseEnter)="changePreviewRange(day.native)"
                 (mouseLeave)="clearPreviewRange()"
             >
-                {{ formattedDate(day.native) }}
+                {{ formattedDate(day.native) | dayDigit:formatViews }}
             </igx-day-item>
         }
     </div>

@@ -12,7 +12,7 @@ import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxList
 import { IgxButtonDirective, IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 'igniteui-angular/tree';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
-import { cloneHierarchicalArray, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, ɵSize } from 'igniteui-angular/core';
+import { cloneHierarchicalArray, columnFieldPath, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, resolveNestedPath, ɵSize } from 'igniteui-angular/core';
 import { Navigate } from 'igniteui-angular/drop-down';
 
 @Directive({
@@ -398,8 +398,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get applyButtonDisabled(): boolean {
-        return (this._selectAllItem && !this._selectAllItem.isSelected && !this._selectAllItem.indeterminate) ||
-            (this.displayedListData && this.displayedListData.length === 0);
+        return ((this._selectAllItem && !this._selectAllItem.isSelected && !this._selectAllItem.indeterminate) ||
+            (this.displayedListData && this.displayedListData.length === 0)) && !this._addToCurrentFilterItem?.isSelected;
     }
 
     /**
@@ -528,11 +528,29 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
             selectedItems = this._hierarchicalSelectedItems;
         } else {
-            const item = this.displayedListData[1];
-            const addToCurrentFilterOptionVisible = item === this.addToCurrentFilterItem;
-            selectedItems = addToCurrentFilterOptionVisible && item.isSelected ?
-                this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected || el.isFiltered) :
-                this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected);
+            const addToCurrentFilter = this._addToCurrentFilterItem?.isSelected;
+            const displayedSet = new Set(this.displayedListData);
+            const listData = this.esf.listData;
+
+            for (let i = 1; i < listData.length; i++) {
+                const el = listData[i];
+                const isDisplayed = displayedSet.has(el);
+
+                if (isDisplayed) {
+                    // Visible items: only include if selected
+                    if (el.isSelected) {
+                        selectedItems.push(el);
+                    }
+                } else if (addToCurrentFilter) {
+                    // Hidden items with "add to current filter": include if selected or filtered
+                    if (el.isSelected || el.isFiltered) {
+                        selectedItems.push(el);
+                    }
+                } else if (el.isSelected) {
+                    // Hidden items without "add to current filter": include if selected
+                    selectedItems.push(el);
+                }
+            }
         }
 
         let unselectedItem;
@@ -583,13 +601,15 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         searchVal = new Set(selectedItems.map(e => e.value.toLocaleTimeString()));
                         break;
                     case GridColumnDataType.String:
-                        if (this.esf.column.filteringIgnoreCase) {
+                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical()) {
                             const selectedValues = new Set(selectedItems.map(item => item.value.toLowerCase()));
                             searchVal = new Set();
 
                             this.esf.grid.data.forEach(item => {
-                                if (typeof item[this.esf.column.field] === "string" && selectedValues.has(item[this.esf.column.field]?.toLowerCase())) {
-                                    searchVal.add(item[this.esf.column.field]);
+                                const fieldPaths = columnFieldPath(this.esf.column.field)
+                                const itemValue = resolveNestedPath(item, fieldPaths);
+                                if (typeof itemValue === "string" && selectedValues.has(itemValue.toLowerCase())) {
+                                    searchVal.add(itemValue);
                                 }
                             });
                             break;
