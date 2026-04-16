@@ -803,6 +803,70 @@ describe('IgxGridState - input properties #grid', () => {
         expect(prodIdColumn.colEnd).toBe(1);
     });
 
+    it('getState should not mutate live sorting expressions (strategy/owner)', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const customStrategy = DefaultSortingStrategy.instance();
+        grid.sortingExpressions = [
+            { fieldName: 'ProductID', dir: SortingDirection.Asc, ignoreCase: false, strategy: customStrategy }
+        ];
+        fix.detectChanges();
+
+        expect(grid.sortingExpressions[0].strategy).toBe(customStrategy, 'strategy should be set before getState');
+
+        state.getState(false, 'sorting');
+
+        expect(grid.sortingExpressions[0].strategy).toBe(customStrategy, 'strategy should not be removed from live expressions after getState');
+    });
+
+    it('getState should not mutate live groupBy expressions (strategy)', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const customStrategy = DefaultSortingStrategy.instance();
+        grid.groupingExpressions = [
+            { fieldName: 'ProductID', dir: SortingDirection.Asc, ignoreCase: false, strategy: customStrategy }
+        ];
+        fix.detectChanges();
+
+        expect(grid.groupingExpressions[0].strategy).toBe(customStrategy, 'strategy should be set before getState');
+
+        state.getState(false, 'groupBy');
+
+        expect(grid.groupingExpressions[0].strategy).toBe(customStrategy, 'strategy should not be removed from live groupBy expressions after getState');
+    });
+
+    it('getState should not mutate live filtering expressions (owner)', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const filteringTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const productFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        productFilteringTree.filteringOperands.push({
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: 'true',
+            fieldName: 'InStock',
+            ignoreCase: true
+        });
+        filteringTree.filteringOperands.push(productFilteringTree);
+        (filteringTree as any).owner = 'testOwner';
+        grid.filteringExpressionsTree = filteringTree;
+        fix.detectChanges();
+
+        expect((grid.filteringExpressionsTree as any).owner).toBe('testOwner', 'owner should be set before getState');
+
+        state.getState(false, 'filtering');
+
+        expect((grid.filteringExpressionsTree as any).owner).toBe('testOwner', 'owner should not be removed from live filtering tree after getState');
+    });
+
     it('should preserve column widths when restoring state with all columns hidden', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();

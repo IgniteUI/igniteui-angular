@@ -139,10 +139,11 @@ export class IgxGridStateBaseDirective {
     private FEATURES = {
         sorting:  {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
-                const sortingState = context.currGrid.sortingExpressions;
-                sortingState.forEach(s => {
-                    delete s.strategy;
-                    delete s.owner;
+                const sortingState = context.currGrid.sortingExpressions.map(s => {
+                    const copy = { ...s };
+                    delete copy.strategy;
+                    delete copy.owner;
+                    return copy;
                 });
                 return { sorting: sortingState };
             },
@@ -154,10 +155,14 @@ export class IgxGridStateBaseDirective {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const filteringState = context.currGrid.filteringExpressionsTree;
                 if (filteringState) {
-                    delete filteringState.owner;
-                    for (const item of filteringState.filteringOperands) {
-                        delete (item as IFilteringExpressionsTree).owner;
-                    }
+                    const copy: IFilteringExpressionsTree = { ...filteringState };
+                    delete (copy as any).owner;
+                    copy.filteringOperands = filteringState.filteringOperands.map(item => {
+                        const operandCopy = { ...(item as IFilteringExpressionsTree) };
+                        delete (operandCopy as any).owner;
+                        return operandCopy;
+                    });
+                    return { filtering: copy };
                 }
                 return { filtering: filteringState };
             },
@@ -171,11 +176,14 @@ export class IgxGridStateBaseDirective {
                 const filteringState = context.currGrid.advancedFilteringExpressionsTree;
                 let advancedFiltering: any;
                 if (filteringState) {
-                    delete filteringState.owner;
-                    for (const item of filteringState.filteringOperands) {
-                        delete (item as IFilteringExpressionsTree).owner;
-                    }
-                    advancedFiltering = filteringState;
+                    const copy: IFilteringExpressionsTree = { ...filteringState };
+                    delete (copy as any).owner;
+                    copy.filteringOperands = filteringState.filteringOperands.map(item => {
+                        const operandCopy = { ...(item as IFilteringExpressionsTree) };
+                        delete (operandCopy as any).owner;
+                        return operandCopy;
+                    });
+                    advancedFiltering = copy;
                 } else {
                     advancedFiltering = {};
                 }
@@ -299,9 +307,10 @@ export class IgxGridStateBaseDirective {
         groupBy: {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const grid = context.currGrid;
-                const groupingExpressions = grid.groupingExpressions;
-                groupingExpressions.forEach(expr => {
-                    delete expr.strategy;
+                const groupingExpressions = grid.groupingExpressions.map(expr => {
+                    const copy = { ...expr };
+                    delete copy.strategy;
+                    return copy;
                 });
                 const expansionState = grid.groupingExpansionState;
                 const groupsExpanded = grid.groupsExpanded;
