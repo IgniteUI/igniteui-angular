@@ -158,9 +158,12 @@ export class IgxGridStateBaseDirective {
                     const copy: IFilteringExpressionsTree = { ...filteringState };
                     delete copy.owner;
                     copy.filteringOperands = filteringState.filteringOperands.map(item => {
-                        const operandCopy = { ...(item as IFilteringExpressionsTree) };
-                        delete operandCopy.owner;
-                        return operandCopy;
+                        if ('filteringOperands' in item) {
+                            const operandCopy = { ...item };
+                            delete operandCopy.owner;
+                            return operandCopy;
+                        }
+                        return { ...item };
                     });
                     return { filtering: copy };
                 }
@@ -179,9 +182,12 @@ export class IgxGridStateBaseDirective {
                     const copy: IFilteringExpressionsTree = { ...filteringState };
                     delete copy.owner;
                     copy.filteringOperands = filteringState.filteringOperands.map(item => {
-                        const operandCopy = { ...(item as IFilteringExpressionsTree) };
-                        delete operandCopy.owner;
-                        return operandCopy;
+                        if ('filteringOperands' in item) {
+                            const operandCopy = { ...item };
+                            delete operandCopy.owner;
+                            return operandCopy;
+                        }
+                        return { ...item };
                     });
                     advancedFiltering = copy;
                 } else {
@@ -234,21 +240,21 @@ export class IgxGridStateBaseDirective {
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IColumnState[]): void => {
                 const newColumns = [];
-                
+
                 // Helper to restore column state without auto-persisting widths
                 const restoreColumnState = (column: IgxColumnComponent | IgxColumnGroupComponent, colState: IColumnState) => {
                     // Extract width to handle it separately
                     const width = colState.width;
                     delete colState.width;
-                    
+
                     Object.assign(column, colState);
-                    
+
                     // Only restore width if it was explicitly set by the user (not undefined)
                     if (width !== undefined) {
                         column.width = width;
                     }
                 };
-                
+
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     const hasColumnLayouts = colState.columnLayout;
@@ -265,9 +271,9 @@ export class IgxGridStateBaseDirective {
                         } else {
                             ref1.children.reset([]);
                         }
-                        
+
                         restoreColumnState(ref1, colState);
-                        
+
                         ref1.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref1.parent));
@@ -285,7 +291,7 @@ export class IgxGridStateBaseDirective {
                         }
 
                         restoreColumnState(ref, colState);
-                        
+
                         ref.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e =>  e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref.parent));
