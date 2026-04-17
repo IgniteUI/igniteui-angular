@@ -75,7 +75,7 @@
         "igniteui-trial-watermark": "^3.1.0",
         "jspdf": "^4.2.1",
         "lodash-es": "^4.17.21",
-        "igniteui-theming": "^25.0.0",
+        "igniteui-theming": "^26.0.0",
         "igniteui-i18n-core": "^1.0.2",
         "@igniteui/material-icons-extended": "^3.1.0"
     },
@@ -87,7 +87,7 @@
         "hammerjs": "^2.0.8",
         "@types/hammerjs": "^2.0.46",
         "igniteui-webcomponents": "^7.0.0",
-        "igniteui-grid-lite": "~0.6.0"
+        "igniteui-grid-lite": "~0.7.1"
     },
     "peerDependenciesMeta": {
         "hammerjs": {

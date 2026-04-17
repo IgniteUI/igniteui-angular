@@ -6,6 +6,9 @@ Closes #
  - [ ] Documentation
  - [ ] Demos
  - [ ] CI/CD
+ - [ ] Tests
+ - [ ] Changelog
+ - [ ] Skills/Agents
 
 ### Checklist:
  - [ ] All relevant tags have been applied to this PR

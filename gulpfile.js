@@ -62,10 +62,14 @@ module.exports.copyMigrations = (cb) => {
         '!**/tsconfig.json'
     ]).pipe(gulp.dest('./dist/igniteui-angular/migrations'));
 
+    cb();
+};
 
+module.exports.copyExtrasMigrations = (cb) => {
     gulp.src([
-        './projects/igniteui-angular/migrations/common/import-helper.js'
-    ]).pipe(gulp.dest('./dist/igniteui-angular/migrations/common'));
+        './projects/igniteui-angular-extras/migrations/**/*.json',
+        '!**/tsconfig.json'
+    ]).pipe(gulp.dest('./dist/igniteui-angular-extras/migrations'));
 
     cb();
 };

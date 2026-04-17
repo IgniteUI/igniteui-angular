@@ -1,10 +1,10 @@
 import {
-    AfterViewInit, ContentChildren, Directive, EventEmitter,
+    AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter,
     Input, OnDestroy, Output, QueryList, booleanAttribute,
     inject
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IBaseEventArgs, ɵIgxDirectionality } from 'igniteui-angular/core';
+import { IBaseEventArgs, isLeftToRight } from 'igniteui-angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
 import { IgxCarouselComponentBase, CarouselAnimationDirection } from 'igniteui-angular/carousel';
@@ -26,8 +26,7 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
-    /** @hidden */
-    public dir = inject(ɵIgxDirectionality);
+    protected readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /**
      * Gets/Sets the index of the selected item.
@@ -277,14 +276,15 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     private triggerPanelAnimations(oldSelectedIndex: number) {
         const item = this.items.get(this._selectedIndex);
+        const rtl = !isLeftToRight(this._element.nativeElement);
 
         if (item &&
             !this.disableAnimation &&
             this.hasPanels &&
             this.currentItem &&
             !this.currentItem.selected) {
-            item.direction = (!this.dir.rtl && this._selectedIndex > oldSelectedIndex) ||
-                (this.dir.rtl && this._selectedIndex < oldSelectedIndex)
+            item.direction = (!rtl && this._selectedIndex > oldSelectedIndex) ||
+                (rtl && this._selectedIndex < oldSelectedIndex)
                 ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV;
 
             if (this.previousItem && this.previousItem.previous) {

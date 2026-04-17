@@ -1,4 +1,4 @@
-import { zip } from 'fflate';
+import { zip } from 'fflate/browser';
 
 import { EventEmitter, Injectable } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
@@ -11,6 +11,7 @@ import { WorksheetData } from './worksheet-data';
 import { WorksheetFile } from './excel-files';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 
+/* csSuppress */
 export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx?: Object
 }
@@ -18,6 +19,7 @@ export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
 const EXCEL_MAX_ROWS = 1048576;
 const EXCEL_MAX_COLS = 16384;
 
+/* csSuppress */
 /**
  * **Ignite UI for Angular Excel Exporter Service** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter_excel.html)

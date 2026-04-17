@@ -1942,6 +1942,40 @@ describe('igxCombo', () => {
                     expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
                     expect(combo.selection.length).toEqual(0);
                 }));
+                it('should stop Escape keydown event propagation when the dropdown is open', fakeAsync(() => {
+                    const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+                    spyOn(escapeEvent, 'stopPropagation');
+
+                    combo.comboInput.nativeElement.focus();
+                    fixture.detectChanges();
+
+                    combo.toggle();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeFalsy();
+
+                    combo.onEscape(escapeEvent);
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(escapeEvent.stopPropagation).toHaveBeenCalled();
+                }));
+                it('should stop Escape key propagation when the combo is collapsed and has a selection', fakeAsync(() => {
+                    combo.comboInput.nativeElement.focus();
+                    fixture.detectChanges();
+
+                    combo.select([combo.data[0][combo.valueKey]]);
+                    expect(combo.selection.length).toEqual(1);
+                    fixture.detectChanges();
+
+                    const keyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+                    const stopPropSpy = spyOn(keyEvent, 'stopPropagation');
+
+                    combo.onEscape(keyEvent);
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(stopPropSpy).toHaveBeenCalledTimes(1);
+                }));
                 it('should close the combo and preserve the focus when Escape key is pressed', fakeAsync(() => {
                     combo.comboInput.nativeElement.focus();
                     fixture.detectChanges();
@@ -2227,6 +2261,25 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 fixture.detectChanges();
                 expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBeFalsy();
+            });
+            it('should default disableClear to false', () => {
+                expect(combo.disableClear).toBe(false);
+            });
+            it('should hide the clear button when disableClear is true and items are selected', () => {
+                combo.select(['Maryland']);
+                fixture.detectChanges();
+                // Verify the clear button is visible before setting disableClear
+                expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
+
+                combo.disableClear = true;
+                fixture.detectChanges();
+                expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(0);
+            });
+            it('should show the clear button when disableClear is false (default) and items are selected', () => {
+                combo.select(['Maryland']);
+                fixture.detectChanges();
+                expect(combo.disableClear).toBe(false);
+                expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
             });
             it('should select/deselect item on check/uncheck', () => {
                 const dropdown = combo.dropdown;
