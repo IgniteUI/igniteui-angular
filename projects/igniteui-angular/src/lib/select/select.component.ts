@@ -640,23 +640,44 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * Items already inside the container (directly or within a projected group) are skipped.
      * If an item is inside an igx-select-item-group that is itself unprojected, the whole
      * group is moved instead of detaching the item from it.
+     * Insertion position is derived from @ContentChildren order so that mixing
+     * normally-projected items with control-flow items preserves the template order.
      */
     private moveItemsToScrollContainer(): void {
         if (!this.children?.length || !this.scrollContainer) {
             return;
         }
         const container = this.scrollContainer;
+
+        // Build an ordered list of top-level nodes (group or standalone item)
+        // based on @ContentChildren order, deduplicating group entries.
+        const orderedTopLevelNodes: HTMLElement[] = [];
+        const seenNodes = new Set<HTMLElement>();
         for (const child of this.children) {
             const el: HTMLElement = child.element.nativeElement;
-            if (container.contains(el)) {
+            const groupEl = el.closest('igx-select-item-group') as HTMLElement | null;
+            const topLevelNode = groupEl ?? el;
+            if (!seenNodes.has(topLevelNode)) {
+                seenNodes.add(topLevelNode);
+                orderedTopLevelNodes.push(topLevelNode);
+            }
+        }
+
+        for (let index = 0; index < orderedTopLevelNodes.length; index++) {
+            const node = orderedTopLevelNodes[index];
+            if (container.contains(node)) {
                 continue;
             }
-            const groupEl = el.closest('igx-select-item-group') as HTMLElement | null;
-            if (groupEl && !container.contains(groupEl)) {
-                container.appendChild(groupEl);
-            } else if (!groupEl) {
-                container.appendChild(el);
+            // Find the next node already in the container and insert before it
+            // to preserve template order.
+            let referenceNode: HTMLElement | null = null;
+            for (let nextIndex = index + 1; nextIndex < orderedTopLevelNodes.length; nextIndex++) {
+                if (orderedTopLevelNodes[nextIndex].parentElement === container) {
+                    referenceNode = orderedTopLevelNodes[nextIndex];
+                    break;
+                }
             }
+            container.insertBefore(node, referenceNode);
         }
     }
 
