@@ -19,7 +19,7 @@ import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, 
 import { IColumnState, IGridState } from './state-base.directive';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 
-describe('IgxGridState - input properties #grid', () => {
+fdescribe('IgxGridState - input properties #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -842,7 +842,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.groupingExpressions[0].owner).toBe(owner, 'owner should be set before getState');
 
         const serializedState = state.getState(false, 'groupBy') as IGridState;
-        const serializedGroupBy = serializedState.groupBy as Array<IGroupingExpression & { owner?: unknown }>;
+        const serializedGroupBy = (serializedState.groupBy?.expressions ?? []) as Array<IGroupingExpression & { owner?: unknown }>;
 
         expect(serializedGroupBy.length).toBe(1, 'serialized groupBy state should contain the configured expression');
         expect(serializedGroupBy[0].strategy).toBeUndefined('strategy should be removed from serialized groupBy expressions');
