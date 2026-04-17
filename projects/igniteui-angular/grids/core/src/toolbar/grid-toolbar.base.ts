@@ -127,7 +127,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         }
         toggleRef.toggle({
             ...this.overlaySettings, ...{
-                target: anchorElement, outlet: this.grid.outlet,
+                target: anchorElement,
                 excludeFromOutsideClick: [anchorElement]
             }
         });

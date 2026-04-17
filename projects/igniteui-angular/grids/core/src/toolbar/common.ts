@@ -1,19 +1,22 @@
 import { Component, Directive, HostBinding, TemplateRef, inject } from '@angular/core';
 import { GridType } from '../common/grid.interface';
 
-@Directive({ 
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[excelText],excel-text',
     standalone: true
 })
 export class IgxExcelTextDirective { }
 
-@Directive({ 
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[csvText],csv-text',
     standalone: true
 })
 export class IgxCSVTextDirective { }
 
-@Directive({ 
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[pdfText],pdf-text',
     standalone: true
 })

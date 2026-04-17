@@ -6,7 +6,7 @@ enum IgxHintPosition {
 }
 
 @Directive({
-    selector: 'igx-hint,[igxHint]',
+    selector: '[igxHint],igx-hint',
     standalone: true
 })
 export class IgxHintDirective implements OnInit {

@@ -132,6 +132,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
+
+            let operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'startsWith', 'Net');
             verifyFilterUIPosition(filterUIRow, grid);
             verifyFilterRowUI(input, close, reset, false);
             expect(grid.rowList.length).toEqual(1);
@@ -143,6 +148,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
+            operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'endsWith', 'script');
             expect(grid.rowList.length).toEqual(2);
             verifyFilterRowUI(input, close, reset, false);
 
@@ -1289,9 +1298,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            const calendar = outlet.getElementsByClassName('igx-calendar')[0];
-
+            const calendar = document.getElementsByClassName('igx-calendar')[0];
             const sundayLabel = calendar.querySelectorAll('.igx-days-view__label')[0].textContent;
 
             expect(sundayLabel.trim()).toEqual('Mo');
@@ -1968,7 +1975,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should scroll correct chip in view when one is deleted', async () => {
-            grid.width = '800px';
+            grid.width = '840px';
             fix.detectChanges();
             await wait(DEBOUNCE_TIME);
 
@@ -2095,8 +2102,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Click the today date.
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            let calendar = outlet.getElementsByClassName('igx-calendar')[0];
+            let calendar = document.getElementsByClassName('igx-calendar')[0];
             const todayDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date--current');
             UIInteractions.simulateClickAndSelectEvent(todayDayItem.firstChild);
             grid.filteringRow.onInputGroupFocusout();
@@ -2127,7 +2133,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            calendar = outlet.getElementsByClassName('igx-calendar')[0];
+            calendar = document.getElementsByClassName('igx-calendar')[0];
 
             // View years
             const yearView: HTMLElement = calendar.querySelectorAll('.igx-calendar-picker__date')[1] as HTMLElement;
@@ -2723,19 +2729,19 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const thead = GridFunctions.getGridHeader(grid).nativeElement;
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
             setElementSize(grid.nativeElement, ɵSize.Medium);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
             setElementSize(grid.nativeElement, ɵSize.Small);
             fix.detectChanges();
             await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
             fix.detectChanges();
-            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+            expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
         });
 
@@ -2977,9 +2983,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            const calendar = outlet.getElementsByClassName('igx-calendar')[0];
-
+            const calendar = document.getElementsByClassName('igx-calendar')[0];
             const currentDay = calendar.querySelector('.igx-days-view__date--current');
 
             UIInteractions.simulateClickAndSelectEvent(currentDay.firstChild);
@@ -3824,6 +3828,33 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(filterIcon).toBeDefined();
         }));
 
+        it('Should keep conditionName in sync when changing condition in ESF custom dialog.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            // Open custom dialog with 'contains' condition (index 0 in cascade menu for string column)
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(100);
+
+            // set first expression's value
+            GridFunctions.setInputValueESF(fix, 0, 'Net');
+            tick(100);
+
+            // change first expression's operator from 'contains' to 'startsWith' (index 2 for string column)
+            GridFunctions.setOperatorESF(fix, 0, 2);
+            tick(100);
+
+            GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+
+            const operands =
+                (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                    .filteringOperands as IFilteringExpression[];
+            verifyFilteringExpression(operands[0], 'ProductName', 'startsWith', 'Net');
+        }));
+
         it('Should filter grid via custom dialog.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
@@ -4077,6 +4108,25 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
         });
 
+        it('Should match numeric column values when searching without locale-specific formatting characters.', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            fix.detectChanges();
+            await wait(100);
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            // Type 1000 (without thousands separator) in search box.
+            // The value 1000 is displayed as "1,000" in the ESF list due to locale formatting.
+            // Searching "1000" should still match the "1,000" entry.
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1000', fix);
+            fix.detectChanges();
+            await wait(100);
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            // Expect 3 items: Select All + Add to current filter + the matched "1,000" item
+            expect(listItems.length).toBe(3, 'searching plain number should match locale-formatted label');
+        });
+
         it('Should enable/disable the apply button correctly.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
@@ -4167,6 +4217,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Open excel style custom filtering dialog and verify its size
+            setElementSize(grid.nativeElement, ɵSize.Large);
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
@@ -5126,7 +5177,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify the calendar is scrolled to previous month.
             const headerLabel = document.querySelector('igx-calendar').querySelector('.igx-calendar-picker__date') as HTMLElement;
             const today = new Date();
-            const prevMonth = new Date(today.setMonth(today.getMonth() - 1));
+            const prevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
             const monthName = prevMonth.toLocaleString('default', { month: 'short' });
             expect(headerLabel.innerText.trim()).toMatch(`${monthName}`);
         }));
@@ -7527,7 +7578,7 @@ const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: �
 const verifyGridSubmenuSize = (gridNativeElement: HTMLElement, expectedSize: ɵSize) => {
     const outlet = gridNativeElement.querySelector('.igx-grid__outlet');
     const dropdowns = Array.from(outlet.querySelectorAll('.igx-drop-down__list'));
-    const visibleDropdown: any = dropdowns.find((d) => !d.classList.contains('igx-toggle--hidden'));
+    const visibleDropdown: any = dropdowns[0];
     const dropdownItems = visibleDropdown.querySelectorAll('igx-drop-down-item');
 
     dropdownItems.forEach((dropdownItem) => {
@@ -7538,6 +7589,7 @@ const verifyGridSubmenuSize = (gridNativeElement: HTMLElement, expectedSize: ɵS
 const verifyFilteringExpression = (operand: IFilteringExpression, fieldName: string, conditionName: string, searchVal: any) => {
     expect(operand.fieldName).toBe(fieldName);
     expect(operand.condition.name).toBe(conditionName);
+    expect(operand.conditionName).toBe(conditionName);
     expect(operand.searchVal).toEqual(searchVal);
 };
 

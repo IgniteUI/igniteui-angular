@@ -424,10 +424,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
     }
 
+    /** @hidden @internal */
+    /* blazorCSSuppress */
     public override get advancedFilteringExpressionsTree(): IFilteringExpressionsTree {
         return super.advancedFilteringExpressionsTree;
     }
-
+    /** @hidden @internal */
     public override set advancedFilteringExpressionsTree(value: IFilteringExpressionsTree) {
         if (!this._hGridSchema) {
             this._hGridSchema = this.generateSchema();
@@ -592,6 +594,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    /* blazorCSSuppress */
     public override get resourceStrings() {
         return super.resourceStrings;
     }
@@ -653,15 +656,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                 ri.actionStrip?.hide();
             });
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public override get parentRowOutletDirective() {
-        // Targeting parent outlet in order to prevent hiding when outlet
-        // is present at a child grid and is attached to a row.
-        return this.parent ? this.parent.rowOutletDirective : this.outlet;
     }
 
     /**

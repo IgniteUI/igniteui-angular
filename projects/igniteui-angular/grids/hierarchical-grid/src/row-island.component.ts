@@ -431,10 +431,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 });
             }
         });
-
-        if (this.actionStrip) {
-            this.actionStrip.menuOverlaySettings.outlet = this.outlet;
-        }
     }
 
     /**
@@ -466,6 +462,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                     grid.paginatorOutlet.createEmbeddedView(this.paginatorTemplate, { $implicit: grid });
                 });
         });
+        this.cdr.reattach();
     }
 
     /**

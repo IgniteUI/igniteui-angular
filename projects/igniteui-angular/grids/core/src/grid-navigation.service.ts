@@ -4,15 +4,17 @@ import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { GridType } from './common/grid.interface';
 import {
     NAVIGATION_KEYS,
+    PlatformUtil,
+    SortingDirection
+} from 'igniteui-angular/core';
+import {
     ROW_COLLAPSE_KEYS,
     ROW_EXPAND_KEYS,
     SUPPORTED_KEYS,
     HORIZONTAL_NAV_KEYS,
     HEADER_KEYS,
-    ROW_ADD_KEYS,
-    PlatformUtil,
-    SortingDirection
-} from 'igniteui-angular/core';
+    ROW_ADD_KEYS
+} from './grid-navigation-keys';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IMultiRowLayoutNode } from './common/types';
@@ -103,10 +105,16 @@ export class IgxGridNavigationService {
             this.grid.selectionService.keyboardStateOnKeydown(this.activeNode, shift, shift && key === 'tab');
         }
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
+        const shouldNotifyVirtualizedKeyboardSelection =
+            ctrl && (key === 'arrowup' || key === 'up' || key === 'arrowdown' || key === 'down') &&
+            this.shouldPerformVerticalScroll(position.rowIndex, position.colIndex);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
             this.navigateInBody(position.rowIndex, position.colIndex, (obj) => {
                 obj.target.activate(event);
+                if (shouldNotifyVirtualizedKeyboardSelection) {
+                    this.grid.notifyChanges();
+                }
             });
         }
     }

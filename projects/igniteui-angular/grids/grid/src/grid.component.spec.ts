@@ -18,7 +18,7 @@ import { AsyncPipe } from '@angular/common';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
-import { SCROLL_THROTTLE_TIME } from './../src/grid-base.directive';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
@@ -44,7 +44,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                providers: [{ provide: SCROLL_THROTTLE_TIME, useValue: 0 }]
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
         });
 
@@ -461,49 +461,55 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fixture.componentInstance.grid;
             const gridElement = fixture.debugElement.query(By.css('.igx-grid'));
-            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
-            let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            const gridBodyContent = fixture.debugElement.query(By.css(TBODY_CLASS));
+            let loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
 
             expect(loadingIndicator).not.toBeNull();
-            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+            expect(gridBodyContent.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(300);
+            expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBeGreaterThan(300);
 
-            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
 
-            // the overlay should be shown
+            // the overlay should be shown and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
-            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
+            const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
+            expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
+
+            expect(loadingIndicator.nativeElement.children.length).not.toBeNull();
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columnList;
             grid.filter(columns.get(0).field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
             tick(100);
-            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+            expect(gridBodyContent.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
             tick(100);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(300);
+            expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBeGreaterThan(300);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
             fixture.detectChanges();
             tick(100);
 
-            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).not.toBeNull();
 
-            // the overlay should be hidden
+            // the overlay should be hidden and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
-            expect(loadingIndicator.nativeElement.children.length).toBe(0);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
+            expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
+            expect(loadingIndicator.query(By.css('igx-circular-bar'))).toBeNull();
         }));
 
         it('should render loading indicator when loading is enabled and autoGenerate is enabled', fakeAsync(() => {
@@ -637,28 +643,32 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fixture.componentInstance.grid;
             const gridElement = fixture.debugElement.query(By.css('.igx-grid'));
-            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
-            let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            const gridBodyContent = fixture.debugElement.query(By.css(TBODY_CLASS));
+            let loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
 
             expect(loadingIndicator).not.toBeNull();
-            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+            expect(gridBodyContent.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBe(548);
 
-            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
 
-            // the overlay should be shown
+            // the overlay should be shown and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
-            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
+            const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
+            expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
+            expect(loadingIndicator.query(By.css('igx-circular-bar'))).not.toBeNull();
 
             grid.isLoading = false;
             tick(16);
-            expect(loadingIndicator.nativeElement.children.length).toBe(0);
+            fixture.detectChanges();
+            expect(loadingIndicator.query(By.css('igx-circular-bar'))).toBeNull();
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
@@ -666,10 +676,10 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(100);
 
             // isLoading is still false so the empty data message should show, not the loading indicator
-            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
 
-            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyGridMessage);
+            expect(gridBodyContent.nativeElement.textContent).toEqual(grid.emptyGridMessage);
         }));
 
         it('should render empty message when grid height is 100%', fakeAsync(() => {
@@ -1315,6 +1325,30 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
             expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
+        }));
+
+        it('should account for CSS border widths in body height calculation when height is percent #16640', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.outerHeight = 600;
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const calcHeightNoBorder = grid.calcHeight;
+            expect(calcHeightNoBorder).not.toBeNull();
+
+            // Apply a 2px border (top and bottom) to the grid's native element
+            grid.nativeElement.style.borderTop = '2px solid black';
+            grid.nativeElement.style.borderBottom = '2px solid black';
+
+            // Trigger height recalculation
+            grid.reflow();
+            fix.detectChanges();
+
+            // The fix ensures border widths are included in the rendered height calculation,
+            // reducing the available body height accordingly and preventing continuous reflow growth
+            expect(grid.calcHeight).toBe(calcHeightNoBorder - 4);
         }));
 
         it('should keep auto-sizing if initial data is empty then set to a new array', fakeAsync(() => {
@@ -2048,7 +2082,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.navigateTo(50, 16);
             fix.detectChanges();
-            await wait(60);
+            await wait(100);
             fix.detectChanges();
 
             expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');

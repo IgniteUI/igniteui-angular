@@ -122,7 +122,6 @@
         <ng-container [formGroup]="formGroup">
             <igx-date-picker
                 [style.width.%]="100"
-                [outlet]="grid.outlet"
                 mode="dropdown"
                 [locale]="grid.locale"
                 [weekStart]="column.pipeArgs.weekStart"
@@ -139,7 +138,6 @@
         <ng-container [formGroup]="formGroup">
             <igx-time-picker
                 [style.width.%]="100"
-                [outlet]="grid.outlet"
                 mode="dropdown"
                 [locale]="grid.locale"
                 [(value)]="editValue"
@@ -207,7 +205,7 @@
         <div
             #indentationDiv
             class="igx-grid__tree-cell--padding-level-{{level}}"
-            [ngStyle]="{'padding-inline-start': 'calc(var(--igx-tree-indent-size) *' + level + ')'}"
+            [ngStyle]="{'padding-inline-start': 'calc(var(--ig-tree-indent-size) *' + level + ')'}"
         ></div>
     }
     @if (!isLoading) {
@@ -254,7 +252,6 @@
         name="error"
         #errorIcon
         [igxTooltipTarget]="tooltipRef"
-        [igxToggleOutlet]="grid.outlet"
         (mouseover)='errorShowing = true'
         (mouseout)='errorShowing = false'>
     </igx-icon>

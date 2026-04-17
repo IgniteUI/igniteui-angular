@@ -39,6 +39,7 @@ Covered Components, Directives and Services with MIT License:
 - igx-divider
 - igx-drop-down
 - igx-expansion-panel
+- igx-grid-lite
 - igx-icon
 - igx-input-group
 - igx-linear-bar
@@ -81,7 +82,7 @@ Covered Components, Directives and Services with MIT License:
 - IgxTextHighlightService
 - igxToggle
 
-The MIT License applies exclusively to the components (encompassing all related modules and directives), directives, and services listed above and their associated source code. 
+The MIT License applies exclusively to the components (encompassing all related modules and directives), directives, and services listed above and their associated source code.
 All other parts of this package remain under the Infragistics Commercial License.
 
 The MIT License (MIT)

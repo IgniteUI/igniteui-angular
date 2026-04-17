@@ -21,13 +21,14 @@ export default [
         rules: {
             "@angular-eslint/component-selector": ["error", {
                 type: "element",
-                prefix: ["igx", "igc", "test"],
+                prefix: ["igx", "test"],
                 style: "kebab-case",
             }],
 
             "@angular-eslint/directive-selector": ["error", {
                 type: ["attribute", "element"],
-                prefix: ["igx", "igc"],
+                prefix: ["igx", "ig"],
+                style: "camelCase",
             }],
 
             "@angular-eslint/no-input-rename": "off",

@@ -4,3 +4,4 @@ export * from './grid.pipes';
 export * from './grid-row.component';
 export * from './expandable-cell.component';
 export * from './grid.module';
+export * from './grouping/grid-group-by-area.component';

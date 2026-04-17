@@ -1,6 +1,6 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { recreateTree, recreateTreeFromFields } from './expressions-tree-util';
+import { recreateExpression, recreateTree, recreateTreeFromFields } from './expressions-tree-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 import type { EntityType, FieldType } from './grid-types';
 
@@ -477,4 +477,5 @@ describe('Unit testing FilteringUtil', () => {
         expect(nestedCondition.condition.name).toBe('greaterThan');
         expect(nestedCondition.condition.logic(200, nestedCondition.searchVal)).toBe(true);
     });
+
 });

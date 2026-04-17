@@ -104,6 +104,7 @@
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             [igxForTrackBy]="trackChanges"
             #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
+            <div [attr.data-index]="rowIndex">
             <ng-template
                 [igxTemplateOutlet]="getRowTemplate(rowData)"
                 [igxTemplateOutletContext]="getContext(rowData, rowIndex)"
@@ -112,6 +113,7 @@
                 (beforeViewDetach)="viewDetachHandler($event)"
                 (viewMoved)="viewMovedHandler($event)">
             </ng-template>
+            </div>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
@@ -155,14 +157,8 @@
         </ng-template>
 
         <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
-        <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
+        <ng-container #bodyViewContainerRef></ng-container>
         <igc-trial-watermark></igc-trial-watermark>
-    </div>
-    <div igxToggle #loadingOverlay>
-        @if (shouldOverlayLoading) {
-            <igx-circular-bar [indeterminate]="true">
-            </igx-circular-bar>
-        }
     </div>
     @if (moving && columnInDrag) {
         <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
@@ -177,11 +173,16 @@
     </div>
 
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
 
-    <div #igxBodyOverlayOutlet="overlay-outlet" igxOverlayOutlet></div>
-    <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
+    <div class="igx-grid__loading-outlet">
+        <div igxToggle #loadingOverlay>
+            @if (shouldOverlayLoading) {
+                <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
+            }
+        </div>
+    </div>
 </div>
 
 
