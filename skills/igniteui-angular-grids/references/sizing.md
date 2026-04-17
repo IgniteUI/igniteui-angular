@@ -17,25 +17,13 @@
 
 The grid uses **border-box sizing** — border and padding are included in the width/height calculations. Do **not** override `box-sizing` on the grid element; doing so will break size calculations.
 
-The grid supports both component inputs (`width`/`height`) and regular CSS/layout sizing from the host or wrapping container (including flex/grid layouts). Use the inputs when you need explicit grid sizing behavior such as `null` sizing that disables virtualization.
+The grid supports both component inputs (`width`/`height`) and regular CSS/layout sizing from the host or wrapping container (including flex/grid layouts). Use the inputs when you need explicit fixed or percentage grid sizing.
 
 ## Grid Width
 
 > **Docs:** [Grid Sizing — Width](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sizing#width)
 
 **Default:** `100%` — the grid fills available width of the parent/window.
-
-### `null` Width
-
-```html
-<igx-grid [width]="null" ...></igx-grid>
-```
-
-- All columns are rendered in the DOM — **column virtualization is disabled**.
-- Grid width expands to fit all column widths (minimum `136px` per column when no column widths are set).
-- No horizontal scrollbar inside the grid; the browser may render a native scrollbar if content overflows the viewport.
-- This is an edge-case mode intended when disabling column virtualization is desired; in layout-constrained containers (for example flex/grid wrappers), the expanding content width can break expected responsive sizing.
-- **Warning:** large column counts with `null` width can significantly impact browser performance due to no virtualization.
 
 ### Pixel Width
 
@@ -117,7 +105,6 @@ html, body, .grid-container {
 
 - Auto-sized columns share the available grid width equally.
 - Minimum column width is **`136px`**; if the equal share is less than `136px`, all auto-sized columns default to `136px` and the grid renders a horizontal scrollbar.
-- When grid `width` is `null`, auto-sized columns default to `136px` each.
 - Feature columns (row selector checkbox, etc.) consume space that reduces what is available for auto-sized columns.
 
 ```html
@@ -154,7 +141,6 @@ html, body, .grid-container {
 - Column width is calculated as a percentage of the grid width.
 - Responsive — resizes when the grid resizes.
 - Combined percentages less than `100%` leave an empty area; greater than `100%` triggers a horizontal scrollbar.
-- **If the grid `width` is `null`**, percentage column widths fall back to `136px` each — the grid has no base width to resolve against.
 
 ## Grid Cell Spacing Control
 
@@ -211,9 +197,8 @@ igx-grid {
 
 ## Key Rules
 
-- Grid sizing can come from CSS/layout context (host/container sizing) or from `[width]`/`[height]` inputs. Use `null` width/height only intentionally, because it disables virtualization.
+- Grid sizing can come from CSS/layout context (host/container sizing) or from `[width]`/`[height]` inputs.
 - **Never** override `box-sizing` on the grid — it uses border-box and relies on this.
-- Use `null` for width/height only when the data set is small; virtualization is disabled and large data will hurt performance.
+- Use `null` for height only when the data set is small; row virtualization is disabled and large data will hurt performance.
 - When using percentage height, the parent **must** have an explicit height for the percentage to resolve correctly. Without it, the grid falls back to 10 visible rows.
-- Percentage column widths combined with `width="null"` on the grid always fall back to `136px` per column.
 - A mix of fixed-width and auto-sized columns is valid — auto-sized columns fill the remaining space after fixed-width columns are laid out.
