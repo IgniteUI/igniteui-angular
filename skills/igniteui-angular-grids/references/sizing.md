@@ -17,7 +17,7 @@
 
 The grid uses **border-box sizing** — border and padding are included in the width/height calculations. Do **not** override `box-sizing` on the grid element; doing so will break size calculations.
 
-Do **not** set `width` or `height` via CSS styles directly on the grid host element — always use the `width` and `height` **inputs** on the grid component.
+The grid supports both component inputs (`width`/`height`) and regular CSS/layout sizing from the host or wrapping container (including flex/grid layouts). Use the inputs when you need explicit grid sizing behavior such as `null` sizing that disables virtualization.
 
 ## Grid Width
 
@@ -34,6 +34,7 @@ Do **not** set `width` or `height` via CSS styles directly on the grid host elem
 - All columns are rendered in the DOM — **column virtualization is disabled**.
 - Grid width expands to fit all column widths (minimum `136px` per column when no column widths are set).
 - No horizontal scrollbar inside the grid; the browser may render a native scrollbar if content overflows the viewport.
+- This is an edge-case mode intended when disabling column virtualization is desired; in layout-constrained containers (for example flex/grid wrappers), the expanding content width can break expected responsive sizing.
 - **Warning:** large column counts with `null` width can significantly impact browser performance due to no virtualization.
 
 ### Pixel Width
@@ -210,7 +211,7 @@ igx-grid {
 
 ## Key Rules
 
-- **Never** set `width` or `height` directly as CSS styles on the grid host element — use the component `[width]` and `[height]` inputs.
+- Grid sizing can come from CSS/layout context (host/container sizing) or from `[width]`/`[height]` inputs. Use `null` width/height only intentionally, because it disables virtualization.
 - **Never** override `box-sizing` on the grid — it uses border-box and relies on this.
 - Use `null` for width/height only when the data set is small; virtualization is disabled and large data will hurt performance.
 - When using percentage height, the parent **must** have an explicit height for the percentage to resolve correctly. Without it, the grid falls back to 10 visible rows.
