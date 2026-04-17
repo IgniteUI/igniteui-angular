@@ -1,4 +1,5 @@
 /* stylelint-disable max-nesting-depth */
+@use 'sass:map';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
@@ -93,7 +94,7 @@ $z-grid-loading: 10003;
 
         igx-input-group {
 	        --_bundle-row: 1;
-	        
+
             background: var-get($theme, 'cell-editing-background');
 
             input {
@@ -432,7 +433,7 @@ $z-grid-loading: 10003;
             }
         }
 
-        @include e(tr, $not: (header, selected)) {
+        @include e(tr, $not: (header, selected, ghost)) {
             &:hover {
                 background: var-get($theme, 'row-hover-background');
                 color: var-get($theme, 'row-hover-text-color');
@@ -928,7 +929,19 @@ $z-grid-loading: 10003;
         @include e(tr, $m: ghost) {
             background: var-get($theme, 'row-ghost-background');
             color: var-get($theme, 'row-drag-color');
+            outline: rem(1px) solid var-get($theme, 'row-ghost-border-color');
             z-index: $z-grid-overlay;
+
+            $ghost-row-tokens: (
+                _meta: (
+                    name: 'grid'
+                ),
+                'row-ghost-background': map.get($theme, 'row-ghost-background'),
+                'row-drag-color': map.get($theme, 'row-drag-color'),
+                'row-ghost-border-color': map.get($theme, 'row-ghost-border-color')
+            );
+
+            @include tokens($ghost-row-tokens, $mode: 'scoped');
         }
 
         // Group row
@@ -2600,10 +2613,10 @@ $z-grid-loading: 10003;
                 }
             }
         }
-	    
+
 	    .igx-grid__group-expand-btn {
 		    color: var-get($theme, 'expand-all-icon-color');
-		    
+
 		    &:hover,
 		    &:focus {
 			    color: var-get($theme, 'expand-all-icon-hover-color');
