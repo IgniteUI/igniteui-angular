@@ -663,21 +663,18 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             }
         }
 
-        for (let index = 0; index < orderedTopLevelNodes.length; index++) {
+        let nextReferenceNode: HTMLElement | null = null;
+        for (let index = orderedTopLevelNodes.length - 1; index >= 0; index--) {
             const node = orderedTopLevelNodes[index];
+            if (node.parentElement === container) {
+                nextReferenceNode = node;
+                continue;
+            }
             if (container.contains(node)) {
                 continue;
             }
-            // Find the next node already in the container and insert before it
-            // to preserve template order.
-            let referenceNode: HTMLElement | null = null;
-            for (let nextIndex = index + 1; nextIndex < orderedTopLevelNodes.length; nextIndex++) {
-                if (orderedTopLevelNodes[nextIndex].parentElement === container) {
-                    referenceNode = orderedTopLevelNodes[nextIndex];
-                    break;
-                }
-            }
-            container.insertBefore(node, referenceNode);
+            container.insertBefore(node, nextReferenceNode);
+            nextReferenceNode = node;
         }
     }
 
