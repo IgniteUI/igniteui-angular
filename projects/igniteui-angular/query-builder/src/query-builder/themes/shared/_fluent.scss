@@ -15,26 +15,29 @@ $_theme: $fluent;
 }
 
 @include themed-block(igx-filter-tree, fluent) {
+    $alpha-hover: .08;
+    $alpha-focus: .16;
+    $alpha-focus-hover: .24;
+
     @include e(button, $m: 'and') {
         &[igxButton='flat'] {
             --background: transparent;
-            --focus-hover-background: #{color($color: 'gray', $variant: 50)};
+            --focus-hover-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
             --focus-visible-background: transparent;
-            --focus-background: transparent;
-            --active-background: #{color($color: 'gray', $variant: 50)};
-            --hover-background: #{color($color: 'gray', $variant: 50)};
+            --focus-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --active-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --hover-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
         }
     }
 
     @include e(button, $m: 'or') {
         &[igxButton='flat'] {
             --background: transparent;
-            --focus-hover-background: #{color($color: 'gray', $variant: 50)};
+            --focus-hover-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
             --focus-visible-background: transparent;
-            --focus-background: transparent;
-            --active-background: #{color($color: 'gray', $variant: 50)};
-            --hover-background: #{color($color: 'gray', $variant: 50)};
-
+            --focus-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-focus});;
+            --active-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+            --hover-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
         }
     }
 
