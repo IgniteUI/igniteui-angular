@@ -1,6 +1,6 @@
 import { Component, ViewChild, DebugElement, OnInit, ElementRef } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -96,6 +96,7 @@ describe('igxSelect', () => {
                 IgxSelectTemplateFormComponent,
                 IgxSelectHeaderFooterComponent,
                 IgxSelectCDRComponent,
+                IgxSelectNestedControlFlowComponent,
                 IgxSelectWithIdComponent
             ]
         }).compileComponents();
@@ -2619,6 +2620,175 @@ describe('igxSelect', () => {
             expect(selectCDR.value).toBe('ID');
         });
     });
+    describe('Test nested control flow (@if/@else inside @for)', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxSelectNestedControlFlowComponent);
+            fixture.detectChanges();
+            select = fixture.componentInstance.select;
+        });
+
+        it('should render items when using @if/@else inside @for loop', fakeAsync(() => {
+            expect(select).toBeDefined();
+            expect(fixture.componentInstance.items.length).toBe(5);
+
+            // @ContentChildren should find items
+            expect(select.children.length).toBe(5);
+            expect(select.items.length).toBe(5);
+
+            // Verify all items are accessible and have correct values
+            const itemValues = select.items.map(item => item.value);
+            expect(itemValues).toEqual(['One', 'Two', 'Three', 'Four', 'Five']);
+
+            // Items should be rendered in the scroll container
+            const scrollContainer = fixture.debugElement.query(By.css('.igx-drop-down__list-scroll'));
+            const renderedItems = scrollContainer.nativeElement.querySelectorAll('igx-select-item');
+            expect(renderedItems.length).toBe(5);
+
+            // Verify dropdown can be opened and shows items
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+
+            expect(select.collapsed).toBeFalsy();
+            const listItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWN_LIST_ITEM));
+            expect(listItems.length).toBe(5);
+        }));
+
+        it('should handle selection with nested control flow items', fakeAsync(() => {
+            expect(select.value).toBeUndefined();
+            
+            // Select an item
+            select.value = 'Three';
+            fixture.detectChanges();
+            tick();
+
+            expect(select.value).toBe('Three');
+            expect(select.selectedItem).toBeDefined();
+            expect(select.selectedItem.value).toBe('Three');
+        }));
+
+        it('should handle dynamic item changes with nested control flow', fakeAsync(() => {
+            expect(select.items.length).toBe(5);
+
+            // Add more items
+            fixture.componentInstance.items.push('Six', 'Seven');
+            fixture.detectChanges();
+            tick();
+
+            expect(select.children.length).toBe(7);
+            expect(select.items.length).toBe(7);
+
+            // Remove items
+            fixture.componentInstance.items = ['One', 'Two'];
+            fixture.detectChanges();
+            tick();
+
+            expect(select.children.length).toBe(2);
+            expect(select.items.length).toBe(2);
+        }));
+    });
+    describe('grouped items with nested control flow', () => {
+        let groupedFixture: ComponentFixture<IgxSelectGroupedItemsControlFlowComponent>;
+        let groupedSelect: IgxSelectComponent;
+
+        beforeEach(() => {
+            groupedFixture = TestBed.createComponent(IgxSelectGroupedItemsControlFlowComponent);
+            groupedFixture.detectChanges();
+            groupedSelect = groupedFixture.componentInstance.select;
+        });
+
+        it('should render group labels and all items in the scroll container', fakeAsync(() => {
+            expect(groupedSelect).toBeDefined();
+            // 3 items in Fruits + 2 in Veggies = 5 total
+            expect(groupedSelect.items.length).toBe(5);
+
+            const scrollContainer = groupedFixture.debugElement.query(By.css('.igx-drop-down__list-scroll'));
+            const renderedGroups = scrollContainer.nativeElement.querySelectorAll('igx-select-item-group');
+            expect(renderedGroups.length).toBe(2);
+
+            const renderedItems = scrollContainer.nativeElement.querySelectorAll('igx-select-item');
+            expect(renderedItems.length).toBe(5);
+
+            // Group labels should be visible
+            const labels = scrollContainer.nativeElement.querySelectorAll('igx-select-item-group label');
+            expect(labels[0].textContent.trim()).toBe('Fruits');
+            expect(labels[1].textContent.trim()).toBe('Veggies');
+        }));
+
+        it('should handle selection of items inside groups with nested control flow', fakeAsync(() => {
+            groupedSelect.value = 'Banana';
+            groupedFixture.detectChanges();
+            tick();
+
+            expect(groupedSelect.value).toBe('Banana');
+            expect(groupedSelect.selectedItem).toBeDefined();
+            expect(groupedSelect.selectedItem.value).toBe('Banana');
+        }));
+
+        it('should open and show all items when dropdown is toggled', fakeAsync(() => {
+            groupedSelect.toggle();
+            tick();
+            groupedFixture.detectChanges();
+
+            expect(groupedSelect.collapsed).toBeFalsy();
+            const listItems = groupedFixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWN_LIST_ITEM));
+            expect(listItems.length).toBe(5);
+        }));
+    });
+
+    describe('groups inside nested control flow', () => {
+        let groupsFixture: ComponentFixture<IgxSelectGroupsInControlFlowComponent>;
+        let groupsSelect: IgxSelectComponent;
+
+        beforeEach(() => {
+            groupsFixture = TestBed.createComponent(IgxSelectGroupsInControlFlowComponent);
+            groupsFixture.detectChanges();
+            groupsSelect = groupsFixture.componentInstance.select;
+        });
+
+        it('should render groups and items in scroll container when groups are in @for > @if', fakeAsync(() => {
+            expect(groupsSelect).toBeDefined();
+            // 3 items in Fruits + 2 in Veggies = 5 total
+            expect(groupsSelect.items.length).toBe(5);
+
+            const scrollContainer = groupsFixture.debugElement.query(By.css('.igx-drop-down__list-scroll'));
+            const renderedGroups = scrollContainer.nativeElement.querySelectorAll('igx-select-item-group');
+            expect(renderedGroups.length).toBe(2);
+
+            const renderedItems = scrollContainer.nativeElement.querySelectorAll('igx-select-item');
+            expect(renderedItems.length).toBe(5);
+        }));
+
+        it('should handle selection when groups are in @for > @if', fakeAsync(() => {
+            groupsSelect.value = 'Carrot';
+            groupsFixture.detectChanges();
+            tick();
+
+            expect(groupsSelect.value).toBe('Carrot');
+            expect(groupsSelect.selectedItem).toBeDefined();
+            expect(groupsSelect.selectedItem.value).toBe('Carrot');
+        }));
+
+        it('should handle dynamic group changes', fakeAsync(() => {
+            expect(groupsSelect.items.length).toBe(5);
+
+            groupsFixture.componentInstance.groups = [
+                { label: 'Fruits', items: ['Apple', 'Banana', 'Cherry'] },
+                { label: 'Veggies', items: ['Carrot', 'Pea'] },
+                { label: 'Grains', items: ['Rice', 'Wheat'] }
+            ];
+            groupsFixture.detectChanges();
+            tick();
+
+            // 3 (Fruits) + 2 (Veggies) + 2 (Grains) = 7
+            expect(groupsSelect.items.length).toBe(7);
+
+            // Items from the new group are accessible
+            const values = groupsSelect.items.map(i => i.value);
+            expect(values).toContain('Rice');
+            expect(values).toContain('Wheat');
+        }));
+    });
     describe('Input with input group directives - hint, label, prefix, suffix: ', () => {
         beforeEach(()  => {
             fixture = TestBed.createComponent(IgxSelectAffixComponent);
@@ -3105,6 +3275,90 @@ class IgxSelectCDRComponent {
         { field: 'ID',  type: 'string' },
         { field: 'CompanyName', type: 'string' },
         { field: 'ContactName', type: 'string' }
+    ];
+}
+
+@Component({
+    template: `
+        <igx-select #select>
+            <label igxLabel>Even/Odd Select</label>
+            @for (item of items; track item; let e = $even) {
+                @if (e) {
+                    <igx-select-item [value]="item">even: {{ item }}</igx-select-item>
+                } @else {
+                    <igx-select-item [value]="item">odd: {{ item }}</igx-select-item>
+                }
+            }
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
+})
+class IgxSelectNestedControlFlowComponent {
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
+    public select: IgxSelectComponent;
+
+    public items: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
+}
+
+@Component({
+    template: `
+        <igx-select #select>
+            <label igxLabel>Grouped items with nested control flow</label>
+            @for (group of groups; track group.label) {
+                <igx-select-item-group [label]="group.label">
+                    @for (item of group.items; track item; let e = $even) {
+                        @if (e) {
+                            <igx-select-item [value]="item">even: {{ item }}</igx-select-item>
+                        } @else {
+                            <igx-select-item [value]="item">odd: {{ item }}</igx-select-item>
+                        }
+                    }
+                </igx-select-item-group>
+            }
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, IgxLabelDirective]
+})
+class IgxSelectGroupedItemsControlFlowComponent {
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
+    public select: IgxSelectComponent;
+
+    public groups: { label: string; items: string[] }[] = [
+        { label: 'Fruits', items: ['Apple', 'Banana', 'Cherry'] },
+        { label: 'Veggies', items: ['Carrot', 'Pea'] }
+    ];
+}
+
+@Component({
+    template: `
+        <igx-select #select>
+            <label igxLabel>Groups inside nested control flow</label>
+            @for (group of groups; track group.label; let e = $even) {
+                @if (e) {
+                    <igx-select-item-group [label]="group.label">
+                        @for (item of group.items; track item) {
+                            <igx-select-item [value]="item">{{ item }}</igx-select-item>
+                        }
+                    </igx-select-item-group>
+                } @else {
+                    <igx-select-item-group [label]="group.label">
+                        @for (item of group.items; track item) {
+                            <igx-select-item [value]="item">{{ item }}</igx-select-item>
+                        }
+                    </igx-select-item-group>
+                }
+            }
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, IgxLabelDirective]
+})
+class IgxSelectGroupsInControlFlowComponent {
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
+    public select: IgxSelectComponent;
+
+    public groups: { label: string; items: string[] }[] = [
+        { label: 'Fruits', items: ['Apple', 'Banana', 'Cherry'] },
+        { label: 'Veggies', items: ['Carrot', 'Pea'] }
     ];
 }
 
