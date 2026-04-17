@@ -569,6 +569,11 @@ export class AppComponent implements OnInit {
             name: 'Reactive Form'
         },
         {
+            link: '/select',
+            icon: 'arrow_drop_down_circle',
+            name: 'Select'
+        },
+        {
             link: '/slider',
             icon: 'tab',
             name: 'Slider'
