@@ -416,7 +416,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludeFromOutsideClick: [this.inputGroup.element.nativeElement as HTMLElement]
         };
+
+        // Initial pass — moves items that Angular's content projection could not place
+        // (e.g. items nested inside @for > @if control flow blocks).
+        this.moveItemsToScrollContainer();
+
         const changes$ = this.children.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.moveItemsToScrollContainer();
             this.setSelection(this.items.find(x => x.value === this.value));
             this.cdr.detectChanges();
         });
@@ -587,6 +593,32 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
 
         this.cdr.markForCheck();
+    }
+
+    /**
+     * Moves any igx-select-item elements that Angular's content projection could not
+     * place in the scroll container (e.g. items nested inside @for > @if control flow).
+     * Items already inside the container (directly or within a projected group) are skipped.
+     * If an item is inside an igx-select-item-group that is itself unprojected, the whole
+     * group is moved instead of detaching the item from it.
+     */
+    private moveItemsToScrollContainer(): void {
+        if (!this.children?.length || !this.scrollContainer) {
+            return;
+        }
+        const container = this.scrollContainer;
+        for (const child of this.children) {
+            const el: HTMLElement = child.element.nativeElement;
+            if (container.contains(el)) {
+                continue;
+            }
+            const groupEl = el.closest('igx-select-item-group') as HTMLElement | null;
+            if (groupEl && !container.contains(groupEl)) {
+                container.appendChild(groupEl);
+            } else if (!groupEl) {
+                container.appendChild(el);
+            }
+        }
     }
 
     private setSelection(item: IgxDropDownItemBaseDirective) {
