@@ -96,6 +96,8 @@ describe('igxSelect', () => {
                 IgxSelectHeaderFooterComponent,
                 IgxSelectCDRComponent,
                 IgxSelectNestedControlFlowComponent,
+                IgxSelectGroupedItemsControlFlowComponent,
+                IgxSelectGroupsInControlFlowComponent,
                 IgxSelectWithIdComponent
             ]
         }).compileComponents();
@@ -3299,9 +3301,9 @@ class IgxSelectCDRComponent {
             <label igxLabel>Even/Odd Select</label>
             @for (item of items; track item; let e = $even) {
                 @if (e) {
-                    <igx-select-item [value]="item">even: {{ item }}</igx-select-item>
-                } @else {
                     <igx-select-item [value]="item">odd: {{ item }}</igx-select-item>
+                } @else {
+                    <igx-select-item [value]="item">even: {{ item }}</igx-select-item>
                 }
             }
         </igx-select>
@@ -3323,9 +3325,9 @@ class IgxSelectNestedControlFlowComponent {
                 <igx-select-item-group [label]="group.label">
                     @for (item of group.items; track item; let e = $even) {
                         @if (e) {
-                            <igx-select-item [value]="item">even: {{ item }}</igx-select-item>
-                        } @else {
                             <igx-select-item [value]="item">odd: {{ item }}</igx-select-item>
+                        } @else {
+                            <igx-select-item [value]="item">even: {{ item }}</igx-select-item>
                         }
                     }
                 </igx-select-item-group>
