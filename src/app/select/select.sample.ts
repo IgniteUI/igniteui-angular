@@ -46,6 +46,9 @@ export class SelectSampleComponent implements OnInit {
     public fruits: string[] = ['Orange', 'Apple', 'Banana', 'Mango', 'Pear', 'Lemon', 'Peach', 'Apricot', 'Grapes', 'Cactus'];
     public selected: string;
     public selectRequired = true;
+    
+    //Test data for nested @if/@else issue
+    public testItems: string[] = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
 
     public reactiveForm: UntypedFormGroup;
     public cities: string[] = [
