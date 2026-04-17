@@ -19,7 +19,7 @@ import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, 
 import { IColumnState, IGridState } from './state-base.directive';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 
-fdescribe('IgxGridState - input properties #grid', () => {
+describe('IgxGridState - input properties #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
