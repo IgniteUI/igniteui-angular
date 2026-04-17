@@ -131,7 +131,7 @@ projects/igniteui-angular/core/src/core/styles/   ← component SCSS themes
 1. Read the feature request.
 2. Search the repo to identify affected components, directives, services, and files.
 3. If the feature touches theming or styles, read
-   `skills/igniteui-angular-theming/references/contributing.md` before planning the styling handoff.
+   `.github/themes-contributing.md` before planning the styling handoff.
 4. Determine:
    - Which components are affected and where they live
    - Whether this replaces, renames, or deprecates any existing API
