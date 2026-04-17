@@ -291,6 +291,7 @@ export class IgxGridStateBaseDirective {
                 const groupingExpressions = grid.groupingExpressions.map(expr => {
                     const copy = { ...expr };
                     delete copy.strategy;
+                    delete copy.owner;
                     return copy;
                 });
                 const expansionState = grid.groupingExpansionState;

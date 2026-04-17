@@ -841,8 +841,12 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.groupingExpressions[0].strategy).toBe(customStrategy, 'strategy should be set before getState');
         expect(grid.groupingExpressions[0].owner).toBe(owner, 'owner should be set before getState');
 
-        state.getState(false, 'groupBy');
+        const serializedState = state.getState(false, 'groupBy') as IGridState;
+        const serializedGroupBy = serializedState.groupBy as Array<IGroupingExpression & { owner?: unknown }>;
 
+        expect(serializedGroupBy.length).toBe(1, 'serialized groupBy state should contain the configured expression');
+        expect(serializedGroupBy[0].strategy).toBeUndefined('strategy should be removed from serialized groupBy expressions');
+        expect(serializedGroupBy[0].owner).toBeUndefined('owner should be removed from serialized groupBy expressions');
         expect(grid.groupingExpressions[0].strategy).toBe(customStrategy, 'strategy should not be removed from live groupBy expressions after getState');
         expect(grid.groupingExpressions[0].owner).toBe(owner, 'owner should not be removed from live groupBy expressions after getState');
     });
