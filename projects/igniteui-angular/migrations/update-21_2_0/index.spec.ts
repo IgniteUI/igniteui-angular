@@ -20,7 +20,7 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-55';
 
     themes.forEach(theme => {
-        it('should rename the base circle color property of the circular progress', async () => {
+        it(`should rename the base circle color property of the circular progress for ${theme}`, async () => {
             appTree.create(
                 testFilePath,
                 `$custom-${theme}: ${theme}($base-circle-color: red);`
