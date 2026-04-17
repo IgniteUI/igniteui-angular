@@ -1,35 +1,43 @@
-import * as path from 'path';
+import * as path from "path";
 
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { setupTestTree } from '../common/setup.spec';
+import {
+    SchematicTestRunner,
+    UnitTestTree,
+} from "@angular-devkit/schematics/testing";
+import { setupTestTree } from "../common/setup.spec";
 
-const version = '21.2.0';
-const themes = [
-    'circular-theme'
-];
-const testFilePath = '/testSrc/appPrefix/component/${theme}.component.scss';
+const version = "21.2.0";
+const themes = ["circular-theme"];
+const testFilePath = "/testSrc/appPrefix/component/test.component.scss";
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
-    const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
+    const schematicRunner = new SchematicTestRunner(
+        "ig-migrate",
+        path.join(__dirname, "../migration-collection.json"),
+    );
 
     beforeEach(() => {
         appTree = setupTestTree();
     });
 
-    const migrationName = 'migration-55';
+    const migrationName = "migration-55";
 
-    themes.forEach(theme => {
+    themes.forEach((theme) => {
         it(`should rename the base circle color property of the circular progress for ${theme}`, async () => {
             appTree.create(
                 testFilePath,
-                `$custom-${theme}: ${theme}($base-circle-color: red);`
+                `$custom-${theme}: ${theme}($base-circle-color: red);`,
             );
 
-            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+            const tree = await schematicRunner.runSchematic(
+                migrationName,
+                {},
+                appTree,
+            );
 
             expect(tree.readContent(testFilePath)).toEqual(
-                `$custom-${theme}: ${theme}($track-color: red);`
+                `$custom-${theme}: ${theme}($track-color: red);`,
             );
         });
     });
