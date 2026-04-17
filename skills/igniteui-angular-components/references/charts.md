@@ -233,7 +233,7 @@ chartComponent.itemsSource = dataArray;
 ```typescript
 // Required
 dataSource: any[];           // Data array (auto-detects numeric fields)
-chartType: ChartType;        // Auto, Area, Column, Line, Point, etc.
+chartType: CategoryChartType;        // Auto, Area, Column, Line, Point, etc.
 
 // Common optional inputs
 xAxisTitle: string;          // X-axis label
