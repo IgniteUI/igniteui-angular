@@ -1,0 +1,194 @@
+name: Bug Report
+description: Create a report to help us improve
+type: Bug
+labels: [":bug: bug", ":new: status: new"]
+projects: ["IgniteUI/16"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the sections below so we can reproduce and fix the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe the issue...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Framework
+      description: Which framework are you using?
+      options:
+        - Angular
+        - Angular Elements
+        - Angular with SSR (Server-Side Rendering)
+    validations:
+      required: true
+
+  - type: input
+    id: angular-version
+    attributes:
+      label: Angular Version
+      description: The version of Angular your project uses (e.g. 19.2.0).
+      placeholder: e.g. 19.2.0
+    validations:
+      required: true
+
+  - type: input
+    id: igniteui-angular-version
+    attributes:
+      label: Ignite UI for Angular Version
+      description: The version of igniteui-angular installed in your project (e.g. 19.2.0).
+      placeholder: e.g. 19.2.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component / Area
+      description: Which component or area is affected?
+      options:
+        - Accordion
+        - Action Strip
+        - Avatar
+        - Badge
+        - Banner
+        - Bottom Navigation (Tabs)
+        - Button / Button Group
+        - Calendar
+        - Card
+        - Carousel
+        - Checkbox
+        - Chip / Chips Area
+        - Combo / Simple Combo
+        - Date Picker
+        - Date Range Picker
+        - Dialog
+        - Drag and Drop
+        - Drop Down
+        - Expansion Panel
+        - Grid
+        - Hierarchical Grid
+        - Tree Grid
+        - Pivot Grid
+        - Icon
+        - Input Group
+        - List
+        - Navbar
+        - Navigation Drawer
+        - Paginator
+        - Progress Bar
+        - Query Builder
+        - Radio / Radio Group
+        - Select
+        - Slider / Range Slider
+        - Snackbar
+        - Splitter
+        - Stepper
+        - Switch
+        - Tabs
+        - Time Picker
+        - Toast
+        - Tooltip
+        - Tree
+        - Theming / Styles
+        - Animations
+        - Layouts
+        - Services (Overlay, Transaction, etc.)
+        - Schematics / Migrations
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: Which browser(s) are you experiencing the issue in?
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: Which OS are you using?
+      multiple: true
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - iOS
+        - Android
+    validations:
+      required: false
+
+  - type: textarea
+    id: command-not-working
+    attributes:
+      label: Command Not Working
+      description: If a CLI command (ng add, ng update, ng generate, etc.) is failing, paste the full command and its output here.
+      placeholder: |
+        $ ng update igniteui-angular
+        <paste error output here>
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Provide a step-by-step list to reproduce the issue.
+      value: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-result
+    attributes:
+      label: Actual Result
+      description: What is the actual result after following the steps to reproduce?
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-result
+    attributes:
+      label: Expected Result
+      description: What is the expected result after following the steps to reproduce?
+    validations:
+      required: true
+
+  - type: input
+    id: reproduction-url
+    attributes:
+      label: Reproduction URL
+      description: A link to a StackBlitz, CodeSandbox, or GitHub repository that reproduces the issue.
+      placeholder: https://stackblitz.com/edit/...
+    validations:
+      required: false
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Attachments
+      description: Attach screenshots, screen recordings, or sample projects if applicable.
+    validations:
+      required: false
