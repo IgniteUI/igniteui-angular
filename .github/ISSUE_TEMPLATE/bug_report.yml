@@ -154,9 +154,9 @@ body:
       label: Steps to Reproduce
       description: Provide a step-by-step list to reproduce the issue.
       value: |
-        1. 
-        2. 
-        3. 
+        1.
+        2.
+        3.
     validations:
       required: true
 
