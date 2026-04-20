@@ -1,0 +1,15 @@
+@use 'styles/themes/standalone' as *;
+
+@include layer(base) {
+    @include b(igx-chip-area) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        width: 100%;
+
+        &:empty {
+            display: none;
+        }
+    }
+}

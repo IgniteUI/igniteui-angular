@@ -175,8 +175,3 @@ $_theme: $indigo;
         }
     }
 }
-
-@include themed-block(igx-chip-area, indigo) {
-    padding: rem(4px);
-    gap: rem(8px)
-}

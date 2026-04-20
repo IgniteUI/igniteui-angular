@@ -2061,9 +2061,9 @@ $z-grid-loading: 10003;
             outline-style: none;
         }
 
-        //%igx-chip {
-        //    margin-block: pad-block(rem(4px), rem(8px), rem(8px));
-        //}
+        .igx-chip {
+            margin-block: pad-block(rem(4px), rem(8px), rem(8px));
+        }
 
         @include e(connector) {
             display: inline-flex;
@@ -2080,10 +2080,6 @@ $z-grid-loading: 10003;
             [dir='rtl'] & {
                 transform: scaleX(-1);
             }
-        }
-
-        .igx-chip-area {
-            flex-grow: 1;
         }
     }
 

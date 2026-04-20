@@ -2,7 +2,7 @@ import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, injec
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
-import { IgxChipsAreaComponent } from './chips-area.component';
+import { IgxChipsAreaComponent } from './chips-area/chips-area.component';
 import { IgxPrefixDirective } from '../../../input-group/src/public_api';
 import { IgxLabelDirective } from '../../../input-group/src/public_api';
 import { IgxSuffixDirective } from '../../../input-group/src/public_api';
