@@ -89,8 +89,7 @@ $_theme: $material;
             justify-content: center;
             text-align: center;
             height: var-get($_theme, 'size');
-            padding-inline: sizable(rem(2px), rem(6px), rem(12px));
-            gap: sizable(rem(3px), rem(6px), rem(8px));
+            padding-inline: pad-inline(rem(2px), rem(6px), rem(12px));
             color: var-get($_theme, 'text-color');
             background: var-get($_theme, 'background');
             border: rem(1px) solid var-get($_theme, 'border-color');
@@ -138,6 +137,7 @@ $_theme: $material;
 
         @include e(start) {
             @extend %chip-part;
+            gap: sizable(rem(3px), rem(6px), rem(8px));
 
             > igx-avatar,
             > igx-circular-bar {
@@ -159,6 +159,7 @@ $_theme: $material;
 
         @include e(end) {
             @extend %chip-part;
+            gap: sizable(rem(3px), rem(6px), rem(8px));
 
             > igx-avatar,
             > igx-circular-bar {
@@ -307,6 +308,7 @@ $_theme: $material;
         @include e(content) {
             @include ellipsis();
 
+            padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
             max-width: 32ch;
 
             &:empty {
