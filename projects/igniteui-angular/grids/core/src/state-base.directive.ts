@@ -139,10 +139,11 @@ export class IgxGridStateBaseDirective {
     private FEATURES = {
         sorting:  {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
-                const sortingState = context.currGrid.sortingExpressions;
-                sortingState.forEach(s => {
-                    delete s.strategy;
-                    delete s.owner;
+                const sortingState = context.currGrid.sortingExpressions.map(s => {
+                    const copy = { ...s };
+                    delete copy.strategy;
+                    delete copy.owner;
+                    return copy;
                 });
                 return { sorting: sortingState };
             },
@@ -154,10 +155,7 @@ export class IgxGridStateBaseDirective {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const filteringState = context.currGrid.filteringExpressionsTree;
                 if (filteringState) {
-                    delete filteringState.owner;
-                    for (const item of filteringState.filteringOperands) {
-                        delete (item as IFilteringExpressionsTree).owner;
-                    }
+                    return { filtering: context.cloneFilteringTree(filteringState) };
                 }
                 return { filtering: filteringState };
             },
@@ -169,16 +167,7 @@ export class IgxGridStateBaseDirective {
         advancedFiltering: {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const filteringState = context.currGrid.advancedFilteringExpressionsTree;
-                let advancedFiltering: any;
-                if (filteringState) {
-                    delete filteringState.owner;
-                    for (const item of filteringState.filteringOperands) {
-                        delete (item as IFilteringExpressionsTree).owner;
-                    }
-                    advancedFiltering = filteringState;
-                } else {
-                    advancedFiltering = {};
-                }
+                const advancedFiltering: any = filteringState ? context.cloneFilteringTree(filteringState) : {};
                 return { advancedFiltering };
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IFilteringExpressionsTree): void => {
@@ -226,21 +215,21 @@ export class IgxGridStateBaseDirective {
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IColumnState[]): void => {
                 const newColumns = [];
-                
+
                 // Helper to restore column state without auto-persisting widths
                 const restoreColumnState = (column: IgxColumnComponent | IgxColumnGroupComponent, colState: IColumnState) => {
                     // Extract width to handle it separately
                     const width = colState.width;
                     delete colState.width;
-                    
+
                     Object.assign(column, colState);
-                    
+
                     // Only restore width if it was explicitly set by the user (not undefined)
                     if (width !== undefined) {
                         column.width = width;
                     }
                 };
-                
+
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     const hasColumnLayouts = colState.columnLayout;
@@ -257,9 +246,9 @@ export class IgxGridStateBaseDirective {
                         } else {
                             ref1.children.reset([]);
                         }
-                        
+
                         restoreColumnState(ref1, colState);
-                        
+
                         ref1.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref1.parent));
@@ -277,7 +266,7 @@ export class IgxGridStateBaseDirective {
                         }
 
                         restoreColumnState(ref, colState);
-                        
+
                         ref.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e =>  e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref.parent));
@@ -299,9 +288,10 @@ export class IgxGridStateBaseDirective {
         groupBy: {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const grid = context.currGrid;
-                const groupingExpressions = grid.groupingExpressions;
-                groupingExpressions.forEach(expr => {
-                    delete expr.strategy;
+                const groupingExpressions = grid.groupingExpressions.map(expr => {
+                    const copy = { ...expr };
+                    delete copy.strategy;
+                    return copy;
                 });
                 const expansionState = grid.groupingExpansionState;
                 const groupsExpanded = grid.groupsExpanded;
@@ -675,6 +665,22 @@ export class IgxGridStateBaseDirective {
                 }
             }
         }
+    }
+
+    /**
+     * Recursively clones a filtering expression tree, stripping the `owner` property
+     * from each cloned node so the live tree is never mutated.
+     */
+    private cloneFilteringTree(tree: IFilteringExpressionsTree): IFilteringExpressionsTree {
+        const copy: IFilteringExpressionsTree = { ...tree };
+        delete copy.owner;
+        copy.filteringOperands = tree.filteringOperands.map(item => {
+            if ('filteringOperands' in item) {
+                return this.cloneFilteringTree(item as IFilteringExpressionsTree);
+            }
+            return { ...item };
+        });
+        return copy;
     }
 
     /**
