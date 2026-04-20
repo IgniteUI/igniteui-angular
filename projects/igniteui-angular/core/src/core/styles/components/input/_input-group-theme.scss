@@ -259,7 +259,7 @@
     }
 
     %form-group-display--filled {
-        color: var-get($theme, 'input-prefix-color--filled');
+        color: var-get($theme, 'filled-text-color');
 
         igx-prefix,
         [igxPrefix] {
