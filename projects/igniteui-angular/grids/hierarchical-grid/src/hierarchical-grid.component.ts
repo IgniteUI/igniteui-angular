@@ -211,7 +211,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.cdr.detectChanges();
     }
 
-    private setupEventEmitters() {
+    protected setupEventEmitters() {
         const destructor = takeUntil(this.hGrid.destroy$);
 
         const mirror = reflectComponentType(IgxGridComponent);
@@ -237,7 +237,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 
 
-    private _handleLayoutChanges(changes: SimpleChanges) {
+    protected _handleLayoutChanges(changes: SimpleChanges) {
         for (const change in changes) {
             if (changes.hasOwnProperty(change)) {
                 this.hGrid[change] = changes[change].currentValue;
@@ -246,23 +246,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
-
-/* blazorAdditionalDependency: Column */
-/* blazorAdditionalDependency: ColumnGroup */
-/* blazorAdditionalDependency: ColumnLayout */
-/* blazorAdditionalDependency: GridToolbar */
-/* blazorAdditionalDependency: GridToolbarActions */
-/* blazorAdditionalDependency: GridToolbarTitle */
-/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
-/* blazorAdditionalDependency: GridToolbarExporter */
-/* blazorAdditionalDependency: GridToolbarHiding */
-/* blazorAdditionalDependency: GridToolbarPinning */
-/* blazorAdditionalDependency: ActionStrip */
-/* blazorAdditionalDependency: GridActionsBaseDirective */
-/* blazorAdditionalDependency: GridEditingActions */
-/* blazorAdditionalDependency: GridPinningActions */
-/* blazorAdditionalDependency: RowIsland */
-/* blazorIndirectRender */
+/* wcAlternateName: HierarchicalGridBase */
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 /**
  * Hierarchical grid
  *
@@ -415,9 +403,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden @internal
      */
     public childRow: IgxChildGridRowComponent;
-
-    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     /** @hidden @internal */
     public override get actionStrip() {
