@@ -33,10 +33,15 @@ $theme: $material;
         line-height: sizable(var(--ig-caption-line-height), var(--ig-body-2-line-height), var(--ig-body-2-line-height));
         letter-spacing: sizable(var(--ig-caption-letter-spacing), var(--ig-body-2-letter-spacing), var(--ig-body-2-letter-spacing));
         text-transform: sizable(var(--ig-caption-text-transform), var(--ig-body-2-text-transform), var(--ig-body-2-text-transform));
+        padding-inline: pad-inline(rem(4px), rem(6px), rem(8px));
+        gap: rem(2px);
+
+        &:has(igx-icon:only-child) {
+            padding-inline: 0;
+        }
 
         @include e(value) {
             white-space: nowrap;
-            padding-inline: pad-inline(rem(4px), rem(6px), rem(8px));
         }
 
         @include m(info) {

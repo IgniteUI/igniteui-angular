@@ -7,14 +7,11 @@
 
 @include themed-block(igx-badge, indigo) {
     --ig-icon-size: #{sizable(rem(8px), rem(10px), rem(12px))};
+    padding-inline: pad-inline(rem(4px), rem(6px), rem(6px));
 
     @include type-style('button', false) {
         font-size: sizable(rem(9px), rem(10px), var(--ig-button-font-size));
         line-height: sizable(rem(12px), rem(14px), var(--ig-button-line-height));
-    }
-
-    @include e(value) {
-        padding-inline: pad-inline(rem(4px), rem(6px), rem(6px));
     }
 
     @include m(success) {
