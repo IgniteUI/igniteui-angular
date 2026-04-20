@@ -48,8 +48,8 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
 @Component({
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
-		styleUrl: 'chips-area.component.css',
-		encapsulation: ViewEncapsulation.None,
+    styleUrl: 'chips-area.component.css',
+    encapsulation: ViewEncapsulation.None,
     standalone: true,
 })
 export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy {
