@@ -279,6 +279,11 @@
             "factory": "./update-21_1_0_add-agent-skills",
             "recommended": true,
             "optional": true
+        },
+        "migration-55": {
+            "version": "21.2.0",
+            "description": "Updates Ignite UI for Angular from v21.1.x to v21.2.0",
+            "factory": "./update-21_2_0"
         }
     }
 }

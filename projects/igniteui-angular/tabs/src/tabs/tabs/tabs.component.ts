@@ -4,7 +4,7 @@ import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { getResizeObserver, PlatformUtil } from 'igniteui-angular/core';
+import { getResizeObserver, PlatformUtil, isLeftToRight } from 'igniteui-angular/core';
 
 export const IgxTabsAlignment = {
     start: 'start',
@@ -338,10 +338,11 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     }
 
     private getOffset(offset: number): number {
-        return this.dir.rtl ? -offset : offset;
+        return isLeftToRight(this._element.nativeElement) ? offset : -offset;
     }
 
     private getElementOffset(element: HTMLElement): number {
-        return this.dir.rtl ? this.itemsWrapper.nativeElement.offsetWidth - element.offsetLeft - element.offsetWidth : element.offsetLeft;
+        const rtl = !isLeftToRight(this._element.nativeElement);
+        return rtl ? this.itemsWrapper.nativeElement.offsetWidth - element.offsetLeft - element.offsetWidth : element.offsetLeft;
     }
 }

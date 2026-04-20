@@ -157,7 +157,7 @@
 
     %inner {
         stroke-width: var(--stroke-thickness);
-        stroke: var-get($theme, 'base-circle-color');
+        stroke: var-get($theme, 'track-color');
     }
 
     %outer {

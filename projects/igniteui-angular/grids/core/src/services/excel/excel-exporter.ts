@@ -1,4 +1,4 @@
-import { zip } from 'fflate';
+import { zip } from 'fflate/browser';
 
 import { EventEmitter, Injectable } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';

@@ -38,6 +38,7 @@ Base your code and explanation exclusively on what you read in Step 3. If the re
 | Cell editing, row editing, batch editing, transactions, validation, summaries | [`references/editing.md`](./references/editing.md) |
 | Paging, remote data, server-side ops, noop strategies, virtual scroll, multi-grid coordination | [`references/paging-remote.md`](./references/paging-remote.md) |
 | State persistence, Tree Grid / Hierarchical Grid / Pivot Grid data operations | [`references/state.md`](./references/state.md) |
+| Grid sizing (width, height, column sizing, null/px/% modes, cell spacing CSS variables) | [`references/sizing.md`](./references/sizing.md) |
 
 > **When in doubt, read more rather than fewer reference files.** The cost of an unnecessary file read is negligible; the cost of hallucinated API usage is a broken application.
 
@@ -82,6 +83,7 @@ After choosing the grid type, **you must still complete Steps 2–4 from the man
 Replace `igniteui-angular` with `@infragistics/igniteui-angular` for the licensed package — entry-point paths are identical.
 
 > **AGENT INSTRUCTION — Documentation URL Pattern**: For grid-specific topics (sorting, filtering, editing, paging, etc.), docs URLs follow this naming pattern per grid type:
+> - Grid Lite: `.../components/grid-lite/{topic}`
 > - Flat Grid: `.../components/grid/{topic}`
 > - Tree Grid: `.../components/treegrid/{topic}`
 > - Hierarchical Grid: `.../components/hierarchicalgrid/{topic}`

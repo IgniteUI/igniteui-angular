@@ -1298,9 +1298,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            const calendar = outlet.getElementsByClassName('igx-calendar')[0];
-
+            const calendar = document.getElementsByClassName('igx-calendar')[0];
             const sundayLabel = calendar.querySelectorAll('.igx-days-view__label')[0].textContent;
 
             expect(sundayLabel.trim()).toEqual('Mo');
@@ -2104,8 +2102,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Click the today date.
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            let calendar = outlet.getElementsByClassName('igx-calendar')[0];
+            let calendar = document.getElementsByClassName('igx-calendar')[0];
             const todayDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date--current');
             UIInteractions.simulateClickAndSelectEvent(todayDayItem.firstChild);
             grid.filteringRow.onInputGroupFocusout();
@@ -2136,7 +2133,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            calendar = outlet.getElementsByClassName('igx-calendar')[0];
+            calendar = document.getElementsByClassName('igx-calendar')[0];
 
             // View years
             const yearView: HTMLElement = calendar.querySelectorAll('.igx-calendar-picker__date')[1] as HTMLElement;
@@ -2986,9 +2983,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            const calendar = outlet.getElementsByClassName('igx-calendar')[0];
-
+            const calendar = document.getElementsByClassName('igx-calendar')[0];
             const currentDay = calendar.querySelector('.igx-days-view__date--current');
 
             UIInteractions.simulateClickAndSelectEvent(currentDay.firstChild);
