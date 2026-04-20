@@ -295,7 +295,7 @@
         @include tokens(
             progress-circular-theme(
                 $schema: $schema,
-                $base-circle-color: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
+                $track-color: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
                 $fill-color-default: var(--_grid-accent-color),
                 $text-color: var(--_grid-foreground)
             )
