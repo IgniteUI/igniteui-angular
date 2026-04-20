@@ -583,7 +583,6 @@
 
             &%igx-chip--primary {
                 %igx-chip__item {
-                    /* stylelint-disable max-nesting-depth */
                     @if $theme-variant == 'light' {
                         color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
                     } @else {
