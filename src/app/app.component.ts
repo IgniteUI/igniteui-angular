@@ -293,6 +293,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Moving'
         },
         {
+            link: '/gridThemeBuilder',
+            icon: 'palette',
+            name: 'Grid Theme Builder'
+        },
+        {
             link: '/gridColumnTypes',
             icon: 'view_column',
             name: 'Grid Column Types'
