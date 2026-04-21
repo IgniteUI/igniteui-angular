@@ -1,6 +1,9 @@
 @use 'sass:meta';
 @use 'tokens';
+@use 'file-tokens';
 @use 'styles/themes/standalone' as *;
 
 $tokens: meta.module-variables(tokens);
+$file-tokens: meta.module-variables(file-tokens);
 @include themes(igx-input-group, $tokens, light);
+@include themes(igx-file-input, $file-tokens, light);

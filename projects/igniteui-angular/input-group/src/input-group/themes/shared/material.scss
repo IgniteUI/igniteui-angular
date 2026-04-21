@@ -4,8 +4,10 @@
 @use 'styles/themes/standalone' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 @use '../light/tokens' as *;
+@use '../light/file-tokens' as file;
 
 $_theme: $material;
+$_file-theme: file.$material;
 $transition-timing: .25s $out-cubic;
 $bundle-start-end-min-width: pad(rem(8px), rem(10px), rem(12px));
 $input-inline-padding: rem(4px);
@@ -29,7 +31,7 @@ $input-bottom-spacing: rem(6px);
         --_bundle-row: 1;
         --_hint-row: 2;
     }
-	
+
 	.igx-input-group:has(:not(.igx-input-group__label)) {
 		--_bundle-row: 1;
 		--_hint-row: 2;
@@ -479,29 +481,29 @@ $input-bottom-spacing: rem(6px);
         }
 
         @include e(file-input) {
-            background: var-get($_theme, 'file-names-background');
-            color: var-get($_theme, 'file-names-foreground');
+            background: var-get($_file-theme, 'file-names-background');
+            color: var-get($_file-theme, 'file-names-foreground');
         }
     }
 
     @include mx(file, filled) {
         @include e(file-input) {
-            background: var-get($_theme, 'file-names-background--filled');
-            color: var-get($_theme, 'file-names-foreground--filled');
+            background: var-get($_file-theme, 'file-names-background--filled');
+            color: var-get($_file-theme, 'file-names-foreground--filled');
         }
     }
 
     @include mx(file, focused) {
         @include e(file-input) {
-            background: var-get($_theme, 'file-names-background--focused');
-            color: var-get($_theme, 'file-names-foreground--focused');
+            background: var-get($_file-theme, 'file-names-background--focused');
+            color: var-get($_file-theme, 'file-names-foreground--focused');
         }
     }
 
     @include mx(file, disabled) {
         @include e(file-input) {
-            background: var-get($_theme, 'file-names-background--disabled');
-            color: var-get($_theme, 'file-names-foreground--disabled');
+            background: var-get($_file-theme, 'file-names-background--disabled');
+            color: var-get($_file-theme, 'file-names-foreground--disabled');
         }
     }
 

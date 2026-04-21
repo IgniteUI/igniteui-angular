@@ -6,8 +6,10 @@
 @use 'styles/themes/standalone' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 @use './light/tokens' as *;
+@use './light/file-tokens' as file;
 
 $theme: $base;
+$file-theme: file.$base;
 $transition-timing: .25s $out-cubic;
 
 @include layer(base) {
@@ -296,7 +298,7 @@ $transition-timing: .25s $out-cubic;
 
             @include e(bundle-main) {
                 display: contents;
-	            
+
 	            > input {
 		            position: absolute;
 		            border: none;
@@ -319,15 +321,15 @@ $transition-timing: .25s $out-cubic;
         }
 
         @include e(upload-button) {
-            --background: #{var-get($theme, 'file-selector-button-background')};
-            --foreground: #{var-get($theme, 'file-selector-button-foreground')};
-            --focus-background: #{var-get($theme, 'file-selector-button-background--focused')};
-            --focus-foreground: #{var-get($theme, 'file-selector-button-foreground--focused')};
-            --focus-visible-background: #{var-get($theme, 'file-selector-button-background--focused')};
-            --active-background: #{var-get($theme, 'file-selector-button-background')};
-            --active-foreground: #{var-get($theme, 'file-selector-button-foreground')};
-            --disabled-background: #{var-get($theme, 'file-selector-button-background--disabled')};
-            --disabled-foreground: #{var-get($theme, 'file-selector-button-foreground--disabled')};
+            --background: #{var-get($file-theme, 'file-selector-button-background')};
+            --foreground: #{var-get($file-theme, 'file-selector-button-foreground')};
+            --focus-background: #{var-get($file-theme, 'file-selector-button-background--focused')};
+            --focus-foreground: #{var-get($file-theme, 'file-selector-button-foreground--focused')};
+            --focus-visible-background: #{var-get($file-theme, 'file-selector-button-background--focused')};
+            --active-background: #{var-get($file-theme, 'file-selector-button-background')};
+            --active-foreground: #{var-get($file-theme, 'file-selector-button-foreground')};
+            --disabled-background: #{var-get($file-theme, 'file-selector-button-background--disabled')};
+            --disabled-foreground: #{var-get($file-theme, 'file-selector-button-foreground--disabled')};
         }
 
         @include m(textarea-group) {
@@ -517,8 +519,8 @@ $transition-timing: .25s $out-cubic;
             }
 
             @include e(file-input) {
-                background: var-get($theme, 'file-names-background--disabled');
-                color: var-get($theme, 'file-names-foreground--disabled');
+                background: var-get($file-theme, 'file-names-background--disabled');
+                color: var-get($file-theme, 'file-names-foreground--disabled');
             }
 
             /* stylelint-disable max-nesting-depth */
