@@ -89,7 +89,7 @@ Decision rule:
 | UI Pattern | Ignite UI Component | Key Properties |
 |---|---|---|
 | Text input | `IgxInputGroupComponent` + `IgxInputDirective` | `igxInput`, `igxLabel`, `igxHint` |
-| Dropdown select | `IgxSelectComponent` | `[IgxSelectItemComponent]` children |
+| Dropdown select | `IgxSelectComponent` | `<igx-select-item>` children |
 | Searchable multi-select | `IgxComboComponent` | `[data]`, `displayKey`, `valueKey` |
 | Date picker | `IgxDatePickerComponent` | `[value]`, `(valueChange)` |
 | Time picker | `IgxTimePickerComponent` | `[value]`, `(valueChange)` |
