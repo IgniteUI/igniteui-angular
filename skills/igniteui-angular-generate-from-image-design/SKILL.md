@@ -155,7 +155,7 @@ Do not run `create_component_theme` for regions built with custom HTML/CSS only.
 Apply in this exact order:
 
 1. Inspect `styles.scss` -> existing theme or blank?
-2. Create or update a theme: `create_theme` (Step 5a)
+2. Create or update a theme: `create_theme` (Step 5b)
 3. For each Ignite UI component: `get_component_design_tokens` -> map image design tokens -> resolve values to design tokens or semantic CSS variables -> `create_component_theme` (Step 5c)
 4. Use `get_color` after palette generation whenever a palette token can represent the final color intent
 
