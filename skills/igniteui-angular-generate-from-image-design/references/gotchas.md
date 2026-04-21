@@ -111,9 +111,9 @@ For core UI component theming, prefer `create_component_theme` and apply the ret
 ### Nav drawer width
 Override the drawer aside width via its internal class using the width measured from the design image:
 ```scss
-igx-navdrawer {
+igx-nav-drawer {
   --ig-nav-drawer-size: <extracted-sidebar-width>; // <- Use this to overwrite the width of the full navdrawer
-  --ig-nav-drawer-size--mini: <extracted-mini-drawer-width> // <- Use this to overwrite the width of the mini navdrawer
+  --ig-nav-drawer-size--mini: <extracted-mini-drawer-width>; // <- Use this to overwrite the width of the mini navdrawer
 }
 ```
 
