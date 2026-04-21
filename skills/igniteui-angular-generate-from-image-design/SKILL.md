@@ -193,7 +193,7 @@ In standalone Angular apps, DV chart, map, and gauge packages are imported via m
 
 After the first implementation pass, use the `set_size`, `set_spacing`, and `set_roundness` tools to adjust the view's visual properties and close the gap with the image. Focus on the most visually distinctive elements first (e.g., panel proportions, chart shape, button prominence) before tuning smaller details (e.g., row heights, spacing between regions).
 
-## Step 8: Validate
+## Step 9: Validate
 
 Use this validation loop explicitly:
 
