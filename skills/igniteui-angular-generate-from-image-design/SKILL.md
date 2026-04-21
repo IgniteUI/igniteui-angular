@@ -29,16 +29,16 @@ Before writing any implementation code, you must complete these steps in order:
 2. **Detect platform** - Call `detect_platform` to confirm Angular + licensed status
 3. **Discover components** - Call `list_components` with targeted filters to find matching components for each UI pattern
 4. **Look up component docs** - Call `get_doc` for every chosen component family before coding
-5. **Get best practices** - Call `get_best_practices` with the workspace path
-6. **Generate theme** - (a) To generate a theme, first extract colors and create a color palette using `create_palette` or `create_custom_palette` depending on the scenario. Then extract elevations and call `create_elevations`. Then extract typography and call `create_typography`. Then call `create_theme` with the palette, elevations, and typography. (b) After a theme exists, prefer using design tokens or scoped semantic CSS variables over raw literals. (c) For every Ignite UI component, call `get_component_design_tokens`, map extracted image tokens to token roles, then call `create_component_theme` with the tokens differing from the global theme for the specific component.
-7. **Implement** - Build the screenshot-first layout, data, and view components
-8. **Validate and refine** - Build, test, run, compare against the image, and fix differences
+5. **Generate theme** - (a) To generate a theme, first extract colors and create a color palette using `create_palette` or `create_custom_palette` depending on the scenario. Then extract elevations and call `create_elevations`. Then extract typography and call `create_typography`. Then call `create_theme` with the palette, elevations, and typography. (b) After a theme exists, prefer using design tokens or scoped semantic CSS variables over raw literals. (c) For every Ignite UI component, call `get_component_design_tokens`, map extracted image tokens to token roles, then call `create_component_theme` with the tokens differing from the global theme for the specific component.
+6. **Implement** - Build the screenshot-first layout, data, and view components
+7. **Refine** - Use the `set_size`, `set_spacing`, `set_roundness` tools to refine the view's visual fidelity against the image, then iterate on implementation and theming until the view matches the design closely
+8. **Validate** - Build, test, run, compare against the image, and fix differences
 
 ## Step 1: Analyze the Design Image
 
 Read the input image carefully. For each visual section, identify:
 
-- **Layout structure**: grid rows/columns, sidebar, navbar, content area proportions, and estimated fixed widths or percentages for major regions
+- **Layout structure**: grid rows/columns, sidebar, navbar, content area proportions, and estimated fixed widths or percentages for major regions.
 > Note: Do not guess the exact CSS properties at this stage; just identify the high-level structure and relative proportions. Do not try to fit the view into exact breakpoints or pixel values. Try to generate a flexible layout that preserves the observed proportions and can adapt to different screen sizes. You will refine the exact CSS rules in Step 8 after building a first version of the view.
 - **Component type**: chart, list, card, map, gauge, table, form, etc.
 - **Color palette**: primary, secondary, surface/background, accent, text colors
@@ -194,7 +194,11 @@ In standalone Angular apps, DV chart, map, and gauge packages are imported via m
 - Avoid generic placeholders when the image shows domain-specific content
 - Document brief assumptions when the image is ambiguous instead of silently guessing
 
-## Step 8: Iterate on Visual Fidelity
+## Step 8: Refine
+
+After the first implementation pass, use the `set_size`, `set_spacing`, and `set_roundness` tools to adjust the view's visual properties and close the gap with the image. Focus on the most visually distinctive elements first (e.g., panel proportions, chart shape, button prominence) before tuning smaller details (e.g., row heights, spacing between regions).
+
+## Step 8: Validate
 
 Use this validation loop explicitly:
 
