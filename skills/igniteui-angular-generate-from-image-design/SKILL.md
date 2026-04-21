@@ -12,7 +12,7 @@ Before writing any implementation code, you must complete these steps in order:
 
 1. Analyze the image and identify all visible regions and UI patterns.
 2. Read [references/component-mapping.md](references/component-mapping.md) and [references/gotchas.md](references/gotchas.md).
-3. Call `detect_platform`.
+3. This skill is Angular-only. Check package layout or licensing only when imports, packages, or theming depend on it.
 4. To apply a theme, use the theming workflow from this skill and the dedicated `igniteui-angular-theming` skill; use the `igniteui-theming` MCP tools instead of styling from memory.
 5. Call `get_doc` for every chosen component family before using it.
 6. Only then start coding.
@@ -20,7 +20,7 @@ Before writing any implementation code, you must complete these steps in order:
 ## Workflow
 
 1. **Analyze the design image** - Read the image, identify every UI section, component, layout structure.
-2. **Detect platform** - Call `detect_platform` to confirm Angular + licensed status
+2. **Confirm package layout if needed** - this skill is Angular-only; check package layout or licensing only when imports, packages, or theming depend on it
 3. **Discover components** - Call `list_components` with targeted filters to find matching components for each UI pattern
 4. **Look up component docs** - Call `get_doc` for every chosen component family before coding
 5. **Generate theme** - (a) To generate a theme, first extract colors and create a color palette using `create_palette` or `create_custom_palette` depending on the scenario. Then extract elevations and call `create_elevations`. Then extract typography and call `create_typography`. Then call `create_theme` with the palette, elevations, and typography. (b) After a theme exists, prefer using design tokens or scoped semantic CSS variables over raw literals. (c) For every Ignite UI component, call `get_component_design_tokens`, map extracted image tokens to token roles, then call `create_component_theme` with the tokens differing from the global theme for the specific component.
@@ -63,12 +63,12 @@ After the table, translate the image into CSS Grid rows and columns first. Prese
 
 ## Step 2-3: Use MCP Tools for Discovery
 
-Call `detect_platform` first to confirm the project setup.
+This skill is Angular-only. Check package layout or licensing only when imports, packages, or theming depend on it.
 
-Act on the result immediately:
+If you need to confirm package layout or licensing state, act on the result immediately:
 
-- If `licensed=false` or the platform is reported as Open Source, use `igniteui-angular` for all core imports.
-- If `licensed=false`, do not mark any core UI components as blocked or premium-only during implementation.
+- If the project uses Open Source package layout, use `igniteui-angular` for all core imports.
+- If the project is unlicensed or uses Open Source package layout, do not mark any core UI components as blocked or premium-only during implementation.
 - If the result indicates a licensed package layout, follow the licensed import paths shown in the component reference when needed.
 
 Then call `list_components` with `framework: "angular"` and relevant filters to find components matching each UI pattern. Common filters:
@@ -128,6 +128,8 @@ create_theme({
 
 Read and act on any luminance warnings returned. If the design needs multiple surface depths that a single generated surface color does not cover, use `create_custom_palette` or define semantic CSS variables for the additional depths in `styles.scss`.
 
+Use `create_palette` for straightforward designs with a small, coherent color system. Use `create_custom_palette` when the design has multiple distinct surface depths, several accent families, or when the generated palette cannot reliably match the screenshot.
+
 ### 5c - Per-component token discovery and mapping (always run)
 
 > **Scope:** this step applies only to **core Ignite UI Angular components** (grid, list, navbar, drawer, card, inputs, chips, etc.). DV components - charts, maps, gauges, and sparklines - have no Sass design tokens. Skip this step for them and set their visual properties exclusively via component inputs as described in [references/gotchas.md](references/gotchas.md) and in Step 7.
@@ -152,11 +154,10 @@ Do not run `create_component_theme` for regions built with custom HTML/CSS only.
 
 Apply in this exact order:
 
-1. `detect_platform`
-2. Inspect `styles.scss` -> existing theme or blank?
-3. Create or update a theme: `create_theme` (Step 5a)
-4. For each Ignite UI component: `get_component_design_tokens` -> map image design tokens -> resolve values to design tokens or semantic CSS variables -> `create_component_theme` (Step 5c)
-5. Use `get_color` after palette generation whenever a palette token can represent the final color intent
+1. Inspect `styles.scss` -> existing theme or blank?
+2. Create or update a theme: `create_theme` (Step 5a)
+3. For each Ignite UI component: `get_component_design_tokens` -> map image design tokens -> resolve values to design tokens or semantic CSS variables -> `create_component_theme` (Step 5c)
+4. Use `get_color` after palette generation whenever a palette token can represent the final color intent
 
 If you use typography mixins with a comma-separated font family list, wrap the font families in parentheses as described in [references/gotchas.md](references/gotchas.md).
 
