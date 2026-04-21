@@ -1,12 +1,6 @@
 ---
 name: igniteui-angular-generate-from-image-design
-description: >
-  Implement Angular application views from design images using Ignite UI Angular components.
-  Uses MCP servers (igniteui-cli, igniteui-theming, angular-cli) to discover components, generate
-  themes, and follow best practices. Triggers when the user provides a design image (screenshot,
-  mockup, wireframe) and wants it built as a working Angular view with igniteui-angular components.
-  Also triggers when the user asks to "implement this design", "build this UI", "convert this
-  mockup", or "create a page from this image" in an Ignite UI Angular project.
+description: Implement Angular application views from design images using Ignite UI Angular components. Uses MCP servers (igniteui-cli, igniteui-theming, angular-cli) to discover components, generate themes, and follow best practices. Triggers when the user provides a design image (screenshot, mockup, wireframe) and wants it built as a working Angular view with igniteui-angular components. Also triggers when the user asks to "implement this design", "build this UI", "convert this mockup", or "create a page from this image" in an Ignite UI Angular project.
 user-invocable: true
 ---
 
