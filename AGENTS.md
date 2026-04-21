@@ -39,7 +39,7 @@ projects/
   igniteui-angular-i18n/           ← i18n package/resources
   igniteui-angular-performance/    ← performance-focused project
 scripts/                           ← build, docs, packaging, and style scripts
-skills/                            ← AI skill guides for components, grids, and theming
+skills/                            ← AI skill guides for components, grids, theming, and image-to-app generation
 src/app/                           ← demo application
   <component>/                     ← existing demo/sample areas reused for user-visible changes
 CHANGELOG.md                       ← release notes
@@ -118,6 +118,7 @@ Domain-specific knowledge for AI assistants:
 | Components | [`skills/igniteui-angular-components/SKILL.md`](skills/igniteui-angular-components/SKILL.md) | Working on non-grid UI components, charts |
 | Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Working on grid, tree-grid, hierarchical-grid, pivot-grid |
 | Theming | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Working on styles, themes, palettes |
+| Generate From Image Design | [`skills/igniteui-angular-generate-from-image-design/SKILL.md`](skills/igniteui-angular-generate-from-image-design/SKILL.md) | Building Angular views from screenshots, mockups, or wireframe with Ignite UI components |
 | Build | [`.github/skills/igniteui-angular-build/SKILL.md`](.github/skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
 | Testing | [`.github/skills/igniteui-angular-testing/SKILL.md`](.github/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the right Karma config |
 | Linting | [`.github/skills/igniteui-angular-linting/SKILL.md`](.github/skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |
