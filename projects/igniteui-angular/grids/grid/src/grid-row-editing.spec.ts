@@ -491,21 +491,20 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.editMode = false;
         });
 
-        it('Overlay position: Should reposition row editing overlay on vertical scroll without closing it', () => {
-            const repositionSpy = spyOn<any>(grid, 'repositionRowEditingOverlay').and.callThrough();
+        it('Overlay position: Should keep row editing overlay open on vertical scroll', fakeAsync(() => {
             cell = grid.getCellByColumn(0, 'ProductName');
             cell.editMode = true;
             fix.detectChanges();
 
             expect(grid.rowEditingOverlay.collapsed).toBeFalse();
-            expect((grid as any).overlayIDs).not.toContain(grid.rowEditingOverlay.overlayId);
 
-            (grid as any).changeRowEditingOverlayStateOnScroll(grid.crudService.rowInEditMode);
+            (grid as any).verticalScrollHandler({ target: grid.verticalScrollContainer.getScroll() });
+            tick();
             fix.detectChanges();
 
-            expect(repositionSpy).toHaveBeenCalled();
+            expect(GridFunctions.getRowEditingOverlay(fix)).toBeTruthy();
             expect(grid.rowEditingOverlay.collapsed).toBeFalse();
-        });
+        }));
 
         it('should end row editing when clearing or applying advanced filter', () => {
             fix.detectChanges();
