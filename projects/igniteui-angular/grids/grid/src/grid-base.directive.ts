@@ -3776,13 +3776,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.overlayService.opened.pipe(destructor).subscribe((event) => {
             const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
 
-            // this sets focus to query builder button for some reason...
+            // do not hide the advanced filtering overlay on scroll
              if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
                     instance.lastActiveNode = this.navigation.activeNode;
                     instance.queryBuilder.setAddButtonFocus();
                 }
+                return;
             }
 
             const inRow = (overlaySettings?.target as HTMLElement)?.classList.contains("igx-grid__tr");
@@ -3790,8 +3791,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (inRow) {
                 return;
             }
-            // check whole grid, since some overlays like the advanced filtering, are outside the body.
-            const isInGrid = this.nativeElement.contains(overlaySettings?.target as Node);
+
+            const isInGrid = overlaySettings?.target instanceof Node && this.tbody.nativeElement.contains(overlaySettings?.target);
             if (isInGrid && this.overlayIDs.indexOf(event.id) === -1) {
                 this.overlayIDs.push(event.id);
             }
