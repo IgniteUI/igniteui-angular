@@ -8,7 +8,7 @@
     <button igxButton="contained" (click)="getState()">Get state</button>
     <igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" class="hgrid"
         [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
-        [rowDraggable]="true" [height]="'800px'" filterMode="excelStyleFilter" [width]="'100%'" [expandChildren]="rootExpanded"
+        [rowDraggable]="true" [height]="'500px'" filterMode="excelStyleFilter" [width]="'100%'" [expandChildren]="rootExpanded"
         #hGrid [rowClasses]="rowClasses">
         <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'500px'">
             <igx-excel-style-column-operations>
@@ -53,7 +53,7 @@
         <ng-template igxRowCollapsedIndicator>
             <igx-icon role="button" family="default" name="add"></igx-icon>
         </ng-template>
-        <igx-row-island [rowDraggable]="true" [height]="'400px'" [showExpandAll]="true" [key]="'childData'"
+        <igx-row-island [primaryKey]="'ID'" [rowEditable]="true" [allowAdvancedFiltering]="true" [rowDraggable]="true" [height]="'400px'" [showExpandAll]="true" [key]="'childData'"
             [autoGenerate]="false" [allowFiltering]='true' [rowSelection]='selectionMode' [rowEditable]="true"
             [expandChildren]="firstLevelExpanded" #layout1  [allowFiltering]="true" filterMode="excelStyleFilter">
             <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'360px'">
@@ -66,10 +66,14 @@
                     <igx-excel-style-search></igx-excel-style-search>
                 </igx-excel-style-filter-operations>
             </igx-grid-excel-style-filtering>
-
+            <igx-action-strip>
+                <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
+                <igx-grid-pinning-actions></igx-grid-pinning-actions>
+            </igx-action-strip>
             <igx-grid-toolbar *igxGridToolbar>
                 <igx-grid-toolbar-title>{{ toolbarTitle }}</igx-grid-toolbar-title>
                 <igx-grid-toolbar-actions>
+                    <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                     <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
@@ -79,8 +83,8 @@
             </igx-paginator>
             <igx-column field="ID" [hasSummary]="false" [dataType]="'number'"></igx-column>
             <igx-column-group header="Information2">
-                <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
-                <igx-column field="ProductName" [resizable]="true" [groupable]="true"></igx-column>
+                <igx-column field="ChildLevels" [resizable]="true" [groupable]="true" ></igx-column>
+                <igx-column field="ProductName" [resizable]="true" [groupable]="true" [editable]="true"></igx-column>
             </igx-column-group>
             <ng-template let-data igxRowDragGhost>
                 <div class="dragGhost">
