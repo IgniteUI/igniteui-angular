@@ -3717,10 +3717,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             filter(() => !this._init),
             throttle(() =>
                 this.throttleTime$.pipe(
-                  take(1),
-                  switchMap(time => timer(time, this.throttleScheduler))
+                    take(1),
+                    switchMap(time => timer(time, this.throttleScheduler))
                 )
-              ),
+            ),
             destructor
         )
             .subscribe((event) => {
@@ -3747,6 +3747,15 @@ export abstract class IgxGridBaseDirective implements GridType,
                             }
                         }
                         this.notifyChanges(true);
+                        if (this.rowEditable && this.crudService.rowInEditMode && this.rowEditingOverlay.collapsed) {
+                            // connected to DOM, row is in edit mode, but overlay is closed - reopen.
+                            this.openRowOverlay(this.crudService.rowInEditMode.id);
+                        }
+                    }
+
+                    if (!this.nativeElement.isConnected && this.rowEditable && this.crudService.rowInEditMode) {
+                        // disconnected from DOM (possibly cached) & row was in edit mode - close overlay.
+                        this.closeRowEditingOverlay();
                     }
                 });
             });
@@ -3766,22 +3775,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.overlayService.opened.pipe(destructor).subscribe((event) => {
             const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
 
-            // do not hide the advanced filtering overlay on scroll
-            if (this._advancedFilteringOverlayId === event.id) {
-                const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
-                if (instance) {
-                    instance.lastActiveNode = this.navigation.activeNode;
-                    instance.queryBuilder.setAddButtonFocus();
-                }
+            const inRow = (overlaySettings?.target as HTMLElement)?.classList.contains("igx-grid__tr");
+            // do not hide the overlay if it's attached to a row on scroll
+            if (inRow) {
                 return;
             }
-
-            // do not hide the overlay if it's attached to a row
-            if (this.rowEditingOverlay?.overlayId === event.id) {
-                return;
-            }
-
-            if (overlaySettings?.outlet === this.outlet && this.overlayIDs.indexOf(event.id) === -1) {
+            // check whole grid, since some overlays like the advanced filtering, are outside the body.
+            const isInGrid = this.nativeElement.contains(overlaySettings?.target as Node);
+            if (isInGrid && this.overlayIDs.indexOf(event.id) === -1) {
                 this.overlayIDs.push(event.id);
             }
         });
@@ -4047,8 +4048,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             const activeRow = this.navigation.activeNode?.row;
 
             const selectedCellIndexes = this.selectionService.selection
-            ? Array.from(this.selectionService.selection.keys())
-            : [];
+                ? Array.from(this.selectionService.selection.keys())
+                : [];
             this._activeRowIndexes = [activeRow, ...selectedCellIndexes];
             return this._activeRowIndexes;
         }
