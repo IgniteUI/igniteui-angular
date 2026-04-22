@@ -3775,6 +3775,15 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.overlayService.opened.pipe(destructor).subscribe((event) => {
             const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
 
+            // this sets focus to query builder button for some reason...
+             if (this._advancedFilteringOverlayId === event.id) {
+                const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+                if (instance) {
+                    instance.lastActiveNode = this.navigation.activeNode;
+                    instance.queryBuilder.setAddButtonFocus();
+                }
+            }
+
             const inRow = (overlaySettings?.target as HTMLElement)?.classList.contains("igx-grid__tr");
             // do not hide the overlay if it's attached to a row on scroll
             if (inRow) {
