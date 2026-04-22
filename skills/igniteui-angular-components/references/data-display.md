@@ -167,6 +167,12 @@ import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
 <igx-icon [family]="'my-icons'" [name]="'logo'"></igx-icon>
 ```
 
+Include Material Icons font in `index.html` for default icons:
+
+```html
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet" media="screen">
+```
+
 Register custom SVG icons in a service or component constructor:
 
 ```typescript

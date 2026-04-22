@@ -5,12 +5,54 @@
 
 ## Contents
 
+- [Navbar](#navbar)
 - [Tabs](#tabs)
 - [Bottom Navigation](#bottom-navigation)
 - [Stepper](#stepper)
 - [Accordion](#accordion)
 - [Splitter](#splitter)
 - [Navigation Drawer](#navigation-drawer)
+
+## Navbar
+> **Docs:** [Navbar Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navbar)
+
+```typescript
+import { IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective } from 'igniteui-angular/navbar';
+import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxIconButtonDirective } from 'igniteui-angular/directives';
+```
+
+```html
+<igx-navbar title="Sample App">
+  <igx-navbar-action>
+    <button igxIconButton="flat">
+      <igx-icon family="fa" name="fa-home"></igx-icon>
+    </button>
+  </igx-navbar-action>
+
+  <div igxNavbarTitle>
+    <a href="https://www.infragistics.com/products/ignite-ui-angular" target="_blank">
+    <img
+        src="https://static.infragistics.com/marketing/Website/products/ignite-ui-landing/ignite-ui-logo.svg"
+        width="120px"
+        height="50px"
+        alt
+        style="margin-top: 7px;"
+    />
+    </a>
+  </div>
+
+  <button igxIconButton="flat">
+    <igx-icon>search</igx-icon>
+  </button>
+  <button igxIconButton="flat">
+    <igx-icon>favorite</igx-icon>
+  </button>
+  <button igxIconButton="flat">
+    <igx-icon>more_vert</igx-icon>
+  </button>
+</igx-navbar>
+```
 
 ## Tabs
 
