@@ -116,6 +116,21 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
         }));
 
+        it('Should close Advanced Filtering dialog on vertical scroll.', fakeAsync(() => {
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
+
+            (grid as any).verticalScrollHandler({ target: grid.verticalScrollContainer.getScroll() });
+            tick(200);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
+        }));
+
         it('Should close Advanced Filtering dialog through API by respecting \'applyChanges\' argument.', fakeAsync(() => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
