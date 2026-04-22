@@ -54,8 +54,8 @@
             <igx-icon role="button" family="default" name="add"></igx-icon>
         </ng-template>
         <igx-row-island [primaryKey]="'ID'" [rowEditable]="true" [allowAdvancedFiltering]="true" [rowDraggable]="true" [height]="'400px'" [showExpandAll]="true" [key]="'childData'"
-            [autoGenerate]="false" [allowFiltering]='true' [rowSelection]='selectionMode' [rowEditable]="true"
-            [expandChildren]="firstLevelExpanded" #layout1  [allowFiltering]="true" filterMode="excelStyleFilter">
+            [autoGenerate]="false" [allowFiltering]="true" [rowSelection]="selectionMode"
+            [expandChildren]="firstLevelExpanded" #layout1 filterMode="excelStyleFilter">
             <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'360px'">
                 <igx-excel-style-column-operations>
                     <igx-excel-style-header [showPinning]="false" [showHiding]="true">
