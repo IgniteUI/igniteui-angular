@@ -276,3 +276,8 @@
     <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
     <ng-content select="igx-row-island,igc-row-island"></ng-content>
 }
+
+ <!-- Lifecycle placeholder used to determine when the grid gets connected/disconnected from the DOM, for example as a result of virtualization or caching. -->
+<igc-hgrid-lifecycle-placeholder (igcConnected)="onLifecyclePlaceholderConnected()"
+    (igcDisconnected)="onLifecyclePlaceholderDisconnected()">
+</igc-hgrid-lifecycle-placeholder>
