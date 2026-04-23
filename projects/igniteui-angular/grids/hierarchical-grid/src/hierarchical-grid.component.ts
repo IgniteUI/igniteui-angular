@@ -38,6 +38,7 @@ import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 import { IgxGridCellMergePipe, IgxGridComponent, IgxGridFilteringPipe, IgxGridSortingPipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
 
 let NEXT_ID = 0;
+const HGRID_LIFECYCLE_PLACEHOLDER_TAG = 'igc-hgrid-lifecycle-placeholder';
 
 /**
  * @hidden @internal
@@ -662,6 +663,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public override ngOnInit() {
+        this.registerLifecyclePlaceholderElement();
         // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
         //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
         // });
@@ -672,6 +674,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             });
         }
         super.ngOnInit();
+    }
+
+    // Event that triggers when element gets connected back to the DOM.
+    // Used to determine when to reopen a previously closed row editing overlay.
+    protected onLifecyclePlaceholderConnected(): void {
+        if (this.rowEditable && this.crudService.rowInEditMode && this.rowEditingOverlay &&
+            this.rowEditingOverlay.collapsed) {
+            // Row is in edit mode, but overlay is closed - reopen.
+            this.openRowOverlay(this.crudService.rowInEditMode.id);
+        }
+
+    }
+
+    // Event that triggers when element gets disconnected from the DOM, for example as a result of virtualization or caching.
+    // Used to determine when to close the row editing overlay.
+    protected onLifecyclePlaceholderDisconnected(): void {
+        if (this.rowEditable && this.crudService.rowInEditMode && this.rowEditingOverlay) {
+            // disconnected from DOM (possibly cached) & row was in edit mode - close overlay.
+            this.closeRowEditingOverlay();
+        }
     }
 
     /**
@@ -718,6 +740,24 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
+    }
+
+    private registerLifecyclePlaceholderElement(): void {
+        if (!this.platform.isBrowser || typeof customElements === 'undefined' || customElements.get(HGRID_LIFECYCLE_PLACEHOLDER_TAG)) {
+            return;
+        }
+
+        class IgxHierarchicalGridLifecyclePlaceholderElement extends HTMLElement {
+            public connectedCallback(): void {
+                this.dispatchEvent(new CustomEvent('igcConnected', { bubbles: true, composed: true }));
+            }
+
+            public disconnectedCallback(): void {
+                this.dispatchEvent(new CustomEvent('igcDisconnected', { bubbles: true, composed: true }));
+            }
+        }
+
+        customElements.define(HGRID_LIFECYCLE_PLACEHOLDER_TAG, IgxHierarchicalGridLifecyclePlaceholderElement);
     }
 
     /**
@@ -1232,15 +1272,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                 {
                     name: null,
                     fields: filterableFields.map(f => ({
-                            field: f.field,
-                            dataType: f.dataType,
-                            header: f.header,
-                            editorOptions: f.editorOptions,
-                            filters: f.filters,
-                            pipeArgs: f.pipeArgs,
-                            defaultTimeFormat: f.defaultTimeFormat,
-                            defaultDateTimeFormat: f.defaultDateTimeFormat
-                        })) as FieldType[]
+                        field: f.field,
+                        dataType: f.dataType,
+                        header: f.header,
+                        editorOptions: f.editorOptions,
+                        filters: f.filters,
+                        pipeArgs: f.pipeArgs,
+                        defaultTimeFormat: f.defaultTimeFormat,
+                        defaultDateTimeFormat: f.defaultDateTimeFormat
+                    })) as FieldType[]
                 }
             ];
 
@@ -1249,7 +1289,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     this.data[0][rowIsland.key][0] : null;
                 return acc.concat(this.generateChildEntity(rowIsland, childFirstRowData));
             }
-            , []);
+                , []);
         }
 
         return entities;

@@ -146,12 +146,12 @@
                 <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
+        <igx-row-island [rowEditable]="true" [primaryKey]="'ID'" [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
             [allowFiltering]="true">
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
+            <igx-row-island [rowEditable]="true" [primaryKey]="'ID'" [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
                 [allowFiltering]="true"></igx-row-island>
         </igx-row-island>
-        <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]="true"></igx-row-island>
+        <igx-row-island [rowEditable]="true" [primaryKey]="'ID'" [key]="'childData2'" [autoGenerate]="true" [allowFiltering]="true"></igx-row-island>
     </igx-hierarchical-grid>
 
 
