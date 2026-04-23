@@ -1065,7 +1065,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
                 const view = container.detach(0);
-
+                view.detectChanges();
                 this.updateTemplateContext(embView.context, i);
                 container.insert(view);
                 this._embeddedViews.push(embView);
@@ -1085,7 +1085,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
                 const view = container.detach(container.length - 1);
-
+                 view.detectChanges();
                 this.updateTemplateContext(embView.context, i);
                 container.insert(view, 0);
                 this._embeddedViews.unshift(embView);
