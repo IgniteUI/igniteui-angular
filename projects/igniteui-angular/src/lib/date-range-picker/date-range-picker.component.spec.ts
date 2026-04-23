@@ -51,6 +51,7 @@ const CSS_CLASS_CALENDAR_HEADER_TITLE = '.igx-calendar__header-year';
 const CSS_CLASS_CALENDAR_SUBHEADER = '.igx-calendar-picker__dates';
 const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
 const CSS_CLASS_CALENDAR_WRAPPER_VERTICAL = 'igx-calendar__wrapper--vertical';
+
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
@@ -1110,6 +1111,29 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     verifyDateRange();
                 });
+
+                it('should not mutate the time of the passed-in value when opening the picker', fakeAsync(() => {
+                    const start = new Date(2026, 4, 10, 14, 30, 45);
+                    const end = new Date(2026, 4, 20, 15, 15, 30);
+                    dateRange.value = { start, end };
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(start.getHours()).toBe(14);
+                    expect(start.getMinutes()).toBe(30);
+                    expect(start.getSeconds()).toBe(45);
+                    expect(end.getHours()).toBe(15);
+                    expect(end.getMinutes()).toBe(15);
+                    expect(end.getSeconds()).toBe(30);
+
+                    dateRange.close();
+                    tick();
+                    fixture.detectChanges();
+                }));
+
                 it('should support different input and display formats', () => {
                     let inputFormat = 'dd/MM/yy';
                     let displayFormat = 'longDate';
