@@ -3747,16 +3747,6 @@ export abstract class IgxGridBaseDirective implements GridType,
                             }
                         }
                         this.notifyChanges(true);
-                        if (this.rowEditable && this.crudService.rowInEditMode && this.rowEditingOverlay &&
-                            this.rowEditingOverlay.collapsed) {
-                            // connected to DOM, row is in edit mode, but overlay is closed - reopen.
-                            this.openRowOverlay(this.crudService.rowInEditMode.id);
-                        }
-                    }
-
-                    if (!this.nativeElement.isConnected && this.rowEditable && this.crudService.rowInEditMode && this.rowEditingOverlay) {
-                        // disconnected from DOM (possibly cached) & row was in edit mode - close overlay.
-                        this.closeRowEditingOverlay();
                     }
                 });
             });
