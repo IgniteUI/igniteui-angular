@@ -74,9 +74,8 @@ chartComponent.itemsSource = dataArray;
 - Requires explicit axis and series components
 
 **IgxFinancialChartComponent** (stock data):
-- `dataSource` — Data array with date + OHLC columns
+- `dataSource` — Data array with date + OHLC columns (fields are auto-detected by name; no member-path inputs exist on this component)
 - `chartType` — Chart type (Auto, Candle, Line, Bar, Column)
-- `openMemberPath`, `highMemberPath`, `lowMemberPath`, `closeMemberPath` — OHLC field names
 
 **IgxPieChartComponent**:
 - `dataSource` — Data array
@@ -183,22 +182,21 @@ chartComponent.itemsSource = dataArray;
 - **Display Modes**:
   - **Price Pane**: Show candlestick, OHLC bar, line (configurable via `chartType`)
   - **Volume Pane**: Show trading volume (column, line, or area chart)
-  - **Indicator Pane**: Financial indicators (RSI, MACD, Bollinger Bands, etc.)
+  - **Indicator Pane**: Financial indicators (e.g. `RelativeStrengthIndex`, `MovingAverageConvergenceDivergence`, `AverageTrueRange` — see `indicatorTypes` below for valid enum values)
   - **Zoom Pane**: Navigation slider to zoom/pan
 - **Chart Types**: `Auto` (default), `Candle`, `Line`, `Bar`, `Column`
 - **API**:
-  - `chartType` — Price display type (Auto, Line, Candle, Bar, Column)
-  - `volumeType` — Volume display (None, Column, Line, Area)
-  - `indicatorTypes` — Array of indicators (0 or more)
-  - `zoomSliderType` — Zoom pane display (defaults to match chartType)
-- **Indicators**: RSI, MACD, Bollinger Bands, Force Index, Standard Deviation, and more
+  - `chartType` — Price display type (`Auto`, `Line`, `Candle`, `Bar`, `Column` from `FinancialChartType`)
+  - `volumeType` — Volume display (`None`, `Column`, `Line`, `Area` from `FinancialChartVolumeType`)
+  - `indicatorTypes` — `IgxFinancialIndicatorTypeCollection`; accepts a comma-separated string or array of `FinancialIndicatorType` enum names (see list below). **Use the full enum name, not abbreviations** — e.g. `RelativeStrengthIndex` not `RSI`, `MovingAverageConvergenceDivergence` not `MACD`. Invalid values throw `Invalid FinancialIndicatorType value: <name>` at runtime.
+  - `overlayTypes` — `IgxFinancialOverlayTypeCollection`; valid values are `BollingerBands` and `PriceChannel` (these are overlays on the price pane, **not** indicators — passing `BollingerBands` to `indicatorTypes` throws).
+  - `zoomSliderType` — Zoom pane display (`None`, `Auto`, `Bar`, `Candle`, `Column`, `Line`, `Area` from `FinancialChartZoomSliderType`)
+- **Valid `FinancialIndicatorType` values**: `AbsoluteVolumeOscillator`, `AccumulationDistribution`, `AverageDirectionalIndex`, `AverageTrueRange`, `BollingerBandWidth`, `ChaikinOscillator`, `ChaikinVolatility`, `CommodityChannelIndex`, `DetrendedPriceOscillator`, `EaseOfMovement`, `FastStochasticOscillator`, `ForceIndex`, `FullStochasticOscillator`, `MarketFacilitationIndex`, `MassIndex`, `MedianPrice`, `MoneyFlowIndex`, `MovingAverageConvergenceDivergence`, `NegativeVolumeIndex`, `OnBalanceVolume`, `PercentagePriceOscillator`, `PercentageVolumeOscillator`, `PositiveVolumeIndex`, `PriceVolumeTrend`, `RateOfChangeAndMomentum`, `RelativeStrengthIndex`, `SlowStochasticOscillator`, `StandardDeviation`, `StochRSI`, `TRIX`, `TypicalPrice`, `UltimateOscillator`, `WeightedClose`, `WilliamsPercentR`
 - **Features**:
   - Crosshairs with value snapshots
   - Trendlines and overlays
   - Time-based filters (users can select 1M, 3M, 6M, YTD, 1Y, ALL)
-- **Data Binding**: 
-  - `openMemberPath`, `highMemberPath`, `lowMemberPath`, `closeMemberPath`, `volumeMemberPath`
-  - `dateMemberPath` — Date/time column
+- **Data Binding**: The component only exposes `dataSource: Array<any>`. It auto-detects OHLC, volume, and date fields from the data — **no `openMemberPath`/`highMemberPath`/`closeMemberPath`/`volumeMemberPath`/`dateMemberPath` inputs exist on `IgxFinancialChartComponent`**. Those member-path properties live on the individual series/indicator sub-components (e.g. `IgxFinancialPriceSeriesComponent`) if you build the chart from lower-level primitives.
 
 ### Pie Chart (`IgxPieChartComponent` or `IgxDataPieChartComponent`)
 - **Use**: Part-to-whole visualization (segments sum to 100%)
@@ -258,21 +256,16 @@ transitionInDuration: number;           // Animation duration (milliseconds)
 
 ### IgxFinancialChartComponent (Stock/Candlestick/OHLC)
 ```typescript
-chartType: FinancialChartType; // Auto, Line, Candle, Bar, Column
-itemsSource: any[];
-openMemberPath: string;
-highMemberPath: string;
-lowMemberPath: string;
-closeMemberPath: string;
-volumeMemberPath: string;
-dateMemberPath: string;
-volumeType: VolumeType; // None, Column, Line, Area
-indicatorTypes: IndicatorType[]; // RSI, MACD, etc.
-zoomSliderType: FinancialChartType; // Should match chartType
-xAxisTitle: string;
+dataSource: Array<any>; // OHLC/volume/date fields are auto-detected — no member-path inputs on this component
+chartType: FinancialChartType; // Auto, Bar, Candle, Column, Line
+volumeType: FinancialChartVolumeType; // None, Column, Line, Area
+indicatorTypes: IgxFinancialIndicatorTypeCollection; // e.g. "MoneyFlowIndex, AverageTrueRange" — use full FinancialIndicatorType enum names, NOT "RSI"/"MACD"
+overlayTypes: IgxFinancialOverlayTypeCollection; // "BollingerBands" or "PriceChannel" (overlays, not indicators)
+zoomSliderType: FinancialChartZoomSliderType; // None, Auto, Bar, Candle, Column, Line, Area — Auto matches chartType
+xAxisMode: FinancialChartXAxisMode; // Ordinal, Time
+yAxisMode: FinancialChartYAxisMode; // Numeric, PercentChange
+xAxisTitle: string; // inherited from IgxDomainChartComponent
 yAxisTitle: string;
-xAxisMode: AxisMode; // OrdinalTimeX, DateTimeX
-yAxisMode: AxisMode;
 showDefaultTooltip: boolean;
 isHorizontalZoomEnabled: boolean;
 isVerticalZoomEnabled: boolean;
