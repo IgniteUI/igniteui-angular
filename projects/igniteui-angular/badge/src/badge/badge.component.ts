@@ -32,9 +32,11 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
  *
  * @example
  * ```html
- * <igx-avatar>
- *   <igx-badge icon="check" type="success"></igx-badge>
- * </igx-avatar>
+ * <div class="wrapper">
+ *  <igx-avatar icon="person" shape="circle" size="small"></igx-avatar>
+ *  <igx-badge icon="check" type="success" shape="square"></igx-badge>
+ * </div>
+ * ```
  */
 @Component({
     selector: 'igx-badge',
