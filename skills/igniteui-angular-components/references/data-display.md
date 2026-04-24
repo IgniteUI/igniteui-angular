@@ -133,9 +133,10 @@ import { IgxBadgeComponent } from 'igniteui-angular/badge';
 
 ```html
 <!-- Image avatar with badge overlay -->
-<igx-avatar [src]="user.photo" shape="circle" size="large">
-  <igx-badge igxAvatarBadge [type]="'success'" [icon]="'check'"></igx-badge>
-</igx-avatar>
+<div class="wrapper">
+  <igx-avatar [src]="user.photo" shape="circle" size="large"></igx-avatar>
+  <igx-badge [type]="'success'" [icon]="'check'"></igx-badge>
+</div>
 
 <!-- Initials avatar -->
 <igx-avatar initials="JD" shape="circle"></igx-avatar>
