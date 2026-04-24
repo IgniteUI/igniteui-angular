@@ -7,7 +7,11 @@ user-invocable: true
 # Ignite UI for Angular — UI Components
 
 ## Prerequisites
-
+- Angular 20+ project
+- `@angular/cli` installed
+- `igniteui-angular` or `@infragistics/igniteui-angular` added to the project via `ng add igniteui-angular` (or the `@infragistics` variant) or `npm install` — see [Package Variants](#package-variants) below.
+- A theme applied to the application (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)).
+- `provideAnimations()` in `app.config.ts` — **required before using any overlay or animated component**
 - The **Ignite UI CLI MCP server** (`igniteui-cli`) is available as a tool provider
 
 > **AGENT INSTRUCTION — MCP Server Setup (REQUIRED)**
@@ -59,15 +63,6 @@ Base your code and explanation exclusively on what you read. If the reference fi
 > **When in doubt, read more rather than fewer reference files.** The cost of an unnecessary file read is negligible; the cost of hallucinated API usage is a broken application.
 
 ---
-
-## Prerequisites
-
-- Angular 20+ project
-- `@angular/cli` installed
-- `igniteui-angular` or `@infragistics/igniteui-angular` added to the project via `ng add igniteui-angular` (or the `@infragistics` variant) or `npm install` — see [Package Variants](#package-variants) below.
-- A theme applied to the application (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)).
-- `provideAnimations()` in `app.config.ts` — **required before using any overlay or animated component**
-
 
 ## Package Variants
 
