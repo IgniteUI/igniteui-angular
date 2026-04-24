@@ -10,7 +10,7 @@
 - [WebStorm / JetBrains IDEs](#webstorm--jetbrains-ides)
 - [Verifying the Setup](#verifying-the-setup)
 
-The Ignite UI CLI MCP server enables AI assistants to generate production-ready theming code. It must be configured in your editor before the theming tools become available.
+The Ignite UI CLI MCP server enables AI assistants to discover Ignite UI components, access component documentation, and support related Ignite UI workflows. It must be configured in your editor before these tools become available.
 
 ## VS Code
 
