@@ -6,6 +6,25 @@ user-invocable: true
 
 # Ignite UI for Angular — UI Components
 
+## Prerequisites
+
+- The **Ignite UI CLI MCP server** (`igniteui-cli`) available as a tool provider
+
+> **AGENT INSTRUCTION — MCP Server Setup (REQUIRED)**
+>
+> Before using any theming tools, you MUST verify the MCP server is available
+> by calling `list_components`. If the tool is not available or the call fails,
+> you MUST automatically configure it by following the setup process steps described below.
+>
+> After writing the file, inform the user that the MCP server has been
+> configured and they may need to reload the editor for the tools to activate.
+> Start the MCP server and wait for that MCP server to start before continuing the theming related work.
+> Do NOT skip this step or ask the user to do it manually.
+
+## Setting Up the Theming MCP Server
+
+> **Full setup instructions for VS Code, Cursor, Claude Desktop, and JetBrains IDEs are in [`references/mcp-setup.md`](./references/mcp-setup.md).** Read that file for editor-specific configuration steps and verification.
+
 ## MANDATORY AGENT PROTOCOL — YOU MUST FOLLOW THIS BEFORE PRODUCING ANY OUTPUT
 
 **This file is a routing hub only. It contains NO code examples and NO API details.**

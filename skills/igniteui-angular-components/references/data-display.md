@@ -16,6 +16,9 @@
 - [Progress Indicators](#progress-indicators)
 - [Chat (AI Chat Component)](#chat-ai-chat-component)
 
+## Overview
+This reference give high-level guidance on when to use each data display component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
+
 ## List
 
 > **Docs:** [List Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list)
