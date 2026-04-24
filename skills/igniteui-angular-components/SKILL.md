@@ -8,7 +8,7 @@ user-invocable: true
 
 ## Prerequisites
 
-- The **Ignite UI CLI MCP server** (`igniteui-cli`) available as a tool provider
+- The **Ignite UI CLI MCP server** (`igniteui-cli`) is available as a tool provider
 
 > **AGENT INSTRUCTION — MCP Server Setup (REQUIRED)**
 >
