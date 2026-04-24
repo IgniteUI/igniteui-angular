@@ -1061,12 +1061,17 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
         for (let i = start; i < end && this.igxForOf[i] !== undefined; i++) {
             const embView = this._embeddedViews.shift();
-            if (!embView.destroyed) {
+            if (embView && !embView.destroyed) {
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
                 const view = container.detach(0);
-
+                // embView and view both refer to the same collections
                 this.updateTemplateContext(embView.context, i);
+
+                // Because in Elements the whole parent div (containing data-index) gets removed (possibly due to being disconnected). In Angular it just gets moved.
+                // This ensures to update it with the new context and remove it first from DOM because of detach action before inserting it manually.
+                view.detectChanges();
+
                 container.insert(view);
                 this._embeddedViews.push(embView);
             }
@@ -1081,12 +1086,15 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const container = this.dc.instance._vcr as ViewContainerRef;
         for (let i = prevIndex - 1; i >= this.state.startIndex && this.igxForOf[i] !== undefined; i--) {
             const embView = this._embeddedViews.pop();
-            if (!embView.destroyed) {
+            if (embView && !embView.destroyed) {
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
+                // embView and view both refer to the same collections
                 const view = container.detach(container.length - 1);
 
                 this.updateTemplateContext(embView.context, i);
+                view.detectChanges();
+
                 container.insert(view, 0);
                 this._embeddedViews.unshift(embView);
             }
