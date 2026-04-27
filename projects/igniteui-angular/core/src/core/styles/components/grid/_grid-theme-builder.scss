@@ -23,7 +23,7 @@
         '#{$theme-variant}-#{$variant}'
     );
 
-    igx-grid,
+    :where(igx-grid,
     igc-grid,
     igx-tree-grid,
     igc-tree-grid,
@@ -32,7 +32,7 @@
     igx-pivot-grid,
     igc-pivot-grid,
     igx-grid-lite,
-    igc-grid-lite {
+    igc-grid-lite) {
         --_grid-background: var(--background, var(--ig-grid-background));
         --_grid-foreground: var(--foreground, var(--ig-grid-foreground));
         --_grid-accent-color: var(--accent-color, var(--ig-grid-accent-color));
