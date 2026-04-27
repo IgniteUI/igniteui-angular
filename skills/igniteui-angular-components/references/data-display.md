@@ -167,7 +167,7 @@ import { IgxBadgeComponent } from 'igniteui-angular/badge';
 ```
 
 Avatar shapes: `'circle'`, `'rounded'`, `'square'`. Sizes: `'small'`, `'medium'`, `'large'`, or custom CSS.
-Badge types: `'default'`, `'info'`, `'success'`, `'warning'`, `'error'`.
+Badge types: `'primary'`, `'info'`, `'success'`, `'warning'`, `'error'`.
 
 ## Icon
 
