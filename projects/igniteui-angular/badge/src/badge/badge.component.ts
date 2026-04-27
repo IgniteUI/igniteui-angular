@@ -32,7 +32,7 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
  *
  * @example
  * ```html
- * <div class="wrapper">
+ * <div class="avatar-badge-container">
  *  <igx-avatar icon="person" shape="circle" size="small"></igx-avatar>
  *  <igx-badge icon="check" type="success" shape="square"></igx-badge>
  * </div>
