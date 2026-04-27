@@ -36,9 +36,9 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { EntityType, FieldType, IFilteringExpressionsTree, IgxActionStripToken, IgxOverlayOutletDirective, flatten, IGridResourceStrings } from 'igniteui-angular/core';
 import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 import { IgxGridCellMergePipe, IgxGridComponent, IgxGridFilteringPipe, IgxGridSortingPipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
+import { registerLifecyclePlaceholderElement } from './lifecycle-placeholder-element';
 
 let NEXT_ID = 0;
-const HGRID_LIFECYCLE_PLACEHOLDER_TAG = 'igc-hgrid-lifecycle-placeholder';
 
 /**
  * @hidden @internal
@@ -663,7 +663,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public override ngOnInit() {
-        this.registerLifecyclePlaceholderElement();
+        if (this.platform.isBrowser) {
+            registerLifecyclePlaceholderElement();
+        }
         // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
         //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
         // });
@@ -740,24 +742,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
-    }
-
-    private registerLifecyclePlaceholderElement(): void {
-        if (!this.platform.isBrowser || typeof customElements === 'undefined' || customElements.get(HGRID_LIFECYCLE_PLACEHOLDER_TAG)) {
-            return;
-        }
-
-        class IgxHierarchicalGridLifecyclePlaceholderElement extends HTMLElement {
-            public connectedCallback(): void {
-                this.dispatchEvent(new CustomEvent('igcConnected', { bubbles: true, composed: true }));
-            }
-
-            public disconnectedCallback(): void {
-                this.dispatchEvent(new CustomEvent('igcDisconnected', { bubbles: true, composed: true }));
-            }
-        }
-
-        customElements.define(HGRID_LIFECYCLE_PLACEHOLDER_TAG, IgxHierarchicalGridLifecyclePlaceholderElement);
     }
 
     /**
