@@ -15,6 +15,7 @@ export const DEFAULT_PIVOT_KEYS = {
 export interface IDimensionsChange {
     /** The new list of dimensions. */
     dimensions: IPivotDimension[],
+    /* mustCoerceToInt */
     /** The dimension list type - Row, Column or Filter. */
     dimensionCollectionType: PivotDimensionType
 }
