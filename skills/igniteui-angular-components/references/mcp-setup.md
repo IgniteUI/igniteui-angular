@@ -21,7 +21,7 @@ Create or edit `.vscode/mcp.json` in your project:
   "servers": {
     "igniteui-cli": {
       "command": "npx",
-      "args": ["-y", "igniteui-cli@next", "mcp"]
+      "args": ["-y", "igniteui-cli", "mcp"]
     }
   }
 }
@@ -38,7 +38,7 @@ Create or edit `.cursor/mcp.json`:
   "mcpServers": {
     "igniteui-cli": {
       "command": "npx",
-      "args": ["-y", "igniteui-cli@next", "mcp"]
+      "args": ["-y", "igniteui-cli", "mcp"]
     }
   }
 }
@@ -55,7 +55,7 @@ Edit the Claude Desktop config file:
   "mcpServers": {
     "igniteui-cli": {
       "command": "npx",
-      "args": ["-y", "igniteui-cli@next", "mcp"]
+      "args": ["-y", "igniteui-cli", "mcp"]
     }
   }
 }
@@ -65,7 +65,7 @@ Edit the Claude Desktop config file:
 
 1. Go to **Settings → Tools → AI Assistant → MCP Servers**
 2. Click **+ Add MCP Server**
-3. Set Command to `npx` and Arguments to `igniteui-cli@next mcp`
+3. Set Command to `npx` and Arguments to `-y igniteui-cli mcp`
 4. Click OK and restart the AI Assistant
 
 ## Verifying the Setup
