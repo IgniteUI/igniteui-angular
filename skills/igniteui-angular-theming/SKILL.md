@@ -414,9 +414,6 @@ Raw hex values are acceptable **only** in these contexts:
 
 Everything else must use `var(--ig-<family>-<shade>)` tokens.
 
-## Contributing to Component Themes
-> **Contributing to the in-repo SCSS source (component theme files, structural SCSS, base functions, and the component registry) is covered in [`references/contributing.md`](./references/contributing.md).** Read that file when modifying or creating `_*-theme.scss` or `_*-component.scss` files, wiring a new component into the theme system, or writing style tests.
-
 ## Common Patterns
 
 > **Light/dark theme switching, scoped themes, and licensed package configuration are in [`references/common-patterns.md`](./references/common-patterns.md).** Read that file for ready-to-use Sass patterns.

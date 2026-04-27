@@ -275,8 +275,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected _differ: IterableDiffer<T> | null = null;
     protected _trackByFn: TrackByFunction<T>;
     protected individualSizeCache: number[] = [];
+    /**
+     * @hidden
+     */
     /** Internal track for scroll top that is being virtualized */
-    protected _virtScrollPosition = 0;
+    public _virtScrollPosition = 0;
     /** If the next onScroll event is triggered due to internal setting of scrollTop */
     protected _bScrollInternal = false;
     // End properties related to virtual height handling
@@ -901,7 +904,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 const maxVirtScrollTop = this._virtSize - containerSize;
                 this._bScrollInternal = true;
                 this._virtScrollPosition = maxVirtScrollTop;
-                this.scrollPosition = maxVirtScrollTop;
+                this.scrollPosition = maxVirtScrollTop / this._virtRatio;
                 return;
             }
             if (this._adjustToIndex) {
@@ -1529,11 +1532,12 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         let currentScroll = this.scrollPosition;
         if (this._virtRatio !== 1) {
             this._calcVirtualScrollPosition(this.scrollPosition);
-            currentScroll = this._virtScrollPosition;
+            scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
+        } else {
+            const scroll = this.scrollComponent.nativeElement;
+            scrollOffset = scroll && this.scrollComponent.size ?
+            currentScroll - this.sizesCache[this.state.startIndex] : 0;
         }
-        const scroll = this.scrollComponent.nativeElement;
-        scrollOffset = scroll && this.scrollComponent.size ?
-        currentScroll - this.sizesCache[this.state.startIndex] : 0;
         const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'transform';
         this.dc.instance._viewContainer.element.nativeElement.style[dir] = this.igxForScrollOrientation === 'horizontal' ?
          -(scrollOffset) + 'px' :
@@ -1668,7 +1672,9 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
     }
 
     public override ngOnInit() {
-        this.syncService.setMaster(this);
+        if (!this.igxGridForOfUniqueSizeCache) {
+            this.syncService.setMaster(this);
+        }
         super.ngOnInit();
         this.removeScrollEventListeners();
         const destructor = takeUntil<any>(this.destroy$);
@@ -1681,7 +1687,9 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
     public override ngOnChanges(changes: SimpleChanges) {
         const forOf = 'igxGridForOf';
-        this.syncService.setMaster(this);
+        if (!this.igxGridForOfUniqueSizeCache) {
+            this.syncService.setMaster(this);
+        }
         if (forOf in changes) {
             const value = changes[forOf].currentValue;
             if (!this._differ && value) {
@@ -1693,9 +1701,9 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
                      NgFor only supports binding to Iterables such as Arrays.`);
                 }
             }
-            if (this.igxForScrollOrientation === 'horizontal') {
+            if (this.igxForScrollOrientation === 'horizontal' && !this.igxGridForOfUniqueSizeCache) {
                 // in case collection has changes, reset sync service
-                this.syncService.setMaster(this, this.igxGridForOfUniqueSizeCache);
+                this.syncService.setMaster(this);
             }
         }
         const defaultItemSize = 'igxForItemSize';
@@ -1738,10 +1746,13 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
                 (e.g. because of filtering); if all columns are hidden, rows are
                 still rendered empty, so we should not reset master */
                 if (!this.igxForOf.length &&
-                    this.igxForScrollOrientation === 'vertical') {
+                    this.igxForScrollOrientation === 'vertical' &&
+                    !this.igxGridForOfUniqueSizeCache) {
                     this.syncService.resetMaster();
                 }
-                this.syncService.setMaster(this);
+                if (!this.igxGridForOfUniqueSizeCache) {
+                    this.syncService.setMaster(this);
+                }
                 this.igxForContainerSize = args.containerSize;
                 const sizeDiff = this._updateSizeCache(changes);
                 this._applyChanges();
@@ -1813,7 +1824,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
     }
 
     protected override initSizesCache(items: U): number {
-        if (!this.syncService.isMaster(this) && this.igxForScrollOrientation === 'horizontal') {
+        if (!this.igxGridForOfUniqueSizeCache && !this.syncService.isMaster(this) && this.igxForScrollOrientation === 'horizontal') {
             const masterSizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
             return masterSizesCache[masterSizesCache.length - 1];
         }
@@ -1953,7 +1964,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
      */
     protected override _calcMaxChunkSize(): number {
         if (this.igxForScrollOrientation === 'horizontal') {
-            if (this.syncService.isMaster(this)) {
+            if (this.igxGridForOfUniqueSizeCache || this.syncService.isMaster(this)) {
                 return super._calcMaxChunkSize();
             }
             return this.syncService.chunkSize(this.igxForScrollOrientation);

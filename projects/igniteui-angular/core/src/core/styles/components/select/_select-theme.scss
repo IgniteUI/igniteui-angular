@@ -49,7 +49,7 @@
     .igx-input-group.igx-input-group--focused:not(.igx-input-group--box) {
         @if $variant == 'material' {
             %igx-select__toggle-button {
-                background: var-get($theme, 'toggle-button-background-focus--border');
+                background: var-get($theme, 'toggle-button-background');
             }
         }
     }
