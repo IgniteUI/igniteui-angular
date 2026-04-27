@@ -136,9 +136,10 @@ import { IgxBadgeComponent } from 'igniteui-angular/badge';
 
 ```html
 <!-- Image avatar with badge overlay -->
-<igx-avatar [src]="user.photo" shape="circle" size="large">
-  <igx-badge igxAvatarBadge [type]="'success'" [icon]="'check'"></igx-badge>
-</igx-avatar>
+<div class="avatar-badge-container">
+  <igx-avatar [src]="user.photo" shape="circle" size="large"></igx-avatar>
+  <igx-badge [type]="'success'" [icon]="'check'"></igx-badge>
+</div>
 
 <!-- Initials avatar -->
 <igx-avatar initials="JD" shape="circle"></igx-avatar>
@@ -148,6 +149,21 @@ import { IgxBadgeComponent } from 'igniteui-angular/badge';
 
 <!-- Standalone badge -->
 <igx-badge [type]="'error'" [value]="unreadCount"></igx-badge>
+```
+
+```scss
+// Required styles to position the badge as an overlay on the avatar
+.avatar-badge-container {
+  position: relative;
+  display: inline-flex;
+
+  igx-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(25%, 25%);
+  }
+}
 ```
 
 Avatar shapes: `'circle'`, `'rounded'`, `'square'`. Sizes: `'small'`, `'medium'`, `'large'`, or custom CSS.
