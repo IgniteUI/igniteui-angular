@@ -77,7 +77,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
      * <button type="button" igxButton="outlined"></button>
      * ```
      */
-    @Input({ alias: 'igxButton', transform: (value: string) => value.trim() || IgxButtonType.Flat })
+    @Input({ alias: 'igxButton', transform: (value: unknown) => (typeof value === 'string' ? value.trim() : '') || IgxButtonType.Flat })
     public set type(type: IgxButtonType) {
         this._type.set(type);
     }

@@ -371,13 +371,13 @@ describe('IgxButtonGroup', () => {
         const groupChildren = buttongroup.buttons;
 
         for (let i = 0; i < groupChildren.length; i++) {
-            const button = groupChildren[i];
-            expect(button.nativeElement.tagName).toBe('BUTTON');
+            const button = groupChildren[i].nativeElement as HTMLButtonElement;
+            expect(button.tagName).toBe('BUTTON');
 
             if (i < groupChildren.length - 1) {
-                expect(button.nativeElement.disabled).toBe(false);
+                expect(button.disabled).toBe(false);
             } else {
-                expect(button.nativeElement.disabled).toBe(true);
+                expect(button.disabled).toBe(true);
             }
         }
     });

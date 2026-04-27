@@ -37,7 +37,7 @@ export class IgxIconButtonDirective extends IgxButtonBaseDirective {
      * <button type="button" igxIconButton="flat"></button>
      * ```
      */
-    @Input({ alias: 'igxIconButton', transform: (value: string) => value.trim() || IgxBaseButtonType.Contained })
+    @Input({ alias: 'igxIconButton', transform: (value: unknown) => (typeof value === 'string' ? value.trim() : '') || IgxBaseButtonType.Contained })
     public set type(type: IgxIconButtonType) {
         this._type.set(type);
     }

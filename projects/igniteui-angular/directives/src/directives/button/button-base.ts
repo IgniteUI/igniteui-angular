@@ -50,8 +50,8 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit {
     public readonly buttonClick = new EventEmitter<MouseEvent>();
 
     /** Returns the underlying DOM element. */
-    public get nativeElement(): HTMLButtonElement {
-        return this._element.nativeElement as HTMLButtonElement;
+    public get nativeElement(): HTMLElement {
+        return this._element.nativeElement;
     }
 
     public ngAfterViewInit(): void {
