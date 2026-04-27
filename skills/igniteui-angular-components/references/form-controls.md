@@ -18,6 +18,9 @@
 - [Reactive Forms Integration](#reactive-forms-integration)
 - [Key Rules](#key-rules)
 
+## Overview
+This reference gives high-level guidance on when to use each form control component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
+
 ## Input Group
 
 > **Docs:** [Input Group](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)
