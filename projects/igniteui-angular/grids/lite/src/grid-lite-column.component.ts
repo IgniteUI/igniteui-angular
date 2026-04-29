@@ -76,7 +76,7 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
     //#region Inputs
 
     /** The field from the data for this column. */
-    public readonly field = input<Keys<T>>();
+    public readonly field = input<NoInfer<Keys<T>>>();
 
     /** The data type of the column's values. */
     public readonly dataType = input<DataType>('string');

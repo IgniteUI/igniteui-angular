@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, viewChild } from '@angular/core';
-import { IgxGridLiteCellTemplateDirective, IgxGridLiteColumnComponent, IgxGridLiteComponent, IgxGridLiteFilteringExpression, IgxGridLiteHeaderTemplateDirective, IgxGridLiteSortingExpression, IgxGridLiteSortingOptions } from "igniteui-angular/grids/lite";
-import { GridLiteDataService } from './data.service';
+import { IgxGridLiteCellTemplateDirective, IgxGridLiteColumnComponent, IgxGridLiteColumnConfiguration, IgxGridLiteComponent, IgxGridLiteFilteringExpression, IgxGridLiteHeaderTemplateDirective, IgxGridLiteSortingExpression, IgxGridLiteSortingOptions } from "igniteui-angular/grids/lite";
+import { GridLiteDataService, type User } from './data.service';
 import { IgxCheckboxComponent } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-lite-sample',
@@ -11,8 +11,16 @@ import { IgxCheckboxComponent } from 'igniteui-angular';
 })
 export class GridLiteSampleComponent {
     protected grid = viewChild<IgxGridLiteComponent<any>>('grid');
-    protected data = [];
+    protected data: User[] = [];
     private dataService = inject(GridLiteDataService);
+
+    public columns: IgxGridLiteColumnConfiguration[] = [
+        { field: 'age', header: 'Age', dataType: 'number' },
+    ];
+
+    public typedColumns: IgxGridLiteColumnConfiguration<User>[] = [
+        { field: 'email', header: 'Email', dataType: 'string' },
+    ];
 
     protected sortingExpressions: IgxGridLiteSortingExpression[] = [
         {
