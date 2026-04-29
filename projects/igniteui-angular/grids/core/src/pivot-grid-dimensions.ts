@@ -142,15 +142,24 @@ export class IgxPivotDateDimension implements IPivotDimension {
         // When fullDate is enabled and the user has not provided a custom memberFunction,
         // attach a locale-aware formatter so the leaf date values are displayed in
         // short-date format instead of the raw data string.
+        // When the user provides their own memberFunction, the dimension is used as-is
+        // (spread-create is skipped) to avoid overriding the user's intended formatting.
         let baseDimension: IPivotDimension = null;
         if (options.fullDate) {
-            baseDimension = inBaseDimension.memberFunction ? inBaseDimension : {
-                ...inBaseDimension,
-                formatter: (value: any) => {
-                    const dateValue = value ? getDateFormatter().createDateFromValue(value) : null;
-                    return dateValue ? getDateFormatter().formatDateTime(dateValue, undefined, { dateStyle: 'short' }) : value;
-                }
-            };
+            if (inBaseDimension.memberFunction) {
+                // User supplied a custom memberFunction — preserve it without adding a formatter.
+                baseDimension = inBaseDimension;
+            } else {
+                // No custom memberFunction: create a new dimension object with a locale-aware
+                // formatter that shows dates in short-date format.
+                baseDimension = {
+                    ...inBaseDimension,
+                    formatter: (value: any) => {
+                        const dateValue = value ? getDateFormatter().createDateFromValue(value) : null;
+                        return dateValue ? getDateFormatter().formatDateTime(dateValue, undefined, { dateStyle: 'short' }) : value;
+                    }
+                };
+            }
         }
         const monthDimensionDef: IPivotDimension = {
             memberName: 'Months',
