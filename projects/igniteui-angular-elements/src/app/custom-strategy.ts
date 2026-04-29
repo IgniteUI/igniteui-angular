@@ -4,10 +4,10 @@ import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { ComponentConfig, ContentQueryMeta } from './component-config';
-import { IExpressionTree, IFilteringExpression } from 'igniteui-angular/core';
 
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes } from './ng-element-strategy';
 import { TemplateWrapperComponent } from './wrapper/wrapper.component';
+import { IExpressionTree, IFilteringExpression } from 'igniteui-angular';
 
 export const ComponentRefKey = Symbol('ComponentRef');
 const SCHEDULE_DELAY = 10;
