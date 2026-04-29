@@ -1,12 +1,21 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, viewChild } from '@angular/core';
-import { IgxGridLiteCellTemplateDirective, IgxGridLiteColumnComponent, IgxGridLiteColumnConfiguration, IgxGridLiteComponent, IgxGridLiteFilteringExpression, IgxGridLiteHeaderTemplateDirective, IgxGridLiteSortingExpression, IgxGridLiteSortingOptions } from "igniteui-angular/grids/lite";
-import { GridLiteDataService, type User } from './data.service';
+import { Component, inject, viewChild } from '@angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular';
+import {
+    IgxGridLiteCellTemplateDirective,
+    IgxGridLiteColumnComponent,
+    type IgxGridLiteColumnConfiguration,
+    IgxGridLiteComponent,
+    type IgxGridLiteFilteringExpression,
+    IgxGridLiteHeaderTemplateDirective,
+    type IgxGridLiteSortingExpression,
+    type IgxGridLiteSortingOptions,
+} from "igniteui-angular/grids/lite";
+import { GridLiteDataService, type User } from './data.service';
+
 @Component({
     selector: 'app-grid-lite-sample',
     templateUrl: 'grid-lite.sample.html',
     styleUrls: ['grid-lite.sample.scss'],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [IgxCheckboxComponent, IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective]
 })
 export class GridLiteSampleComponent {
