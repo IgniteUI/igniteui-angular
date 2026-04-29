@@ -4,6 +4,7 @@ import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { ComponentConfig, ContentQueryMeta } from './component-config';
+import { IExpressionTree, IFilteringExpression } from 'igniteui-angular/core';
 
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes } from './ng-element-strategy';
 import { TemplateWrapperComponent } from './wrapper/wrapper.component';
@@ -465,11 +466,30 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     protected patchOutputComponents(eventName: string, eventArgs: any) {
-        // Single out only `columnInit` event for now. If more events pop up will require a config generation.
-        if (eventName !== "columnInit") {
+        if (eventName === 'filteringExpressionsTreeChange' || eventName === 'expressionTreeChange' || eventName === 'advancedFilteringExpressionsTreeChange') {
+            this.stripExternalObject(eventArgs);
             return eventArgs;
         }
-        return this.createProxyForComponentValue(eventArgs, 1).value;
+        // Single out only `columnInit` event for now. If more events pop up will require a config generation.
+        if (eventName === "columnInit") {
+            return this.createProxyForComponentValue(eventArgs, 1).value;
+        }
+        return eventArgs;
+    }
+
+    protected stripExternalObject(tree: IExpressionTree): void {
+        for (const operand of tree?.filteringOperands ?? []) {
+            if ('operator' in operand) {
+                this.stripExternalObject(operand);
+                continue;
+            }
+
+            delete (operand.condition as any)?.externalObject;
+
+            if ((operand as IFilteringExpression).searchTree) {
+                this.stripExternalObject(operand.searchTree);
+            }
+        }
     }
 
     /**
