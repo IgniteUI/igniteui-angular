@@ -408,6 +408,7 @@ The system also relies on repository-specific guidance and internal operational 
 skills/igniteui-angular-components/SKILL.md
 skills/igniteui-angular-grids/SKILL.md
 skills/igniteui-angular-theming/SKILL.md
+skills/igniteui-angular-generate-from-image-design/SKILL.md
 .github/skills/igniteui-angular-build/SKILL.md
 .github/skills/igniteui-angular-testing/SKILL.md
 .github/skills/igniteui-angular-linting/SKILL.md
@@ -418,6 +419,7 @@ Repository-specific skills for implementation guidance:
 - `igniteui-angular-components` — shared guidance for general component patterns, structure, and repository conventions.
 - `igniteui-angular-grids` — shared guidance for grid architecture, patterns, and grid-specific implementation work.
 - `igniteui-angular-theming` — shared guidance for SCSS structure, theme wiring, and style-system conventions.
+- `igniteui-angular-generate-from-image-design` — shared guidance for turning screenshots and mockups into Angular views with Ignite UI components and theming workflow.
 
 The internal operational skills are shared references for repository commands and validation flow:
 
