@@ -139,7 +139,19 @@ export class IgxPivotDateDimension implements IPivotDimension {
         this.enabled = inBaseDimension.enabled;
         this.displayName = inBaseDimension.displayName || this.resourceStrings.igx_grid_pivot_date_dimension_total;
 
-        const baseDimension = options.fullDate ? inBaseDimension : null;
+        // When fullDate is enabled and the user has not provided a custom memberFunction,
+        // attach a locale-aware formatter so the leaf date values are displayed in
+        // short-date format instead of the raw data string.
+        let baseDimension: IPivotDimension = null;
+        if (options.fullDate) {
+            baseDimension = inBaseDimension.memberFunction ? inBaseDimension : {
+                ...inBaseDimension,
+                formatter: (value: any) => {
+                    const dateValue = value ? getDateFormatter().createDateFromValue(value) : null;
+                    return dateValue ? getDateFormatter().formatDateTime(dateValue, undefined, { dateStyle: 'short' }) : value;
+                }
+            };
+        }
         const monthDimensionDef: IPivotDimension = {
             memberName: 'Months',
             memberFunction: (rec) => {
