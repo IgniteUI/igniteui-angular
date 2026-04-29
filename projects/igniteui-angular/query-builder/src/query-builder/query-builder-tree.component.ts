@@ -1671,7 +1671,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.cancelOperandEdit();
 
         // Ignore values of certain properties for the comparison
-        const propsToIgnore = ['parent', 'hovered', 'ignoreCase', 'inEditMode', 'inAddMode'];
+        const propsToIgnore = ['parent', 'hovered', 'ignoreCase', 'inEditMode', 'inAddMode', 'externalObject'];
         const propsReplacer = function replacer(key, value) {
             if (propsToIgnore.indexOf(key) >= 0) {
                 return undefined;
