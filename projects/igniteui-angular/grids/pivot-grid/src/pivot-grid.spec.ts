@@ -1245,7 +1245,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // check rows
                 const rows = pivotGrid.rowList.toArray();
                 expect(rows.length).toBe(5);
-                const formattedDate = Intl.DateTimeFormat(undefined, { dateStyle: 'short' }).format(new Date('12/08/2021'));
+                const formattedDate = Intl.DateTimeFormat(undefined, { dateStyle: 'short' }).format(new Date(2021, 11, 8));
                 const expectedHeaders = ['All Periods', '2021', 'Q4', 'December', formattedDate];
                 const rowHeaders = fixture.debugElement.queryAll(
                     By.directive(IgxPivotRowDimensionHeaderComponent));

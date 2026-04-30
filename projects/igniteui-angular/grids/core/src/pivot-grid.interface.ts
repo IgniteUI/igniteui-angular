@@ -152,7 +152,7 @@ export interface IPivotDimension {
      * { memberName: 'Date', enabled: true, formatter: (value) => new Date(value).toLocaleDateString() }
      * ```
      */
-    formatter?: (value: any) => any;
+    formatter?: (value: any) => string;
 }
 
 /* marshalByValue */

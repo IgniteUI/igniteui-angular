@@ -155,8 +155,12 @@ export class IgxPivotDateDimension implements IPivotDimension {
                 baseDimension = {
                     ...inBaseDimension,
                     formatter: (value: any) => {
-                        const dateValue = value ? getDateFormatter().createDateFromValue(value) : null;
-                        return dateValue ? getDateFormatter().formatDateTime(dateValue, undefined, { dateStyle: 'short' }) : value;
+                        const dateValue = (value !== null && value !== undefined && value !== '')
+                            ? getDateFormatter().createDateFromValue(value)
+                            : null;
+                        return dateValue
+                            ? getDateFormatter().formatDateTime(dateValue, undefined, { dateStyle: 'short' })
+                            : value;
                     }
                 };
             }
