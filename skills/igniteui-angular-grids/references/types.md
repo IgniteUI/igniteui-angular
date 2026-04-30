@@ -31,7 +31,7 @@ import { IgxTreeGridComponent, IGX_TREE_GRID_DIRECTIVES } from 'igniteui-angular
   selector: 'app-org-tree',
   imports: [IGX_TREE_GRID_DIRECTIVES],
   templateUrl: './org-tree.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrgTreeComponent {
   treeGridRef = viewChild.required<IgxTreeGridComponent>('treeGrid');
@@ -44,13 +44,15 @@ export class OrgTreeComponent {
 ```
 
 ```html
-<igx-tree-grid #treeGrid
+<igx-tree-grid
+  #treeGrid
   [data]="employees()"
   [primaryKey]="'id'"
   [foreignKey]="'managerId'"
   [autoGenerate]="false"
   [rowSelection]="'multipleCascade'"
-  height="600px">
+  height="600px"
+>
   <igx-column field="name" header="Name" [sortable]="true"></igx-column>
   <igx-column field="title" header="Title"></igx-column>
 </igx-tree-grid>
@@ -59,12 +61,14 @@ export class OrgTreeComponent {
 **Mode 2: Nested object data** — each row contains its children in an array property:
 
 ```html
-<igx-tree-grid #treeGrid
+<igx-tree-grid
+  #treeGrid
   [data]="departments()"
   [primaryKey]="'id'"
   [childDataKey]="'children'"
   [autoGenerate]="false"
-  height="600px">
+  height="600px"
+>
   <igx-column field="name" header="Name"></igx-column>
   <igx-column field="headCount" header="Employees" dataType="number"></igx-column>
 </igx-tree-grid>
@@ -95,13 +99,16 @@ For master-detail data where **each level has a different schema** (e.g., Compan
 
 ```typescript
 import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
-import { IgxHierarchicalGridComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES } from 'igniteui-angular/grids/hierarchical-grid';
+import {
+  IgxHierarchicalGridComponent,
+  IGX_HIERARCHICAL_GRID_DIRECTIVES,
+} from 'igniteui-angular/grids/hierarchical-grid';
 
 @Component({
   selector: 'app-company-grid',
   imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES],
   templateUrl: './company-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompanyGridComponent {
   hGridRef = viewChild.required<IgxHierarchicalGridComponent>('hGrid');
@@ -110,12 +117,13 @@ export class CompanyGridComponent {
 ```
 
 ```html
-<igx-hierarchical-grid #hGrid
+<igx-hierarchical-grid
+  #hGrid
   [data]="companies()"
   [primaryKey]="'id'"
   [autoGenerate]="false"
-  height="600px">
-
+  height="600px"
+>
   <igx-column field="name" header="Company"></igx-column>
   <igx-column field="industry" header="Industry"></igx-column>
 
@@ -128,7 +136,6 @@ export class CompanyGridComponent {
       <igx-column field="role" header="Role"></igx-column>
     </igx-row-island>
   </igx-row-island>
-
 </igx-hierarchical-grid>
 ```
 
@@ -189,7 +196,7 @@ import {
   IgxGridLiteComponent,
   IgxGridLiteColumnComponent,
   IgxGridLiteCellTemplateDirective,
-  IgxGridLiteHeaderTemplateDirective
+  IgxGridLiteHeaderTemplateDirective,
 } from 'igniteui-angular/grids/lite';
 
 @Component({
@@ -198,11 +205,11 @@ import {
     IgxGridLiteComponent,
     IgxGridLiteColumnComponent,
     IgxGridLiteCellTemplateDirective,
-    IgxGridLiteHeaderTemplateDirective
+    IgxGridLiteHeaderTemplateDirective,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],  // Required — Grid Lite is a Web Component
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Required — Grid Lite is a Web Component
   templateUrl: './users-lite.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersLiteComponent {
   gridRef = viewChild<IgxGridLiteComponent<User>>('grid');
@@ -213,26 +220,11 @@ export class UsersLiteComponent {
 ### Template
 
 ```html
-<igx-grid-lite #grid
-  [data]="data"
-  [autoGenerate]="false"
-  [sortingOptions]="{ mode: 'multiple' }">
-
-  <igx-grid-lite-column
-    field="name"
-    dataType="string"
-    header="Name"
-    sortable
-    filterable
-    resizable>
+<igx-grid-lite #grid [data]="data" [autoGenerate]="false" [sortingOptions]="{ mode: 'multiple' }">
+  <igx-grid-lite-column field="name" dataType="string" header="Name" sortable filterable resizable>
   </igx-grid-lite-column>
 
-  <igx-grid-lite-column
-    field="age"
-    dataType="number"
-    header="Age"
-    sortable
-    filterable>
+  <igx-grid-lite-column field="age" dataType="number" header="Age" sortable filterable>
   </igx-grid-lite-column>
 
   <igx-grid-lite-column field="active" dataType="boolean" header="Active">
@@ -247,18 +239,18 @@ export class UsersLiteComponent {
 
 Columns use `<igx-grid-lite-column>` with these inputs:
 
-| Input | Type | Description |
-|---|---|---|
-| `field` | `string` | Data property key (required) |
-| `dataType` | `'string' \| 'number' \| 'boolean' \| 'date'` | Column data type |
-| `header` | `string` | Header text |
-| `width` | `string` | CSS width (e.g., `'250px'`) |
-| `hidden` | `boolean` | Hide the column |
-| `resizable` | `boolean` | Allow column resizing |
-| `sortable` | `boolean` | Enable sorting |
-| `filterable` | `boolean` | Enable filtering |
-| `sortingCaseSensitive` | `boolean` | Case-sensitive sorting |
-| `filteringCaseSensitive` | `boolean` | Case-sensitive filtering |
+| Input                    | Type                                          | Description                  |
+| ------------------------ | --------------------------------------------- | ---------------------------- |
+| `field`                  | `string`                                      | Data property key (required) |
+| `dataType`               | `'string' \| 'number' \| 'boolean' \| 'date'` | Column data type             |
+| `header`                 | `string`                                      | Header text                  |
+| `width`                  | `string`                                      | CSS width (e.g., `'250px'`)  |
+| `hidden`                 | `boolean`                                     | Hide the column              |
+| `resizable`              | `boolean`                                     | Allow column resizing        |
+| `sortable`               | `boolean`                                     | Enable sorting               |
+| `filterable`             | `boolean`                                     | Enable filtering             |
+| `sortingCaseSensitive`   | `boolean`                                     | Case-sensitive sorting       |
+| `filteringCaseSensitive` | `boolean`                                     | Case-sensitive filtering     |
 
 ### Templates
 
@@ -285,7 +277,7 @@ Cell and header templates use dedicated directives:
 this.gridRef().sort({ key: 'name', direction: 'ascending' });
 this.gridRef().sort([
   { key: 'name', direction: 'ascending' },
-  { key: 'age', direction: 'descending' }
+  { key: 'age', direction: 'descending' },
 ]);
 this.gridRef().clearSort('name');
 this.gridRef().clearSort(); // clear all
@@ -299,14 +291,16 @@ this.gridRef().clearFilter(); // clear all
 ### Two-Way Binding for Sort/Filter State
 
 ```html
-<igx-grid-lite #grid
+<igx-grid-lite
+  #grid
   [data]="data"
   [(sortingExpressions)]="sortExprs"
   [(filteringExpressions)]="filterExprs"
   (sorting)="onSorting($event)"
   (sorted)="onSorted($event)"
   (filtering)="onFiltering($event)"
-  (filtered)="onFiltered($event)">
+  (filtered)="onFiltered($event)"
+>
 </igx-grid-lite>
 ```
 
@@ -330,29 +324,27 @@ dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
   filter: async (params) => {
     const filtered = await this.dataService.filterRemote(params.grid.filteringExpressions);
     return filtered;
-  }
+  },
 };
 ```
 
 ```html
-<igx-grid-lite #grid
-  [data]="data"
-  [dataPipelineConfiguration]="dataPipeline">
-</igx-grid-lite>
+<igx-grid-lite #grid [data]="data" [dataPipelineConfiguration]="dataPipeline"> </igx-grid-lite>
 ```
 
 ### Grid Lite Events
 
-| Event | Cancelable | Payload |
-|---|---|---|
-| `(sorting)` | Yes (`event.detail.cancel = true`) | Sorting expression about to be applied |
-| `(sorted)` | No | Sorting completed |
-| `(filtering)` | Yes (`event.detail.cancel = true`) | Filter expression about to be applied |
-| `(filtered)` | No | Filtering completed |
+| Event         | Cancelable                         | Payload                                |
+| ------------- | ---------------------------------- | -------------------------------------- |
+| `(sorting)`   | Yes (`event.detail.cancel = true`) | Sorting expression about to be applied |
+| `(sorted)`    | No                                 | Sorting completed                      |
+| `(filtering)` | Yes (`event.detail.cancel = true`) | Filter expression about to be applied  |
+| `(filtered)`  | No                                 | Filtering completed                    |
 
 ### Grid Lite Limitations
 
 These features are **NOT available** in Grid Lite:
+
 - Editing (cell, row, batch) — no `[editable]`, no `beginEdit()`, no transactions
 - Grouping — no `groupBy()`, no `IgxGroupByRow`
 - Paging — no `IgxPaginatorComponent`
@@ -385,51 +377,48 @@ For **pivot table analytics** where users reshape data by dragging dimensions be
 > **IMPORTANT**: The Pivot Grid is fundamentally different from the other three grids. Standard grid features like cell editing, row editing, batch editing, paging, column pinning, column moving, row dragging, and standard filtering/sorting are **disabled**. All data operations are driven by the `pivotConfiguration`.
 
 ```typescript
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 import { DATA } from '../../data/pivot-data';
 
 import { IPivotConfiguration, IgxPivotNumericAggregate } from 'igniteui-angular/grids/core';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 
 @Component({
-    selector: 'app-pivot-grid-basic-sample',
-    styleUrls: ['./pivot-grid-basic-sample.component.scss'],
-    templateUrl: './pivot-grid-basic-sample.component.html',
-    imports: [IgxPivotGridComponent]
+  selector: 'app-pivot-grid-basic-sample',
+  styleUrls: ['./pivot-grid-basic-sample.component.scss'],
+  templateUrl: './pivot-grid-basic-sample.component.html',
+  imports: [IgxPivotGridComponent],
 })
 export class PivotGridBasicSampleComponent {
-    public data = DATA;
-    public pivotConfigHierarchy: IPivotConfiguration = {
-        columns: [
-            {
-
-                memberName: 'Product',
-                memberFunction: (data) => data.Product.Name,
-                enabled: true
-            }
-            
-        ],
-        rows: [
-            {
-                memberName: 'Seller',
-                memberFunction: (data) => data.Seller.Name,
-                enabled: true
-            }
-        ],
-        values: [
-            {
-                member: 'NumberOfUnits',
-                aggregate: {
-                    aggregator: IgxPivotNumericAggregate.sum,
-                    key: 'sum',
-                    label: 'Sum'
-                },
-                enabled: true
-
-            }
-        ],
-        filters: null
-    };
+  public data = DATA;
+  public pivotConfigHierarchy: IPivotConfiguration = {
+    columns: [
+      {
+        memberName: 'Product',
+        memberFunction: (data) => data.Product.Name,
+        enabled: true,
+      },
+    ],
+    rows: [
+      {
+        memberName: 'Seller',
+        memberFunction: (data) => data.Seller.Name,
+        enabled: true,
+      },
+    ],
+    values: [
+      {
+        member: 'NumberOfUnits',
+        aggregate: {
+          aggregator: IgxPivotNumericAggregate.sum,
+          key: 'sum',
+          label: 'Sum',
+        },
+        enabled: true,
+      },
+    ],
+    filters: null,
+  };
 }
 ```
 

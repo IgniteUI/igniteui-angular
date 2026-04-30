@@ -14,6 +14,7 @@
 - [Key Rules](#key-rules)
 
 ## Overview
+
 This reference gives high-level guidance on when to use each feedback and overlay component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
 
 ## Dialog
@@ -21,7 +22,11 @@ This reference gives high-level guidance on when to use each feedback and overla
 > **Docs:** [Dialog Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)
 
 ```typescript
-import { IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective } from 'igniteui-angular/dialog';
+import {
+  IgxDialogComponent,
+  IgxDialogTitleDirective,
+  IgxDialogActionsDirective,
+} from 'igniteui-angular/dialog';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 ```
 
@@ -32,7 +37,8 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
   [closeOnEscape]="true"
   [closeOnOutsideSelect]="false"
   title="Confirm Delete"
-  (closed)="onDialogClosed()">
+  (closed)="onDialogClosed()"
+>
   <igx-dialog-title>Confirm Delete</igx-dialog-title>
   <p>Are you sure you want to delete this item? This action cannot be undone.</p>
   <div igxDialogActions>
@@ -65,11 +71,7 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
 ```
 
 ```html
-<igx-snackbar
-  #snackbar
-  [displayTime]="3000"
-  [autoHide]="true"
-  (animationDone)="onSnackbarDone()">
+<igx-snackbar #snackbar [displayTime]="3000" [autoHide]="true" (animationDone)="onSnackbarDone()">
   Item saved successfully
   <button igxButton="flat" igxSnackbarAction (click)="undo()">UNDO</button>
 </igx-snackbar>

@@ -26,11 +26,11 @@
 
 Quick reference:
 
-| Mode | Key properties |
-|---|---|
-| **Cell editing** | `[editable]="true"` on columns + `(cellEditDone)` |
-| **Row editing** (recommended default) | `[rowEditable]="true"` + `[editable]="true"` on columns + `(rowEditDone)` |
-| **Batch editing** | `[batchEditing]="true"` + `[rowEditable]="true"` + `transactions.commit(data)` |
+| Mode                                  | Key properties                                                                 |
+| ------------------------------------- | ------------------------------------------------------------------------------ |
+| **Cell editing**                      | `[editable]="true"` on columns + `(cellEditDone)`                              |
+| **Row editing** (recommended default) | `[rowEditable]="true"` + `[editable]="true"` on columns + `(rowEditDone)`      |
+| **Batch editing**                     | `[batchEditing]="true"` + `[rowEditable]="true"` + `transactions.commit(data)` |
 
 ## Grouping (Grid only)
 
@@ -83,7 +83,7 @@ import { IGridMergeStrategy } from 'igniteui-angular/core';
 priceRangeMerge: IGridMergeStrategy = {
   shouldMerge(prevCell, curCell) {
     return Math.abs(prevCell.value - curCell.value) < 10;
-  }
+  },
 };
 ```
 
@@ -136,7 +136,11 @@ export class MyComponent {
 > **Docs:** [CSV Export](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-csv)
 
 ```typescript
-import { IgxCsvExporterService, IgxCsvExporterOptions, CsvFileTypes } from 'igniteui-angular/grids/core';
+import {
+  IgxCsvExporterService,
+  IgxCsvExporterOptions,
+  CsvFileTypes,
+} from 'igniteui-angular/grids/core';
 
 export class MyComponent {
   private csvExporter = inject(IgxCsvExporterService);
@@ -163,7 +167,11 @@ For full remote virtualization patterns — see [`paging-remote.md`](./paging-re
 > **Docs:** [Row Drag](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-drag)
 
 ```html
-<igx-grid [rowDraggable]="true" (rowDragStart)="onDragStart($event)" (rowDragEnd)="onDragEnd($event)">
+<igx-grid
+  [rowDraggable]="true"
+  (rowDragStart)="onDragStart($event)"
+  (rowDragEnd)="onDragEnd($event)"
+>
   <ng-template igxRowDragGhost let-dragData>
     <span>Moving {{ dragData.dragData.name }}</span>
   </ng-template>
@@ -200,8 +208,7 @@ Expand rows to show arbitrary detail content:
   <ng-template igxGridDetail let-dataItem>
     <div class="detail-container">
       <h4>Order Items for {{ dataItem.customer }}</h4>
-      <igx-grid [data]="dataItem.items" [autoGenerate]="true" height="200px">
-      </igx-grid>
+      <igx-grid [data]="dataItem.items" [autoGenerate]="true" height="200px"> </igx-grid>
     </div>
   </ng-template>
 </igx-grid>
@@ -212,7 +219,9 @@ Expand rows to show arbitrary detail content:
 Grids support copy to clipboard by default. Configure via:
 
 ```html
-<igx-grid [clipboardOptions]="{ enabled: true, copyHeaders: true, copyFormatters: true, separator: '\t' }">
+<igx-grid
+  [clipboardOptions]="{ enabled: true, copyHeaders: true, copyFormatters: true, separator: '\t' }"
+>
 </igx-grid>
 ```
 

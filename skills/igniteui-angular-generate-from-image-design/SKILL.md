@@ -33,7 +33,7 @@ Before writing any implementation code, you must complete these steps in order:
 Read the input image carefully. For each visual section, identify:
 
 - **Layout structure**: grid rows/columns, sidebar, navbar, content area proportions, and estimated fixed widths or percentages for major regions.
-> Note: Do not guess the exact CSS properties at this stage; just identify the high-level structure and relative proportions. Do not try to fit the view into exact breakpoints or pixel values. Try to generate a flexible layout that preserves the observed proportions and can adapt to different screen sizes. You will refine the exact CSS rules in Step 8 after building a first version of the view.
+  > Note: Do not guess the exact CSS properties at this stage; just identify the high-level structure and relative proportions. Do not try to fit the view into exact breakpoints or pixel values. Try to generate a flexible layout that preserves the observed proportions and can adapt to different screen sizes. You will refine the exact CSS rules in Step 8 after building a first version of the view.
 - **Component type**: chart, list, card, map, gauge, table, form, etc.
 - **Color palette**: primary, secondary, surface/background, accent, text colors
 - **Typography**: font sizes, weights, letter-spacing patterns
@@ -43,11 +43,11 @@ Read the input image carefully. For each visual section, identify:
 
 Before writing code, create a decomposition table with one row per visible region containing:
 
-| Region | Visual role | Candidate component | Custom CSS required | Data type |
-|---|---|---|---|---|
-| Example: sidebar item list | repeated rows with icon + label | `IgxListComponent` | yes - item height, icon size | domain-appropriate mock data |
-| Example: top bar | brand + tabs + search | `IgxNavbarComponent` | yes - multi-zone flex layout | n/a |
-| Example: side panel | always-visible navigation | `IgxNavigationDrawerComponent` | yes - width, item styling | n/a |
+| Region                     | Visual role                     | Candidate component            | Custom CSS required          | Data type                    |
+| -------------------------- | ------------------------------- | ------------------------------ | ---------------------------- | ---------------------------- |
+| Example: sidebar item list | repeated rows with icon + label | `IgxListComponent`             | yes - item height, icon size | domain-appropriate mock data |
+| Example: top bar           | brand + tabs + search           | `IgxNavbarComponent`           | yes - multi-zone flex layout | n/a                          |
+| Example: side panel        | always-visible navigation       | `IgxNavigationDrawerComponent` | yes - width, item styling    | n/a                          |
 
 Start every region with the most appropriate Ignite UI component from [references/component-mapping.md](references/component-mapping.md). Only fall back to plain semantic HTML when the component DOM structure is fundamentally incompatible with the design after CSS overrides are considered. Document the reason for any plain-HTML fallback in a code comment.
 
@@ -141,6 +141,7 @@ For **every** core Ignite UI component chosen in Steps 3-4, follow this MCP-firs
 3. **Generate** - call `create_component_theme(component, platform, licensed, tokens)` passing only the tokens whose resolved value differs from the global theme. This produces scoped SCSS with the minimal override set.
 
 **Example - theming a grid:**
+
 - `get_component_design_tokens("grid")` returns `header-background`, `content-background`, `row-hover-background` among many others
 - Look at the grid region in the image -> extract the color intent for header, row background, and hover state
 - Resolve each value to a palette token or local semantic CSS variable

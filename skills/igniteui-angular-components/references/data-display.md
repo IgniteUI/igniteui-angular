@@ -17,6 +17,7 @@
 - [Chat (AI Chat Component)](#chat-ai-chat-component)
 
 ## Overview
+
 This reference gives high-level guidance on when to use each data display component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
 
 ## List
@@ -33,13 +34,13 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 <igx-list>
   <igx-list-item [isHeader]="true">Contacts</igx-list-item>
   @for (contact of contacts; track contact.id) {
-    <igx-list-item>
-      <igx-avatar igxListThumbnail [src]="contact.avatar" shape="circle"></igx-avatar>
-      <span igxListLine>{{ contact.name }}</span>
-      <span igxListLineSubTitle>{{ contact.phone }}</span>
-      <span igxListLineTitle>{{ contact.email }}</span>
-      <igx-icon igxListAction (click)="call(contact)">phone</igx-icon>
-    </igx-list-item>
+  <igx-list-item>
+    <igx-avatar igxListThumbnail [src]="contact.avatar" shape="circle"></igx-avatar>
+    <span igxListLine>{{ contact.name }}</span>
+    <span igxListLineSubTitle>{{ contact.phone }}</span>
+    <span igxListLineTitle>{{ contact.email }}</span>
+    <igx-icon igxListAction (click)="call(contact)">phone</igx-icon>
+  </igx-list-item>
   }
 </igx-list>
 ```
@@ -57,16 +58,15 @@ import { IGX_TREE_DIRECTIVES } from 'igniteui-angular/tree';
 ```html
 <igx-tree [selection]="'BiCascade'" (nodeSelection)="onNodeSelect($event)">
   @for (node of treeData; track node.id) {
-    <igx-tree-node [data]="node" [expanded]="node.expanded">
-      <igx-icon>folder</igx-icon>
-      {{ node.label }}
-      @for (child of node.children; track child.id) {
-        <igx-tree-node [data]="child">
-          <igx-icon>description</igx-icon>
-          {{ child.label }}
-        </igx-tree-node>
-      }
+  <igx-tree-node [data]="node" [expanded]="node.expanded">
+    <igx-icon>folder</igx-icon>
+    {{ node.label }} @for (child of node.children; track child.id) {
+    <igx-tree-node [data]="child">
+      <igx-icon>description</igx-icon>
+      {{ child.label }}
     </igx-tree-node>
+    }
+  </igx-tree-node>
   }
 </igx-tree>
 ```
@@ -78,7 +78,16 @@ Selection modes: `'None'`, `'BiCascade'`, `'Cascade'`.
 > **Docs:** [Card Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card)
 
 ```typescript
-import { IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxCardMediaDirective, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective, IgxCardHeaderThumbnailDirective } from 'igniteui-angular/card';
+import {
+  IgxCardComponent,
+  IgxCardHeaderComponent,
+  IgxCardContentDirective,
+  IgxCardActionsComponent,
+  IgxCardMediaDirective,
+  IgxCardHeaderTitleDirective,
+  IgxCardHeaderSubtitleDirective,
+  IgxCardHeaderThumbnailDirective,
+} from 'igniteui-angular/card';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -118,9 +127,7 @@ import { IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips'
 ```html
 <igx-chips-area (reorder)="onChipsReorder($event)">
   @for (tag of tags; track tag) {
-    <igx-chip [removable]="true" [selectable]="true" (remove)="removeTag(tag)">
-      {{ tag }}
-    </igx-chip>
+  <igx-chip [removable]="true" [selectable]="true" (remove)="removeTag(tag)"> {{ tag }} </igx-chip>
   }
 </igx-chips-area>
 ```
@@ -211,10 +218,10 @@ import { IgxCarouselComponent, IgxSlideComponent } from 'igniteui-angular/carous
 ```html
 <igx-carousel [interval]="3000" [pause]="true" [loop]="true" [navigation]="true">
   @for (slide of slides; track slide.id) {
-    <igx-slide>
-      <img [src]="slide.image" [alt]="slide.alt" />
-      <div class="slide-caption">{{ slide.caption }}</div>
-    </igx-slide>
+  <igx-slide>
+    <img [src]="slide.image" [alt]="slide.alt" />
+    <div class="slide-caption">{{ slide.caption }}</div>
+  </igx-slide>
   }
 </igx-carousel>
 ```
@@ -235,7 +242,8 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
   [perPage]="pageSize()"
   [selectOptions]="[5, 10, 25, 50]"
   (perPageChange)="onPageSizeChange($event)"
-  (pageChange)="onPageChange($event)">
+  (pageChange)="onPageChange($event)"
+>
 </igx-paginator>
 ```
 
@@ -258,7 +266,8 @@ import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
   [type]="'info'"
   [striped]="true"
   [animate]="true"
-  [textVisibility]="true">
+  [textVisibility]="true"
+>
 </igx-linear-bar>
 
 <!-- Circular progress (determinate) -->
@@ -279,31 +288,30 @@ import { IgxChatComponent } from 'igniteui-angular/chat';
 ```
 
 ```html
- <igx-chat
-        [options]="options()"
-        [messages]="messages()"
-        [draftMessage]="draftMessage"
-        [templates]="templates()"
-        (messageCreated)="onMessageCreated($event)">
-    </igx-chat>
+<igx-chat
+  [options]="options()"
+  [messages]="messages()"
+  [draftMessage]="draftMessage"
+  [templates]="templates()"
+  (messageCreated)="onMessageCreated($event)"
+>
+</igx-chat>
 
-    <ng-template #messageHeader let-message>
-        @if (message.sender !== 'user') {
-            <div>
-                <span style="font-weight: bold; color: #c00000;"
-                >Developer Support</span
-                >
-            </div>
-        }
-    </ng-template>
+<ng-template #messageHeader let-message>
+  @if (message.sender !== 'user') {
+  <div>
+    <span style="font-weight: bold; color: #c00000;">Developer Support</span>
+  </div>
+  }
+</ng-template>
 
-    <ng-template #suggestionPrefix>
-        <span style="font-weight: bold">💡</span>
-    </ng-template>
+<ng-template #suggestionPrefix>
+  <span style="font-weight: bold">💡</span>
+</ng-template>
 
-    <ng-template #messageContent let-message igxChatMessageContext>
-        <div [innerHTML]="message.text | fromMarkdown | async"></div>
-    </ng-template>
+<ng-template #messageContent let-message igxChatMessageContext>
+  <div [innerHTML]="message.text | fromMarkdown | async"></div>
+</ng-template>
 ```
 
 ```typescript

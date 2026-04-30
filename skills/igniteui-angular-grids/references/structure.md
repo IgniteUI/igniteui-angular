@@ -38,7 +38,7 @@ import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/
   selector: 'app-users-grid',
   imports: [IGX_GRID_DIRECTIVES],
   templateUrl: './users-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersGridComponent {
   // Signal-based view child — use #grid on the template element
@@ -51,21 +51,27 @@ export class UsersGridComponent {
 ### Basic Grid
 
 ```html
-<igx-grid #grid
+<igx-grid
+  #grid
   [data]="users()"
   [primaryKey]="'id'"
   [autoGenerate]="false"
   height="600px"
-  width="100%">
-
+  width="100%"
+>
   <igx-column field="id" header="ID" [hidden]="true"></igx-column>
-  <igx-column field="name" header="Name" [sortable]="true" [filterable]="true" [resizable]="true"></igx-column>
+  <igx-column
+    field="name"
+    header="Name"
+    [sortable]="true"
+    [filterable]="true"
+    [resizable]="true"
+  ></igx-column>
   <igx-column field="email" header="Email" [sortable]="true" [filterable]="true"></igx-column>
   <igx-column field="role" header="Role" [groupable]="true" [filterable]="true"></igx-column>
   <igx-column field="salary" header="Salary" dataType="number" [hasSummary]="true"></igx-column>
   <igx-column field="hireDate" header="Hire Date" dataType="date" [sortable]="true"></igx-column>
   <igx-column field="active" header="Active" dataType="boolean"></igx-column>
-
 </igx-grid>
 ```
 
@@ -77,17 +83,17 @@ export class UsersGridComponent {
 
 Set `dataType` to enable proper formatting, filtering, sorting, and editing:
 
-| dataType | Behavior |
-|---|---|
-| `string` | Text input, string filtering |
-| `number` | Numeric input, number filtering, number summaries |
-| `boolean` | Checkbox editor, boolean filtering |
-| `date` | Date picker editor, date filtering |
-| `dateTime` | Date+time editor |
-| `time` | Time picker editor |
-| `currency` | Currency formatting, number filtering |
-| `percent` | Percentage formatting |
-| `image` | Image rendering (read-only) |
+| dataType   | Behavior                                          |
+| ---------- | ------------------------------------------------- |
+| `string`   | Text input, string filtering                      |
+| `number`   | Numeric input, number filtering, number summaries |
+| `boolean`  | Checkbox editor, boolean filtering                |
+| `date`     | Date picker editor, date filtering                |
+| `dateTime` | Date+time editor                                  |
+| `time`     | Time picker editor                                |
+| `currency` | Currency formatting, number filtering             |
+| `percent`  | Percentage formatting                             |
+| `image`    | Image rendering (read-only)                       |
 
 ### Column Templates
 
@@ -99,9 +105,7 @@ Override default rendering with template directives:
 <igx-column field="status" header="Status">
   <!-- Custom cell template -->
   <ng-template igxCell let-cell="cell">
-    <igx-badge [type]="cell.value === 'Active' ? 'success' : 'error'">
-      {{ cell.value }}
-    </igx-badge>
+    <igx-badge [type]="cell.value === 'Active' ? 'success' : 'error'"> {{ cell.value }} </igx-badge>
   </ng-template>
 
   <!-- Custom header template -->
@@ -179,7 +183,8 @@ Or programmatically: `this.gridRef().pinColumn('name')`.
 <igx-grid
   [data]="data()"
   [(sortingExpressions)]="sortExprs"
-  [sortingOptions]="{ mode: 'multiple' }">
+  [sortingOptions]="{ mode: 'multiple' }"
+>
   <igx-column field="name" [sortable]="true"></igx-column>
 </igx-grid>
 ```
@@ -230,7 +235,12 @@ For advanced programmatic sorting patterns, custom sort strategies, and sorting 
 ### Programmatic Filtering
 
 ```typescript
-this.gridRef().filter('name', 'John', IgxStringFilteringOperand.instance().condition('contains'), true);
+this.gridRef().filter(
+  'name',
+  'John',
+  IgxStringFilteringOperand.instance().condition('contains'),
+  true,
+);
 this.gridRef().clearFilter('name');
 this.gridRef().clearFilter(); // clear all
 ```
@@ -249,7 +259,10 @@ For advanced programmatic filtering, complex AND/OR trees, and remote filtering 
 <igx-grid [rowSelection]="'multiple'" [primaryKey]="'id'" [(selectedRows)]="selectedIds">
   <!-- Optional: Custom row selector checkbox -->
   <ng-template igxRowSelector let-rowContext>
-    <igx-checkbox [checked]="rowContext.selected" (change)="rowContext.select(!rowContext.selected)">
+    <igx-checkbox
+      [checked]="rowContext.selected"
+      (change)="rowContext.select(!rowContext.selected)"
+    >
     </igx-checkbox>
   </ng-template>
 </igx-grid>

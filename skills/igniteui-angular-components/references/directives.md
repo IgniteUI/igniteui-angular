@@ -12,6 +12,7 @@
 - [Drag and Drop](#drag-and-drop)
 
 ## Overview
+
 This reference gives high-level guidance on when to use each directive, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific directive or feature you're interested in.
 
 ## Button & Icon Button
@@ -116,27 +117,27 @@ onDeselected(event: IButtonGroupEventArgs) {
 
 **Key inputs on `igx-buttongroup`:**
 
-| Input | Type | Default | Description |
-|---|---|---|---|
-| `selectionMode` | `'single' \| 'singleRequired' \| 'multi'` | `'single'` | Selection behaviour. `singleRequired` prevents full deselection. |
-| `alignment` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction of the buttons. |
-| `disabled` | `boolean` | `false` | Disables every button in the group. |
+| Input           | Type                                      | Default        | Description                                                      |
+| --------------- | ----------------------------------------- | -------------- | ---------------------------------------------------------------- |
+| `selectionMode` | `'single' \| 'singleRequired' \| 'multi'` | `'single'`     | Selection behaviour. `singleRequired` prevents full deselection. |
+| `alignment`     | `'horizontal' \| 'vertical'`              | `'horizontal'` | Layout direction of the buttons.                                 |
+| `disabled`      | `boolean`                                 | `false`        | Disables every button in the group.                              |
 
 **Key outputs on `igx-buttongroup`:**
 
-| Output | Payload | Emits when |
-|---|---|---|
-| `(selected)` | `IButtonGroupEventArgs` | A button is selected. |
+| Output         | Payload                 | Emits when              |
+| -------------- | ----------------------- | ----------------------- |
+| `(selected)`   | `IButtonGroupEventArgs` | A button is selected.   |
 | `(deselected)` | `IButtonGroupEventArgs` | A button is deselected. |
 
 `IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`, where `IgxButtonDirective` is imported from `igniteui-angular/directives` (see **Button & Icon Button** section above).
 
 **Key inputs on each `<button igxButton>` child:**
 
-| Input | Type | Description |
-|---|---|---|
+| Input        | Type      | Description                                    |
+| ------------ | --------- | ---------------------------------------------- |
 | `[selected]` | `boolean` | Sets the initial selected state of the button. |
-| `[disabled]` | `boolean` | Disables a specific button within the group. |
+| `[disabled]` | `boolean` | Disables a specific button within the group.   |
 
 **Programmatic control:**
 
@@ -210,7 +211,12 @@ hideTooltip() { this.tooltip().close(); }
 > **Docs:** [Drag and Drop](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drag-drop)
 
 ```typescript
-import { IgxDragDirective, IgxDropDirective, IDragMoveEventArgs, IDropDroppedEventArgs } from 'igniteui-angular/directives';
+import {
+  IgxDragDirective,
+  IgxDropDirective,
+  IDragMoveEventArgs,
+  IDropDroppedEventArgs,
+} from 'igniteui-angular/directives';
 ```
 
 ### Basic drag and drop
@@ -223,7 +229,12 @@ import { IgxDragDirective, IgxDropDirective, IDragMoveEventArgs, IDropDroppedEve
 </div>
 
 <!-- Drop target -->
-<div igxDrop (dropped)="onDrop($event)" (dragEnter)="onDragEnter($event)" (dragLeave)="onDragLeave($event)">
+<div
+  igxDrop
+  (dropped)="onDrop($event)"
+  (dragEnter)="onDragEnter($event)"
+  (dragLeave)="onDragLeave($event)"
+>
   Drop here
 </div>
 ```
@@ -242,9 +253,7 @@ onDrop(event: IDropDroppedEventArgs) {
 <div igxDrag [ghostTemplate]="ghostTmpl">Drag me</div>
 
 <ng-template #ghostTmpl>
-  <div class="custom-ghost">
-    <igx-icon>content_copy</igx-icon> Moving...
-  </div>
+  <div class="custom-ghost"><igx-icon>content_copy</igx-icon> Moving...</div>
 </ng-template>
 ```
 
@@ -253,10 +262,10 @@ onDrop(event: IDropDroppedEventArgs) {
 ```html
 <igx-list>
   @for (item of items; track item.id) {
-    <igx-list-item igxDrag [dragData]="item" igxDrop (dropped)="reorder($event, item)">
-      <igx-icon igxListAction>drag_handle</igx-icon>
-      <span igxListLine>{{ item.name }}</span>
-    </igx-list-item>
+  <igx-list-item igxDrag [dragData]="item" igxDrop (dropped)="reorder($event, item)">
+    <igx-icon igxListAction>drag_handle</igx-icon>
+    <span igxListLine>{{ item.name }}</span>
+  </igx-list-item>
   }
 </igx-list>
 ```
