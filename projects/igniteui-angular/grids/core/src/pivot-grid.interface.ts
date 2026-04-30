@@ -143,7 +143,7 @@ export interface IPivotDimension {
     /**
      * Optional function to format the display value of a dimension cell.
      * Unlike `memberFunction`, this does not affect the data key used for grouping or sorting —
-     * it is applied only when rendering the row dimension header text.
+     * it is applied when rendering the dimension header text (both row and column dimension headers).
      * When set, the return value of this function is shown instead of the raw dimension value.
      * Return `null` or `undefined` to fall back to the raw value.
      *
