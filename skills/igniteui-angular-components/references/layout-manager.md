@@ -10,6 +10,7 @@
 - [Tile Manager](#tile-manager)
 
 ## Overview
+
 This reference gives high-level guidance on when to use each layout manager component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
 
 ---
@@ -37,10 +38,16 @@ import { IgxLayoutDirective, IgxFlexDirective } from 'igniteui-angular/directive
 
 ```html
 <div igxLayout igxLayoutDir="row" style="height: 100vh;">
-
   <!-- Sidebar column -->
-  <div igxFlex igxFlexGrow="0" igxFlexShrink="0" igxFlexBasis="240px"
-       igxLayout igxLayoutDir="column" class="sidebar">
+  <div
+    igxFlex
+    igxFlexGrow="0"
+    igxFlexShrink="0"
+    igxFlexBasis="240px"
+    igxLayout
+    igxLayoutDir="column"
+    class="sidebar"
+  >
     <div igxFlex>Nav item 1</div>
     <div igxFlex>Nav item 2</div>
   </div>
@@ -58,15 +65,19 @@ import { IgxLayoutDirective, IgxFlexDirective } from 'igniteui-angular/directive
     </div>
     <div igxFlex igxFlexGrow="0" class="footer">Footer</div>
   </div>
-
 </div>
 ```
 
 #### Centered Content
 
 ```html
-<div igxLayout igxLayoutDir="row" igxLayoutJustify="center" igxLayoutItemAlign="center"
-     style="height: 100vh;">
+<div
+  igxLayout
+  igxLayoutDir="row"
+  igxLayoutJustify="center"
+  igxLayoutItemAlign="center"
+  style="height: 100vh;"
+>
   <div igxFlex igxFlexGrow="0">Centered content</div>
 </div>
 ```
@@ -76,31 +87,29 @@ import { IgxLayoutDirective, IgxFlexDirective } from 'igniteui-angular/directive
 ```html
 <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap" igxLayoutJustify="flex-start">
   @for (item of items; track item.id) {
-    <div igxFlex igxFlexBasis="200px" igxFlexGrow="0" class="tile">
-      {{ item.title }}
-    </div>
+  <div igxFlex igxFlexBasis="200px" igxFlexGrow="0" class="tile">{{ item.title }}</div>
   }
 </div>
 ```
 
 ### `igxLayout` Directive Inputs
 
-| Input | Values | Default | Description |
-|---|---|---|---|
-| `igxLayoutDir` | `'row'` \| `'column'` | `'row'` | Flex direction |
-| `igxLayoutReverse` | `true` \| `false` | `false` | Reverse flow order |
-| `igxLayoutWrap` | `'nowrap'` \| `'wrap'` \| `'wrap-reverse'` | `'nowrap'` | Child wrapping |
-| `igxLayoutJustify` | `'flex-start'` \| `'center'` \| `'flex-end'` \| `'space-between'` \| `'space-around'` | `'flex-start'` | Main axis alignment |
-| `igxLayoutItemAlign` | `'flex-start'` \| `'center'` \| `'flex-end'` \| `'stretch'` \| `'baseline'` | `'stretch'` | Cross axis alignment |
+| Input                | Values                                                                                | Default        | Description          |
+| -------------------- | ------------------------------------------------------------------------------------- | -------------- | -------------------- |
+| `igxLayoutDir`       | `'row'` \| `'column'`                                                                 | `'row'`        | Flex direction       |
+| `igxLayoutReverse`   | `true` \| `false`                                                                     | `false`        | Reverse flow order   |
+| `igxLayoutWrap`      | `'nowrap'` \| `'wrap'` \| `'wrap-reverse'`                                            | `'nowrap'`     | Child wrapping       |
+| `igxLayoutJustify`   | `'flex-start'` \| `'center'` \| `'flex-end'` \| `'space-between'` \| `'space-around'` | `'flex-start'` | Main axis alignment  |
+| `igxLayoutItemAlign` | `'flex-start'` \| `'center'` \| `'flex-end'` \| `'stretch'` \| `'baseline'`           | `'stretch'`    | Cross axis alignment |
 
 ### `igxFlex` Directive Inputs
 
-| Input | Type | Default | Description |
-|---|---|---|---|
-| `igxFlexGrow` | `number` | `1` | How much the element grows to fill space |
-| `igxFlexShrink` | `number` | `1` | How much the element shrinks when space is limited |
-| `igxFlexBasis` | `string` | `'auto'` | Initial main-axis size (e.g., `'200px'`, `'30%'`) |
-| `igxFlexOrder` | `number` | `0` | Visual order among siblings |
+| Input           | Type     | Default  | Description                                        |
+| --------------- | -------- | -------- | -------------------------------------------------- |
+| `igxFlexGrow`   | `number` | `1`      | How much the element grows to fill space           |
+| `igxFlexShrink` | `number` | `1`      | How much the element shrinks when space is limited |
+| `igxFlexBasis`  | `string` | `'auto'` | Initial main-axis size (e.g., `'200px'`, `'30%'`)  |
+| `igxFlexOrder`  | `number` | `0`      | Visual order among siblings                        |
 
 ### Key Rules for Layout Manager
 
@@ -153,14 +162,14 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@ang
 import {
   IgcDockManagerLayout,
   IgcDockManagerPaneType,
-  IgcSplitPaneOrientation
+  IgcSplitPaneOrientation,
 } from 'igniteui-dockmanager';
 
 @Component({
   selector: 'app-dock-manager',
   templateUrl: './dock-manager.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DockManagerComponent {
   layout: IgcDockManagerLayout = {
@@ -171,7 +180,7 @@ export class DockManagerComponent {
         {
           type: IgcDockManagerPaneType.contentPane,
           contentId: 'sidebar',
-          header: 'Explorer'
+          header: 'Explorer',
         },
         {
           type: IgcDockManagerPaneType.documentHost,
@@ -187,18 +196,18 @@ export class DockManagerComponent {
                     type: IgcDockManagerPaneType.contentPane,
                     header: 'File 1',
                     contentId: 'doc1',
-                    documentOnly: true
+                    documentOnly: true,
                   },
                   {
                     type: IgcDockManagerPaneType.contentPane,
                     header: 'File 2',
                     contentId: 'doc2',
-                    documentOnly: true
-                  }
-                ]
-              }
-            ]
-          }
+                    documentOnly: true,
+                  },
+                ],
+              },
+            ],
+          },
         },
         {
           type: IgcDockManagerPaneType.splitPane,
@@ -208,17 +217,17 @@ export class DockManagerComponent {
             {
               type: IgcDockManagerPaneType.contentPane,
               contentId: 'properties',
-              header: 'Properties'
+              header: 'Properties',
             },
             {
               type: IgcDockManagerPaneType.contentPane,
               contentId: 'output',
               header: 'Output',
-              isPinned: false  // starts unpinned (auto-hidden)
-            }
-          ]
-        }
-      ]
+              isPinned: false, // starts unpinned (auto-hidden)
+            },
+          ],
+        },
+      ],
     },
     floatingPanes: [
       {
@@ -231,11 +240,11 @@ export class DockManagerComponent {
           {
             type: IgcDockManagerPaneType.contentPane,
             contentId: 'search',
-            header: 'Search'
-          }
-        ]
-      }
-    ]
+            header: 'Search',
+          },
+        ],
+      },
+    ],
   };
 }
 ```
@@ -259,13 +268,13 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
   IgcDockManagerLayout,
   IgcDockManagerPaneType,
-  IgcSplitPaneOrientation
+  IgcSplitPaneOrientation,
 } from 'igniteui-dockmanager';
 
 @Component({
   selector: 'app-dock-manager',
   templateUrl: './dock-manager.component.html',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DockManagerComponent {
   layout: IgcDockManagerLayout = {
@@ -277,9 +286,18 @@ export class DockManagerComponent {
           type: IgcDockManagerPaneType.splitPane,
           orientation: IgcSplitPaneOrientation.vertical,
           panes: [
-            { type: IgcDockManagerPaneType.contentPane, contentId: 'content1', header: 'Content Pane 1' },
-            { type: IgcDockManagerPaneType.contentPane, contentId: 'content2', header: 'Unpinned Pane 1', isPinned: false }
-          ]
+            {
+              type: IgcDockManagerPaneType.contentPane,
+              contentId: 'content1',
+              header: 'Content Pane 1',
+            },
+            {
+              type: IgcDockManagerPaneType.contentPane,
+              contentId: 'content2',
+              header: 'Unpinned Pane 1',
+              isPinned: false,
+            },
+          ],
         },
         {
           type: IgcDockManagerPaneType.splitPane,
@@ -297,15 +315,30 @@ export class DockManagerComponent {
                   {
                     type: IgcDockManagerPaneType.tabGroupPane,
                     panes: [
-                      { type: IgcDockManagerPaneType.contentPane, header: 'Document 1', contentId: 'content3', documentOnly: true },
-                      { type: IgcDockManagerPaneType.contentPane, header: 'Document 2', contentId: 'content4', documentOnly: true }
-                    ]
-                  }
-                ]
-              }
+                      {
+                        type: IgcDockManagerPaneType.contentPane,
+                        header: 'Document 1',
+                        contentId: 'content3',
+                        documentOnly: true,
+                      },
+                      {
+                        type: IgcDockManagerPaneType.contentPane,
+                        header: 'Document 2',
+                        contentId: 'content4',
+                        documentOnly: true,
+                      },
+                    ],
+                  },
+                ],
+              },
             },
-            { type: IgcDockManagerPaneType.contentPane, contentId: 'content5', header: 'Unpinned Pane 2', isPinned: false }
-          ]
+            {
+              type: IgcDockManagerPaneType.contentPane,
+              contentId: 'content5',
+              header: 'Unpinned Pane 2',
+              isPinned: false,
+            },
+          ],
         },
         {
           type: IgcDockManagerPaneType.splitPane,
@@ -315,17 +348,41 @@ export class DockManagerComponent {
               type: IgcDockManagerPaneType.tabGroupPane,
               size: 200,
               panes: [
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content6', header: 'Tab 1' },
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content7', header: 'Tab 2' },
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content8', header: 'Tab 3' },
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content9', header: 'Tab 4' },
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content10', header: 'Tab 5' }
-              ]
+                {
+                  type: IgcDockManagerPaneType.contentPane,
+                  contentId: 'content6',
+                  header: 'Tab 1',
+                },
+                {
+                  type: IgcDockManagerPaneType.contentPane,
+                  contentId: 'content7',
+                  header: 'Tab 2',
+                },
+                {
+                  type: IgcDockManagerPaneType.contentPane,
+                  contentId: 'content8',
+                  header: 'Tab 3',
+                },
+                {
+                  type: IgcDockManagerPaneType.contentPane,
+                  contentId: 'content9',
+                  header: 'Tab 4',
+                },
+                {
+                  type: IgcDockManagerPaneType.contentPane,
+                  contentId: 'content10',
+                  header: 'Tab 5',
+                },
+              ],
             },
-            { type: IgcDockManagerPaneType.contentPane, contentId: 'content11', header: 'Content Pane 2' }
-          ]
-        }
-      ]
+            {
+              type: IgcDockManagerPaneType.contentPane,
+              contentId: 'content11',
+              header: 'Content Pane 2',
+            },
+          ],
+        },
+      ],
     },
     floatingPanes: [
       {
@@ -335,10 +392,14 @@ export class DockManagerComponent {
         floatingWidth: 250,
         floatingLocation: { x: 300, y: 200 },
         panes: [
-          { type: IgcDockManagerPaneType.contentPane, contentId: 'content12', header: 'Floating Pane' }
-        ]
-      }
-    ]
+          {
+            type: IgcDockManagerPaneType.contentPane,
+            contentId: 'content12',
+            header: 'Floating Pane',
+          },
+        ],
+      },
+    ],
   };
 }
 ```
@@ -402,9 +463,9 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 @Component({
   selector: 'app-tile-manager',
   templateUrl: './tile-manager.component.html',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class TileManagerComponent { }
+export class TileManagerComponent {}
 ```
 
 ### Basic Usage
@@ -432,11 +493,7 @@ Key `igc-tile-manager` properties:
 - **`min-row-height`**: minimum height per row (e.g., `"150px"`).
 
 ```html
-<igc-tile-manager
-  column-count="2"
-  gap="20px"
-  min-column-width="220px"
-  min-row-height="160px">
+<igc-tile-manager column-count="2" gap="20px" min-column-width="220px" min-row-height="160px">
   <igc-tile>
     <span slot="title">Tile 1 header</span>
     <p>Tile 1 content</p>

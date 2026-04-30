@@ -20,6 +20,7 @@
 - [Key Rules](#key-rules)
 
 ## Overview
+
 This reference gives high-level guidance on when to use each form control component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
 
 ## Input Group
@@ -55,7 +56,8 @@ import { IgxComboComponent } from 'igniteui-angular/combo';
   [groupKey]="'region'"
   placeholder="Select cities"
   [allowCustomValues]="false"
-  [(ngModel)]="selectedCityIds">
+  [(ngModel)]="selectedCityIds"
+>
 </igx-combo>
 ```
 
@@ -75,7 +77,8 @@ import { IgxSimpleComboComponent } from 'igniteui-angular/simple-combo';
   [valueKey]="'code'"
   [displayKey]="'name'"
   placeholder="Select country"
-  [(ngModel)]="selectedCountry">
+  [(ngModel)]="selectedCountry"
+>
 </igx-simple-combo>
 ```
 
@@ -90,7 +93,7 @@ import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/sel
 ```html
 <igx-select [(ngModel)]="selectedRole" placeholder="Choose role">
   @for (role of roles; track role.id) {
-    <igx-select-item [value]="role.id">{{ role.name }}</igx-select-item>
+  <igx-select-item [value]="role.id">{{ role.name }}</igx-select-item>
   }
 </igx-select>
 ```
@@ -107,7 +110,8 @@ import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
   [minValue]="minDate"
   [maxValue]="maxDate"
   [hideOutsideDays]="true"
-  [displayMonthsCount]="2">
+  [displayMonthsCount]="2"
+>
 </igx-date-picker>
 ```
 
@@ -116,7 +120,11 @@ Implements `ControlValueAccessor` and `Validator`. Works with both reactive and 
 ## Date Range Picker
 
 ```typescript
-import { IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent } from 'igniteui-angular/date-picker';
+import {
+  IgxDateRangePickerComponent,
+  IgxDateRangeStartComponent,
+  IgxDateRangeEndComponent,
+} from 'igniteui-angular/date-picker';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -133,7 +141,6 @@ import { IgxPickerToggleComponent, IgxPickerClearComponent } from 'igniteui-angu
   </igx-date-range-end>
 </igx-date-range-picker>
 ```
-
 
 `IgxDateRangePickerComponent` is imported from `igniteui-angular/date-picker`.
 
@@ -187,10 +194,7 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 ```
 
 ```html
-<igx-time-picker
-  [(ngModel)]="selectedTime"
-  [inputFormat]="'HH:mm'">
-</igx-time-picker>
+<igx-time-picker [(ngModel)]="selectedTime" [inputFormat]="'HH:mm'"> </igx-time-picker>
 ```
 
 ## Calendar
@@ -204,7 +208,8 @@ import { IgxCalendarComponent } from 'igniteui-angular/calendar';
   [(ngModel)]="selectedDate"
   [selection]="'single'"
   [hideOutsideDays]="true"
-  [weekStart]="1">
+  [weekStart]="1"
+>
 </igx-calendar>
 ```
 
@@ -251,29 +256,30 @@ public sliderType = IgxSliderType;
   [minValue]="0"
   [maxValue]="100"
   [lowerBound]="20"
-  [upperBound]="80">
+  [upperBound]="80"
+>
 </igx-slider>
 ```
 
 ## Autocomplete
 
 ```typescript
-import { IgxAutocompleteDirective, IgxDropDownComponent, IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
+import {
+  IgxAutocompleteDirective,
+  IgxDropDownComponent,
+  IgxDropDownItemComponent,
+} from 'igniteui-angular/drop-down';
 import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
 ```
 
 ```html
 <igx-input-group type="border">
   <label igxLabel>City</label>
-  <input igxInput type="text"
-    [(ngModel)]="selectedCity"
-    [igxAutocomplete]="citiesPanel" />
+  <input igxInput type="text" [(ngModel)]="selectedCity" [igxAutocomplete]="citiesPanel" />
 </igx-input-group>
 <igx-drop-down #citiesPanel>
   @for (city of cities | startsWith:selectedCity; track city) {
-    <igx-drop-down-item [value]="city">
-      {{ city }}
-    </igx-drop-down-item>
+  <igx-drop-down-item [value]="city"> {{ city }} </igx-drop-down-item>
   }
 </igx-drop-down>
 ```
@@ -302,7 +308,7 @@ import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/sel
     IgxComboComponent,
     IgxDatePickerComponent,
     IgxSelectComponent,
-    IgxSelectItemComponent
+    IgxSelectItemComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -320,7 +326,8 @@ import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/sel
         formControlName="skills"
         [valueKey]="'id'"
         [displayKey]="'name'"
-        placeholder="Select skills">
+        placeholder="Select skills"
+      >
       </igx-combo>
 
       <igx-date-picker formControlName="startDate"></igx-date-picker>
@@ -331,18 +338,24 @@ import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/sel
         }
       </igx-select>
     </form>
-  `
+  `,
 })
 export class MyFormComponent {
   form = new FormGroup({
     name: new FormControl('', Validators.required),
     skills: new FormControl<number[]>([]),
     startDate: new FormControl<Date | null>(null),
-    role: new FormControl<string | null>(null)
+    role: new FormControl<string | null>(null),
   });
 
-  skills = [{ id: 1, name: 'Angular' }, { id: 2, name: 'TypeScript' }];
-  roles = [{ id: 'admin', name: 'Admin' }, { id: 'user', name: 'User' }];
+  skills = [
+    { id: 1, name: 'Angular' },
+    { id: 2, name: 'TypeScript' },
+  ];
+  roles = [
+    { id: 'admin', name: 'Admin' },
+    { id: 'user', name: 'User' },
+  ];
 
   submit() {
     if (this.form.valid) {

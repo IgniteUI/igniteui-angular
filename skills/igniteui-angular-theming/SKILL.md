@@ -1,6 +1,6 @@
 ---
 name: igniteui-angular-theming
-description: "Generates and customizes Ignite UI for Angular themes including color palettes, typography, elevations, and component-level styles using the Sass theming system and the igniteui-theming MCP server. Use when users ask to theme, restyle, or style Ignite UI components, change colors or the color palette, switch between light and dark themes, create or apply a global theme, customize typography or elevation shadows, adjust spacing, sizing, or roundness, or configure per-component design tokens. Do NOT use for component behavior, APIs, or data binding — use igniteui-angular-components or igniteui-angular-grids instead."
+description: 'Generates and customizes Ignite UI for Angular themes including color palettes, typography, elevations, and component-level styles using the Sass theming system and the igniteui-theming MCP server. Use when users ask to theme, restyle, or style Ignite UI components, change colors or the color palette, switch between light and dark themes, create or apply a global theme, customize typography or elevation shadows, adjust spacing, sizing, or roundness, or configure per-component design tokens. Do NOT use for component behavior, APIs, or data binding — use igniteui-angular-components or igniteui-angular-grids instead.'
 user-invocable: true
 ---
 
@@ -64,6 +64,7 @@ The quickest way to theme an app is to include a pre-built CSS file in `angular.
 ```
 
 > **Licensed package users:** replace `igniteui-angular` with `@infragistics/igniteui-angular` in the path:
+>
 > ```json
 > "styles": ["node_modules/@infragistics/igniteui-angular/styles/igniteui-angular.css"]
 > ```
@@ -188,6 +189,7 @@ Each component has its own set of design tokens (themeable CSS custom properties
 Some components (e.g., `combo`, `grid`, `date-picker`, `select`) are **compound** — they contain internal child components, each requiring their own theme. For example, `date-picker` uses `calendar`, `flat-button`, and `input-group` internally.
 
 Workflow for compound components:
+
 1. Call `get_component_design_tokens` for the parent (e.g., `date-picker`)
 2. The response lists related themes and scope selectors
 3. Call `create_component_theme` for each child, using the parent's selector as the wrapper
@@ -253,6 +255,7 @@ Always follow this workflow:
 ```
 Tool: detect_platform
 ```
+
 This auto-detects `angular` from `package.json` and sets the correct import paths.
 
 ### Step 2 — Generate a Full Theme
@@ -344,6 +347,7 @@ Params: { color: "primary", opacity: 0.5 }
 ```
 
 Use these token references everywhere:
+
 - Component theme `tokens` values
 - Custom CSS rules (`color`, `background`, `border-color`, `fill`, `stroke`, etc.)
 - Sass variables for derived values (`$sidebar-bg: var(--ig-surface-500);`)

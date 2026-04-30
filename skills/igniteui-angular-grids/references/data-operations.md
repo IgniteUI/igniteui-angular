@@ -27,7 +27,7 @@ All programmatic data operations require a reference to the grid component. Use 
   selector: 'app-orders-grid',
   imports: [IGX_GRID_DIRECTIVES],
   templateUrl: './orders-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrdersGridComponent {
   gridRef = viewChild.required<IgxGridComponent>('grid');
@@ -46,7 +46,7 @@ export class OrdersGridComponent {
   selector: 'app-org-tree',
   imports: [IGX_TREE_GRID_DIRECTIVES],
   templateUrl: './org-tree.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrgTreeComponent {
   // Use IgxTreeGridComponent for tree grids
@@ -56,11 +56,7 @@ export class OrgTreeComponent {
 ```
 
 ```html
-<igx-tree-grid #treeGrid
-  [data]="employees()"
-  primaryKey="id"
-  foreignKey="managerId"
-  height="600px">
+<igx-tree-grid #treeGrid [data]="employees()" primaryKey="id" foreignKey="managerId" height="600px">
   <igx-column field="name" [sortable]="true" [filterable]="true"></igx-column>
 </igx-tree-grid>
 ```
@@ -72,7 +68,7 @@ export class OrgTreeComponent {
   selector: 'app-company-grid',
   imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES],
   templateUrl: './company-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompanyGridComponent {
   // Use IgxHierarchicalGridComponent for hierarchical grids
@@ -82,10 +78,7 @@ export class CompanyGridComponent {
 ```
 
 ```html
-<igx-hierarchical-grid #hGrid
-  [data]="companies()"
-  primaryKey="id"
-  height="800px">
+<igx-hierarchical-grid #hGrid [data]="companies()" primaryKey="id" height="800px">
   <igx-column field="name" [sortable]="true"></igx-column>
   <igx-row-island key="orders" primaryKey="orderId">
     <igx-column field="orderId" [sortable]="true"></igx-column>
@@ -108,11 +101,13 @@ export class CompanyGridComponent {
 Enable sorting on individual columns and optionally bind the sorting state:
 
 ```html
-<igx-grid #grid
+<igx-grid
+  #grid
   [data]="data()"
   [(sortingExpressions)]="sortExprs"
   [sortingOptions]="{ mode: 'single' }"
-  height="500px">
+  height="500px"
+>
   <igx-column field="name" [sortable]="true"></igx-column>
   <igx-column field="date" dataType="date" [sortable]="true"></igx-column>
   <igx-column field="amount" dataType="number" [sortable]="true"></igx-column>
@@ -120,6 +115,7 @@ Enable sorting on individual columns and optionally bind the sorting state:
 ```
 
 Sorting modes:
+
 - `'multiple'` — multi-column sorting in order (default)
 - `'single'` — only one column sorted at a time
 
@@ -135,7 +131,7 @@ this.gridRef().sort({ fieldName: 'name', dir: SortingDirection.Asc, ignoreCase: 
 // Sort multiple columns
 this.gridRef().sort([
   { fieldName: 'category', dir: SortingDirection.Asc, ignoreCase: true },
-  { fieldName: 'price', dir: SortingDirection.Desc, ignoreCase: false }
+  { fieldName: 'price', dir: SortingDirection.Desc, ignoreCase: false },
 ]);
 
 // Clear sorting on one column
@@ -147,10 +143,10 @@ this.gridRef().clearSort();
 
 ### Sorting Events
 
-| Event | Cancelable | Payload |
-|---|---|---|
-| `(sorting)` | Yes | `ISortingEventArgs` — set `event.cancel = true` to prevent |
-| `(sortingDone)` | No | `ISortingExpression \| ISortingExpression[]` — fires after sort is applied |
+| Event           | Cancelable | Payload                                                                    |
+| --------------- | ---------- | -------------------------------------------------------------------------- |
+| `(sorting)`     | Yes        | `ISortingEventArgs` — set `event.cancel = true` to prevent                 |
+| `(sortingDone)` | No         | `ISortingExpression \| ISortingExpression[]` — fires after sort is applied |
 
 ```typescript
 onSorting(event: ISortingEventArgs) {
@@ -179,7 +175,13 @@ import { ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 class PrioritySortStrategy implements ISortingStrategy {
   private priorityOrder = ['Critical', 'High', 'Medium', 'Low'];
 
-  sort(data: any[], fieldName: string, dir: SortingDirection, ignoreCase: boolean, valueResolver: (obj: any, key: string) => any): any[] {
+  sort(
+    data: any[],
+    fieldName: string,
+    dir: SortingDirection,
+    ignoreCase: boolean,
+    valueResolver: (obj: any, key: string) => any,
+  ): any[] {
     return [...data].sort((a, b) => {
       const indexA = this.priorityOrder.indexOf(a[fieldName]);
       const indexB = this.priorityOrder.indexOf(b[fieldName]);
@@ -203,18 +205,15 @@ class PrioritySortStrategy implements ISortingStrategy {
 
 ### Filter Modes
 
-| Mode | Template Property | Description |
-|---|---|---|
-| Quick Filter | `[filterMode]="'quickFilter'"` | Row of filter inputs above columns |
-| Excel-Style | `[filterMode]="'excelStyleFilter'"` | Excel-like dropdown menus per column |
-| Advanced | `[allowAdvancedFiltering]="true"` | Dialog with complex filter tree (AND/OR groups) |
+| Mode         | Template Property                   | Description                                     |
+| ------------ | ----------------------------------- | ----------------------------------------------- |
+| Quick Filter | `[filterMode]="'quickFilter'"`      | Row of filter inputs above columns              |
+| Excel-Style  | `[filterMode]="'excelStyleFilter'"` | Excel-like dropdown menus per column            |
+| Advanced     | `[allowAdvancedFiltering]="true"`   | Dialog with complex filter tree (AND/OR groups) |
 
 ```html
 <!-- Excel-style filtering (most common enterprise pattern) -->
-<igx-grid #grid
-  [data]="data()"
-  [allowFiltering]="true"
-  [filterMode]="'excelStyleFilter'">
+<igx-grid #grid [data]="data()" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
   <igx-column field="name" [filterable]="true"></igx-column>
   <igx-column field="status" [filterable]="true"></igx-column>
   <igx-column field="amount" dataType="number" [filterable]="true"></igx-column>
@@ -230,18 +229,31 @@ import {
   IgxDateFilteringOperand,
   IgxBooleanFilteringOperand,
   FilteringExpressionsTree,
-  FilteringLogic
+  FilteringLogic,
 } from 'igniteui-angular/core';
 // import { ... } from '@infragistics/igniteui-angular/core'; for licensed package
 
 // Simple single-column filter
-this.gridRef().filter('name', 'John', IgxStringFilteringOperand.instance().condition('contains'), true);
+this.gridRef().filter(
+  'name',
+  'John',
+  IgxStringFilteringOperand.instance().condition('contains'),
+  true,
+);
 
 // Filter by number range
-this.gridRef().filter('amount', 1000, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+this.gridRef().filter(
+  'amount',
+  1000,
+  IgxNumberFilteringOperand.instance().condition('greaterThan'),
+);
 
 // Filter by date
-this.gridRef().filter('hireDate', new Date(2024, 0, 1), IgxDateFilteringOperand.instance().condition('after'));
+this.gridRef().filter(
+  'hireDate',
+  new Date(2024, 0, 1),
+  IgxDateFilteringOperand.instance().condition('after'),
+);
 
 // Clear single column filter
 this.gridRef().clearFilter('name');
@@ -261,13 +273,13 @@ tree.filteringOperands = [
     fieldName: 'status',
     condition: IgxStringFilteringOperand.instance().condition('equals'),
     searchVal: 'Active',
-    ignoreCase: true
+    ignoreCase: true,
   },
   {
     fieldName: 'amount',
     condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-    searchVal: 500
-  }
+    searchVal: 500,
+  },
 ];
 // Use filteringExpressionsTree for column-level programmatic filtering
 this.gridRef().filteringExpressionsTree = tree;
@@ -283,7 +295,11 @@ this.gridRef().cdr.detectChanges();
 ```typescript
 // Filter all filterable columns at once with a search term
 // ⚠️ Deprecated since v19.0 — prefer filteringExpressionsTree
-this.gridRef().filterGlobal('search term', IgxStringFilteringOperand.instance().condition('contains'), true);
+this.gridRef().filterGlobal(
+  'search term',
+  IgxStringFilteringOperand.instance().condition('contains'),
+  true,
+);
 ```
 
 Control the AND/OR logic between **different column** filters:
@@ -305,11 +321,11 @@ filteringLogic = FilteringLogic.And;
 
 ### Filtering Events
 
-| Event | Cancelable | Payload |
-|---|---|---|
-| `(filtering)` | Yes | `IFilteringEventArgs` — set `event.cancel = true` to prevent |
-| `(filteringDone)` | No | `IFilteringExpressionsTree` — fires after a **column-level** filter is applied |
-| `(filteringExpressionsTreeChange)` | No | `IFilteringExpressionsTree` — fires after the **grid-level** filter tree changes (use this for remote data) |
+| Event                              | Cancelable | Payload                                                                                                     |
+| ---------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------- |
+| `(filtering)`                      | Yes        | `IFilteringEventArgs` — set `event.cancel = true` to prevent                                                |
+| `(filteringDone)`                  | No         | `IFilteringExpressionsTree` — fires after a **column-level** filter is applied                              |
+| `(filteringExpressionsTreeChange)` | No         | `IFilteringExpressionsTree` — fires after the **grid-level** filter tree changes (use this for remote data) |
 
 ```typescript
 onFilteringDone(event: IFilteringExpressionsTree) {
@@ -322,12 +338,12 @@ onFilteringDone(event: IFilteringExpressionsTree) {
 
 ### Available Filtering Operands by Data Type
 
-| Operand Class | Conditions |
-|---|---|
-| `IgxStringFilteringOperand` | `contains`, `startsWith`, `endsWith`, `equals`, `doesNotEqual`, `doesNotContain`, `empty`, `notEmpty`, `null`, `notNull`, `in` |
-| `IgxNumberFilteringOperand` | `equals`, `doesNotEqual`, `greaterThan`, `lessThan`, `greaterThanOrEqualTo`, `lessThanOrEqualTo`, `empty`, `notEmpty`, `null`, `notNull`, `in` |
-| `IgxDateFilteringOperand` | `equals`, `doesNotEqual`, `before`, `after`, `today`, `yesterday`, `thisMonth`, `lastMonth`, `nextMonth`, `thisYear`, `lastYear`, `nextYear`, `empty`, `notEmpty`, `null`, `notNull`, `in` |
-| `IgxBooleanFilteringOperand` | `all`, `true`, `false`, `empty`, `notEmpty`, `null`, `notNull` |
+| Operand Class                | Conditions                                                                                                                                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `IgxStringFilteringOperand`  | `contains`, `startsWith`, `endsWith`, `equals`, `doesNotEqual`, `doesNotContain`, `empty`, `notEmpty`, `null`, `notNull`, `in`                                                             |
+| `IgxNumberFilteringOperand`  | `equals`, `doesNotEqual`, `greaterThan`, `lessThan`, `greaterThanOrEqualTo`, `lessThanOrEqualTo`, `empty`, `notEmpty`, `null`, `notNull`, `in`                                             |
+| `IgxDateFilteringOperand`    | `equals`, `doesNotEqual`, `before`, `after`, `today`, `yesterday`, `thisMonth`, `lastMonth`, `nextMonth`, `thisYear`, `lastYear`, `nextYear`, `empty`, `notEmpty`, `null`, `notNull`, `in` |
+| `IgxBooleanFilteringOperand` | `all`, `true`, `false`, `empty`, `notEmpty`, `null`, `notNull`                                                                                                                             |
 
 ## Grouping (Flat Grid Only)
 
@@ -336,17 +352,14 @@ onFilteringDone(event: IFilteringExpressionsTree) {
 ### Template-Driven Grouping
 
 ```html
-<igx-grid #grid
-  [data]="data()"
-  [groupsExpanded]="true">
+<igx-grid #grid [data]="data()" [groupsExpanded]="true">
   <igx-column field="category" [groupable]="true"></igx-column>
   <igx-column field="product" [groupable]="true"></igx-column>
   <igx-column field="price" dataType="number"></igx-column>
 
   <!-- Custom group row template -->
   <ng-template igxGroupByRow let-groupRow>
-    {{ groupRow.expression.fieldName }}: {{ groupRow.value }}
-    ({{ groupRow.records.length }} items)
+    {{ groupRow.expression.fieldName }}: {{ groupRow.value }} ({{ groupRow.records.length }} items)
   </ng-template>
 </igx-grid>
 ```
@@ -362,7 +375,7 @@ this.gridRef().groupBy({ fieldName: 'category', dir: SortingDirection.Asc, ignor
 // Group by multiple columns
 this.gridRef().groupBy([
   { fieldName: 'region', dir: SortingDirection.Asc, ignoreCase: true },
-  { fieldName: 'category', dir: SortingDirection.Asc, ignoreCase: true }
+  { fieldName: 'category', dir: SortingDirection.Asc, ignoreCase: true },
 ]);
 
 // Clear grouping on one column
@@ -380,8 +393,8 @@ this.gridRef().toggleAllGroupRows();
 
 ### Group By Events
 
-| Event | Description |
-|---|---|
+| Event            | Description                             |
+| ---------------- | --------------------------------------- |
 | `(groupingDone)` | Fires after grouping expressions change |
 
 ### Custom Group-By Key
@@ -396,7 +409,12 @@ const monthGroupComparer = (a: Date, b: Date) => {
 ```
 
 ```html
-<igx-column field="orderDate" dataType="date" [groupable]="true" [groupingComparer]="monthGroupComparer"></igx-column>
+<igx-column
+  field="orderDate"
+  dataType="date"
+  [groupable]="true"
+  [groupingComparer]="monthGroupComparer"
+></igx-column>
 ```
 
 ## Key Rules

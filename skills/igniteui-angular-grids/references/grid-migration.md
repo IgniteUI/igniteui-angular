@@ -23,25 +23,25 @@ Before producing migration code:
 
 Migrate from Grid Lite to the Premium Grid when the user needs **any** of these features:
 
-| Required Feature | Grid Lite | Premium Grid |
-|---|---|---|
-| Cell / Row / Batch editing | No | Yes |
-| Row adding / deleting | No | Yes |
-| Row / Cell / Column selection | No | Yes |
-| Paging (client or remote) | No | Yes |
-| GroupBy | No | Yes (exclusive to flat grid) |
-| Summaries (built-in & custom) | No | Yes |
-| Column pinning | No | Yes |
-| Column moving | No | Yes |
-| Master-Detail rows | No | Yes (exclusive to flat grid) |
-| Export (Excel / CSV) | No | Yes |
-| Toolbar | No | Yes |
-| State persistence | No | Yes |
-| Advanced filtering | No | Yes |
-| Action strip | No | Yes |
-| Row drag | No | Yes |
-| Clipboard support | No | Yes |
-| Cell merging | No | Yes |
+| Required Feature              | Grid Lite | Premium Grid                 |
+| ----------------------------- | --------- | ---------------------------- |
+| Cell / Row / Batch editing    | No        | Yes                          |
+| Row adding / deleting         | No        | Yes                          |
+| Row / Cell / Column selection | No        | Yes                          |
+| Paging (client or remote)     | No        | Yes                          |
+| GroupBy                       | No        | Yes (exclusive to flat grid) |
+| Summaries (built-in & custom) | No        | Yes                          |
+| Column pinning                | No        | Yes                          |
+| Column moving                 | No        | Yes                          |
+| Master-Detail rows            | No        | Yes (exclusive to flat grid) |
+| Export (Excel / CSV)          | No        | Yes                          |
+| Toolbar                       | No        | Yes                          |
+| State persistence             | No        | Yes                          |
+| Advanced filtering            | No        | Yes                          |
+| Action strip                  | No        | Yes                          |
+| Row drag                      | No        | Yes                          |
+| Clipboard support             | No        | Yes                          |
+| Cell merging                  | No        | Yes                          |
 
 > **IMPORTANT:** The upgrade path from Grid Lite is **always** to `igx-grid` (`IgxGridComponent`). Never recommend a different component type as a substitute.
 
@@ -125,6 +125,7 @@ import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/gr
 ```
 
 **Changes:**
+
 - Replace individual Grid Lite imports with `IGX_GRID_DIRECTIVES`
 - If you previously added `CUSTOM_ELEMENTS_SCHEMA` for Grid Lite (e.g. when using the underlying web component directly), remove it after migrating — Premium Grid is a native Angular component
 - Remove the `schemas` array entirely if it only contained `CUSTOM_ELEMENTS_SCHEMA`
@@ -150,6 +151,7 @@ export class DataViewComponent {
 ```
 
 **Changes:**
+
 - Replace `IgxGridLiteComponent` with `IgxGridComponent`
 - Add `[primaryKey]` support - strongly recommended for editing, selection, and any row-targeted API (`getRowByKey`, transactions, row pinning, etc.). Without it the grid falls back to row indexes/object identity, which breaks across virtualization and remote data.
 - Use `signal()` for reactive data (recommended but not required)
@@ -158,12 +160,12 @@ export class DataViewComponent {
 
 #### Selector & Grid Element
 
-| Grid Lite | Premium Grid |
-|---|---|
-| `<igx-grid-lite>` | `<igx-grid>` (needs an explicit `height` - or a parent with a fixed height - for row virtualization) |
-| `<igx-grid-lite-column>` | `<igx-column>` |
-| No `[primaryKey]` | `[primaryKey]="'id'"` (strongly recommended for editing/selection/row APIs) |
-| `[sortingOptions]="{ mode: 'multiple' }"` | `[sortingOptions]="{ mode: 'multiple' }"` or per-column `[sortable]="true"` |
+| Grid Lite                                 | Premium Grid                                                                                         |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `<igx-grid-lite>`                         | `<igx-grid>` (needs an explicit `height` - or a parent with a fixed height - for row virtualization) |
+| `<igx-grid-lite-column>`                  | `<igx-column>`                                                                                       |
+| No `[primaryKey]`                         | `[primaryKey]="'id'"` (strongly recommended for editing/selection/row APIs)                          |
+| `[sortingOptions]="{ mode: 'multiple' }"` | `[sortingOptions]="{ mode: 'multiple' }"` or per-column `[sortable]="true"`                          |
 
 **Before:**
 
@@ -180,32 +182,25 @@ export class DataViewComponent {
 
 ```html
 <!-- height is required for row virtualization (or set it on the parent container) -->
-<igx-grid
-  #grid
-  [data]="data()"
-  [primaryKey]="'id'"
-  [autoGenerate]="false"
-  height="600px"
->
+<igx-grid #grid [data]="data()" [primaryKey]="'id'" [autoGenerate]="false" height="600px">
   <igx-column field="name" header="Name" [sortable]="true" [filterable]="true" [resizable]="true">
   </igx-column>
-  <igx-column field="price" header="Price" dataType="number" [sortable]="true">
-  </igx-column>
+  <igx-column field="price" header="Price" dataType="number" [sortable]="true"> </igx-column>
 </igx-grid>
 ```
 
 #### Column Attribute Differences
 
-| Grid Lite attribute | Premium Grid equivalent | Notes |
-|---|---|---|
-| `sortable` (boolean HTML attr) | `[sortable]="true"` or bare `sortable` | Both styles work on `igx-column`; bracketed binding is preferred for clarity |
-| `filterable` (boolean HTML attr) | `[filterable]="true"` or bare `filterable` | Same pattern |
-| `resizable` (boolean HTML attr) | `[resizable]="true"` or bare `resizable` | Same pattern |
-| `hidden` (boolean HTML attr) | `[hidden]="true"` | Use binding - bare `hidden` collides with the native HTML attribute |
-| `field` | `field` | Identical |
-| `header` | `header` | Identical |
-| `dataType` | `dataType` | Premium supports additional types: `dateTime`, `time`, `currency`, `percent`, `image` |
-| `width` | `width` | Identical (CSS value, e.g., `'250px'`) |
+| Grid Lite attribute              | Premium Grid equivalent                    | Notes                                                                                 |
+| -------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------- |
+| `sortable` (boolean HTML attr)   | `[sortable]="true"` or bare `sortable`     | Both styles work on `igx-column`; bracketed binding is preferred for clarity          |
+| `filterable` (boolean HTML attr) | `[filterable]="true"` or bare `filterable` | Same pattern                                                                          |
+| `resizable` (boolean HTML attr)  | `[resizable]="true"` or bare `resizable`   | Same pattern                                                                          |
+| `hidden` (boolean HTML attr)     | `[hidden]="true"`                          | Use binding - bare `hidden` collides with the native HTML attribute                   |
+| `field`                          | `field`                                    | Identical                                                                             |
+| `header`                         | `header`                                   | Identical                                                                             |
+| `dataType`                       | `dataType`                                 | Premium supports additional types: `dateTime`, `time`, `currency`, `percent`, `image` |
+| `width`                          | `width`                                    | Identical (CSS value, e.g., `'250px'`)                                                |
 
 #### Cell Template Migration
 
@@ -230,6 +225,7 @@ export class DataViewComponent {
 ```
 
 **Key differences:**
+
 - Template directive: `igxGridLiteCell` → `igxCell`
 - Context object: Grid Lite exposes `let-value` directly; Premium exposes `let-cell="cell"` where you access `cell.value`, `cell.row`, `cell.column`
 - Premium also supports `igxCellEditor` for edit templates (not available in Grid Lite)
@@ -272,17 +268,13 @@ dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
 ```
 
 ```html
-<igx-grid-lite [data]="data" [dataPipelineConfiguration]="dataPipeline">
-</igx-grid-lite>
+<igx-grid-lite [data]="data" [dataPipelineConfiguration]="dataPipeline"> </igx-grid-lite>
 ```
 
 **After (Premium Grid - noop strategies + events):**
 
 ```typescript
-import {
-  NoopSortingStrategy,
-  NoopFilteringStrategy,
-} from 'igniteui-angular/core';
+import { NoopSortingStrategy, NoopFilteringStrategy } from 'igniteui-angular/core';
 import { ISortingEventArgs } from 'igniteui-angular/grids/core';
 
 export class DataViewComponent {
@@ -291,11 +283,15 @@ export class DataViewComponent {
   noopFilter = NoopFilteringStrategy.instance();
 
   onSortingDone(event: ISortingEventArgs) {
-    this.dataService.sortRemote(this.gridRef().sortingExpressions).subscribe(data => this.data.set(data));
+    this.dataService
+      .sortRemote(this.gridRef().sortingExpressions)
+      .subscribe((data) => this.data.set(data));
   }
 
   onFilteringDone() {
-    this.dataService.filterRemote(this.gridRef().filteringExpressionsTree).subscribe(data => this.data.set(data));
+    this.dataService
+      .filterRemote(this.gridRef().filteringExpressionsTree)
+      .subscribe((data) => this.data.set(data));
   }
 }
 ```
@@ -313,12 +309,12 @@ export class DataViewComponent {
 
 ### Step 7 - Migrate Sort/Filter Events
 
-| Grid Lite Event | Premium Grid Event | Notes |
-|---|---|---|
-| `(sorting)` | `(sorting)` | Both cancelable |
-| `(sorted)` | `(sortingDone)` | Name changed |
-| `(filtering)` | `(filtering)` | Both cancelable |
-| `(filtered)` | `(filteringDone)` | Name changed |
+| Grid Lite Event | Premium Grid Event | Notes           |
+| --------------- | ------------------ | --------------- |
+| `(sorting)`     | `(sorting)`        | Both cancelable |
+| `(sorted)`      | `(sortingDone)`    | Name changed    |
+| `(filtering)`   | `(filtering)`      | Both cancelable |
+| `(filtered)`    | `(filteringDone)`  | Name changed    |
 
 ### Step 8 - Migrate Programmatic Sort/Filter API
 
@@ -346,6 +342,7 @@ this.gridRef().clearFilter('age');
 ```
 
 **Key differences:**
+
 - Sort expression: `key` → `fieldName`, `direction: 'ascending'` → `dir: SortingDirection.Asc`
 - Filter: object-based → positional arguments with typed operand instances
 
@@ -367,7 +364,12 @@ Once on the Premium Grid, enable the features that motivated the migration:
 ### Editing
 
 ```html
-<igx-grid [data]="data()" [primaryKey]="'id'" [rowEditable]="true" (rowEditDone)="onRowEditDone($event)">
+<igx-grid
+  [data]="data()"
+  [primaryKey]="'id'"
+  [rowEditable]="true"
+  (rowEditDone)="onRowEditDone($event)"
+>
   <igx-column field="name" [editable]="true"></igx-column>
   <igx-column field="price" dataType="number" [editable]="true"></igx-column>
 </igx-grid>
@@ -452,25 +454,25 @@ this.gridRef().transactions.clear();
 
 ## Quick Reference - Full Migration Map
 
-| Aspect | Grid Lite | Premium Grid |
-|---|---|---|
-| **Package** | `igniteui-grid-lite` (separate) | `igniteui-angular` or `@infragistics/igniteui-angular` |
-| **Entry point** | `igniteui-angular/grids/lite` | `igniteui-angular/grids/grid` |
-| **Component** | `IgxGridLiteComponent` | `IgxGridComponent` |
-| **Selector** | `<igx-grid-lite>` | `<igx-grid>` |
-| **Column selector** | `<igx-grid-lite-column>` | `<igx-column>` |
-| **Imports style** | Individual (`IgxGridLiteComponent`, `IgxGridLiteColumnComponent`, ...) | Bundle (`IGX_GRID_DIRECTIVES`) |
-| **Schema** | `CUSTOM_ELEMENTS_SCHEMA` (optional; only if using the underlying web component directly) | Not needed |
-| **Primary key** | Not supported | `[primaryKey]="'id'"` (required for editing/selection) |
-| **Cell template** | `igxGridLiteCell` (exposes `let-value`) | `igxCell` (exposes `let-cell="cell"`, access `cell.value`) |
-| **Header template** | `igxGridLiteHeader` | `igxHeader` |
-| **Editor template** | Not available | `igxCellEditor` |
-| **Column attributes** | Boolean HTML attrs (`sortable`, `filterable`) | Angular inputs (`[sortable]="true"`, `[filterable]="true"`) |
-| **Remote data** | `dataPipelineConfiguration` (async callbacks) | Noop strategies + events |
-| **Sort event (done)** | `(sorted)` | `(sortingDone)` |
-| **Filter event (done)** | `(filtered)` | `(filteringDone)` |
-| **Sort expression** | `{ key, direction }` | `{ fieldName, dir: SortingDirection }` |
-| **License** | MIT (free) | Commercial (trial with watermark) |
+| Aspect                  | Grid Lite                                                                                | Premium Grid                                                |
+| ----------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Package**             | `igniteui-grid-lite` (separate)                                                          | `igniteui-angular` or `@infragistics/igniteui-angular`      |
+| **Entry point**         | `igniteui-angular/grids/lite`                                                            | `igniteui-angular/grids/grid`                               |
+| **Component**           | `IgxGridLiteComponent`                                                                   | `IgxGridComponent`                                          |
+| **Selector**            | `<igx-grid-lite>`                                                                        | `<igx-grid>`                                                |
+| **Column selector**     | `<igx-grid-lite-column>`                                                                 | `<igx-column>`                                              |
+| **Imports style**       | Individual (`IgxGridLiteComponent`, `IgxGridLiteColumnComponent`, ...)                   | Bundle (`IGX_GRID_DIRECTIVES`)                              |
+| **Schema**              | `CUSTOM_ELEMENTS_SCHEMA` (optional; only if using the underlying web component directly) | Not needed                                                  |
+| **Primary key**         | Not supported                                                                            | `[primaryKey]="'id'"` (required for editing/selection)      |
+| **Cell template**       | `igxGridLiteCell` (exposes `let-value`)                                                  | `igxCell` (exposes `let-cell="cell"`, access `cell.value`)  |
+| **Header template**     | `igxGridLiteHeader`                                                                      | `igxHeader`                                                 |
+| **Editor template**     | Not available                                                                            | `igxCellEditor`                                             |
+| **Column attributes**   | Boolean HTML attrs (`sortable`, `filterable`)                                            | Angular inputs (`[sortable]="true"`, `[filterable]="true"`) |
+| **Remote data**         | `dataPipelineConfiguration` (async callbacks)                                            | Noop strategies + events                                    |
+| **Sort event (done)**   | `(sorted)`                                                                               | `(sortingDone)`                                             |
+| **Filter event (done)** | `(filtered)`                                                                             | `(filteringDone)`                                           |
+| **Sort expression**     | `{ key, direction }`                                                                     | `{ fieldName, dir: SortingDirection }`                      |
+| **License**             | MIT (free)                                                                               | Commercial (trial with watermark)                           |
 
 ---
 
