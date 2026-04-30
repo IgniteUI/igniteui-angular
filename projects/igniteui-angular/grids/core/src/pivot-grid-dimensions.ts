@@ -170,8 +170,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberName: 'Months',
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
-                const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? getDateFormatter().formatDateTime(dateValue, undefined, { month: 'long'}) : rec['Months'];
+                const dateValue = (recordValue != null && recordValue !== '') ? getDateFormatter().createDateFromValue(recordValue) : null;
+                return (recordValue != null && recordValue !== '') ? getDateFormatter().formatDateTime(dateValue, undefined, { month: 'long'}) : rec['Months'];
             },
             enabled: true,
             childLevel: baseDimension
@@ -182,8 +182,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberName: 'Quarters',
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
-                const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? `Q` + Math.ceil((dateValue.getMonth() + 1) / 3) : rec['Quarters'];
+                const dateValue = (recordValue != null && recordValue !== '') ? getDateFormatter().createDateFromValue(recordValue) : null;
+                return (recordValue != null && recordValue !== '') ? `Q` + Math.ceil((dateValue.getMonth() + 1) / 3) : rec['Quarters'];
             },
             enabled: true,
             childLevel: monthDimension
@@ -194,8 +194,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberName: 'Years',
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
-                const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? dateValue.getFullYear().toString() : rec['Years'];
+                const dateValue = (recordValue != null && recordValue !== '') ? getDateFormatter().createDateFromValue(recordValue) : null;
+                return (recordValue != null && recordValue !== '') ? dateValue.getFullYear().toString() : rec['Years'];
             },
             enabled: true,
             childLevel: quarterDimension
