@@ -1,7 +1,7 @@
 ﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxChipComponent } from './chip.component';
+import { IgxChipComponent } from '../chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPrefixDirective } from 'igniteui-angular/input-group';

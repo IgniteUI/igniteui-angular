@@ -1,11 +1,11 @@
-import { Component, ContentChildren, ChangeDetectorRef, EventEmitter, HostBinding, Input, IterableDiffer, IterableDiffers, Output, QueryList, DoCheck, AfterViewInit, OnDestroy, ElementRef, inject } from '@angular/core';
+import { Component, ContentChildren, ChangeDetectorRef, EventEmitter, HostBinding, Input, IterableDiffer, IterableDiffers, Output, QueryList, DoCheck, AfterViewInit, OnDestroy, ElementRef, inject, ViewEncapsulation } from '@angular/core';
 import {
     IgxChipComponent,
     IChipSelectEventArgs,
     IChipKeyDownEventArgs,
     IChipEnterDragAreaEventArgs,
     IBaseChipEventArgs
-} from './chip.component';
+} from '../chip.component';
 import { IDropBaseEventArgs, IDragBaseEventArgs } from 'igniteui-angular/directives';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -48,7 +48,9 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
 @Component({
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
-    standalone: true
+    styleUrl: 'chips-area.component.css',
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
 })
 export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy {
      public cdr = inject(ChangeDetectorRef);

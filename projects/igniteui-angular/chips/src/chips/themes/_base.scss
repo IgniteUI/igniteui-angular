@@ -20,18 +20,6 @@ $_theme: $material;
         }
     }
 
-    @include b(igx-chip-area) {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        width: 100%;
-
-        &:empty {
-            display: none;
-        }
-    }
-
     @include b(igx-chip) {
         @include sizable();
 
