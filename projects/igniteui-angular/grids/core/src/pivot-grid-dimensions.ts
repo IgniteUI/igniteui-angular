@@ -160,7 +160,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
                             : null;
                         return dateValue
                             ? getDateFormatter().formatDateTime(dateValue, undefined, { dateStyle: 'short' })
-                            : String(value ?? '');
+                            : value;
                     }
                 };
             }
