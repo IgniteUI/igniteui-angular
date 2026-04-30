@@ -146,7 +146,7 @@ For **every** core Ignite UI component chosen in Steps 3-4, follow this MCP-firs
 - Resolve each value to a palette token or local semantic CSS variable
 - Call `create_component_theme("grid", ...)` with only `{ "header-background": "<resolved token>", "content-background": "<resolved token>", "row-hover-background": "<resolved token>" }`
 
-Apply the generated theme blocks inside `::ng-deep` scoped to the component selector as shown in the `create_component_theme` output.
+Apply the generated theme block using `@include tokens(<theme-name>);` as returned by `create_component_theme`.
 
 Do not run `create_component_theme` for regions built with custom HTML/CSS only.
 
