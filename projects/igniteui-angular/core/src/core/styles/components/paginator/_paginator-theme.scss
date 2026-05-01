@@ -23,8 +23,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: var-get($theme, 'text-color');
-        background: var-get($theme, 'background-color');
+        color: var-get($theme, 'foreground');
+        background: var-get($theme, 'background');
         font-size: rem(12px);
         border-top: rem(1px) solid var-get($theme, 'border-color');
 

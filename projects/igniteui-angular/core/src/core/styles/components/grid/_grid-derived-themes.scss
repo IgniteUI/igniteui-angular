@@ -229,8 +229,8 @@
         @include tokens(
             paginator-theme(
                 $schema: $schema,
-                $background-color: var(--_grid-background),
-                $text-color: var(--_grid-foreground),
+                $background: var(--_grid-background),
+                $foreground: var(--_grid-foreground),
                 $border-color: color-mix(in srgb, var(--_grid-foreground) 16%, var(--_grid-background)),
                 $accent-color: var(--_grid-accent-color)
             )
