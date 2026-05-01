@@ -1,11 +1,13 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use './paginator-derived-themes' as *;
 
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
+/// @deprecated Use the `tokens` mixin instead.
+/// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin paginator($theme) {
-    @include css-vars($theme);
+    @include tokens($theme, $mode: 'scoped');
+    @include paginator-derived-themes($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
 

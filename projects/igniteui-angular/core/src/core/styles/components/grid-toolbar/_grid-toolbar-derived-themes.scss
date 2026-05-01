@@ -1,0 +1,38 @@
+@use 'sass:map';
+@use '../../base' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
+@use '../_common/extract-theme-schema' as *;
+
+/// Grid toolbar internal theming
+/// @access private
+/// @param {Map} $theme - The grid toolbar theme map.
+@mixin grid-toolbar-derived-themes($theme) {
+    $theme-info: extract-theme-schema($theme);
+    $schema: map.get($theme-info, 'schema');
+
+    :where(igx-grid-toolbar) {
+        --_grid-toolbar-background: var(--background, var(--ig-grid-toolbar-background));
+        --_grid-toolbar-foreground: var(--foreground, var(--ig-grid-toolbar-foreground));
+        --_grid-toolbar-accent-color: var(--accent-color, var(--ig-grid-toolbar-accent-color));
+
+        @include tokens(
+            column-actions-theme(
+                $schema: $schema,
+                $background: var(--_grid-toolbar-background),
+                $foreground: var(--_grid-toolbar-foreground),
+                $title-color: var(--_grid-toolbar-accent-color),
+                $accent-color: var(--_grid-toolbar-accent-color)
+            )
+        );
+
+        @include tokens(
+            outlined-button-theme(
+                $schema: $schema,
+                $foreground: var(--_grid-toolbar-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_grid-toolbar-accent-color) 50%, var(--_grid-toolbar-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_grid-toolbar-accent-color) 50%, var(--_grid-toolbar-background)),
+            )
+        );
+    }
+}

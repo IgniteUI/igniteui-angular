@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use 'sass:string';
+@use '../grid/advanced-filtering-component' as *;
 
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
@@ -110,7 +111,7 @@
         @include e(expression-item-drop-ghost) {
             @extend %filter-tree__expression-item-ghost !optional;
         }
-	    
+
 	    @include e(expression-item-keyboard-ghost) {
 		    @extend %filter-tree__expression-item-keyboard-ghost !optional;
 	    }

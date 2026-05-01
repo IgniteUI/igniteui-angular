@@ -1,0 +1,29 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/themes/schemas' as *;
+
+/// Function to extract theme variant and schema for derived themes
+/// @param $theme - The theme map
+/// @returns Map with keys: 'variant', 'theme-variant', 'schema'
+@function extract-theme-schema($theme) {
+  $variant: map.get($theme, '_meta', 'theme');
+  $theme-variant: map.get($theme, '_meta', 'variant');
+  $schema: map.get(
+    (
+      'light-material': $light-material-schema,
+      'light-bootstrap': $light-bootstrap-schema,
+      'light-fluent': $light-fluent-schema,
+      'light-indigo': $light-indigo-schema,
+      'dark-material': $dark-material-schema,
+      'dark-bootstrap': $dark-bootstrap-schema,
+      'dark-fluent': $dark-fluent-schema,
+      'dark-indigo': $dark-indigo-schema,
+    ),
+    '#{$theme-variant}-#{$variant}'
+  );
+
+  @return (
+    'variant': $variant,
+    'theme-variant': $theme-variant,
+    'schema': $schema
+  );
+}

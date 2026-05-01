@@ -1,29 +1,15 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use 'igniteui-theming/sass/themes/schemas' as *;
-
+@use '../_common/extract-theme-schema' as *;
 /// Applies all sub-component token overrides used by the grid.
 /// @access private
 /// @param {Map} $theme - The grid theme map.
-@mixin grid-theme-builder($theme) {
-    $variant: map.get($theme, '_meta', 'theme');
-    $theme-variant: map.get($theme, '_meta', 'variant');
+@mixin grid-derived-themes($theme) {
+    $theme-info: extract-theme-schema($theme);
+    $schema: map.get($theme-info, 'schema');
+    $variant: map.get($theme-info, 'variant');
 
-    $schema: map.get(
-        (
-            'light-material': $light-material-schema,
-            'light-bootstrap': $light-bootstrap-schema,
-            'light-fluent': $light-fluent-schema,
-            'light-indigo': $light-indigo-schema,
-            'dark-material': $dark-material-schema,
-            'dark-bootstrap': $dark-bootstrap-schema,
-            'dark-fluent': $dark-fluent-schema,
-            'dark-indigo': $dark-indigo-schema,
-        ),
-        '#{$theme-variant}-#{$variant}'
-    );
-
-    igx-grid,
+    :where(igx-grid,
     igc-grid,
     igx-tree-grid,
     igc-tree-grid,
@@ -32,7 +18,7 @@
     igx-pivot-grid,
     igc-pivot-grid,
     igx-grid-lite,
-    igc-grid-lite {
+    igc-grid-lite) {
         --_grid-background: var(--background, var(--ig-grid-background));
         --_grid-foreground: var(--foreground, var(--ig-grid-foreground));
         --_grid-accent-color: var(--accent-color, var(--ig-grid-accent-color));
@@ -60,73 +46,6 @@
                 $banner-message-color: var(--_grid-foreground),
                 $banner-illustration-color: var(--_grid-foreground),
                 $banner-border-color: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background))
-            )
-        );
-
-        .igx-excel-filter__menu .igx-button-group,
-        .igx-button-group {
-            --ig-btn-group-selected-bg: color-mix(in srgb, var(--_grid-accent-color) 8%, var(--_grid-background));
-
-            @include tokens(
-                button-group-theme(
-                    $schema: $schema,
-                    $item-background: var(--_grid-background, #{var-get($theme, if($variant == 'indigo', 'filtering-dialog-background', 'filtering-row-background'))}),
-                    $item-border-color: transparent,
-                    $item-text-color: var(--_grid-foreground, #{color($color: 'gray', $variant: 700)}),
-                    $item-selected-background: if(
-                        $variant == 'indigo',
-                        var(--ig-btn-group-selected-bg, var(--ig-primary-500)),
-                        var(--ig-btn-group-selected-bg, #{color($color: 'gray', $variant: 100)}),
-                    ),
-                    $item-hover-background: var(--item-selected-background),
-                    $item-selected-text-color: var(--_grid-accent-color, #{if(
-                        $variant == 'indigo',
-                        contrast-color($color: 'primary'),
-                        if($variant == 'material',
-                            color($color: 'secondary', $variant: 500),
-                            color($color: 'primary', $variant: 500)
-                        )
-                    )}),
-                    $item-selected-hover-text-color: var(--_grid-accent-color, #{if(
-                        $variant == 'indigo',
-                        contrast-color($color: 'primary'),
-                        if($variant == 'material',
-                            color($color: 'secondary', $variant: 500),
-                            color($color: 'primary', $variant: 500)
-                        )
-                    )}),
-                    $item-selected-hover-background: dynamic-shade(var(--item-hover-background), $offset: 3),
-                    $shadow: none
-                ),
-                $mode: 'scoped'
-            );
-        }
-
-        @include tokens(
-            contained-button-theme(
-                $schema: $schema,
-                $background: var(--_grid-accent-color),
-                $disabled-background: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
-                $disabled-foreground: color-mix(in srgb, var(--_grid-foreground) 50%, var(--_grid-background)),
-            )
-        );
-
-        @include tokens(
-            flat-button-theme(
-                $schema: $schema,
-                $foreground: var(--_grid-accent-color),
-                $disabled-background: transparent,
-                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
-            )
-        );
-
-        @include tokens(
-            outlined-button-theme(
-                $schema: $schema,
-                $foreground: var(--_grid-accent-color),
-                $disabled-background: transparent,
-                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
-                $disabled-border-color: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
             )
         );
 
@@ -164,10 +83,11 @@
         );
 
         @include tokens(
-            column-actions-theme(
+            contained-button-theme(
                 $schema: $schema,
-                $background-color: var(--_grid-background),
-                $title-color: var(--_grid-accent-color)
+                $background: var(--_grid-accent-color),
+                $disabled-background: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+                $disabled-foreground: color-mix(in srgb, var(--_grid-foreground) 50%, var(--_grid-background)),
             )
         );
 
@@ -186,36 +106,29 @@
         );
 
         @include tokens(
-            grid-summary-theme(
-                $schema: $schema,
-                $background-color: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
-                $border-color: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background)),
-                $pinned-border-color: color-mix(in srgb, var(--_grid-foreground) 30%, var(--_grid-background)),
-                $label-color: var(--_grid-accent-color),
-                $result-color: var(--_grid-foreground)
+            excel-filtering-theme(
+                $background: var(--_grid-background),
+                $foreground: var(--_grid-foreground),
+                $accent-color: var(--_grid-accent-color),
+                $header-foreground: var(--excel-filtering-header-foreground),
+                $subheader-foreground: var(--excel-filtering-subheader-foreground),
+                $actions-foreground: var(--excel-filtering-actions-foreground),
+                $actions-icon-color: var(--excel-filtering-actions-icon-color),
+                $actions-hover-foreground: var(--excel-filtering-actions-hover-foreground),
+                $actions-hover-icon-color: var(--excel-filtering-actions-hover-icon-color),
+                $actions-selected-icon-color: var(--excel-filtering-actions-selected-icon-color),
+                $actions-hover-background: var(--excel-filtering-actions-hover-background),
+                $actions-disabled-foreground: var(--excel-filtering-actions-disabled-foreground),
+                $border-color: var(--excel-filtering-border-color),
             )
         );
 
         @include tokens(
-            grid-toolbar-theme(
+            flat-button-theme(
                 $schema: $schema,
-                $background-color: var(--_grid-background),
-                $title-text-color: var(--_grid-foreground),
-                $dropdown-background: var(--_grid-background),
-                $item-text-color: var(--_grid-foreground),
-                $item-hover-background: color-mix(in srgb, var(--_grid-accent-color) 8%, var(--_grid-background)),
-                $item-hover-text-color: var(--_grid-foreground),
-                $item-focus-background: color-mix(in srgb, var(--_grid-accent-color) 12%, var(--_grid-background)),
-                $item-focus-text-color: var(--_grid-foreground),
-                $border-color: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background))
-            )
-        );
-
-        @include tokens(
-            highlight-theme(
-                $schema: $schema,
-                $resting-background: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
-                $active-background: var(--_grid-accent-color)
+                $foreground: var(--_grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
             )
         );
 
@@ -229,12 +142,30 @@
         );
 
         @include tokens(
-            outlined-icon-button-theme(
+            grid-summary-theme(
                 $schema: $schema,
-                $foreground: var(--_grid-accent-color),
-                $disabled-background: transparent,
-                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
-                $disabled-border-color: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background))
+                $background-color: color-mix(in srgb, var(--_grid-foreground) 12%, var(--_grid-background)),
+                $border-color: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background)),
+                $pinned-border-color: color-mix(in srgb, var(--_grid-foreground) 30%, var(--_grid-background)),
+                $label-color: var(--_grid-accent-color),
+                $result-color: var(--_grid-foreground)
+            )
+        );
+
+        @include tokens(
+            grid-toolbar-theme(
+                $schema: $schema,
+                $background: var(--_grid-background),
+                $foreground: var(--_grid-foreground),
+                $accent-color: var(--_grid-accent-color)
+            )
+        );
+
+        @include tokens(
+            highlight-theme(
+                $schema: $schema,
+                $resting-background: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
+                $active-background: var(--_grid-accent-color)
             )
         );
 
@@ -276,10 +207,22 @@
         }
 
         @include tokens(
-            list-theme(
+            outlined-button-theme(
                 $schema: $schema,
-                $background: var(--_grid-background),
-                $item-background-hover: color-mix(in srgb, var(--_grid-accent-color) 8%, var(--_grid-background))
+                $foreground: var(--_grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+            )
+        );
+
+        @include tokens(
+            outlined-icon-button-theme(
+                $schema: $schema,
+                $foreground: var(--_grid-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_grid-accent-color) 50%, var(--_grid-background))
             )
         );
 
@@ -289,6 +232,7 @@
                 $background-color: var(--_grid-background),
                 $text-color: var(--_grid-foreground),
                 $border-color: color-mix(in srgb, var(--_grid-foreground) 16%, var(--_grid-background)),
+                $accent-color: var(--_grid-accent-color)
             )
         );
 
@@ -315,6 +259,8 @@
                 query-builder-theme(
                     $schema: $schema,
                     $background: var(--_grid-background),
+                    $foreground: var(--_grid-foreground),
+                    $accent-color: var(--_grid-accent-color),
                     $header-foreground: var(--_grid-foreground),
                     $header-border: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background)),
                 )
@@ -324,6 +270,8 @@
                 query-builder-theme(
                     $schema: $schema,
                     $background: var(--_grid-background),
+                    $foreground: var(--_grid-foreground),
+                    $accent-color: var(--_grid-accent-color),
                     $header-foreground: var(--_grid-foreground),
                 )
             );
