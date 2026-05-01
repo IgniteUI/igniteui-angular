@@ -118,24 +118,9 @@ igx-nav-drawer {
 ```
 
 ### Dark theme overrides for `IgxGridComponent`
-Grid internals often need explicit dark-theme overrides. Use palette tokens or local semantic CSS variables that map to the design:
+Grid internals often need explicit dark-theme overrides. Use `get_component_design_tokens("grid")` to discover available tokens, then call `create_component_theme` with the tokens that differ from the global theme. Apply the returned theme with the `tokens`:
 ```scss
-:host ::ng-deep igx-grid {
-  .igx-grid__thead,
-  .igx-grid__tr {
-    background: <resolved-surface-token>;
-  }
-
-  .igx-grid__th,
-  .igx-grid__td {
-    color: <resolved-text-token>;
-    border-color: <resolved-border-token>;
-  }
-
-  .igx-grid__tbody {
-    background: <resolved-surface-token>;
-  }
-}
+@include tokens($custom-grid-theme);
 ```
 
 ### Read luminance warnings from theme generation
