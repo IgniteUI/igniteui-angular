@@ -2,11 +2,8 @@
 
 # Current Milestone
 
-## Milestone 41, version 21 (Due by Feb, 2026)
-1. Transition the library to signals
-2. Zoneless support
-3. Grids Performance
-4. MCP server
+## Milestone 43, version 22.0 (Due by May, 2026)
+1. Support for Angular 22
 
 ## Going down the road
 
@@ -15,7 +12,22 @@
 
 # Previous Milestone
 
-## Milestone 40, version 21 (Released Dec 3rd, 2025), [Release Blog 21.0](https://www.infragistics.com/blogs/ignite-ui-for-angular-21-0/)
+## Milestone 42, version 21.2 (Released Apr 27th, 2026), [Release Blog 21.2](https://www.infragistics.com/blogs/ignite-ui-cli-mcp-release)
+1. **[DONE]** `IgxCombo`, `IgxSimpleCombo` - Introduced `selectionChanged` event and `disableClear` input
+2. **[DONE]** `IgxSnackbarComponent`, `IgxToastComponent` - New `positioning` input for container-based placement
+3. **[DONE]** `IgxOverlayService` - New `createAbsoluteOverlaySettings` overload accepting `useContainerStrategy`
+4. **[DONE]** AI Copilot Skill: Generate Angular views from design images (screenshots, mockups, wireframes)
+5. **[DONE]** AI Copilot Skills improvements for Components, Grids, and Theming
+
+## Milestone 41, version 21.1 (Released Feb 17th, 2026), [Release Blog 21.1](https://www.infragistics.com/blogs/ignite-ui-for-angular-21-1)
+1. **[DONE]** HTML Popover API integration in `IgxOverlayService` and `IgxNavigationDrawer`
+2. **[DONE]** `IgxGridLiteComponent` Grid Lite component _(Developer Preview)_
+3. **[DONE]** `IgxPdfExporterService` - Unicode character support with custom TrueType fonts
+4. **[DONE]** AI Copilot Skills for Components, Data Grids, and Theming & Styling (including MCP server support)
+5. **[DONE]** Grids performance improvements
+6. **[DONE]** New `Intl`-based localization implementation for all components
+
+## Milestone 40, version 21.0 (Released Dec 3rd, 2025), [Release Blog 21.0](https://www.infragistics.com/blogs/ignite-ui-for-angular-21-0/)
 1. **[DONE]** Support for Angular 21
 2. **[DONE]** AI Chat UI component [#16094](https://github.com/IgniteUI/igniteui-angular/issues/16094)
 3. **[DONE]** PDF Export feature on Angular Data Grid, Tree Grid, Hierarchical Grid and Pivot Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
