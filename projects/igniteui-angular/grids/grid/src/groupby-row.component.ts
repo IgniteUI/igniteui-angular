@@ -183,7 +183,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * const groupRowExpanded = this.grid1.rowList.first.expanded;
      * ```
      */
-    @HostBinding('attr.aria-expanded')
     public get expanded(): boolean {
         return this.grid.isExpandedGroup(this.groupRow);
     }
@@ -228,6 +227,9 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         return `${this.defaultCssClass} ` + `${this.paddingIndentationCssClass}-` + this.groupRow.level +
             (this.isActive() ? ` ${this.defaultCssClass}--active` : '');
     }
+
+    @HostBinding('attr.role')
+    public role = 'row';
 
     public isActive() {
         return this.grid.navigation.activeNode ? this.grid.navigation.activeNode.row === this.index : false;
