@@ -1,7 +1,7 @@
-import type { Rule, SchematicContext, Tree } from "@angular-devkit/schematics";
-import { UpdateChanges } from "../common/UpdateChanges";
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { UpdateChanges } from '../common/UpdateChanges';
 
-const version = "21.2.2";
+const version = '21.2.2';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(
