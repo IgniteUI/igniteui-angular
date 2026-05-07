@@ -27,7 +27,7 @@ This reference gives high-level guidance on when to use each chart type, their k
 
 | Component | NgModule to import | Description |
 |---|---|---|
-| `IgxCategoryChartComponent` | `IgxCategoryChartModule` | Simplified API for column, line, area, spline, step, point, waterfall |
+| `IgxCategoryChartComponent` | `IgxCategoryChartModule` | Simplified API for column, line, area, spline, StepLine/StepArea, point, waterfall |
 | `IgxFinancialChartComponent` | `IgxFinancialChartModule` | Stock/candlestick charts with OHLC data |
 | `IgxDataChartComponent` | `IgxDataChartModule` | Advanced: explicit axes, series, >65 chart types |
 | `IgxPieChartComponent` | `IgxPieChartModule` | Part-to-whole pie and donut charts |
