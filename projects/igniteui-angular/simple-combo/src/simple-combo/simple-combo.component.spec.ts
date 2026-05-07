@@ -2566,6 +2566,7 @@ describe('IgxSimpleCombo', () => {
                     ]
                 }).compileComponents();
             }));
+
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSimpleComboInReactiveFormComponent);
                 fixture.detectChanges();
@@ -2573,6 +2574,7 @@ describe('IgxSimpleCombo', () => {
                 reactiveForm = fixture.componentInstance.reactiveForm;
                 reactiveControl = reactiveForm.form.controls['comboValue'];
             });
+
             it('should not select null, undefined and empty string in a reactive form with required', fakeAsync(() => {
                 // array of objects
                 combo.data = [
@@ -2685,6 +2687,7 @@ describe('IgxSimpleCombo', () => {
                 expect(reactiveForm.status).toEqual('INVALID');
                 expect(reactiveControl.status).toEqual('INVALID');
             }));
+
             it('should not select null, undefined and empty string with "writeValue" method in a reactive form with required', () => {
                 // array of objects
                 combo.data = [
@@ -2844,6 +2847,40 @@ describe('IgxSimpleCombo', () => {
                 expect(combo.value).toEqual(1);
                 expect(form.controls['comboValue'].value).toEqual(1);
             }));
+
+            it('should render as INITIAL after control.disable() and touched/dirty', () => {
+                combo.select([combo.data.at(0)])
+                fixture.detectChanges();
+
+                reactiveControl.markAsTouched();
+                fixture.detectChanges();
+
+                expect(combo.valid).toEqual(IgxInputState.INITIAL);
+
+                reactiveControl.disable();
+                fixture.detectChanges();
+
+                expect(combo.disabled).toBe(true);
+                expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+            });
+
+            it('should render as INITIAL (not INVALID) after control.disable() and previously invalid', () => {
+                // markAsTouched must come BEFORE setValue: markAsTouched does not emit
+                // statusChanges, so onStatusChanged must see touched=true at the moment
+                // statusChanges fires from setValue.
+                reactiveControl.markAsTouched();
+                reactiveControl.setValue([]);
+                fixture.detectChanges();
+
+                expect(combo.valid).toEqual(IgxInputState.INVALID);
+
+                reactiveControl.disable();
+                fixture.detectChanges();
+
+                expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+            });
         });
     });
 
