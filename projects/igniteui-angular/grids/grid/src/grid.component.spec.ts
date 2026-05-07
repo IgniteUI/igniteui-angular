@@ -339,6 +339,32 @@ describe('IgxGrid Component Tests #grid', () => {
 
         }));
 
+        it('should have correct ARIA role structure on tbody and tfoot', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            fixture.componentInstance.columns[0].hasSummary = true;
+
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(100);
+
+            // Outer tbody wrapper is layout-only
+            const tbodyWrapper = fixture.nativeElement.querySelector('.igx-grid__tbody');
+            expect(tbodyWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner focus host is the rowgroup
+            const tbodyContent = fixture.nativeElement.querySelector('.igx-grid__tbody-content');
+            expect(tbodyContent.getAttribute('role')).toBe('rowgroup');
+            expect(tbodyContent.getAttribute('tabindex')).toBe('0');
+
+            // Outer tfoot wrapper is layout-only
+            const tfootWrapper = fixture.nativeElement.querySelector('.igx-grid__tfoot');
+            expect(tfootWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner tfoot div is the rowgroup focus host
+            const tfootContent = fixture.nativeElement.querySelector('.igx-grid__tfoot > div');
+            expect(tfootContent.getAttribute('role')).toBe('rowgroup');
+            expect(tfootContent.getAttribute('tabindex')).toBe('0');
+        }));
         it('should render empty message', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
