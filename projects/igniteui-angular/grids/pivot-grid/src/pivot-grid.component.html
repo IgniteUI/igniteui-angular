@@ -60,12 +60,8 @@
         </ng-template>
 
         <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
-<<<<<<< HEAD
         <ng-container #bodyViewContainerRef></ng-container>
         <igc-trial-watermark></igc-trial-watermark>
-=======
-        <!-- <igc-trial-watermark></igc-trial-watermark> -->
->>>>>>> 3f97adf006 (fix(pivot-grid): enhance accessibility by adding ARIA roles to row groups)
     </div>
     <div igxToggle #loadingOverlay>
         @if (shouldOverlayLoading) {
