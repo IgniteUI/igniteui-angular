@@ -27,7 +27,7 @@ This reference gives high-level guidance on when to use each chart type, their k
 
 | Component | NgModule to import | Description |
 |---|---|---|
-| `IgxCategoryChartComponent` | `IgxCategoryChartModule` | Simplified API for area, bar, column charts |
+| `IgxCategoryChartComponent` | `IgxCategoryChartModule` | Simplified API for column, line, area, spline, step, point, waterfall |
 | `IgxFinancialChartComponent` | `IgxFinancialChartModule` | Stock/candlestick charts with OHLC data |
 | `IgxDataChartComponent` | `IgxDataChartModule` | Advanced: explicit axes, series, >65 chart types |
 | `IgxPieChartComponent` | `IgxPieChartModule` | Part-to-whole pie and donut charts |
@@ -35,7 +35,7 @@ This reference gives high-level guidance on when to use each chart type, their k
 | `IgxLegendComponent` | `IgxLegendModule` | Shared legend component |
 
 ### When to use each:
-- **Category Chart** → Use for simple area/bar/column; let framework auto-configure
+- **Category Chart** → Use for simple line/area/column/point/spline/waterfall; let framework auto-configure
 - **Financial Chart** → Use for stock data with time-series OHLC, indicators, volume
 - **Data Chart** → Use for advanced scenarios: multiple axes, custom series combinations, stacked/scatter
 - **Pie Chart** → Use for part-to-whole (segments sum to 100%)
@@ -173,7 +173,7 @@ chartComponent.itemsSource = dataArray;
   - Start Y-axis at 0
   - Order time-series left to right
 - **Avoid**: Many series (>10) side-by-side (readability)
-- **Related**: Bar Chart (same but horizontal), Waterfall (show differences between values)
+- **Related**: Bar Chart (horizontal equivalent, use IgxDataChartComponent + IgxBarSeriesComponent), Waterfall (show differences between values)
 
 ### Stock Chart (`IgxFinancialChartComponent`)
 - **Use**: Financial/OHLC data analysis, candlestick visualization, technical indicators
@@ -231,7 +231,7 @@ chartComponent.itemsSource = dataArray;
 
 ## Common API Members by Chart Type
 
-### IgxCategoryChartComponent (Area, Bar, Column, Line, etc.)
+### IgxCategoryChartComponent (Area, Column, Line, Point, Spline, Step, Waterfall etc.)
 ```typescript
 // Required
 dataSource: any[];           // Data array (auto-detects numeric fields)
@@ -427,7 +427,7 @@ import { IgxCategoryChartModule } from 'igniteui-angular-charts';
 
 ## Data Requirements
 
-### Category Chart (Area, Bar, Column, Line)
+### Category Chart (Area, Column, Line, Point, Spline, Step, Waterfall)
 - Array or list of data items
 - At least 1 numeric column (values)
 - Optionally 1 string/date column (labels)
