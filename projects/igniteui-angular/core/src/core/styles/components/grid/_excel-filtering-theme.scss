@@ -128,17 +128,6 @@
             }
         }
 
-        // @include tree(tree-theme(
-        //     $background: color($color: 'surface'),
-        //     $background-selected: color($color: 'surface'),
-        //     $background-active: color($color: 'surface'),
-        //     $background-active-selected: color($color: 'surface'),
-        //     $foreground: contrast-color($color: 'surface'),
-        //     $foreground-selected: contrast-color($color: 'surface'),
-        //     $foreground-active: contrast-color($color: 'surface'),
-        //     $foreground-active-selected: contrast-color($color: 'surface'),
-        // ));
-
         .igx-tree-node__wrapper {
             padding: 0;
         }

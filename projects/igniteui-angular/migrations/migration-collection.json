@@ -285,11 +285,6 @@
             "description": "Updates Ignite UI for Angular from v21.1.x to v21.2.0",
             "factory": "./update-21_2_0"
         },
-        "migration-55": {
-            "version": "21.2.0",
-            "description": "Updates Ignite UI for Angular from v21.1.x to v21.2.0",
-            "factory": "./update-21_2_0"
-        },
         "migration-56": {
             "version": "21.2.2",
             "description": "Updates Ignite UI for Angular from v21.2.0 to v21.2.2",
