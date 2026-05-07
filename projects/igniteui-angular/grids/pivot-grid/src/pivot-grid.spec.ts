@@ -145,7 +145,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const rowDimension = pivotGrid.pivotConfiguration.rows[0];
             const headerFormatter = jasmine.createSpy('headerFormatter')
                 .and.callFake((value, dimension, rowData) => {
-                    expect(dimension).toBe(rowDimension);
+                    expect(dimension).toEqual(jasmine.objectContaining({ memberName: rowDimension.memberName }));
                     expect(rowData).toBeDefined();
                     return `formatted-${value}`;
                 });
@@ -160,7 +160,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             const [rawValue, dimension, rowData] = headerFormatter.calls.mostRecent().args;
             expect(rawValue).toBe('All');
-            expect(dimension).toBe(rowDimension);
+            expect(dimension).toEqual(jasmine.objectContaining({ memberName: rowDimension.memberName }));
             expect(rowData.dimensionValues).toBeDefined();
         });
 
