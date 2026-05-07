@@ -12,6 +12,9 @@
 - [Splitter](#splitter)
 - [Navigation Drawer](#navigation-drawer)
 
+## Overview
+This reference gives high-level guidance on when to use each layout component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
+
 ## Tabs
 
 > **Docs:** [Tabs Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)

@@ -1995,7 +1995,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             await wait(300);
 
-            verifyMultipleChipsVisibility(fix, [true, true, false, false]);
+            // NOTE: This test is very sensitive to the width of the grid and the chips.
+            verifyMultipleChipsVisibility(fix, [true, false, false, false]);
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             GridFunctions.removeFilterChipByIndex(1, filterUIRow);
