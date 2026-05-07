@@ -140,6 +140,30 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(actualDataTypeValue).toEqual('$71.89');
         });
 
+        it('should provide context to dimension header formatter', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            const rowDimension = pivotGrid.pivotConfiguration.rows[0];
+            const headerFormatter = jasmine.createSpy('headerFormatter')
+                .and.callFake((value, dimension, rowData) => {
+                    expect(dimension).toBe(rowDimension);
+                    expect(rowData).toBeDefined();
+                    return `formatted-${value}`;
+                });
+            rowDimension.headerFormatter = headerFormatter;
+
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
+            fixture.detectChanges();
+
+            const rowHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(rowHeaders[0].componentInstance.column.header).toBe('formatted-All');
+
+            const [rawValue, dimension, rowData] = headerFormatter.calls.mostRecent().args;
+            expect(rawValue).toBe('All');
+            expect(dimension).toBe(rowDimension);
+            expect(rowData.dimensionValues).toBeDefined();
+        });
+
         it('should apply css class to cells from measures', () => {
             fixture.detectChanges();
             const pivotGrid = fixture.componentInstance.pivotGrid;

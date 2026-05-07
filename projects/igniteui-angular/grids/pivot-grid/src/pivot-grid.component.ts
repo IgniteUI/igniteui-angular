@@ -2382,7 +2382,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
         const rawHeader = parent != null ? key.split(parent.field + this.pivotKeys.columnDimensionSeparator)[1] : key;
         const dim = value.dimension as IPivotDimension;
-        ref.instance.header = dim?.formatter != null ? (dim.formatter(rawHeader) ?? rawHeader) : rawHeader;
+        ref.instance.header = dim?.headerFormatter != null ? (dim.headerFormatter(rawHeader, dim) ?? rawHeader) : rawHeader;
         ref.instance.field = key;
         ref.instance.parent = parent;
         if (value.dimension.width) {

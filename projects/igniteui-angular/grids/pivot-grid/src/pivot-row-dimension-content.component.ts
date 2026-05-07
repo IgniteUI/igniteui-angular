@@ -185,8 +185,8 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         const field = dim.memberName;
         const rawHeader = rowData?.dimensionValues.get(field);
         let header = rawHeader;
-        if (dim.formatter != null) {
-            header = dim.formatter(rawHeader) ?? rawHeader;
+        if (dim.headerFormatter != null) {
+            header = dim.headerFormatter(rawHeader, dim, rowData) ?? rawHeader;
         }
         const col = this._createColComponent(field, header, dim);
         return col;
