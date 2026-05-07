@@ -1,8 +1,19 @@
 @use '../../base' as *;
+@use 'sass:string';
 
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin excel-filtering-partial {
+    @include register-component(
+        $name: 'igx-grid-excel-style-filtering',
+        $deps: (
+            igx-button,
+            igx-checkbox,
+            igx-icon-button,
+            igx-input-group,
+        )
+    );
+
     @include b(igx-excel-filter) {
         @extend %grid-excel-filter !optional;
 

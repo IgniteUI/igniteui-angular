@@ -1,29 +1,29 @@
 {
-    "$schema": "../../common/schema/theme-changes.schema.json",
-    "changes": [
-        {
-            "name": "$background-color",
-            "replaceWith": "$background",
-            "owner": "column-actions-theme",
-            "type": "property"
-        },
-        {
-            "name": "$background-color",
-            "replaceWith": "$background",
-            "owner": "grid-toolbar-theme",
-            "type": "property"
-        },
-        {
-            "name": "$text-color",
-            "replaceWith": "$foreground",
-            "owner": "paginator-theme",
-            "type": "property"
-        },
-        {
-            "name": "$background-color",
-            "replaceWith": "$background",
-            "owner": "paginator-theme",
-            "type": "property"
-        }
-    ]
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$background-color",
+      "replaceWith": "$background",
+      "owner": "column-actions-theme",
+      "type": "property"
+    },
+    {
+      "name": "$background-color",
+      "replaceWith": "$background",
+      "owner": "grid-toolbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$text-color",
+      "replaceWith": "$foreground",
+      "owner": "paginator-theme",
+      "type": "property"
+    },
+    {
+      "name": "$background-color",
+      "replaceWith": "$background",
+      "owner": "paginator-theme",
+      "type": "property"
+    }
+  ]
 }

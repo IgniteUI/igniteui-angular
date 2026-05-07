@@ -112,9 +112,9 @@
             @extend %filter-tree__expression-item-ghost !optional;
         }
 
-	    @include e(expression-item-keyboard-ghost) {
-		    @extend %filter-tree__expression-item-keyboard-ghost !optional;
-	    }
+        @include e(expression-item-keyboard-ghost) {
+            @extend %filter-tree__expression-item-keyboard-ghost !optional;
+        }
 
         @include e(expression-column) {
             @extend %filter-tree__expression-column !optional;
