@@ -7765,12 +7765,19 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
 
-        this.zone.onStable.pipe(first()).subscribe(() => {
+        const callback = () => {
             this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
-        });
+        };
+
+        if (this.zone.isStable) {
+            this.cdr.detectChanges();
+            callback();
+        } else {
+            this.zone.onStable.pipe(first()).subscribe(callback);
+        }
         this.disableTransitions = false;
 
         this.hideOverlays();
