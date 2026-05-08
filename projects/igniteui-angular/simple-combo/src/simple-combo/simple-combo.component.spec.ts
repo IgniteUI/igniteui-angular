@@ -2849,7 +2849,7 @@ describe('IgxSimpleCombo', () => {
             }));
 
             it('should render as INITIAL after control.disable() and touched/dirty', () => {
-                combo.select([combo.data.at(0)])
+                combo.select([combo.data.at(0)]);
                 fixture.detectChanges();
 
                 reactiveControl.markAsTouched();
