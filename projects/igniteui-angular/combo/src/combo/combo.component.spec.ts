@@ -3447,7 +3447,7 @@ describe('igxCombo', () => {
                     const form = fixture.componentInstance.reactiveForm;
                     const control = form.controls.townCombo;
 
-                    combo.select([combo.data.at(0)], true)
+                    combo.select([combo.data.at(0)], true);
                     fixture.detectChanges();
 
                     control.markAsTouched();
