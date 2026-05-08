@@ -7772,7 +7772,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
         };
 
-        if (this.zone.isStable) {
+        if (NgZone.isInAngularZone() && this.zone.isStable) {
             this.cdr.detectChanges();
             callback();
         } else {
