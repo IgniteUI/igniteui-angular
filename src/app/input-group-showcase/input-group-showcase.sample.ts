@@ -51,7 +51,6 @@ defineComponents(
 })
 export class InputGroupShowcaseSampleComponent {
     public field = viewChild<IgxInputGroupComponent>('field');
-    public fieldNativeDate = viewChild<IgxInputGroupComponent>('fieldNativeDate');
     public fieldTextarea = viewChild<IgxInputGroupComponent>('fieldTextarea');
     public fieldFile = viewChild<IgxInputGroupComponent>('fieldFile');
     public select = viewChild<IgxSelectComponent>('selectReactive');
@@ -170,7 +169,6 @@ export class InputGroupShowcaseSampleComponent {
         angularSelect: [this.properties()?.value || ''],
         angularCombo: [this.properties()?.value || ''],
         field: [this.properties()?.value || ''],
-        fieldNativeDate: [this.properties()?.value || ''],
         fieldTextarea: [this.properties()?.value || ''],
         fieldFile: [this.properties()?.value || '']
     });
@@ -207,7 +205,6 @@ export class InputGroupShowcaseSampleComponent {
             angularSelect: this.properties()?.value || '',
             angularCombo: this.properties()?.value || '',
             field: this.properties()?.value || '',
-            fieldNativeDate: this.properties()?.value || '',
             fieldTextarea: this.properties()?.value || '',
         };
 
