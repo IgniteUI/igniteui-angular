@@ -51,6 +51,7 @@ defineComponents(
 })
 export class InputGroupShowcaseSampleComponent {
     public field = viewChild<IgxInputGroupComponent>('field');
+    public fieldNativeDate = viewChild<IgxInputGroupComponent>('fieldNativeDate');
     public fieldTextarea = viewChild<IgxInputGroupComponent>('fieldTextarea');
     public fieldFile = viewChild<IgxInputGroupComponent>('fieldFile');
     public select = viewChild<IgxSelectComponent>('selectReactive');
@@ -71,15 +72,28 @@ export class InputGroupShowcaseSampleComponent {
             control: {
                 type: 'button-group',
                 options: ['box', 'border', 'line', 'search'],
-                defaultValue: 'box'
+                defaultValue: 'border'
             }
         },
         type: {
             label: 'Native Input Type',
             control: {
                 type: 'select',
-                options: ['email', 'number', 'password', 'search', 'tel', 'text', 'url'],
-                defaultValue: 'text'
+                options: [
+                    'email',
+                    'number',
+                    'date',
+                    'time',
+                    'datetime-local',
+                    'month',
+                    'week',
+                    'password',
+                    'search',
+                    'tel',
+                    'text',
+                    'url'
+                ],
+                defaultValue: 'datetime-local'
             }
         },
         label: {
@@ -156,6 +170,7 @@ export class InputGroupShowcaseSampleComponent {
         angularSelect: [this.properties()?.value || ''],
         angularCombo: [this.properties()?.value || ''],
         field: [this.properties()?.value || ''],
+        fieldNativeDate: [this.properties()?.value || ''],
         fieldTextarea: [this.properties()?.value || ''],
         fieldFile: [this.properties()?.value || '']
     });
@@ -192,6 +207,7 @@ export class InputGroupShowcaseSampleComponent {
             angularSelect: this.properties()?.value || '',
             angularCombo: this.properties()?.value || '',
             field: this.properties()?.value || '',
+            fieldNativeDate: this.properties()?.value || '',
             fieldTextarea: this.properties()?.value || '',
         };
 
@@ -205,6 +221,7 @@ export class InputGroupShowcaseSampleComponent {
     private updateDisabledState(isDisabled: boolean): void {
         Object.keys(this.reactiveForm.controls).forEach((controlName) => {
             const control = this.reactiveForm.get(controlName);
+
             if (control) {
                 isDisabled ? control.disable() : control.enable();
             }
