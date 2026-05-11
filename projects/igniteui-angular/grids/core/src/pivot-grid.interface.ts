@@ -76,7 +76,7 @@ export interface IPivotAggregator {
      * Aggregator function can be a custom implementation of `PivotAggregation`, or
      * use predefined ones from `IgxPivotAggregate` and its variants.
      */
-    aggregator?: (members: any[], data?: any[]) => any;
+    aggregator?: PivotAggregation;
 }
 
 /* marshalByValue */
