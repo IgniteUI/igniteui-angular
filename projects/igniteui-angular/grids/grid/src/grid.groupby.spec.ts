@@ -790,9 +790,57 @@ describe('IgxGrid - GroupBy #grid', () => {
         const groupRows = grid.groupsRowList.toArray();
         for (const grRow of groupRows) {
             const elem = grRow.element.nativeElement;
+            // host carries role="row", aria-describedby; aria-expanded moved to the toggle cell
+            expect(elem.getAttribute('role')).toBe('row');
             expect(elem.attributes['aria-describedby'].value).toEqual(grid.id + '_Released');
-            expect(elem.attributes['aria-expanded'].value).toEqual('true');
+            const toggleCell = elem.querySelector('.igx-grid__grouping-indicator');
+            expect(toggleCell.getAttribute('role')).toBe('gridcell');
+            expect(toggleCell.getAttribute('aria-expanded')).toBe('true');
         }
+    }));
+
+    it('should update aria-expanded on the toggle cell when a group row is collapsed and expanded', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+        const toggleCell = grRow.element.nativeElement.querySelector('.igx-grid__grouping-indicator');
+
+        expect(toggleCell.getAttribute('aria-expanded')).toBe('true');
+
+        grRow.toggle();
+        fix.detectChanges();
+
+        expect(toggleCell.getAttribute('aria-expanded')).toBe('false');
+
+        grRow.toggle();
+        fix.detectChanges();
+
+        expect(toggleCell.getAttribute('aria-expanded')).toBe('true');
+    }));
+
+    it('should assign role="gridcell" to all action wrappers inside a group row', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.rowDraggable = true;
+        grid.rowSelection = GridSelectionMode.multiple;
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+        const elem = grRow.element.nativeElement;
+
+        expect(elem.querySelector('.igx-grid__drag-indicator').getAttribute('role')).toBe('gridcell');
+        expect(elem.querySelector('.igx-grid__cbx-selection').getAttribute('role')).toBe('gridcell');
+        expect(elem.querySelector('.igx-grid__grouping-indicator').getAttribute('role')).toBe('gridcell');
+        expect(elem.querySelector('.igx-grid__group-content').getAttribute('role')).toBe('gridcell');
     }));
 
     it('should not apply grouping if the grouping expressions value is the same reference', fakeAsync(() => {
