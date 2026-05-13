@@ -52,7 +52,7 @@ export interface IPivotDimensionStrategy {
 * Interface describing a PivotAggregation function.
 * Accepts an array of extracted data members and a array of the original data records.
 */
-export type PivotAggregation = (members: any[], data: any[]) => any;
+export type PivotAggregation = (members: any[], data?: any[]) => any;
 
 /* marshalByValue */
 /**
