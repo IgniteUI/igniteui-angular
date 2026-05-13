@@ -140,24 +140,25 @@ export class IgxPivotDateDimension implements IPivotDimension {
         this.displayName = inBaseDimension.displayName || this.resourceStrings.igx_grid_pivot_date_dimension_total;
 
         // When fullDate is enabled, attach a locale-aware formatter unless the user has
-        // already supplied their own formatter on inBaseDimension.
+        // already supplied their own headerFormatter on inBaseDimension.
         // The memberFunction (if any) is kept intact via the spread — the formatter is
         // a separate display-only concern and should not be gated on memberFunction.
         let baseDimension: IPivotDimension = null;
         if (options.fullDate) {
-            if (inBaseDimension.formatter) {
+            if (inBaseDimension.headerFormatter) {
                 // User supplied their own formatter — use the dimension as-is.
                 baseDimension = inBaseDimension;
             } else {
+                const dateFormatter = getDateFormatter();
                 // No user-supplied formatter: create a new dimension object with a locale-aware
                 // formatter that shows dates in short-date format.
                 baseDimension = {
                     ...inBaseDimension,
-                    formatter: (value: any) => {
+                    headerFormatter: (value: any) => {
                         const hasValue = value !== null && value !== undefined && value !== '';
-                        const dateValue = hasValue ? getDateFormatter().createDateFromValue(value) : null;
+                        const dateValue = hasValue ? dateFormatter.createDateFromValue(value) : null;
                         if (dateValue) {
-                            return getDateFormatter().formatDateTime(dateValue, undefined, { dateStyle: 'short' });
+                            return dateFormatter.formatDateTime(dateValue, undefined, { dateStyle: 'short' });
                         }
                         return hasValue ? String(value) : '';
                     }
