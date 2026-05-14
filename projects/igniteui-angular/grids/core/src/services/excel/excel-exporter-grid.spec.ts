@@ -44,7 +44,6 @@ import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { IgxGridNavigationService, IgxPivotNumericAggregate, PivotRowLayoutType } from 'igniteui-angular/grids/core';
-import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { FileContentData } from './test-data.service.spec';
 import { ZipWrapper } from './zip-verification-wrapper.spec';
@@ -1729,7 +1728,7 @@ describe('Excel Exporter', () => {
     };
 
     const exportAndVerify = async (component, exportOptions, expectedData, exportTable = true) => {
-        const isHGrid = component instanceof IgxHierarchicalGridComponent;
+        const isHGrid = component.type === 'hierarchical';
         const shouldNotExportTable = isHGrid || !exportTable;
 
         const wrapper = await getExportedData(component, exportOptions);
