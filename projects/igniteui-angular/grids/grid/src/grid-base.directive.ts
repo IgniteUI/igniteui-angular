@@ -7771,8 +7771,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
         };
-
-        if (NgZone.isInAngularZone() && this.zone.isStable) {
+        if (this.isZonelessChangeDetection()) {
             this.cdr.detectChanges();
             callback();
         } else {
@@ -7800,6 +7799,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
+    }
+
+    protected isZonelessChangeDetection(): boolean {
+        return this.zone.constructor.name === 'NoopNgZone';
     }
 
     protected hasMenuPinningActions(): boolean {
