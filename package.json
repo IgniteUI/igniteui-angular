@@ -174,14 +174,20 @@
       }
     },
     "igniteui-angular-charts": {
-      "@angular/core": "^21.0.0",
-      "@angular/common": "^21.0.0",
-      "@angular/compiler": "^21.0.0"
+      "@angular/core": "^22.0.0-rc.0",
+      "@angular/common": "^22.0.0-rc.0",
+      "@angular/compiler": "^22.0.0-rc.0"
     },
     "igniteui-angular-core": {
-      "@angular/core": "^21.0.0",
-      "@angular/common": "^21.0.0",
-      "@angular/compiler": "^21.0.0"
+      "@angular/core": "^22.0.0-rc.0",
+      "@angular/common": "^22.0.0-rc.0",
+      "@angular/compiler": "^22.0.0-rc.0"
+    },
+    "@angular-eslint/builder": {
+      "@angular/cli": "$@angular/cli"
+    },
+    "@angular-eslint/schematics": {
+      "@angular/cli": "$@angular/cli"
     }
   }
 }
