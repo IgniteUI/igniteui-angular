@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ChipResourceStringsBG } from 'igniteui-angular-i18n';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 
@@ -6,6 +6,7 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
     selector: 'app-chip',
     imports: [IgxChipComponent],
     templateUrl: './chip.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./chip.component.scss']
 })
 export class ChipComponent {

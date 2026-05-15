@@ -1,4 +1,4 @@
-import { Component, DebugElement, LOCALE_ID, ViewChild } from "@angular/core";
+import { Component, DebugElement, LOCALE_ID, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import {
     TestBed,
     tick,
@@ -3027,6 +3027,7 @@ describe("IgxCalendar - ", () => {
     template: `
         <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarComponent, FormsModule]
 })
 export class IgxCalendarSampleComponent {
@@ -3040,6 +3041,7 @@ export class IgxCalendarSampleComponent {
     template: `
         <igx-calendar [viewDate]="viewDate" selection="range"></igx-calendar>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarComponent]
 })
 export class IgxCalendarRangeComponent {
@@ -3058,6 +3060,7 @@ export class IgxCalendarRangeComponent {
         >
         </igx-calendar>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarComponent, FormsModule]
 })
 export class IgxCalendarDisabledSpecialDatesComponent {
@@ -3081,6 +3084,7 @@ export class IgxCalendarDisabledSpecialDatesComponent {
 
 @Component({
     template: ` <igx-calendar [value]="value"></igx-calendar> `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarComponent]
 })
 export class IgxCalendarValueComponent {

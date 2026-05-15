@@ -1,4 +1,4 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, computed, viewChild, DestroyRef} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, computed, viewChild, DestroyRef, ChangeDetectionStrategy} from '@angular/core';
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators} from '@angular/forms';
 
 import {
@@ -47,6 +47,7 @@ defineComponents(
         IgxSelectItemComponent,
         IgxComboComponent,
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class InputGroupShowcaseSampleComponent {

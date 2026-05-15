@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, viewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridLiteCellTemplateDirective, IgxGridLiteColumnComponent, IgxGridLiteComponent, IgxGridLiteFilteringExpression, IgxGridLiteHeaderTemplateDirective, IgxGridLiteSortingExpression, IgxGridLiteSortingOptions } from "igniteui-angular/grids/lite";
 import { GridLiteDataService } from './data.service';
 import { IgxCheckboxComponent } from 'igniteui-angular';
@@ -7,6 +7,7 @@ import { IgxCheckboxComponent } from 'igniteui-angular';
     templateUrl: 'grid-lite.sample.html',
     styleUrls: ['grid-lite.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective]
 })
 export class GridLiteSampleComponent {

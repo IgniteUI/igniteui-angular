@@ -7,16 +7,17 @@
     "inlineSources": true,
     "types": [],
     "paths": {
-      "igniteui-angular": [
-        "dist/igniteui-angular/"
-      ],
-      "igniteui-angular/*": [
-        "dist/igniteui-angular/*"
-      ]
+      "igniteui-angular": ["dist/igniteui-angular/"],
+      "igniteui-angular/*": ["dist/igniteui-angular/*"]
     }
   },
-  "exclude": [
-    "src/test.ts",
-    "**/*.spec.ts"
-  ]
+  "exclude": ["src/test.ts", "**/*.spec.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

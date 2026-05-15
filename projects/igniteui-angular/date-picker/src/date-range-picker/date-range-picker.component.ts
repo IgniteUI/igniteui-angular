@@ -1,8 +1,9 @@
 import {
-    AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
-    EventEmitter, HostBinding, HostListener, Injector, Input,
-    OnChanges, OnDestroy, OnInit, Output, QueryList,
-    SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject
+  AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
+  EventEmitter, HostBinding, HostListener, Injector, Input,
+  OnChanges, OnDestroy, OnInit, Output, QueryList,
+  SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -93,6 +94,7 @@ const SingleInputDatesConcatenationString = ' - ';
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         IgxIconComponent,

@@ -1,4 +1,4 @@
-import { Component, Input, booleanAttribute, inject } from '@angular/core';
+import { Component, Input, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { NgClass } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -10,6 +10,7 @@ import { IgxIconButtonDirective } from 'igniteui-angular/directives';
 @Component({
     selector: 'igx-excel-style-header',
     templateUrl: './excel-style-header.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxExcelStyleHeaderComponent {

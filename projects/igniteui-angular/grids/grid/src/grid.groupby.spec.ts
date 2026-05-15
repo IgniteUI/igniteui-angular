@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
+﻿import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import { formatNumber } from '@angular/common'
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -4048,6 +4048,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             <span> Custom template </span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class DefaultGridComponent extends DataParent {
@@ -4121,6 +4122,7 @@ class MySortingStrategy extends IgxGrouping {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class GroupableGridComponent extends DataParent {
@@ -4175,6 +4177,7 @@ export class GroupableGridComponent extends DataParent {
                 </span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeaderCollapsedIndicatorDirective]
 })
 export class CustomTemplateGridComponent extends DataParent {
@@ -4200,6 +4203,7 @@ export class CustomTemplateGridComponent extends DataParent {
             }
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupByDataMoreColumnsComponent extends DataParent {
@@ -4239,6 +4243,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
             </igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupByEmptyColumnFieldComponent extends DataParent {
@@ -4271,6 +4276,7 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
             </ng-template>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowSelectorDirective, IgxCheckboxComponent]
 })
 export class GridGroupByRowCustomSelectorsComponent extends DataParent {
@@ -4296,6 +4302,7 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
                 dataType="string"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupByCaseSensitiveComponent {
@@ -4342,6 +4349,7 @@ export class GridGroupByCaseSensitiveComponent {
             <igx-column [field]="'DateTimeField'" [width]="'200px'" [groupable]="true" dataType="dateTime"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupByTestDateTimeDataComponent {
@@ -4368,6 +4376,7 @@ export class GridGroupByTestDateTimeDataComponent {
             <igx-column [field]="'DateTimeField'" [width]="'200px'" [groupable]="true" dataType="dateTime"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridStateDirective]
 })
 export class GridGroupByStateComponent extends GridGroupByTestDateTimeDataComponent {

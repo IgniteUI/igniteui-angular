@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { IgxTabContentDirective } from '../tab-content.directive';
 import { IgxTabContentBase } from '../tabs.base';
 
@@ -6,6 +6,7 @@ import { IgxTabContentBase } from '../tabs.base';
     selector: 'igx-tab-content',
     templateUrl: 'tab-content.component.html',
     providers: [{ provide: IgxTabContentBase, useExisting: IgxTabContentComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: []
 })
 export class IgxTabContentComponent extends IgxTabContentDirective {

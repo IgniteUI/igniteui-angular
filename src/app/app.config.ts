@@ -2,7 +2,7 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { TestInterceptorClass } from './interceptor.service';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { HammerModule, provideClientHydration } from '@angular/platform-browser';
+import { HammerModule, provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideIgniteIntl } from 'igniteui-angular/core';
@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
         },
         provideAnimations(),
         provideHttpClient(withInterceptorsFromDi(), withFetch()),
-        provideClientHydration(),
+        provideClientHydration(withNoIncrementalHydration()),
         provideRouter(appRoutes),
         provideIgniteIntl()
     ]

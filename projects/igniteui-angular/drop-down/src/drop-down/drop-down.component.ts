@@ -1,20 +1,22 @@
 import {
-    Component,
-    ContentChildren,
-    ElementRef,
-    forwardRef,
-    QueryList,
-    OnChanges,
-    Input,
-    OnDestroy,
-    ViewChild,
-    ContentChild,
-    AfterViewInit,
-    Output,
-    EventEmitter,
-    SimpleChanges,
-    booleanAttribute,
-    inject} from '@angular/core';
+  Component,
+  ContentChildren,
+  ElementRef,
+  forwardRef,
+  QueryList,
+  OnChanges,
+  Input,
+  OnDestroy,
+  ViewChild,
+  ContentChild,
+  AfterViewInit,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  booleanAttribute,
+  inject,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBaseDirective } from './drop-down.base';
@@ -51,6 +53,7 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleDirective]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {

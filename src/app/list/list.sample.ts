@@ -1,8 +1,9 @@
 import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    ViewEncapsulation,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -84,6 +85,7 @@ interface Employee {
         IgSizeDirective,
         HammerModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         {
             provide: HAMMER_GESTURE_CONFIG,

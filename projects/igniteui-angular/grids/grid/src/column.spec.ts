@@ -1,4 +1,4 @@
-import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
+import { Component, DebugElement, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
@@ -1729,6 +1729,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnsFromIterableComponent {
@@ -1755,6 +1756,7 @@ interface IColumnConfig {
         <button type="button" igxButton="contained">{{value}}</button>
     </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxButtonDirective]
 })
 export class ResizableColumnsComponent {
@@ -1784,6 +1786,7 @@ export class ResizableColumnsComponent {
         <ng-template #newSummary>
             <span class="new-summary">New summary text</span>
         </ng-template>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellFooterTemplateDirective, IgxSummaryTemplateDirective]
 })
 export class TemplatedColumnsComponent {
@@ -1829,6 +1832,7 @@ export class TemplatedColumnsComponent {
             <span class="customSummaryTemplate">{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxSummaryTemplateDirective]
 })
 export class TemplatedInputColumnsComponent {
@@ -1855,6 +1859,7 @@ export class TemplatedInputColumnsComponent {
             </igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TemplatedContextInputColumnsComponent {
@@ -1879,6 +1884,7 @@ export class TemplatedContextInputColumnsComponent {
         </igx-grid>
     `,
     styles: [`.headerAlignSyle {text-align: right !important;}`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnHaederClassesComponent {
@@ -1927,6 +1933,7 @@ export class ColumnHaederClassesComponent {
             <igx-column field="value"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class DOMAttributesAsSettersComponent {

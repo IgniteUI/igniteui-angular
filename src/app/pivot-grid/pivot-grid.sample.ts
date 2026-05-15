@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, HostBinding, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxPivotNumericAggregate,
@@ -55,6 +55,7 @@ export class IgxTotalSaleAggregate {
     selector: 'app-tree-grid-sample',
     styleUrls: ['pivot-grid.sample.scss'],
     templateUrl: 'pivot-grid.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, FormsModule, IgxButtonGroupComponent, IgxButtonDirective, IgxPivotGridComponent, IgxPivotValueChipTemplateDirective, IgxPivotDataSelectorComponent]
 })
 export class PivotGridSampleComponent {

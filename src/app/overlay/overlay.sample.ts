@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxDropDownComponent,
@@ -30,6 +30,7 @@ import { IAnimationParams } from 'igniteui-angular/animations';
     selector: 'overlay-sample',
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxToggleDirective]
 })
 export class OverlaySampleComponent implements OnInit {

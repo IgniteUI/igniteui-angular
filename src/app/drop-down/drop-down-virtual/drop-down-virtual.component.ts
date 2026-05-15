@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 
 import { Observable } from 'rxjs';
@@ -15,6 +15,7 @@ interface DataItem {
     templateUrl: './drop-down-virtual.component.html',
     styleUrls: ['./drop-down-virtual.component.scss'],
     providers: [RemoteService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxForOfDirective, IgxDropDownItemComponent, IgxToastComponent, AsyncPipe]
 })
 export class DropDownVirtualComponent implements OnInit, AfterViewInit {
