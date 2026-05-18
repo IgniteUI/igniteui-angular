@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { By, HammerModule } from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
@@ -27,7 +27,7 @@ describe('IgxSlider', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule,
+                NoopAnimationsModule, FormsModule, ReactiveFormsModule,
                 SliderInitializeTestComponent,
                 SliderMinMaxComponent,
                 SliderTestComponent,

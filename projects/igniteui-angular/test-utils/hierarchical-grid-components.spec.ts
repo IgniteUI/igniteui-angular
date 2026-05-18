@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';
+import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from '../../../src/app/shared/sample-data';
 import { IgxButtonDirective } from '../directives/src/directives/button/button.directive';
 import { IgxCheckboxComponent } from '../checkbox/src/checkbox/checkbox.component';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../paginator/src/paginator/paginator.component';

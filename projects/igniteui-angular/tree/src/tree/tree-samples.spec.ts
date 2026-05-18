@@ -1,6 +1,6 @@
 import { Component, ViewChild, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxTreeComponent, IgxTreeExpandIndicatorDirective, IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './public_api';
-import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
+import { HIERARCHICAL_SAMPLE_DATA } from '../../../../../src/app/shared/sample-data';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 
