@@ -1,0 +1,1 @@
+../../../../../skills/igniteui-angular-grids/SKILL.md

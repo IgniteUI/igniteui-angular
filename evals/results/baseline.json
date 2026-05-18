@@ -1,0 +1,36 @@
+{
+  "generated_at": "2026-03-08T07:00:00.000Z",
+  "framework_version": "1.0.0",
+  "description": "Initial baseline results for skill evals. Actual scores will be populated after the first full eval run with an API key.",
+  "thresholds": {
+    "pass_at_5_merge_gate": 0.8,
+    "pass_at_5_block": 0.6,
+    "pass_pow_5_tracked": 0.6
+  },
+  "tasks": {
+    "grid-basic-setup": {
+      "skill": "igniteui-angular-grids",
+      "trials": 5,
+      "pass_rate": null,
+      "pass_at_5": null,
+      "pass_pow_5": null,
+      "status": "pending_first_run"
+    },
+    "component-combo-reactive-form": {
+      "skill": "igniteui-angular-components",
+      "trials": 5,
+      "pass_rate": null,
+      "pass_at_5": null,
+      "pass_pow_5": null,
+      "status": "pending_first_run"
+    },
+    "theming-palette-generation": {
+      "skill": "igniteui-angular-theming",
+      "trials": 5,
+      "pass_rate": null,
+      "pass_at_5": null,
+      "pass_pow_5": null,
+      "status": "pending_first_run"
+    }
+  }
+}
