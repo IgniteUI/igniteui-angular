@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "target": "es6",
+        "strict": false,
         "module": "node16",
         "sourceMap": false,
         "composite": true,
