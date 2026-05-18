@@ -6,6 +6,7 @@
         "composite": true,
         "declaration": true,
         "outDir": "../../../dist/igniteui-angular/schematics/",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "types": ["node", "jasmine"]
     }
 }
