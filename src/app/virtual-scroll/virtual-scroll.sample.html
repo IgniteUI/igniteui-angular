@@ -1,0 +1,135 @@
+<section class="vs-demo">
+    <h1 class="vs-demo__title">Virtual Scroll Samples</h1>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- 1. Vertical - variable-height items                                 -->
+    <!-- ------------------------------------------------------------------ -->
+    <article class="vs-demo__card">
+        <h2>Vertical - variable-height items (100 items)</h2>
+        <p class="vs-demo__desc">
+            Each item has a different height. The engine measures sizes after the first
+            render and adjusts scroll calculations automatically.
+        </p>
+
+        <igx-virtual-scroll [data]="verticalItems()" class="vs-demo__viewport">
+            <ng-template igxVirtualItem let-item let-i="index" let-odd="odd">
+                <div
+                    class="vs-demo__row"
+                    [style.height.px]="item.height"
+                    [style.border-left-color]="item.color"
+                    [class.vs-demo__row--odd]="odd"
+                >
+                    <span class="vs-demo__row-index">#{{ i }}</span>
+                    <span>{{ item.label }}</span>
+                    <span class="vs-demo__row-meta">h={{ item.height }}px</span>
+                </div>
+            </ng-template>
+        </igx-virtual-scroll>
+    </article>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- 2. Vertical - constant item size                                     -->
+    <!-- ------------------------------------------------------------------ -->
+    <article class="vs-demo__card">
+        <h2>Vertical - constant item size (500 items)</h2>
+        <p class="vs-demo__desc">
+            All items share the same height of 48 px. Providing a uniform estimated
+            size lets the engine skip re-measurement, giving the best performance.
+        </p>
+
+        <igx-virtual-scroll [data]="verticalConstantItems()" class="vs-demo__viewport">
+            <ng-template igxVirtualItem let-item let-i="index">
+                <div
+                    class="vs-demo__row vs-demo__row--fixed"
+                    [style.border-left-color]="item.color"
+                >
+                    <span class="vs-demo__row-index">#{{ i }}</span>
+                    <span>{{ item.label }}</span>
+                </div>
+            </ng-template>
+        </igx-virtual-scroll>
+    </article>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- 3. Horizontal - variable column widths                              -->
+    <!-- ------------------------------------------------------------------ -->
+    <article class="vs-demo__card">
+        <h2>Horizontal - variable column widths (300 columns)</h2>
+        <p class="vs-demo__desc">
+            Each column has a different width. The engine measures sizes after the
+            first render and updates scroll calculations automatically.
+        </p>
+
+        <igx-virtual-scroll
+            [data]="horizontalVariableItems()"
+            orientation="horizontal"
+            class="vs-demo__viewport vs-demo__viewport--horizontal"
+        >
+            <ng-template igxVirtualItem let-col let-i="index">
+                <div
+                    class="vs-demo__col vs-demo__col--variable"
+                    [style.width.px]="col.width"
+                    [style.border-top-color]="col.color"
+                >
+                    <span class="vs-demo__col-index">{{ i }}</span>
+                    <span>{{ col.label }}</span>
+                    <span class="vs-demo__col-meta">{{ col.width }}px</span>
+                </div>
+            </ng-template>
+        </igx-virtual-scroll>
+    </article>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- 5. Horizontal - fixed column widths                                 -->
+    <!-- ------------------------------------------------------------------ -->
+    <article class="vs-demo__card">
+        <h2>Horizontal - fixed column widths (200 columns)</h2>
+        <p class="vs-demo__desc">
+            Set <code>orientation="horizontal"</code> to scroll along the x-axis.
+        </p>
+
+        <igx-virtual-scroll
+            [data]="horizontalItems()"
+            orientation="horizontal"
+            class="vs-demo__viewport vs-demo__viewport--horizontal"
+        >
+            <ng-template igxVirtualItem let-col let-i="index">
+                <div class="vs-demo__col">
+                    <span class="vs-demo__col-index">{{ i }}</span>
+                    <span>{{ col }}</span>
+                </div>
+            </ng-template>
+        </igx-virtual-scroll>
+    </article>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- 6. Remote / infinite scrolling                                      -->
+    <!-- ------------------------------------------------------------------ -->
+    <article class="vs-demo__card">
+        <h2>Remote / infinite scrolling</h2>
+        <p class="vs-demo__desc">
+            The <code>dataRequest</code> event fires when the viewport approaches the
+            end of loaded data. Append new items to trigger another render pass.
+        </p>
+
+        <div class="vs-demo__status">
+            Loaded: {{ remoteItems().length }} items
+            @if (isLoading()) {
+                <span class="vs-demo__loading"> — loading…</span>
+            }
+        </div>
+
+        <igx-virtual-scroll
+            [data]="remoteItems()"
+            (dataRequest)="onDataRequest($event)"
+            class="vs-demo__viewport"
+        >
+            <ng-template igxVirtualItem let-item let-i="index">
+                <div class="vs-demo__row">
+                    <span class="vs-demo__row-index">#{{ i }}</span>
+                    <span>{{ item }}</span>
+                </div>
+            </ng-template>
+        </igx-virtual-scroll>
+    </article>
+</section>

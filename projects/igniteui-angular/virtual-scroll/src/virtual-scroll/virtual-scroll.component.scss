@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  position: relative;
+  overflow: auto;
+}
+
+:host(.igx-virtual-scroll--vertical) {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+:host(.igx-virtual-scroll--horizontal) {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.igx-vs__track {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+}
+
+.igx-vs__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  will-change: transform;
+  contain: layout style paint;
+}
+
+:host(.igx-virtual-scroll--horizontal) {
+  .igx-vs__track {
+    height: 100%;
+    min-height: unset;
+  }
+
+  .igx-vs__content {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: auto;
+  }
+}
