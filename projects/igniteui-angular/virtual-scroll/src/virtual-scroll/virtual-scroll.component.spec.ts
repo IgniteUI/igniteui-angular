@@ -25,7 +25,7 @@ function generateItems(count: number): string[] {
 // VirtualScrollEngine (pure unit tests – no DOM required)
 // ---------------------------------------------------------------------------
 
-fdescribe('VirtualScrollEngine', () => {
+describe('VirtualScrollEngine', () => {
     let engine: VirtualScrollEngine;
 
     beforeEach(() => {
