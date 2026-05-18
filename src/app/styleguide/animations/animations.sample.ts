@@ -234,7 +234,7 @@ export class AnimationsSampleComponent {
         if (animation.options?.params?.duration && animation.options?.params?.duration !== '1000ms') {
             animation.options.params.duration = '1000ms';
         }
-        const overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(AbsolutePosition.Center);
+        const overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings();
         overlaySettings.closeOnOutsideClick = true;
         overlaySettings.modal = true;
         overlaySettings.positionStrategy.settings.openAnimation = animation;

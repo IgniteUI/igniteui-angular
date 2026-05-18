@@ -391,6 +391,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (this.disabled || this.items.length === 0) {
             return;
         }
+
         if (!this.selectedItem) {
             this.navigateFirst();
         }
@@ -539,7 +540,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     protected onStatusChanged() {
         this.manageRequiredAsterisk();
-        if (this.ngControl && !this.disabled && this.isTouchedOrDirty) {
+
+        if (this.ngControl && !this.ngControl.disabled && this.isTouchedOrDirty) {
             if (this.hasValidators && this.inputGroup.isFocused) {
                 this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {

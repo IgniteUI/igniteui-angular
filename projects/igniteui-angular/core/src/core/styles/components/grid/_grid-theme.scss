@@ -3,11 +3,13 @@
 @use '../../base' as *;
 @use './excel-filtering-theme' as *;
 @use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
+@use './grid-theme-builder' as *;
 
 @mixin _filtering-scroll-mask($theme, $dir) {
     display: block;
-    position: absolute;
-    width: rem(10px);
+    position: sticky;
+    min-width: rem(10px);
     content: '';
     inset-block: rem(-2px);
     background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
@@ -20,6 +22,7 @@
 @mixin grid($theme) {
     @include css-vars($theme);
     @include scale-in-ver-center();
+    @include grid-theme-builder($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
     $theme-variant: map.get($theme, '_meta', 'variant');
@@ -249,6 +252,7 @@
         igx-prefix,
         igx-suffix {
             background: transparent !important;
+            color: var(--ig-input-group-idle-text-color) !important;
             border-radius: 0 !important;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
@@ -310,7 +314,7 @@
                 min-width: rem(140px);
 
                 @if $variant != 'fluent' {
-                    border: rem(1px) solid color($color: 'gray', $variant: 300);
+                    border: rem(1px) solid color-mix(in srgb, var(--_grid-accent-color, var(--ig-gray-300)) 70%, var(--_grid-background, var(--ig-gray-300)));
                 }
 
                 --size: calc(#{$filtering-row-height} - #{rem(8px)});
@@ -321,6 +325,7 @@
                 igx-prefix,
                 igx-suffix {
                     background: transparent;
+                    color: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background));
                     border-radius: 0;
 
                     /* stylelint-disable-next-line */
@@ -367,13 +372,13 @@
 
                 &:hover{
                     color: var-get($theme, 'filtering-row-text-color');
-                    border-color: color($color: 'primary', $variant: 500);
+                    border-color: var(--_grid-accent-color, var(--ig-primary-500));
                 }
             }
 
             .igx-input-group--focused {
                 @if $variant != 'fluent' {
-                    border-color: color($color: 'primary', $variant: 500);
+                    border-color: var(--_grid-accent-color, var(--ig-primary-500));
                     border-width: rem(1px);
                 }
 
@@ -402,6 +407,7 @@
                 igx-prefix,
                 igx-suffix {
                     background: transparent !important;
+                    color: var(--_grid-foreground);
                     border-radius: 0;
                 }
             }
@@ -411,7 +417,7 @@
             }
 
             igx-prefix:focus {
-                color: color(map.get($theme, 'palette'), 'secondary');
+                color: var-get($theme, 'sorted-header-icon-color');
             }
 
             igx-suffix {
@@ -419,7 +425,7 @@
                     outline-style: none;
 
                     &:focus {
-                        color: color($color: 'secondary');
+                        color: var-get($theme, 'sorted-header-icon-color');
                     }
 
                     + igx-icon {
@@ -436,43 +442,43 @@
     igx-tree-grid {
         @if $variant == 'material' {
             @if $theme-variant == 'light' {
-                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
-                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 300)};
-                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+                --ig-chip-disabled-text-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-500)) 50%, var(--_grid-background, var(--ig-gray-500)));
+                --ig-chip-disabled-background: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-300)) 12%, var(--_grid-background, var(--ig-gray-300)));
+                --ig-chip-disabled-border-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-300)) 24%, var(--_grid-background, var(--ig-gray-300)));
             }
             @if $theme-variant == 'dark' {
-                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
-                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-text-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-300)) 50%, var(--_grid-background, var(--ig-gray-300)));
+                --ig-chip-disabled-background: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-200)) 12%, var(--_grid-background, var(--ig-gray-200)));
+                --ig-chip-disabled-border-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-200)) 24%, var(--_grid-background, var(--ig-gray-200)));
             }
         }
 
         @if $variant == 'fluent' {
             @if $theme-variant == 'dark' {
-                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
-                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-text-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-400)) 50%, var(--_grid-background, var(--ig-gray-400)));
+                --ig-chip-disabled-background: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-200)) 12%, var(--_grid-background, var(--ig-gray-200)));
+                --ig-chip-disabled-border-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-200)) 24%, var(--_grid-background, var(--ig-gray-200)));
             }
         }
 
         @if $variant == 'bootstrap' {
             @if $theme-variant == 'dark' {
-                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
-                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-text-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-400)) 50%, var(--_grid-background, var(--ig-gray-400)));
+                --ig-chip-disabled-background: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-200)) 12%, var(--_grid-background, var(--ig-gray-200)));
+                --ig-chip-disabled-border-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-200)) 24%, var(--_grid-background, var(--ig-gray-200)));
             }
         }
 
         @if $variant == 'indigo' {
             @if $theme-variant == 'light' {
-                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
-                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+                --ig-chip-disabled-text-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-500)) 50%, var(--_grid-background, var(--ig-gray-500)));
+                --ig-chip-disabled-background: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-200)) 12%, var(--_grid-background, var(--ig-gray-200)));
+                --ig-chip-disabled-border-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-300)) 24%, var(--_grid-background, var(--ig-gray-300)));
             }
             @if $theme-variant == 'dark' {
-                --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
-                --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
-                --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 200)};
+                --ig-chip-disabled-text-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-300)) 50%, var(--_grid-background, var(--ig-gray-300)));
+                --ig-chip-disabled-background: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-200)) 12%, var(--_grid-background, var(--ig-gray-200)));
+                --ig-chip-disabled-border-color: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-200)) 24%, var(--_grid-background, var(--ig-gray-200)));
             }
         }
     }
@@ -892,12 +898,14 @@
         &%igx-grid__tr--ghost {
             background: var-get($theme, 'row-ghost-background');
             color: var-get($theme, 'row-drag-color');
+            outline: rem(1px) solid var-get($theme, 'row-ghost-border-color');
             z-index: 10002;
 
             @include css-vars((
                 name: 'igx-grid-row',
                 row-ghost-background: map.get($theme, 'row-ghost-background'),
-                row-drag-color: map.get($theme, 'row-drag-color')
+                row-drag-color: map.get($theme, 'row-drag-color'),
+                row-ghost-border-color: map.get($theme, 'row-ghost-border-color')
             ));
         }
     }
@@ -1009,17 +1017,13 @@
         }
 
         %igx-icon--error {
-            @if $variant == 'indigo' or $theme-variant == 'dark' {
-                color: color($color: 'gray', $variant: 500);
-            } @else {
-                color: color($color: 'gray', $variant: 600);
-            }
+            color: var-get($theme, 'grouparea-color');
         }
     }
 
     %igx-grid__td--bool-true {
         %igx-icon--success {
-            color: color($color: 'gray', $variant: 700);
+            color: var-get($theme, 'drop-area-text-color');
         }
     }
 
@@ -1372,6 +1376,7 @@
     }
 
     %igx-grid__tr--merged {
+        border-bottom: 0;
         border-block-end: 0;
     }
 
@@ -1814,7 +1819,7 @@
     }
 
     %grid-summaries--body {
-        --summaries-patch-background: var(--ig-gray-100);
+        --summaries-patch-background: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-100)) 12%, var(--_grid-background, var(--ig-gray-100)));
 
         border-bottom: rem(1px) dashed var-get($theme, 'row-border-color');
         background-color: var-get($theme, 'summaries-patch-background');
@@ -2335,35 +2340,6 @@
 
     %igx-grid__outlet {
         --ig-size: var(--grid-size);
-
-        z-index: 10002;
-        position: fixed;
-    }
-
-    %igx-grid__loading-outlet {
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        position: absolute;
-
-        > %overlay-wrapper--modal {
-            background: none;
-        }
-
-        %circular-display {
-            width: rem(50);
-            height: rem(50);
-        }
-    }
-
-    %igx-grid__row-editing-outlet {
-        z-index: 10000;
-        position: absolute;
-
-        %overlay-wrapper {
-            /* Change wrapper position from 'fixed' to 'absolute' so that it is hidden when scrolled below the parent grid body content. */
-            position: absolute;
-        }
     }
 
     %igx-grid__addrow-snackbar {
@@ -2507,6 +2483,7 @@
         display: flex;
         flex: 1;
         overflow: hidden;
+        position: relative;
         max-width: calc(100% - 176px);
         min-width: rem(56px);
 
@@ -2526,9 +2503,6 @@
                 igx-icon {
                     position: absolute;
                     inset-inline-start: rem(12px);
-                    // IE fix for vertical alignment
-                    top: 50%;
-                    transform: translateY(-50%);
                 }
 
                 span {
@@ -2538,48 +2512,43 @@
         }
     }
 
-    %igx-grid__filtering-scroll-start {
-        &::after {
-            @include _filtering-scroll-mask($theme, right);
-            inset-inline-start: calc(100% + 6px);
-        }
-
-        [dir='rtl'] & {
-            &::before {
-                @include _filtering-scroll-mask($theme, right);
-                inset-inline-end: calc(100% + 6px);
-            }
-        }
-    }
-
-    %igx-grid__filtering-scroll-end {
-        &::before {
-            @include _filtering-scroll-mask($theme, left);
-            inset-inline-end: calc(100% + 6px);
-        }
-
-        [dir='rtl'] & {
-            &::after {
-                @include _filtering-scroll-mask($theme, left);
-                inset-inline-start: calc(100% + 6px);
-            }
-        }
-    }
-
     %igx-grid__filtering-scroll-start,
     %igx-grid__filtering-scroll-end {
         width: rem(24px);
         height: rem(24px);
         position: relative;
-        overflow: visible;
         margin: if($variant == 'indigo', rem(12px), rem(8px));
         z-index: 1;
 
         [dir='rtl'] & {
             transform: scaleX(-1);
+        }
+    }
+
+    .igx-grid__filtering-row-scroll-start + .igx-grid__filtering-row-main {
+        &::before {
+            @include _filtering-scroll-mask($theme, right);
+
+            inset-inline-start: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        &::after {
+            @include _filtering-scroll-mask($theme, left);
+
+            inset-inline-end: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        [dir='rtl'] & {
+            &::before {
+                background: linear-gradient(to left, var-get($theme, 'filtering-row-background'), transparent);
+            }
 
             &::after {
-                content: initial;
+                background: linear-gradient(to right, var-get($theme, 'filtering-row-background'), transparent);
             }
         }
     }
@@ -2722,14 +2691,7 @@
     @include excel-filtering($theme);
 
     %advanced-filtering-dialog {
-	    @if $variant == 'indigo' {
-		    $light-variant: contrast-color($color: 'gray', $variant: 900);
-		    $dark-variant: color($color: 'gray', $variant: 50);
-		    background: if($theme-variant == 'light', $light-variant,  $dark-variant);
-	    } @else {
-		    background: color($color: 'surface', $variant: 500);
-	    }
-
+	    background: var-get($theme, 'filtering-dialog-background');
         box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
 
         @if $variant == 'material' or $variant == 'bootstrap' {

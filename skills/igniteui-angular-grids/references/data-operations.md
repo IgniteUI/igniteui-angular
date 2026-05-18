@@ -111,7 +111,7 @@ export class CompanyGridComponent {
 <igx-hierarchical-grid #hGrid
   [data]="companies()"
   primaryKey="id"
-  height="600px">
+  height="800px">
   <igx-column field="name" [sortable]="true"></igx-column>
   <igx-row-island key="orders" primaryKey="orderId">
     <igx-column field="orderId" [sortable]="true"></igx-column>
@@ -139,7 +139,8 @@ Enable sorting on individual columns and optionally bind the sorting state:
 <igx-grid #grid
   [data]="data()"
   [(sortingExpressions)]="sortExprs"
-  [sortingOptions]="{ mode: 'single' }">
+  [sortingOptions]="{ mode: 'single' }"
+  height="500px">
   <igx-column field="name" [sortable]="true"></igx-column>
   <igx-column field="date" dataType="date" [sortable]="true"></igx-column>
   <igx-column field="amount" dataType="number" [sortable]="true"></igx-column>

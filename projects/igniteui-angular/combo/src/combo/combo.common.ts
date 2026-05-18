@@ -1289,6 +1289,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public onClick(event: Event) {
         event.stopPropagation();
         event.preventDefault();
+
         if (!this.disabled) {
             this.toggle();
         }
@@ -1313,7 +1314,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     protected onStatusChanged = () => {
-        if (this.ngControl && this.isTouchedOrDirty && !this.disabled) {
+        if (this.ngControl && this.isTouchedOrDirty && !this.ngControl.disabled) {
             if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
                 this.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
@@ -1323,6 +1324,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
             this.valid = IgxInputState.INITIAL;
         }
+
         this.manageRequiredAsterisk();
     };
 

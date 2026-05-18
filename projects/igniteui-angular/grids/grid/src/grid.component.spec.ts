@@ -319,9 +319,9 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(100);
-            // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+            // With data, igx-grid__tbody-content is the rowgroup focus host
             const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
-            expect(container.getAttribute('role')).toBe(null);
+            expect(container.getAttribute('role')).toBe('rowgroup');
 
             //Filter grid so no results are available and grid is empty
             grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
@@ -337,6 +337,33 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(container.getAttribute('role')).toMatch('row');
 
+        }));
+
+        it('should have correct ARIA role structure on tbody and tfoot', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            fixture.componentInstance.columns[0].hasSummary = true;
+
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(100);
+
+            // Outer tbody wrapper is layout-only
+            const tbodyWrapper = fixture.nativeElement.querySelector('.igx-grid__tbody');
+            expect(tbodyWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner focus host is the rowgroup
+            const tbodyContent = fixture.nativeElement.querySelector('.igx-grid__tbody-content');
+            expect(tbodyContent.getAttribute('role')).toBe('rowgroup');
+            expect(tbodyContent.getAttribute('tabindex')).toBe('0');
+
+            // Outer tfoot wrapper is layout-only
+            const tfootWrapper = fixture.nativeElement.querySelector('.igx-grid__tfoot');
+            expect(tfootWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner tfoot div is the rowgroup focus host
+            const tfootContent = fixture.nativeElement.querySelector('.igx-grid__tfoot > div');
+            expect(tfootContent.getAttribute('role')).toBe('rowgroup');
+            expect(tfootContent.getAttribute('tabindex')).toBe('0');
         }));
 
         it('should render empty message', fakeAsync(() => {
@@ -460,10 +487,10 @@ describe('IgxGrid Component Tests #grid', () => {
             // the overlay should be shown and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
             const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
-            expect(loadingIndicator.nativeElement.offsetWidth).toBe(gridBody.nativeElement.offsetWidth);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
             expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
 
-            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
+            expect(loadingIndicator.nativeElement.children.length).not.toBeNull();
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columnList;
@@ -488,9 +515,9 @@ describe('IgxGrid Component Tests #grid', () => {
 
             // the overlay should be hidden and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
-            expect(loadingIndicator.nativeElement.offsetWidth).toBe(gridBody.nativeElement.offsetWidth);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
             expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
-            expect(loadingIndicator.nativeElement.children.length).toBe(0);
+            expect(loadingIndicator.query(By.css('igx-circular-bar'))).toBeNull();
         }));
 
         it('should render loading indicator when loading is enabled and autoGenerate is enabled', fakeAsync(() => {
@@ -642,13 +669,14 @@ describe('IgxGrid Component Tests #grid', () => {
             // the overlay should be shown and container should have the same dimensions as the grid's body
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
             const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
-            expect(loadingIndicator.nativeElement.offsetWidth).toBe(gridBody.nativeElement.offsetWidth);
+            expect(loadingIndicator.nativeElement.offsetWidth).toBe(0);
             expect(loadingIndicator.nativeElement.offsetHeight).toBe(gridBody.nativeElement.offsetHeight);
-            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
+            expect(loadingIndicator.query(By.css('igx-circular-bar'))).not.toBeNull();
 
             grid.isLoading = false;
             tick(16);
-            expect(loadingIndicator.nativeElement.children.length).toBe(0);
+            fixture.detectChanges();
+            expect(loadingIndicator.query(By.css('igx-circular-bar'))).toBeNull();
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
@@ -1305,6 +1333,30 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
             expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
+        }));
+
+        it('should account for CSS border widths in body height calculation when height is percent #16640', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.outerHeight = 600;
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const calcHeightNoBorder = grid.calcHeight;
+            expect(calcHeightNoBorder).not.toBeNull();
+
+            // Apply a 2px border (top and bottom) to the grid's native element
+            grid.nativeElement.style.borderTop = '2px solid black';
+            grid.nativeElement.style.borderBottom = '2px solid black';
+
+            // Trigger height recalculation
+            grid.reflow();
+            fix.detectChanges();
+
+            // The fix ensures border widths are included in the rendered height calculation,
+            // reducing the available body height accordingly and preventing continuous reflow growth
+            expect(grid.calcHeight).toBe(calcHeightNoBorder - 4);
         }));
 
         it('should keep auto-sizing if initial data is empty then set to a new array', fakeAsync(() => {

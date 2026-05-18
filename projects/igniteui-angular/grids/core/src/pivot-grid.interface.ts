@@ -50,9 +50,10 @@ export interface IPivotDimensionStrategy {
 
 /**
 * Interface describing a PivotAggregation function.
-* Accepts an array of extracted data members and a array of the original data records.
+* Accepts an array of extracted data members and an optional array of the original data records,
+* which can be omitted or undefined.
 */
-export type PivotAggregation = (members: any[], data: any[]) => any;
+export type PivotAggregation = (members: any[], data?: any[]) => any;
 
 /* marshalByValue */
 /**
@@ -76,7 +77,7 @@ export interface IPivotAggregator {
      * Aggregator function can be a custom implementation of `PivotAggregation`, or
      * use predefined ones from pivot aggregate and its variants.
      */
-    aggregator?: (members: any[], data?: any[]) => any;
+    aggregator?: PivotAggregation;
 }
 
 /* marshalByValue */
