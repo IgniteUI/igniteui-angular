@@ -3,7 +3,7 @@ import { AsyncPipe } from '@angular/common';
 
 import { Observable } from 'rxjs';
 
-import { RemoteService } from 'src/app/shared/remote.service';
+import { RemoteService } from '../../shared/remote.service';
 import { IForOfState, IgxButtonDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxToastComponent, IgxToggleActionDirective, VerticalAlignment } from 'igniteui-angular';
 
 interface DataItem {
