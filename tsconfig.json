@@ -1,6 +1,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
+      "strict": false,
       "importHelpers": true,
       "module": "es2022",
       "outDir": "./dist/out-tsc",
