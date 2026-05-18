@@ -8,12 +8,14 @@
     "compilerOptions": {
         "target": "es6",
         "module": "node16",
+        "strict": false,
         "sourceMap": false,
         "declaration": true,
         "outDir": "../../../dist/igniteui-angular/migrations",
         "typeRoots": [
             "../../../node_modules/@types"
         ],
+        "types": ["node"],
         "paths": {
             "igniteui-angular/*": [
                 "../*"

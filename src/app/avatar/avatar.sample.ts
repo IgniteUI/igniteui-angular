@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxAvatarComponent,
     IgxIconComponent,
@@ -28,6 +28,7 @@ defineComponents(IgcAvatarComponent, IgcIconComponent);
     templateUrl: `avatar.sample.html`,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxAvatarComponent,
         IgxIconComponent,

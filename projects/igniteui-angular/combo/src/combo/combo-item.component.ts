@@ -1,9 +1,10 @@
 import {
-    Component,
-    HostBinding,
-    Input,
-    booleanAttribute,
-    inject
+  Component,
+  HostBinding,
+  Input,
+  booleanAttribute,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxComboAPIService } from './combo.api';
 import { rem } from 'igniteui-angular/core';
@@ -14,6 +15,7 @@ import { IgxDropDownItemComponent, Navigate } from 'igniteui-angular/drop-down';
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 export class IgxComboItemComponent extends IgxDropDownItemComponent {

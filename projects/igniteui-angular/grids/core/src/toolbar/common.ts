@@ -1,4 +1,4 @@
-import { Component, Directive, HostBinding, TemplateRef, inject } from '@angular/core';
+import { Component, Directive, HostBinding, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { GridType } from '../common/grid.interface';
 
 @Directive({
@@ -40,6 +40,7 @@ export class IgxPdfTextDirective { }
  */
 @Component({
     selector: 'igx-grid-toolbar-title', template: '<ng-content></ng-content>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxGridToolbarTitleComponent {
@@ -73,6 +74,7 @@ export class IgxGridToolbarTitleComponent {
  */
 @Component({
     selector: 'igx-grid-toolbar-actions', template: '<ng-content></ng-content>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxGridToolbarActionsComponent {

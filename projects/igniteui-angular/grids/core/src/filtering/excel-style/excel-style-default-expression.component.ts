@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, inject } from '@angular/core';
+import { Component, AfterViewInit, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExpressionUI } from './common';
 import { AbsoluteScrollStrategy, ColumnType, ConnectedPositioningStrategy, DataUtil, FilteringLogic, GridColumnDataType, IBaseEventArgs, IFilteringOperation, IgxOverlayOutletDirective, IgxPercentFormatterPipe, OverlaySettings, PlatformUtil } from 'igniteui-angular/core';
@@ -22,6 +22,7 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
 @Component({
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective, IgxPercentFormatterPipe]
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {

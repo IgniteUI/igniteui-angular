@@ -1153,6 +1153,7 @@ class HelperTestFunctions {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselTestComponent {
@@ -1201,6 +1202,7 @@ class CarouselAnimationsComponent {
             </ng-template>
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective]
 })
 class CarouselTemplateSetInMarkupTestComponent {
@@ -1237,6 +1239,7 @@ class CarouselTemplateSetInMarkupTestComponent {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselTemplateSetInTypescriptTestComponent {
@@ -1261,6 +1264,7 @@ class CarouselTemplateSetInTypescriptTestComponent {
             }
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselDynamicSlidesComponent {
