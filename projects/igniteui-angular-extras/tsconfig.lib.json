@@ -5,10 +5,11 @@
     "declarationMap": true,
     "declaration": true,
     "inlineSources": true,
+    "lib": ["ESNext", "DOM"],
     "types": [],
     "paths": {
-      "igniteui-angular": ["dist/igniteui-angular/"],
-      "igniteui-angular/*": ["dist/igniteui-angular/*"]
+      "igniteui-angular": ["../../dist/igniteui-angular/"],
+      "igniteui-angular/*": ["../../dist/igniteui-angular/*"]
     }
   },
   "exclude": ["src/test.ts", "**/*.spec.ts"],
