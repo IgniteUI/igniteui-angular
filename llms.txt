@@ -1,0 +1,161 @@
+# Ignite UI for Angular
+
+> Enterprise Angular UI component library from Infragistics. 60+ Angular-native components including high-performance data grids (Grid, Tree Grid, Hierarchical Grid, Pivot Grid), 65+ charts, and a full AI developer toolchain — MCP servers, AI Skills, and structured docs for agent-native workflows.
+
+## AI Toolchain
+
+- [Documentation MCP server](https://www.npmjs.com/package/@igniteui/mcp-server): MCP server bundled in igniteui-cli. Start with `ig mcp`. Exposes 6 tools: list_components, get_doc, search_docs, get_api_reference, search_api, generate_ignite_app. Supports Angular, React, Blazor, Web Components.
+- [Theming MCP server](https://www.npmjs.com/package/igniteui-theming): MCP server bundled in igniteui-theming. Start with `npx igniteui-theming/mcp`. Exposes tools for palette generation, typography, elevations, component theming across Material, Bootstrap, Fluent, Indigo design systems.
+- [AI Skills — Components](https://github.com/IgniteUI/igniteui-angular/blob/master/skills/igniteui-angular-components/SKILL.md): Structured knowledge file for form controls, layout, data display, overlays, charts. Auto-discovered in VS Code (Copilot) and Cursor.
+- [AI Skills — Data Grids](https://github.com/IgniteUI/igniteui-angular/blob/master/skills/igniteui-angular-grids/SKILL.md): Structured knowledge file for Grid, Tree Grid, Hierarchical Grid, Pivot Grid — column config, sorting, filtering, editing, remote data, state persistence.
+- [AI Skills — Theming](https://github.com/IgniteUI/igniteui-angular/blob/master/skills/igniteui-angular-theming/SKILL.md): Structured knowledge file for theming system — includes Theming MCP server setup instructions.
+- [MCP tool inventory](https://github.com/IgniteUI/igniteui-angular/blob/master/README.md#mcp-tool-inventory): Full table of documentation MCP tools with input/output signatures.
+- [Theming MCP tool inventory](https://github.com/IgniteUI/igniteui-angular/blob/master/README.md#theming-mcp-tool-inventory): Full table of theming MCP tools with phase availability.
+- [Integration matrix](https://github.com/IgniteUI/igniteui-angular/blob/master/README.md#integration-matrix): Which tools work in which IDEs (VS Code, Cursor, Claude Code, Claude Desktop, JetBrains).
+- [Boundary constraints](https://github.com/IgniteUI/igniteui-angular/blob/master/README.md#boundary-constraints): Explicit constraints on tool capabilities, scope, and what is NOT supported — read before generating integration code.
+- [Architecture diagram](https://github.com/IgniteUI/igniteui-angular/blob/master/README.md#ai-toolchain-architecture): ASCII diagram of the two-MCP-server topology and Skills layer.
+
+## Getting Started
+
+- [Getting started guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/getting-started): Installation, CLI scaffolding, ng add setup.
+- [npm package — igniteui-angular](https://www.npmjs.com/package/igniteui-angular): Core component library. Install with `npm install igniteui-angular`.
+- [npm package — igniteui-cli](https://www.npmjs.com/package/igniteui-cli): CLI for project scaffolding and MCP server. Install globally with `npm install -g igniteui-cli`.
+- [npm package — igniteui-theming](https://www.npmjs.com/package/igniteui-theming): Theming Sass library + Theming MCP server. Run MCP with `npx igniteui-theming/mcp`.
+- [README](https://github.com/IgniteUI/igniteui-angular/blob/master/README.md): Full repository overview including AI toolchain setup, component inventory, and integration matrix.
+
+## Data Grid Components
+
+- [Grid overview](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid): IgxGridComponent — primary flat data grid with virtualization, sorting, filtering, editing, grouping, paging, summaries, export.
+- [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid): IgxTreeGridComponent — hierarchical flat data with parent-child relationships. License: Commercial.
+- [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid): IgxHierarchicalGridComponent — master-detail grid with nested child grids. License: Commercial.
+- [Pivot Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotgrid/pivot-grid): IgxPivotGridComponent — OLAP-style pivot table with dimensions and aggregations. License: Commercial.
+- [Grid state persistence](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/state-persistence): IgxGridState directive — serialize and restore grid state (sorting, filtering, paging, selection).
+- [Grid column configuration](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-types): Column types, templates, pinning, hiding, resizing, moving.
+- [Grid remote data](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations): Remote sorting, filtering, paging with RxJS and virtual scrolling.
+- [Query Builder](https://www.infragistics.com/products/ignite-ui-angular/angular/components/query-builder): IgxQueryBuilderComponent — visual filter expression builder. License: Commercial.
+
+## Chart Components
+
+- [Charts overview](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/chart-overview): 65+ chart types via igniteui-angular-charts package. License: Commercial.
+- [Category Chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/line-chart): IgxCategoryChartComponent — line, area, column, bar, spline, waterfall, and more.
+- [Financial / Stock Chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart): IgxFinancialChartComponent — OHLC, candlestick, volume overlay, trendlines.
+- [Data Chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/data-chart): IgxDataChartComponent — composite chart with multiple series types and axes.
+- [Pie Chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart): IgxPieChartComponent — pie and exploded pie.
+- [Donut Chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart): IgxDoughnutChartComponent — multi-ring donut chart.
+- [Polar Chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart): Polar series for radial data visualization.
+- [Bubble Chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart): Scatter bubble with size encoding.
+- [Treemap](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart): IgxTreemapComponent — hierarchical rectangular area chart.
+
+## Gauge Components
+
+- [Radial Gauge](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radial-gauge): IgxRadialGaugeComponent. Package: igniteui-angular-gauges. License: Commercial.
+- [Linear Gauge](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear-gauge): IgxLinearGaugeComponent. Package: igniteui-angular-gauges. License: Commercial.
+- [Bullet Graph](https://www.infragistics.com/products/ignite-ui-angular/angular/components/bullet-graph): IgxBulletGraphComponent. Package: igniteui-angular-gauges. License: Commercial.
+
+## Form Controls
+
+- [Input Group](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group): IgxInputGroupComponent — wraps input, label, prefix, suffix, hint.
+- [Combo](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo): IgxComboComponent — multi-select dropdown with search and virtual scroll.
+- [Simple Combo](https://www.infragistics.com/products/ignite-ui-angular/angular/components/simple-combo): IgxSimpleComboComponent — single-select variant of Combo.
+- [Select](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select): IgxSelectComponent — native-style single-select with overlay.
+- [Date Picker](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-picker): IgxDatePickerComponent — calendar overlay date input.
+- [Date Range Picker](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-range-picker): IgxDateRangePickerComponent — start/end date selection.
+- [Time Picker](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker): IgxTimePickerComponent — time input with spinner/dialog.
+- [Calendar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar): IgxCalendarComponent — standalone inline calendar, single/multi/range selection.
+- [Checkbox](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox): IgxCheckboxComponent.
+- [Radio / Radio Group](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio-button): IgxRadioComponent, IgxRadioGroupDirective.
+- [Switch](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch): IgxSwitchComponent — toggle switch.
+- [Slider](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider/slider): IgxSliderComponent — single and range slider.
+- [Rating](https://www.infragistics.com/products/ignite-ui-angular/angular/components/rating): IgxRatingComponent.
+
+## Layout & Navigation
+
+- [Tabs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs): IgxTabsComponent — top-aligned Material tabs.
+- [Bottom Navigation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar): IgxBottomNavComponent — mobile-style bottom tab bar.
+- [Navbar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navbar): IgxNavbarComponent — top app bar.
+- [Navigation Drawer](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer): IgxNavigationDrawerComponent — side navigation panel.
+- [Accordion](https://www.infragistics.com/products/ignite-ui-angular/angular/components/accordion): IgxAccordionComponent — collapsible panel group.
+- [Expansion Panel](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion-panel): IgxExpansionPanelComponent — single collapsible panel.
+- [Stepper](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper): IgxStepperComponent — multi-step wizard flow.
+- [Splitter](https://www.infragistics.com/products/ignite-ui-angular/angular/components/splitter): IgxSplitterComponent — resizable pane divider.
+- [Dock Manager](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dock-manager): IgcDockManagerComponent — VS Code-style dockable panel layout. License: Commercial.
+- [Tile Manager](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tile-manager): IgcTileManagerComponent — resizable/draggable tile grid layout.
+
+## Data Display
+
+- [List](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list): IgxListComponent — virtualized list with item templates.
+- [Tree](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree): IgxTreeComponent — recursive tree structure with expand/collapse.
+- [Card](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card): IgxCardComponent — content container with header, media, actions.
+- [Carousel](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel): IgxCarouselComponent — sliding item view.
+- [Chips](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip): IgxChipsAreaComponent, IgxChipComponent — filterable tag inputs.
+- [Avatar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar): IgxAvatarComponent — image, initials, or icon avatar.
+- [Badge](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge): IgxBadgeComponent — notification count overlay.
+- [Icon](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon): IgxIconComponent — Material icons + custom SVG registry.
+- [Linear Progress](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear-progress): IgxLinearProgressBarComponent.
+- [Circular Progress](https://www.infragistics.com/products/ignite-ui-angular/angular/components/circular-progress): IgxCircularProgressBarComponent.
+- [Chat](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chat): IgxChatComponent — conversational UI component. Added 21.0.0.
+
+## Feedback & Overlays
+
+- [Dialog](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog): IgxDialogComponent — modal dialog.
+- [Snackbar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar): IgxSnackbarComponent — transient notification.
+- [Toast](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast): IgxToastComponent — timed status message.
+- [Banner](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner): IgxBannerComponent — persistent inline notification.
+- [Drop Down](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down): IgxDropDownComponent — generic overlay list, used by Select and Combo internally.
+- [Tooltip](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip): IgxTooltipDirective — hover/focus tooltip.
+
+## Directives
+
+- [Button](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button): igxButton directive — flat, raised, outlined, FAB variants.
+- [Ripple](https://www.infragistics.com/products/ignite-ui-angular/angular/components/ripple): igxRipple directive — Material touch ripple effect.
+- [Drag and Drop](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drag-drop): igxDrag, igxDrop directives — pointer-based drag/drop.
+- [Mask](https://www.infragistics.com/products/ignite-ui-angular/angular/components/mask): igxMask directive — input masking.
+- [Date Time Editor](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-time-editor): igxDateTimeEditor directive — inline date/time editing.
+- [Autocomplete](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete): igxAutocomplete directive — dropdown suggestions on text input.
+- [Text Highlight](https://www.infragistics.com/products/ignite-ui-angular/angular/components/texthighlight): igxTextHighlight directive — highlight search terms in text.
+- [For Of](https://www.infragistics.com/products/ignite-ui-angular/angular/components/for-of): igxForOf directive — virtual scrolling replacement for *ngFor.
+
+## Theming
+
+- [Theming overview](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index): Sass-based theming system using igniteui-theming under the hood.
+- [Palettes](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/palettes): palette() mixin, color shades, light/dark variants. Presets: Material, Bootstrap, Fluent, Indigo.
+- [Typography](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/typography): typography() mixin, type scales, custom fonts.
+- [Elevations](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/elevations): elevation() function, 0–24 shadow levels.
+- [Component themes](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/component-themes): Per-component theme() function — override individual token values.
+- [Sass API reference](https://github.com/IgniteUI/igniteui-theming): igniteui-theming source — functions, mixins, variables for all four design systems.
+
+## Additional Packages
+
+- [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts): Chart components — Bar, Line, Financial, Doughnut, Pie. License: Commercial.
+- [igniteui-angular-gauges](https://www.npmjs.com/package/igniteui-angular-gauges): Gauge components — Radial, Linear, Bullet Graph. License: Commercial.
+- [igniteui-angular-excel](https://www.npmjs.com/package/igniteui-angular-excel): Excel library for spreadsheet read/write. License: Commercial.
+- [igniteui-angular-spreadsheet](https://www.npmjs.com/package/igniteui-angular-spreadsheet): Spreadsheet component. License: Commercial.
+
+## Repository Structure
+
+- [Source — components](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular): All component source under projects/igniteui-angular.
+- [Skills directory](https://github.com/IgniteUI/igniteui-angular/tree/master/skills): AI Skill files for Copilot, Cursor, Claude Code, JetBrains.
+- [Copilot instructions](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/copilot-instructions.md): Auto-discovered by GitHub Copilot in VS Code.
+- [Contributing guide](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md): Bug fixes, PRs, new feature development, accessibility.
+- [Roadmap](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md): Upcoming milestones and release schedule.
+- [Release history](https://github.com/IgniteUI/igniteui-angular/blob/master/RELEASE_HISTORY.md): All past releases with dates and milestone links.
+- [Changelog](https://github.com/IgniteUI/igniteui-angular/blob/master/CHANGELOG.md): Per-version detailed change log.
+- [License](https://github.com/IgniteUI/igniteui-angular/blob/master/LICENSE): Dual license — MIT (OSS components) + Commercial (grids, charts, gauges).
+
+## Support & Community
+
+- [Infragistics Forums](https://www.infragistics.com/community/forums/): Commercial support channel.
+- [Discord](https://discord.gg/39MjrTRqds): Community chat — #ignite-ui-angular channel.
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular): Community Q&A tagged ignite-ui-angular.
+- [GitHub Discussions](https://github.com/IgniteUI/igniteui-angular/discussions): Feature requests and open questions.
+- [GitHub Issues](https://github.com/IgniteUI/igniteui-angular/issues): Bug reports.
+
+## Constraints for AI Agents
+
+- The documentation MCP server (`ig mcp`) requires `igniteui-cli` installed globally. It does NOT run standalone.
+- The Theming MCP server (`npx igniteui-theming/mcp`) is separate from the documentation MCP server. They require separate mcp.json entries.
+- AI Skills cover Angular only. Use the doc MCP `framework` parameter for React, Blazor, or Web Components.
+- Skills are versioned npm packages — not single prompt files.
+- Grids (Grid, Tree Grid, Hierarchical Grid, Pivot Grid), Charts, Gauges, Dock Manager, Query Builder are under Commercial license. All other components are MIT.
+- Theming MCP Phase 3 and Phase 4 tools (set_size, set_spacing, set_roundness, validate_theme, explain_function) are not yet implemented — do not suggest calling them.
+- Component APIs change across major versions. Always use get_api_reference MCP tool to verify against the installed version rather than relying on training data.
