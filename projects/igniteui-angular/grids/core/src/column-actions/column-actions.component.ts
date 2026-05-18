@@ -11,7 +11,7 @@ import { ColumnType } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 /**
- * Providing reference to `IgxColumnActionsComponent`:
+ * Providing reference to column actions:
  * ```typescript
  *  @ViewChild('columnActions', { read: IgxColumnActionsComponent })
  *  public columnActions: IgxColumnActionsComponent;
@@ -246,7 +246,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * Gets the text of the button that unchecks all columns.
      *
      * @remarks
-     * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
+     * If unset it is obtained from the column actions based derived directive applied.
      * @example
      * ```typescript
      * let uncheckAllText = this.columnActions.uncheckAllText;
@@ -271,7 +271,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * Gets the text of the button that checks all columns.
      *
      * @remarks
-     * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
+     * If unset it is obtained from the column actions based derived directive applied.
      * @example
      * ```typescript
      * let uncheckAllText = this.columnActions.uncheckAllText;
@@ -285,7 +285,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * Sets the text of the button that checks all columns.
      *
      * @remarks
-     * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
+     * If unset it is obtained from the column actions based derived directive applied.
      * @example
      * ```html
      * <igx-column-actions [checkAllText]="'Hide All'"></igx-column-actions>

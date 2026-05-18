@@ -193,7 +193,7 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Returns the `context` object which represents the `template context` binding into the `list item container`
-     * by providing the `$implicit` declaration which is the `IgxListItemComponent` itself.
+     * by providing the `$implicit` declaration which is the list item itself.
      * ```typescript
      * let listItemComponent = this.listItem.context;
      * ```

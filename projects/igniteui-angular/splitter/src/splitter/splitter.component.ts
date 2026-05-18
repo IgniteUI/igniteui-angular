@@ -137,7 +137,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * @hidden @internal
-     * A field that holds the initial size of the main `IgxSplitterPaneComponent` in each pair of panes divided by a splitter bar.
+     * A field that holds the initial size of the main splitter pane in each pair of panes divided by a splitter bar.
      */
     private initialPaneSize!: number;
 

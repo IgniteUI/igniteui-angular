@@ -316,7 +316,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     }
 
     /**
-     * Goes to the next page of the `IgxPaginatorComponent`, if the paginator is not already at the last page.
+     * Goes to the next page of the paginator, if the paginator is not already at the last page.
      * ```typescript
      * this.paginator.nextPage();
      * ```
@@ -329,7 +329,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
         }
     }
     /**
-     * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
+     * Goes to the previous page of the paginator, if the paginator is not already at the first page.
      * ```typescript
      * this.paginator.previousPage();
      * ```

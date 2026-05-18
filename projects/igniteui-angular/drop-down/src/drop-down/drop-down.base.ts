@@ -15,7 +15,7 @@ let NEXT_ID = 0;
 /**
  * An abstract class, defining a drop-down component, with:
  * Properties for display styles and classes
- * A collection items of type `IgxDropDownItemBaseDirective`
+ * A collection items of type drop down item base
  * Properties and methods for navigating (highlighting/focusing) items from the collection
  * Properties and methods for selecting items from the collection
  */
@@ -170,7 +170,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * @hidden @internal
      * Gets the id of the focused item during dropdown navigation.
      * This is used to update the `aria-activedescendant` attribute of
-     * the IgxDropDownNavigationDirective host element.
+     * the drop down navigation host element.
      */
     public get activeDescendant (): string {
         return this.focusedItem ? this.focusedItem.id : null;

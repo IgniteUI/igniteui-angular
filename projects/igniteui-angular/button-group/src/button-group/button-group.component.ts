@@ -88,7 +88,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Returns the CSS class of the item content of the `IgxButtonGroup`.
+     * Returns the CSS class of the item content of the button group.
      * ```typescript
      *  @ViewChild("MyChild")
      * public buttonG: IgxButtonGroupComponent;

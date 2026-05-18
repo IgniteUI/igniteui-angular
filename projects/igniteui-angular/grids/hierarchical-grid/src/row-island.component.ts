@@ -319,7 +319,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     private _paginatorTemplate: TemplateRef<IgxGridPaginatorTemplateContext>;
 
     /**
-     * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
+     * Sets if all immediate children of the grids for this row island should be expanded/collapsed.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
      *      <igx-row-island [key]="'childData'" [expandChildren]="true" #rowIsland>
@@ -346,7 +346,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     /**
-     * Gets if all immediate children of the grids for this `IgxRowIslandComponent` have been set to be expanded/collapsed.
+     * Gets if all immediate children of the grids for this row island have been set to be expanded/collapsed.
      * ```typescript
      * const expanded = this.rowIsland.expandChildren;
      * ```

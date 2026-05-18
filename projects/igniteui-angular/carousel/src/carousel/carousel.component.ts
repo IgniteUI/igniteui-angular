@@ -310,7 +310,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * An event that is emitted after a slide transition has happened.
-     * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
+     * Provides references to the carousel and slide as event arguments.
      * ```html
      * <igx-carousel (slideChanged)="slideChanged($event)"></igx-carousel>
      * ```
@@ -321,7 +321,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * An event that is emitted after a slide has been added to the carousel.
-     * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
+     * Provides references to the carousel and slide as event arguments.
      * ```html
      * <igx-carousel (slideAdded)="slideAdded($event)"></igx-carousel>
      * ```
@@ -332,7 +332,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * An event that is emitted after a slide has been removed from the carousel.
-     * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
+     * Provides references to the carousel and slide as event arguments.
      * ```html
      * <igx-carousel (slideRemoved)="slideRemoved($event)"></igx-carousel>
      * ```
@@ -343,7 +343,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * An event that is emitted after the carousel has been paused.
-     * Provides a reference to the `IgxCarouselComponent` as an event argument.
+     * Provides a reference to the carousel as an event argument.
      * ```html
      * <igx-carousel (carouselPaused)="carouselPaused($event)"></igx-carousel>
      * ```
@@ -354,7 +354,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * An event that is emitted after the carousel has resumed transitioning between `slides`.
-     * Provides a reference to the `IgxCarouselComponent` as an event argument.
+     * Provides a reference to the carousel as an event argument.
      * ```html
      * <igx-carousel (carouselPlaying)="carouselPlaying($event)"></igx-carousel>
      * ```

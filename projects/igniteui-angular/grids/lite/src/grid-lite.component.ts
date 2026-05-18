@@ -204,7 +204,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
     }
 
     /**
-     * Returns a {@link IgxGridLiteColumnConfiguration} for a given column.
+     * Returns a {@link grid lite column configuration} for a given column.
      */
     public getColumn(id: Keys<T> | number): IgxGridLiteColumnConfiguration<T> | undefined {
         return this.gridRef.nativeElement.getColumn(id);

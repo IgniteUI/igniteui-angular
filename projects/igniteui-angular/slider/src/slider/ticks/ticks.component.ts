@@ -84,7 +84,7 @@ export class IgxTicksComponent {
 
     /**
      * Returns the template context corresponding to
-     * {@link IgxTickLabelTemplateDirective}
+     * {@link tick label template}
      *
      * ```typescript
      * return {

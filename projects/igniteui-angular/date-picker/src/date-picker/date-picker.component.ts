@@ -258,7 +258,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     //#region calendar members
 
     /**
-     * Gets/Sets the format views of the `IgxDatePickerComponent`.
+     * Gets/Sets the format views of the date picker.
      *
      * @example
      * ```typescript
@@ -306,7 +306,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
 
     /**
-     * Gets/Sets the format options of the `IgxDatePickerComponent`.
+     * Gets/Sets the format options of the date picker.
      *
      * @example
      * ```typescript

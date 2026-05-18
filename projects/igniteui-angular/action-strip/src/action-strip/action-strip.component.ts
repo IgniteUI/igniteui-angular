@@ -232,7 +232,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
 
 
     /**
-     * Getter for the 'display' property of the current `IgxActionStrip`
+     * Getter for the 'display' property of the current action strip
      */
     @HostBinding('style.display')
     private get display(): string {
