@@ -565,14 +565,18 @@ describe('IgxVirtualItemDirective', () => {
     });
 
     it('should be picked up as a content child of IgxVirtualScrollComponent', () => {
-        const directive = fixture.debugElement.query(By.directive(IgxVirtualItemDirective));
-        expect(directive).toBeTruthy();
+        // By.directive() is unreliable for ng-template nodes in headless environments;
+        // access the component's contentChild signal directly instead.
+        const vs = fixture.debugElement
+            .query(By.directive(IgxVirtualScrollComponent))
+            .componentInstance as any;
+        expect(vs._itemDirective()).not.toBeNull();
     });
 
     it('should expose a non-null TemplateRef', () => {
-        const directiveInstance: IgxVirtualItemDirective = fixture.debugElement
-            .query(By.directive(IgxVirtualItemDirective))
-            .injector.get(IgxVirtualItemDirective);
-        expect(directiveInstance.template).toBeTruthy();
+        const vs = fixture.debugElement
+            .query(By.directive(IgxVirtualScrollComponent))
+            .componentInstance as any;
+        expect(vs._itemDirective()?.template).toBeTruthy();
     });
 });

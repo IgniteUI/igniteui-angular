@@ -180,7 +180,22 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       const data = this.data();
       const template = this._resolvedTemplate();
       const vcr = this._itemsViewContainer();
-      if (!template || !vcr || range.endIndex < range.startIndex) return;
+      if (!vcr) return;
+
+      if (range.endIndex < range.startIndex) {
+        // Data is empty or viewport has no size — clear any previously rendered views.
+        untracked(() => {
+          while (this._activeItems.length > 0) {
+            const view = this._activeItems.pop()!;
+            const idx = vcr.indexOf(view);
+            if (idx > -1) vcr.detach(idx);
+            this._pooledItems.push(view);
+          }
+        });
+        return;
+      }
+
+      if (!template) return;
 
       untracked(() =>
         this._renderRange(range.startIndex, range.endIndex, data, template),
