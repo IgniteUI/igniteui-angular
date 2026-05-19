@@ -995,8 +995,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.setupColumns();
             // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
             onResourceChangeHandle(this.destroy$, () => {
-                // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
-                this.setupColumns();
+                // Columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
+                // Use notifyDimensionChange to also increment pipeTrigger and run detectChanges synchronously,
+                // since this callback fires outside Angular's zone and markForCheck() alone is not enough.
+                this.notifyDimensionChange(true);
             }, this);
         });
         if (this.valueChipTemplateDirective) {
@@ -2380,7 +2382,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const ref = isGroup ?
             createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector }) :
             createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
-        ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
+        const rawHeader = parent != null ? key.split(parent.field + this.pivotKeys.columnDimensionSeparator)[1] : key;
+        const dim = value.dimension as IPivotDimension;
+        ref.instance.header = dim?.headerFormatter != null ? (dim.headerFormatter(rawHeader, dim, undefined) ?? rawHeader) : rawHeader;
         ref.instance.field = key;
         ref.instance.parent = parent;
         if (value.dimension.width) {
