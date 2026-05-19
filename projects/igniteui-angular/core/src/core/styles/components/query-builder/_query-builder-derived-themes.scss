@@ -1,0 +1,169 @@
+@use 'sass:map';
+@use '../../base' as *;
+@use '../_common/extract-theme-schema' as *;
+
+/// Query Builder internal theming
+/// @access private
+/// @param {Map} $theme - The query builder theme map.
+@mixin query-builder-derived-themes($theme) {
+    $theme-info: extract-theme-schema($theme);
+    $schema: map.get($theme-info, 'schema');
+    $variant: map.get($theme-info, 'variant');
+
+    @include tokens($theme, $mode: 'scoped', $scope: 'igx-advanced-filtering-dialog');
+
+    :where(igx-query-builder, igx-advanced-filtering-dialog) {
+        --_query-builder-background:  var(--background, var(--ig-query-builder-background));
+        --_query-builder-foreground: var(--foreground, var(--ig-query-builder-foreground));
+        --_query-builder-accent-color: var(--accent-color, var(--ig-query-builder-accent-color));
+
+        @include tokens(
+            checkbox-theme(
+                $schema: $schema,
+                $empty-color: color-mix(in srgb, var(--_query-builder-foreground) 80%, var(--_query-builder-background)),
+                $empty-fill-color: var(--_query-builder-background),
+                $tick-color-hover: color-mix(in srgb, var(--_query-builder-foreground) 40%, var(--_query-builder-background)),
+                $fill-color: var(--_query-builder-accent-color),
+                $label-color: var(--_query-builder-foreground),
+                $disabled-color: color-mix(in srgb, var(--_query-builder-foreground) 50%, var(--_query-builder-background)),
+            )
+        );
+
+        @include tokens(
+            chip-theme(
+                $schema: $schema,
+                $background: color-mix(in srgb, var(--_query-builder-foreground) 12%, var(--_query-builder-background)),
+                $text-color: var(--_query-builder-foreground),
+                $ghost-background: color-mix(in srgb, var(--_query-builder-foreground) 12%, var(--_query-builder-background)),
+                $ghost-text-color: var(--_query-builder-foreground),
+                $disabled-background: color-mix(in srgb, var(--_query-builder-foreground) 12%, var(--_query-builder-background)),
+                $disabled-text-color: color-mix(in srgb, var(--_query-builder-foreground) 50%, var(--_query-builder-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_query-builder-foreground) 24%, var(--_query-builder-background)),
+            )
+        );
+
+        @if $variant == 'indigo' {
+            @include tokens(
+                combo-theme(
+                    $schema: $schema,
+                    $toggle-button-foreground: var(--_query-builder-accent-color),
+                    $toggle-button-foreground-disabled: color-mix(in srgb, var(--_query-builder-accent-color) 50%, var(--_query-builder-background)),
+                    $clear-button-foreground: var(--_query-builder-foreground)
+                )
+            );
+        } @else {
+            @include tokens(
+                combo-theme(
+                    $schema: $schema,
+                    $toggle-button-background: var(--_query-builder-accent-color),
+                    $clear-button-foreground: var(--_query-builder-foreground)
+                )
+            );
+        }
+
+        @include tokens(
+            contained-button-theme(
+                $schema: $schema,
+                $background: var(--_query-builder-accent-color),
+                $disabled-background: color-mix(in srgb, var(--_query-builder-accent-color) 50%, var(--_query-builder-background)),
+                $disabled-foreground: color-mix(in srgb, var(--_query-builder-foreground) 50%, var(--_query-builder-background)),
+            )
+        );
+
+        @include tokens(
+            drop-down-theme(
+                $schema: $schema,
+                $background-color: var(--_query-builder-background),
+                $item-text-color: var(--_query-builder-foreground),
+                $border-color: color-mix(in srgb, var(--_query-builder-foreground) 12%, var(--_query-builder-background)),
+                $hover-item-background: color-mix(in srgb, var(--_query-builder-accent-color) 8%, var(--_query-builder-background)),
+                $focused-item-background: color-mix(in srgb, var(--_query-builder-accent-color) 12%, var(--_query-builder-background)),
+                $selected-item-background: color-mix(in srgb, var(--_query-builder-accent-color) 12%, var(--_query-builder-background)),
+                $selected-hover-item-background: color-mix(in srgb, var(--_query-builder-accent-color) 16%, var(--_query-builder-background)),
+                $selected-focus-item-background: color-mix(in srgb, var(--_query-builder-accent-color) 24%, var(--_query-builder-background)),
+            )
+        );
+
+        @include tokens(
+            flat-button-theme(
+                $schema: $schema,
+                $foreground: var(--_query-builder-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_query-builder-accent-color) 50%, var(--_query-builder-background)),
+            )
+        );
+
+        @include tokens(
+            input-group-theme(
+                $schema: $schema,
+                $idle-bottom-line-color: var(--_query-builder-accent-color),
+                $box-background: var(--_query-builder-background),
+                $border-color: var(--_query-builder-accent-color),
+                $idle-text-color: var(--_query-builder-foreground),
+                $placeholder-color: color-mix(in srgb, var(--_query-builder-foreground) 80%, var(--_query-builder-background)),
+            )
+        );
+
+        @include tokens(
+            outlined-button-theme(
+                $schema: $schema,
+                $foreground: var(--_query-builder-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_query-builder-accent-color) 50%, var(--_query-builder-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_query-builder-accent-color) 50%, var(--_query-builder-background)),
+            )
+        );
+
+        @include tokens(
+            outlined-icon-button-theme(
+                $schema: $schema,
+                $foreground: var(--_query-builder-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_query-builder-accent-color) 50%, var(--_query-builder-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_query-builder-accent-color) 50%, var(--_query-builder-background))
+            )
+        );
+
+        $scrollbar-theme: digest-schema(map.get($schema, 'scrollbar'));
+        $scrollbar-bg-color: map.get($scrollbar-theme, 'sb-track-bg-color');
+        $scrollbar-thumb-color: map.get($scrollbar-theme, 'sb-thumb-bg-color');
+        $scrollbar-track-border-color: map.get($scrollbar-theme, 'sb-track-border-color');
+
+        --_scrollbar-thumb-color: color-mix(in srgb, var(--_query-builder-foreground) 50%, var(--_query-builder-background));
+        --_scrollbar-track-border-color: color-mix(in srgb, var(--_query-builder-foreground) 16%, var(--_query-builder-background));
+
+        @include tokens(
+            scrollbar-theme(
+                $schema: $schema,
+                $sb-track-bg-color: var(--_query-builder-background, $scrollbar-bg-color),
+                $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
+                $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
+            ),
+            $mode: 'scoped'
+        );
+
+        @if $variant == 'indigo' {
+            @include tokens(
+                select-theme(
+                    $schema: $schema,
+                    $toggle-button-foreground: var(--_query-builder-accent-color),
+                    $toggle-button-foreground-disabled: color-mix(in srgb, var(--_query-builder-accent-color) 50%, var(--_query-builder-background)),
+                )
+            );
+        } @else {
+            @include tokens(
+                select-theme(
+                    $schema: $schema,
+                    $toggle-button-background: var(--_query-builder-accent-color),
+                )
+            );
+        }
+
+        @include tokens(
+            tooltip-theme(
+                $schema: $schema,
+                $background: hsl(from var(--_query-builder-foreground) h s l / 80%)
+            ),
+        );
+    }
+}
