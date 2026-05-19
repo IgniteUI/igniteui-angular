@@ -687,6 +687,27 @@ describe('igxSelect', () => {
             expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
         }));
 
+        it('should render as INITIAL (not INVALID) after control.disable() when previously invalid', () => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            fix.detectChanges();
+
+            const selectComp = fix.componentInstance.select;
+            const control = fix.componentInstance.reactiveForm.controls.optionsSelect;
+
+            // markAsTouched does not emit statusChanges; use updateValueAndValidity() to
+            // trigger onStatusChanged while touched=true so the INVALID precondition is established.
+            control.markAsTouched();
+            control.updateValueAndValidity();
+            fix.detectChanges();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INVALID);
+
+            control.disable();
+            fix.detectChanges();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+        });
+
         it('Should properly initialize when used as a form control - with initial validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
 
