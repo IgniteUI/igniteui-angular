@@ -37,7 +37,9 @@ import {
     DateTimeUtil,
     IgxPickerActionsDirective,
     isDateInRanges,
-    PickerCalendarOrientation
+    PickerCalendarOrientation,
+    THEME_TOKEN,
+    ThemeToken
 } from 'igniteui-angular/core';
 import { IgxCalendarContainerComponent } from '../date-picker/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-picker/picker-base.directive';
@@ -107,6 +109,7 @@ const SingleInputDatesConcatenationString = ' - ';
 export class IgxDateRangePickerComponent extends PickerBaseDirective
     implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
     protected platform = inject(PlatformUtil);
+    private themeToken = inject<ThemeToken>(THEME_TOKEN);
     private _injector = inject(Injector);
     private _cdr = inject(ChangeDetectorRef);
     private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
@@ -1337,6 +1340,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
         componentInstance.cancelButtonLabel = !this.isDropdown ? this.cancelButtonText : null;
+        if (!this.isDropdown && this.themeToken.theme === 'indigo') {
+            componentInstance.closeButtonType = 'contained';
+            componentInstance.cancelButtonType = 'outlined';
+        }
         componentInstance.pickerActions = this.pickerActions;
         componentInstance.usePredefinedRanges = this.usePredefinedRanges;
         componentInstance.customRanges = this.customRanges;
