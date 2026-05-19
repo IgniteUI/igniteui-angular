@@ -107,6 +107,13 @@ export class IgxPivotDateDimension implements IPivotDimension {
     /** @hidden @internal */
     public memberName = 'AllPeriods';
     public displayName: string;
+    /**
+     * Gets/Sets the locale used for date dimension member formatting (e.g. month names).
+     * When set, overrides the global I18nManager locale for this dimension.
+     * Set automatically by the pivot grid row pipe when the grid locale changes.
+     * @hidden @internal
+     */
+    public locale: string;
     private _resourceStrings: IGridResourceStrings = null;
     private _baseDimension: IPivotDimension;
     private _options: IPivotDateDimensionOptions = {};
@@ -158,7 +165,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
                         const hasValue = value !== null && value !== undefined && value !== '';
                         const dateValue = hasValue ? dateFormatter.createDateFromValue(value) : null;
                         if (dateValue) {
-                            return dateFormatter.formatDateTime(dateValue, undefined, { dateStyle: 'short' });
+                            return dateFormatter.formatDateTime(dateValue, this.locale, { dateStyle: 'short' });
                         }
                         return hasValue ? String(value) : '';
                     }
@@ -171,7 +178,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
                 const dateValue = (recordValue != null && recordValue !== '') ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return (recordValue != null && recordValue !== '') ? getDateFormatter().formatDateTime(dateValue, undefined, { month: 'long'}) : rec['Months'];
+                return (recordValue != null && recordValue !== '') ? getDateFormatter().formatDateTime(dateValue, this.locale, { month: 'long'}) : rec['Months'];
             },
             enabled: true,
             childLevel: baseDimension
