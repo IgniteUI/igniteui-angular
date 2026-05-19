@@ -2,7 +2,7 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { IgxToolbarToken } from './token';
 import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IFilteringExpressionsTree, isTree, OverlaySettings } from 'igniteui-angular/core';
+import { ExpressionsTreeUtil, IFilteringExpressionsTree, OverlaySettings } from 'igniteui-angular/core';
 
 /* blazorElement */
 /* wcElementTag: igc-grid-toolbar-advanced-filtering */
@@ -48,24 +48,11 @@ export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
      */
     public ngOnInit(): void {
         // Initial value
-        this.numberOfColumns = this.grid?.advancedFilteringExpressionsTree ? this.extractUniqueFieldNamesFromFilterTree(this.grid?.advancedFilteringExpressionsTree).length : 0;
+        this.numberOfColumns = this.grid?.advancedFilteringExpressionsTree ? ExpressionsTreeUtil.extractUniqueFieldNamesFromFilterTree(this.grid?.advancedFilteringExpressionsTree).length : 0;
 
         // Subscribing for future updates
         this.grid?.advancedFilteringExpressionsTreeChange.subscribe(filteringTree => {
-            this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
+            this.numberOfColumns = ExpressionsTreeUtil.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
         });
-    }
-
-    protected extractUniqueFieldNamesFromFilterTree(filteringTree?: IFilteringExpressionsTree) : string[] {
-        const columnNames = [];
-        if (!filteringTree) return columnNames;
-        filteringTree.filteringOperands.forEach((expr) => {
-            if (isTree(expr)) {
-                columnNames.push(...this.extractUniqueFieldNamesFromFilterTree(expr));
-            } else {
-                columnNames.push(expr.fieldName);
-            }
-        });
-        return [...new Set(columnNames)];
     }
 }

@@ -1,6 +1,6 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { recreateExpression, recreateTree, recreateTreeFromFields } from './expressions-tree-util';
+import { ExpressionsTreeUtil, recreateExpression, recreateTree, recreateTreeFromFields } from './expressions-tree-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 import type { EntityType, FieldType } from './grid-types';
 
@@ -478,4 +478,62 @@ describe('Unit testing FilteringUtil', () => {
         expect(nestedCondition.condition.logic(200, nestedCondition.searchVal)).toBe(true);
     });
 
+});
+
+describe('ExpressionsTreeUtil.extractUniqueFieldNamesFromFilterTree', () => {
+    it('Should return an empty array for undefined input', () => {
+        const result = ExpressionsTreeUtil.extractUniqueFieldNamesFromFilterTree(undefined);
+        expect(result).toEqual([]);
+    });
+
+    it('Should return an empty array for a tree with no operands', () => {
+        const tree = new FilteringExpressionsTree(FilteringLogic.And);
+        const result = ExpressionsTreeUtil.extractUniqueFieldNamesFromFilterTree(tree);
+        expect(result).toEqual([]);
+    });
+
+    it('Should return unique field names from a flat filtering tree', () => {
+        const tree = new FilteringExpressionsTree(FilteringLogic.And);
+        tree.filteringOperands.push({ fieldName: 'ProductName', conditionName: 'contains', searchVal: 'A' } as IFilteringExpression);
+        tree.filteringOperands.push({ fieldName: 'Downloads', conditionName: 'greaterThan', searchVal: 100 } as IFilteringExpression);
+        tree.filteringOperands.push({ fieldName: 'ProductName', conditionName: 'startsWith', searchVal: 'B' } as IFilteringExpression);
+
+        const result = ExpressionsTreeUtil.extractUniqueFieldNamesFromFilterTree(tree);
+        expect(result.length).toBe(2);
+        expect(result).toContain('ProductName');
+        expect(result).toContain('Downloads');
+    });
+
+    it('Should return unique field names from a nested filtering tree', () => {
+        const outerTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And);
+
+        outerTree.filteringOperands.push({ fieldName: 'ID', conditionName: 'equals', searchVal: 1 } as IFilteringExpression);
+        innerTree.filteringOperands.push({ fieldName: 'ProductName', conditionName: 'contains', searchVal: 'test' } as IFilteringExpression);
+        innerTree.filteringOperands.push({ fieldName: 'ID', conditionName: 'lessThan', searchVal: 50 } as IFilteringExpression);
+        outerTree.filteringOperands.push(innerTree);
+
+        const result = ExpressionsTreeUtil.extractUniqueFieldNamesFromFilterTree(outerTree);
+        expect(result.length).toBe(2);
+        expect(result).toContain('ID');
+        expect(result).toContain('ProductName');
+    });
+
+    it('Should return unique field names from a deeply nested filtering tree', () => {
+        const root = new FilteringExpressionsTree(FilteringLogic.And);
+        const level1 = new FilteringExpressionsTree(FilteringLogic.Or);
+        const level2 = new FilteringExpressionsTree(FilteringLogic.And);
+
+        level2.filteringOperands.push({ fieldName: 'Downloads', conditionName: 'greaterThan', searchVal: 10 } as IFilteringExpression);
+        level1.filteringOperands.push({ fieldName: 'ProductName', conditionName: 'contains', searchVal: 'x' } as IFilteringExpression);
+        level1.filteringOperands.push(level2);
+        root.filteringOperands.push({ fieldName: 'ID', conditionName: 'equals', searchVal: 5 } as IFilteringExpression);
+        root.filteringOperands.push(level1);
+
+        const result = ExpressionsTreeUtil.extractUniqueFieldNamesFromFilterTree(root);
+        expect(result.length).toBe(3);
+        expect(result).toContain('ID');
+        expect(result).toContain('ProductName');
+        expect(result).toContain('Downloads');
+    });
 });
