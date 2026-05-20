@@ -1389,7 +1389,7 @@
         width: 100%;
         min-width: 0;
         background: transparent;
-        color: var-get($theme, 'filled-text-color');
+        color: inherit;
         outline-style: none;
         box-shadow: none;
         overflow: hidden;
