@@ -317,10 +317,30 @@
             color: var-get($theme, 'input-suffix-color--filled');
             background: var-get($theme, 'input-suffix-background--filled');
         }
+
+        &:not(%form-group-display--readonly, %form-group-display--disabled) {
+            &:hover {
+                %form-group-input {
+                    color: var-get($theme, 'filled-text-hover-color');
+                }
+            }
+
+            &%form-group-display--focused {
+                %form-group-input {
+                    color: var-get($theme, 'focused-text-color');
+                }
+            }
+        }
     }
 
     %form-group-display--focused {
         color: var-get($theme, 'input-prefix-color--focused');
+
+        &:not(%form-group-display--filled) {
+            %form-group-input {
+                color: var-get($theme, 'idle-text-color');
+            }
+        }
 
         igx-prefix,
         [igxPrefix] {
@@ -409,7 +429,6 @@
         &:hover {
             %form-group-input--hover {
                 cursor: default;
-                color: var-get($theme, 'filled-text-color');
 
                 &:not(:focus-within)::placeholder {
                     color: var-get($theme, 'placeholder-color');
@@ -1491,16 +1510,12 @@
     }
 
     %form-group-input--hover {
-        color: var-get($theme, 'filled-text-hover-color');
-
         &::placeholder {
             color: var-get($theme, 'hover-placeholder-color');
         }
     }
 
     %form-group-input--focus {
-        color: var-get($theme, 'focused-text-color');
-
         &::placeholder {
             color: var-get($theme, 'hover-placeholder-color');
         }
