@@ -53,7 +53,7 @@ class BIT {
   }
 
   /** Total size of all items. O(1). */
-  get totalSize(): number {
+  public get totalSize(): number {
     return this._total;
   }
 
@@ -61,7 +61,7 @@ class BIT {
    * Prefix sum of items [0, i) — the virtual scroll offset at the leading
    * edge of item i. O(log N).
    */
-  prefixSum(i: number): number {
+  public prefixSum(i: number): number {
     let sum = 0;
     for (let j = i; j > 0; j -= j & -j) {
         sum += this._tree[j];
@@ -73,7 +73,7 @@ class BIT {
    * Update the size of item at 0-based index.
    * Returns true when the size actually changed. O(log N).
    */
-  update(index: number, newSize: number): boolean {
+  public update(index: number, newSize: number): boolean {
     if (index < 0 || index >= this.length) return false;
 
     const old = this._sizes[index];
@@ -93,7 +93,7 @@ class BIT {
    * Existing measured sizes are preserved up to `min(this.length, newLength)`;
    * new slots are filled with `fillSize`. Rebuilds the BIT in O(N).
    */
-  cloneResized(newLength: number, fillSize: number): BIT {
+  public cloneResized(newLength: number, fillSize: number): BIT {
     const next = new BIT(newLength, fillSize);
     const copyLen = Math.min(this.length, newLength);
 
@@ -120,7 +120,7 @@ class BIT {
    * O(log N) — semantics are identical to the previous binarySearchPrefixSums
    * result so `getVisibleRange` / overscan logic is unchanged.
    */
-  findIndexAtOffset(offset: number): number {
+  public findIndexAtOffset(offset: number): number {
     if (offset <= 0 || this.length === 0) return 0;
 
     let idx = 0;
