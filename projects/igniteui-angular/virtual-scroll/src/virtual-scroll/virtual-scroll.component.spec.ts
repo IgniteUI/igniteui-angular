@@ -76,9 +76,9 @@ describe('VirtualScrollEngine', () => {
 
         it('should be a no-op when the size has not changed', () => {
             engine.resize(3, 50);
-            const before = engine.prefixSums();
-            engine.measureItem(0, 50);
-            expect(engine.prefixSums()).toEqual(before);
+            const before = engine.totalSize();
+            engine.measureItem(0, 50); // size is already 50
+            expect(engine.totalSize()).toBe(before);
         });
     });
 

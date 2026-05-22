@@ -36,7 +36,7 @@ function makeItems(start: number, count: number): VsSampleItem[] {
     imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective],
 })
 export class VirtualScrollSampleComponent {
-    protected readonly verticalItems = signal<VsSampleItem[]>(makeItems(0, 100));
+    protected readonly verticalItems = signal<VsSampleItem[]>(makeItems(0, 1_000_000));
     protected readonly verticalConstantItems = signal<VsSampleItem[]>(
         Array.from({ length: 500 }, (_, i) => ({
             id: i,

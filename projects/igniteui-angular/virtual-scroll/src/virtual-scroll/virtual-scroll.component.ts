@@ -61,27 +61,48 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   /** Detached views available for reuse. */
   private readonly _pooledItems: EmbeddedViewRef<IgxVsItemContext<T>>[] = [];
 
+  protected readonly _engine = new VirtualScrollEngine();
+
   private readonly _scrollPosition = signal(0);
   private readonly _viewportSize = signal(0);
 
-  private readonly _visibleRange = computed(() =>
-    this._engine.getVisibleRange(
+  private readonly _visibleRange = computed(() => {
+
+    // Establish a reactive dependency on domSize so the range recomputes
+    // whenever measureItem() changes _virtualRatio. Without this, the range
+    // stays stale while scroll position is unchanged but sizes have updated:
+    //  - items smaller than estimated  -> viewport is not fully filled
+    //  - virtual-ratio increase at end -> last items are in the DOM but
+    //    positioned beyond the max scroll coordinate
+    void this._engine.domSize();
+
+    return this._engine.getVisibleRange(
       this._scrollPosition(),
       this._viewportSize(),
       this.overScan(),
       this.data().length,
-    ),
-  );
+    );
+  });
 
-  protected readonly _engine = new VirtualScrollEngine();
   protected readonly _isVertical = computed(
     () => this.orientation() === "vertical",
   );
   protected readonly _spaceSize = computed(() => this._engine.domSize());
   protected readonly _contentTransform = computed(() => {
-    const position = this._engine.getContentPosition(
-      this._visibleRange().startIndex,
+    const range = this._visibleRange();
+    let position = this._engine.getContentPosition(range.startIndex);
+
+    // Under coordinate compression (_virtualRatio > 1) item virtual positions
+    // are scaled down but item physical heights are not. Without this cap the
+    // rendered range overflows past domSize at the end of the list, pushing
+    // the last items beyond the maximum browser scroll coordinate.
+    const physicalRangeSize = this._engine.getPhysicalRangeSize(
+      range.startIndex,
+      range.endIndex,
     );
+    const domSize = this._engine.domSize();
+    position = Math.max(0, Math.min(position, domSize - physicalRangeSize));
+
     return this._isVertical()
       ? `translateY(${position}px)`
       : `translateX(${position}px)`;
@@ -207,6 +228,12 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       const range = this._visibleRange();
       const total = this.data().length;
 
+      // Guard: do not fire on the initial render. The effect runs eagerly
+      // before any user interaction, and with a small initial dataset the
+      // visible range may already reach near the end of the loaded items.
+      // Only emit once the user has actually scrolled (scrollPosition > 0).
+      if (this._scrollPosition() === 0) return;
+
       if (total > 0 && range.endIndex >= total - REMOTE_SCROLLING_THRESHOLD) {
         this.dataRequest.emit({
           startIndex: total,
@@ -292,32 +319,35 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   private _scheduleItemMeasurement(startIndex: number, count: number): void {
     if (!isPlatformBrowser(this._platformId)) return;
 
-    this._itemResizeObserver?.disconnect();
-    this._itemResizeObserver = new ResizeObserver((entries) => {
-      let anyChanged = false;
-      for (const entry of entries) {
-        const el = entry.target as HTMLElement;
-        const index = parseInt(el.dataset["vsIndex"] ?? "-1", 10);
-        if (index < 0) continue;
+    if (!this._itemResizeObserver) {
+      this._itemResizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const el = entry.target as HTMLElement;
+          const index = parseInt(el.dataset["vsIndex"] ?? "-1", 10);
+          if (index < 0) continue;
 
-        const measured = this._isVertical()
-          ? (entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height)
-          : (entry.borderBoxSize?.[0]?.inlineSize ?? entry.contentRect.width);
+          const measured = this._isVertical()
+            ? (entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height)
+            : (entry.borderBoxSize?.[0]?.inlineSize ?? entry.contentRect.width);
 
-        if (measured > 0) {
-          this._engine.measureItem(index, measured);
-          anyChanged = true;
+          if (measured > 0) {
+            this._engine.measureItem(index, measured);
+          }
         }
-      }
-    });
+      });
+    }
+
+    this._itemResizeObserver.disconnect();
 
     const content = this._contentDivRef()?.nativeElement;
     if (!content) return;
 
     const itemRoots = Array.from(content.children) as HTMLElement[];
-    for (let i = 0; i < Math.min(count, itemRoots.length); i++) {
+    const max = Math.min(count, itemRoots.length);
+
+    for (let i = 0; i < max; i++) {
       const el = itemRoots[i];
-      el.dataset["vsIndex"] = (startIndex + i).toString();
+      el.dataset["vsIndex"] = String(startIndex + i);
       this._itemResizeObserver.observe(el);
     }
   }
