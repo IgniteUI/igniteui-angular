@@ -130,11 +130,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
 import {
   IFilteringExpressionsTree,
+  ISortingExpression,
   NoopSortingStrategy,
   NoopFilteringStrategy
 } from 'igniteui-angular/core';
 import { IForOfState } from 'igniteui-angular/directives';
-import { ISortingEventArgs } from 'igniteui-angular/grids/core';
 import { debounceTime, Subject } from 'rxjs';
 
 @Component({
@@ -156,7 +156,7 @@ export class RemoteGridComponent {
   private dataService = inject(OrderService);
   private destroyRef = inject(DestroyRef);
 
-  private currentSort: ISortingEventArgs[] | undefined;
+  private currentSort: ISortingExpression[] | undefined;
   private currentFilter: IFilteringExpressionsTree | undefined;
 
   // Debounce rapid dataPreLoad events during fast scrolling
@@ -179,7 +179,7 @@ export class RemoteGridComponent {
     this.dataPreLoad$.next(event);
   }
 
-  onSortingDone(event: ISortingEventArgs) {
+  onSortingDone() {
     this.currentSort = this.gridRef().sortingExpressions;
     this.loadData(0, 15);
   }

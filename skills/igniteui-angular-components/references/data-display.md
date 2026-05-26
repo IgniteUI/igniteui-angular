@@ -35,9 +35,8 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
   @for (contact of contacts; track contact.id) {
     <igx-list-item>
       <igx-avatar igxListThumbnail [src]="contact.avatar" shape="circle"></igx-avatar>
-      <span igxListLine>{{ contact.name }}</span>
+      <span igxListLineTitle>{{ contact.name }}</span>
       <span igxListLineSubTitle>{{ contact.phone }}</span>
-      <span igxListLineTitle>{{ contact.email }}</span>
       <igx-icon igxListAction (click)="call(contact)">phone</igx-icon>
     </igx-list-item>
   }
@@ -55,7 +54,7 @@ import { IGX_TREE_DIRECTIVES } from 'igniteui-angular/tree';
 ```
 
 ```html
-<igx-tree [selection]="'BiCascade'" (nodeSelection)="onNodeSelect($event)">
+<igx-tree selection="BiState" (nodeSelection)="onNodeSelect($event)">
   @for (node of treeData; track node.id) {
     <igx-tree-node [data]="node" [expanded]="node.expanded">
       <igx-icon>folder</igx-icon>
@@ -71,14 +70,14 @@ import { IGX_TREE_DIRECTIVES } from 'igniteui-angular/tree';
 </igx-tree>
 ```
 
-Selection modes: `'None'`, `'BiCascade'`, `'Cascade'`.
+Selection modes: `'None'`, `'BiState'`, `'Cascading'`.
 
 ## Card
 
 > **Docs:** [Card Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card)
 
 ```typescript
-import { IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxCardMediaDirective, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective, IgxCardHeaderThumbnailDirective } from 'igniteui-angular/card';
+import { IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxCardMediaDirective, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective, IgxCardThumbnailDirective } from 'igniteui-angular/card';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -91,7 +90,8 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
     <img [src]="article.coverImage" />
   </igx-card-media>
   <igx-card-header>
-    <igx-avatar igxCardHeaderThumbnail [src]="author.photo" shape="circle"></igx-avatar>
+    <!-- igx-avatar inside igx-card-header is auto-detected as thumbnail -->
+    <igx-avatar [src]="author.photo" shape="circle"></igx-avatar>
     <h3 igxCardHeaderTitle>{{ article.title }}</h3>
     <h5 igxCardHeaderSubtitle>{{ author.name }}</h5>
   </igx-card-header>
@@ -268,7 +268,7 @@ import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
 ```
 
-Types for linear bar: `'default'`, `'info'`, `'success'`, `'warning'`, `'danger'`.
+Types for linear bar: `'default'`, `'info'`, `'success'`, `'warning'`, `'error'`.
 
 ## Chat (AI Chat Component)
 

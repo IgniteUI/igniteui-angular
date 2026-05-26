@@ -188,8 +188,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
 import {
   IgxGridLiteComponent,
   IgxGridLiteColumnComponent,
-  IgxGridLiteCellTemplateDirective,
-  IgxGridLiteHeaderTemplateDirective
+  IgxGridLiteCellTemplateDirective
 } from 'igniteui-angular/grids/lite';
 
 @Component({
@@ -197,8 +196,7 @@ import {
   imports: [
     IgxGridLiteComponent,
     IgxGridLiteColumnComponent,
-    IgxGridLiteCellTemplateDirective,
-    IgxGridLiteHeaderTemplateDirective
+    IgxGridLiteCellTemplateDirective
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],  // Required — Grid Lite is a Web Component
   templateUrl: './users-lite.component.html',
@@ -215,7 +213,6 @@ export class UsersLiteComponent {
 ```html
 <igx-grid-lite #grid
   [data]="data"
-  [autoGenerate]="false"
   [sortingOptions]="{ mode: 'multiple' }">
 
   <igx-grid-lite-column
@@ -262,18 +259,12 @@ Columns use `<igx-grid-lite-column>` with these inputs:
 
 ### Templates
 
-Cell and header templates use dedicated directives:
+Cell templates use the `igxGridLiteCell` directive:
 
 ```html
 <igx-grid-lite-column field="status" header="Status">
-  <!-- Custom cell template -->
   <ng-template igxGridLiteCell let-value let-row="row" let-column="column">
     <span [class]="value">{{ value }}</span>
-  </ng-template>
-
-  <!-- Custom header template -->
-  <ng-template igxGridLiteHeader let-column>
-    <strong>{{ column.header }}</strong>
   </ng-template>
 </igx-grid-lite-column>
 ```
@@ -345,9 +336,9 @@ dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
 
 | Event | Cancelable | Payload |
 |---|---|---|
-| `(sorting)` | Yes (`event.detail.cancel = true`) | Sorting expression about to be applied |
+| `(sorting)` | Yes (`event.preventDefault()`) | Sorting expression about to be applied |
 | `(sorted)` | No | Sorting completed |
-| `(filtering)` | Yes (`event.detail.cancel = true`) | Filter expression about to be applied |
+| `(filtering)` | Yes (`event.preventDefault()`) | Filter expression about to be applied |
 | `(filtered)` | No | Filtering completed |
 
 ### Grid Lite Limitations

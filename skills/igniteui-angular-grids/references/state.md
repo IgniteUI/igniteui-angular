@@ -260,18 +260,16 @@ regionFilter.filteringOperands = [
   }
 ];
 
-// Apply the filter to a dimension
+// Apply the filter to a dimension and notify the grid
 this.pivotConfig.filters[0].filter = regionFilter;
-// Notify the grid of the change
-this.pivotGridRef().pipeTrigger++;
+this.pivotGridRef().notifyDimensionChange(true);
 ```
 
 ### Dimension-Based Sorting
 
 ```typescript
-// Sort a row dimension
-this.pivotConfig.rows[0].sortDirection = SortingDirection.Desc;
-this.pivotGridRef().pipeTrigger++;
+// Sort a row dimension via the public API
+this.pivotGridRef().sortDimension(this.pivotConfig.rows[0], SortingDirection.Desc);
 ```
 
 ### Key Pivot Grid Limitations

@@ -67,24 +67,35 @@ For advanced programmatic grouping patterns — see [`data-operations.md`](./dat
 Merge adjacent cells with equal values:
 
 ```html
-<igx-column field="category" [merge]="true"></igx-column>
+<igx-grid [data]="data()" [cellMergeMode]="'always'">
+  <igx-column field="category" [merge]="true"></igx-column>
+</igx-grid>
 ```
 
-Or apply a custom merge strategy:
+Grid merge modes (`cellMergeMode`):
+- `'onSort'` — merge only when the column is sorted **(default)**
+- `'always'` — merge regardless of sort state
+
+Or apply a custom merge strategy at the **grid level** (not column):
 
 ```html
-<igx-column field="price" [merge]="true" [mergeStrategy]="priceRangeMerge"></igx-column>
+<igx-grid [data]="data()" [mergeStrategy]="customMerge" [cellMergeMode]="'always'">
+  <igx-column field="price" [merge]="true"></igx-column>
+</igx-grid>
 ```
 
 ```typescript
-import { IGridMergeStrategy } from 'igniteui-angular/core';
-// import { IGridMergeStrategy } from '@infragistics/igniteui-angular/core'; for licensed package
+import { DefaultMergeStrategy } from 'igniteui-angular/core';
+// import { DefaultMergeStrategy } from '@infragistics/igniteui-angular/core'; for licensed package
 
-priceRangeMerge: IGridMergeStrategy = {
-  shouldMerge(prevCell, curCell) {
-    return Math.abs(prevCell.value - curCell.value) < 10;
+// Extend DefaultMergeStrategy and override comparer
+class PriceRangeMergeStrategy extends DefaultMergeStrategy {
+  public override comparer(prevRecord: any, record: any, field: string): boolean {
+    return Math.abs(prevRecord[field] - record[field]) < 10;
   }
-};
+}
+
+customMerge = new PriceRangeMergeStrategy();
 ```
 
 ## Toolbar
@@ -164,10 +175,22 @@ For full remote virtualization patterns — see [`paging-remote.md`](./paging-re
 
 ```html
 <igx-grid [rowDraggable]="true" (rowDragStart)="onDragStart($event)" (rowDragEnd)="onDragEnd($event)">
-  <ng-template igxRowDragGhost let-dragData>
-    <span>Moving {{ dragData.dragData.name }}</span>
+  <!-- Custom ghost template (purely visual; row data is accessed in event handlers, not in the ghost template) -->
+  <ng-template igxRowDragGhost>
+    <igx-icon>arrow_right_alt</igx-icon>
   </ng-template>
 </igx-grid>
+```
+
+Handle drops via `igxDrop` on the target:
+
+```typescript
+import { IDropDroppedEventArgs } from 'igniteui-angular/directives';
+
+onDropAllowed(args: IDropDroppedEventArgs) {
+  this.targetGrid.addRow(args.dragData.data);    // row data
+  this.sourceGrid.deleteRow(args.dragData.key);  // primary key
+}
 ```
 
 ## Action Strip

@@ -178,18 +178,21 @@ this.gridRef().clearSort();
 | Event | Cancelable | Payload |
 |---|---|---|
 | `(sorting)` | Yes | `ISortingEventArgs` — set `event.cancel = true` to prevent |
-| `(sortingDone)` | No | `ISortingEventArgs` — fires after sort is applied |
+| `(sortingDone)` | No | `ISortingExpression \| ISortingExpression[]` — fires after sort is applied |
 
 ```typescript
 onSorting(event: ISortingEventArgs) {
   // Prevent sorting on a specific column
-  if (event.fieldName === 'id') {
+  const exprs = Array.isArray(event.sortingExpressions)
+    ? event.sortingExpressions : [event.sortingExpressions];
+  if (exprs.some(e => e?.fieldName === 'id')) {
     event.cancel = true;
   }
 }
 
-onSortingDone(event: ISortingEventArgs) {
-  console.log('Sorted by:', event.fieldName, event.dir);
+onSortingDone(event: ISortingExpression | ISortingExpression[]) {
+  const expr = Array.isArray(event) ? event[0] : event;
+  console.log('Sorted by:', expr.fieldName, expr.dir);
   // Good place to trigger remote data fetch
 }
 ```
@@ -204,8 +207,8 @@ import { ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 class PrioritySortStrategy implements ISortingStrategy {
   private priorityOrder = ['Critical', 'High', 'Medium', 'Low'];
 
-  sort(data: any[], fieldName: string, dir: SortingDirection): any[] {
-    return data.sort((a, b) => {
+  sort(data: any[], fieldName: string, dir: SortingDirection, ignoreCase: boolean, valueResolver: (obj: any, key: string) => any): any[] {
+    return [...data].sort((a, b) => {
       const indexA = this.priorityOrder.indexOf(a[fieldName]);
       const indexB = this.priorityOrder.indexOf(b[fieldName]);
       return dir === SortingDirection.Asc ? indexA - indexB : indexB - indexA;
@@ -305,8 +308,11 @@ this.gridRef().cdr.detectChanges();
 
 ### Global Filtering & Cross-Column Logic
 
+> **DEPRECATED (v19.0+):** `filterGlobal()` is deprecated. Use `filteringExpressionsTree` to build a tree that applies conditions across all columns instead.
+
 ```typescript
 // Filter all filterable columns at once with a search term
+// ⚠️ Deprecated since v19.0 — prefer filteringExpressionsTree
 this.gridRef().filterGlobal('search term', IgxStringFilteringOperand.instance().condition('contains'), true);
 ```
 
@@ -319,7 +325,8 @@ Control the AND/OR logic between **different column** filters:
 ```
 
 ```typescript
-import { FilteringLogic } from 'igniteui-angular';
+import { FilteringLogic } from 'igniteui-angular/core';
+// import { FilteringLogic } from '@infragistics/igniteui-angular/core'; for licensed package
 
 // FilteringLogic.And (default) — row must match ALL column filters
 // FilteringLogic.Or — row must match ANY column filter
@@ -331,11 +338,11 @@ filteringLogic = FilteringLogic.And;
 | Event | Cancelable | Payload |
 |---|---|---|
 | `(filtering)` | Yes | `IFilteringEventArgs` — set `event.cancel = true` to prevent |
-| `(filteringDone)` | No | `IFilteringEventArgs` — fires after a **column-level** filter is applied |
+| `(filteringDone)` | No | `IFilteringExpressionsTree` — fires after a **column-level** filter is applied |
 | `(filteringExpressionsTreeChange)` | No | `IFilteringExpressionsTree` — fires after the **grid-level** filter tree changes (use this for remote data) |
 
 ```typescript
-onFilteringDone(event: IFilteringEventArgs) {
+onFilteringDone(event: IFilteringExpressionsTree) {
   // Trigger remote data fetch with new filter state
   this.loadFilteredData();
 }

@@ -100,7 +100,7 @@ import { IGX_STEPPER_DIRECTIVES } from 'igniteui-angular/stepper';
 </igx-stepper>
 ```
 
-Key inputs: `[linear]`, `[orientation]` (`'horizontal'` | `'vertical'`), `[stepType]` (`'indicator'` | `'title'` | `'full'`), `[animationType]`.
+Key inputs: `[linear]`, `[orientation]` (`'horizontal'` | `'vertical'`), `[stepType]` (`'indicator'` | `'title'` | `'full'`), `[horizontalAnimationType]` (`'slide'` | `'fade'` | `'none'`), `[verticalAnimationType]` (`'grow'` | `'fade'` | `'none'`), `[animationDuration]`.
 
 Events: `(activeStepChanging)`, `(activeStepChanged)`.
 

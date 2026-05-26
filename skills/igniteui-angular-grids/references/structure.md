@@ -249,7 +249,7 @@ For advanced programmatic filtering, complex AND/OR trees, and remote filtering 
 <igx-grid [rowSelection]="'multiple'" [primaryKey]="'id'" [(selectedRows)]="selectedIds">
   <!-- Optional: Custom row selector checkbox -->
   <ng-template igxRowSelector let-rowContext>
-    <igx-checkbox [checked]="rowContext.selected" (change)="rowContext.select(!rowContext.selected)">
+    <igx-checkbox [checked]="rowContext.selected" [readonly]="true">
     </igx-checkbox>
   </ng-template>
 </igx-grid>

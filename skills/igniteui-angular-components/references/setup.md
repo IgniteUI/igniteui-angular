@@ -29,13 +29,11 @@ Both packages share identical entry-point paths. Everywhere below, replace `igni
 import { ApplicationConfig } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { provideIgniteIntl } from 'igniteui-angular/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),    // REQUIRED — all overlay and animated components
     provideRouter(appRoutes),
-    provideIgniteIntl(),    // recommended — localization for date/time pickers, grids, etc.
   ]
 };
 ```
@@ -44,7 +42,6 @@ export const appConfig: ApplicationConfig = {
 |---|---|---|
 | `provideAnimations()` | `@angular/platform-browser/animations` | **All overlay and animated components** — Dialog, Combo, Select, Dropdown, Date/Time Picker, Snackbar, Toast, Banner, Navigation Drawer, Carousel, Overlay service |
 | `importProvidersFrom(HammerModule)` | `@angular/platform-browser` | OPTIONAL — touch gestures (Slider, Drag & Drop, swipe) |
-| `provideIgniteIntl()` | `igniteui-angular/core` | Localization for grids, date/time pickers, and components displaying formatted values |
 
 > **`provideAnimationsAsync()`** lazy-loads the animations module — prefer it for SSR or when optimizing initial bundle size:
 > ```typescript

@@ -202,8 +202,7 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 ```html
 <igx-time-picker
   [(ngModel)]="selectedTime"
-  [inputFormat]="'HH:mm'"
-  [is24HourFormat]="true">
+  [inputFormat]="'HH:mm'">
 </igx-time-picker>
 ```
 

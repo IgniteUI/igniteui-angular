@@ -27,7 +27,7 @@ This reference gives high-level guidance on when to use each chart type, their k
 
 | Component | NgModule to import | Description |
 |---|---|---|
-| `IgxCategoryChartComponent` | `IgxCategoryChartModule` | Simplified API for area, bar, column charts |
+| `IgxCategoryChartComponent` | `IgxCategoryChartModule` | Simplified API for area, column, line, spline, waterfall charts |
 | `IgxFinancialChartComponent` | `IgxFinancialChartModule` | Stock/candlestick charts with OHLC data |
 | `IgxDataChartComponent` | `IgxDataChartModule` | Advanced: explicit axes, series, >65 chart types |
 | `IgxPieChartComponent` | `IgxPieChartModule` | Part-to-whole pie and donut charts |
@@ -35,7 +35,7 @@ This reference gives high-level guidance on when to use each chart type, their k
 | `IgxLegendComponent` | `IgxLegendModule` | Shared legend component |
 
 ### When to use each:
-- **Category Chart** → Use for simple area/bar/column; let framework auto-configure
+- **Category Chart** → Use for simple area/column/line/spline/waterfall; let framework auto-configure
 - **Financial Chart** → Use for stock data with time-series OHLC, indicators, volume
 - **Data Chart** → Use for advanced scenarios: multiple axes, custom series combinations, stacked/scatter
 - **Pie Chart** → Use for part-to-whole (segments sum to 100%)
@@ -52,32 +52,31 @@ chartComponent.dataSource = [
   { month: 'Feb', revenue: 6500 }
 ];
 
-// Data Chart uses 'itemsSource' and explicit series configuration
-chartComponent.itemsSource = dataArray;
+// Data Chart: data is bound on individual series via 'itemsSource', not on the chart itself
+seriesComponent.itemsSource = dataArray;
 ```
 
 ### Chart Type Selection
-- **Category Chart**: `chartType` property (Auto, Area, Column, Line, Point, etc.)
-- **Financial Chart**: `chartType` property (Auto, Candle, Line, Bar, Column)
-- **Data Chart**: Configure explicit series (IgxAreaSeriesComponent, IgxBarSeriesComponent, IgxBarSeries, etc.)
+- **Category Chart**: `chartType` property — type: `CategoryChartType` (Auto, Line, Area, Column, Spline, ...)
+- **Financial Chart**: `chartType` property — type: `FinancialChartType` (Auto, Bar, Candle, ...)
+- **Data Chart**: Configure explicit series (IgxAreaSeriesComponent, IgxBarSeriesComponent, IgxColumnSeriesComponent, etc.)
 - **Pie Chart**: No chartType needed; inherent pie structure
 
 ### Required Properties
 
 **IgxCategoryChartComponent** (simplest API; auto-detects numeric & string columns):
 - `dataSource` — Data array (required)
-- `chartType` — Chart type (Auto, Area, Column, Line, Point, etc.)
+- `chartType` — type: `CategoryChartType`
 - Component auto-detects: first string column → X-axis labels, numeric columns → Y-axis data
 
 **IgxDataChartComponent** (advanced; requires explicit configuration):
-- `itemsSource` — Data array (required)
-- `valueMemberPath` — Which property contains numeric values (for series)
+- Data is bound on individual series via `itemsSource`, not on the chart itself
+- `valueMemberPath` — Set on the series, not the chart
 - Requires explicit axis and series components
 
 **IgxFinancialChartComponent** (stock data):
-- `dataSource` — Data array with date + OHLC columns
-- `chartType` — Chart type (Auto, Candle, Line, Bar, Column)
-- `openMemberPath`, `highMemberPath`, `lowMemberPath`, `closeMemberPath` — OHLC field names
+- `dataSource` — Data array with date + OHLC columns (chart auto-detects columns)
+- `chartType` — type: `FinancialChartType`
 
 **IgxPieChartComponent**:
 - `dataSource` — Data array
@@ -100,23 +99,23 @@ chartComponent.itemsSource = dataArray;
 - Gridlines: `xAxisMajorStroke`, `yAxisMajorStroke`, gridline styling
 
 ### Tooltips
-- **Default tooltips**: Auto-enabled; style with `toolTipType` (Category, Item, etc.)
-- **Custom tooltips**: `tooltipTemplate` directive for custom content
-- Properties: `showDefaultTooltip`, `toolTipBrush` (color)
+- **Default tooltips**: Auto-enabled; style with `toolTipType`: `ToolTipType` (Default, Item, Category, None)
+- **Custom tooltips**: `tooltipTemplate` for custom content
 
 ### Markers & Data Points
 - Control marker visibility and style via `markerTypes`, `markerBrushes`, `markerOutlines`
-- Properties: `markerSize`, `markerShape` (Circle, Square, Triangle, etc.)
-- Use marker templates for custom marker appearance
+- Properties: `markerThickness`, `markerMaxCount`, `markerFillMode`, `markerOutlineMode`
+- `markerTypes` accepts `MarkerType` values
 
 ### Animations
-- Enable with `transitionInMode` (Auto, None, FromZero, FromSeries, etc.)
-- Control speed via `transitionDuration` (milliseconds)
-- Works on initial load and data updates
+- Enable with `transitionInMode` — type: `CategoryTransitionInMode` (Auto, FromZero, SweepFromLeft, ...)
+- Control initial load speed via `transitionInDuration` (milliseconds)
+- Control data-change animation speed via `transitionDuration` (milliseconds)
+- `transitionInSpeedType` — type: `TransitionInSpeedType`
 
 ### Highlighting & Selection
-- **Highlighting**: Mouse hover effect; set `highlightingMode`, `highlightingBehavior`
-- **Selection**: Click to select data points/series; properties vary by chart type
+- **Highlighting**: Mouse hover effect; `highlightingMode`: `SeriesHighlightingMode` (None, Brighten, FadeOthers, ...), `highlightingBehavior`: `SeriesHighlightingBehavior`
+- **Selection**: Click to select data points/series; `selectionMode`: `SeriesSelectionMode`, `selectionBehavior`: `SeriesSelectionBehavior`
 
 ### Zooming & Panning
 - Mouse wheel to zoom; drag to pan
@@ -124,18 +123,18 @@ chartComponent.itemsSource = dataArray;
 - Keyboard support: Arrow keys, +/- for zoom
 
 ### Trendlines
-- Visualize data trends with trendline types (Linear, Logarithmic, Exponential, etc.)
-- Property: `trendLineType` (Category/Financial charts)
+- Property: `trendLineType`: `TrendLineType` (Category/Financial charts)
 
 ### Legend
 - Display with `legend` property (assign `IgxLegendComponent`)
 - `legendItemTemplate` for custom legend items
-- Properties: `showLegend`, `legendOrientation`, `legendPosition`
+- Properties: `legendItemVisibility`, `legendHighlightingMode`, `legendItemBadgeShape`
+- `legendOrientation` is set on the `IgxLegendComponent` itself, not on the chart
 
 ### Annotations
-- **Crosshairs**: `crosshairsDisplayMode` (None, Vertical, Horizontal, Both)
-- **Final Value Layer**: Show ending values on axis
-- **Callout Layer**: Custom callouts at specific values
+- **Crosshairs**: `crosshairsDisplayMode`: `CrosshairsDisplayMode`
+- **Final Value Layer**: `finalValueAnnotationsVisible` — show ending values on axis
+- **Callout Layer**: `calloutsVisible` — custom callouts at specific values
 - **Range Annotations**: Highlight data ranges
 
 ---
@@ -146,7 +145,7 @@ chartComponent.itemsSource = dataArray;
 - **Use**: Trends over time, cumulative part-to-whole
 - **Data**: X-axis categories, Y-axis numeric values
 - **Variants**: Area, StepArea, Stacked Area, Stacked 100% Area
-- **API**: `chartType`, `valueMemberPath`, `categoryXAxis`
+- **API**: `chartType`, `dataSource` (auto-detects numeric columns)
 - **Best Practices**:
   - Start Y-axis at 0 for accuracy
   - Use transparent colors for overlaid series
@@ -157,7 +156,7 @@ chartComponent.itemsSource = dataArray;
 - **Use**: Compare categories, show rankings, time-series changes
 - **Data**: X-axis numeric, Y-axis categories (reversed from Column)
 - **Variants**: Grouped Bar, Stacked Bar, Stacked 100% Bar, Polar Bar
-- **API**: `IgxBarSeriesComponent`, `valueMemberPath`, `argumentMemberPath`
+- **API**: `IgxBarSeriesComponent`, `valueMemberPath`, `valueAxis`, `categoryAxis`
 - **Best Practices**:
   - Start numeric axis at 0
   - Sort categories by value (ascending/descending)
@@ -168,7 +167,7 @@ chartComponent.itemsSource = dataArray;
 - **Use**: Compare categories, show distribution, time-series changes
 - **Data**: X-axis categories, Y-axis numeric values
 - **Variants**: Column, StackedColumn, Stacked100%Column, RangeColumn, WaterfallColumn
-- **API**: `chartType`, `valueMemberPath`, `categoryXAxis`
+- **API**: `chartType`, `dataSource` (auto-detects numeric columns)
 - **Best Practices**:
   - Start Y-axis at 0
   - Order time-series left to right
@@ -186,20 +185,20 @@ chartComponent.itemsSource = dataArray;
   - **Volume Pane**: Show trading volume (column, line, or area chart)
   - **Indicator Pane**: Financial indicators (RSI, MACD, Bollinger Bands, etc.)
   - **Zoom Pane**: Navigation slider to zoom/pan
-- **Chart Types**: `Auto` (default), `Candle`, `Line`, `Bar`, `Column`
 - **API**:
-  - `chartType` — Price display type (Auto, Line, Candle, Bar, Column)
-  - `volumeType` — Volume display (None, Column, Line, Area)
-  - `indicatorTypes` — Array of indicators (0 or more)
-  - `zoomSliderType` — Zoom pane display (defaults to match chartType)
+  - `chartType`: `FinancialChartType`
+  - `volumeType`: `FinancialChartVolumeType`
+  - `indicatorTypes`: `FinancialIndicatorType[]`
+  - `zoomSliderType`: `FinancialChartZoomSliderType`
 - **Indicators**: RSI, MACD, Bollinger Bands, Force Index, Standard Deviation, and more
 - **Features**:
   - Crosshairs with value snapshots
   - Trendlines and overlays
   - Time-based filters (users can select 1M, 3M, 6M, YTD, 1Y, ALL)
 - **Data Binding**: 
-  - `openMemberPath`, `highMemberPath`, `lowMemberPath`, `closeMemberPath`, `volumeMemberPath`
-  - `dateMemberPath` — Date/time column
+  - The Financial Chart auto-detects OHLC, Volume, and Date columns from the data source
+  - Data items should have properties named like `open`, `high`, `low`, `close`, `volume`, `date` (or similar)
+  - No explicit member path properties are needed on the chart component
 
 ### Pie Chart (`IgxPieChartComponent` or `IgxDataPieChartComponent`)
 - **Use**: Part-to-whole visualization (segments sum to 100%)
@@ -209,9 +208,9 @@ chartComponent.itemsSource = dataArray;
   - `labelMemberPath` — Data property for slice labels
   - `valueMemberPath` — Data property for numeric values
   - `legend` — Assign IgxLegendComponent for legend display
-  - `selectionMode` — Single, Multiple, Manual (default Single)
+  - `selectionMode`: `SliceSelectionMode`
   - `othersCategoryThreshold` — Combine small slices into "Others"
-  - `othersCategoryType` — Threshold as Number or Percent
+  - `othersCategoryType`: `OthersCategoryType`
   - `allowSliceExplosion` — Enable click to expand slice
   - `allowSliceSelection` — Enable click selection highlighting
 - **Features**:
@@ -231,76 +230,70 @@ chartComponent.itemsSource = dataArray;
 
 ## Common API Members by Chart Type
 
-### IgxCategoryChartComponent (Area, Bar, Column, Line, etc.)
+### IgxCategoryChartComponent (Area, Column, Line, etc.)
 ```typescript
 // Required
 dataSource: any[];           // Data array (auto-detects numeric fields)
-chartType: CategoryChartType;        // Auto, Area, Column, Line, Point, etc.
+chartType: CategoryChartType;
 
 // Common optional inputs
 xAxisTitle: string;          // X-axis label
 yAxisTitle: string;          // Y-axis label
-xAxisLabelLocation: AxisLabelLocation;  // Axis label alignment
-yAxisLabelLocation: AxisLabelLocation;
+xAxisLabelLocation: XAxisLabelLocation;
+yAxisLabelLocation: YAxisLabelLocation;
 yAxisMinimumValue: number;   // Y-axis minimum
 yAxisMaximumValue: number;   // Y-axis maximum
 brushes: string[];           // Series colors (fill)
 outlines: string[];          // Series colors (outline)
-markerTypes: MarkerType[];   // Marker shapes (Circle, Square, etc.)
+markerTypes: MarkerType[];
 markerBrushes: string[];     // Marker fill colors
 markerOutlines: string[];    // Marker outline colors
-toolTipType: ToolTipType;    // Tooltip display mode
-highlightingMode: HighlightingMode;     // Hover highlight behavior
-highlightingBehavior: HighlightingBehavior;
-trendLineType: TrendLineType;           // Trendline visualization
-transitionInMode: TransitionInMode;     // Animation on load
-transitionInDuration: number;           // Animation duration (milliseconds)
+toolTipType: ToolTipType;
+highlightingMode: SeriesHighlightingMode;
+highlightingBehavior: SeriesHighlightingBehavior;
+trendLineType: TrendLineType;
+transitionInMode: CategoryTransitionInMode;
+transitionInDuration: number;           // Initial load animation duration (milliseconds)
 ```
 
 ### IgxFinancialChartComponent (Stock/Candlestick/OHLC)
 ```typescript
-chartType: FinancialChartType; // Auto, Line, Candle, Bar, Column
-itemsSource: any[];
-openMemberPath: string;
-highMemberPath: string;
-lowMemberPath: string;
-closeMemberPath: string;
-volumeMemberPath: string;
-dateMemberPath: string;
-volumeType: VolumeType; // None, Column, Line, Area
-indicatorTypes: IndicatorType[]; // RSI, MACD, etc.
-zoomSliderType: FinancialChartType; // Should match chartType
+chartType: FinancialChartType;
+dataSource: any[];             // Data array (auto-detects OHLC and date columns)
+volumeType: FinancialChartVolumeType;
+indicatorTypes: FinancialIndicatorType[];
+zoomSliderType: FinancialChartZoomSliderType;
 xAxisTitle: string;
 yAxisTitle: string;
-xAxisMode: AxisMode; // OrdinalTimeX, DateTimeX
-yAxisMode: AxisMode;
-showDefaultTooltip: boolean;
+xAxisMode: FinancialChartXAxisMode;
+yAxisMode: FinancialChartYAxisMode;
+toolTipType: ToolTipType;
 isHorizontalZoomEnabled: boolean;
 isVerticalZoomEnabled: boolean;
 crosshairsDisplayMode: CrosshairsDisplayMode;
 trendLineType: TrendLineType;
+isToolbarVisible: boolean;
+isLegendVisible: boolean;
 ```
 
 ### IgxPieChartComponent / IgxDataPieChartComponent
 ```typescript
-itemsSource: any[];
+dataSource: any[];
 labelMemberPath: string;
 valueMemberPath: string;
 legend: IgxLegendComponent;
 legendLabelMemberPath: string;
-legendItemTemplate: TemplateRef;
-legendItemBadgeTemplate: TemplateRef;
-selectionMode: SelectionMode; // Single, Multiple, Manual
-selectionBehavior: SelectionBehavior;
+legendItemTemplate: IgDataTemplate;
+legendItemBadgeTemplate: IgDataTemplate;
+selectionMode: SliceSelectionMode;
 allowSliceExplosion: boolean;
 allowSliceSelection: boolean;
 othersCategoryThreshold: number;
-othersCategoryType: OthersCategoryType; // Number, Percent
+othersCategoryType: OthersCategoryType;
 startAngle: number;
 radiusFactor: number;
-showDefaultTooltip: boolean;
-toolTipType: ToolTipType;
-highlightingMode: HighlightingMode;
+innerExtent: number;          // 0 for pie, >0 for donut (ring)
+sweepDirection: SweepDirection;
 ```
 
 ---
@@ -324,19 +317,28 @@ import {
 
 // Enums and types — these ARE plain TS exports and can be imported directly
 import {
+  CategoryChartType,
+  CategoryTransitionInMode,
   FinancialChartType,
+  FinancialChartVolumeType,
+  FinancialChartXAxisMode,
+  FinancialChartYAxisMode,
+  FinancialChartZoomSliderType,
+  FinancialIndicatorType,
   MarkerType,
   ToolTipType,
-  TrendLineTypeCollection,
-  HighlightingMode,
+  TrendLineType,
+  SeriesHighlightingMode,
+  SeriesHighlightingBehavior,
   TransitionInSpeedType,
-  AxisLabelSettings,
   CrosshairsDisplayMode,
-  LegendOrientation,
-  OthersCategoryContext,
+  SliceSelectionMode,
   SeriesSelectionMode,
+  OthersCategoryType,
   IndicatorDisplayType,
-  FinancialChartVolumeType,
+  XAxisLabelLocation,
+  YAxisLabelLocation,
+  LegendOrientation,
   AxisOrientation
 } from 'igniteui-angular-charts';
 ```
@@ -347,7 +349,7 @@ import {
 import { Component } from '@angular/core';
 import {
   IgxCategoryChartModule,
-  ChartType
+  CategoryChartType
 } from 'igniteui-angular-charts';
 
 @Component({
@@ -414,9 +416,9 @@ import { IgxCategoryChartModule } from 'igniteui-angular-charts';
 ### Color Customization
 - **Series colors**: `brushes` (fill), `outlines` (border)
 - **Marker colors**: `markerBrushes`, `markerOutlines`
-- **Axis styles**: `xAxisMajorStroke`, `yAxisMajorStroke`, `xAxisLabelBrush`, `yAxisLabelBrush`
-- **Tooltip**: `toolTipBrush`, `toolTipTextColor`
-- **Highlight**: `highlightedSeriesOpacity`, `highlightedItemsOpacity`
+- **Axis styles**: `xAxisMajorStroke`, `yAxisMajorStroke`, `xAxisLabelTextColor`, `yAxisLabelTextColor`
+- **Tooltip**: Controlled via `toolTipType` and custom tooltip templates
+- **Highlight**: `highlightingFadeOpacity` (opacity for faded non-highlighted series)
 
 ### CSS & Host Binding
 - Chart containers inherit CSS flex/grid properties
