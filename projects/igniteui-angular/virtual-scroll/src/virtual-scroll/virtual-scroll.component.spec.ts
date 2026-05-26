@@ -445,10 +445,27 @@ describe('IgxVirtualScrollComponent', () => {
         });
 
         it('should emit dataRequest when near the end of data', fakeAsync(() => {
-            // Provide a very small list so the initial render is near the end
+            // Provide a very small list so the visible range is near the end.
+            // dataRequest must not fire on initial render — only after the user
+            // has scrolled (scrollPosition > 0 guard added to the effect).
             component.items = generateItems(3);
             fixture.detectChanges();
             tick();
+            expect(component.lastDataRequest).toBeNull();
+
+            // Simulate a scroll event so scrollPosition becomes > 0.
+            const vsEl: HTMLElement = fixture.debugElement.query(
+                By.directive(IgxVirtualScrollComponent)
+            ).nativeElement;
+
+            Object.defineProperty(vsEl, 'scrollTop', {
+                get: () => 1,
+                configurable: true,
+            });
+            vsEl.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
+            tick();
+
             expect(component.lastDataRequest).not.toBeNull();
             expect(component.lastDataRequest!.startIndex).toBe(3);
         }));
