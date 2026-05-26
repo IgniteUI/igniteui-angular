@@ -231,7 +231,7 @@ chartComponent.itemsSource = dataArray;
 
 ## Common API Members by Chart Type
 
-### IgxCategoryChartComponent (Area, Column, Line, Point, Spline, StepLine, StepArea, Waterfall etc.)
+### IgxCategoryChartComponent (Area, Column, Line, Point, Spline, StepLine, StepArea, Waterfall)
 ```typescript
 // Required
 dataSource: any[];           // Data array (auto-detects numeric fields)
