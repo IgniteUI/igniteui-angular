@@ -23,7 +23,7 @@
 1. **[DONE]** HTML Popover API integration in `IgxOverlayService` and `IgxNavigationDrawer`
 2. **[DONE]** `IgxGridLiteComponent` Grid Lite component _(Developer Preview)_
 3. **[DONE]** `IgxPdfExporterService` - Unicode character support with custom TrueType fonts
-4. **[DONE]** Agent Skills for Components, Data Grids, and Theming & Styling (including MCP server setup)
+4. **[DONE]** Copilot Skills for Components, Data Grids, and Theming & Styling (including MCP server setup)
 5. **[DONE]** Grids performance improvements
 6. **[DONE]** New `Intl`-based localization implementation for all components
 
