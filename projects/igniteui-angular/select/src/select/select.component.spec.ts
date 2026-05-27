@@ -2816,7 +2816,7 @@ class IgxSelectGroupsComponent {
 
 @Component({
     template: `
-    <div style="width: 2500px; height: 400px;"></div>
+    <div style="width: 2500px; height: 300px;"></div>
     <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [(ngModel)]="value" >
         @for (item of items; track item) {
             <igx-select-item [value]="item">
@@ -2824,7 +2824,7 @@ class IgxSelectGroupsComponent {
             </igx-select-item>
         }
     </igx-select>
-    <div style="width: 2500px; height: 400px;"></div>
+    <div style="width: 2500px; height: 300px;"></div>
 `,
     styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }'],
     changeDetection: ChangeDetectionStrategy.Eager,
