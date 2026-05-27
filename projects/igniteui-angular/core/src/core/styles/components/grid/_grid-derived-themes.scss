@@ -69,6 +69,20 @@
             )
         );
 
+        igx-grid-header-row {
+            @include tokens(
+                checkbox-theme(
+                    $schema: $schema,
+                    $empty-color: var(--header-text-color),
+                    $empty-fill-color: var(--header-background),
+                    $tick-color-hover: color-mix(in srgb, var(--header-text-color) 40%, var(--header-background)),
+                    $fill-color: var(--_grid-accent-color),
+                    $label-color: var(--header-text-color),
+                    $disabled-color: color-mix(in srgb, var(--header-text-color) 50%, var(--header-background)),
+                )
+            );
+        }
+
         @include tokens(
             chip-theme(
                 $schema: $schema,
