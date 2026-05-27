@@ -568,17 +568,12 @@
     %advanced-filtering-dialog {
         background: var-get($theme, 'background');
         box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
+        border-radius: $border-radius;
 
-        @if $variant == 'material' or $variant == 'bootstrap' {
-            border-radius: rem(4px);
-        }
-
-        @if $variant == 'fluent' {
-            border-radius: rem(2px);
-        }
-
-        @if $variant == 'indigo' {
-            border-radius: rem(10px);
+         %grid-excel-menu__secondary-footer {
+            @if $variant == 'bootstrap' {
+                border-block-start: rem(1px) solid var-get($theme, 'header-border');
+            }
         }
 
         igx-query-builder {

@@ -268,12 +268,6 @@
         padding-inline: pad-inline(rem(4px), rem(16px), rem(16px));
     }
 
-    %grid-excel-actions--selected {
-        igx-icon {
-            color: var-get($theme, 'actions-selected-icon-color');
-        }
-    }
-
     %grid-excel-move .igx-button-group {
         [dir='rtl'] & {
             flex-direction: row-reverse;
@@ -316,6 +310,14 @@
         color: var-get($theme, 'actions-foreground');
         outline-style: none;
 
+        igx-icon {
+            @if $variant == 'indigo' {
+                --component-size: 2;
+            }
+
+            color: var-get($theme, 'actions-icon-color');
+        }
+
         &:hover,
         &:focus {
             color: var-get($theme, 'actions-hover-foreground');
@@ -326,18 +328,16 @@
             }
         }
 
-        @if $variant == 'indigo' {
-            igx-icon {
-                --component-size: 2;
-
-                color: var-get($theme, 'actions-icon-color');
-            }
-        }
-
         [dir='rtl'] & {
             igx-icon {
                 transform: scaleX(-1);
             }
+        }
+    }
+
+    %grid-excel-actions--selected {
+        igx-icon {
+            color: var-get($theme, 'actions-selected-icon-color');
         }
     }
 
