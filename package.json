@@ -153,7 +153,7 @@
     "postcss": "^8.5.1",
     "postcss-scss": "^4.0.6",
     "prettier": "^3.3.3",
-    "puppeteer": "^24.5.0",
+    "puppeteer": "^25.1.0",
     "sass-embedded": "^1.92.1",
     "sass-true": "^8.1.0",
     "sassdoc": "^2.7.4",
