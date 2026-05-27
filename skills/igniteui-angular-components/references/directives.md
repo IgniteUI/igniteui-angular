@@ -129,7 +129,7 @@ onDeselected(event: IButtonGroupEventArgs) {
 | `(selected)` | `IButtonGroupEventArgs` | A button is selected. |
 | `(deselected)` | `IButtonGroupEventArgs` | A button is deselected. |
 
-`IButtonGroupEventArgs`: `{ button: IgxButtonDirective; index: number }`, where `IgxButtonDirective` is imported from `igniteui-angular/directives` (see **Button & Icon Button** section above).
+`IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`, where `IgxButtonGroupComponent` is from `igniteui-angular/button-group` and `IgxButtonDirective` is from `igniteui-angular/directives` (see **Button & Icon Button** section above).
 
 **Key inputs on each `<button igxButton>` child:**
 
@@ -217,7 +217,7 @@ import { IgxDragDirective, IgxDropDirective, IDragMoveEventArgs, IDropDroppedEve
 
 ```html
 <!-- Draggable source -->
-<div igxDrag [data]="item" (dragMove)="onDragMove($event)" (dragEnd)="onDragEnd($event)">
+<div [igxDrag]="item" (dragMove)="onDragMove($event)" (dragEnd)="onDragEnd($event)">
   <igx-icon>drag_indicator</igx-icon>
   {{ item.name }}
 </div>
@@ -225,7 +225,6 @@ import { IgxDragDirective, IgxDropDirective, IDragMoveEventArgs, IDropDroppedEve
 <!-- Drop target -->
 <div igxDrop (dropped)="onDrop($event)" (enter)="onDragEnter($event)" (leave)="onDragLeave($event)">
   Drop here
-</div>
 </div>
 ```
 
@@ -254,7 +253,7 @@ onDrop(event: IDropDroppedEventArgs) {
 ```html
 <igx-list>
   @for (item of items; track item.id) {
-    <igx-list-item igxDrag [data]="item" igxDrop (dropped)="reorder($event, item)">
+    <igx-list-item [igxDrag]="item" igxDrop (dropped)="reorder($event, item)">
       <igx-icon igxListAction>drag_handle</igx-icon>
       <span igxListLine>{{ item.name }}</span>
     </igx-list-item>

@@ -29,11 +29,13 @@ Both packages share identical entry-point paths. Everywhere below, replace `igni
 import { ApplicationConfig } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
+import { provideIgniteIntl } from 'igniteui-angular/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),    // REQUIRED — all overlay and animated components
     provideRouter(appRoutes),
+    provideIgniteIntl(),    // recommended — localization for date/time pickers, grids, etc.
   ]
 };
 ```

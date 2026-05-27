@@ -217,7 +217,7 @@ export class RemoteGridComponent {
   [sortStrategy]="noopSort"
   [filterStrategy]="noopFilter"
   (dataPreLoad)="onDataPreLoad($event)"
-  (sortingDone)="onSortingDone($event)"
+  (sortingDone)="onSortingDone()"
   (filteringExpressionsTreeChange)="onFilteringExpressionsTreeChange()"
   height="600px">
 

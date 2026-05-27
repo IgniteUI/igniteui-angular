@@ -184,11 +184,12 @@ npm install igniteui-grid-lite
 ### Setup
 
 ```typescript
-import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
 import {
   IgxGridLiteComponent,
   IgxGridLiteColumnComponent,
-  IgxGridLiteCellTemplateDirective
+  IgxGridLiteCellTemplateDirective,
+  IgxGridLiteHeaderTemplateDirective
 } from 'igniteui-angular/grids/lite';
 
 @Component({
@@ -196,7 +197,8 @@ import {
   imports: [
     IgxGridLiteComponent,
     IgxGridLiteColumnComponent,
-    IgxGridLiteCellTemplateDirective
+    IgxGridLiteCellTemplateDirective,
+    IgxGridLiteHeaderTemplateDirective
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],  // Required — Grid Lite is a Web Component
   templateUrl: './users-lite.component.html',
@@ -259,15 +261,20 @@ Columns use `<igx-grid-lite-column>` with these inputs:
 
 ### Templates
 
-Cell templates use the `igxGridLiteCell` directive:
+Use `igxGridLiteCell` for cell templates and `igxGridLiteHeader` for header templates:
 
 ```html
-<igx-grid-lite-column field="status" header="Status">
-  <ng-template igxGridLiteCell let-value let-row="row" let-column="column">
-    <span [class]="value">{{ value }}</span>
+<igx-grid-lite-column field="rating" dataType="number">
+  <ng-template igxGridLiteHeader let-value>
+    <span>⭐ Rating</span>
+  </ng-template>
+  <ng-template igxGridLiteCell let-value let-row="row">
+    <span>{{ value }}</span>
   </ng-template>
 </igx-grid-lite-column>
 ```
+
+> When a header template is provided, the `header` text property is ignored.
 
 ### Sorting & Filtering API
 
