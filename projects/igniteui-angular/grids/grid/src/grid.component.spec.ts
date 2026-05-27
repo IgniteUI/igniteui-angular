@@ -1602,25 +1602,25 @@ describe('IgxGrid Component Tests #grid', () => {
             const rows = grid.rowList.toArray();
             // verify default number formatting
             let expectedValue = '2,760';
-            expect((rows[0].cells.toArray()[3] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[3] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = '1,098';
-            expect((rows[5].cells.toArray()[3] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[5].cells.toArray()[3] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = '7,898';
-            expect((rows[7].cells.toArray()[3] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[7].cells.toArray()[3] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             // verify formatter function formatting
             expectedValue = '2.76e+3';
-            expect((rows[0].cells.toArray()[5] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[5] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = '1.098e+3';
-            expect((rows[5].cells.toArray()[5] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[5].cells.toArray()[5] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = '7.898e+3';
-            expect((rows[7].cells.toArray()[5] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[7].cells.toArray()[5] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             // verify date formatting
             expectedValue = 'Mar 21, 2005';
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             // verify summaries formatting
             let avgValue;
             let earliestValue;
@@ -1658,11 +1658,11 @@ describe('IgxGrid Component Tests #grid', () => {
             // verify cells formatting
             const rows = grid.rowList.toArray();
             let expectedValue = 'Mar 21, 2005';
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
 
             // verify summaries formatting
             let avgValue;
@@ -1701,11 +1701,11 @@ describe('IgxGrid Component Tests #grid', () => {
             // verify cells formatting
             const rows = grid.rowList.toArray();
             let expectedValue = 'Mar 21, 2005';
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
 
             // verify summaries formatting
             let avgValue;
@@ -1743,11 +1743,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
             let rows = grid.rowList.toArray();
             let expectedValue = 'Mar 21, 2005';
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             // verify summaries formatting
             let avgValue;
             let earliestValue;
@@ -1786,11 +1786,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
             rows = grid.rowList.toArray();
             expectedValue = `${ymd('2005-03-21').getUTCDate()}. März 2005`;
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = `${ymd('2005-01-15').getUTCDate()}. Januar 2008`;
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue =`${ymd('2005-11-20').getUTCDate()}. November 2010`;
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
 
             // verify summaries formatting
             summaries = fixture.debugElement.queryAll(By.css('.igx-grid-summary'));

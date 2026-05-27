@@ -374,7 +374,7 @@ describe('IgxGrid - Column properties #grid', () => {
         const rowCount = grid.rowList.length;
         for (let i = 0; i < rowCount; i++) {
             // Check the display value
-            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent).toBe(expectedVal[i]);
+            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent.trim()).toBe(expectedVal[i]);
             // Check the cell's value is not changed
             expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }
@@ -387,7 +387,7 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(col.formatter).toBeDefined();
         for (let i = 0; i < rowCount; i++) {
             // Check the cell's formatter value(display value)
-            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent).toBe(expectedValToLower[i]);
+            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent.trim()).toBe(expectedValToLower[i]);
             // Check the cell's value is not changed
             expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }

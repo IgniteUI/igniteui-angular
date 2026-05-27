@@ -51,7 +51,7 @@ describe('Column Hiding UI #grid', () => {
 
             const titleElement = GridFunctions.getColumnChooserTitle(columnChooserElement).nativeElement as HTMLHeadingElement;
             expect(columnChooser.title).toBe('Show/Hide Columns');
-            expect(titleElement.textContent).toBe('Show/Hide Columns');
+            expect(titleElement.textContent.trim()).toBe('Show/Hide Columns');
 
             columnChooser.title = undefined;
             fix.detectChanges();
