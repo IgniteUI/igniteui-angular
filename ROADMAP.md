@@ -2,7 +2,7 @@
 
 # Current Milestone
 
-## Milestone 43, version 22.0 (Due by May, 2026)
+## Milestone 43, version 22.0 (Due by Jun, 2026)
 1. Support for Angular 22
 
 ## Going down the road
@@ -16,14 +16,14 @@
 1. **[DONE]** `IgxCombo`, `IgxSimpleCombo` - Introduced `selectionChanged` event and `disableClear` input
 2. **[DONE]** `IgxSnackbarComponent`, `IgxToastComponent` - New `positioning` input for container-based placement
 3. **[DONE]** `IgxOverlayService` - New `createAbsoluteOverlaySettings` overload accepting `useContainerStrategy`
-4. **[DONE]** AI Copilot Skill: Generate Angular views from design images (screenshots, mockups, wireframes)
-5. **[DONE]** AI Copilot Skills improvements for Components, Grids, and Theming
+4. **[DONE]** Agent Skills: Generate Angular views from design images (screenshots, mockups, wireframes)
+5. **[DONE]** Agent Skills improvements for Components, Grids, and Theming
 
 ## Milestone 41, version 21.1 (Released Feb 17th, 2026), [Release Blog 21.1](https://www.infragistics.com/blogs/ignite-ui-for-angular-21-1)
 1. **[DONE]** HTML Popover API integration in `IgxOverlayService` and `IgxNavigationDrawer`
 2. **[DONE]** `IgxGridLiteComponent` Grid Lite component _(Developer Preview)_
 3. **[DONE]** `IgxPdfExporterService` - Unicode character support with custom TrueType fonts
-4. **[DONE]** AI Copilot Skills for Components, Data Grids, and Theming & Styling (including MCP server support)
+4. **[DONE]** Agent Skills for Components, Data Grids, and Theming & Styling (including MCP server setup)
 5. **[DONE]** Grids performance improvements
 6. **[DONE]** New `Intl`-based localization implementation for all components
 
