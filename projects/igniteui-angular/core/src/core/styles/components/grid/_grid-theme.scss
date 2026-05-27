@@ -1502,7 +1502,7 @@
         min-height: var(--header-size);
         outline-style: none;
         overflow: hidden;
-        transition: color 250ms ease-in-out;
+        transition: color 120ms $ease-in-out-cubic;
     }
 
     %grid-cell-header--filtering {
@@ -1526,7 +1526,7 @@
         flex-grow: 1; /* hey IE, the text should take most of the space */
         // align-self: flex-end; /* commenting out for now on external request */
         line-height: var(--header-size);
-        transition: color 250ms ease-in-out;
+        transition: color 120ms $ease-in-out-cubic;
     }
 
     %grid-cell-header-icons {
@@ -1744,7 +1744,7 @@
     %grid-excel-icon--filtered,
     %grid-excel-icon,
     .sort-icon {
-        transition: all 250ms ease-in-out;
+        transition: all 120ms $ease-in-out-cubic;
     }
 
     %grid-cell-number {

@@ -11,9 +11,20 @@
         grid-theme(
             $schema: vars.$schema,
             $background: #f7f4f0,
-            $accent-color: #5B8F8A
+            $accent-color: #5B8F8A,
         )
     );
+
+    &.has-header-overrides {
+        @include tokens(
+            grid-theme(
+                $schema: vars.$schema,
+                $background: #f7f4f0,
+                $accent-color: #5B8F8A,
+                $header-background: var(--ig-grid-header-background),
+            )
+        );
+    }
 }
 
 .color-pickers {

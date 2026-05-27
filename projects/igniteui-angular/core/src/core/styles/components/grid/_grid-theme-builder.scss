@@ -73,6 +73,7 @@
                     $item-background: var(--_grid-background, #{var-get($theme, if($variant == 'indigo', 'filtering-dialog-background', 'filtering-row-background'))}),
                     $item-border-color: transparent,
                     $item-text-color: var(--_grid-foreground, #{color($color: 'gray', $variant: 700)}),
+                    $item-active-border-color: var(--item-active-background),
                     $item-selected-background: if(
                         $variant == 'indigo',
                         var(--ig-btn-group-selected-bg, var(--ig-primary-500)),
@@ -87,6 +88,7 @@
                             color($color: 'primary', $variant: 500)
                         )
                     )}),
+                    $item-selected-active-border-color: var(--item-selected-active-background),
                     $item-selected-hover-text-color: var(--_grid-accent-color, #{if(
                         $variant == 'indigo',
                         contrast-color($color: 'primary'),
@@ -149,6 +151,19 @@
                 $disabled-color: color-mix(in srgb, var(--_grid-foreground) 50%, var(--_grid-background)),
             )
         );
+
+        igx-grid-header-row {
+            @include tokens(
+                checkbox-theme(
+                    $schema: $schema,
+                    $empty-color: var(--header-text-color),
+                    $empty-fill-color: var(--header-background),
+                    $tick-color-hover: color-mix(in srgb, var(--header-text-color) 40%, var(--header-background)),
+                    $fill-color: var(--_grid-accent-color),
+                    $label-color: var(--header-text-color),
+                    $disabled-color: color-mix(in srgb, var(--header-text-color) 50%, var(--header-background)),
+                ));
+        }
 
         @include tokens(
             chip-theme(
