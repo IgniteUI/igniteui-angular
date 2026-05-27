@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:string';
 @use '../../base' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
@@ -11,6 +12,7 @@
     // The --variant CSS produced by css-vars is needed also
     // when dynamically switching between the input `type` attribute.
     $variant: map.get($theme, '_meta', 'theme');
+    $mode: map.get($theme, '_meta', 'variant');
     $transition-timing: .25s $out-cubic;
     $material-theme: $variant == 'material';
     $indigo-theme: $variant == 'indigo';
@@ -112,7 +114,15 @@
 
     @if $variant == 'material' {
         %form-group-display--border {
-            &:has(input:-webkit-autofill, input:autofill) {
+            &:has(
+                input:-webkit-autofill,
+                input:autofill,
+                input[type='date'],
+                input[type='time'],
+                input[type='datetime-local'],
+                input[type='month'],
+                input[type='week']
+            ) {
                 %igx-input-group__notch--border {
                     border-block-start-color: transparent;
                 }
@@ -137,12 +147,14 @@
 
     %form-group-display {
         @include sizable();
+
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
         --input-size: var(--component-size);
         --input-icon: #{sizable(rem(14px), rem(16px), rem(16px))};
 
         position: relative;
         display: block;
+        color-scheme: string.unquote($mode);
         color: var-get($theme, 'idle-text-color');
 
         igx-prefix,
@@ -193,6 +205,7 @@
 
         input[type='number'] {
             -moz-appearance: textfield;
+            appearance: textfield;
         }
 
         // Don't show the number spinner
@@ -218,7 +231,15 @@
 
         @if $variant == 'material' {
             &:not(%form-group-display--border) {
-                &:has(input:-webkit-autofill, input:autofill) {
+                &:has(
+                    input:-webkit-autofill,
+                    input:autofill,
+                    input[type='date'],
+                    input[type='time'],
+                    input[type='datetime-local'],
+                    input[type='month'],
+                    input[type='week']
+                ) {
                     %form-group-label {
                         --floating-label-position: -73%;
 
@@ -230,10 +251,34 @@
             }
 
             &:not(%form-group-display--focused, %form-group-display--filled) {
-                &:has(input:not(:placeholder-shown, [type='file'])) {
+                &:has(input:not(
+                    :placeholder-shown,
+                    [type='file'],
+                    [type='date'],
+                    [type='time'],
+                    [type='datetime-local'],
+                    [type='month'],
+                    [type='week']
+                )) {
                     %form-group-label {
                         @include type-style('subtitle-1');
                         transform: translateY(0);
+                    }
+                }
+
+                &:has(
+                    input[type='date'],
+                    input[type='time'],
+                    input[type='datetime-local'],
+                    input[type='month'],
+                    input[type='week']
+                ) {
+                    %form-group-label {
+                        @include type-style('caption');
+                    }
+
+                    %igx-input-group__notch {
+                        border-block-start-color: transparent !important;
                     }
                 }
             }
@@ -272,10 +317,30 @@
             color: var-get($theme, 'input-suffix-color--filled');
             background: var-get($theme, 'input-suffix-background--filled');
         }
+
+        &:not(%form-group-display--readonly, %form-group-display--disabled) {
+            &:hover {
+                %form-group-input {
+                    color: var-get($theme, 'filled-text-hover-color');
+                }
+            }
+
+            &%form-group-display--focused {
+                %form-group-input {
+                    color: var-get($theme, 'focused-text-color');
+                }
+            }
+        }
     }
 
     %form-group-display--focused {
         color: var-get($theme, 'input-prefix-color--focused');
+
+        &:not(%form-group-display--filled) {
+            %form-group-input {
+                color: var-get($theme, 'idle-text-color');
+            }
+        }
 
         igx-prefix,
         [igxPrefix] {
@@ -364,12 +429,9 @@
         &:hover {
             %form-group-input--hover {
                 cursor: default;
-                color: var-get($theme, 'filled-text-color');
 
-                &:not(:focus-within) {
-                    &::placeholder {
-                        color: var-get($theme, 'placeholder-color');
-                    }
+                &:not(:focus-within)::placeholder {
+                    color: var-get($theme, 'placeholder-color');
                 }
             }
         }
@@ -388,6 +450,10 @@
         igx-suffix,
         [igxSuffix] {
             @extend %form-group-suffix--disabled;
+        }
+
+        input::-webkit-datetime-edit {
+            color: var-get($theme, 'disabled-text-color');
         }
     }
 
@@ -1334,7 +1400,6 @@
 
     %form-group-input {
         position: relative;
-        display: block;
         border: none;
         padding-block-start: $input-top-padding;
         padding-block-end: $input-bottom-padding;
@@ -1343,13 +1408,21 @@
         width: 100%;
         min-width: 0;
         background: transparent;
-        color: var-get($theme, 'filled-text-color');
+        color: inherit;
         outline-style: none;
         box-shadow: none;
         overflow: hidden;
         text-overflow: ellipsis;
+        appearance: none;
 
-        &:not(%form-group-textarea, [type='date']) {
+        &:not(
+            %form-group-textarea,
+            [type='date'],
+            [type='time'],
+            [type='datetime-local'],
+            [type='month'],
+            [type='week']
+        ) {
             line-height: 0 !important; /* Reset typography */
         }
 
@@ -1361,6 +1434,16 @@
             color: var-get($theme, 'placeholder-color');
             opacity: 1;
             line-height: normal; /* Fix placeholder position in Safari */
+        }
+
+        &::-webkit-datetime-edit-fields-wrapper {
+            width: 100%;
+            padding: 0;
+        }
+
+        &::-webkit-datetime-edit {
+            color: inherit;
+            line-height: normal;
         }
 
         @if $variant == 'indigo' {
@@ -1427,16 +1510,12 @@
     }
 
     %form-group-input--hover {
-        color: var-get($theme, 'filled-text-hover-color');
-
         &::placeholder {
             color: var-get($theme, 'hover-placeholder-color');
         }
     }
 
     %form-group-input--focus {
-        color: var-get($theme, 'focused-text-color');
-
         &::placeholder {
             color: var-get($theme, 'hover-placeholder-color');
         }
@@ -2299,7 +2378,15 @@
 
     // The :not selector is needed otherwise bootstrap will override the %autofill-background-fix
     %form-group-display--bootstrap {
-        :not(:has(input:-webkit-autofill, input:autofill)) {
+        :not(:has(
+            input:-webkit-autofill,
+            input:autofill,
+            input[type='date'],
+            input[type='time'],
+            input[type='datetime-local'],
+            input[type='month'],
+            input[type='week'])
+        ) {
             %bootstrap-input {
                 transition: box-shadow .15s ease-out, border .15s ease-out;
             }
