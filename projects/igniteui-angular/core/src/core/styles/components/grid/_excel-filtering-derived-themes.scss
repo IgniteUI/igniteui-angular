@@ -30,7 +30,6 @@
                     $item-background: transparent,
                     $item-border-color: transparent,
                     $item-text-color: var(--_excel-filtering-foreground, #{color($color: 'gray', $variant: 700)}),
-                    $item-active-border-color: var(--item-active-background),
                     $item-selected-background: if(
                         $variant == 'indigo',
                         var(--ig-btn-group-selected-bg, var(--ig-primary-500)),
@@ -46,7 +45,7 @@
                             color($color: 'primary', $variant: 500)
                         )
                     )}),
-                    $item-selected-active-border-color: var(--item-selected-active-background),
+                    $item-selected-active-border-color: transparent,
                     $item-selected-hover-text-color: var(--_excel-filtering-accent-color, #{if(
                         $variant == 'indigo',
                         contrast-color($color: 'primary'),
