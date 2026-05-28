@@ -16,8 +16,6 @@ This reference gives high-level guidance on when to use each directive, their ke
 
 ## Button & Icon Button
 
-> **Docs:** [Button Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)
-
 ```typescript
 import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -45,8 +43,6 @@ Button variants for `igxButton`: `'flat'`, `'contained'`, `'outlined'`, `'fab'`.
 Button variants for `igxIconButton`: `'flat'`, `'outlined'`, `'contained'`.
 
 ## Button Group
-
-> **Docs:** [Button Group Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/buttongroup)
 
 ```typescript
 // Option A — convenience collection (includes IgxButtonGroupComponent + IgxButtonDirective)
@@ -129,7 +125,7 @@ onDeselected(event: IButtonGroupEventArgs) {
 | `(selected)` | `IButtonGroupEventArgs` | A button is selected. |
 | `(deselected)` | `IButtonGroupEventArgs` | A button is deselected. |
 
-`IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`, where `IgxButtonDirective` is imported from `igniteui-angular/directives` (see **Button & Icon Button** section above).
+`IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`, where `IgxButtonGroupComponent` is from `igniteui-angular/button-group` and `IgxButtonDirective` is from `igniteui-angular/directives` (see **Button & Icon Button** section above).
 
 **Key inputs on each `<button igxButton>` child:**
 
@@ -161,8 +157,6 @@ getSelected()    { return this.buttonGroup().selectedButtons; }
 
 ## Ripple Effect
 
-> **Docs:** [Ripple Directive](https://www.infragistics.com/products/ignite-ui-angular/angular/components/ripple)
-
 ```typescript
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 ```
@@ -181,33 +175,29 @@ Inputs: `[igxRipple]` (ripple color), `[igxRippleCentered]` (always start from c
 
 ## Tooltip
 
-> **Docs:** [Tooltip Directive](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)
-
 ```typescript
 import { IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
 ```
 
 ```html
-<button igxButton [igxTooltipTarget]="myTooltip" [igxTooltipTargetShowDelay]="500">
+<button igxButton [igxTooltipTarget]="myTooltip" [showDelay]="500">
   Hover or focus me
 </button>
 <div igxTooltip #myTooltip="tooltip">Helpful tooltip text</div>
 ```
 
-Inputs on `[igxTooltipTarget]`: `[igxTooltipTargetShowDelay]` (ms), `[igxTooltipTargetHideDelay]` (ms), `[tooltipDisabled]`.
+Inputs on `[igxTooltipTarget]`: `[showDelay]` (ms), `[hideDelay]` (ms), `[tooltipDisabled]`.
 
-Programmatic control:
+Programmatic control via the target directive:
 
 ```typescript
-tooltip = viewChild.required<IgxTooltipDirective>('myTooltip');
+tooltipTarget = viewChild.required(IgxTooltipTargetDirective);
 
-showTooltip() { this.tooltip().open(); }
-hideTooltip() { this.tooltip().close(); }
+show() { this.tooltipTarget().showTooltip(); }
+hide() { this.tooltipTarget().hideTooltip(); }
 ```
 
 ## Drag and Drop
-
-> **Docs:** [Drag and Drop](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drag-drop)
 
 ```typescript
 import { IgxDragDirective, IgxDropDirective, IDragMoveEventArgs, IDropDroppedEventArgs } from 'igniteui-angular/directives';
@@ -217,13 +207,13 @@ import { IgxDragDirective, IgxDropDirective, IDragMoveEventArgs, IDropDroppedEve
 
 ```html
 <!-- Draggable source -->
-<div igxDrag [dragData]="item" (dragMove)="onDragMove($event)" (dragEnd)="onDragEnd($event)">
+<div [igxDrag]="item" (dragMove)="onDragMove($event)" (dragEnd)="onDragEnd($event)">
   <igx-icon>drag_indicator</igx-icon>
   {{ item.name }}
 </div>
 
 <!-- Drop target -->
-<div igxDrop (dropped)="onDrop($event)" (dragEnter)="onDragEnter($event)" (dragLeave)="onDragLeave($event)">
+<div igxDrop (dropped)="onDrop($event)" (enter)="onDragEnter($event)" (leave)="onDragLeave($event)">
   Drop here
 </div>
 ```
@@ -253,7 +243,7 @@ onDrop(event: IDropDroppedEventArgs) {
 ```html
 <igx-list>
   @for (item of items; track item.id) {
-    <igx-list-item igxDrag [dragData]="item" igxDrop (dropped)="reorder($event, item)">
+    <igx-list-item [igxDrag]="item" igxDrop (dropped)="reorder($event, item)">
       <igx-icon igxListAction>drag_handle</igx-icon>
       <span igxListLine>{{ item.name }}</span>
     </igx-list-item>
@@ -261,8 +251,8 @@ onDrop(event: IDropDroppedEventArgs) {
 </igx-list>
 ```
 
-Key drag events: `(dragStart)`, `(dragMove)`, `(dragEnd)`, `(dragClick)`, `(transitioned)`.
-Key drop events: `(dragEnter)`, `(dragLeave)`, `(dragOver)`, `(dropped)`.
+Key drag events: `(dragStart)`, `(dragMove)`, `(dragEnd)`, `(dragClick)`, `(ghostCreate)`, `(ghostDestroy)`, `(transitioned)`.
+Key drop events: `(enter)`, `(leave)`, `(over)`, `(dropped)`.
 
 > **NOTE:** For touch-based drag, add `importProvidersFrom(HammerModule)` to `app.config.ts` providers.
 

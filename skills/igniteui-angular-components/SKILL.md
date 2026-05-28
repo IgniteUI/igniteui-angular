@@ -52,7 +52,7 @@ Base your code and explanation exclusively on what you read. If the reference fi
 | Task | Reference file to read |
 |---|---|
 | App setup, `app.config.ts` providers, `provideAnimations()`, entry-point imports, convenience directive arrays | [`references/setup.md`](./references/setup.md) |
-| Input Group, Combo, Simple Combo, Select, Date Picker, Date Range Picker, Time Picker, Calendar, Checkbox, Radio, Switch, Slider, reactive/template-driven forms | [`references/form-controls.md`](./references/form-controls.md) |
+| Input Group, Combo, Simple Combo, Select, Date Picker, Date Range Picker, Time Picker, Calendar, Checkbox, Radio, Switch, Slider, Autocomplete, reactive/template-driven forms | [`references/form-controls.md`](./references/form-controls.md) |
 | Tabs, Bottom Navigation, Stepper, Accordion, Expansion Panel, Splitter, Navigation Drawer | [`references/layout.md`](./references/layout.md) |
 | List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress Indicators, Chat | [`references/data-display.md`](./references/data-display.md) |
 | Dialog, Snackbar, Toast, Banner | [`references/feedback.md`](./references/feedback.md) |
