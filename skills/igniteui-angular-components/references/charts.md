@@ -18,7 +18,7 @@ Ignite UI for Angular Charts provides 65+ chart types for data visualization. Ch
 This reference gives high-level guidance on when to use each chart type, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific chart component or feature you're interested in.
 
 ### Chart Component packages
-- `igniteui-angular-charts` — Category Chart, Financial Chart, Data Chart, and Pie Chart components (NPM)
+- `igniteui-angular-charts` — Category Chart, Financial Chart, Data Chart, Pie Chart, and Sparkline components (NPM)
 - `@infragistics/igniteui-angular-charts` — Licensed version with same API (ProGet)
 
 ### Main Chart Components
@@ -33,12 +33,14 @@ This reference gives high-level guidance on when to use each chart type, their k
 | `IgxPieChartComponent` | `IgxPieChartModule` | Part-to-whole pie and donut charts |
 | `IgxDataPieChartComponent` | `IgxDataPieChartModule` | Simplified API for pie charts |
 | `IgxLegendComponent` | `IgxLegendModule` | Shared legend component |
+| `IgxSparklineComponent` | `IgxSparklineModule` | Compact inline chart for grid cells or small layouts |
 
 ### When to use each:
 - **Category Chart** → Use for simple area/column/line/spline/waterfall; let framework auto-configure
 - **Financial Chart** → Use for stock data with time-series OHLC, indicators, volume
 - **Data Chart** → Use for advanced scenarios: multiple axes, custom series combinations, stacked/scatter
 - **Pie Chart** → Use for part-to-whole (segments sum to 100%)
+- **Sparkline** → Use for compact inline visualization in grid cells, dashboards, or small-space layouts
 
 ---
 
@@ -48,6 +50,7 @@ This reference gives high-level guidance on when to use each chart type, their k
 - **Category Chart**: `chartType` property — type: `CategoryChartType` (Auto, Line, Area, Column, Spline, ...)
 - **Financial Chart**: `chartType` property — type: `FinancialChartType` (Auto, Bar, Candle, ...)
 - **Data Chart**: Configure explicit series (IgxAreaSeriesComponent, IgxBarSeriesComponent, IgxColumnSeriesComponent, etc.)
+- **Sparkline**: `displayType` property — type: `SparklineDisplayType` (Line, Area, Column, WinLoss)
 - **Pie Chart**: No chartType needed; inherent pie structure
 
 ### Required Properties
@@ -146,6 +149,23 @@ This reference gives high-level guidance on when to use each chart type, their k
   - Ensure segments sum to 100%
   - Use distinguishable colors
 - **Avoid**: Many segments (>8), change over time (use Bar/Line instead), precise comparisons (Bar is better)
+
+### Sparkline (`IgxSparklineComponent`)
+- **Use**: Compact inline data visualization in grid cells, dashboards, or small-space layouts
+- **Data**: One-dimensional array with at least one numeric field
+- **Variants**: Line, Area, Column, WinLoss
+- **Features**:
+  - Configurable markers (All, Low, High, First, Last, Negative)
+  - Normal range — horizontal shaded band (`normalRangeMinimum`, `normalRangeMaximum`)
+  - Trendlines via `trendLineType`
+  - Unknown value plotting via `unknownValuePlotting`
+  - Tooltip support via `tooltipTemplate`
+- **Best Practices**:
+  - Set explicit `height` and `width` on the component or its container (renders at 0px otherwise)
+  - Start Y-axis at 0 for accurate comparisons
+  - Use Line or Area type for trend visualization; Column for discrete comparisons; WinLoss for binary positive/negative
+  - When embedding in a grid cell, set compact dimensions (e.g. `height="40px"` `width="220px"`)
+- **Avoid**: Detailed data analysis (use Category Chart or Data Chart), displaying many data labels (Sparkline only supports first/last X-axis labels and high/low Y-axis values)
 
 ---
 
@@ -252,3 +272,9 @@ import { IgxCategoryChartModule } from 'igniteui-angular-charts';
 - 1 label column (category)
 - 1 numeric column (value; segments should sum to 100%)
 - Example: `[{ label: 'Category A', value: 30 }, { label: 'Category B', value: 70 }]`
+
+### Sparkline
+- Array of data items (one-dimensional)
+- At least 1 numeric field mapped via `valueMemberPath`
+- Optionally 1 string field mapped via `labelMemberPath` (used for first/last X-axis labels)
+- Example: `[{ label: 'Jan', value: 10 }, { label: 'Feb', value: 25 }, { label: 'Mar', value: 15 }]`
