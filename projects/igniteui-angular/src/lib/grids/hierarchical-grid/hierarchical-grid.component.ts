@@ -819,6 +819,22 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * Returns an array of the current cell selection.
+     */
+    public override getSelectedData(formatters = false, headers = false): any[] {
+        const source: any[] = [];
+        this.dataView.forEach((record) => {
+            if (this.isChildGridRecord(record)) {
+                source.push(null);
+                return;
+            }
+            const rowData = record as any;
+            source.push(this.isGhostRecord(rowData) || this.isRecordMerged(rowData) ? rowData.recordRef : rowData);
+        });
+        return this.extractDataFromSelection(source, formatters, headers);
+    }
+
+    /**
      * Returns a `CellType` object that matches the conditions.
      *
      * @example
@@ -1179,21 +1195,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.updateColumns(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public override getSelectedData(formatters = false, headers = false): any[] {
-        const source: any[] = [];
-        this.dataView.forEach((record) => {
-            if (this.isChildGridRecord(record)) {
-                source.push(null);
-                return;
-            }
-            source.push(record);
-        });
-        return this.extractDataFromSelection(source, formatters, headers);
     }
 
     protected override setupColumns() {

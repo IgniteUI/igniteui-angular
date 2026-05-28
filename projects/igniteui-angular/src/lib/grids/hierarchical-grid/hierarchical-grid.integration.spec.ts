@@ -174,21 +174,22 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const previousArtist = singersData[1].Artist;
             const targetArtist = singersData[2].Artist;
             const targetRow = grid.dataRowList.toArray()
-                .find(row => row.data.Artist === targetArtist) as IgxHierarchicalRowComponent;
+                .find(row => row.data.Artist === targetArtist) as IgxHierarchicalRowComponent | undefined;
 
-            targetRow.toggle();
+            expect(targetRow).toBeDefined();
+            targetRow!.toggle();
             tick(DEBOUNCE_TIME);
             singersFixture.detectChanges();
 
             grid.selectRange({
-                rowStart: targetRow.index,
-                rowEnd: targetRow.index,
+                rowStart: targetRow!.index,
+                rowEnd: targetRow!.index,
                 columnStart: 'Artist',
                 columnEnd: 'Artist'
             });
             singersFixture.detectChanges();
 
-            expect(targetRow.expanded).toBeTruthy();
+            expect(targetRow!.expanded).toBeTruthy();
 
             const selectedData = grid.getSelectedData();
             expect(selectedData).toEqual([{ Artist: targetArtist }]);
