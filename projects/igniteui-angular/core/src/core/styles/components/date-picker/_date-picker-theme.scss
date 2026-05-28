@@ -53,7 +53,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        padding: pad(rem(8px));
+        gap: rem(8px);
     }
 
     %date-picker__actions {

@@ -6,7 +6,7 @@ import {
     HostListener,
     HostBinding
 } from '@angular/core';
-import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective, IgxButtonType, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 import { IgxDividerDirective } from 'igniteui-angular/directives';
 import { IBaseEventArgs, DateRange, CustomDateRange, PickerInteractionMode, IDateRangePickerResourceStrings, IgxPickerActionsDirective } from 'igniteui-angular/core';
@@ -56,7 +56,9 @@ export class IgxCalendarContainerComponent {
     public resourceStrings!: IDateRangePickerResourceStrings;
     public vertical = false;
     public closeButtonLabel: string;
+    public closeButtonType: IgxButtonType = 'flat';
     public cancelButtonLabel: string;
+    public cancelButtonType: IgxButtonType = 'flat';
     public todayButtonLabel: string;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public pickerActions: IgxPickerActionsDirective;
