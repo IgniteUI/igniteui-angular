@@ -3,7 +3,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
+    Component, Input, ViewChild, OnDestroy, HostBinding
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
@@ -13,7 +13,6 @@ import {
     IQueryBuilderResourceStrings,
     QueryBuilderResourceStringsEN,
     recreateTree,
-    IgxOverlayOutletDirective,
     getCurrentResourceStrings,
     onResourceChangeHandle
 } from 'igniteui-angular/core';
@@ -294,15 +293,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
-    }
-
-    /**
-     * @hidden @internal
-     *
-     * used by the grid
-     */
-    public setPickerOutlet(outlet?: IgxOverlayOutletDirective | ElementRef) {
-        this.queryTree.setPickerOutlet(outlet);
     }
 
     /**

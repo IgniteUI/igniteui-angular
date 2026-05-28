@@ -3380,6 +3380,7 @@ describe('igxCombo', () => {
                     combo = fixture.componentInstance.combo;
                     input = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 });
+
                 it('should properly initialize when used as a form control', () => {
                     expect(combo).toBeDefined();
                     const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
@@ -3410,6 +3411,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
+
                 it('should properly initialize when used as a form control - without validators', () => {
                     const form: UntypedFormGroup = fixture.componentInstance.reactiveForm;
                     form.controls.townCombo.validator = null;
@@ -3442,6 +3444,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
+
                 it('should be possible to be enabled/disabled when used as a form control', () => {
                     const form = fixture.componentInstance.reactiveForm;
                     const comboFormReference = form.controls.townCombo;
@@ -3474,6 +3477,47 @@ describe('igxCombo', () => {
                     expect(comboFormReference.disabled).toBeFalsy();
                     expect(combo.disabled).toBeFalsy();
                 });
+
+                it('should render as INITIAL after control.disable() and touched/dirty', () => {
+                    const form = fixture.componentInstance.reactiveForm;
+                    const control = form.controls.townCombo;
+
+                    combo.select([combo.data.at(0)], true);
+                    fixture.detectChanges();
+
+                    control.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+
+                    control.disable();
+                    fixture.detectChanges();
+
+                    expect(combo.disabled).toBe(true);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                });
+
+                it('should render as INITIAL (not INVALID) after control.disable() and previously invalid', () => {
+                    const form = fixture.componentInstance.reactiveForm;
+                    const control = form.controls.townCombo;
+
+                    // markAsTouched must come BEFORE setValue: markAsTouched does not emit
+                    // statusChanges, so onStatusChanged must see touched=true at the moment
+                    // statusChanges fires from setValue.
+                    control.markAsTouched();
+                    control.setValue([]);
+                    fixture.detectChanges();
+
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
+
+                    control.disable();
+                    fixture.detectChanges();
+
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                });
+
                 it('should change value when addressed as a form control', () => {
                     expect(combo).toBeDefined();
                     const form = fixture.componentInstance.reactiveForm;
@@ -3493,6 +3537,7 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                     expect(comboFormReference.value).toEqual([{ field: 'South Carolina', region: 'South Atlantic' }]);
                 });
+
                 it('should properly submit values when used as a form control', () => {
                     expect(combo).toBeDefined();
                     const form = fixture.componentInstance.reactiveForm;
@@ -3508,6 +3553,7 @@ describe('igxCombo', () => {
                     expect(form.status).toEqual('VALID');
                     fixture.debugElement.query(By.css('button')).triggerEventHandler('click', UIInteractions.simulateClickAndSelectEvent);
                 });
+
                 it('should add/remove asterisk when setting validators dynamically', () => {
                     let inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
                     let asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
@@ -3557,6 +3603,7 @@ describe('igxCombo', () => {
                     expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
                 }));
             });
+
             describe('Template form tests: ', () => {
                 let inputGroupRequired: DebugElement;
                 beforeEach(fakeAsync(() => {

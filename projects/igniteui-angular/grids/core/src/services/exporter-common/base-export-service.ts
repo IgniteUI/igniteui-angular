@@ -3,7 +3,6 @@ import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import { yieldingLoop } from './yielding-loop';
 import { type ITreeGridRecord, type ColumnType, type GridTypeBase, type IPathSegment, type IgxSummaryResult, type GridColumnDataType, DataUtil, FilterUtil, GridSummaryCalculationMode, IBaseEventArgs, IFilteringState, IGroupByExpandState, IGroupByRecord, IGroupingState, TreeGridFilteringStrategy, cloneArray, cloneValue, columnFieldPath, resolveNestedPath, getHierarchy, isHierarchyMatch, BaseFormatter } from 'igniteui-angular/core';
-import { FormatWidth, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -1164,14 +1163,6 @@ export abstract class IgxBaseExporter {
                 columnInfo.digitsInfo = column.pipeArgs.digitsInfo
                     ? column.pipeArgs.digitsInfo
                     : '1.0-2';
-            }
-
-            if (column.dataType === 'date') {
-                columnInfo.dateFormat = getLocaleDateFormat(this.locale, FormatWidth.Medium);
-            }
-
-            if (column.dataType === 'dateTime') {
-                columnInfo.dateFormat = getLocaleDateTimeFormat(this.locale, FormatWidth.Medium);
             }
 
             if (this.options.ignoreColumnsOrder) {

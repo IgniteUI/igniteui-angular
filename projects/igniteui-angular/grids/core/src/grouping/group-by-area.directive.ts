@@ -37,6 +37,12 @@ export abstract class IgxGroupByAreaDirective {
     @HostBinding('class.igx-grid-grouparea')
     public defaultClass = true;
 
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'presentation';
+
     /** The parent grid containing the component. */
     @Input()
     public grid: FlatGridType | GridType;

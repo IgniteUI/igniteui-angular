@@ -1618,8 +1618,9 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
+            const requiredRow = grid.gridAPI.get_row_by_index(0);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
-            GridSelectionFunctions.verifyRowSelected(selectedRow);
+            GridSelectionFunctions.verifyRowSelected(requiredRow);
         });
 
         it('Should be able to select and deselect rows from API', () => {
@@ -2451,6 +2452,11 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(rowSelector.textContent).toBe('CUSTOM SELECTOR: 0');
             expect(groupRowSelector.textContent).toBe('CUSTOM GROUP SELECTOR');
             expect(headerSelector.textContent).toBe('CUSTOM HEADER SELECTOR');
+
+            // ARIA: row-selector wrappers must have the correct cell roles
+            expect(rowSelector.getAttribute('role')).toBe('gridcell');
+            expect(groupRowSelector.getAttribute('role')).toBe('gridcell');
+            expect(headerSelector.getAttribute('role')).toBe('columnheader');
         });
     });
 });

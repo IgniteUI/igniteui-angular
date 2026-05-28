@@ -8,6 +8,16 @@ import type { IgxTheme } from '../services/theme/theme.token';
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
 
+
+/**
+ * Returns true if the element's direction is left-to-right
+ *
+ * @hidden @internal
+ */
+export function isLeftToRight(element: Element): boolean {
+    return element?.matches(':dir(ltr)') ?? true;
+}
+
 /**
  * @hidden
  */

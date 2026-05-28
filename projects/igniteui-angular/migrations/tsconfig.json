@@ -1,7 +1,13 @@
 {
+    "ts-node": {
+        "compilerOptions": {
+            // explicitly force ts-node into CommonJS mode, otherwise spies on modules like `fs` fail as those are not configurable in ESM context
+            "module": "CommonJS"
+        }
+    },
     "compilerOptions": {
         "target": "es6",
-        "module": "commonjs",
+        "module": "node16",
         "sourceMap": false,
         "declaration": true,
         "outDir": "../../../dist/igniteui-angular/migrations",

@@ -11,7 +11,7 @@ import {
 import { IgxTabHeaderDirective } from '../../tab-header.directive';
 import { IgxTabHeaderBase } from '../../tabs.base';
 import { IgxTabsComponent } from './../tabs.component';
-import { getResizeObserver, ɵIgxDirectionality } from 'igniteui-angular/core';
+import { getResizeObserver, isLeftToRight } from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-tab-header',
@@ -24,7 +24,6 @@ import { getResizeObserver, ɵIgxDirectionality } from 'igniteui-angular/core';
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {
     protected override tabs = inject(IgxTabsComponent);
     private ngZone = inject(NgZone);
-    private dir = inject(ɵIgxDirectionality);
 
     /** @hidden @internal */
     @HostBinding('class.igx-tab-header--selected')
@@ -121,7 +120,9 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
     }
 
     private getNewSelectionIndex(newIndex: number, itemsArray: any[], key: string, hasDisabledItems: boolean): number {
-        if ((key === this.platform.KEYMAP.ARROW_RIGHT && !this.dir.rtl) || (key === this.platform.KEYMAP.ARROW_LEFT && this.dir.rtl)) {
+        const rtl = !isLeftToRight(this.nativeElement);
+
+        if ((key === this.platform.KEYMAP.ARROW_RIGHT && !rtl) || (key === this.platform.KEYMAP.ARROW_LEFT && rtl)) {
             newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
             while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
                 newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;

@@ -1,5 +1,6 @@
 :host {
     display: grid;
+    gap: 32px;
 
     > .igx-grid {
         --ig-grid-row-odd-background: var(--ig-primary-50);
@@ -11,7 +12,9 @@
         }
     }
 
-    gap: 32px
+    .activeRow {
+        --row-odd-background: #{dynamic-shade(var(--row-even-background), $offset: 3)};
+    }
 }
 
 .sample-header {

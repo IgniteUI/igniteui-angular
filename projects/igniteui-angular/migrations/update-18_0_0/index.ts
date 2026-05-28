@@ -1,7 +1,6 @@
 import { Rule, SchematicContext, SchematicsException, Tree } from "@angular-devkit/schematics";
 import { FileChange, findElementNodes, getAttribute, getProjects, getSourceOffset, getWorkspace, hasAttribute, parseFile } from '../common/util';
-import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
-import type { Element } from '@angular/compiler';
+import type { Element } from '@angular/compiler' with { "resolution-mode": "import" };
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from "../common/UpdateChanges";
 
 const version = "18.0.0";
@@ -10,7 +9,8 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(
         `Applying migration for Ignite UI for Angular to version ${version}`,
     );
-    const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
+    // bare specifier escapes schematics encapsulation for the compiler dynamic import:
+    const { HtmlParser } = await import('@angular/compiler');
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
     const prop = ["displayDensity", "[displayDensity]"];

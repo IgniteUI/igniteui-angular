@@ -5,15 +5,14 @@ import type {
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
-// use bare specifier to escape the schematics encapsulation for the dynamic import:
-import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
-import type { Element } from '@angular/compiler';
+import type { Element } from '@angular/compiler' with { "resolution-mode": "import" };
 
 const version = '16.1.0';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
-    const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
+    // bare specifier escapes schematics encapsulation for the compiler dynamic import:
+    const { HtmlParser } = await import('@angular/compiler');
     const update = new UpdateChanges(__dirname, host, context);
     update.applyChanges();
 

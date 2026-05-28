@@ -55,7 +55,7 @@ import {
     IgxTextSelectionDirective,
     IgxFocusDirective,
     IgxTextHighlightDirective
- } from 'igniteui-angular/directives';
+} from 'igniteui-angular/directives';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
@@ -920,7 +920,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 closeOnOutsideClick: true,
                 excludeFromOutsideClick: [this.nativeElement],
                 closeOnEscape: false,
-                outlet: this.grid.outlet,
                 modal: false,
                 positionStrategy: new AutoPositionStrategy({
                     horizontalStartPoint: HorizontalAlignment.Center,
@@ -1181,6 +1180,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if (this.grid.isCellSelectable && shouldEmitSelection) {
             this.zone.run(() => this.grid.selected.emit({ cell: this.getCellType(), event }));
         }
+
     }
 
     /**
