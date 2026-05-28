@@ -18,8 +18,6 @@ This reference gives high-level guidance on when to use each feedback and overla
 
 ## Dialog
 
-> **Docs:** [Dialog Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)
-
 ```typescript
 import { IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective } from 'igniteui-angular/dialog';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -56,8 +54,6 @@ Events: `(opening)`, `(opened)`, `(closing)`, `(closed)`, `(leftButtonSelect)`, 
 
 ## Snackbar
 
-> **Docs:** [Snackbar Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar)
-
 ```typescript
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -88,8 +84,6 @@ save() {
 
 ## Toast
 
-> **Docs:** [Toast Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast)
-
 ```typescript
 import { IgxToastComponent } from 'igniteui-angular/toast';
 ```
@@ -103,8 +97,6 @@ import { IgxToastComponent } from 'igniteui-angular/toast';
 Toast vs Snackbar: Toast is non-interactive (no action button), always auto-hides. Snackbar supports an action button and can be persistent.
 
 ## Banner
-
-> **Docs:** [Banner Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner)
 
 ```typescript
 import { IgxBannerComponent, IgxBannerActionsDirective } from 'igniteui-angular/banner';

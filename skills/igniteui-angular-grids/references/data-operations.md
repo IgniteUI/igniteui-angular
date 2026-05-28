@@ -20,32 +20,6 @@ All programmatic data operations require a reference to the grid component. Use 
 
 > **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Replace the package prefix in every import accordingly. Always use specific entry points — never the root barrel of either package.
 
-```typescript
-import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
-
-// Open-source package — import from specific entry points
-// Grid Lite (separate npm package — requires `npm install igniteui-grid-lite`)
-import { IgxGridLiteComponent } from 'igniteui-angular/grids/lite';
-// Flat Grid
-import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
-// Tree Grid
-import { IgxTreeGridComponent, IGX_TREE_GRID_DIRECTIVES } from 'igniteui-angular/grids/tree-grid';
-// Hierarchical Grid
-import { IgxHierarchicalGridComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES } from 'igniteui-angular/grids/hierarchical-grid';
-// Pivot Grid
-import { IgxPivotGridComponent, IGX_PIVOT_GRID_DIRECTIVES } from 'igniteui-angular/grids/pivot-grid';
-
-// Licensed package — same entry-point paths, different prefix:
-// import { IgxGridComponent, IGX_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/grid';
-// import { IgxTreeGridComponent, IGX_TREE_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/tree-grid';
-// import { IgxHierarchicalGridComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/hierarchical-grid';
-// import { IgxPivotGridComponent, IGX_PIVOT_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/pivot-grid';
-
-// AVOID — never import from the root barrel (wrong for BOTH variants)
-// import { IgxGridComponent } from 'igniteui-angular';
-// import { IgxGridComponent } from '@infragistics/igniteui-angular';
-```
-
 ### Flat Grid Example
 
 ```typescript
@@ -122,8 +96,6 @@ export class CompanyGridComponent {
 > **CRITICAL**: Every programmatic example in this file uses Flat Grid (`IgxGridComponent`) by default. For Tree Grid substitute `IgxTreeGridComponent` and `#treeGrid`. For Hierarchical Grid substitute `IgxHierarchicalGridComponent` and `#hGrid`. The sorting, filtering, and editing APIs are either the same or very similar across all three grid types (Flat, Tree, Hierarchical). **Pivot Grid does NOT support standard sorting/filtering/editing APIs** — see [`state.md`](./state.md). **Grid Lite has its own lightweight sorting/filtering API** — see [`state.md`](./state.md).
 
 ## Sorting
-
-> **Docs:** [Sorting](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sorting) · [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/sorting) · [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/sorting)
 
 > **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level sorting instead (see [`state.md`](./state.md)). **Grid Lite** uses a different sorting API — see [`state.md`](./state.md).
 >
@@ -222,8 +194,6 @@ class PrioritySortStrategy implements ISortingStrategy {
 ```
 
 ## Filtering
-
-> **Docs:** [Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/filtering) · [Excel-Style](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/excel-style-filtering) · [Advanced](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/advanced-filtering) (substitute URL prefix per grid type)
 
 > **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level filtering instead (see [`state.md`](./state.md)). **Grid Lite** uses a different filtering API — see [`state.md`](./state.md).
 >
@@ -360,8 +330,6 @@ onFilteringDone(event: IFilteringExpressionsTree) {
 | `IgxBooleanFilteringOperand` | `all`, `true`, `false`, `empty`, `notEmpty`, `null`, `notNull` |
 
 ## Grouping (Flat Grid Only)
-
-> **Docs:** [Group By](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby)
 
 > **NOTE**: GroupBy is **exclusive to the Flat Grid** (`igx-grid`). Tree Grid uses its natural hierarchy. Hierarchical Grid uses row islands. Pivot Grid uses dimensions.
 

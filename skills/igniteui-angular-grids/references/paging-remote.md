@@ -15,8 +15,6 @@
 
 ## Paging
 
-> **Docs:** [Paging — Remote Paging](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging) (substitute URL prefix per grid type)
-
 ### Using the Paginator Component
 
 ```html
@@ -113,8 +111,6 @@ export class RemotePagingComponent {
 ```
 
 ## Remote Data Operations
-
-> **Docs:** [Remote Data Operations](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations) (substitute URL prefix per grid type)
 
 ### The Problem
 

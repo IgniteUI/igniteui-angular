@@ -16,8 +16,6 @@ This reference gives high-level guidance on when to use each layout manager comp
 
 ## Layout Manager Directives
 
-> **Docs:** [Layout Manager](https://www.infragistics.com/products/ignite-ui-angular/angular/components/layout)
-
 The Layout Manager is a pair of Angular directives (`igxLayout` / `igxFlex`) that wrap CSS Flexbox. Apply `igxLayout` to any container to control its children's flow; apply `igxFlex` to individual children to control their flex properties.
 
 ```typescript
@@ -114,9 +112,6 @@ import { IgxLayoutDirective, IgxFlexDirective } from 'igniteui-angular/directive
 ---
 
 ## Dock Manager
-
-> **Docs:** [Dock Manager (Angular)](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dock-manager)
-> **Full API Docs:** [Dock Manager Web Component](https://www.infragistics.com/products/ignite-ui-web-components/web-components/components/dock-manager.html)
 
 The Dock Manager is a **separate package** (`igniteui-dockmanager`) and is implemented as a **Web Component** (`<igc-dockmanager>`). It provides IDE-style dockable, resizable, floating, and tabbed pane layouts. It is a **premium** (licensed) component.
 
@@ -364,46 +359,6 @@ export class DockManagerComponent {
   <div slot="content12" class="dockManagerContent">Content 12</div>
 </igc-dockmanager>
 ```
-
-### Pane Types
-
-| `IgcDockManagerPaneType` | Purpose |
-|---|---|
-| `splitPane` | Splits space horizontally or vertically between child panes |
-| `contentPane` | A single leaf pane that renders a slotted element via `contentId` |
-| `tabGroupPane` | Groups multiple `contentPane` children as tabs |
-| `documentHost` | A special area for `documentOnly: true` panes (like an editor area) |
-
-### `IgcSplitPaneOrientation`
-
-| Value | Layout |
-|---|---|
-| `horizontal` | Children placed left-to-right |
-| `vertical` | Children placed top-to-bottom |
-
-### Key `contentPane` Properties
-
-| Property | Type | Description |
-|---|---|---|
-| `contentId` | `string` | Matches the `slot` attribute on the rendered HTML element |
-| `header` | `string` | Tab/title bar label |
-| `isPinned` | `boolean` | `false` = auto-hidden (collapsed to edge); default `true` |
-| `documentOnly` | `boolean` | Restricts pane to `documentHost` areas only |
-| `size` | `number` | Relative size within parent split |
-| `allowClose` | `boolean` | Show close button (default `true`) |
-| `allowPinning` | `boolean` | Allow user to pin/unpin (default `true`) |
-| `allowFloating` | `boolean` | Allow user to float the pane (default `true`) |
-
-### Key `splitPane` / floating pane Properties
-
-| Property | Type | Description |
-|---|---|---|
-| `orientation` | `IgcSplitPaneOrientation` | `horizontal` or `vertical` |
-| `size` | `number` | Relative size in the parent split |
-| `allowEmpty` | `boolean` | Allow pane to remain when all children are closed |
-| `floatingWidth` | `number` | Initial width of floating pane (px) |
-| `floatingHeight` | `number` | Initial height of floating pane (px) |
-| `floatingLocation` | `{x, y}` | Initial top-left corner position of floating pane |
 
 ### Key Rules for Dock Manager
 

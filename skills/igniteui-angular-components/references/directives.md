@@ -16,8 +16,6 @@ This reference gives high-level guidance on when to use each directive, their ke
 
 ## Button & Icon Button
 
-> **Docs:** [Button Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)
-
 ```typescript
 import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -45,8 +43,6 @@ Button variants for `igxButton`: `'flat'`, `'contained'`, `'outlined'`, `'fab'`.
 Button variants for `igxIconButton`: `'flat'`, `'outlined'`, `'contained'`.
 
 ## Button Group
-
-> **Docs:** [Button Group Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/buttongroup)
 
 ```typescript
 // Option A — convenience collection (includes IgxButtonGroupComponent + IgxButtonDirective)
@@ -161,8 +157,6 @@ getSelected()    { return this.buttonGroup().selectedButtons; }
 
 ## Ripple Effect
 
-> **Docs:** [Ripple Directive](https://www.infragistics.com/products/ignite-ui-angular/angular/components/ripple)
-
 ```typescript
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 ```
@@ -180,8 +174,6 @@ Inputs: `[igxRipple]` (ripple color), `[igxRippleCentered]` (always start from c
 ```
 
 ## Tooltip
-
-> **Docs:** [Tooltip Directive](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)
 
 ```typescript
 import { IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
@@ -206,8 +198,6 @@ hide() { this.tooltipTarget().hideTooltip(); }
 ```
 
 ## Drag and Drop
-
-> **Docs:** [Drag and Drop](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drag-drop)
 
 ```typescript
 import { IgxDragDirective, IgxDropDirective, IDragMoveEventArgs, IDropDroppedEventArgs } from 'igniteui-angular/directives';

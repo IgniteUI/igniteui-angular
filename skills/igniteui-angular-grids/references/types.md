@@ -15,8 +15,6 @@
 
 ## Tree Grid
 
-> **Docs:** [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)
-
 For data with parent-child relationships **within a single schema** (e.g., org charts, file systems, categories).
 
 ### Two Data Binding Modes
@@ -88,8 +86,6 @@ export class OrgTreeComponent {
 ---
 
 ## Hierarchical Grid
-
-> **Docs:** [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid)
 
 For master-detail data where **each level has a different schema** (e.g., Companies → Departments → Employees). Each level is defined by a **Row Island** blueprint.
 
@@ -375,8 +371,6 @@ These features are **NOT available** in Grid Lite:
 ---
 
 ## Pivot Grid
-
-> **Docs:** [Pivot Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid)
 
 For **pivot table analytics** where users reshape data by dragging dimensions between rows, columns, filters, and values.
 

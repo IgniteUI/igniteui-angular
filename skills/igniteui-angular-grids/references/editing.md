@@ -31,8 +31,6 @@
 
 ### Cell Editing (Immediate)
 
-> **Docs:** [Cell Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/cell-editing)
-
 The simplest mode. Each cell saves the moment the user tabs away or presses Enter.
 
 ```typescript
@@ -78,9 +76,7 @@ export class CarsGridComponent {
 </igx-grid>
 ```
 
-### Row Editing (Recommended for CRUD)
-
-> **Docs:** [Row Editing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-editing)
+### Row Editing
 
 Users click into a row, edit cells, then click **Done** or **Cancel** — changes only apply when Done is pressed. An overlay toolbar appears automatically.
 
@@ -370,8 +366,6 @@ onCellEdit(event: IGridEditEventArgs) {
 
 ## Validation
 
-> **Docs:** [Validation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/validation)
-
 ### Template-Driven Validation
 
 Apply Angular validators directly on columns:
@@ -416,8 +410,6 @@ this.gridRef().validation.clear(recordId);
 ```
 
 ## Summaries
-
-> **Docs:** [Summaries](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/summaries) (substitute URL prefix per grid type)
 
 ### Built-In Summaries
 

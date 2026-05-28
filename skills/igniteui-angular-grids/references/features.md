@@ -32,9 +32,7 @@ Quick reference:
 | **Row editing** (recommended default) | `[rowEditable]="true"` + `[editable]="true"` on columns + `(rowEditDone)` |
 | **Batch editing** | `[batchEditing]="true"` + `[rowEditable]="true"` + `transactions.commit(data)` |
 
-## Grouping (Grid only)
-
-> **Docs:** [Group By](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby)
+## Grouping (Grid and Tree Grid only)
 
 ```html
 <igx-grid [data]="data()" [groupsExpanded]="true">
@@ -100,8 +98,6 @@ customMerge = new PriceRangeMergeStrategy();
 
 ## Toolbar
 
-> **Docs:** [Toolbar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/toolbar)
-
 ```typescript
 import { IgxGridToolbarComponent } from 'igniteui-angular/grids/core';
 ```
@@ -126,8 +122,6 @@ import { IgxGridToolbarComponent } from 'igniteui-angular/grids/core';
 
 ### Excel Export
 
-> **Docs:** [Excel Export](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-excel)
-
 ```typescript
 import { IgxExcelExporterService, IgxExcelExporterOptions } from 'igniteui-angular/grids/core';
 
@@ -143,8 +137,6 @@ export class MyComponent {
 ```
 
 ### CSV Export
-
-> **Docs:** [CSV Export](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-csv)
 
 ```typescript
 import { IgxCsvExporterService, IgxCsvExporterOptions, CsvFileTypes } from 'igniteui-angular/grids/core';
@@ -171,8 +163,6 @@ For full remote virtualization patterns — see [`paging-remote.md`](./paging-re
 
 ## Row Drag
 
-> **Docs:** [Row Drag](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-drag)
-
 ```html
 <igx-grid [rowDraggable]="true" (rowDragStart)="onDragStart($event)" (rowDragEnd)="onDragEnd($event)">
   <!-- Custom ghost template (purely visual; row data is accessed in event handlers, not in the ghost template) -->
@@ -195,8 +185,6 @@ onDropAllowed(args: IDropDroppedEventArgs) {
 
 ## Action Strip
 
-> **Docs:** [Action Strip](https://www.infragistics.com/products/ignite-ui-angular/angular/components/action-strip)
-
 Overlay actions on a row:
 
 ```html
@@ -210,8 +198,6 @@ Overlay actions on a row:
 ```
 
 ## Master-Detail (Grid only)
-
-> **Docs:** [Master-Detail](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/master-detail)
 
 Expand rows to show arbitrary detail content:
 
