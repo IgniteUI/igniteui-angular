@@ -1181,6 +1181,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         super.initColumns(collection, cb);
     }
 
+    /**
+     * @hidden @internal
+     */
+    public override getSelectedData(formatters = false, headers = false): any[] {
+        const source: any[] = [];
+        this.dataView.forEach((record) => {
+            if (this.isChildGridRecord(record)) {
+                source.push(null);
+                return;
+            }
+            source.push(record);
+        });
+        return this.extractDataFromSelection(source, formatters, headers);
+    }
 
     protected override setupColumns() {
         if (this.parentIsland && this.parentIsland.childColumns.length > 0 && !this.autoGenerate) {
