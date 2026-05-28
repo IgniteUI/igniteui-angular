@@ -44,6 +44,11 @@ Base your code and explanation exclusively on what you read in Step 3. If the re
 
 ---
 
+## Overview
+This reference gives high-level guidance on grids and their features. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component and feature you're interested in.
+
+---
+
 ## Prerequisites
 
 - Angular 20+ project
