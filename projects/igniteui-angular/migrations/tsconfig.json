@@ -1,10 +1,4 @@
 {
-    "ts-node": {
-        "compilerOptions": {
-            // explicitly force ts-node into CommonJS mode, otherwise spies on modules like `fs` fail as those are not configurable in ESM context
-            "module": "CommonJS"
-        }
-    },
     "compilerOptions": {
         "target": "es6",
         "module": "node16",
@@ -15,7 +9,7 @@
         "typeRoots": [
             "../../../node_modules/@types"
         ],
-        "types": ["node"],
+        "types": ["node", "jasmine"],
         "paths": {
             "igniteui-angular/*": [
                 "../*"
@@ -27,8 +21,7 @@
         "skipLibCheck": true
     },
     "exclude": [
-        "../../../node_modules",
-        "**/*.spec.ts"
+        "../../../node_modules"
     ],
     "references": [
         { "path": "../schematics" }
