@@ -150,6 +150,17 @@ You can disable the combo using the following code:
 
 <div class="divider--half"></div>
 
+### Disable Clear
+You can hide the clear button using the following code:
+
+```html
+<igx-simple-combo [disableClear]="true"></igx-simple-combo>
+```
+
+When set to `true`, the clear button is not rendered even when a value is selected.
+
+<div class="divider--half"></div>
+
 ### Grouping
 Defining a combo's groupKey option will group the items, according to that key.
 
@@ -292,7 +303,8 @@ When the combo is opened, allow custom values are enabled and add item button is
 | `placeholder `          | Defines the "empty value" text.                    | `string`                      |
 | `collapsed`             | Gets the dropdown state.                              | `boolean`                     |
 | `disabled`              | Defines whether the control is active or not.      | `boolean`                     |
-| `ariaLabelledBy`        | Defines label ID related to combo.                 | `boolean`                     |
+| `disableClear`          | Defines whether the clear button is rendered.      | `boolean`                     |
+| `ariaLabelledBy`        | Defines label ID related to combo.                 | `string`                      |
 | `valid`                 | gets if control is valid, when used in a form.     | `boolean`                     |
 | `overlaySettings`       | Controls how the dropdown is displayed.            | `OverlaySettings`            |
 | `selected`              | Get current selection state.                       | `Array<any>`                |

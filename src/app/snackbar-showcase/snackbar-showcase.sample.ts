@@ -1,8 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import {
     IgxButtonDirective,
-    IgxOverlayOutletDirective,
-    IgxSnackbarComponent,
+    IgxSnackbarComponent
 } from 'igniteui-angular';
 import { defineComponents, IgcSnackbarComponent } from 'igniteui-webcomponents';
 import {
@@ -21,7 +20,6 @@ defineComponents(IgcSnackbarComponent);
     standalone: true,
     imports: [
         IgxSnackbarComponent,
-        IgxOverlayOutletDirective,
         IgxButtonDirective,
     ],
 })

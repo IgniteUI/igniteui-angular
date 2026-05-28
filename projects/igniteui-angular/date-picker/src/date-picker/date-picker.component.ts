@@ -5,7 +5,6 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
@@ -242,22 +241,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      */
     @Input()
     public spinDelta: Pick<DatePartDeltas, 'date' | 'month' | 'year'>;
-
-    /**
-     * Gets/Sets the container used for the popup element.
-     *
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
-     * //..
-     * ```
-     */
-    @Input()
-    public override outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * Gets/Sets the value of `id` attribute.

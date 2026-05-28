@@ -5,6 +5,7 @@ tools:
   - search/codebase
   - edit/editFiles
   - read/problems
+  - web
 ---
 
 # Component README Agent
@@ -58,7 +59,8 @@ Component documentation is located at:
    - examples when needed
 5. If behavior changed, update the related explanatory text.
 6. If a new capability was added, add a short example only if the README style supports it.
-7. Match existing formatting exactly.
+7. If API was renamed or deprecated, update or remove stale examples and snippets that still reference the old usage.
+8. Match existing formatting exactly.
 
 ---
 

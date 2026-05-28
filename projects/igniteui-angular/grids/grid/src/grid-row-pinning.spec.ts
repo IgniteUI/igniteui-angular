@@ -31,7 +31,8 @@ describe('Row Pinning #grid', () => {
                 GridRowPinningWithMRLComponent,
                 GridRowPinningWithMDVComponent,
                 GridRowPinningWithTransactionsComponent,
-                GridRowPinningWithInitialPinningComponent
+                GridRowPinningWithInitialPinningComponent,
+                GridRowPinningWithPrimaryKeyComponent
             ],
             providers: [
                 IgxGridMRLNavigationService
@@ -825,6 +826,69 @@ describe('Row Pinning #grid', () => {
 
     });
 
+    describe('Editing primary key of pinned row', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(GridRowPinningWithPrimaryKeyComponent);
+            grid = fix.componentInstance.instance;
+            fix.detectChanges();
+        });
+
+        it('should update _pinnedRecordIDs when updating the primary key of a pinned row via updateCell', () => {
+            // Pin the first row (ALFKI)
+            grid.pinRow('ALFKI');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            expect((grid as any)._pinnedRecordIDs).toContain('ALFKI');
+
+            // Update the primary key column (ID) for the pinned row — this triggers
+            // api.service.ts update_cell → unpin_row(oldId) + pin_row(newId)
+            grid.updateCell('NEWID', 'ALFKI', 'ID');
+            fix.detectChanges();
+
+            // Old ID should be removed; new ID should be pinned
+            expect((grid as any)._pinnedRecordIDs).not.toContain('ALFKI');
+            expect((grid as any)._pinnedRecordIDs).toContain('NEWID');
+            expect(grid.pinnedRows.length).toBe(1);
+        });
+
+        it('should keep pinned row count unchanged when primary key of unpinned row is updated', () => {
+            // Pin ALFKI, then update a different (unpinned) row's primary key
+            grid.pinRow('ALFKI');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+
+            // ANATR is not pinned — update_cell should NOT call unpin_row / pin_row for it
+            grid.updateCell('ANATR_NEW', 'ANATR', 'ID');
+            fix.detectChanges();
+
+            // Pinned set stays the same
+            expect((grid as any)._pinnedRecordIDs).toContain('ALFKI');
+            expect((grid as any)._pinnedRecordIDs).not.toContain('ANATR');
+            expect(grid.pinnedRows.length).toBe(1);
+        });
+
+        it('should emit rowPinning on unpin and re-pin when primary key of pinned row is updated', () => {
+            grid.pinRow('ALFKI');
+            fix.detectChanges();
+
+            const rowPinningEvents: IPinRowEventArgs[] = [];
+            grid.rowPinning.subscribe((args: IPinRowEventArgs) => rowPinningEvents.push(args));
+
+            grid.updateCell('ALFKI_RENAMED', 'ALFKI', 'ID');
+            fix.detectChanges();
+
+            // Should emit twice: once for unpin (ALFKI) and once for re-pin (ALFKI_RENAMED)
+            expect(rowPinningEvents.length).toBe(2);
+            expect(rowPinningEvents[0].isPinned).toBeFalse();
+            expect(rowPinningEvents[0].rowKey).toBe('ALFKI');
+            expect(rowPinningEvents[1].isPinned).toBeTrue();
+            expect(rowPinningEvents[1].rowKey).toBe('ALFKI_RENAMED');
+        });
+
+    });
+
     describe('Row pinning with MRL', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithMRLComponent);
@@ -1536,3 +1600,21 @@ export class GridRowPinningWithInitialPinningComponent implements OnInit {
         this.grid1.pinRow(this.data[0].ID);
     }
 }
+
+@Component({
+    template: `
+        <igx-grid
+            [pinning]='pinningConfig'
+            primaryKey='ID'
+            [width]='"800px"'
+            [height]='"500px"'
+            [data]="data"
+            [autoGenerate]="false">
+            <igx-column field="ID" [editable]="true"></igx-column>
+            <igx-column field="CompanyName" [editable]="true"></igx-column>
+            <igx-column field="ContactName" [editable]="true"></igx-column>
+        </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class GridRowPinningWithPrimaryKeyComponent extends GridRowPinningComponent { }

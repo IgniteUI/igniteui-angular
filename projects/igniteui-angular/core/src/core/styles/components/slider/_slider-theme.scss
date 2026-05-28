@@ -568,10 +568,10 @@
     $thumb-label: map.get($categories, 'thumb-label');
 
     %igx-slider-thumb-label__container {
-        @include type-style($thumb-label)
+        @include type-style($thumb-label);
     }
 
     %igx-slider__tick-label {
-        @include type-style($ticks-label)
+        @include type-style($ticks-label);
     }
 }

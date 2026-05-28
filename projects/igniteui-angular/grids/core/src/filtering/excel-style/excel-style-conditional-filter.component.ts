@@ -6,7 +6,7 @@ import { BaseFilteringComponent } from './base-filtering.component';
 import { NgClass } from '@angular/common';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, OverlaySettings, PlatformUtil, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxOverlayService, OverlaySettings, PlatformUtil, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 
 
 /**
@@ -15,17 +15,12 @@ import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, Horiz
 @Component({
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html',
-    imports: [NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
+    imports: [NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     public esf = inject(BaseFilteringComponent);
     protected platform = inject(PlatformUtil);
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
-    public customDialog: IgxExcelStyleCustomDialogComponent;
+    private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
 
     /**
      * @hidden @internal
@@ -133,20 +128,41 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      * @hidden @internal
      */
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
-        if (this.esf.expressionsList && this.esf.expressionsList.length &&
-            this.esf.expressionsList[0].expression.condition.name !== 'in') {
-            this.customDialog.expressionsList = this.esf.expressionsList;
-        } else {
-            this.customDialog.expressionsList = this.customDialog.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
-        }
+        const positionSettings: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection: VerticalAlignment.Middle,
+            horizontalStartPoint: HorizontalAlignment.Center,
+            verticalStartPoint: VerticalAlignment.Middle
+        };
+        const overlaySettings: OverlaySettings = {
+            target: this.esf.grid.tbody.nativeElement,
+            modal: false,
+            closeOnOutsideClick: true,
+            positionStrategy: new AutoPositionStrategy(positionSettings),
+            scrollStrategy: new AbsoluteScrollStrategy(),
+        };
+        const overlayId = this._overlayService.attach(IgxExcelStyleCustomDialogComponent, this.esf.grid.bodyViewContainerRef, overlaySettings);
+        const overlayInfo = this._overlayService.getOverlayById(overlayId);
+        const customDialog = overlayInfo.componentRef!.instance as IgxExcelStyleCustomDialogComponent;
 
-        this.customDialog.selectedOperator = eventArgs.newSelection.value;
+        customDialog.esf = this.esf;
+        customDialog.column = this.esf.column;
+        customDialog.filteringService = this.esf.grid.filteringService;
+        customDialog.overlayComponentId = overlayId;
+        if (this.esf.expressionsList && this.esf.expressionsList.length &&
+            this.esf.expressionsList[0].expression.condition?.name !== 'in') {
+            customDialog.expressionsList = this.esf.expressionsList;
+        } else {
+            customDialog.expressionsList = customDialog.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
+        }
+        customDialog.selectedOperator = eventArgs.newSelection.value;
+
         eventArgs.cancel = true;
         if (this.esf.overlayComponentId) {
             this.esf.hide();
         }
         this.subMenu.close();
-        this.customDialog.open(this.esf.mainDropdown.nativeElement);
+        this._overlayService.show(overlayId);
     }
 
     /**

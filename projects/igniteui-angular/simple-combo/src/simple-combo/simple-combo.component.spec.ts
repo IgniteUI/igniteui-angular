@@ -1220,6 +1220,38 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).not.toBeDefined();
         }));
 
+        it('should stop Escape keydown event propagation when the dropdown is open', fakeAsync(() => {
+            const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+            spyOn(escapeEvent, 'stopPropagation');
+
+            combo.open();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBeFalsy();
+
+            combo.handleKeyDown(escapeEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(escapeEvent.stopPropagation).toHaveBeenCalled();
+        }));
+
+        it('should stop Escape key propagation when the combo is collapsed and has a selection', fakeAsync(() => {
+            combo.comboInput.nativeElement.focus();
+            fixture.detectChanges();
+
+            combo.select(combo.data[2][combo.valueKey]);
+            fixture.detectChanges();
+            expect(combo.selection).toBeDefined();
+
+            const keyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+            const stopPropSpy = spyOn(keyEvent, 'stopPropagation');
+
+            combo.handleKeyDown(keyEvent);
+            fixture.detectChanges();
+
+            expect(stopPropSpy).toHaveBeenCalledTimes(1);
+        }));
+
         it('should clear the selection on tab/blur if the search text does not match any value', () => {
             // allowCustomValues does not matter
             combo.select(combo.data[2][combo.valueKey]);
@@ -1797,6 +1829,26 @@ describe('IgxSimpleCombo', () => {
             //should hide the clear button immediately when clearing the selection by typing
             clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearButton).toBeNull();
+        });
+
+        it('should default disableClear to false', () => {
+            expect(combo.disableClear).toBe(false);
+        });
+        it('should hide the clear button when disableClear is true and an item is selected', () => {
+            combo.select('Wisconsin');
+            fixture.detectChanges();
+            // Verify the clear button is visible before setting disableClear
+            expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
+
+            combo.disableClear = true;
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(0);
+        });
+        it('should show the clear button when disableClear is false (default) and an item is selected', () => {
+            combo.select('Wisconsin');
+            fixture.detectChanges();
+            expect(combo.disableClear).toBe(false);
+            expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
         });
 
         it('should open the combo to the top when there is no space to open to the bottom', fakeAsync(() => {
@@ -2514,6 +2566,7 @@ describe('IgxSimpleCombo', () => {
                     ]
                 }).compileComponents();
             }));
+
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSimpleComboInReactiveFormComponent);
                 fixture.detectChanges();
@@ -2521,6 +2574,7 @@ describe('IgxSimpleCombo', () => {
                 reactiveForm = fixture.componentInstance.reactiveForm;
                 reactiveControl = reactiveForm.form.controls['comboValue'];
             });
+
             it('should not select null, undefined and empty string in a reactive form with required', fakeAsync(() => {
                 // array of objects
                 combo.data = [
@@ -2633,6 +2687,7 @@ describe('IgxSimpleCombo', () => {
                 expect(reactiveForm.status).toEqual('INVALID');
                 expect(reactiveControl.status).toEqual('INVALID');
             }));
+
             it('should not select null, undefined and empty string with "writeValue" method in a reactive form with required', () => {
                 // array of objects
                 combo.data = [
@@ -2792,6 +2847,40 @@ describe('IgxSimpleCombo', () => {
                 expect(combo.value).toEqual(1);
                 expect(form.controls['comboValue'].value).toEqual(1);
             }));
+
+            it('should render as INITIAL after control.disable() and touched/dirty', () => {
+                combo.select([combo.data.at(0)]);
+                fixture.detectChanges();
+
+                reactiveControl.markAsTouched();
+                fixture.detectChanges();
+
+                expect(combo.valid).toEqual(IgxInputState.INITIAL);
+
+                reactiveControl.disable();
+                fixture.detectChanges();
+
+                expect(combo.disabled).toBe(true);
+                expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+            });
+
+            it('should render as INITIAL (not INVALID) after control.disable() and previously invalid', () => {
+                // markAsTouched must come BEFORE setValue: markAsTouched does not emit
+                // statusChanges, so onStatusChanged must see touched=true at the moment
+                // statusChanges fires from setValue.
+                reactiveControl.markAsTouched();
+                reactiveControl.setValue([]);
+                fixture.detectChanges();
+
+                expect(combo.valid).toEqual(IgxInputState.INVALID);
+
+                reactiveControl.disable();
+                fixture.detectChanges();
+
+                expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+            });
         });
     });
 

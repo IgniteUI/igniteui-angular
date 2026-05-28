@@ -36,8 +36,12 @@ jobs:
             NODE_OPTIONS: --max_old_space_size=4096
       - name: Lint i18n
         run: npm run lint:i18n
+      - name: Lint Extras
+        run: npm run lint:extras
       - name: Build Lib
         run: npm run build:lib
+      - name: Build Extras
+        run: npm run build:extras
       - name: Build Schematics
         run: npm run build:schematics
       - name: Build Migrations
@@ -51,6 +55,7 @@ jobs:
             npm run test:styles
             npm run test:schematics
             npm run test:i18n
+            npm run test:extras
         env:
             NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
             TZ: America/New_York

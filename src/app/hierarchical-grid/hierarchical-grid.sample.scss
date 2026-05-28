@@ -1,7 +1,9 @@
+@use '../../../projects/igniteui-angular/core/src/core/styles/themes' as *;
+
 :host::ng-deep {
     .activeRow {
-        background-color: rgb(201, 241, 201);
-      }
+        --row-odd-background: #{dynamic-shade(var(--row-even-background), $offset: 3)};
+    }
 }
 
 [igxButton="contained"] {

@@ -183,6 +183,48 @@ describe('IgxSnackbar', () => {
         expect(customPositionSettings.openAnimation.options.params).toEqual({duration: '1000ms'});
         expect(customPositionSettings.minSize).toEqual({height: 100, width: 100});
     });
+
+    it('should open when isVisible is set to true', fakeAsync(() => {
+        expect(snackbar.isVisible).toBeFalse();
+
+        snackbar.isVisible = true;
+        fixture.detectChanges();
+        // requestAnimationFrame is used in the setter; flush all pending async tasks
+        tick(50);
+        fixture.detectChanges();
+
+        expect(snackbar.isVisible).toBeTrue();
+        snackbar.close();
+    }));
+
+    it('should close when isVisible is set to false while open', fakeAsync(() => {
+        snackbar.autoHide = false;
+        // Use open() directly (bypasses rAF) to put snackbar in open state
+        snackbar.open();
+        tick(100);
+        fixture.detectChanges();
+        expect(snackbar.isVisible).toBeTrue();
+
+        snackbar.isVisible = false;
+        tick(100);
+        fixture.detectChanges();
+
+        expect(snackbar.isVisible).toBeFalse();
+    }));
+
+    it('should not call open/close when isVisible is set to the same value', () => {
+        // snackbar starts closed (isVisible === false)
+        expect(snackbar.isVisible).toBeFalse();
+
+        spyOn(snackbar, 'close').and.callThrough();
+
+        // Setting to the same value (false) should be a no-op
+        snackbar.isVisible = false;
+        fixture.detectChanges();
+
+        expect(snackbar.close).not.toHaveBeenCalled();
+        expect(snackbar.isVisible).toBeFalse();
+    });
 });
 
 describe('IgxSnackbar with custom content', () => {

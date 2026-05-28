@@ -1,12 +1,10 @@
-<article #toggle igxToggle
+<article
     class="igx-excel-filter__secondary"
     [ngClass]="{
         'igx-excel-filter__secondary--cosy': grid.gridSize === '2',
         'igx-excel-filter__secondary--compact': grid.gridSize === '1'
     }"
-    (keydown)="onKeyDown($event)"
-    (opening)="onCustomDialogOpening()"
-    (opened)="onCustomDialogOpened()">
+    (keydown)="onKeyDown($event)">
     <header class="igx-excel-filter__secondary-header">
         <h4 class="ig-typography__h6">
             {{ grid.resourceStrings.igx_grid_excel_custom_dialog_header }}{{ column.header || column.field }}

@@ -1,10 +1,33 @@
 ---
 name: igniteui-angular-components
-description: "Covers all non-grid Ignite UI for Angular UI components: application scaffolding and setup, form controls (inputs, combos, selects, date/time pickers, calendar, checkbox, radio, switch, slider), layout containers (tabs, stepper, accordion, splitter, navigation drawer), data-display components (list, tree, card, chips, carousel, paginator, progress indicators, chat), feedback overlays (dialog, snackbar, toast, banner), directives (button, icon button, button group, ripple, tooltip, drag-and-drop), Dock Manager, Layout Manager, and Charts. Use when users ask about any Ignite UI Angular component that is NOT a data grid — such as forms, dropdowns, pickers, dialogs, navigation, lists, trees, cards, charts, or initial project setup. Do NOT use for data grids, tables, or tabular data — use igniteui-angular-grids instead. Do NOT use for theming or styling — use igniteui-angular-theming instead."
+description: "Covers all non-grid Ignite UI for Angular UI components: application scaffolding and setup, form controls (inputs, combos, selects, date/time pickers, calendar, checkbox, radio, switch, slider), layout containers (tabs, stepper, accordion, splitter, navigation drawer), data-display components (list, tree, card, chips, carousel, paginator, progress indicators, chat), feedback overlays (dialog, snackbar, toast, banner), directives (button, icon button, button group, ripple, tooltip, drag-and-drop), Dock Manager, Layout Manager, Tile Manager, and Charts. Use when users ask about any Ignite UI Angular component that is NOT a data grid — such as forms, dropdowns, pickers, dialogs, navigation, lists, trees, cards, charts, or initial project setup. Do NOT use for data grids, tables, or tabular data — use igniteui-angular-grids instead. Do NOT use for theming or styling — use igniteui-angular-theming instead."
 user-invocable: true
 ---
 
 # Ignite UI for Angular — UI Components
+
+## Prerequisites
+- Angular 20+ project
+- `@angular/cli` installed
+- `igniteui-angular` or `@infragistics/igniteui-angular` added to the project via `ng add igniteui-angular` (or the `@infragistics` variant) or `npm install` — see [Package Variants](#package-variants) below.
+- A theme applied to the application (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)).
+- `provideAnimations()` in `app.config.ts` — **required before using any overlay or animated component**
+- The **Ignite UI CLI MCP server** (`igniteui-cli`) is available as a tool provider
+
+> **AGENT INSTRUCTION — MCP Server Setup (REQUIRED)**
+>
+> Before using any Ignite UI CLI MCP tools, you MUST verify the MCP server is available
+> by calling `list_components`. If the tool is not available or the call fails,
+> you MUST automatically configure it by following the setup process steps described below.
+>
+> After writing the file, inform the user that the MCP server has been
+> configured and they may need to reload the editor for the tools to activate.
+> Start the MCP server and wait for that MCP server to start before continuing the component-related work.
+> Do NOT skip this step or ask the user to do it manually.
+
+## Setting Up the Ignite UI CLI MCP Server
+
+> **Full setup instructions for VS Code, Cursor, Claude Desktop, and JetBrains IDEs are in [`references/mcp-setup.md`](./references/mcp-setup.md).** Read that file for editor-specific configuration steps and verification.
 
 ## MANDATORY AGENT PROTOCOL — YOU MUST FOLLOW THIS BEFORE PRODUCING ANY OUTPUT
 
@@ -29,26 +52,17 @@ Base your code and explanation exclusively on what you read. If the reference fi
 | Task | Reference file to read |
 |---|---|
 | App setup, `app.config.ts` providers, `provideAnimations()`, entry-point imports, convenience directive arrays | [`references/setup.md`](./references/setup.md) |
-| Input Group, Combo, Simple Combo, Select, Date Picker, Date Range Picker, Time Picker, Calendar, Checkbox, Radio, Switch, Slider, reactive/template-driven forms | [`references/form-controls.md`](./references/form-controls.md) |
+| Input Group, Combo, Simple Combo, Select, Date Picker, Date Range Picker, Time Picker, Calendar, Checkbox, Radio, Switch, Slider, Autocomplete, reactive/template-driven forms | [`references/form-controls.md`](./references/form-controls.md) |
 | Tabs, Bottom Navigation, Stepper, Accordion, Expansion Panel, Splitter, Navigation Drawer | [`references/layout.md`](./references/layout.md) |
 | List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress Indicators, Chat | [`references/data-display.md`](./references/data-display.md) |
 | Dialog, Snackbar, Toast, Banner | [`references/feedback.md`](./references/feedback.md) |
 | Button, Icon Button, Button Group, Ripple, Tooltip, Drag and Drop | [`references/directives.md`](./references/directives.md) |
-| Layout Manager (`igxLayout`, `igxFlex` directives), Dock Manager (`igc-dockmanager` web component) | [`references/layout-manager.md`](./references/layout-manager.md) |
+| Layout Manager (`igxLayout`, `igxFlex` directives), Dock Manager (`igc-dockmanager` web component), Tile Manager (`igc-tile-manager` web component) | [`references/layout-manager.md`](./references/layout-manager.md) |
 | Charts (Area, Bar, Column, Stock/Financial, Pie), chart configuration, chart features (animation, tooltips, markers, highlighting, zooming), data binding | [`references/charts.md`](./references/charts.md) |
 
 > **When in doubt, read more rather than fewer reference files.** The cost of an unnecessary file read is negligible; the cost of hallucinated API usage is a broken application.
 
 ---
-
-## Prerequisites
-
-- Angular 20+ project
-- `@angular/cli` installed
-- `igniteui-angular` or `@infragistics/igniteui-angular` added to the project via `ng add igniteui-angular` (or the `@infragistics` variant) or `npm install` — see [Package Variants](#package-variants) below.
-- A theme applied to the application (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)).
-- `provideAnimations()` in `app.config.ts` — **required before using any overlay or animated component**
-
 
 ## Package Variants
 

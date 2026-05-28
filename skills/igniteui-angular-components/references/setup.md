@@ -44,7 +44,6 @@ export const appConfig: ApplicationConfig = {
 |---|---|---|
 | `provideAnimations()` | `@angular/platform-browser/animations` | **All overlay and animated components** — Dialog, Combo, Select, Dropdown, Date/Time Picker, Snackbar, Toast, Banner, Navigation Drawer, Carousel, Overlay service |
 | `importProvidersFrom(HammerModule)` | `@angular/platform-browser` | OPTIONAL — touch gestures (Slider, Drag & Drop, swipe) |
-| `provideIgniteIntl()` | `igniteui-angular/core` | Localization for grids, date/time pickers, and components displaying formatted values |
 
 > **`provideAnimationsAsync()`** lazy-loads the animations module — prefer it for SSR or when optimizing initial bundle size:
 > ```typescript
@@ -89,8 +88,7 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Input Group | `igniteui-angular/input-group` |
 | Combo / Simple Combo | `igniteui-angular/combo` |
 | Select | `igniteui-angular/select` |
-| Date Picker | `igniteui-angular/date-picker` |
-| Date Range Picker | `igniteui-angular/date-range-picker` |
+| Date Picker / Date Range Picker | `igniteui-angular/date-picker` |
 | Time Picker | `igniteui-angular/time-picker` |
 | Calendar | `igniteui-angular/calendar` |
 | Checkbox | `igniteui-angular/checkbox` |

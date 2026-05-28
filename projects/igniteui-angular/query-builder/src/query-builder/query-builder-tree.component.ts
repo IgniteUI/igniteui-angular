@@ -32,7 +32,6 @@ import {
     VerticalAlignment,
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
-    CloseScrollStrategy,
     ConnectedPositioningStrategy,
     IgxPickerToggleComponent,
     IgxPickerClearComponent,
@@ -40,8 +39,7 @@ import {
     DEFAULT_LOCALE,
     onResourceChangeHandle,
     IgxDateFormatterPipe,
-    isTree,
-    IgxOverlayOutletDirective
+    isTree
 } from 'igniteui-angular/core';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
@@ -106,7 +104,6 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
         IgxIconComponent,
         IgxInputDirective,
         IgxInputGroupComponent,
-        IgxOverlayOutletDirective,
         IgxPickerClearComponent,
         IgxPickerToggleComponent,
         IgxPrefixDirective,
@@ -360,9 +357,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('expressionsContainer')
     private expressionsContainer: ElementRef;
 
-    @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    private overlayOutlet: IgxOverlayOutletDirective;
-
     @ViewChildren(IgxQueryBuilderTreeComponent)
     private innerQueries: QueryList<IgxQueryBuilderTreeComponent>;
 
@@ -405,11 +399,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public searchValue: { value: any } = { value: null };
-
-    /**
-     * @hidden @internal
-     */
-    public pickerOutlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * @hidden @internal
@@ -528,18 +517,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return _level;
     }
 
-    private _positionSettings = {
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalStartPoint: VerticalAlignment.Top
-    };
-
-    private _overlaySettings: OverlaySettings = {
-        closeOnOutsideClick: false,
-        modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
-        scrollStrategy: new CloseScrollStrategy()
-    };
-
     /** @hidden */
     protected isAdvancedFiltering(): boolean {
         return (this.entities?.length === 1 && !this.entities[0]?.name) ||
@@ -570,14 +547,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public ngAfterViewInit(): void {
-        this._overlaySettings.outlet = this.overlayOutlet;
-        this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
-        this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
-        this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
-        this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
-        this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
-        this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
-
         if (this.isAdvancedFiltering() && this.entities?.length === 1) {
             this.selectedEntity = this.entities[0].name;
             if (this._selectedEntity.fields.find(f => f.field === this.expectedReturnField)) {
@@ -739,15 +708,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public get selectedField(): FieldType {
         return this._selectedField;
-    }
-
-    /**
-     * @hidden @internal
-     *
-     * used by the grid
-     */
-    public setPickerOutlet(outlet?: IgxOverlayOutletDirective | ElementRef) {
-        this.pickerOutlet = outlet;
     }
 
     /**
@@ -1389,14 +1349,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             args.preventDefault();
             this.picker.open();
         }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public onOutletPointerDown(event) {
-        // This prevents closing the select's dropdown when clicking the scroll
-        event.preventDefault();
     }
 
     /**

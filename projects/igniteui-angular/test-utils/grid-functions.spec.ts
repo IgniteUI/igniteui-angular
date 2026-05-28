@@ -1404,7 +1404,7 @@ export class GridFunctions {
         input.click();
         fix.detectChanges();
 
-        const operators = fix.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex + 1];
+        const operators = fix.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex];
         const operator = operators.children[itemIndex].children[0];
         operator.click();
         tick();

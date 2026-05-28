@@ -125,7 +125,6 @@
         <ng-container [formGroup]="formGroup">
             <igx-date-picker
                 [style.width.%]="100"
-                [outlet]="grid.outlet"
                 mode="dropdown"
                 [locale]="grid.locale"
                 [weekStart]="column.pipeArgs.weekStart"
@@ -142,7 +141,6 @@
         <ng-container [formGroup]="formGroup">
             <igx-time-picker
                 [style.width.%]="100"
-                [outlet]="grid.outlet"
                 mode="dropdown"
                 [locale]="grid.locale"
                 [inputFormat]="column.editorOptions?.dateTimeFormat"
@@ -215,7 +213,6 @@
         name="error"
         #errorIcon
         [igxTooltipTarget]="tooltipRef"
-        [igxToggleOutlet]="grid.outlet"
         (mouseover)='errorShowing = true'
         (mouseout)='errorShowing = false'>
     </igx-icon>

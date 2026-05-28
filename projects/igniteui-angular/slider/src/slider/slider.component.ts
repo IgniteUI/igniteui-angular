@@ -2,7 +2,7 @@ import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentC
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
 import { takeUntil, throttle, throttleTime } from 'rxjs/operators';
-import { EditorProvider, ɵIgxDirectionality, resizeObservable } from 'igniteui-angular/core';
+import { EditorProvider, isLeftToRight, resizeObservable } from 'igniteui-angular/core';
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import {
     IgxSliderType, IgxThumbFromTemplateDirective,
@@ -47,7 +47,6 @@ export class IgxSliderComponent implements
     private _el = inject(ElementRef);
     private _cdr = inject(ChangeDetectorRef);
     private _ngZone = inject(NgZone);
-    private _dir = inject(ɵIgxDirectionality);
 
     /**
      * @hidden
@@ -1200,19 +1199,13 @@ export class IgxSliderComponent implements
         return this._el.nativeElement.getBoundingClientRect().width / (this.maxValue - this.minValue) * this.step;
     }
 
-    // private toggleThumb() {
-    //     return this.thumbFrom.isActive ?
-    //         this.thumbTo.nativeElement.focus() :
-    //         this.thumbFrom.nativeElement.focus();
-    // }
-
     private valueInRange(value, min = 0, max = 100) {
         return Math.max(Math.min(value, max), min);
     }
 
     private positionHandler(thumbHandle: ElementRef, labelHandle: ElementRef, position: number) {
         const percent = `${this.valueToFraction(position) * 100}%`;
-        const dir = this._dir.rtl ? 'right' : 'left';
+        const dir = !isLeftToRight(this._el.nativeElement) ? 'right' : 'left';
 
         if (thumbHandle) {
             thumbHandle.nativeElement.style[dir] = percent;
@@ -1368,7 +1361,8 @@ export class IgxSliderComponent implements
                 trackLeftIndention = Math.round((1 / positionGap * fromPosition) * 100);
             }
 
-            trackLeftIndention = this._dir.rtl ? -trackLeftIndention : trackLeftIndention;
+            const rtl = !isLeftToRight(this._el.nativeElement);
+            trackLeftIndention = rtl ? -trackLeftIndention : trackLeftIndention;
             this.renderer.setStyle(this.trackRef.nativeElement, 'transform', `scaleX(${positionGap}) translateX(${trackLeftIndention}%)`);
         } else {
             this.renderer.setStyle(this.trackRef.nativeElement, 'transform', `scaleX(${toPosition})`);

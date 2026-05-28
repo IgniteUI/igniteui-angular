@@ -164,6 +164,17 @@ You can disable combo using the following code:
 
 <div class="divider--half"></div>
 
+### Disable Clear
+You can hide the clear button using the following code:
+
+```html
+<igx-combo [disableClear]="true"></igx-combo>
+```
+
+When set to `true`, the clear button is not rendered even when items are selected.
+
+<div class="divider--half"></div>
+
 ### Grouping
 Defining a combo's groupKey option will group the items, according to that key.
 
@@ -320,7 +331,8 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 | `searchPlaceholder `  | defines the placeholder text for search input     | string                      |
 | `collapsed`           | gets drop down state                              | boolean                     |
 | `disabled`            | defines whether the control is active or not      | boolean                     |
-| `ariaLabelledBy`      | defines label ID related to combo                 | boolean                     |
+| `disableClear`        | defines whether the clear button is rendered      | boolean                     |
+| `ariaLabelledBy`      | defines label ID related to combo                 | string                      |
 | `type`                | Combo style. - "line", "box", "border", "search"  | string                      |
 | `valid`               | gets if control is valid, when used in a form     | boolean                     |
 | `overlaySettings`     | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings |

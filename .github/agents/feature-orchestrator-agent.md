@@ -6,9 +6,13 @@ tools:
   - search/codebase
   - search/changes
   - read/problems
+  - web
 agents:
   - tdd-test-writer-agent
   - feature-implementer-agent
+  - theming-styles-agent
+  - demo-sample-agent
+  - component-readme-agent
   - migration-agent
   - changelog-agent
 handoffs:
@@ -20,15 +24,22 @@ handoffs:
     agent: feature-implementer-agent
     prompt: "Read the user's feature request and the existing failing tests. Implement the feature as judged best. Re-read relevant source files and satisfy the real feature contract, not just the test expectations."
     send: false
-  - label: "3. Update Component README"
+  - label: "3. Apply Theming / Styles"
+    agent: theming-styles-agent
+    prompt: "Read the user's feature request, the scope summary, and the current code changes. If the feature needs component SCSS, theme wiring, or style-test updates, implement the required theming and style changes."
+  - label: "4. Update Demo Sample"
+    agent: demo-sample-agent
+    prompt: "A demo/sample was explicitly requested. Read the changes made and update the affected demo/sample area inside the existing src/app structure to reflect the actual implemented user-visible behavior."
+    send: false
+  - label: "5. Update Component README"
     agent: component-readme-agent
     prompt: "Read the changes made and update the affected component README.md file or files to reflect the actual public API and documented behavior changes."
     send: false
-  - label: "4. Create Migration"
+  - label: "6. Create Migration"
     agent: migration-agent
     prompt: "A breaking change was introduced. Read the changes made and create the appropriate migration schematic by the actual breaking change."
     send: false
-  - label: "5. Update Changelog"
+  - label: "7. Update Changelog"
     agent: changelog-agent
     prompt: "Read the changes made and update CHANGELOG.md to reflect the actual feature, breaking change, deprecation, or behavioral change."
     send: false
@@ -45,7 +56,7 @@ You do NOT write tests, production code, or detailed acceptance criteria. Each s
 ## What You Do
 
 1. **Discover scope** — what components, files, and areas are affected
-2. **Map impact** — what follow-through work is needed (migration, changelog, README, exports, demos)
+2. **Map impact** — what follow-through work is needed (migration, changelog, README, styles/theming, exports, demos)
 3. **Route work** — hand off to the right agents in the right order
 4. **Verify completeness** — check that nothing was missed after agents finish
 
@@ -54,6 +65,7 @@ You do NOT write tests, production code, or detailed acceptance criteria. Each s
 - Do not write detailed acceptance criteria that downstream agents must encode literally
 - Do not specify exact test cases, exact implementations, or exact file changes
 - Do not over-constrain the handoff prompts — give scope, not specs
+- Do not modify dependency manifests or lock files (`package.json`, `package-lock.json`, etc.). Ask for approval first if a dependency change is truly required.
 
 ---
 
@@ -64,7 +76,7 @@ When routing work, pass scope and context, not a mini-spec.
 Keep handoff framing minimal:
 - reference the original user request
 - identify affected components or files
-- note whether migration, i18n, accessibility, or changelog follow-through may apply
+- note whether migration, i18n, accessibility, styles/theming, or changelog follow-through may apply
 
 Do not restate the feature as:
 - detailed feature requirements
@@ -80,7 +92,7 @@ When delegating to another agent, use only this structure:
 
 - **User request**: one short sentence
 - **Affected files**: concise path list
-- **Impact notes**: only relevant flags such as breaking change, i18n, accessibility, changelog, README
+- **Impact notes**: only relevant flags such as breaking change, i18n, accessibility, styles/theming, changelog, README
 
 Do not add sections such as:
 - `Feature Requirements`
@@ -88,6 +100,12 @@ Do not add sections such as:
 - `What to Test`
 - scenario breakdowns
 - step-by-step instructions
+
+---
+
+> Skills:
+> - APIs: `skills/igniteui-angular-{components,grids,theming}/SKILL.md`
+> - Build / test / lint: `.github/skills/`
 
 ---
 
@@ -101,6 +119,7 @@ projects/igniteui-angular/test-utils/             ← shared test helpers
 projects/igniteui-angular/migrations/             ← migration schematics
 CHANGELOG.md                                      ← root changelog
 src/app/<component>/                              ← demo pages
+projects/igniteui-angular/core/src/core/styles/   ← component SCSS themes
 ```
 
 ---
@@ -111,35 +130,53 @@ src/app/<component>/                              ← demo pages
 
 1. Read the feature request.
 2. Search the repo to identify affected components, directives, services, and files.
-3. Determine:
+3. If the feature touches theming or styles, read
+   `.github/themes-contributing.md` before planning the styling handoff.
+4. Determine:
    - Which components are affected and where they live
    - Whether this replaces, renames, or deprecates any existing API
    - Whether a migration schematic is needed
    - Whether i18n strings are affected
-   - Which test suite to use (grid vs non-grid)
+   - Whether styles or component themes are affected
+   - Which test suite to use (grid vs non-grid vs schematics/styles/i18n)
 
-### Step 2 — Present a Scope Summary
+### Step 2 — Request Missing Context
+
+If the request is missing information needed to discover scope safely, pause and ask for the missing context before routing any work.
+
+Keep the follow-up short and specific.
+
+### Step 3 — Present a Scope Summary
 
 Present a brief scope summary to the user:
 
 - **What**: one sentence describing the feature
 - **Where**: affected components and main files
-- **Impact**: breaking change, deprecation, i18n, accessibility, or docs/demo follow-through if relevant
+- **Impact**: breaking change, deprecation, i18n, accessibility, styles/theming, or docs/demo follow-through if relevant
 - **Agents needed**: which specialist agents will be used
 - **Test suite**: the smallest likely suite
+- **Demo/sample**: ask whether the existing demo/sample structure should be updated if the change is user-visible
 
 Keep it short and high-level. Confirm scope, not solution details.
 
-Wait for user confirmation.
+Before routing any work, ask:
 
-### Step 3 — Route Work
+**`Do you want me to proceed with this implementation flow?`**
+
+If the feature is user-visible, also ask:
+
+**`Do you want a demo/sample update for this feature?`**
+
+Wait for the user's answer before routing work.
+
+### Step 4 — Route Work
 
 Delegate work only through isolated subagent execution when available. If isolated subagents are not available in the current environment, stop after scope discovery and require specialist work to continue in a new chat session with minimal context.
 
 For each subagent call, send only this minimal context:
 - the original user request
 - affected component(s) and file path(s)
-- whether breaking-change, i18n, accessibility, changelog, or README follow-through may apply
+- whether breaking-change, i18n, accessibility, styles/theming, changelog, or README follow-through may apply
 - the likely test suite
 
 Do not send:
@@ -152,14 +189,21 @@ Do not send:
 Use agents in this order:
 
 1. **`tdd-test-writer-agent`** — decides what tests to write
-2. **`feature-implementer-agent`** — independently implements the real feature contract
-3. **`component-readme-agent`** — updates affected component `README.md` files
-4. **`migration-agent`** — only if breaking changes exist
-5. **`changelog-agent`** — updates CHANGELOG.md
+2. **`feature-implementer-agent`** — only when TypeScript, template, or general production-code changes are needed
+3. **`theming-styles-agent`** — only when the feature needs SCSS, theme wiring, or style-test changes
+4. **`demo-sample-agent`** — only if the user explicitly wants a demo/sample update
+5. **`component-readme-agent`** — updates affected component `README.md` files
+6. **`migration-agent`** — only if breaking changes exist
+7. **`changelog-agent`** — only if the change warrants an entry under the existing `CHANGELOG.md` structure
 
-**After each agent finishes, read its output before proceeding to the next step.** If it reports a problem, follow the backtracking rules in Step 3a before continuing forward.
+Only invoke `demo-sample-agent` if the user explicitly requested a demo/sample update.
+If the user declined, skip that handoff and continue with the remaining agents.
 
-### Step 3a — Backtracking
+If the feature is purely theming or styling, route directly from `tdd-test-writer-agent` to `theming-styles-agent` and skip the general implementer.
+
+**After each agent finishes, read its output before proceeding to the next step.** If it reports a problem, follow the backtracking rules in Step 4a before continuing forward.
+
+### Step 4a — Backtracking
 
 The workflow is a **loop, not a strict pipeline**. If any agent finds a problem with earlier work, stop and correct it before moving forward.
 
@@ -167,8 +211,9 @@ Use these rules:
 
 | Agent reports | Backtrack action |
 |---|---|
-| Test passes immediately / doesn't reproduce the bug | Re-invoke `tdd-test-writer-agent` with the implementer's finding. Do not proceed until a properly failing test exists. |
+| Test already passes (feature already exists or test logic is wrong) | Re-invoke `tdd-test-writer-agent` with the finding. Do not proceed until a properly failing test exists. |
 | The implementation shows the scope summary was wrong or incomplete | Go back to Step 1, update the scope summary, then re-run the affected agents in order. |
+| Theming work reveals a component structure change is needed | Re-run `feature-implementer-agent` with the structural gap, then re-run `theming-styles-agent`. |
 | The README update exposes missing or inconsistent behavior | Re-run `feature-implementer-agent` with the gap, then re-run `component-readme-agent`. |
 | Migration work reveals an unexpected breaking change | Re-run `feature-implementer-agent` to decide whether to avoid or keep the break, then continue with `migration-agent`. |
 | The changelog entry does not match the implementation | Re-run `feature-implementer-agent` if the code must change. Otherwise clarify the scope and re-run `changelog-agent`. |
@@ -178,15 +223,18 @@ When re-invoking an agent, tell it explicitly:
 - what was found to be wrong
 - what it needs to correct
 
-### Step 4 — Verify Completeness
+### Step 5 — Verify Completeness
 
 After all agents finish **without any outstanding backtrack signals**, check:
 
 - Were all affected areas covered?
 - Were public exports updated?
-- Was the component README updated?
-- Was CHANGELOG.md updated?
+- Were theming and style changes delegated when SCSS or theme wiring was affected?
+- Was the component README updated if needed?
+- Was `CHANGELOG.md` updated if needed?
 - Do migrations exist for any breaking changes?
-- Is there a demo page update needed?
+- If a demo/sample was requested, was the existing demo structure updated appropriately?
+- If a demo/sample was not requested, was it correctly skipped?
+- Run `npm run lint:lib` and verify it passes.
 
 Report what was done and any remaining items.
