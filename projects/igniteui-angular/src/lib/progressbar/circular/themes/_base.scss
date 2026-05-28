@@ -102,7 +102,7 @@ $theme: $base;
             @extend %circle;
 
             stroke-width: var(--stroke-thickness);
-            stroke: var-get($theme, 'base-circle-color');
+            stroke: var-get($theme, 'track-color');
         }
 
         @include e(outer) {

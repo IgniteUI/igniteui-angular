@@ -7,7 +7,7 @@
     <igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" class="hgrid"
         [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
         [rowDraggable]="true" [height]="'500px'" filterMode="excelStyleFilter" [width]="'100%'" [expandChildren]="rootExpanded"
-        #hGrid [rowClasses]="rowClasses">
+        #hGrid>
         <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'500px'">
             <igx-excel-style-column-operations>
                 <igx-excel-style-header [showPinning]="true" [showHiding]="true">

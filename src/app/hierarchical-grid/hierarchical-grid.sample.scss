@@ -1,3 +1,5 @@
+@use 'igniteui-theming/sass/color/functions' as *;
+
 :host {
     display: grid;
     gap: 32px;
