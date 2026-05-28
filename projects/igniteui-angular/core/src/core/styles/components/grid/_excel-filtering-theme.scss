@@ -40,7 +40,7 @@
         flex-grow: 1;
 
         @if $variant == 'indigo' {
-            box-shadow: elevation(if($theme-variant == 'light', 3, 2)), 0 0 0 rem(1px) var-get($theme, 'excel-filtering-border-color');
+            box-shadow: elevation(3), 0 0 0 rem(1px) var-get($theme, 'excel-filtering-border-color');
 
             // TODO: The border-radius should not be hardcoded.
             border-radius: border-radius(rem(4px));
