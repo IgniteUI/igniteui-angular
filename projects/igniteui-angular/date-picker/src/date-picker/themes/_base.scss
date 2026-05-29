@@ -50,7 +50,7 @@ $theme: $material;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            padding: rem(8px);
+            gap: rem(8px);
         }
 
         @include m(dropdown) {

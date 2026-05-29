@@ -7,7 +7,7 @@ import {
     HostListener,
     HostBinding
 } from '@angular/core';
-import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective, IgxButtonType, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 import { IgxDividerComponent } from 'igniteui-angular/directives';
 import {
@@ -21,6 +21,7 @@ import {
 import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predefined-ranges/predefined-ranges-area.component';
 
 /** @hidden */
+
 @Component({
     selector: 'igx-calendar-container',
     styles: [':host {display: block;}'],
@@ -64,7 +65,9 @@ export class IgxCalendarContainerComponent {
     public resourceStrings!: IDateRangePickerResourceStrings;
     public vertical = false;
     public closeButtonLabel: string;
+    public closeButtonType: IgxButtonType = 'flat';
     public cancelButtonLabel: string;
+    public cancelButtonType: IgxButtonType = 'flat';
     public todayButtonLabel: string;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public pickerActions: IgxPickerActionsDirective;
@@ -85,4 +88,3 @@ export class IgxCalendarContainerComponent {
 }
 
 /** @hidden */
-
