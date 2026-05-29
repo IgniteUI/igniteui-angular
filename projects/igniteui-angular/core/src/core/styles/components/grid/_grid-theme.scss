@@ -2692,7 +2692,7 @@
 
     %advanced-filtering-dialog {
 	    background: var-get($theme, 'filtering-dialog-background');
-        box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
+        box-shadow: elevation(24);
 
         @if $variant == 'material' or $variant == 'bootstrap' {
             border-radius: rem(4px);
