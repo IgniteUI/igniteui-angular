@@ -6,6 +6,8 @@
 // TODO type style is throwing an error
 
 @include themed-block(igx-excel-filter, indigo) {
+    box-shadow: elevation(3);
+
     %grid-excel-actions__action {
         padding-block: pad-block(rem(4px), rem(6px), rem(8px));
         padding-inline: pad-inline(rem(12px));
