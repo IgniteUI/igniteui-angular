@@ -1311,11 +1311,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const childGrids = this.gridAPI.getChildGrids(true) as IgxHierarchicalGridComponent[];
 
         childGrids.forEach((grid) => {
-            const row = grid.crudService.rowInEditMode;
-
             if (!grid.rowEditable || !grid.rowEditingOverlay || grid.rowEditingOverlay.collapsed) {
                 return;
             }
+
+            const row = grid.crudService.rowInEditMode;
 
             if (!row || !this.isElementInVisibleArea(row.nativeElement, visibleArea)) {
                 grid.toggleRowEditingOverlay(false);
