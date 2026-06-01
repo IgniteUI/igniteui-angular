@@ -895,7 +895,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Emitted after column visibility is changed.
      *
      * @remarks
-     * Args: { column: column, newValue: boolean }
+     * Args: { column: IgxColumnComponent, newValue: boolean }
      * @example
      * ```html
      * <igx-grid (columnVisibilityChanged)="visibilityChanged($event)"></igx-grid>

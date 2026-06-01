@@ -130,7 +130,7 @@ export class IgxSliderComponent implements
 
     /**
      * Gets the type of the slider.
-     * The slider can be slider type.SLIDER(default) or slider type.RANGE.
+     * The slider type can be SLIDER(default) or RANGE.
      * ```typescript
      * @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -145,7 +145,7 @@ export class IgxSliderComponent implements
 
     /**
      * Sets the type of the slider.
-     * The slider can be slider type.SLIDER(default) or slider type.RANGE.
+     * The slider type can be SLIDER(default) or RANGE.
      * ```typescript
      * sliderType: IgxSliderType = IgxSliderType.RANGE;
      * ```
