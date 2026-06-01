@@ -476,6 +476,6 @@ this.gridRef().transactions.clear();
 
 ## Related Skills
 
-- **[`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md)** - Full grid reference for all grid types (use after migration for feature details)
-- **[`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)** - Theming and styling (works with both Grid Lite and Premium Grid)
-- **[`igniteui-angular-components`](../igniteui-angular-components/SKILL.md)** - Non-grid UI components
+- **[`igniteui-angular-grids`](../SKILL.md)** - Full grid reference for all grid types (use after migration for feature details)
+- **[`igniteui-angular-theming`](../../igniteui-angular-theming/SKILL.md)** - Theming and styling (works with both Grid Lite and Premium Grid)
+- **[`igniteui-angular-components`](../../igniteui-angular-components/SKILL.md)** - Non-grid UI components
