@@ -106,7 +106,7 @@ import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/gr
     IgxGridLiteColumnComponent,
     IgxGridLiteCellTemplateDirective,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Required by Grid Lite
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Optional: only needed when using the underlying web component directly
   templateUrl: './data-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
