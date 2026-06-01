@@ -12,7 +12,7 @@ import { isLeftToRight, PlatformUtil } from 'igniteui-angular/core';
 let NEXT_ID = 0;
 
 /**
- * The step is used within the `igx-stepper` element and it holds the content of each step.
+ * The step is used within the stepper element and it holds the content of each step.
  * It also supports custom indicators, title and subtitle.
  *
  * @igxModule IgxStepperModule

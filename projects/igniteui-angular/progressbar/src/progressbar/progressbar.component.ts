@@ -434,7 +434,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 
     /**
      * Set the position that defines where the text is aligned.
-     * Possible options - text align.START` (default), text align.CENTER`, text align.END`.
+     * Possible options - `START` (default), `CENTER`, `END`.
      * ```typescript
      * public positionCenter: IgxTextAlign;
      * public ngOnInit() {

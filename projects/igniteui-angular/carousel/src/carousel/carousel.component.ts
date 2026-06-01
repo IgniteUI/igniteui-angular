@@ -310,7 +310,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * An event that is emitted after a slide transition has happened.
-     * Provides references to the carousel and slide as event arguments.
+     * Provides references to the carousel and slide components as event arguments.
      * ```html
      * <igx-carousel (slideChanged)="slideChanged($event)"></igx-carousel>
      * ```
@@ -321,7 +321,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * An event that is emitted after a slide has been added to the carousel.
-     * Provides references to the carousel and slide as event arguments.
+     * Provides references to the carousel and slide components as event arguments.
      * ```html
      * <igx-carousel (slideAdded)="slideAdded($event)"></igx-carousel>
      * ```
@@ -332,7 +332,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * An event that is emitted after a slide has been removed from the carousel.
-     * Provides references to the carousel and slide as event arguments.
+     * Provides references to the carousel and slide components as event arguments.
      * ```html
      * <igx-carousel (slideRemoved)="slideRemoved($event)"></igx-carousel>
      * ```

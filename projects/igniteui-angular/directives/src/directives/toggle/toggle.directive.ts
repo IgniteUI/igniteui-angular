@@ -443,7 +443,7 @@ export class IgxToggleActionDirective implements OnInit {
      * <!--set-->
      * <div igxToggleAction [igxToggleOutlet]="outlet"></div>
      * ```
-     * Where `outlet` in an instance of overlay outlet or an `ElementRef`
+     * Where outlet is an instance of overlay outlet or a reference to the element.
      *
      * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
      * body by default, so using outlet is also no longer needed - just define the overlay in the intended

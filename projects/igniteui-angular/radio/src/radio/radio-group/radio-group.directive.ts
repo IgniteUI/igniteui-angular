@@ -81,11 +81,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     }
 
     /**
-     * Sets/gets the `value` attribute.
+     * Sets/gets the value attribute.
      *
      * @example
      * ```html
-     * <igx-radio-group [value] = "'radioButtonValue'"></igx-radio-group>
+     * <igx-radio-group [value]="'radioButtonValue'"></igx-radio-group>
      * ```
      */
     @Input()
@@ -183,10 +183,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     }
 
     /**
-     * An event that is emitted after the radio group `value` is changed.
+     * An event that is emitted after the radio group value is changed.
      *
      * @remarks
-     * Provides references to the selected radio and the `value` property as event arguments.
+     * Provides references to the selected radio and the value property as event arguments.
      *
      * @example
      * ```html
