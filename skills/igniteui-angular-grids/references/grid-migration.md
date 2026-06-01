@@ -13,7 +13,7 @@ This skill automates the migration from the **open-source Grid Lite** (`igx-grid
 Before producing migration code:
 
 1. **Identify the current Grid Lite usage** - read the user's existing component files to understand their column configuration, templates, data binding, and any `dataPipelineConfiguration` usage.
-2. **Consult the grids skill** - read the relevant reference files from [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) for the target features the user needs after migration.
+2. **Consult the grids skill** - read the relevant reference files from [`igniteui-angular-grids`](../SKILL.md) for the target features the user needs after migration.
 3. **Use the MCP server** - call `mcp_igniteui-cli_get_doc` or `mcp_igniteui-cli_search_docs` for Angular to verify current API details when in doubt.
 4. **Only then produce output** - base all code on verified references, not memory.
 
