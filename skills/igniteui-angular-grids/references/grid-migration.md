@@ -126,7 +126,7 @@ import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/gr
 
 **Changes:**
 - Replace individual Grid Lite imports with `IGX_GRID_DIRECTIVES`
-- Remove `CUSTOM_ELEMENTS_SCHEMA` from `schemas` (Grid Lite is a Web Component wrapper; the Premium Grid is a native Angular component)
+- If you previously added `CUSTOM_ELEMENTS_SCHEMA` for Grid Lite (e.g. when using the underlying web component directly), remove it after migrating — Premium Grid is a native Angular component
 - Remove the `schemas` array entirely if it only contained `CUSTOM_ELEMENTS_SCHEMA`
 
 ### Step 4 - Update the Component Class
