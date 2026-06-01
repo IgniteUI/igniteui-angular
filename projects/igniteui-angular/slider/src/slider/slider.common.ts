@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
 
 /**
- * Template directive that allows you to set a custom template representing the lower label value of the {@link slider}
+ * Template directive that allows you to set a custom template representing the lower label value of the {@link IgxSliderComponent}
  *
  * ```html
  * <igx-slider>
@@ -9,7 +9,7 @@ import { Directive } from '@angular/core';
  * </igx-slider>
  * ```
  *
- * @context {@link slider.context}
+ * @context {@link IgxSliderComponent.context}
  */
 @Directive({
     selector: '[igxSliderThumbFrom]',
@@ -18,7 +18,7 @@ import { Directive } from '@angular/core';
 export class IgxThumbFromTemplateDirective {}
 
 /**
- * Template directive that allows you to set a custom template representing the upper label value of the {@link slider}
+ * Template directive that allows you to set a custom template representing the upper label value of the {@link IgxSliderComponent}
  *
  * ```html
  * <igx-slider>
@@ -26,7 +26,7 @@ export class IgxThumbFromTemplateDirective {}
  * </igx-slider>
  * ```
  *
- * @context {@link slider.context}
+ * @context {@link IgxSliderComponent.context}
  */
 @Directive({
     selector: '[igxSliderThumbTo]',
@@ -35,9 +35,9 @@ export class IgxThumbFromTemplateDirective {}
 export class IgxThumbToTemplateDirective {}
 
 /**
- * Template directive that allows you to set a custom template, represeting primary/secondary tick labels of the {@link slider}
+ * Template directive that allows you to set a custom template, represeting primary/secondary tick labels of the {@link IgxSliderComponent}
  *
- * @context {@link ticks.context}
+ * @context {@link IgxTicksComponent.context}
  */
 @Directive({
     selector: '[igxSliderTickLabel]',

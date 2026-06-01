@@ -193,7 +193,7 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the template context corresponding
-     * to {@link thumb from template} and {@link thumb to template} templates.
+     * to {@link IgxThumbFromTemplateDirective} and {@link IgxThumbToTemplateDirective} templates.
      *
      * ```typescript
      * return {
@@ -230,7 +230,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the incremental/decremental dragging step of the {@link slider}.
+     * Returns the incremental/decremental dragging step of the {@link IgxSliderComponent}.
      * ```typescript
      * @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -244,7 +244,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns if the {@link slider} is disabled.
+     * Returns if the {@link IgxSliderComponent} is disabled.
      * ```typescript
      * @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -273,7 +273,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns if the {@link slider} is set as continuous.
+     * Returns if the {@link IgxSliderComponent} is set as continuous.
      * ```typescript
      * @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -288,10 +288,10 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the {@link slider} as continuous.
-     * By default is considered that the {@link slider} is discrete.
-     * Discrete {@link slider} slider has step indicators over the track and visible thumb labels during interaction.
-     * Continuous {@link slider} does not have ticks and does not show bubble labels for values.
+     * Sets the {@link IgxSliderComponent} as continuous.
+     * By default is considered that the {@link IgxSliderComponent} is discrete.
+     * Discrete {@link IgxSliderComponent} slider has step indicators over the track and visible thumb labels during interaction.
+     * Continuous {@link IgxSliderComponent} does not have ticks and does not show bubble labels for values.
      * ```html
      * <igx-slider #slider [continuous]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
      * ```
@@ -352,7 +352,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the maximum displayed track value for the {@link slider}.
+     * Returns the maximum displayed track value for the {@link IgxSliderComponent}.
      * ```typescript
      * @ViewChild("slider")
      * public slider: IgxSliderComponent;
@@ -475,8 +475,8 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the slider value. If the slider is of type {@link slider type.SLIDER} the returned value is number.
-     * If the slider type is {@link slider type.RANGE}.
+     * Returns the slider value. If the slider is of type {@link IgxSliderType.SLIDER} the returned value is number.
+     * If the slider type is {@link IgxSliderType.RANGE}.
      * The returned value represents an object of {@link lowerValue} and {@link upperValue}.
      * ```typescript
      * @ViewChild("slider2")
@@ -499,9 +499,9 @@ export class IgxSliderComponent implements
 
     /**
      * Sets the slider value.
-     * If the slider is of type {@link slider type.SLIDER}.
+     * If the slider is of type {@link IgxSliderType.SLIDER}.
      * The argument is number. By default the {@link value} gets the {@link lowerBound}.
-     * If the slider type is {@link slider type.RANGE} the argument
+     * If the slider type is {@link IgxSliderType.RANGE} the argument
      * represents an object of {@link lowerValue} and {@link upperValue} properties.
      * By default the object is associated with the {@link lowerBound} and {@link upperBound} property values.
      * ```typescript

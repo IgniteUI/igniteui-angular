@@ -979,7 +979,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Emitted when a copy operation is executed.
      *
      * @remarks
-     * Fired only if copy behavior is enabled through the [`clipboardOptions`]{@link grid base#clipboardOptions}.
+     * Fired only if copy behavior is enabled through the [`clipboardOptions`]{@link IgxGridBaseDirective#clipboardOptions}.
      */
     @Output()
     public gridCopy = new EventEmitter<IGridClipboardEvent>();
