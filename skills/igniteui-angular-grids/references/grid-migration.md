@@ -460,7 +460,7 @@ this.gridRef().transactions.clear();
 | **Selector** | `<igx-grid-lite>` | `<igx-grid>` |
 | **Column selector** | `<igx-grid-lite-column>` | `<igx-column>` |
 | **Imports style** | Individual (`IgxGridLiteComponent`, `IgxGridLiteColumnComponent`, ...) | Bundle (`IGX_GRID_DIRECTIVES`) |
-| **Schema** | `CUSTOM_ELEMENTS_SCHEMA` required | Not needed |
+| **Schema** | `CUSTOM_ELEMENTS_SCHEMA` (optional; only if using the underlying web component directly) | Not needed |
 | **Primary key** | Not supported | `[primaryKey]="'id'"` (required for editing/selection) |
 | **Cell template** | `igxGridLiteCell` (exposes `let-value`) | `igxCell` (exposes `let-cell="cell"`, access `cell.value`) |
 | **Header template** | `igxGridLiteHeader` | `igxHeader` |
