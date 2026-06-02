@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 import { mkdirSync as makeDir } from 'fs';
 import fsExtra from 'fs-extra';
 import { fileURLToPath } from 'url';
-import { writeFile } from 'fs/promises';
+import { writeFile, readFile } from 'fs/promises';
 import report from './report.mjs';
 
 const THEMES = {
@@ -119,73 +119,59 @@ async function _buildThemes() {
   await compiler.dispose();
 }
 
-export async function buildComponentStyles() {
-  const [compiler, paths] = await Promise.all([
-    sass.initAsyncCompiler(),
-    globby([COMPONENT_STYLES.SRC, COMPONENT_STYLES.IGNORE]),
-  ]);
+async function buildComponentStyles(compiler, paths) {
+  await Promise.all(
+    paths.map(async (srcPath) => {
+      const result = await compiler.compileAsync(srcPath, COMPONENT_STYLES.CONFIG);
+      const smBase64 = Buffer.from(JSON.stringify(result.sourceMap)).toString('base64');
+      const sourceMapComment = `/*# sourceMappingURL=data:application/json;charset=utf-8;base64,${smBase64} */`;
+      let css = postProcessor.process(result.css).css;
 
-  try {
-    await Promise.all(
-      paths.map(async (path) => {
-        const result = await compiler.compileAsync(path, COMPONENT_STYLES.CONFIG);
-        const fileName = path
-          .replace(/\.scss$/, '.css')
-          .replace(COMPONENT_STYLES.SRC, '');
+      if (css.charCodeAt(0) === 0xfeff) css = css.slice(1);
 
-        const sm = JSON.stringify(result.sourceMap);
-        const smBase64 = (Buffer.from(sm, 'utf8') || '').toString('base64');
-        const sourceMapComment =
-          '/*# sourceMappingURL=data:application/json;charset=utf-8;base64,' +
-          smBase64 +
-          ' */';
-
-        let outCss = postProcessor.process(result.css).css;
-
-        if (outCss.charCodeAt(0) === 0xfeff) {
-          outCss = outCss.substring(1);
-        }
-
-        outCss = outCss + '\n'.repeat(2) + sourceMapComment;
-
-        await createFile(fileName, outCss);
-      })
-    );
-  } catch (err) {
-    await compiler.dispose();
-    report.error(err);
-  }
-
-  await compiler.dispose();
+      await createFile(
+        srcPath.replace(/\.scss$/, '.css').replace(COMPONENT_STYLES.SRC, ''),
+        css + '\n\n' + sourceMapComment
+      );
+    })
+  );
 }
 
-export async function buildBaseStyles() {
-  const [compiler, paths] = await Promise.all([
-    sass.initAsyncCompiler(),
-    globby(BASE_STYLES.SRC),
-  ]);
+async function buildBaseStyles(compiler, paths) {
+  await Promise.all(
+    paths.map(async (srcPath) => {
+      const css = await compileSass(srcPath, compiler, BASE_STYLES.CONFIG);
+      const ts = [
+        '// Auto-generated — do not edit manually. Re-run build:styles to update.',
+        `export const GRID_BASE_CSS = ${JSON.stringify(css)};`,
+        '',
+      ].join('\n');
+      const outPath = srcPath.replace(/\.scss$/, '.ts');
+      const existing = await readFile(outPath, 'utf-8').catch(() => null);
 
-  try {
-    await Promise.all(
-      paths.map(async (srcPath) => {
-        const css = await compileSass(srcPath, compiler, BASE_STYLES.CONFIG);
-        const ts = [
-          '// Auto-generated — do not edit manually. Re-run build:styles to update.',
-          `export const GRID_BASE_CSS = ${JSON.stringify(css)};`,
-          '',
-        ].join('\n');
-        await createFile(srcPath.replace(/\.scss$/, '.ts'), ts);
-      })
-    );
-  } finally {
-    await compiler.dispose();
-  }
+      if (existing !== ts) {
+        await createFile(outPath, ts);
+      }
+    })
+  );
 }
 
 export async function buildComponents(isProduction = false) {
   const start = performance.now();
+  const [compiler, componentPaths, basePaths] = await Promise.all([
+    sass.initAsyncCompiler(),
+    globby([COMPONENT_STYLES.SRC, COMPONENT_STYLES.IGNORE]),
+    globby(BASE_STYLES.SRC),
+  ]);
 
-  await Promise.all([buildComponentStyles(), buildBaseStyles()]);
+  try {
+    await Promise.all([
+      buildComponentStyles(compiler, componentPaths),
+      buildBaseStyles(compiler, basePaths),
+    ]);
+  } finally {
+    await compiler.dispose();
+  }
 
   if (!isProduction) {
     report.success(

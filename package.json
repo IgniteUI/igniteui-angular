@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "concurrently -r \"npm run build:styles:components\" \"npm run watch:styles\" \"ng serve --open --hmr\"",
+    "start": "npm run build:styles:components && concurrently -r \"npm run watch:styles\" \"ng serve --open --hmr\"",
     "start:elements": "ng serve --project igniteui-angular-elements",
     "start:performance": "ng serve --project igniteui-angular-performance",
     "build": "npm run build:lib && npm run build:elements && npm run build:extras && npm run build:schematics && npm run build:migrations && npm run build:i18n",

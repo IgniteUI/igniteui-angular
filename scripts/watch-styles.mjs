@@ -1,7 +1,6 @@
 import watch from 'node-watch';
-import * as sass from 'sass-embedded';
 import report from './report.mjs';
-import { buildComponentStyles, buildBaseStyles } from './sass.mjs';
+import { buildComponents } from './sass.mjs';
 
 const watchOptions = {
   recursive: true,
@@ -11,9 +10,8 @@ const watchOptions = {
 };
 
 let updating = false;
-const compiler = await sass.initAsyncCompiler();
 
-const watcher = watch(
+watch(
   ['projects/igniteui-angular'],
   watchOptions,
   async (_, path) => {
@@ -25,7 +23,7 @@ const watcher = watch(
     updating = true;
 
     try {
-      await Promise.all([buildComponentStyles(), buildBaseStyles()]);
+      await buildComponents();
     } catch (err) {
       report.error(err);
     }
@@ -34,7 +32,5 @@ const watcher = watch(
     updating = false;
   }
 );
-
-watcher.on('close', () => compiler.dispose());
 
 report.info('Styles watcher started...');
