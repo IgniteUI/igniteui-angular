@@ -2,13 +2,16 @@ import * as sass from 'sass-embedded';
 import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
 import { globby } from 'globby';
-import path from 'path';
-import { resolve } from 'node:path';
-import { mkdirSync as makeDir } from 'fs';
+import path, { resolve } from 'node:path';
 import fsExtra from 'fs-extra';
-import { fileURLToPath } from 'url';
-import { writeFile, readFile } from 'fs/promises';
+import { fileURLToPath } from 'node:url';
+import { writeFile, readFile, mkdir } from 'node:fs/promises';
 import report from './report.mjs';
+
+const SHARED_SASS_CONFIG = {
+  style: 'compressed',
+  silenceDeprecations: ['if-function'],
+};
 
 const THEMES = {
   SRC: 'projects/igniteui-angular/core/src/core/styles/themes/presets',
@@ -18,34 +21,30 @@ const THEMES = {
     DIST: 'dist/igniteui-angular/lib/core/styles/',
   },
   CONFIG: {
-    style: 'compressed',
+    ...SHARED_SASS_CONFIG,
     loadPaths: ['node_modules'],
     sourceMap: true,
     sourceMapEmbed: true,
-    silenceDeprecations: ['if-function'],
   },
 };
 
 const BASE_STYLES = {
   SRC: 'projects/igniteui-angular/**/*.styles.scss',
   CONFIG: {
-    style: 'compressed',
+    ...SHARED_SASS_CONFIG,
     loadPaths: ['node_modules', 'projects/igniteui-angular/core/src/core/'],
     sourceMap: false,
-    silenceDeprecations: ['if-function'],
   },
 };
 
 const COMPONENT_STYLES = {
   SRC: 'projects/igniteui-angular/**/*.component.scss',
-  DIST: './',
   IGNORE: '!projects/igniteui-angular/core/src/core/styles/**/*.scss',
   CONFIG: {
-    style: 'compressed',
+    ...SHARED_SASS_CONFIG,
     loadPaths: ['node_modules', 'projects/igniteui-angular/core/src/core/'],
     sourceMap: true,
     sourceMapEmbed: true,
-    silenceDeprecations: ['if-function'],
   },
 };
 
@@ -71,104 +70,172 @@ const postProcessor = postcss([
   stripComments,
 ]);
 
-const _postProcessor = postcss([autoprefixer, stripComments]);
+function stripBom(s) {
+  return s.charCodeAt(0) === 0xfeff ? s.slice(1) : s;
+}
 
 async function createFile(outputFile, content) {
-  makeDir(path.dirname(outputFile), { recursive: true });
+  await mkdir(path.dirname(outputFile), { recursive: true });
   await writeFile(outputFile, content, 'utf-8');
 }
 
-export async function compileSass(src, compiler, options) {
-  const compiled = await compiler.compileAsync(src, options);
-
-  const out = _postProcessor.process(compiled.css).css;
-  return out.charCodeAt(0) === 0xfeff ? out.slice(1) : out;
-}
-
-async function _buildThemes() {
+async function buildThemePresets() {
   const paths = await globby(`${THEMES.SRC}/**/*.scss`);
   const compiler = await sass.initAsyncCompiler();
 
   try {
     await Promise.all(
-      paths.map(async (path) => {
-        const result = await compiler.compileAsync(path, THEMES.CONFIG);
-        const fileName = path
+      paths.map(async (srcPath) => {
+        const result = await compiler.compileAsync(srcPath, THEMES.CONFIG);
+        const fileName = srcPath
           .replace(/\.scss$/, '.css')
           .replace(THEMES.SRC, '');
-        const sourceMapComment = `/*# sourceMappingURL=maps${fileName}.map */`;
 
-        let outCss = postProcessor.process(result.css).css;
-
-        if (outCss.charCodeAt(0) === 0xfeff) {
-          outCss = outCss.substring(1);
-        }
-
-        outCss = outCss + '\n'.repeat(2) + sourceMapComment;
+        let outCss = stripBom(postProcessor.process(result.css).css);
 
         const outputFile = DEST_DIR(fileName);
+
+        // Write external source map alongside the CSS and reference it.
+        if (result.sourceMap) {
+          const mapFile = DEST_DIR('maps' + fileName + '.map');
+          await createFile(mapFile, JSON.stringify(result.sourceMap));
+          const relMap = path.relative(path.dirname(outputFile), mapFile);
+          outCss += `\n\n/*# sourceMappingURL=${relMap} */`;
+        }
+
         await createFile(outputFile, outCss);
       })
     );
-  } catch (err) {
+  } finally {
     await compiler.dispose();
-    report.error(err);
-    process.exit(1);
+  }
+}
+
+export function createStylesBuilder(compiler) {
+  // Reverse dependency map: absolute dep path -> Set of absolute entry point paths
+  const depMap = new Map();
+
+  // Forward map: absolute entry path -> Set of absolute dep paths
+  const entryDeps = new Map();
+
+  function trackDeps(loadedUrls, entryPath) {
+    const absEntry = path.resolve(entryPath);
+    let forward = entryDeps.get(absEntry);
+
+    if (!forward) {
+      forward = new Set();
+      entryDeps.set(absEntry, forward);
+    }
+
+    for (const url of loadedUrls) {
+      const dep = fileURLToPath(url);
+
+      forward.add(dep);
+
+      let reverse = depMap.get(dep);
+
+      if (!reverse) {
+        reverse = new Set();
+        depMap.set(dep, reverse);
+      }
+
+      reverse.add(absEntry);
+    }
   }
 
-  await compiler.dispose();
-}
+  function clearEntryDeps(absEntry) {
+    const deps = entryDeps.get(absEntry);
 
-async function buildComponentStyles(compiler, paths) {
-  await Promise.all(
-    paths.map(async (srcPath) => {
-      const result = await compiler.compileAsync(srcPath, COMPONENT_STYLES.CONFIG);
+    if (!deps) return;
+
+    for (const dep of deps) {
+      const reverse = depMap.get(dep);
+      if (!reverse) continue;
+
+      reverse.delete(absEntry);
+      if (reverse.size === 0) depMap.delete(dep);
+    }
+
+    entryDeps.delete(absEntry);
+  }
+
+  async function compileComponent(srcPath) {
+    const result = await compiler.compileAsync(srcPath, COMPONENT_STYLES.CONFIG);
+
+    trackDeps(result.loadedUrls, srcPath);
+
+    let css = stripBom(postProcessor.process(result.css).css);
+
+    if (result.sourceMap) {
       const smBase64 = Buffer.from(JSON.stringify(result.sourceMap)).toString('base64');
-      const sourceMapComment = `/*# sourceMappingURL=data:application/json;charset=utf-8;base64,${smBase64} */`;
-      let css = postProcessor.process(result.css).css;
+      css += `\n\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,${smBase64} */`;
+    }
 
-      if (css.charCodeAt(0) === 0xfeff) css = css.slice(1);
+    await createFile(srcPath.replace(/\.scss$/, '.css'), css);
+  }
 
-      await createFile(
-        srcPath.replace(/\.scss$/, '.css').replace(COMPONENT_STYLES.SRC, ''),
-        css + '\n\n' + sourceMapComment
+  async function compileBase(srcPath) {
+    const result = await compiler.compileAsync(srcPath, BASE_STYLES.CONFIG);
+    trackDeps(result.loadedUrls, srcPath);
+
+    const css = stripBom(postProcessor.process(result.css).css);
+    const exportName =
+      path.basename(srcPath, '.styles.scss').toUpperCase().replace(/-/g, '_') + '_CSS';
+    const ts = [
+      '// Auto-generated — do not edit manually. Re-run build:styles to update.',
+      `export const ${exportName} = ${JSON.stringify(css)};`,
+      '',
+    ].join('\n');
+
+    const outPath = srcPath.replace(/\.scss$/, '.ts');
+    const existing = await readFile(outPath, 'utf-8').catch(() => null);
+
+    if (existing !== ts) await createFile(outPath, ts);
+  }
+
+  return {
+    async build() {
+      const [componentPaths, basePaths] = await Promise.all([
+        globby([COMPONENT_STYLES.SRC, COMPONENT_STYLES.IGNORE]),
+        globby(BASE_STYLES.SRC),
+      ]);
+
+      depMap.clear();
+      entryDeps.clear();
+
+      await Promise.all([
+        ...componentPaths.map(compileComponent),
+        ...basePaths.map(compileBase),
+      ]);
+    },
+
+    async rebuild(changedPath) {
+      const affected = depMap.get(path.resolve(changedPath));
+
+      // Not in the dep map (new file, renamed, etc.) — fall back to full build
+      if (!affected?.size) return this.build();
+
+      await Promise.all(
+        [...affected].map((absEntry) => {
+          clearEntryDeps(absEntry);
+
+          const relEntry = path.relative(process.cwd(), absEntry);
+
+          return relEntry.endsWith('.component.scss')
+            ? compileComponent(relEntry)
+            : compileBase(relEntry);
+        })
       );
-    })
-  );
-}
-
-async function buildBaseStyles(compiler, paths) {
-  await Promise.all(
-    paths.map(async (srcPath) => {
-      const css = await compileSass(srcPath, compiler, BASE_STYLES.CONFIG);
-      const ts = [
-        '// Auto-generated — do not edit manually. Re-run build:styles to update.',
-        `export const GRID_BASE_CSS = ${JSON.stringify(css)};`,
-        '',
-      ].join('\n');
-      const outPath = srcPath.replace(/\.scss$/, '.ts');
-      const existing = await readFile(outPath, 'utf-8').catch(() => null);
-
-      if (existing !== ts) {
-        await createFile(outPath, ts);
-      }
-    })
-  );
+    },
+  };
 }
 
 export async function buildComponents(isProduction = false) {
   const start = performance.now();
-  const [compiler, componentPaths, basePaths] = await Promise.all([
-    sass.initAsyncCompiler(),
-    globby([COMPONENT_STYLES.SRC, COMPONENT_STYLES.IGNORE]),
-    globby(BASE_STYLES.SRC),
-  ]);
+  const compiler = await sass.initAsyncCompiler();
 
   try {
-    await Promise.all([
-      buildComponentStyles(compiler, componentPaths),
-      buildBaseStyles(compiler, basePaths),
-    ]);
+    await createStylesBuilder(compiler).build();
   } finally {
     await compiler.dispose();
   }
@@ -188,7 +255,12 @@ export async function buildThemes() {
 
   // Build theme presets
   console.info('Building themes...');
-  await _buildThemes();
+  try {
+    await buildThemePresets();
+  } catch (err) {
+    report.error(err);
+    throw err;
+  }
   report.success(
     `Themes generated in ${((performance.now() - start) / 1000).toFixed(2)}s`
   );

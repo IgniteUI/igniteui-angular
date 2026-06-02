@@ -1,36 +1,33 @@
 import watch from 'node-watch';
+import * as sass from 'sass-embedded';
 import report from './report.mjs';
-import { buildComponents } from './sass.mjs';
+import { createStylesBuilder } from './sass.mjs';
+import getArgs from './get-args.mjs';
 
-const watchOptions = {
-  recursive: true,
-  filter: (path) => {
-    return /.(?:scss)$/.test(path);
-  },
-};
+const { 'no-initial': skipInitial } = getArgs();
 
-let updating = false;
+const compiler = await sass.initAsyncCompiler();
+const builder = createStylesBuilder(compiler);
 
-watch(
+if (!skipInitial) {
+  await builder.build();
+}
+
+const watcher = watch(
   ['projects/igniteui-angular'],
-  watchOptions,
-  async (_, path) => {
-    if (updating) {
-      return;
-    }
-
-    report.warn(`Change detected: ${path}`);
-    updating = true;
+  { recursive: true, filter: (p) => /\.scss$/.test(p) },
+  async (_, changedPath) => {
+    report.warn(`Change detected: ${changedPath}`);
 
     try {
-      await buildComponents();
+      await builder.rebuild(changedPath);
     } catch (err) {
       report.error(err);
     }
 
     report.success('Styles rebuilt 🎨');
-    updating = false;
   }
 );
 
+watcher.on('close', () => compiler.dispose());
 report.info('Styles watcher started...');
