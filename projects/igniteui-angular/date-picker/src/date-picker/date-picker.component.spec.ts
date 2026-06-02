@@ -1682,24 +1682,25 @@ describe('IgxDatePicker', () => {
             }).compileComponents();
 
             fixture = TestBed.createComponent(IgxDatePickerNgModelComponent);
-            await fixture.whenStable();
+            fixture.detectChanges();
         });
 
-        it('should not throw ExpressionChangedAfterItHasBeenCheckedError when closing - issue #17305', fakeAsync(async () => {
+        it('should not throw ExpressionChangedAfterItHasBeenCheckedError when closing - issue #17305', fakeAsync(() => {
             datePicker = fixture.componentInstance.datePicker;
 
             datePicker.open();
-            await fixture.whenStable();
+            fixture.detectChanges();
+            tick();
 
-            expect(async () => {
+            expect(() => {
                 datePicker.close();
                 fixture.detectChanges();
-                tick(100);
-                await fixture.whenStable();
-
-                const input = fixture.debugElement.query(By.css('input'));
-                expect(input.nativeElement.getAttribute('aria-expanded')).toBe('false');
             }).not.toThrow();
+
+            fixture.detectChanges();
+            tick(100);
+            const input = fixture.debugElement.query(By.css('input'));
+            expect(input.nativeElement.getAttribute('aria-expanded')).toBe('false');
         }));
     });
 });
