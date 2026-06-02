@@ -1,7 +1,7 @@
 import watch from 'node-watch';
 import * as sass from 'sass-embedded';
 import report from './report.mjs';
-import { buildComponentStyles } from './sass.mjs';
+import { buildComponentStyles, buildBaseStyles } from './sass.mjs';
 
 const watchOptions = {
   recursive: true,
@@ -25,7 +25,7 @@ const watcher = watch(
     updating = true;
 
     try {
-      await buildComponentStyles();
+      await Promise.all([buildComponentStyles(), buildBaseStyles()]);
     } catch (err) {
       report.error(err);
     }
