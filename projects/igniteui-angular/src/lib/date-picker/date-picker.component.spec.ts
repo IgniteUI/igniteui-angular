@@ -12,7 +12,7 @@ import {
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings
 } from '../services/public_api';
-import { Component, DebugElement, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, EventEmitter, provideZonelessChangeDetection, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { DatePart } from '../directives/date-time-editor/date-time-editor.common';
@@ -902,9 +902,9 @@ describe('IgxDatePicker', () => {
                 get: mockNgControl
             });
 
-            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges', 'markForCheck']);
 
-            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
+            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => { } };
             const mockComponentInstance = {
                 calendar: mockCalendar,
                 todaySelection: new EventEmitter<any>(),
@@ -1666,6 +1666,44 @@ describe('IgxDatePicker', () => {
                 expect(mockInputDirective.valid).toEqual(IgxInputState.INVALID);
             });
         });
+    });
+
+    describe('Zoneless', () => {
+        let fixture: ComponentFixture<IgxDatePickerNgModelComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxDatePickerNgModelComponent,
+                ],
+                providers: [
+                    provideZonelessChangeDetection()
+                ]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxDatePickerNgModelComponent);
+            fixture.detectChanges();
+        });
+
+        it('should not throw ExpressionChangedAfterItHasBeenCheckedError when closing - issue #17305', fakeAsync(() => {
+            datePicker = fixture.componentInstance.datePicker;
+
+            datePicker.open();
+            fixture.detectChanges();
+            tick();
+
+            expect(() => {
+                datePicker.close();
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            fixture.detectChanges();
+            tick(100);
+            const input = fixture.debugElement.query(By.css('input'));
+            expect(input.nativeElement.getAttribute('aria-expanded')).toBe('false');
+        }));
     });
 });
 @Component({
