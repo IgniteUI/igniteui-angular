@@ -70,7 +70,6 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-child-grid-row',
     templateUrl: './child-grid-row.component.html',
-    styleUrl: 'hierarchical-grid.component.css',
     encapsulation: ViewEncapsulation.None,
     imports: [NgClass]
 })
@@ -299,7 +298,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
-    styleUrl: 'hierarchical-grid.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [
         IgxGridCRUDService,

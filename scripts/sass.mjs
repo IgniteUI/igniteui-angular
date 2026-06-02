@@ -26,7 +26,17 @@ const THEMES = {
   },
 };
 
-const STYLES = {
+const BASE_STYLES = {
+  SRC: 'projects/igniteui-angular/**/*.styles.scss',
+  CONFIG: {
+    style: 'compressed',
+    loadPaths: ['node_modules', 'projects/igniteui-angular/core/src/core/'],
+    sourceMap: false,
+    silenceDeprecations: ['if-function'],
+  },
+};
+
+const COMPONENT_STYLES = {
   SRC: 'projects/igniteui-angular/**/*.component.scss',
   DIST: './',
   IGNORE: '!projects/igniteui-angular/core/src/core/styles/**/*.scss',
@@ -57,7 +67,6 @@ stripComments.postcss = true;
 const postProcessor = postcss([
   autoprefixer({
     cascade: false,
-    grid: true,
   }),
   stripComments,
 ]);
@@ -113,16 +122,16 @@ async function _buildThemes() {
 export async function buildComponentStyles() {
   const [compiler, paths] = await Promise.all([
     sass.initAsyncCompiler(),
-    globby([STYLES.SRC, STYLES.IGNORE]),
+    globby([COMPONENT_STYLES.SRC, COMPONENT_STYLES.IGNORE]),
   ]);
 
   try {
     await Promise.all(
       paths.map(async (path) => {
-        const result = await compiler.compileAsync(path, STYLES.CONFIG);
+        const result = await compiler.compileAsync(path, COMPONENT_STYLES.CONFIG);
         const fileName = path
           .replace(/\.scss$/, '.css')
-          .replace(STYLES.SRC, '');
+          .replace(COMPONENT_STYLES.SRC, '');
 
         const sm = JSON.stringify(result.sourceMap);
         const smBase64 = (Buffer.from(sm, 'utf8') || '').toString('base64');
@@ -150,10 +159,33 @@ export async function buildComponentStyles() {
   await compiler.dispose();
 }
 
+export async function buildBaseStyles() {
+  const [compiler, paths] = await Promise.all([
+    sass.initAsyncCompiler(),
+    globby(BASE_STYLES.SRC),
+  ]);
+
+  try {
+    await Promise.all(
+      paths.map(async (srcPath) => {
+        const css = await compileSass(srcPath, compiler, BASE_STYLES.CONFIG);
+        const ts = [
+          '// Auto-generated — do not edit manually. Re-run build:styles to update.',
+          `export const GRID_BASE_CSS = ${JSON.stringify(css)};`,
+          '',
+        ].join('\n');
+        await createFile(srcPath.replace(/\.scss$/, '.ts'), ts);
+      })
+    );
+  } finally {
+    await compiler.dispose();
+  }
+}
+
 export async function buildComponents(isProduction = false) {
   const start = performance.now();
 
-  await buildComponentStyles();
+  await Promise.all([buildComponentStyles(), buildBaseStyles()]);
 
   if (!isProduction) {
     report.success(
