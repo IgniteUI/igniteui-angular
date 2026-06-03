@@ -9,6 +9,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { take } from 'rxjs/operators';
 import {
+    IgxHierarchicalGridEmptyDataExportComponent,
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridTestCustomToolbarComponent,
     IgxHierarchicalGridTestInputPaginatorComponent,
@@ -36,6 +37,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
+                IgxHierarchicalGridEmptyDataExportComponent,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestCustomToolbarComponent,
                 IgxHierarchicalGridWithTransactionProviderComponent,
@@ -159,6 +161,39 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             expect(fChildCell.selected).toBeFalsy();
             expect(fCell.selected).toBeTruthy();
+        }));
+
+        it('should not copy the previous row value from an expanded parent row', fakeAsync(() => {
+            const singersFixture = TestBed.createComponent(IgxHierarchicalGridEmptyDataExportComponent);
+            const singersData = SampleTestData.hierarchicalGridSingersFullData();
+            (singersFixture.componentInstance as { data: unknown[] }).data = singersData;
+            singersFixture.detectChanges();
+
+            const grid = singersFixture.componentInstance.hGrid;
+
+            const previousArtist = singersData[1].Artist;
+            const targetArtist = singersData[2].Artist;
+            const targetRow = grid.dataRowList.toArray()
+                .find(row => row.data.Artist === targetArtist) as IgxHierarchicalRowComponent | undefined;
+
+            expect(targetRow).toBeDefined();
+            targetRow!.toggle();
+            tick(DEBOUNCE_TIME);
+            singersFixture.detectChanges();
+
+            grid.selectRange({
+                rowStart: targetRow!.index,
+                rowEnd: targetRow!.index,
+                columnStart: 'Artist',
+                columnEnd: 'Artist'
+            });
+            singersFixture.detectChanges();
+
+            expect(targetRow!.expanded).toBeTruthy();
+
+            const selectedData = grid.getSelectedData();
+            expect(selectedData).toEqual([{ Artist: targetArtist }]);
+            expect(selectedData[0].Artist).not.toBe(previousArtist);
         }));
     });
 
