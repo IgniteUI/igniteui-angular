@@ -63,6 +63,64 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
 
         super.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight },
             document, initialCall, targetElement);
+
+        this.updateContentClip(contentElement);
+    }
+
+    private updateContentClip(contentElement: HTMLElement): void {
+        const container = this.settings.container;
+
+        if (!container) {
+            return;
+        }
+
+        const clippingRect = this.getClippingRect(container);
+        const contentRect = contentElement.getBoundingClientRect();
+
+        const top = Math.round(Math.max(clippingRect.top - contentRect.top, 0));
+        const right = Math.round(Math.max(contentRect.right - clippingRect.right, 0));
+        const bottom = Math.round(Math.max(contentRect.bottom - clippingRect.bottom, 0));
+        const left = Math.round(Math.max(clippingRect.left - contentRect.left, 0));
+
+        const fullyClipped = top >= contentRect.height || bottom >= contentRect.height ||
+            left >= contentRect.width || right >= contentRect.width;
+
+        contentElement.style.clipPath = fullyClipped ? 'inset(100%)' :
+            (top || right || bottom || left ? `inset(${top}px ${right}px ${bottom}px ${left}px)` : '');
+
+        contentElement.style.pointerEvents = fullyClipped ? 'none' : '';
+        contentElement.style.visibility = '';
+    }
+
+    private getClippingRect(element: HTMLElement): Pick<DOMRect, 'top' | 'right' | 'bottom' | 'left'> {
+        const document = element.ownerDocument;
+        const rect = element.getBoundingClientRect();
+        const clippingRect = { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left };
+
+        let parent = element.parentElement;
+
+        while (parent && parent !== document.body && parent !== document.documentElement) {
+            const style = getComputedStyle(parent);
+            const overflow = `${style.overflow}${style.overflowX}${style.overflowY}`;
+
+            if (/(auto|scroll|hidden|clip)/.test(overflow)) {
+                const parentRect = parent.getBoundingClientRect();
+
+                clippingRect.top = Math.max(clippingRect.top, parentRect.top);
+                clippingRect.right = Math.min(clippingRect.right, parentRect.right);
+                clippingRect.bottom = Math.min(clippingRect.bottom, parentRect.bottom);
+                clippingRect.left = Math.max(clippingRect.left, parentRect.left);
+            }
+
+            parent = parent.parentElement;
+        }
+
+        return {
+            top: Math.max(clippingRect.top, 0),
+            right: Math.min(clippingRect.right, document.documentElement.clientWidth),
+            bottom: Math.min(clippingRect.bottom, document.documentElement.clientHeight),
+            left: Math.max(clippingRect.left, 0)
+        };
     }
 
     /**

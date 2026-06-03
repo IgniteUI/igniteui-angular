@@ -794,60 +794,38 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             const row = childGrid.gridAPI.get_row_by_index(0);
             spyOnProperty(childGrid.crudService, 'rowInEditMode', 'get').and.returnValue(row);
-            spyOnProperty(childGrid.rowEditingOverlay, 'collapsed', 'get').and.returnValue(false);
-            childGrid.rowEditingOverlay.element.style.display = 'block';
+            childGrid.openRowOverlay(row.key);
+            fixture.detectChanges();
 
-            spyOn((hierarchicalGrid as any).tbodyContainer.nativeElement, 'getBoundingClientRect').and.returnValue({
-                top: 0,
-                bottom: 200
+            expect(childGrid.rowEditingOverlay.collapsed).toBeFalse();
+
+            const parentTbody = hierarchicalGrid.tbody.nativeElement.parentElement;
+            const childTbody = childGrid.tbody.nativeElement.parentElement;
+            const overlayContent = childGrid.rowEditingOverlay.element.parentElement;
+
+            parentTbody.style.overflow = 'hidden';
+            childTbody.style.overflow = 'hidden';
+            spyOn(parentTbody, 'getBoundingClientRect').and.returnValue({
+                top: 0, right: 500, bottom: 200, left: 0
             } as DOMRect);
-            let childRowRect = {
-                top: 40,
-                bottom: 80
-            } as DOMRect;
-            spyOn(row.nativeElement, 'getBoundingClientRect').and.callFake(() => childRowRect);
-            const repositionOverlaySpy = spyOn(childGrid, 'repositionRowEditingOverlay');
-            const toggleOverlaySpy = spyOn(childGrid, 'toggleRowEditingOverlay').and.callThrough();
+            spyOn(childTbody, 'getBoundingClientRect').and.returnValue({
+                top: 0, right: 500, bottom: 200, left: 0
+            } as DOMRect);
+            spyOn(childGrid.tbody.nativeElement, 'getBoundingClientRect').and.returnValue({
+                top: -100, right: 500, bottom: 500, left: 0
+            } as DOMRect);
+            spyOn(row.nativeElement, 'getBoundingClientRect').and.returnValue({
+                top: -120, right: 500, bottom: -80, left: 0
+            } as DOMRect);
+            spyOn(overlayContent, 'getBoundingClientRect').and.returnValue({
+                top: -80, right: 500, bottom: -32, left: 0, width: 500, height: 48
+            } as DOMRect);
 
-            const scroll = hierarchicalGrid.verticalScrollContainer.getScroll();
-            scroll.scrollTop = 10;
-            (hierarchicalGrid as any).verticalScrollHandler({ target: scroll });
-            (hierarchicalGrid as any).zone.onStable.emit(null);
+            childGrid.rowEditingOverlay.reposition();
             fixture.detectChanges();
 
-            expect(repositionOverlaySpy).toHaveBeenCalledWith(row);
-            expect(toggleOverlaySpy).not.toHaveBeenCalledWith(false);
-            expect(childGrid.rowEditingOverlay.element.style.display).not.toBe('none');
-
-            repositionOverlaySpy.calls.reset();
-            toggleOverlaySpy.calls.reset();
-            childRowRect = {
-                top: -80,
-                bottom: -40
-            } as DOMRect;
-            scroll.scrollTop = 1000;
-            (hierarchicalGrid as any).verticalScrollHandler({ target: scroll });
-            (hierarchicalGrid as any).zone.onStable.emit(null);
-            fixture.detectChanges();
-
-            expect(repositionOverlaySpy).not.toHaveBeenCalled();
-            expect(toggleOverlaySpy).toHaveBeenCalledWith(false);
-            expect(childGrid.rowEditingOverlay.element.style.display).toBe('none');
-
-            repositionOverlaySpy.calls.reset();
-            toggleOverlaySpy.calls.reset();
-            childRowRect = {
-                top: 40,
-                bottom: 80
-            } as DOMRect;
-            scroll.scrollTop = 10;
-            (hierarchicalGrid as any).verticalScrollHandler({ target: scroll });
-            (hierarchicalGrid as any).zone.onStable.emit(null);
-            fixture.detectChanges();
-
-            expect(toggleOverlaySpy).toHaveBeenCalledWith(true);
-            expect(repositionOverlaySpy).toHaveBeenCalledWith(row);
-            expect(childGrid.rowEditingOverlay.element.style.display).not.toBe('none');
+            expect(overlayContent.style.clipPath).toBe('inset(100%)');
+            expect(overlayContent.style.pointerEvents).toBe('none');
         });
 
         it('Should apply runtime option changes to all related child grids (both existing and not yet initialized).', () => {
