@@ -819,18 +819,25 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * Returns an array of the current cell selection.
+     *
+     * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     *
+     * @remarks
+     * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
+     * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public override getSelectedData(formatters = false, headers = false): any[] {
         const source: any[] = [];
-        this.dataView.forEach((record) => {
+
+        const process = (record: any) => {
             if (this.isChildGridRecord(record)) {
                 source.push(null);
                 return;
             }
-            const rowData = record as any;
-            source.push(this.isGhostRecord(rowData) || this.isRecordMerged(rowData) ? rowData.recordRef : rowData);
-        });
+            source.push(this.isGhostRecord(record) || this.isRecordMerged(record) ? record.recordRef : record);
+        };
+
+        this.dataView.forEach(process);
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
