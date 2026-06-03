@@ -64,6 +64,7 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         super.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight },
             document, initialCall, targetElement);
 
+        // After positioning in the top layer, keep the overlay clipped to the visible grid body.
         this.updateContentClip(contentElement);
     }
 
@@ -77,32 +78,38 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         const clippingRect = this.getClippingRect(container);
         const contentRect = contentElement.getBoundingClientRect();
 
+        // Convert the clipped overflow on each side to CSS inset values.
         const top = Math.round(Math.max(clippingRect.top - contentRect.top, 0));
         const right = Math.round(Math.max(contentRect.right - clippingRect.right, 0));
         const bottom = Math.round(Math.max(contentRect.bottom - clippingRect.bottom, 0));
         const left = Math.round(Math.max(clippingRect.left - contentRect.left, 0));
 
+        // When the overlay is fully outside the clipping rect, hide it and block its action buttons.
         const fullyClipped = top >= contentRect.height || bottom >= contentRect.height ||
             left >= contentRect.width || right >= contentRect.width;
 
+        // Row-edit overlays are rendered in the top layer, so clip the content explicitly to the grid's visible area.
         contentElement.style.clipPath = fullyClipped ? 'inset(100%)' :
             (top || right || bottom || left ? `inset(${top}px ${right}px ${bottom}px ${left}px)` : '');
 
         contentElement.style.pointerEvents = fullyClipped ? 'none' : '';
-        contentElement.style.visibility = '';
+        contentElement.style.visibility = fullyClipped ? 'hidden' : '';
     }
 
     private getClippingRect(element: HTMLElement): Pick<DOMRect, 'top' | 'right' | 'bottom' | 'left'> {
         const document = element.ownerDocument;
         const rect = element.getBoundingClientRect();
+        // Start with the current grid body, then narrow it by every clipping parent.
         const clippingRect = { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left };
 
         let parent = element.parentElement;
 
+        // Intersect with clipping ancestors so nested grids respect their parent grid scroll bounds.
         while (parent && parent !== document.body && parent !== document.documentElement) {
-            const style = getComputedStyle(parent);
+            const style = document.defaultView?.getComputedStyle(parent) ?? parent.style;
             const overflow = `${style.overflow}${style.overflowX}${style.overflowY}`;
 
+            // Only ancestors that clip their children should reduce the visible area.
             if (/(auto|scroll|hidden|clip)/.test(overflow)) {
                 const parentRect = parent.getBoundingClientRect();
 
@@ -115,6 +122,7 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
             parent = parent.parentElement;
         }
 
+        // Keep the clipping area inside the viewport because popover content is viewport-positioned.
         return {
             top: Math.max(clippingRect.top, 0),
             right: Math.min(clippingRect.right, document.documentElement.clientWidth),
