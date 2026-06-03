@@ -7433,7 +7433,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
-        if (this.type === 'hierarchical') {
+        if (this.type === 'hierarchical' && source === this.filteredSortedData) {
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
