@@ -1,9 +1,9 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Injectable, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, DOCUMENT, inject } from '@angular/core';
+import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Injectable, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CarouselResourceStringsEN, ICarouselResourceStrings, ɵIgxDirectionality } from 'igniteui-angular/core';
+import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight} from 'igniteui-angular/core';
 import { first, IBaseEventArgs, last, PlatformUtil } from 'igniteui-angular/core';
 import { CarouselAnimationDirection, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
@@ -64,8 +64,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private element = inject(ElementRef);
     private iterableDiffers = inject(IterableDiffers);
     private platformUtil = inject(PlatformUtil);
-    private dir = inject(ɵIgxDirectionality);
-    private document = inject(DOCUMENT);
+
 
 
     /**
@@ -725,21 +724,22 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public handleKeydown(event: KeyboardEvent): void {
         const { key } = event;
         const slides = this.slides.toArray();
+        const isRTL = !isLeftToRight(this.nativeElement);
 
         switch (key) {
             case this.platformUtil.KEYMAP.ARROW_LEFT:
-                this.dir.rtl ? this.next() : this.prev();
+                isRTL ? this.next() : this.prev();
                 break;
             case this.platformUtil.KEYMAP.ARROW_RIGHT:
-                this.dir.rtl ? this.prev() : this.next();
+                isRTL ? this.prev() : this.next();
                 break;
             case this.platformUtil.KEYMAP.HOME:
                 event.preventDefault();
-                this.select(this.dir.rtl ? last(slides) : first(slides));
+                this.select(isRTL ? last(slides) : first(slides));
                 break;
             case this.platformUtil.KEYMAP.END:
                 event.preventDefault();
-                this.select(this.dir.rtl ? first(slides) : last(slides));
+                this.select(isRTL ? first(slides) : last(slides));
                 break;
         }
 

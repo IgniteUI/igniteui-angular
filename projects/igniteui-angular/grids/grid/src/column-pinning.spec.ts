@@ -255,7 +255,7 @@ describe('Column Pinning UI #grid', () => {
             pinningUIButton.click();
             fix.detectChanges();
 
-            expect(GridFunctions.getOverlay(fix).querySelectorAll('igx-checkbox').length).toEqual(5);
+            expect(fix.nativeElement.querySelectorAll('igx-grid-toolbar-pinning igx-checkbox').length).toEqual(5);
 
             grid.columnList.get(0).disablePinning = true;
             fix.detectChanges();
@@ -263,7 +263,7 @@ describe('Column Pinning UI #grid', () => {
             pinningUIButton.click();
             fix.detectChanges();
 
-            expect(GridFunctions.getOverlay(fix).querySelectorAll('igx-checkbox').length).toEqual(4);
+            expect(fix.nativeElement.querySelectorAll('igx-grid-toolbar-pinning igx-checkbox').length).toEqual(4);
         });
 
         it('Checks order of columns after unpinning', () => {

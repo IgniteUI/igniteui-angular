@@ -71,15 +71,28 @@ export class InputGroupShowcaseSampleComponent {
             control: {
                 type: 'button-group',
                 options: ['box', 'border', 'line', 'search'],
-                defaultValue: 'box'
+                defaultValue: 'border'
             }
         },
         type: {
             label: 'Native Input Type',
             control: {
                 type: 'select',
-                options: ['email', 'number', 'password', 'search', 'tel', 'text', 'url'],
-                defaultValue: 'text'
+                options: [
+                    'email',
+                    'number',
+                    'date',
+                    'time',
+                    'datetime-local',
+                    'month',
+                    'week',
+                    'password',
+                    'search',
+                    'tel',
+                    'text',
+                    'url'
+                ],
+                defaultValue: 'datetime-local'
             }
         },
         label: {
@@ -205,6 +218,7 @@ export class InputGroupShowcaseSampleComponent {
     private updateDisabledState(isDisabled: boolean): void {
         Object.keys(this.reactiveForm.controls).forEach((controlName) => {
             const control = this.reactiveForm.get(controlName);
+
             if (control) {
                 isDisabled ? control.disable() : control.enable();
             }

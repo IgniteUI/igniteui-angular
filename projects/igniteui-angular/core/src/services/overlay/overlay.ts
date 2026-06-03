@@ -137,17 +137,6 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
-     * @param position Preset position settings. Default position is 'center'
-     * @param outlet The outlet container to attach the overlay to
-     * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
-    *
-     * @deprecated in version 21.2.0. The outlet parameter is deprecated. Please provide the container or outlet element through the
-     * `createAbsoluteOverlaySettings` method when calling `attach` method.
-     * Creates overlay settings with global or container position strategy and preset position settings
-     */
-    public static createAbsoluteOverlaySettings(
-        position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings;
-    /**
      * Creates overlay settings with global or container position strategy and preset position settings.
      *
      * @param position Preset position settings. Default position is `center`.
@@ -159,6 +148,17 @@ export class IgxOverlayService implements OnDestroy {
      */
     public static createAbsoluteOverlaySettings(
         position?: AbsolutePosition, useContainerStrategy?: boolean): OverlaySettings;
+    /**
+     * @param position Preset position settings. Default position is 'center'
+     * @param outlet The outlet container to attach the overlay to
+     * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
+    *
+     * @deprecated in version 21.2.0. The outlet parameter is deprecated. Please provide the container or outlet element through the
+     * `createAbsoluteOverlaySettings` method when calling `attach` method.
+     * Creates overlay settings with global or container position strategy and preset position settings
+     */
+    public static createAbsoluteOverlaySettings(
+        position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings;
     public static createAbsoluteOverlaySettings(
         position?: AbsolutePosition, containerOrOutlet?: IgxOverlayOutletDirective | ElementRef | boolean): OverlaySettings {
         const positionSettings = this.createAbsolutePositionSettings(position);

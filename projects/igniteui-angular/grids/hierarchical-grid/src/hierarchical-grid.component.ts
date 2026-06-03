@@ -646,15 +646,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public override get parentRowOutletDirective() {
-        // Targeting parent outlet in order to prevent hiding when outlet
-        // is present at a child grid and is attached to a row.
-        return this.parent ? this.parent.rowOutletDirective : this.outlet;
-    }
-
-    /**
-     * @hidden
-     */
     public override ngOnInit() {
         // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
         //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
@@ -794,6 +785,29 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public get selectedCells(): CellType[] {
         return this.dataRows().map((row) => row.cells.filter((cell) => cell.selected))
             .reduce((a, b) => a.concat(b), []);
+    }
+
+    /**
+     *
+     * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     *
+     * @remarks
+     * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
+     * If `headers` is enabled, it will use the column header (if any) instead of the column field.
+     */
+    public override getSelectedData(formatters = false, headers = false): any[] {
+        const source: any[] = [];
+
+        const process = (record: any) => {
+            if (this.isChildGridRecord(record)) {
+                source.push(null);
+                return;
+            }
+            source.push(this.isGhostRecord(record) || this.isRecordMerged(record) ? record.recordRef : record);
+        };
+
+        this.dataView.forEach(process);
+        return this.extractDataFromSelection(source, formatters, headers);
     }
 
     /**
@@ -1158,7 +1172,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
         super.initColumns(collection, cb);
     }
-
 
     protected override setupColumns() {
         if (this.parentIsland && this.parentIsland.childColumns.length > 0 && !this.autoGenerate) {

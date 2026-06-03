@@ -458,14 +458,6 @@
             @extend %igx-grid__outlet !optional;
         }
 
-        @include e(loading-outlet) {
-            @extend %igx-grid__loading-outlet !optional;
-        }
-
-        @include e(row-editing-outlet) {
-            @extend %igx-grid__row-editing-outlet !optional;
-        }
-
         @include e(addrow-snackbar) {
             @extend %igx-grid__addrow-snackbar !optional;
         }

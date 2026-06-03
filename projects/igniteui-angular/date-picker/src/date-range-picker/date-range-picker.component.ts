@@ -38,7 +38,8 @@ import {
     IgxPickerActionsDirective,
     isDateInRanges,
     PickerCalendarOrientation,
-    IgxOverlayOutletDirective
+    THEME_TOKEN,
+    ThemeToken
 } from 'igniteui-angular/core';
 import { IgxCalendarContainerComponent } from '../date-picker/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-picker/picker-base.directive';
@@ -108,6 +109,7 @@ const SingleInputDatesConcatenationString = ' - ';
 export class IgxDateRangePickerComponent extends PickerBaseDirective
     implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
     protected platform = inject(PlatformUtil);
+    private themeToken = inject<ThemeToken>(THEME_TOKEN);
     private _injector = inject(Injector);
     private _cdr = inject(ChangeDetectorRef);
     private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
@@ -365,26 +367,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public override placeholder = '';
 
     /**
-     * Gets/Sets the container used for the popup element.
-     *
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-date-range-picker [outlet]="outlet"></igx-date-range-picker>
-     * //..
-     * ```
-     *
-     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
-     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
-     * DOM tree position instead.
-     */
-    @Input()
-    public override outlet: IgxOverlayOutletDirective | ElementRef<any>;
-
-    /**
      * Show/hide week numbers
      *
      * @remarks
@@ -496,7 +478,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @Input()
     public get activeDate(): Date {
         const today = new Date(new Date().setHours(0, 0, 0, 0));
-        const dateValue = DateTimeUtil.isValidDate(this._firstDefinedInRange) ? new Date(this._firstDefinedInRange.setHours(0, 0, 0, 0)) : null;
+        const dateValue = DateTimeUtil.isValidDate(this._firstDefinedInRange) ? new Date(new Date(this._firstDefinedInRange.getTime()).setHours(0, 0, 0, 0)) : null;
         return this._activeDate ?? dateValue ?? this._calendar?.activeDate ?? today;
     }
 
@@ -1358,6 +1340,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         componentInstance.mode = this.mode;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
         componentInstance.cancelButtonLabel = !this.isDropdown ? this.cancelButtonText : null;
+        if (!this.isDropdown && this.themeToken.theme === 'indigo') {
+            componentInstance.closeButtonType = 'contained';
+            componentInstance.cancelButtonType = 'outlined';
+        }
         componentInstance.pickerActions = this.pickerActions;
         componentInstance.usePredefinedRanges = this.usePredefinedRanges;
         componentInstance.customRanges = this.customRanges;

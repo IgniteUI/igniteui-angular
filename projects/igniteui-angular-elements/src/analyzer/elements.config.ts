@@ -587,6 +587,7 @@ export var registerConfig = [
     methods: [
       "getRowByIndex",
       "getRowByKey",
+      "getSelectedData",
       "getCellByColumn",
       "getCellByKey",
       "pinRow",
@@ -633,7 +634,6 @@ export var registerConfig = [
       "clearCellSelection",
       "selectRange",
       "getSelectedRanges",
-      "getSelectedData",
       "selectedColumns",
       "selectColumns",
       "deselectColumns",

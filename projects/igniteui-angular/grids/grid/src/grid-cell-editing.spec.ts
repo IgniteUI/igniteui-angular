@@ -621,11 +621,21 @@ describe('IgxGrid - Cell Editing #grid', () => {
             let picker = document.getElementsByClassName('igx-calendar-picker');
             expect(picker.length).toBe(1);
 
-            GridFunctions.scrollTop(grid, 10);
+            // scroll cell out of view
+            GridFunctions.scrollTop(grid, 120);
             await wait(100);
             fixture.detectChanges();
 
             // Verify calendar is closed
+            picker = document.getElementsByClassName('igx-calendar-picker');
+            expect(picker.length).toBe(0);
+
+            // scroll back to cell
+            GridFunctions.scrollTop(grid, -120);
+            await wait(100);
+            fixture.detectChanges();
+
+            // Verify calendar is not opened
             picker = document.getElementsByClassName('igx-calendar-picker');
             expect(picker.length).toBe(0);
 

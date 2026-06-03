@@ -131,12 +131,6 @@ interface IMatchInfoCache {
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
-// By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
-// In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
-// Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
-// More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height,
-// but in the same time we need to set row editing overlay outlet before opening the overlay itself.
-const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 /* blazorIndirectRender
    blazorComponent
@@ -1139,13 +1133,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     @ViewChild('loadingOverlay', { read: IgxToggleDirective, static: true })
-    public loadingOverlay: IgxToggleDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('igxLoadingOverlayOutlet', { static: true })
-    public loadingOutlet: ElementRef<HTMLElement>;
+    public loadingOverlay!: IgxToggleDirective;
 
     /* reactContentChildren */
     /* blazorInclude */
@@ -1326,12 +1314,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef<HTMLElement>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden @internal
@@ -2670,20 +2652,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public get rowOutletDirective() {
-        return this.rowEditingOutletDirective;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get parentRowOutletDirective() {
-        return this.outlet;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get rowEditCustom(): TemplateRef<IgxGridRowEditTemplateContext> {
         if (this.rowEditCustomDirectives && this.rowEditCustomDirectives.first) {
             return this.rowEditCustomDirectives.first;
@@ -3307,7 +3275,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
-        outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
 
@@ -3731,10 +3698,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             filter(() => !this._init),
             throttle(() =>
                 this.throttleTime$.pipe(
-                  take(1),
-                  switchMap(time => timer(time, this.throttleScheduler))
+                    take(1),
+                    switchMap(time => timer(time, this.throttleScheduler))
                 )
-              ),
+            ),
             destructor
         )
             .subscribe((event) => {
@@ -3781,7 +3748,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
 
             // do not hide the advanced filtering overlay on scroll
-            if (this._advancedFilteringOverlayId === event.id) {
+             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
                     instance.lastActiveNode = this.navigation.activeNode;
@@ -3790,12 +3757,14 @@ export abstract class IgxGridBaseDirective implements GridType,
                 return;
             }
 
-            // do not hide the overlay if it's attached to a row
-            if (this.rowEditingOverlay?.overlayId === event.id) {
+            const inRow = (overlaySettings?.target as HTMLElement)?.classList.contains("igx-grid__tr");
+            // do not hide the overlay if it's attached to a row on scroll
+            if (inRow) {
                 return;
             }
 
-            if (overlaySettings?.outlet === this.outlet && this.overlayIDs.indexOf(event.id) === -1) {
+            const isInGrid = overlaySettings?.target instanceof Node && this.tbody.nativeElement.contains(overlaySettings?.target);
+            if (isInGrid && this.overlayIDs.indexOf(event.id) === -1) {
                 this.overlayIDs.push(event.id);
             }
         });
@@ -4052,18 +4021,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.setUpPaginator();
         });
-
-        this.actionStripComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.actionStrip) {
-                this.actionStrip.menuOverlaySettings.outlet = this.outlet;
-            }
-        });
-
-        if (this.actionStrip) {
-            this.actionStrip.menuOverlaySettings.outlet = this.outlet;
-        }
     }
-
 
     protected get activeRowIndexes(): number[] {
         if (this._activeRowIndexes) {
@@ -4072,8 +4030,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             const activeRow = this.navigation.activeNode?.row;
 
             const selectedCellIndexes = this.selectionService.selection
-            ? Array.from(this.selectionService.selection.keys())
-            : [];
+                ? Array.from(this.selectionService.selection.keys())
+                : [];
             this._activeRowIndexes = [activeRow, ...selectedCellIndexes];
             return this._activeRowIndexes;
         }
@@ -4253,7 +4211,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.paginator) {
                 this.paginator.totalRecords = this.totalRecords ? this.totalRecords : this.paginator.totalRecords;
-                this.paginator.overlaySettings = { outlet: this.outlet };
             }
             if (this.hasColumnsToAutosize) {
                 this.autoSizeColumnsInView();
@@ -6365,7 +6322,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * TODO: MOVE to CRUD
      */
     public openRowOverlay(id) {
-        this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
+        this.configureRowEditingOverlay(id);
 
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler);
@@ -6746,7 +6703,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.shouldOverlayLoading) {
             // a new overlay should be shown
             const overlaySettings: OverlaySettings = {
-                outlet: this.loadingOutlet,
                 closeOnOutsideClick: false,
                 positionStrategy: new ContainerPositionStrategy()
             };
@@ -7238,20 +7194,24 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!this._height) {
             return null;
         }
+        const styles = this.document.defaultView.getComputedStyle(this.nativeElement);
         const actualTheadRow = this.getTheadRowHeight();
         const footerHeight = this.getFooterHeight();
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingFooterHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const scrHeight = this.getComputedHeight(this.scr.nativeElement);
+        const borderTop = parseFloat(styles.getPropertyValue('border-top-width')) || 0;
+        const borderBottom = parseFloat(styles.getPropertyValue('border-bottom-width')) || 0;
+
         const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
-            scrHeight;
+            scrHeight + borderTop + borderBottom;
 
         let gridHeight = 0;
 
         if (this.isPercentHeight) {
-            const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('height');
+            const computed = styles.getPropertyValue('height');
             const autoSize = this._shouldAutoSize(renderedHeight);
             if (autoSize || computed.indexOf('%') !== -1) {
                 const bodyHeight = this.getDataBasedBodyHeight();
@@ -7453,7 +7413,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
-        if (this.type === 'hierarchical') {
+        if (this.type === 'hierarchical' && source === this.filteredSortedData) {
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
@@ -7787,12 +7747,18 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
 
-        this.zone.onStable.pipe(first()).subscribe(() => {
+        const callback = () => {
             this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
-        });
+        };
+        if (this.isZonelessChangeDetection()) {
+            this.cdr.detectChanges();
+            callback();
+        } else {
+            this.zone.onStable.pipe(first()).subscribe(callback);
+        }
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7815,6 +7781,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
+    }
+
+    protected isZonelessChangeDetection(): boolean {
+        return this.zone.constructor.name === 'NoopNgZone';
     }
 
     protected hasMenuPinningActions(): boolean {
@@ -8146,13 +8116,12 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     // TODO: About to Move to CRUD
-    private configureRowEditingOverlay(rowID: any, useOuter = false) {
+    private configureRowEditingOverlay(rowID: any) {
         let settings = this.rowEditSettings;
         const overlay = this.overlayService.getOverlayById(this.rowEditingOverlay.overlayId);
         if (overlay) {
             settings = overlay.settings;
         }
-        settings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
         const targetRow = !pinned ?

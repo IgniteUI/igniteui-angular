@@ -9,14 +9,11 @@ import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirect
 import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
 import {
-    IgxOverlayOutletDirective,
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
-    WEEKDAYS,
-    BaseFormatter,
-    I18N_FORMATTER
+    WEEKDAYS
 } from 'igniteui-angular/core';
-import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, QueryList, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, provideZonelessChangeDetection, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { DatePart } from '../../../core/src/date-common/public_api';
@@ -906,8 +903,8 @@ describe('IgxDatePicker', () => {
                 get: mockNgControl
             });
 
-            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges', 'markForCheck']);
+            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => { } };
             const mockComponentInstance = {
                 calendar: mockCalendar,
                 todaySelection: new EventEmitter<any>(),
@@ -1064,7 +1061,6 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.isDropdown).toEqual(true);
                 expect(datePicker.minValue).toEqual(undefined);
                 expect(datePicker.maxValue).toEqual(undefined);
-                expect(datePicker.outlet).toEqual(undefined);
                 expect(datePicker.specialDates).toEqual(null);
                 expect(datePicker.spinDelta).toEqual(undefined);
                 expect(datePicker.spinLoop).toEqual(true);
@@ -1152,15 +1148,6 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.maxValue).toEqual(today);
                 datePicker.maxValue = '12/12/1998';
                 expect(datePicker.maxValue).toEqual('12/12/1998');
-                datePicker.outlet = null;
-                expect(datePicker.outlet).toEqual(null);
-                const mockEl: ElementRef = jasmine.createSpyObj<ElementRef>('mockEl', ['nativeElement']);
-                datePicker.outlet = mockEl;
-                expect(datePicker.outlet).toEqual(mockEl);
-                const mockOverlayDirective: IgxOverlayOutletDirective =
-                    jasmine.createSpyObj<IgxOverlayOutletDirective>('mockEl', ['nativeElement']);
-                datePicker.outlet = mockOverlayDirective;
-                expect(datePicker.outlet).toEqual(mockOverlayDirective);
                 const specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Weekdays },
                 { type: DateRangeType.Before, dateRange: [today] }];
                 datePicker.specialDates = specialDates;
@@ -1286,13 +1273,11 @@ describe('IgxDatePicker', () => {
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDropdownSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
-                const mockOutlet = {} as any;
-                datePicker.outlet = mockOutlet;
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
                     viewsContainerRef,
-                    Object.assign({}, baseDropdownSettings, { outlet: mockOutlet }),
+                    Object.assign({}, baseDropdownSettings),
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 let mockSettings: OverlaySettings = {
@@ -1300,7 +1285,6 @@ describe('IgxDatePicker', () => {
                     closeOnOutsideClick: true,
                     modal: false
                 };
-                datePicker.outlet = null;
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
@@ -1680,6 +1664,44 @@ describe('IgxDatePicker', () => {
                 expect(mockInputDirective.valid).toEqual(IgxInputState.INVALID);
             });
         });
+    });
+
+    describe('Zoneless', () => {
+        let fixture: ComponentFixture<IgxDatePickerNgModelComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxDatePickerNgModelComponent,
+                ],
+                providers: [
+                    provideZonelessChangeDetection()
+                ]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxDatePickerNgModelComponent);
+            fixture.detectChanges();
+        });
+
+        it('should not throw ExpressionChangedAfterItHasBeenCheckedError when closing - issue #17305', fakeAsync(() => {
+            datePicker = fixture.componentInstance.datePicker;
+
+            datePicker.open();
+            fixture.detectChanges();
+            tick();
+
+            expect(() => {
+                datePicker.close();
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            fixture.detectChanges();
+            tick(100);
+            const input = fixture.debugElement.query(By.css('input'));
+            expect(input.nativeElement.getAttribute('aria-expanded')).toBe('false');
+        }));
     });
 });
 @Component({
