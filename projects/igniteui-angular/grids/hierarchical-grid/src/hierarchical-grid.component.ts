@@ -8,7 +8,7 @@ import { IgxColumnComponent, } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
-import { first, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from 'igniteui-angular/grids/core';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridCRUDService } from 'igniteui-angular/grids/core';
@@ -1115,7 +1115,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /** @hidden @internal **/
     public onContainerScroll() {
         this.hideOverlays();
-        this.updateChildRowEditingOverlayStateOnScroll();
     }
 
     /**
@@ -1136,15 +1135,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /** @hidden @internal */
     public getChildGrids(inDeph?: boolean) {
         return this.gridAPI.getChildGrids(inDeph);
-    }
-
-    /** @hidden @internal **/
-    protected override verticalScrollHandler(event) {
-        super.verticalScrollHandler(event);
-
-        this.zone.onStable.pipe(first()).subscribe(() => {
-            this.updateChildRowEditingOverlayStateOnScroll();
-        });
     }
 
     protected override generateDataFields(data: any[]): string[] {
@@ -1304,30 +1294,5 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             fields: fields,
             childEntities: childEntities
         }
-    }
-
-    private updateChildRowEditingOverlayStateOnScroll() {
-        const visibleArea = this.tbodyContainer.nativeElement.getBoundingClientRect();
-        const childGrids = this.gridAPI.getChildGrids(true) as IgxHierarchicalGridComponent[];
-
-        childGrids.forEach((grid) => {
-            if (!grid.rowEditable || !grid.rowEditingOverlay || grid.rowEditingOverlay.collapsed) {
-                return;
-            }
-
-            const row = grid.crudService.rowInEditMode;
-
-            if (!row || !this.isElementInVisibleArea(row.nativeElement, visibleArea)) {
-                grid.toggleRowEditingOverlay(false);
-            } else {
-                grid.toggleRowEditingOverlay(true);
-                grid.repositionRowEditingOverlay(row);
-            }
-        });
-    }
-
-    private isElementInVisibleArea(element: HTMLElement, visibleArea: DOMRect) {
-        const rect = element.getBoundingClientRect();
-        return rect.bottom > visibleArea.top && rect.top < visibleArea.bottom;
     }
 }
