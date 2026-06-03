@@ -919,6 +919,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._initializeCalendarContainer(e.componentRef.instance);
             this._calendarContainer = e.componentRef.location.nativeElement;
             this._collapsed = false;
+            this.cdr.markForCheck();
         });
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
@@ -951,6 +952,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._overlayId = null;
             this._calendar = null;
             this._calendarContainer = undefined;
+            this.cdr.markForCheck();
         });
     }
 
