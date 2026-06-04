@@ -48,7 +48,7 @@ playwright_browser_navigate({ url: "http://localhost:4200/dashboard" })
 playwright_browser_take_screenshot({ type: "png" })
 ```
 
-### 2. `browser_evaluate` Script Must Be a String
+### 2. `playwright_browser_evaluate` Script Must Be a String
 
 **Problem:** Passing a TypeScript function reference to `playwright_browser_evaluate` causes a `ReferenceError: __name is not defined` in some tool runners. The function gets rewritten by TypeScript transpilers and breaks in the browser context.
 
