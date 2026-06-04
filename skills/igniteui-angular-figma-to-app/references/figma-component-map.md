@@ -197,10 +197,10 @@
 
 ## Package Notes
 
-| Pattern                                     | Import path                                                                                                |
+| Pattern                                     | Import path                                                                                                  |
 | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Open-source package                         | `import { Igx... } from 'igniteui-angular'`                                                                |
-| Licensed package                            | `import { Igx... } from '@infragistics/igniteui-angular'`                                                  |
+| Open-source package                         | `import { Igx... } from 'igniteui-angular/<entry-point>'`                                                   |
+| Licensed package                            | `import { Igx... } from '@infragistics/igniteui-angular/<entry-point>'`                                     |
 | Web components (Tile Manager, Dock Manager) | `import 'igniteui-dockmanager'` / see `layout-manager.md` in the components skill                          |
 | DV charts/gauges/maps                       | Require separate `igniteui-angular-charts`, `igniteui-angular-gauges`, or `igniteui-angular-maps` packages |
 
