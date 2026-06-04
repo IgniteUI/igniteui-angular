@@ -33,16 +33,19 @@ It requires a **Figma personal access token**.
 
 Create or edit `.vscode/mcp.json`:
 
-```json
+~~~json
 {
   "servers": {
     "figma": {
       "command": "npx",
-      "args": ["-y", "@figma/mcp@latest", "--figma-access-token", "YOUR_TOKEN_HERE"]
+      "args": ["-y", "@figma/mcp@latest"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "YOUR_TOKEN_HERE"
+      }
     }
   }
 }
-```
+~~~
 
 ### Cursor
 
