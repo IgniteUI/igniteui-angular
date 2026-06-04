@@ -10,7 +10,7 @@
 ## Core Philosophy
 
 **Measure, don't eyeball.** The goal is not visual regression (did this change from last week?) but design fidelity (does this match the Figma spec?).
-Screenshots give you the gestalt. `browser_evaluate` gives you the numbers. Numbers drive corrections.
+Screenshots give you the gestalt. `playwright_browser_evaluate` gives you the numbers. Numbers drive corrections.
 
 ---
 
