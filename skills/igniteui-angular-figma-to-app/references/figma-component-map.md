@@ -46,25 +46,46 @@
 
 ## Form Controls
 
-| Kit Component Name             | Angular Selector                  | IgxXxx Class               | `get_doc` Key  | Key Inputs / Variants                                                           |
-| ------------------------------ | --------------------------------- | -------------------------- | -------------- | ------------------------------------------------------------------------------- |
-| `_Input/Line`                  | `<igx-input-group type="line">`   | `IgxInputGroupComponent`   | `input`        | `type="line\|border\|box\|search"`, `[disabled]`                                |
-| `_Input/Border`                | `<igx-input-group type="border">` | `IgxInputGroupComponent`   | `input`        | `type="border"`                                                                 |
-| `_Input/Box` / `_Input/Filled` | `<igx-input-group type="box">`    | `IgxInputGroupComponent`   | `input`        | `type="box"`                                                                    |
-| `_Input/Search`                | `<igx-input-group type="search">` | `IgxInputGroupComponent`   | `input`        | `type="search"`                                                                 |
-| `_Combo` / `_ComboBox`         | `<igx-combo>`                     | `IgxComboComponent`        | `combo`        | `[data]`, `[displayKey]`, `[valueKey]`, `[groupKey]`, `[allowCustomValues]`     |
-| `_Simple Combo`                | `<igx-simple-combo>`              | `IgxSimpleComboComponent`  | `simple-combo` | `[data]`, `[displayKey]`, `[valueKey]`                                          |
-| `_Select` / `_Dropdown`        | `<igx-select>`                    | `IgxSelectComponent`       | `select`       | `<igx-select-item>` children, `[type]`                                          |
-| `_Autocomplete`                | `igxAutocomplete` directive       | `IgxAutocompleteDirective` | `autocomplete` | Used alongside `igx-input-group` + `igx-drop-down`                              |
-| `_Checkbox`                    | `<igx-checkbox>`                  | `IgxCheckboxComponent`     | `checkbox`     | `[(ngModel)]`, `[checked]`, `[indeterminate]`, `[disabled]`, `labelPosition`    |
-| `_Radio` / `_Radio Button`     | `<igx-radio>`                     | `IgxRadioComponent`        | `radio-button` | `[value]`, `[(ngModel)]`; wrap multiple in `<igx-radio-group>`                  |
-| `_Switch` / `_Toggle`          | `<igx-switch>`                    | `IgxSwitchComponent`       | `switch`       | `[(ngModel)]`, `[checked]`, `labelPosition`                                     |
-| `_Slider` / `_Range Slider`    | `<igx-slider>`                    | `IgxSliderComponent`       | `slider`       | `[type]` (`SLIDER\|RANGE`), `[minValue]`, `[maxValue]`, `[step]`, `[(ngModel)]` |
-| `_Rating`                      | `<igx-rating>`                    | `IgxRatingComponent`       | `rating`       | `[max]`, `[(ngModel)]`, `[disabled]`                                            |
+> **Input type defaults differ from the Figma kit defaults.** When a Figma design uses
+> `border`-type inputs globally, set the `IGX_INPUT_GROUP_TYPE` injection token once in
+> `app.config.ts` rather than adding `type="border"` to every component tag. This covers
+> all compound components: `IgxSimpleCombo` (default: `box`), `IgxDatePickerComponent`
+> (default: `line`), `IgxDateRangePickerComponent`, `IgxTimePickerComponent`,
+> `IgxSelectComponent`.
+>
+> ```typescript
+> import { IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
+> // providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'border' }]
+> ```
+>
+> Detect the intended type from Phase 1d: look for hidden `size-[0.5px]` nodes whose
+> `data-name` encodes the variant (e.g. `"Date Picker Type"` → `border`).
+
+| Kit Component Name             | Angular Selector                  | IgxXxx Class                                                                | `get_doc` Key            | Default Type                                                                    | Key Inputs / Variants                                                           |
+| ------------------------------ | --------------------------------- | --------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `_Input/Line`                  | `<igx-input-group type="line">`   | `IgxInputGroupComponent`                                                    | `input`                  | `line`                                                                          | `type="line\|border\|box\|search"`, `[disabled]`                                |
+| `_Input/Border`                | `<igx-input-group type="border">` | `IgxInputGroupComponent`                                                    | `input`                  | `line`                                                                          | `type="border"`                                                                 |
+| `_Input/Box` / `_Input/Filled` | `<igx-input-group type="box">`    | `IgxInputGroupComponent`                                                    | `input`                  | `line`                                                                          | `type="box"`                                                                    |
+| `_Input/Search`                | `<igx-input-group type="search">` | `IgxInputGroupComponent`                                                    | `input`                  | `line`                                                                          | `type="search"`                                                                 |
+| `_Combo` / `_ComboBox`         | `<igx-combo>`                     | `IgxComboComponent`                                                         | `combo`                  | `box`                                                                           | `[data]`, `[displayKey]`, `[valueKey]`, `[groupKey]`, `[allowCustomValues]`     |
+| `_Simple Combo`                | `<igx-simple-combo>`              | `IgxSimpleComboComponent`                                                   | `simple-combo`           | `box`                                                                           | `[data]`, `[displayKey]`, `[valueKey]`                                          |
+| `_Select` / `_Dropdown`        | `<igx-select>`                    | `IgxSelectComponent`                                                        | `select`                 | `line`                                                                          | `<igx-select-item>` children, `[type]`                                          |
+| `_Autocomplete`                | `igxAutocomplete` directive       | `IgxAutocompleteDirective`                                                  | `autocomplete`           | n/a                                                                             | Used alongside `igx-input-group` + `igx-drop-down`                              |
+| `_Checkbox`                    | `<igx-checkbox>`                  | `IgxCheckboxComponent`                                                      | `checkbox`               | `[(ngModel)]`, `[checked]`, `[indeterminate]`, `[disabled]`, `labelPosition`    |
+| `_Radio` / `_Radio Button`     | `<igx-radio>`                     | `IgxRadioComponent`                                                         | `radio-button`           | `[value]`, `[(ngModel)]`; wrap multiple in `<igx-radio-group>`                  |
+| `_Switch` / `_Toggle`          | `<igx-switch>`                    | `IgxSwitchComponent`                                                        | `switch`                 | `[(ngModel)]`, `[checked]`, `labelPosition`                                     |
+| `_Slider` / `_Range Slider`    | `<igx-slider>`                    | `IgxSliderComponent`                                                        | `slider`                 | `[type]` (`SLIDER\|RANGE`), `[minValue]`, `[maxValue]`, `[step]`, `[(ngModel)]` |
+| `_Rating`                      | `<igc-rating>`                    | `IgcRatingComponent` (**web component** — `igniteui-webcomponents` package) | _(see setup note below)_ | n/a                                                                             | `value` attribute; `igcChange` event; no `[(ngModel)]` — bind via `(igcChange)` |
+
+> **Rating setup:** `npm install igniteui-webcomponents`. In the component:
+>
+> ```typescript
+> import { IgcRatingComponent, defineComponents } from 'igniteui-webcomponents';
+> defineComponents(IgcRatingComponent);
+> // Add CUSTOM_ELEMENTS_SCHEMA to the component's schemas array
+> ```
 
 ---
-
-## Date & Time Pickers
 
 | Kit Component Name   | Angular Selector          | IgxXxx Class                  | `get_doc` Key       | Key Inputs / Variants                                                                       |
 | -------------------- | ------------------------- | ----------------------------- | ------------------- | ------------------------------------------------------------------------------------------- |
@@ -149,18 +170,32 @@
 
 > DV components have **no Sass design tokens**. All visual configuration is done via
 > component inputs. Do **not** call `theming_get_component_design_tokens` for these.
+>
+> **`get_doc` key:** use `charts-chart-overview` for all chart types (not the
+> type-specific keys like `category-chart` or `pie-chart` — those return "Doc not found").
+>
+> **Series colors:** chart components use their own default brush palette. Always
+> explicitly set `[brushes]` and `[outlines]` with space-separated hex colors extracted
+> from the Phase 1d design context to match the Figma series colors:
+> `[brushes]="'#9DE772 #6DB1FF'"`
 
-| Kit Component Name                                               | Angular Selector                       | IgxXxx Class                 | `get_doc` Key     | Key Inputs / Variants                                                                         |
-| ---------------------------------------------------------------- | -------------------------------------- | ---------------------------- | ----------------- | --------------------------------------------------------------------------------------------- |
-| `_Category Chart` / `_Line Chart` / `_Area Chart` / `_Bar Chart` | `<igx-category-chart>`                 | `IgxCategoryChartComponent`  | `category-chart`  | `[dataSource]`, `[chartType]` (`Line\|Area\|Column\|Bar\|Point`), `[legend]`, `[markerTypes]` |
-| `_Pie Chart` / `_Donut Chart`                                    | `<igx-pie-chart>`                      | `IgxPieChartComponent`       | `pie-chart`       | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                                      |
-| `_Financial Chart` / `_Stock Chart`                              | `<igx-financial-chart>`                | `IgxFinancialChartComponent` | `financial-chart` | `[dataSource]`, `[chartType]` (`Candle\|Bar\|Line`), `[volumeType]`                           |
-| `_Sparkline`                                                     | `<igx-sparkline>`                      | `IgxSparklineComponent`      | `sparkline`       | `[dataSource]`, `[valueMemberPath]`, `[displayType]` (`Line\|Area\|Column\|WinLoss`)          |
-| `_Data Chart`                                                    | `<igx-data-chart>`                     | `IgxDataChartComponent`      | `data-chart`      | `[dataSource]`; series added as child elements                                                |
-| `_Doughnut Chart`                                                | `<igx-doughnut-chart>`                 | `IgxDoughnutChartComponent`  | `doughnut-chart`  | `[dataSource]`; `<igx-ring-series>` children                                                  |
-| `_Treemap`                                                       | `<igx-treemap>`                        | `IgxTreemapComponent`        | `treemap`         | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                                      |
-| `_Funnel Chart`                                                  | `<igx-funnel-chart>`                   | `IgxFunnelChartComponent`    | `funnel-chart`    | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                                      |
-| `_Scatter Chart` / `_Bubble Chart`                               | `<igx-data-chart>` with scatter series | `IgxDataChartComponent`      | `data-chart`      | Use `<igx-scatter-series>` or `<igx-bubble-series>`                                           |
+| Kit Component Name                                               | Angular Selector                       | IgxXxx Class                 | `get_doc` Key           | Key Inputs / Variants                                                                 |
+| ---------------------------------------------------------------- | -------------------------------------- | ---------------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
+| `_Category Chart` / `_Line Chart` / `_Area Chart` / `_Bar Chart` | `<igx-category-chart>`                 | `IgxCategoryChartComponent`  | `charts-chart-overview` | `[dataSource]`, `[chartType]`, `[brushes]`, `[outlines]`, `[legend]`, `[markerTypes]` |
+| `_Pie Chart` / `_Donut Chart`                                    | `<igx-pie-chart>`                      | `IgxPieChartComponent`       | `charts-chart-overview` | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Financial Chart` / `_Stock Chart`                              | `<igx-financial-chart>`                | `IgxFinancialChartComponent` | `charts-chart-overview` | `[dataSource]`, `[chartType]` (`Candle\|Bar\|Line`), `[volumeType]`                   |
+| `_Sparkline`                                                     | `<igx-sparkline>`                      | `IgxSparklineComponent`      | `charts-chart-overview` | `[dataSource]`, `[valueMemberPath]`, `[displayType]` (`Line\|Area\|Column\|WinLoss`)  |
+| `_Data Chart`                                                    | `<igx-data-chart>`                     | `IgxDataChartComponent`      | `charts-chart-overview` | `[dataSource]`; series added as child elements                                        |
+| `_Doughnut Chart`                                                | `<igx-doughnut-chart>`                 | `IgxDoughnutChartComponent`  | `charts-chart-overview` | `[dataSource]`; `<igx-ring-series>` children                                          |
+| `_Treemap`                                                       | `<igx-treemap>`                        | `IgxTreemapComponent`        | `charts-chart-overview` | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Funnel Chart`                                                  | `<igx-funnel-chart>`                   | `IgxFunnelChartComponent`    | `charts-chart-overview` | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Scatter Chart` / `_Bubble Chart`                               | `<igx-data-chart>` with scatter series | `IgxDataChartComponent`      | `charts-chart-overview` | Use `<igx-scatter-series>` or `<igx-bubble-series>`                                   |
+| `_Sparkline`                                                     | `<igx-sparkline>`                      | `IgxSparklineComponent`      | `sparkline`             | `[dataSource]`, `[valueMemberPath]`, `[displayType]` (`Line\|Area\|Column\|WinLoss`)  |
+| `_Data Chart`                                                    | `<igx-data-chart>`                     | `IgxDataChartComponent`      | `data-chart`            | `[dataSource]`; series added as child elements                                        |
+| `_Doughnut Chart`                                                | `<igx-doughnut-chart>`                 | `IgxDoughnutChartComponent`  | `doughnut-chart`        | `[dataSource]`; `<igx-ring-series>` children                                          |
+| `_Treemap`                                                       | `<igx-treemap>`                        | `IgxTreemapComponent`        | `treemap`               | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Funnel Chart`                                                  | `<igx-funnel-chart>`                   | `IgxFunnelChartComponent`    | `funnel-chart`          | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Scatter Chart` / `_Bubble Chart`                               | `<igx-data-chart>` with scatter series | `IgxDataChartComponent`      | `data-chart`            | Use `<igx-scatter-series>` or `<igx-bubble-series>`                                   |
 
 ---
 
@@ -197,15 +232,67 @@
 
 ## Package Notes
 
-| Pattern                                     | Import path                                                                                                  |
+| Pattern                                     | Import path                                                                                                |
 | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Open-source package                         | `import { Igx... } from 'igniteui-angular/<entry-point>'`                                                   |
-| Licensed package                            | `import { Igx... } from '@infragistics/igniteui-angular/<entry-point>'`                                     |
+| Open-source package                         | `import { Igx... } from 'igniteui-angular/<entry-point>'`                                                  |
+| Licensed package                            | `import { Igx... } from '@infragistics/igniteui-angular/<entry-point>'`                                    |
 | Web components (Tile Manager, Dock Manager) | `import 'igniteui-dockmanager'` / see `layout-manager.md` in the components skill                          |
+| Rating web component                        | `import { IgcRatingComponent, defineComponents } from 'igniteui-webcomponents'` + `CUSTOM_ELEMENTS_SCHEMA` |
 | DV charts/gauges/maps                       | Require separate `igniteui-angular-charts`, `igniteui-angular-gauges`, or `igniteui-angular-maps` packages |
 
-> **DV package install:** determine the installed Ignite UI version first, then resolve the
-> compatible DV package version. Ask for approval before installing any new package.
+> **DV package install:** determine the installed Ignite UI version first
+> (`npm list igniteui-angular`), then install the closest matching DV package version.
+> If no exact version match exists, install the closest lower version with
+> `--legacy-peer-deps`. Always ask for approval before installing any new package.
+
+---
+
+## Material Icons Extended (`@igniteui/material-icons-extended`)
+
+The Indigo.Design UI Kit for Material includes domain and navigation icons from
+`@igniteui/material-icons-extended`. These appear in Figma component descriptions with
+the suffix **"material extended"**.
+
+**Detection in Phase 1d:** scan all `data-name` or component description strings for
+"material extended". If found, add this package to the required packages list and ask
+for user approval before Phase 4.
+
+**Setup:**
+
+```bash
+npm install @igniteui/material-icons-extended
+```
+
+```typescript
+// In root component (e.g. app.ts)
+import { IgxIconService } from 'igniteui-angular/icon';
+import { addIcons } from '@igniteui/material-icons-extended';
+
+export class AppComponent implements OnInit {
+  private iconService = inject(IgxIconService);
+  ngOnInit() {
+    for (const icon of addIcons()) {
+      this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
+    }
+  }
+}
+```
+
+```html
+<!-- Use family="imx-icons", name = kebab-case layer name -->
+<igx-icon family="imx-icons" name="credit-cards"></igx-icon>
+<igx-icon family="imx-icons" name="wire-transfer"></igx-icon>
+```
+
+| Figma description keyword | `imx-icons` name |
+| ------------------------- | ---------------- |
+| credit, card, bank        | `credit-cards`   |
+| wire transfer, payment    | `wire-transfer`  |
+| budget, savings           | `piggy-bank`     |
+| loan, borrow              | `loan`           |
+| crypto, bitcoin           | `bitcoin`        |
+| calculator, math          | `calculator`     |
+| poll, analytics           | `poll`           |
 
 ---
 

@@ -4,6 +4,50 @@
 >
 > Use this file in Phase 1h to identify and extract image assets from Figma artboards
 > before implementation. Read in full before calling any extraction tool.
+>
+> **Zero-placeholder policy:** every image asset visible in the Figma design must be
+> extracted and committed to `src/assets/` before Phase 4 begins. Gradient placeholders
+> and empty `<div>` boxes are not acceptable. If the highest-fidelity method is
+> unavailable, use the next tier — but always extract something real.
+
+---
+
+## Step 0 — Acquire the Figma File Key (Required for REST API)
+
+The Figma REST API requires a **file key** — the identifier embedded in every Figma
+file URL. Without it, you can still extract assets using Tier 2 and Tier 3 methods
+below, but the REST API (Tier 1) produces the highest quality output and should always
+be the first attempt.
+
+**Ask the user for the file key at the start of Phase 1h:**
+
+> "To extract image assets at the highest quality, I need the Figma file key.
+> In the Figma desktop app:
+>
+> 1. Right-click the file tab at the top → **Copy link** (or go to **File → Share** and copy the URL)
+> 2. The URL looks like: `https://www.figma.com/design/ABCDEF1234567890/My-File-Name`
+> 3. The file key is the segment after `/design/`: **`ABCDEF1234567890`**
+>
+> Please share that key (or the full URL). If you cannot access it right now, I will
+> proceed with the desktop-app extraction methods and note which assets need to be
+> re-exported at higher quality."
+
+**Extracting the key from a URL (if the user pastes it):**
+
+```bash
+# URL format: https://www.figma.com/design/<FILE_KEY>/<file-name>?...
+# Extract key with sed:
+echo "https://www.figma.com/design/ABCDEF1234567890/My-App" \
+  | sed -E 's|.*/design/([^/]+)/.*|\1|'
+# → ABCDEF1234567890
+export FILE_KEY="ABCDEF1234567890"
+```
+
+**Your Figma personal access token** (same one used for the MCP server) is needed for REST calls. Store it as an environment variable:
+
+```bash
+export FIGMA_TOKEN="your-personal-access-token"
+```
 
 ---
 
@@ -11,12 +55,12 @@
 
 Figma stores images in two distinct ways — understanding the difference is essential for choosing the right extraction method:
 
-| Type             | What it is                                                                                                  | Figma signal                                                   | Best extraction method                            |
-| ---------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------- |
-| **Image fill**   | A photo, texture, or raster image dragged/pasted into Figma. Stored as a fill on a RECTANGLE or FRAME node. | Layer has fill of type `IMAGE`; `imageRef` in node data        | REST API `/v1/files/:key/images` → original file  |
-| **Vector asset** | A logo, icon, or illustration drawn in Figma using vector tools.                                            | Node type `VECTOR`, `BOOLEAN_OPERATION`, or `GROUP` of vectors | REST API `/v1/images/:key?format=svg` → clean SVG |
+| Type             | What it is                                                                                                         | Figma signal                                            | Best extraction method                   |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------- | ---------------------------------------- |
+| **Image fill**   | A photo, texture, or raster image dragged/pasted into Figma. Stored as an IMAGE fill on a RECTANGLE or FRAME node. | Layer has fill of type `IMAGE`; `imageRef` in node data | REST API Method A → original source file |
+| **Vector asset** | A logo, icon, or illustration drawn in Figma using vector tools.                                                   | Node type `VECTOR`, `BOOLEAN_OPERATION`, or `GROUP`     | REST API Method B → clean SVG            |
 
-Do **not** confuse these with Ignite UI component instances — those get implemented as Angular components, not extracted as assets.
+Do **not** confuse these with Ignite UI component instances — those become Angular components, not extracted assets.
 
 ---
 
@@ -26,229 +70,283 @@ Do **not** confuse these with Ignite UI component instances — those get implem
 
 Scan the XML returned by `figma_get_metadata` for layer names matching:
 
-| Naming pattern                                     | Likely asset type | Action                                                 |
-| -------------------------------------------------- | ----------------- | ------------------------------------------------------ |
-| `_Image`, `_Photo`, `_Picture`, `image`, `photo`   | Raster image fill | Extract as PNG                                         |
-| `_Hero`, `_Banner`, `_Cover`, `hero`, `banner`     | Large raster fill | Extract as PNG (2× scale)                              |
-| `_Thumbnail`, `_Avatar`, `_Illustration`           | Raster image fill | Extract as PNG                                         |
-| `_Logo`, `_Brand`, `logo`, `brand`                 | Vector or raster  | If vector: extract as SVG; if raster: PNG              |
-| `_Icon/` prefix (custom icons not in igx-icon set) | Custom SVG icon   | Extract as SVG                                         |
-| `_Background`, `_Bg`, `bg`, `background`           | Large raster fill | Extract as PNG (check if `igx-icon` can replace first) |
-| `_Illustration`, `_Art`, `_Pattern`                | Vector or raster  | Classify before extracting                             |
+| Naming pattern                                     | Likely asset type | Action                                    |
+| -------------------------------------------------- | ----------------- | ----------------------------------------- |
+| `_Image`, `_Photo`, `_Picture`, `image`, `photo`   | Raster image fill | Extract as PNG                            |
+| `_Hero`, `_Banner`, `_Cover`, `hero`, `banner`     | Large raster fill | Extract as PNG (2× scale)                 |
+| `_Thumbnail`, `_Avatar`, `_Illustration`           | Raster image fill | Extract as PNG                            |
+| `_Logo`, `_Brand`, `logo`, `brand`                 | Vector or raster  | If vector: extract as SVG; if raster: PNG |
+| `_Icon/` prefix (custom icons not in igx-icon set) | Custom SVG icon   | Extract as SVG                            |
+| `_Background`, `_Bg`, `bg`, `background`           | Large raster fill | Extract as PNG                            |
+| `_Illustration`, `_Art`, `_Pattern`                | Vector or raster  | Classify before extracting                |
 
 > **Ignore these** — do NOT extract them as image assets:
 >
-> - Any layer whose name starts with `_Button`, `_Input`, `_Grid`, `_Card`, etc. from
->   the Indigo.Design UI Kit (those are component instances → implement as IgxXxx components)
+> - Any layer whose name starts with `_Button`, `_Input`, `_Grid`, `_Card`, etc.
+>   (Indigo.Design UI Kit component instances → implement as IgxXxx components)
 > - `igx-icon` glyph nodes (use `<igx-icon>` in Angular instead)
 > - Artboard/frame boundaries themselves
 
 ### Size heuristic
 
-Large rectangles (width > 200px or height > 200px) at key layout positions (hero area, sidebar background, card thumbnail slot) are almost always image fills.
+Large rectangles (width > 200px or height > 200px) at key layout positions (hero area,
+sidebar background, card thumbnail slot) are almost always image fills.
 
 Small nodes (< 48×48px) named with icon-like names are usually SVG icons.
 
-### Confirm classification with design context
+### Confirm with design context
 
-For ambiguous nodes, call `figma_get_design_context` on the node and look for:
+For ambiguous nodes, look at the `figma_get_design_context` output for the artboard.
+Each image asset appears as either:
 
-- `background-image: url(...)` or `src="..."` in the reference code → image fill
-- Inline SVG markup or `<img>` with a `.svg` src → vector asset
-- A localhost URL (e.g. `http://localhost:PORT/...`) in the response → image node confirmed; note the node ID for REST API extraction (do **not** use the localhost URL as the asset source)
+- An `<img src="http://localhost:3845/assets/...">` — confirms it is a raster fill; note the node ID
+- Inline SVG or an `<img>` with `.svg` extension — confirms it is a vector; note the node ID
 
----
-
-## Step 2 — Always Extract at the Highest Fidelity
-
-The extraction method is determined by **asset type** — never by speed or convenience.
-Asset extraction is a one-time operation per build; sacrificing image quality here means shipping a blurry hero or a rasterized logo into production.
-
-| Asset type                                                                  | Method                                                                   | Why it is the highest fidelity                                                 |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| Image fill — photo, texture, or raster image uploaded to Figma              | **Method A** — REST API original file (`/v1/files/:key/images`)          | Returns the **actual source file** at its native resolution; never a re-render |
-| Vector asset — logo, icon, or illustration drawn in Figma with vector tools | **Method B** — REST API SVG export (`/v1/images/:key?format=svg`)        | Preserves infinite-scale vector fidelity; CSS-styleable; no rasterization loss |
-| Raster node export — complex composition with no single `imageRef`          | **Method B** — REST API PNG at 2× (`/v1/images/:key?format=png&scale=2`) | Rendered at double resolution; retina-ready                                    |
-
-### What NOT to use
-
-Two MCP shortcuts appear convenient but produce strictly lower-quality output.
-**Never use them for final assets.**
-
-| Method                                                                            | Why it is insufficient                                                                                                                                                                                                                                 |
-| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `figma_get_screenshot`                                                            | Produces a 1× screen-capture — not the original file. Vectors are rasterized. May include drop shadows or siblings from the canvas. Use it only as a temporary visual reference for yourself while exploring the design, never as the extracted asset. |
-| Localhost URLs from `figma_get_design_context` (e.g. `http://localhost:3845/...`) | Served by the Figma desktop app's in-memory renderer. Expire the moment the Figma app closes. Cannot be committed to the repo. Do not reflect original resolution or format.                                                                           |
-
-If `figma_get_design_context` returns a localhost image URL, **use it only to confirm the node identity** — note the node ID, then immediately run Method A or B to get the real asset. Never put a localhost URL in an Angular template or SCSS file.
+Note all localhost image URLs from the design context — these are needed for Tier 2
+extraction if the REST API is unavailable.
 
 ---
 
-### Method A — REST API: Original Image Fills
+## Step 2 — Extract at the Highest Available Fidelity
 
-Use this to download the **original raster images** that were uploaded to Figma.
-Best for: photos, textures, raster logos — where you want the source file, not a rendering.
+Use this **four-tier decision tree**. Start at Tier 1. Move to the next tier only if
+the previous one is unavailable for this specific asset.
 
-#### Step A — Get all image fill URLs for the file
+```
+Do you have the FILE_KEY?
+├─ YES → Use Tier 1 (REST API). Always the best.
+└─ NO  → Did figma_get_design_context include a localhost URL for this asset?
+          ├─ YES → Use Tier 2 (download localhost URL to disk).
+          └─ NO  → Can you get a clean node screenshot?
+                    ├─ YES → Use Tier 3 (figma_get_screenshot per node).
+                    └─ NO  → Use Tier 4 (CSS gradient/color placeholder as last resort,
+                              with a TODO comment to replace later).
+```
+
+**After completing Phase 4, if you used Tier 2 or Tier 3 for any asset:**
+
+> Tell the user: "The following assets were extracted at reduced quality because the
+> Figma file key was not available: [list]. To replace them with the original
+> source files, run the Tier 1 REST API commands in Step 2a once you have the file key."
+
+---
+
+### Tier 1 — REST API (Highest Fidelity)
+
+**Requires:** `FILE_KEY` and `FIGMA_TOKEN`.
+
+#### Method A — Original Image Fills
+
+Use this to download **photos, textures, and raster images** that were uploaded to
+Figma (identified by `imageRef` in node fill data). Returns the original source file
+at its native resolution — never a re-render.
 
 ```bash
+# Step A.1 — Get all image fill URLs in the file
 curl -s \
   -H "X-Figma-Token: $FIGMA_TOKEN" \
   "https://api.figma.com/v1/files/$FILE_KEY/images" \
-  | tee /tmp/figma_image_fills.json
-```
+  -o /tmp/figma_image_fills.json
 
-Response format:
+# Response: { "images": { "<imageRef>": "<cdn-url>", ... } }
 
-```json
-{
-  "images": {
-    "abc123def": "https://s3.amazonaws.com/figma-alpha-api/img/...png",
-    "xyz789ghi": "https://s3.amazonaws.com/figma-alpha-api/img/...jpg"
-  }
-}
-```
-
-The keys are **image reference IDs** (`imageRef`) — these appear in node fill data.
-
-#### Step B — Match imageRefs to node IDs
-
-To know which node uses which imageRef, call the REST API for the specific nodes:
-
-```bash
+# Step A.2 — Get node fill data to match imageRef → node
 curl -s \
   -H "X-Figma-Token: $FIGMA_TOKEN" \
   "https://api.figma.com/v1/files/$FILE_KEY/nodes?ids=$NODE_IDS" \
-  | tee /tmp/figma_nodes.json
+  -o /tmp/figma_nodes.json
+# In the response, look for: "fills": [{ "type": "IMAGE", "imageRef": "abc123" }]
+# Match "abc123" → URL from figma_image_fills.json
+
+# Step A.3 — Download to assets folder
+mkdir -p src/assets/images src/assets/icons
+IMAGE_URL=$(jq -r '.images["<imageRef>"]' /tmp/figma_image_fills.json)
+curl -sL "$IMAGE_URL" -o src/assets/images/hero-background.jpg
 ```
 
-In the response, look for:
+> **URL expiry:** image fill URLs expire in **14 days**. Download during the session.
 
-```json
-"fills": [
-  {
-    "type": "IMAGE",
-    "imageRef": "abc123def",
-    "scaleMode": "FILL"
-  }
-]
-```
+#### Method B — Node Export (SVG, PNG, JPG)
 
-Match `imageRef` → URL from Step A.
-
-#### Step C — Download to assets folder
+Use this to export **any node** as SVG, PNG, or JPG. Best for logos, custom icons,
+vector illustrations, and raster compositions.
 
 ```bash
-# Create the assets directory if it doesn't exist
-mkdir -p src/assets/images
+mkdir -p src/assets/images src/assets/icons
 
-# Download (example for a specific imageRef URL)
-IMAGE_URL=$(jq -r '.images["abc123def"]' /tmp/figma_image_fills.json)
-curl -sL "$IMAGE_URL" -o src/assets/images/hero-photo.jpg
-```
-
-> **URL expiry:** image fill URLs expire in **14 days**. Download them during the
-> implementation session; do not store the URLs in code.
-
----
-
-### Method B — REST API: Node Export (any format, any scale)
-
-Use this to export **any node** as PNG, JPG, SVG, or PDF at any scale.
-Best for: SVG icon/logo export, retina-quality PNG, vector illustrations.
-
-```bash
-# Export multiple nodes at once (recommended — batches in one API call)
-curl -s \
-  -H "X-Figma-Token: $FIGMA_TOKEN" \
-  "https://api.figma.com/v1/images/$FILE_KEY?ids=$NODE_IDS&format=png&scale=2&contents_only=true" \
-  | tee /tmp/figma_export.json
-
-# Response: { "images": { "123:456": "https://s3.url...", "789:012": "https://..." } }
-# Download each URL to the right path
-jq -r '.images | to_entries[] | "\(.key)\t\(.value)"' /tmp/figma_export.json | \
-while IFS=$'\t' read -r nodeId url; do
-  # Convert nodeId to a safe filename: "123:456" → "node-123-456"
-  filename="node-$(echo "$nodeId" | tr ':' '-')"
-  curl -sL "$url" -o "src/assets/images/$filename.png"
-  echo "Downloaded $nodeId → src/assets/images/$filename.png"
-done
-```
-
-**For SVG export** (logos, icons, illustrations):
-
-```bash
+# SVG export (vectors — logos, icons, illustrations)
 curl -s \
   -H "X-Figma-Token: $FIGMA_TOKEN" \
   "https://api.figma.com/v1/images/$FILE_KEY?ids=$NODE_IDS&format=svg&svg_outline_text=false&contents_only=true" \
-  | tee /tmp/figma_svg_export.json
+  -o /tmp/figma_svg_export.json
 
-# Download and save
 jq -r '.images | to_entries[] | "\(.key)\t\(.value)"' /tmp/figma_svg_export.json | \
 while IFS=$'\t' read -r nodeId url; do
-  filename="node-$(echo "$nodeId" | tr ':' '-')"
-  curl -sL "$url" -o "src/assets/icons/$filename.svg"
-  echo "Downloaded $nodeId → src/assets/icons/$filename.svg"
+  filename="$(echo "$nodeId" | tr ':' '-').svg"
+  curl -sL "$url" -o "src/assets/icons/$filename"
+  echo "Downloaded $nodeId → src/assets/icons/$filename"
+done
+
+# PNG export at 2× (raster compositions, hero banners)
+curl -s \
+  -H "X-Figma-Token: $FIGMA_TOKEN" \
+  "https://api.figma.com/v1/images/$FILE_KEY?ids=$NODE_IDS&format=png&scale=2&contents_only=true" \
+  -o /tmp/figma_png_export.json
+
+jq -r '.images | to_entries[] | "\(.key)\t\(.value)"' /tmp/figma_png_export.json | \
+while IFS=$'\t' read -r nodeId url; do
+  filename="$(echo "$nodeId" | tr ':' '-').png"
+  curl -sL "$url" -o "src/assets/images/$filename"
 done
 ```
 
-> **Export URL expiry:** rendered export URLs expire in **30 days**. Download immediately.
+**Key export parameters:**
 
-**Key parameters for `/v1/images/:key`:**
+| Parameter          | Value   | When to use                                          |
+| ------------------ | ------- | ---------------------------------------------------- |
+| `format`           | `svg`   | Logos, icons, vector illustrations                   |
+| `format`           | `png`   | Hero backgrounds, thumbnails — always pair `scale=2` |
+| `format`           | `jpg`   | Photos without transparency — use `scale=2`          |
+| `scale`            | `2`     | **Always for PNG/JPG** — retina-quality output       |
+| `svg_outline_text` | `false` | Keep text as `<text>` elements (smaller, accessible) |
+| `contents_only`    | `true`  | Render the node in isolation (default)               |
 
-| Parameter          | Value            | When to use                                                                          |
-| ------------------ | ---------------- | ------------------------------------------------------------------------------------ |
-| `format`           | `png`            | Raster images, backgrounds, thumbnails — always pair with `scale=2`                  |
-| `format`           | `svg`            | Logos, icons, vector illustrations — always the right choice for drawn vectors       |
-| `format`           | `jpg`            | Photos where file size matters and no transparency is needed — use `scale=2`         |
-| `scale`            | `2`              | **Always use this for PNG and JPG.** Retina-quality; HTML/CSS displays at half size. |
-| `scale`            | `1`              | Only acceptable when the design is explicitly 1× and retina is not a concern.        |
-| `svg_outline_text` | `false`          | Keeps SVG text as `<text>` elements (selectable, smaller file)                       |
-| `svg_outline_text` | `true` (default) | Converts text to paths (exact match to Figma rendering)                              |
-| `contents_only`    | `true` (default) | Renders the node in isolation                                                        |
-| `contents_only`    | `false`          | Includes overlapping sibling content                                                 |
+> **Export URL expiry:** export URLs expire in **30 days**. Download immediately.
+
+---
+
+### Tier 2 — Localhost URL Download (Desktop MCP Fallback)
+
+**Use when:** the file key is unavailable and `figma_get_design_context` returned
+localhost URLs (e.g. `http://localhost:3845/assets/abc123.png`).
+
+These URLs are served by the Figma desktop app's in-memory renderer and are accessible
+via `curl` during the active Figma session. They are **not** the original source file
+(they are a renderer output), but they are substantially better than placeholders and
+can be committed to the repository.
+
+```bash
+mkdir -p src/assets/images src/assets/icons
+
+# Extract localhost URLs from a design context output and download them
+# Replace <localhost-url> with the actual URL found in figma_get_design_context output
+curl -sL "http://localhost:3845/assets/<hash>.png" -o src/assets/images/hero-background.png
+curl -sL "http://localhost:3845/assets/<hash>.svg" -o src/assets/icons/logo.svg
+```
+
+**Finding localhost URLs in design context output:**
+
+In the React+Tailwind code returned by `figma_get_design_context`, look for:
+
+- `const imgXxx = "http://localhost:3845/assets/<hash>.<ext>";` at the top of the output
+- `<img src={imgXxx} />` or `background-image` references inline
+
+Each `const` at the top is an image asset. Note its variable name, the URL, and which
+Figma node it belongs to (from context around the `<img>` tag).
+
+**Limitations of Tier 2 assets:**
+
+- Raster renders — vectors become PNGs, not SVGs
+- Renderer resolution (typically 2×) — adequate for most uses
+- Expire when the Figma desktop app closes — **must be downloaded before closing Figma**
+- Must be renamed from `<hash>.png` to descriptive names before committing
+
+**Commit as-is** — they are real assets. Add a comment in the asset manifest:
+
+```typescript
+// TODO: Replace with Tier 1 REST API export once FILE_KEY is available
+heroBg: 'assets/images/hero-background.png', // extracted from Figma session
+```
+
+---
+
+### Tier 3 — `figma_get_screenshot` per Node
+
+**Use when:** no file key AND no localhost URLs were produced for a specific node.
+
+`figma_get_screenshot` renders any currently-selected Figma node as a PNG screenshot.
+Ask the user to select each image node in Figma, then call the tool.
+
+```
+// 1. Ask: "In Figma, please click the [Hero Background] layer to select it."
+// 2. After confirmation:
+figma_get_screenshot({})
+// 3. The returned image is a 1× screen-capture PNG. Save it to src/assets/images/.
+```
+
+**Limitations:**
+
+- 1× resolution — suitable as a placeholder but blurry on retina screens
+- Rasterizes all vectors — logos become PNGs
+- May include surrounding canvas elements
+
+Label these assets clearly in the manifest:
+
+```typescript
+// TODO: Re-export at 2× via Tier 1 or Tier 2 — current version is 1× screen capture
+heroBg: 'assets/images/hero-background.png',
+```
+
+---
+
+### Tier 4 — CSS Fallback (Last Resort Only)
+
+**Use only when** an asset is confirmed to be a pure color fill or a gradient — not when
+an image exists in Figma but extraction failed. Never use Tier 4 because extraction
+feels difficult.
+
+```scss
+// Only acceptable when the Figma layer is genuinely a gradient, not a photo
+.hero-banner {
+  // TODO: Replace with real asset — extraction blocked (no file key, no session URL)
+  background: linear-gradient(135deg, #0d1b3e 0%, #1a0533 100%);
+}
+```
+
+If you use Tier 4, add the `TODO` comment and include it in the post-session handoff
+notes to the user.
 
 ---
 
 ## Step 3 — Build an Asset Manifest
 
-After extraction, maintain an asset manifest so the implementation phase knows exactly where each asset lives. Add it as a comment at the top of the component's SCSS file, or as a `_assets.ts` constant file:
+After extraction, create a manifest so the implementation phase uses consistent paths:
 
 ```typescript
-// src/app/dashboard/_assets.ts — generated during Figma asset extraction
+// src/app/<page>/_assets.ts — generated during Phase 1h
 
-export const DASHBOARD_ASSETS = {
+export const PAGE_ASSETS = {
   // Figma node 123:456 — "Hero/Background" layer
+  // Tier 1: REST API PNG export at 2×
   heroBg: 'assets/images/hero-background.jpg',
 
   // Figma node 789:012 — "_Logo/Main" layer
+  // Tier 1: REST API SVG export
   logo: 'assets/icons/logo.svg',
 
   // Figma node 345:678 — "Card/Thumbnail" layer
+  // Tier 2: localhost URL download (TODO: re-export via REST API)
   cardThumbnail: 'assets/images/card-thumbnail.png',
 } as const;
 ```
 
-Name files descriptively based on the Figma layer name, not the Figma node ID.
+Name files by layer purpose, not by node ID.
 
 ---
 
 ## Step 4 — Angular Usage Patterns
 
-### Static images via `ngOptimizedImage`
-
-For images where you control the `src` (photos, thumbnails, hero images):
+### Static images via `NgOptimizedImage`
 
 ```html
-<!-- Preferred: ngOptimizedImage for LCP/CLS optimization -->
+<!-- Preferred: NgOptimizedImage for LCP/CLS optimization -->
 <img ngSrc="assets/images/hero-background.jpg" width="1440" height="600" alt="Dashboard hero background" priority />
 ```
 
-Import `NgOptimizedImage` in the component's `imports` array.
+Import `NgOptimizedImage` in the component's `imports` array. Note: `NgOptimizedImage`
+does **not** work for inline base64 images.
 
 ### Background images via SCSS
-
-For decorative background images (no alt text needed):
 
 ```scss
 .dashboard-hero {
@@ -258,38 +356,38 @@ For decorative background images (no alt text needed):
 }
 ```
 
-### Inline SVG for logos/icons that need CSS control
+### Inline SVG logos
 
 ```html
-<!-- Direct <img> for SVG logos -->
 <img src="assets/icons/logo.svg" alt="Company logo" width="120" height="40" />
-
-<!-- Or Angular component that inlines SVG for color control -->
 ```
 
-### Igx-icon for Ignite UI icons (do NOT use custom assets)
+### Igx-icon for kit icons (do NOT extract as assets)
 
-If the Figma design uses icons from the standard Ignite UI icon set (Material icons):
+Standard Material icons and `imx-icons` (Material Icons Extended) are registered at
+runtime — never extract them as image files:
 
 ```html
-<igx-icon>settings</igx-icon> <igx-icon family="material">arrow_forward</igx-icon>
+<igx-icon>settings</igx-icon> <igx-icon family="imx-icons" name="credit-cards"></igx-icon>
 ```
 
-Never extract these as SVG/PNG assets — they are rendered by the `igx-icon` component.
+See `figma-component-map.md § Material Icons Extended` for setup.
 
 ---
 
 ## Pitfalls
 
-| Pitfall                                                              | Consequence                                                       | Fix                                                                                  |
-| -------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Using `figma_get_screenshot` as the extracted asset                  | 1× screen-capture — rasterizes vectors, loses original resolution | Always use Method A or B via the REST API                                            |
-| Using localhost URLs from `figma_get_design_context` as assets       | Expire when Figma closes; can't be committed                      | Use localhost URLs only to identify the node ID, then run REST API extraction        |
-| Extracting Ignite UI component instances as images                   | Produces a static screenshot instead of an interactive component  | Identify layer names from `figma-component-map.md`; those are components, not assets |
-| Downloading SVGs with `svg_outline_text=true` (default)              | All text converted to paths; larger file; no accessibility        | Set `svg_outline_text=false` for logos and icons meant to be used in code            |
-| Exporting PNG at `scale=1`                                           | Blurry on HiDPI/retina screens                                    | Always use `scale=2`; reference at half size in HTML (`width` / 2)                   |
-| Storing Figma export URLs in source code                             | URLs expire in 14–30 days; breaks production                      | Only store the local `src/assets/...` paths in code                                  |
-| Naming assets by node ID ("node-123-456.png")                        | Unmaintainable, breaks if Figma is reorganized                    | Name by layer purpose: `hero-background.jpg`, `company-logo.svg`                     |
-| Extracting background colors as images                               | Inflates bundle size, breaks theming                              | Colors → use CSS custom properties or Ignite UI theming tokens                       |
-| Not creating `src/assets/images/` and `src/assets/icons/` dirs first | `curl` write fails silently or to wrong path                      | Always run `mkdir -p src/assets/images src/assets/icons` first                       |
-| Large SVGs from complex illustrations                                | Slow render, large bundle                                         | Consider PNG for illustrations > 50KB SVG; SVG is best for logos/icons               |
+| Pitfall                                                      | Consequence                                                      | Fix                                                                                    |
+| ------------------------------------------------------------ | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Skipping asset extraction entirely (gradient placeholders)   | Implementation looks nothing like the design; Phase 5 fails      | Always use at least Tier 2 or Tier 3 — never skip                                      |
+| Not asking for the file key before starting extraction       | Defaults to Tier 2/3 when Tier 1 was actually possible           | Ask for the file key at the start of Phase 1h (see Step 0)                             |
+| Using localhost URLs without downloading them in the session | URLs expire when Figma closes; assets become broken              | Download with `curl` immediately; commit the files                                     |
+| Naming assets by node ID ("node-123-456.png")                | Unmaintainable; breaks if Figma is reorganized                   | Name by layer purpose: `hero-background.jpg`, `company-logo.svg`                       |
+| Using `figma_get_screenshot` for SVG logos                   | Logo is rasterized to PNG; loses vector scalability              | Use Tier 1 Method B with `format=svg` instead; fall back to Tier 2 only if unavailable |
+| Exporting PNG at `scale=1`                                   | Blurry on HiDPI/retina screens                                   | Always use `scale=2`                                                                   |
+| Storing Figma CDN export URLs in source code                 | URLs expire in 14–30 days; breaks production                     | Only store local `src/assets/...` paths in code                                        |
+| Downloading SVG with `svg_outline_text=true` (default)       | All text converted to paths; larger file; no accessibility       | Set `svg_outline_text=false`                                                           |
+| Extracting Ignite UI component instances as images           | Produces a static screenshot instead of an interactive component | Identify layer names from `figma-component-map.md`; those are components, not assets   |
+| Extracting background colors or gradients as images          | Inflates bundle size, breaks theming                             | Colors → CSS custom properties or Ignite UI theming tokens                             |
+| Not creating asset directories before running curl           | Writes fail silently or to the wrong path                        | Always run `mkdir -p src/assets/images src/assets/icons` first                         |
+| Large SVGs from complex illustrations                        | Slow render, large bundle                                        | Consider PNG for illustrations > 50KB as SVG; SVG is best for logos and icons          |

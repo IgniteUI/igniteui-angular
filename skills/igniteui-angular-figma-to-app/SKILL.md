@@ -54,7 +54,7 @@ server is not connected; do not surface raw errors to the user at this point.
 | Server                | Verification call                              | Success signal                      |
 | --------------------- | ---------------------------------------------- | ----------------------------------- |
 | **Figma**             | `figma_get_metadata` with no `nodeId`          | Returns page list or selection info |
-| **Ignite UI CLI**     | `list_components` with `framework: "angular"`  | Returns component list              |
+| **Ignite UI CLI**     | `igniteui_cli_list_components` with `framework: "angular"` | Returns component list              |
 | **Ignite UI Theming** | `theming_detect_platform`                      | Returns platform info               |
 | **Playwright**        | `playwright_browser_navigate` to `about:blank` | Navigates without error             |
 
@@ -76,6 +76,10 @@ Check whether the current working directory contains a valid Angular + Ignite UI
 
 - Note the package layout: `igniteui-angular` (open-source) or `@infragistics/igniteui-angular` (licensed)
 - Note the Angular version from `package.json`
+- **Check `.vscode/mcp.json` for all four required MCP server entries** — `figma`, `igniteui-cli`,
+  `igniteui-theming`, and `playwright`. If any are missing, add them from
+  [references/mcp-setup.md](references/mcp-setup.md) before continuing. Projects scaffolded with
+  `npx igniteui-cli new` have `igniteui-cli` pre-wired but typically lack the other three.
 - Check whether `.vscode/mcp.json` exists in the project root. If it does not, run
   `npx -y igniteui-cli ai-config` from the project root to auto-generate the Ignite UI
   CLI MCP server configuration and copy the Agent Skills — this ensures `list_components`
@@ -138,8 +142,17 @@ If the user confirms scaffolding:
 **Goal:** understand the full design structure and capture all data needed for
 implementation and validation before writing any code.
 
-> **Rate-limit awareness:** Figma MCP calls count against plan quotas. Use
-> `figma_get_metadata` first to discover structure cheaply, then call
+> **Rate-limit awareness:** Figma MCP calls count against plan quotas.
+> Starter plan: **6 calls/month**. Organization plan: 200/day. Enterprise: 600/day.
+>
+> Estimated call budget for a 5-artboard design:
+> `figma_get_metadata` ×2 + `figma_get_screenshot` ×5 + `figma_get_design_context` ×5 + `figma_get_variable_defs` ×1 + `figma_get_code_connect_map` ×5 = **~18 calls**.
+> **Starter plan users will exceed their monthly quota in a single session.** Strategies:
+> 1. Call `figma_get_variable_defs` only **once** for the root page (variables are file-scoped, not artboard-scoped — calling it per artboard wastes quota on duplicate data).
+> 2. Prioritize `figma_get_design_context` over additional screenshots if quota is tight.
+> 3. For large files, consider implementing one artboard per monthly budget cycle.
+>
+> Use `figma_get_metadata` first to discover structure cheaply, then call
 > `figma_get_design_context` only for the artboards you will implement.
 
 ### 1a: Discover Pages and Artboards
@@ -167,48 +180,83 @@ Wait for confirmation before proceeding.
 
 ### 1c: Capture Reference Screenshots
 
-For each target artboard, call `figma_get_screenshot` and **save the screenshot and its
-artboard dimensions** — you will compare against these in Phase 5.
+> **IMPORTANT — Figma MCP is session-bound.** The `figma_get_screenshot` tool returns a
+> screenshot of the **currently selected node in the Figma desktop app**, regardless of any
+> `nodeId` parameter passed. To capture each artboard, you must ask the user to navigate
+> to it in Figma first.
 
-```
-figma_get_screenshot({ nodeId: "<artboardId>" })
-// Store: { nodeId, screenshot, width: <from metadata>, height: <from metadata> }
-```
+For each target artboard:
+
+1. Ask the user: *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
+2. Wait for confirmation, then call:
+   ```
+   figma_get_screenshot({})
+   // Store: { artboardName, screenshotFile, width: <from metadata>, height: <from metadata> }
+   ```
+3. Repeat for each artboard — do **not** batch these calls before the user navigates.
+
+After all artboards are captured, confirm the count:
+> *"I have N reference screenshots: [list artboard names]. Proceeding to design context extraction."
+> If any are missing, navigate to that artboard in Figma and recapture before continuing.*
 
 > Never skip this step. The screenshots are your ground truth for Phase 5 validation.
 
 ### 1d: Extract Design Context
 
-For each target artboard, call `figma_get_design_context`:
+> **IMPORTANT — Figma MCP is session-bound.** The `figma_get_design_context` tool returns
+> context for the **currently selected node in the Figma desktop app**. You must ask the
+> user to navigate to each artboard before calling this tool.
+>
+> **Output format:** `figma_get_design_context` returns **React + Tailwind CSS code**, not
+> structured Angular metadata. The response is explicitly tagged *"SUPER CRITICAL: The
+> generated React+Tailwind code MUST be converted to match the target project's technology
+> stack."* Do **not** copy the React code into Angular files. Instead, read the JSX to extract
+> the information below. Image localhost URLs in the output are session-scoped previews —
+> do **not** use them as final assets (see Phase 1h and `references/asset-extraction.md`).
 
-```
-figma_get_design_context({
-  nodeId: "<artboardId>",
-  clientLanguages: "typescript",
-  clientFrameworks: "angular",
-  artifactType: "WEB_PAGE_OR_APP_SCREEN",
-  taskType: "CREATE_ARTIFACT"
-})
-```
+For **each** target artboard:
 
-From the response, extract:
+1. Ask the user: *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
+2. Wait for confirmation, then call:
+   ```
+   figma_get_design_context({
+     clientLanguages: "typescript",
+     clientFrameworks: "angular",
+     artifactType: "WEB_PAGE_OR_APP_SCREEN",
+     taskType: "CREATE_ARTIFACT"
+   })
+   ```
+3. From the React+Tailwind output, extract:
 
-- **Component layer names** — match against `references/figma-component-map.md`
-- **Layout structure** — frame type (auto-layout vs fixed), direction, gap, padding
-- **Typography** — font family, weights, sizes used in the design
-- **Color values** — used fills, strokes, backgrounds in this artboard
-- **Active kit variant** — look for library component references whose source file name
-  contains "Material", "Fluent", "Bootstrap", or "Indigo". This determines the
-  `designSystem` value for Phase 3 theming. If it cannot be determined here, defer
-  to Step 1e variable names and the visual heuristics in
-  [references/design-token-bridge.md](references/design-token-bridge.md).
+   - **Component layer names** (`data-name` attributes in the JSX) — match against `references/figma-component-map.md`
+   - **Layout structure** — `flex`, `grid`, `gap-*`, `p-*`, `w-*`, `h-*` Tailwind classes on container divs
+   - **Typography** — `font-['...']`, `text-[...]`, `font-weight` classes
+   - **Surface colors** — `bg-[#XXXXXX]` classes on container `<div>` elements that wrap major sections
+     (these become plain `<div>` wrappers in Angular with `background: #XXXXXX`)
+   - **Border/roundness** — `rounded-[...]`, `border`, `border-[...]` classes on containers and cards
+   - **Input type variants** — look for hidden zero-size nodes (`size-[0.5px]`) whose `data-name`
+     contains a component type (e.g. `"Date Picker Type"`, `"Combo Input"`). These are the
+     Indigo.Design kit's **variant indicator nodes** — their name encodes which input variant
+     (border/line/box) is active for that component.
+   - **Chart series colors** — for any chart layer, note the fill colors on its series paths
+   - **Action controls** — list every button, icon button, and toolbar action visible in the artboard;
+     this is your authoritative inventory — do not add actions not present in the design
+   - **Active kit variant** — look for library component references whose source file name
+     contains "Material", "Fluent", "Bootstrap", or "Indigo". If not found here, defer to
+     Phase 1e variable names and [references/design-token-bridge.md](references/design-token-bridge.md).
+
+4. Record all surface containers in the **Surfaces Spec** (added to Phase 1g).
 
 ### 1e: Extract Design Tokens
 
-For each target artboard, call `figma_get_variable_defs`:
+> Figma variables are **file-scoped**, not artboard-scoped. Call `figma_get_variable_defs`
+> **once** for the root page node — not once per artboard. Calling it multiple times returns
+> identical data and wastes plan quota.
+
+Call once:
 
 ```
-figma_get_variable_defs({ nodeId: "<artboardId>" })
+figma_get_variable_defs({})
 ```
 
 The response contains a map of variable names to values, e.g.:
@@ -235,7 +283,9 @@ figma_get_code_connect_map({ nodeId: "<artboardId>" })
 
 ### 1g: Build the Decomposition Table
 
-Before writing any code, produce a decomposition table for **each artboard**:
+Before writing any code, produce **two tables** for **each artboard**.
+
+#### Table A — Ignite UI Components
 
 | Figma Layer Name           | Visual Role        | Ignite UI Component     | Design Tokens Used  | Data Type       |
 | -------------------------- | ------------------ | ----------------------- | ------------------- | --------------- |
@@ -246,46 +296,61 @@ Before writing any code, produce a decomposition table for **each artboard**:
 Fallback to plain semantic HTML only when no Ignite UI component can match the layer
 after consulting `references/figma-component-map.md`. Document the reason inline.
 
-Present the decomposition table to the user for review before proceeding.
+#### Table B — Layout Surfaces
+
+Record every **non-IgxXxx container** that carries visual properties (background color,
+border, padding, shadow). These are plain `<div>` wrappers in Angular — not Ignite UI
+components — but they are critical to visual fidelity. Populate this table from the
+`bg-[...]`, `rounded-[...]`, `border`, `p-[...]`, and `shadow-[...]` Tailwind classes
+observed on container divs in the Phase 1d design context output.
+
+| Figma Frame / Container Name | Background | Border-Radius | Padding | Border | Shadow | Encloses (child sections) |
+| ---------------------------- | ---------- | ------------- | ------- | ------ | ------ | ------------------------- |
+| _e.g._ `Budget Categories`  | `#222222`  | `4px`         | `24px`  | none   | none   | Categories list, Add button |
+| _e.g._ `Friend Card`        | `#222222`  | `8px`         | `24px 16px` | `1px solid #333` | none | Avatar, name, phone, email, buttons |
+
+> **Rule:** if a section appears on a surface in Figma (i.e. its container has a
+> non-transparent background), it **must** have that background in the Angular implementation.
+> If a section floats on the page background (transparent), do **not** add a surface wrapper.
+> Never infer surface structure from another page — always derive it from the design context
+> for the specific artboard being implemented.
+
+Present both tables to the user for review before proceeding.
 
 ### 1h: Extract Image Assets
 
 Read [references/asset-extraction.md](references/asset-extraction.md) in full before
 running any extraction.
 
-From the decomposition table, identify every layer that is a **static image asset**
-(photo, background image, logo, custom icon, illustration) rather than an Ignite UI
-component. Do **not** extract Indigo.Design UI Kit component instances — those become
-Angular components.
+**Zero-placeholder policy:** every image visible in the Figma design must be extracted
+and committed to `src/assets/` before Phase 4. Gradient placeholders are not acceptable.
 
-**Detection signals:** layer names containing `image`, `photo`, `hero`, `banner`,
-`thumbnail`, `logo`, `illustration`, `bg`, `background`; large RECTANGLE nodes in
-hero/banner positions; VECTOR/GROUP nodes for logos and custom icons.
+**Step 0 — Get the file key first.** Ask the user to share the Figma file URL or key
+before attempting any extraction. In Figma desktop: right-click the file tab →
+**Copy link**. Without it you fall back to Tier 2 or Tier 3 (see below).
 
-**Choose the extraction method based on asset type — always at the highest fidelity.**
-Speed is not a criterion here; asset extraction is a one-time operation per build.
+From the decomposition tables, identify every layer that is a **static image asset**
+(photo, background, logo, custom icon, illustration) rather than an Ignite UI component.
+Do **not** extract Indigo.Design UI Kit component instances.
 
-| Asset type                                                         | Method                                                       | Reference section                |
-| ------------------------------------------------------------------ | ------------------------------------------------------------ | -------------------------------- |
-| Image fill — photo, texture, raster uploaded to Figma              | REST API `/v1/files/:key/images` → original source file      | `asset-extraction.md § Method A` |
-| Vector asset — logo, icon, illustration drawn in Figma             | REST API `/v1/images/:key?format=svg&svg_outline_text=false` | `asset-extraction.md § Method B` |
-| Raster node export — complex composition with no single `imageRef` | REST API `/v1/images/:key?format=png&scale=2`                | `asset-extraction.md § Method B` |
+**Use the four-tier decision tree from `asset-extraction.md`:**
 
-> **Do not use `figma_get_screenshot` or localhost URLs from `figma_get_design_context`
-> as final assets.** Both produce lower-quality output (1× screen captures or
-> session-scoped renderer URLs). See `asset-extraction.md § What NOT to use`.
+| Tier | Method | When to use |
+| ---- | ------ | ----------- |
+| **1** | REST API `/v1/files/:key/images` (Method A) or `/v1/images/:key` (Method B) | File key available — always the highest fidelity |
+| **2** | Download localhost URLs from `figma_get_design_context` with `curl` | No file key; Figma session is active; design context was already called |
+| **3** | `figma_get_screenshot` per node (ask user to select each node) | No file key; no localhost URLs |
+| **4** | CSS gradient/color placeholder with `// TODO` comment | Only for confirmed pure-color fills — never as a shortcut |
 
-The Figma access token used for the MCP server is the same token required for all REST
-API calls (`X-Figma-Token` header). Extract the file key from the Figma URL:
-`https://figma.com/design/:fileKey/...` → `fileKey`.
-
-After downloading, save assets to:
-
+After extraction, save assets to:
 - `src/assets/images/` — raster images (PNG, JPG)
 - `src/assets/icons/` — SVG icons and logos
 
 Build a concise asset manifest (see `asset-extraction.md § Build an Asset Manifest`)
 so the implementation phase uses consistent paths.
+
+If you used Tier 2 or Tier 3 for any asset, tell the user which ones need re-export
+once the file key becomes available.
 
 ---
 
@@ -354,20 +419,46 @@ before running any theming tool.
 Open `src/styles.scss` (or the project's global stylesheet). Look for an active
 `@include theme(...)` or `@include palette(...)` call.
 
-- **Theme found** → do **not** call `theming_create_theme` or `theming_create_palette`
-  unless the user explicitly asks for a global theme change. Reuse the existing palette.
-  Skip to step 3d.
+- **Theme found, but variant mismatch** — if the existing theme is **light** and the
+  Figma design is **dark** (or vice versa), treat this as a theme change and proceed with
+  3b–3c. A light theme applied to a dark design produces wrong background colors on every
+  component and will fail every Phase 5 check.
+- **Theme found, variant matches** → do **not** call `theming_create_theme` or
+  `theming_create_palette` unless the user explicitly asks for a global theme change.
+  Reuse the existing palette. Skip to step 3d.
 - **No theme found** → proceed with 3b.
+
+Detect the Figma design's variant from Phase 1e: if a `color/mode` variable exists,
+use its value. Otherwise, use the artboard background color: near-black (`#121212`,
+`#1a1a1a`, `#000`) → `"dark"`; near-white (`#fff`, `#f5f5f5`) → `"light"`.
 
 ### 3b: Resolve Design System
 
 You don't need to call `theming_detect_platform` to confirm the Angular package layout. We already did that in Phase 0.
 
-To determine the design system, use this precedence order:
+To determine the design system, use this **strict precedence order**. Stop at the first
+signal that gives a clear answer:
 
-1. An explicit user request ("make it Material", "use Fluent")
-2. An existing theme variant in the project
-3. The Figma file's metadata and/or visual language (Material-like shadows → Material; sharp corners + flat surfaces → Bootstrap or Fluent; rounded cards → Indigo)
+1. **Explicit user request** — "make it Material", "use Fluent", etc.
+2. **Library source name in design context** — the `figma_get_design_context` or
+   `figma_get_metadata` response may reference the Figma source library file name
+   (e.g. `"Indigo.Design UI Kit for Material"` → `material`).
+3. **Variable collection names from Phase 1e** — collection names like
+   `Material/color/primary` identify the kit variant directly.
+4. **Elevation variable structure** — inspect the `Elevations/*` variables in
+   `figma_get_variable_defs` output:
+   - **Three-layer DROP_SHADOW** (umbra + penumbra + ambient) → **Material Design**
+   - **Single-layer DROP_SHADOW** → Indigo, Fluent, or Bootstrap
+5. **Palette shade naming** — variables named `primary/500`, `primary/100`–`primary/900`
+   follow the Material 100–900 palette convention → likely **Material**.
+6. **Visual heuristics** (use only when all above are inconclusive):
+   prominent shadows + ripple effects → `"material"`;
+   flat surfaces + sharp corners + Segoe/Inter font → `"fluent"`;
+   component borders + Bootstrap grid → `"bootstrap"`;
+   rounded purple/indigo accents without Material shadows → `"indigo"`.
+
+> **Never use font name as a primary signal.** "Titillium Web" is the default body font
+> in the Indigo.Design UI Kit for Material — it is not exclusive to the Indigo design system.
 
 Supported values: `material` (default), `bootstrap`, `fluent`, `indigo`.
 
@@ -385,9 +476,20 @@ fontFamily      ← from "typography/font-family" or "typography/body/font-famil
 
 Then call in order:
 
+> **Parameter names differ between tools** — `theming_create_palette` uses `primary`,
+> `secondary`, `surface` (not `primaryColor` etc.). `theming_create_theme` uses
+> `primaryColor`, `secondaryColor`, `surfaceColor`. Do not mix them up.
+
+> **fontFamily double-quote bug** — `theming_create_theme` may double-wrap the fontFamily
+> string (e.g. `""'Titillium Web', sans-serif""`) in its Sass output, producing invalid Sass.
+> If you see double-quoted strings in the generated output, strip the outer quotes before
+> applying to `styles.scss`.
+
 ```
 theming_create_palette({
-  primaryColor, secondaryColor, surfaceColor,
+  primary: primaryColor,
+  secondary: secondaryColor,
+  surface: surfaceColor,
   platform: "angular",
   licensed: <true if @infragistics package>
 })
@@ -458,6 +560,25 @@ See `references/design-token-bridge.md § Spacing, Sizing, and Roundness`.
 9. For DV components (charts, maps, gauges), set visual properties via component inputs
    as described in [references/figma-component-map.md](references/figma-component-map.md)
 10. After implementing each major section, save and check in the browser (if dev server is running)
+11. **Global input type:** if the Figma design uses `border`-type inputs globally (detected
+    via variant indicator nodes in Phase 1d), set the `IGX_INPUT_GROUP_TYPE` injection token
+    once in `app.config.ts` rather than `type="border"` on every component. This covers all
+    compound components that wrap `IgxInputGroup` internally (`IgxSimpleCombo`,
+    `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, `IgxTimePickerComponent`,
+    `IgxSelectComponent`):
+    ```typescript
+    // app.config.ts
+    import { IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
+    // in providers array:
+    { provide: IGX_INPUT_GROUP_TYPE, useValue: 'border' }
+    ```
+12. **Layout surfaces:** for every entry in the Phase 1g Surfaces table, add a CSS class
+    with the recorded `background`, `border-radius`, `padding`, `border`, and `box-shadow`.
+    Never leave a section transparent if the Figma surface has a background. Never add a
+    background to a section that floats on the page background in the Figma design.
+13. **Implement only controls that appear in the Figma artboard.** Do not add toolbar
+    buttons, actions, or UI elements that look useful but are not visible in the design
+    context output for that artboard.
 
 ### Layout Strategy
 
@@ -523,41 +644,49 @@ playwright_browser_navigate({ url: "<target route>" })  // re-navigate after res
 
 ### 5c: Capture and Compare Screenshots
 
-Take a browser screenshot and compare it visually against the Phase 1c Figma screenshot:
+> **IMPORTANT — Figma MCP is session-bound.** To get a fresh Figma reference screenshot
+> for comparison, ask the user to select the artboard in Figma, then call
+> `figma_get_screenshot({})`. Alternatively, use the Phase 1c reference screenshots
+> already saved to disk.
 
-```
-playwright_browser_take_screenshot({ type: "png" })
-```
+For **each target artboard** (run the full 5c–5f loop once per page):
 
-Do a section-by-section visual comparison: top bar → sidebar → content → footer.
+1. Ask the user: *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
+2. Navigate the browser to the corresponding route.
+3. Take a browser screenshot:
+   ```
+   playwright_browser_take_screenshot({ type: "png" })
+   ```
+4. Do a **section-by-section** visual comparison against the Phase 1c reference:
+   - top bar → sidebar → **every section in the Phase 1g Surfaces table** → footer
+5. Do **not** advance to the next artboard until no Critical/Major issues remain on the current one.
 
 ### 5d: Measure Computed Styles
 
-For each section with visible differences, use `playwright_browser_evaluate` to extract
-exact values. Pass code as a **plain JavaScript string**, not a TypeScript function
-reference (see [references/validation-patterns.md](references/validation-patterns.md)
-for why and for reusable measurement snippets):
+For each section with visible differences — and **mandatorily for every entry in the
+Phase 1g Surfaces table** — use `playwright_browser_evaluate` to extract exact values.
+Pass code as a **plain JavaScript function string** using the `function` parameter
+(see [references/validation-patterns.md](references/validation-patterns.md)):
 
 ```
 playwright_browser_evaluate({
-  script: `
-    const el = document.querySelector('<selector>');
-    if (!el) return { error: 'not found' };
-    const s = getComputedStyle(el);
-    const r = el.getBoundingClientRect();
-    return {
-      fontSize: s.fontSize,
-      backgroundColor: s.backgroundColor,
-      padding: s.padding,
-      gap: s.gap,
-      height: r.height,
-      width: r.width
-    };
-  `
+  function: "() => { var el = document.querySelector('<selector>'); if (!el) return { error: 'not found' }; var s = getComputedStyle(el); var r = el.getBoundingClientRect(); return { fontSize: s.fontSize, backgroundColor: s.backgroundColor, padding: s.padding, borderRadius: s.borderRadius, border: s.border, gap: s.gap, height: Math.round(r.height), width: Math.round(r.width) }; }"
 })
 ```
 
-Compare the returned values against the Figma spec (from Phase 1d design context).
+**Surfaces audit (mandatory for every page):** For every section in the Phase 1g Surfaces
+table, assert:
+- `backgroundColor` is **not** `rgba(0, 0, 0, 0)` when the surface has a background color
+- `backgroundColor` **is** `rgba(0, 0, 0, 0)` when the design shows the section floating
+  on the page background (no card wrapper)
+- All child elements shown inside the surface card in Figma are enclosed within the card's
+  bounding rect in the DOM
+
+**Action controls audit (mandatory for every page):** Count and name all visible action
+buttons and toolbar controls. Compare against the Phase 1d inventory — any button not
+recorded in the Figma design context is fabricated and must be removed.
+
+Compare all returned values against the Figma spec (from Phase 1d design context).
 
 ### 5e: Classify and Report Mismatches
 

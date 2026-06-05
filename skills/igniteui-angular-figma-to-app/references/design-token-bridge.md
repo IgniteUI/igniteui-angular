@@ -21,11 +21,24 @@ The kits come in four design-system variants, each with light and dark themes:
 | Indigo                 | `Indigo.Design UI Kit` / `Indigo.Design System` | `"indigo"`               |
 
 **Identifying the active kit variant** is the first task in Phase 3 because it sets
-the `designSystem` parameter for `theming_create_theme`. Use these signals in order:
+the `designSystem` parameter for `theming_create_theme`. Use these signals in **strict
+precedence order** — stop at the first clear match:
 
-1. **Library source name** — `figma_get_design_context` and `figma_get_metadata` responses include references to the source library. Look for the library file name in the component instance data (e.g. `"Indigo.Design UI Kit for Material"`).
-2. **Variable collection name** — `figma_get_variable_defs` may return collection names that include the design system (e.g. `Material/color/primary`).
-3. **Visual heuristics** — see the [Design System Detection table](#design-system-detection-from-figma) below when no library name is available.
+1. **Library source name** — `figma_get_design_context` and `figma_get_metadata` responses
+   may reference the source library file name (e.g. `"Indigo.Design UI Kit for Material"`).
+2. **Variable collection name** — `figma_get_variable_defs` may return collection names
+   that include the design system (e.g. `Material/color/primary`).
+3. **Elevation variable structure** — inspect the `Elevations/*` variables from
+   `figma_get_variable_defs`:
+   - **Three-layer DROP_SHADOW** (umbra + penumbra + ambient, `Elevations/Shadow 01-03`) → **Material**
+   - **Single-layer DROP_SHADOW** → Indigo, Fluent, or Bootstrap
+4. **Palette shade naming** — variables named `primary/500`, `primary/100`–`primary/900`
+   follow the Material 100–900 convention → likely **Material**.
+5. **Visual heuristics** (use only when all above are inconclusive) — see the
+   [Design System Detection table](#design-system-detection-from-figma) below.
+
+> **Never use font name as a primary signal.** "Titillium Web" is the default body font
+> in the Indigo.Design UI Kit for Material — it is not exclusive to any single kit variant.
 
 All four kit variants share the same variable naming conventions described below. The Ignite UI theming system uses Figma variable collections that mirror its own token structure:
 
@@ -43,30 +56,34 @@ The `figma_get_variable_defs` response returns a flat map of resolved variable n
 
 ### Primary Color
 
-| Figma Variable Pattern | Theming Input                              | Notes                                   |
-| ---------------------- | ------------------------------------------ | --------------------------------------- |
-| `color/primary`        | `primaryColor` in `theming_create_palette` | Use the resolved hex value              |
-| `primary/500`          | `primaryColor`                             | The 500 shade is the seed color         |
-| `Primary/Default`      | `primaryColor`                             | Alternative naming in some kit versions |
-| `palette/primary/500`  | `primaryColor`                             | Prefixed naming pattern                 |
+| Figma Variable Pattern | Theming Input                         | Notes                                   |
+| ---------------------- | ------------------------------------- | --------------------------------------- |
+| `color/primary`        | `primary` in `theming_create_palette` | Use the resolved hex value              |
+| `primary/500`          | `primary`                             | The 500 shade is the seed color         |
+| `Primary/Default`      | `primary`                             | Alternative naming in some kit versions |
+| `palette/primary/500`  | `primary`                             | Prefixed naming pattern                 |
+
+> **Parameter names:** `theming_create_palette` uses `primary`, `secondary`, `surface`
+> (short names). `theming_create_theme` uses `primaryColor`, `secondaryColor`,
+> `surfaceColor` (long names). Do **not** mix them up.
 
 ### Secondary / Accent Color
 
-| Figma Variable Pattern | Theming Input                                | Notes                              |
-| ---------------------- | -------------------------------------------- | ---------------------------------- |
-| `color/secondary`      | `secondaryColor` in `theming_create_palette` | —                                  |
-| `secondary/500`        | `secondaryColor`                             | —                                  |
-| `Secondary/Default`    | `secondaryColor`                             | —                                  |
-| `color/accent`         | `secondaryColor`                             | Some kit variants call it "accent" |
+| Figma Variable Pattern | Theming Input                           | Notes                              |
+| ---------------------- | --------------------------------------- | ---------------------------------- |
+| `color/secondary`      | `secondary` in `theming_create_palette` | —                                  |
+| `secondary/500`        | `secondary`                             | —                                  |
+| `Secondary/Default`    | `secondary`                             | —                                  |
+| `color/accent`         | `secondary`                             | Some kit variants call it "accent" |
 
 ### Surface / Background Color
 
-| Figma Variable Pattern | Theming Input                              | Notes               |
-| ---------------------- | ------------------------------------------ | ------------------- |
-| `color/surface`        | `surfaceColor` in `theming_create_palette` | The main background |
-| `surface/default`      | `surfaceColor`                             | —                   |
-| `Surface`              | `surfaceColor`                             | —                   |
-| `color/background`     | `surfaceColor`                             | Alternative naming  |
+| Figma Variable Pattern | Theming Input                         | Notes               |
+| ---------------------- | ------------------------------------- | ------------------- |
+| `color/surface`        | `surface` in `theming_create_palette` | The main background |
+| `surface/default`      | `surface`                             | —                   |
+| `Surface`              | `surface`                             | —                   |
+| `color/background`     | `surface`                             | Alternative naming  |
 
 ### Gray / Neutral Palette
 
@@ -96,6 +113,19 @@ a custom gray override if they differ significantly.
 | `typography/heading/font-family` | `fontFamily`                                        | Use if heading font differs from body |
 | `font/primary`                   | `fontFamily`                                        | Alternative naming                    |
 | `font/display`                   | Pass as `displayFontFamily` if the tool supports it | Display/headline font                 |
+
+> **fontFamily double-quote bug:** `theming_create_theme` may double-wrap the fontFamily
+> string in its Sass output, producing invalid Sass such as `""'Titillium Web', sans-serif""`.
+> If you see this pattern, strip the outer quotes before applying to `styles.scss`:
+>
+> ```scss
+> // BAD (generated with bug)
+> $font-family:
+>   '' 'Titillium Web',
+>   sans-serif '';
+> // GOOD (manually corrected)
+> $font-family: 'Titillium Web', sans-serif;
+> ```
 
 > **Comma-separated font families** must be wrapped in parentheses when used in Sass
 > typography mixins:
@@ -184,13 +214,15 @@ Detect from the Figma artboard:
 
 ## Design System Detection from Figma
 
-| Figma Visual Signal                                                | Likely Design System  | `designSystem` Value    |
-| ------------------------------------------------------------------ | --------------------- | ----------------------- |
-| Prominent shadows, rounded cards, ripple effects                   | Material Design       | `"material"`            |
-| Flat surfaces, sharp corners, Segoe/Inter font                     | Microsoft Fluent      | `"fluent"`              |
-| Component borders, Bootstrap-like grid                             | Bootstrap             | `"bootstrap"`           |
-| Heavy use of purple/indigo accents, rounded corners                | Infragistics Indigo   | `"indigo"`              |
-| Explicit `$light-material-schema` or similar in Figma descriptions | Match the schema name | Use corresponding value |
+| Figma Visual Signal                                                | Likely Design System       | `designSystem` Value    |
+| ------------------------------------------------------------------ | -------------------------- | ----------------------- |
+| Three-layer `DROP_SHADOW` on elevation variables (`Shadow 01-03`)  | Material Design            | `"material"`            |
+| Prominent single-layer shadows, rounded cards, ripple effects      | Material Design            | `"material"`            |
+| Flat surfaces, sharp corners, Segoe/Inter font                     | Microsoft Fluent           | `"fluent"`              |
+| Component borders, Bootstrap-like grid                             | Bootstrap                  | `"bootstrap"`           |
+| Heavy use of purple/indigo accents, rounded corners, single shadow | Infragistics Indigo        | `"indigo"`              |
+| `primary/500`, `primary/900` palette shade naming                  | Material (100–900 palette) | `"material"`            |
+| Explicit `$light-material-schema` or similar in Figma descriptions | Match the schema name      | Use corresponding value |
 
 ---
 

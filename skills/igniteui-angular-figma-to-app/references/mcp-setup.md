@@ -12,7 +12,7 @@
 | Server                                     | Purpose                                             | Verify with                                    |
 | ------------------------------------------ | --------------------------------------------------- | ---------------------------------------------- |
 | **Figma**                                  | Read artboard structure, screenshots, design tokens | `figma_get_metadata` (no nodeId)               |
-| **Ignite UI CLI** (`igniteui-cli`)         | Component docs, API reference                       | `list_components`                              |
+| **Ignite UI CLI** (`igniteui-cli`)         | Component docs, API reference                       | `igniteui_cli_list_components`                 |
 | **Ignite UI Theming** (`igniteui-theming`) | Palette + component-level theming code              | `theming_detect_platform`                      |
 | **Playwright**                             | Browser automation, screenshots, DOM measurement    | `playwright_browser_navigate` to `about:blank` |
 
@@ -98,6 +98,26 @@ Or edit `~/.claude/settings.json`:
 If you use the Figma desktop app, the preferred setup is through the Figma MCP plugin for your editor. Follow Figma's official installation guide: https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/
 
 This approach connects to the currently open Figma file and the selected node without needing to pass node IDs manually.
+
+> **Session-binding behaviour:** The Figma MCP tools (`figma_get_screenshot`,
+> `figma_get_design_context`, `figma_get_variable_defs`) always operate on the
+> **currently selected node in the Figma desktop app**. Any `nodeId` parameter passed
+> to these tools is **silently ignored** — the tool returns data for whatever is
+> selected, not for the specified ID.
+>
+> **Consequence:** you cannot programmatically navigate between artboards by passing
+> node IDs. To get screenshots or design context for a specific artboard you **must**
+> ask the user to click that artboard frame in Figma before calling the tool.
+>
+> The correct pattern in every Phase 1 step:
+> ```
+> // 1. Ask the user
+> "In Figma, please click the [Artboard Name] frame to select it, then confirm."
+> // 2. Wait for confirmation
+> // 3. Only then call the tool
+> figma_get_screenshot({})
+> figma_get_design_context({ clientLanguages: "typescript", clientFrameworks: "angular", ... })
+> ```
 
 ### Verifying Figma MCP
 
@@ -331,7 +351,7 @@ The `playwright_browser_navigate` tool should open the page without error.
 | Screenshots are blank                                 | Make sure the dev server is running (`npm start`)           |
 | Page resets to `about:blank` after resize             | Always re-navigate after `playwright_browser_resize`        |
 | Console shows `ERR_CONNECTION_REFUSED`                | The Angular dev server is not running                       |
-| `browser_evaluate` fails with `__name is not defined` | Pass a plain JS string, not a TypeScript function reference |
+| `browser_evaluate` fails with `__name is not defined` | Pass code using the `function` parameter (not `script`): `playwright_browser_evaluate({ function: "() => { ... }" })` |
 | `playwright_browser_take_screenshot` returns empty    | Re-navigate to the target URL first                         |
 
 ---
