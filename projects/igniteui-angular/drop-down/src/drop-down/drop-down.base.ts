@@ -173,7 +173,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * the IgxDropDownNavigationDirective host element.
      */
     public get activeDescendant (): string | null {
-        return this.focusedItem ? this.focusedItem.id : null;
+        return this.focusedItem?.id ?? null;
     }
 
     /**
