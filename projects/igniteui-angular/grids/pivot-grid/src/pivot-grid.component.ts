@@ -190,7 +190,6 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
     preserveWhitespaces: false,
     selector: 'igx-pivot-grid',
     templateUrl: 'pivot-grid.component.html',
-    styleUrl: 'pivot-grid.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [
         IgxGridCRUDService,
