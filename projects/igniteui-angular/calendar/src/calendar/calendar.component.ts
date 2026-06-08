@@ -10,7 +10,7 @@ import {
 	ViewChildren,
 	QueryList,
 	booleanAttribute,
-    HostListener,
+	HostListener, ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -70,7 +70,19 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html',
-    imports: [NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, IgxDateFormatterPipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
+    styleUrls: ['calendar.component.css', 'shared-themes/calendar-picker/calendar-picker.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        NgTemplateOutlet,
+        IgxCalendarScrollPageDirective,
+        IgxIconComponent,
+        IgxDaysViewComponent,
+        IgxMonthsViewComponent,
+        IgxYearsViewComponent,
+        IgxDateFormatterPipe,
+        IgxMonthViewSlotsCalendar,
+        IgxGetViewDateCalendar
+    ]
 })
 export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit {
     /**

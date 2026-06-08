@@ -1,28 +1,33 @@
-.form-title {
-    margin-bottom: 16px;
-}
-
-igx-input-group + igx-input-group {
-    margin-top: 32px;
-}
-
-.radio-group {
-    display: flex;
-    flex-flow: column nowrap;
-    margin-top: 16px;
-}
-
-.radio-group igx-radio+igx-radio {
-    margin-top: 8px;
-}
-
-.settings {
-    margin-left: 16px;
-    width: 100%;
-    justify-content: space-between;
-}
-
-:host button {
-    align-self: flex-start;
-    margin-top: 1.5rem;
+:host {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--demos-gap);
+	
+	.demo-sample {
+		display: flex;
+		flex-direction: column;
+		gap: var(--demos-gap);
+		padding: var(--content-spacing);
+		min-width: 320px;
+	}
+	
+	.demo-sample__form {
+		display: flex;
+		flex-direction: column;
+		gap: var(--demos-gap);
+	}
+	
+	.demo-sample__radio-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: var(--demos-gap);
+	}
+	
+	.demo-sample__form-in-list {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		gap: var(--demos-gap);
+	}
 }

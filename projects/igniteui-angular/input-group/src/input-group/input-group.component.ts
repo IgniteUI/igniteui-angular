@@ -7,14 +7,16 @@ import {
     DestroyRef,
     ElementRef,
     HostBinding,
-    HostListener, Input,
-    QueryList, booleanAttribute,
+    HostListener,
+    Input,
+    QueryList,
+    booleanAttribute,
     inject,
-    DOCUMENT,
+    ViewEncapsulation,
     AfterContentChecked
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from 'igniteui-angular/core';
-import { PlatformUtil, getComponentTheme } from 'igniteui-angular/core';
+import { getComponentTheme } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxHintDirective } from './directives-hint/hint.directive';
 import {
@@ -33,14 +35,14 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
 @Component({
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
+    styleUrl: 'input-group.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentChecked {
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
     private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
-    private document = inject(DOCUMENT);
-    private platform = inject(PlatformUtil);
     private cdr = inject(ChangeDetectorRef);
     private themeToken = inject<ThemeToken>(THEME_TOKEN);
 
@@ -114,9 +116,21 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     @HostBinding('class.igx-input-group--warning')
     public hasWarning = false;
 
-    /** @hidden */
-    @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
-    protected hints: QueryList<IgxHintDirective>;
+    /**
+     * @hidden
+     * Hints resolved via @ContentChildren — used for standalone input-group usage.
+     * Kept separate from _externalHints to avoid being overwritten by Angular's
+     * change detection re-evaluation of @ContentChildren, which caused hints
+     * projected through wrapper components (e.g. combo) to flicker/disappear.
+     */
+    @ContentChildren(IgxHintDirective, { read: IgxHintDirective, descendants: true })
+    protected _ownHints: QueryList<IgxHintDirective>;
+
+    /**
+     * Hints set explicitly by wrapper components (e.g. combo) via the `hints` setter.
+     * Takes precedence over _ownHints in `hasHints` to avoid CD timing conflicts.
+     */
+    private _externalHints: QueryList<IgxHintDirective>;
 
     @ContentChildren(IgxPrefixDirective, { read: IgxPrefixDirective, descendants: true })
     protected _prefixes: QueryList<IgxPrefixDirective>;
@@ -277,7 +291,15 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * ```
      */
     public get hasHints() {
-        return this.hints.length > 0;
+        // Prefer externally set hints (from wrapper components like combo)
+        // over @ContentChildren to avoid CD timing race conditions.
+        const hints = this._externalHints ?? this._ownHints;
+        return hints?.length > 0;
+    }
+
+    /** @hidden @internal */
+    public set hints(items: QueryList<IgxHintDirective>) {
+        this._externalHints = items;
     }
 
     /** @hidden @internal */
@@ -294,7 +316,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--suffixed')
     public get hasSuffixes() {
-        return this._suffixes.length > 0 || this.isFileType && this.isFilled;
+        return this._suffixes.length > 0 || (this.isFileType && this.isFilled && !this.disabled);
     }
 
     /** @hidden @internal */
@@ -329,8 +351,15 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--line')
     public get isTypeLine(): boolean {
         return this.type === 'line' && this._theme === 'material';
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--base')
+    public get isNotBorder(): boolean {
+        return this.type !== 'border' && this._theme === 'material';
     }
 
     /**
@@ -401,51 +430,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     @HostBinding('class.igx-input-group--border')
     public get isTypeBorder() {
         return this.type === 'border' && this._theme === 'material';
-    }
-
-    /**
-     * Returns true if the `IgxInputGroupComponent` theme is Fluent.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeFluent = this.inputGroup.isTypeFluent;
-     * }
-     * ```
-     */
-    @HostBinding('class.igx-input-group--fluent')
-    public get isTypeFluent() {
-        return this._theme === 'fluent';
-    }
-
-    /**
-     * Returns true if the `IgxInputGroupComponent` theme is Bootstrap.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeBootstrap = this.inputGroup.isTypeBootstrap;
-     * }
-     * ```
-     */
-    @HostBinding('class.igx-input-group--bootstrap')
-    public get isTypeBootstrap() {
-        return this._theme === 'bootstrap';
-    }
-
-    /**
-     * Returns true if the `IgxInputGroupComponent` theme is Indigo.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeIndigo = this.inputGroup.isTypeIndigo;
-     * }
-     * ```
-     */
-    @HostBinding('class.igx-input-group--indigo')
-    public get isTypeIndigo() {
-        return this._theme === 'indigo';
     }
 
     /**

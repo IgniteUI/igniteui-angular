@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 
 import {
     IgxGridComponent,
@@ -32,10 +32,6 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true })
     private grid1: IgxGridComponent;
 

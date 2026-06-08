@@ -38,6 +38,6 @@
     }
 
     @include b(igx-date-range-picker-buttons) {
-        @extend %igx-date-range-picker-buttons !optional;
+        //@extend %igx-date-range-picker-buttons !optional;
     }
 }

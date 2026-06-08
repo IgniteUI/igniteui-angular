@@ -1,0 +1,132 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-bottom-nav) {
+        @include e(panel) {
+            display: block;
+
+            &:focus {
+                outline-style: none;
+            }
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(menu) {
+            display: flex;
+            position: fixed;
+            justify-content: center;
+            align-items: center;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
+            height: rem(56px);
+            background: var-get($theme, 'background');
+            border-top: rem(1px) solid var-get($theme, 'border-color');
+            overflow: hidden;
+            z-index: 8;
+        }
+
+        @include e(menu, $m: top) {
+            inset-block-start: 0;
+            inset-block-end: inherit;
+            box-shadow: var-get($theme, 'elevation');
+        }
+
+        @include e(menu, $m: bottom) {
+            inset-block-start: inherit;
+            inset-block-end: 0;
+            box-shadow: var-get($theme, 'elevation');
+        }
+
+        @include e(menu-item) {
+            display: flex;
+            position: relative;
+            flex-flow: column nowrap;
+            flex: 1;
+            gap: rem(4px);
+            align-items: center;
+            justify-content: center;
+            min-width: rem(80px);
+            max-width: rem(168px);
+            height: 100%;
+            cursor: pointer;
+            user-select: none;
+            overflow: hidden;
+            padding: 0 rem(12px, 16px);
+            -webkit-tap-highlight-color: transparent;
+            outline-style: none;
+            color: var-get($theme, 'label-color');
+
+            igx-icon {
+                --component-size: 3;
+            }
+
+            [igxBottomNavHeaderIcon] {
+                display: flex;
+                position: relative;
+                justify-content: center;
+                color: var-get($theme, 'icon-color');
+                padding: 0 rem(8px);
+                height: rem(24px);
+                transform: translateZ(0);
+                transition: transform 0.15s $ease-in-out-quad;
+                z-index: 1;
+            }
+
+            [igxBottomNavHeaderLabel] {
+                @include type-style(caption) {
+                    margin: 0;
+                }
+
+                @include ellipsis();
+
+                color: var-get($theme, 'label-color');
+                max-width: 100%;
+                text-align: center;
+                transform: translateZ(0);
+                transition: transform 0.15s $ease-in-out-quad;
+                z-index: 1;
+            }
+        }
+
+        @include e(menu-item, $m: selected) {
+            transition:
+                color 0.15s $ease-in-out-quad,
+                opacity 0.25s $ease-in-out-quad;
+
+            [igxBottomNavHeaderIcon] {
+                color: var-get($theme, 'icon-selected-color');
+                inset-block-start: rem(-2px);
+                transform: translateY(-2px);
+            }
+
+            [igxBottomNavHeaderLabel] {
+                color: var-get($theme, 'label-selected-color');
+                transform: translateY(-2px) scale(1.166667);
+            }
+        }
+
+        @include e(menu-item, $m: disabled) {
+            cursor: default;
+            pointer-events: none;
+            opacity: 0.5;
+
+            [igxBottomNavHeaderIcon] {
+                color: var-get($theme, 'icon-disabled-color');
+            }
+
+            [igxBottomNavHeaderLabel] {
+                color: var-get($theme, 'label-disabled-color');
+            }
+        }
+    }
+}

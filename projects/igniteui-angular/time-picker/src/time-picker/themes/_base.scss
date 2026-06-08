@@ -1,0 +1,190 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-time-picker) {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
+        display: flex;
+        flex-flow: column nowrap;
+        border-radius: var-get($theme, 'border-radius');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color'),
+            var-get($theme, 'modal-elevation');
+        background: var-get($theme, 'background-color');
+        overflow: hidden;
+        min-width: fit-content;
+
+        igx-divider {
+            --ig-divider-color: #{var-get($theme, 'divider-color')};
+        }
+
+        @include e(header) {
+            display: flex;
+            flex-direction: column;
+            background: var-get($theme, 'header-background');
+            padding: rem(16px);
+        }
+
+        @include e(header-hour) {
+            @include type-style(h4);
+
+            display: flex;
+            color: var-get($theme, 'header-hour-text-color');
+            margin: 0;
+
+            [dir='rtl'] & {
+                flex-direction: row-reverse;
+                justify-content: flex-end;
+            }
+        }
+
+        @include e(main) {
+            flex: 1 1 auto;
+        }
+
+        @include e(column) {
+            width: rem(64px);
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: space-between;
+            align-items: center;
+            color: var-get($theme, 'text-color');
+            overflow: hidden;
+            gap: rem(4px);
+
+            &:focus,
+            &:active {
+                outline: none;
+            }
+        }
+
+        @include e(item) {
+            width: rem(46px);
+            padding: pad-block(rem(5px)) pad-inline(rem(10px));
+            border-radius: var-get($theme, 'active-item-border-radius');
+            height: var-get($theme, 'time-item-size');
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: sizable(var(--ig-body-2-font-size), var(--ig-body-2-font-size), var(--ig-body-1-font-size));
+            font-weight: sizable(var(--ig-body-2-font-weight), var(--ig-body-2-font-weight), var(--ig-body-1-font-weight));
+            font-style: sizable(var(--ig-body-2-font-style), var(--ig-body-2-font-style), var(--ig-body-1-font-style));
+            line-height: sizable(var(--ig-body-2-line-height), var(--ig-body-2-line-height), var(--ig-body-1-line-height));
+            letter-spacing: sizable(var(--ig-body-2-letter-spacing), var(--ig-body-2-letter-spacing), var(--ig-body-1-letter-spacing));
+            text-transform: sizable(var(--ig-body-2-text-transform), var(--ig-body-2-text-transform), var(--ig-body-1-text-transform));
+
+            &:focus,
+            &:active {
+                outline: none;
+            }
+
+            &:hover {
+                color: var-get($theme, 'hover-text-color');
+            }
+        }
+
+        @include e(item, $m: selected) {
+            @include type-style(h5);
+
+            margin: 0;
+            color: var-get($theme, 'selected-text-color');
+        }
+
+        @include e(item, $m: active) {
+            color: var-get($theme, 'active-item-foreground');
+            background: var-get($theme, 'active-item-background');
+
+            &:hover,
+            &:focus {
+                color: var-get($theme, 'active-item-foreground');
+            }
+        }
+
+        @include e(item, $m: disabled) {
+            color: var-get($theme, 'disabled-text-color');
+            background: var-get($theme, 'disabled-item-background');
+            pointer-events: none;
+        }
+
+        @include e(hourList) {
+            text-align: end;
+
+            [dir='rtl'] & {
+                order: 2;
+            }
+        }
+
+        @include e(minuteList) {
+            text-align: center;
+
+            [dir='rtl'] & {
+                order: 1;
+            }
+        }
+
+        @include e(secondsList) {
+            text-align: center;
+        }
+
+        @include e(ampmList) {
+            [dir='rtl'] & {
+                order: 3;
+            }
+        }
+
+        @include e(body) {
+            display: flex;
+            min-width: sizable(rem(290px), rem(314px), rem(360px));
+            padding-block: rem(16px);
+            justify-content: center;
+        }
+
+        @include e(buttons) {
+            display: flex;
+            min-height: sizable(rem(40px), rem(44px), rem(48px));
+            justify-content: flex-end;
+            align-items: center;
+            padding: rem(8px);
+            gap: rem(8px);
+        }
+
+        @include m(dropdown) {
+            min-width: sizable(rem(290px), rem(314px), rem(360px));
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color'),
+                var-get($theme, 'dropdown-elevation');
+
+            @include e(body) {
+                min-width: auto;
+            }
+        }
+
+        @include m(vertical) {
+            @include e(main) {
+                display: flex;
+                flex-grow: 1;
+            }
+
+            @include e(header) {
+                min-width: rem(168px);
+            }
+
+            @include e(body) {
+                flex-grow: 1;
+            }
+
+            @include e(buttons) {
+                align-items: flex-end;
+            }
+        }
+    }
+}

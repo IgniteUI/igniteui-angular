@@ -18,7 +18,7 @@ import { IgxButtonDirective } from '../../../directives/src/directives/button/bu
 import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
-const CSS_CLASS_LIST = 'igx-drop-down__list';
+const CSS_CLASS_LIST = 'igx-drop-down';
 const CSS_CLASS_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_INNER_SPAN = 'igx-drop-down__inner';
@@ -325,7 +325,7 @@ describe('IgxDropDown ', () => {
                 expect(focusedItem.componentInstance.itemIndex).toEqual(0);
                 expect(dropdown.collapsed).toEqual(false);
 
-                let dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+                let dropdownElement = fixture.debugElement.query(By.css('igx-drop-down'));
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownElement);
                 tick();
                 fixture.detectChanges();
@@ -343,7 +343,7 @@ describe('IgxDropDown ', () => {
                 dropdown.toggle();
                 tick();
                 fixture.detectChanges();
-                dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+                dropdownElement = fixture.debugElement.query(By.css('igx-drop-down'));
                 focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownElement);
                 tick();
@@ -373,7 +373,7 @@ describe('IgxDropDown ', () => {
                 let focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
                 expect(focusedItem).toBeDefined();
 
-                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+                const dropdownElement = fixture.debugElement.query(By.css('igx-drop-down'));
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownElement);
                 fixture.detectChanges();
                 focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
@@ -394,7 +394,7 @@ describe('IgxDropDown ', () => {
                 dropdown.toggle();
                 tick();
                 fixture.detectChanges();
-                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+                const dropdownElement = fixture.debugElement.query(By.css('igx-drop-down'));
                 dropdownElement.triggerEventHandler('keydown', UIInteractions.getKeyboardEvent('keydown', 'ArrowDown'));
                 tick();
                 fixture.detectChanges();
@@ -467,7 +467,7 @@ describe('IgxDropDown ', () => {
 
                 const selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
                 expect(selectedItem.componentInstance.itemIndex).toEqual(10);
-                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+                const dropdownElement = fixture.debugElement.query(By.css('igx-drop-down'));
                 UIInteractions.triggerEventHandlerKeyDown('Home', dropdownElement);
                 tick();
                 fixture.detectChanges();
@@ -572,7 +572,7 @@ describe('IgxDropDown ', () => {
             }));
             it('should provide correct event argument when closing through keyboard', fakeAsync(() => {
                 spyOn(dropdown.closing, 'emit').and.callThrough();
-                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+                const dropdownElement = fixture.debugElement.query(By.css('igx-drop-down'));
 
                 dropdown.toggle();
                 tick();
@@ -736,7 +736,7 @@ describe('IgxDropDown ', () => {
                 const selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
                 expect(selectedItem.componentInstance.itemIndex).toEqual(10);
 
-                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+                const dropdownElement = fixture.debugElement.query(By.css('igx-drop-down'));
                 UIInteractions.triggerEventHandlerKeyDown('End', dropdownElement);
                 tick();
                 fixture.detectChanges();
@@ -764,7 +764,7 @@ describe('IgxDropDown ', () => {
                 tick();
                 fixture.detectChanges();
 
-                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+                const dropdownElement = fixture.debugElement.query(By.css('igx-drop-down'));
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownElement);
                 tick();
                 fixture.detectChanges();
@@ -817,7 +817,7 @@ describe('IgxDropDown ', () => {
                 fixture.detectChanges();
                 expect(dropdown.items[10].focused).toEqual(true);
 
-                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
+                const dropdownElement = fixture.debugElement.query(By.css('igx-drop-down'));
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownElement);
                 fixture.detectChanges();
                 expect(dropdown.items[11].focused).toEqual(true);

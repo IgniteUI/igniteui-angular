@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+
+@include themed-block(igx-divider, indigo) {
+    --dash-interval: #{rem(3px)};
+}

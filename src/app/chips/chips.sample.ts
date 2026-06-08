@@ -15,7 +15,7 @@ import {
     IgxSuffixDirective,
     IgxSwitchComponent,
     IgxCircularProgressBarComponent,
-    IgSizeDirective,
+    IgSizeDirective, IgxLabelDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -71,7 +71,7 @@ icons.forEach((icon) => {
         IgxSwitchComponent,
         FormsModule,
         IgxAvatarComponent,
-        IgSizeDirective
+        IgxLabelDirective,
     ]
 })
 export class ChipsSampleComponent implements OnInit {
@@ -90,13 +90,6 @@ export class ChipsSampleComponent implements OnInit {
                     'warning',
                     'danger'
                 ]
-            }
-        },
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'large'
             }
         },
         disabled: {
@@ -118,6 +111,12 @@ export class ChipsSampleComponent implements OnInit {
             }
         },
         removable: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        draggable: {
             control: {
                 type: 'boolean',
                 defaultValue: false

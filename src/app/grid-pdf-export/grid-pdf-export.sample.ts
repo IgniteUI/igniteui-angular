@@ -1,5 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, DestroyRef, ViewChild, inject, signal } from '@angular/core';
 import {
     IgxGridComponent,
     IgxColumnComponent,
@@ -9,16 +8,11 @@ import {
     IgxHierarchicalGridComponent,
     IgxRowIslandComponent,
     IgxButtonDirective,
-    IgxSwitchComponent,
-    IgxSelectComponent,
-    IgxSelectItemComponent,
-    IgxInputGroupComponent,
-    IgxLabelDirective,
-    IgxInputDirective,
     IgxColumnGroupComponent,
     IgxPivotGridComponent,
-    IgxPivotDataSelectorComponent
+    IgxPivotDataSelectorComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent
 } from 'igniteui-angular';
+import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
 
 @Component({
     selector: 'app-grid-pdf-export-sample',
@@ -34,18 +28,15 @@ import {
         IgxPivotDataSelectorComponent,
         IgxRowIslandComponent,
         IgxButtonDirective,
-        IgxSwitchComponent,
-        IgxSelectComponent,
-        IgxSelectItemComponent,
-        IgxInputGroupComponent,
-        IgxLabelDirective,
-        IgxInputDirective,
-        FormsModule
+      IgxGridToolbarComponent,
+      IgxGridToolbarActionsComponent,
+      IgxGridToolbarTitleComponent,
     ],
     providers: [IgxPdfExporterService]
 })
 export class GridPdfExportSampleComponent {
     private pdfExporter = inject(IgxPdfExporterService);
+    private pcs = inject(PropertyChangeService);
 
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
@@ -58,6 +49,76 @@ export class GridPdfExportSampleComponent {
 
     @ViewChild('pivotGrid', { static: true })
     public pivotGrid: IgxPivotGridComponent;
+
+    public panelConfig: PropertyPanelConfig = {
+        fileName: {
+            label: 'File Name',
+            control: {
+                type: 'text',
+                defaultValue: 'GridExport'
+            }
+        },
+        pageOrientation: {
+            label: 'Page Orientation',
+            control: {
+                type: 'button-group',
+                options: ['portrait', 'landscape'],
+                defaultValue: 'landscape'
+            }
+        },
+        pageSize: {
+            label: 'Page Size',
+            control: {
+                type: 'select',
+                options: ['a3', 'a4', 'a5', 'letter', 'legal'],
+                defaultValue: 'a4'
+            }
+        },
+        fontSize: {
+            label: 'Font Size',
+            control: {
+                type: 'number',
+                defaultValue: 10,
+                min: 8,
+                max: 16
+            }
+        },
+        showTableBorders: {
+            label: 'Show Table Borders',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
+    };
+
+    public properties = signal<Properties>(
+        Object.fromEntries(
+            Object.keys(this.panelConfig).map((key) => {
+                const control = this.panelConfig[key]?.control;
+                return [key, control?.defaultValue];
+            })
+        ) as Properties
+    );
+
+    constructor(private destroyRef: DestroyRef) {
+        this.pcs.setPanelConfig(this.panelConfig);
+
+        const propertyChange = this.pcs.propertyChanges.subscribe((updatedProperties) => {
+            const mergedProperties = Object.fromEntries(
+                Object.entries(this.panelConfig).map(([key, config]) => [
+                    key,
+                    updatedProperties[key] !== undefined
+                        ? updatedProperties[key]
+                        : config?.control?.defaultValue
+                ])
+            ) as Properties;
+
+            this.properties.set(mergedProperties);
+        });
+
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
+    }
 
     // Grid data
     public gridData = [
@@ -153,14 +214,6 @@ export class GridPdfExportSampleComponent {
         }
     ];
 
-    // Export options
-    public fileName = 'GridExport';
-    public pageOrientation: 'portrait' | 'landscape' = 'landscape';
-    public pageSize = 'a4';
-    public showTableBorders = true;
-    public fontSize = 10;
-    public pageSizes = ['a3', 'a4', 'a5', 'letter', 'legal'];
-
     public exportGrid() {
         const options = this.createExportOptions();
         this.pdfExporter.export(this.grid1, options);
@@ -168,28 +221,29 @@ export class GridPdfExportSampleComponent {
 
     public exportTreeGrid() {
         const options = this.createExportOptions();
-        options.fileName = `TreeGrid_${this.fileName}`;
+        options.fileName = `TreeGrid_${this.properties().fileName}`;
         this.pdfExporter.export(this.treeGrid, options);
     }
 
     public exportHierarchicalGrid() {
         const options = this.createExportOptions();
-        options.fileName = `HierarchicalGrid_${this.fileName}`;
+        options.fileName = `HierarchicalGrid_${this.properties().fileName}`;
         this.pdfExporter.export(this.hierarchicalGrid, options);
     }
 
     public exportPivotGrid() {
         const options = this.createExportOptions();
-        options.fileName = `PivotGrid_${this.fileName}`;
+        options.fileName = `PivotGrid_${this.properties().fileName}`;
         this.pdfExporter.export(this.pivotGrid, options);
     }
 
     private createExportOptions(): IgxPdfExporterOptions {
-        const options = new IgxPdfExporterOptions(this.fileName);
-        options.pageOrientation = this.pageOrientation;
-        options.pageSize = this.pageSize;
-        options.showTableBorders = this.showTableBorders;
-        options.fontSize = this.fontSize;
+        const props = this.properties();
+        const options = new IgxPdfExporterOptions(props.fileName);
+        options.pageOrientation = props.pageOrientation;
+        options.pageSize = props.pageSize;
+        options.showTableBorders = props.showTableBorders;
+        options.fontSize = props.fontSize;
         return options;
     }
 }

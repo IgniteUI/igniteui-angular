@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/banner' as *;
+
+$material: digest-schema($dark-material-banner);
+$bootstrap: digest-schema($dark-bootstrap-banner);
+$fluent: digest-schema($dark-fluent-banner);
+$indigo: digest-schema($dark-indigo-banner);

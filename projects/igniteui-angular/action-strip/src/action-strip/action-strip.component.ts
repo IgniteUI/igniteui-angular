@@ -13,6 +13,7 @@ import {
     AfterViewInit,
     ElementRef,
     booleanAttribute,
+    ViewEncapsulation,
     inject,
     DestroyRef,
     AfterContentInit
@@ -80,6 +81,8 @@ export class IgxActionStripMenuItemDirective {
 @Component({
     selector: 'igx-action-strip',
     templateUrl: 'action-strip.component.html',
+    styleUrl: 'action-strip.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [
         NgTemplateOutlet,
         IgxIconButtonDirective,

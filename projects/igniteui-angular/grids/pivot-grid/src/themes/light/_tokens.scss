@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/pivot-data-selector' as *;
+
+$base: digest-schema($light-pivot-data-selector);
+$material: digest-schema($material-pivot-data-selector);
+$bootstrap: digest-schema($bootstrap-pivot-data-selector);
+$fluent: digest-schema($fluent-pivot-data-selector);
+$indigo: digest-schema($indigo-pivot-data-selector);

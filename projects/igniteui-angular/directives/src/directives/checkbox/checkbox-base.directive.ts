@@ -421,7 +421,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
     public get labelClass(): string {
         switch (this.labelPosition) {
             case LabelPosition.BEFORE:
-                return `${this.cssClass}__label--before`;
+                return `${this.cssClass}__label ${this.cssClass}__label--before`;
             case LabelPosition.AFTER:
             default:
                 return `${this.cssClass}__label`;

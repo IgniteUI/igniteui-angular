@@ -1,10 +1,13 @@
-.sample-buttons {
-    margin-top: 24px;
+:host {
+    display: grid;
+    gap: var(--demos-gap);
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    align-items: start;
 }
 
 [igxButton] {
-    margin-right: 8px;
-    margin-bottom: 8px;
+    margin: 0.5rem;
 }
 
 .density-chooser {

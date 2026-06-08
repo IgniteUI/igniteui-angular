@@ -2,17 +2,26 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ViewChild,
-    Output, EventEmitter,
+    Output,
+    EventEmitter,
     HostListener,
     HostBinding
 } from '@angular/core';
 import { IgxButtonDirective, IgxButtonType, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
-import { IgxDividerDirective } from 'igniteui-angular/directives';
-import { IBaseEventArgs, DateRange, CustomDateRange, PickerInteractionMode, IDateRangePickerResourceStrings, IgxPickerActionsDirective } from 'igniteui-angular/core';
+import { IgxDividerComponent } from 'igniteui-angular/directives';
+import {
+    IBaseEventArgs,
+    DateRange,
+    CustomDateRange,
+    PickerInteractionMode,
+    IDateRangePickerResourceStrings,
+    IgxPickerActionsDirective
+} from 'igniteui-angular/core';
 import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predefined-ranges/predefined-ranges-area.component';
 
 /** @hidden */
+
 @Component({
     selector: 'igx-calendar-container',
     styles: [':host {display: block;}'],
@@ -22,7 +31,7 @@ import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predef
         IgxRippleDirective,
         IgxCalendarComponent,
         NgTemplateOutlet,
-        IgxDividerDirective,
+        IgxDividerComponent,
         IgxPredefinedRangesAreaComponent
     ]
 })
@@ -64,7 +73,7 @@ export class IgxCalendarContainerComponent {
     public pickerActions: IgxPickerActionsDirective;
 
     @HostListener('keydown.alt.arrowup', ['$event'])
-    public onEscape(event) {
+    public onEscape(event: KeyboardEvent) {
         event.preventDefault();
 
         // Prevent the event from reaching IgxDatePickerComponent/IgxDateRangePickerComponent,
@@ -79,4 +88,3 @@ export class IgxCalendarContainerComponent {
 }
 
 /** @hidden */
-

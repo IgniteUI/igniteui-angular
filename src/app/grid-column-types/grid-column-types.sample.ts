@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { FilterMode, IgxButtonGroupComponent, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconService } from 'igniteui-angular';
+import { FilterMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconService } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -7,7 +7,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-column-types-sample',
     styleUrls: ['grid-column-types.sample.scss'],
     templateUrl: 'grid-column-types.sample.html',
-    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent]
 })
 export class GridColumnTypesSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
@@ -101,11 +101,6 @@ export class GridColumnTypesSampleComponent implements OnInit {
             family: "fa-solid",
             name: "fa-car",
         });
-    }
-
-
-    public selectDensity(event) {
-        this.filterMode = this.filterModes[event.index].label;
     }
 
     public moveColumn() {

@@ -1,5 +1,7 @@
 <div class="properties-panel" [formGroup]="form">
-    <h5 class="properties-panel__title">Properties Panel</h5>
+    <h6 class="properties-panel__title">
+        <span>Properties Panel</span>
+    </h6>
     @for( key of getConfigKeys(); track key ) {
         <div>
             @if (getControlType(key) !== 'boolean') {
@@ -81,7 +83,7 @@
 
             <!-- Button Group -->
             @if (getControlType(key) === 'button-group') {
-            <igx-buttongroup [selectionMode]="'single'">
+            <igx-buttongroup [selectionMode]="'single'" alignment="vertical">
                 @for (option of getControlOptions(key); track option) {
                     <button igxButton
                             [selected]="form.controls[key].value === (option.value || option)"

@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { SizeSelectorComponent } from '../size-selector/size-selector.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     IDataCloneStrategy,
     IRowDataEventArgs,
@@ -11,10 +10,15 @@ import {
     IgxGridComponent,
     IgxGridEditingActionsComponent,
     IgxGridPinningActionsComponent,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarTitleComponent,
     IgxIconComponent,
+    IgxToastComponent,
+    IgxTooltipTargetDirective,
     IRowDataCancelableEventArgs
 }
-from 'igniteui-angular';
+    from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 
@@ -65,6 +69,7 @@ class User {
         IgxButtonDirective,
         IgxActionStripComponent,
         IgxIconComponent,
+        IgxToastComponent,
         IgxGridComponent,
         IgxColumnComponent,
         IgxGridPinningActionsComponent,
@@ -72,11 +77,16 @@ class User {
         IgxGridEditingActionsComponent,
         IgxActionStripMenuItemDirective,
         IgxButtonDirective,
-        SizeSelectorComponent
+        IgxGridToolbarActionsComponent,
+        IgxGridToolbarComponent,
+        IgxGridToolbarTitleComponent,
+        IgxTooltipTargetDirective
     ]
 })
 export class ActionStripSampleComponent implements OnInit {
-    public result: string;
+    @ViewChild('toast', { static: true })
+    private toast: IgxToastComponent;
+
     public isVisible = false;
     public customItem = false;
     public data: any[];
@@ -87,7 +97,9 @@ export class ActionStripSampleComponent implements OnInit {
     private counter = 0;
 
     public doSomeAction() {
-        this.result = `Clicked ${this.counter++} times`;
+        this.counter++;
+        const clicks = this.counter;
+        this.toast.open(`clicked ${clicks} time${clicks === 1 ? '' : 's'}`);
     }
 
     public showActions() {

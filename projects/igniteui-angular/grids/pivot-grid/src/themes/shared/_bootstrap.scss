@@ -1,0 +1,14 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-pivot-data-selector, bootstrap) {
+    @include e(filter) {
+        igx-input-group {
+            padding: rem(4px);
+        }
+    }
+}
