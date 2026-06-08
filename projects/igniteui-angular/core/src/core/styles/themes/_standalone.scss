@@ -2,6 +2,7 @@
 @use 'sass:map';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas' as schemas;
 @forward 'igniteui-theming/sass/themes';
 @forward 'igniteui-theming/sass/bem';
 
@@ -98,3 +99,16 @@
 
     @return ($map-1, $map-2);
 }
+
+/// All theme/variant/schema combinations used by derived component styles.
+/// @access private
+$derived-schemas: (
+    ('material', 'light', schemas.$light-material-schema),
+    ('material', 'dark', schemas.$dark-material-schema),
+    ('bootstrap', 'light', schemas.$light-bootstrap-schema),
+    ('bootstrap', 'dark', schemas.$dark-bootstrap-schema),
+    ('fluent', 'light', schemas.$light-fluent-schema),
+    ('fluent', 'dark', schemas.$dark-fluent-schema),
+    ('indigo', 'light', schemas.$light-indigo-schema),
+    ('indigo', 'dark', schemas.$dark-indigo-schema),
+);

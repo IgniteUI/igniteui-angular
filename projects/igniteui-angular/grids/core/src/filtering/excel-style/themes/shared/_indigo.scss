@@ -1,12 +1,17 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/elevations' as *;
 @use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
 
 // TODO type style is throwing an error
 
 @include themed-block(igx-excel-filter, indigo) {
-    box-shadow: elevation(3);
+    box-shadow: elevation(3), 0 0 0 rem(1px) var-get($_theme, 'border-color');
+    border-radius: border-radius(rem(4px));
 
     %grid-excel-actions__action {
         padding-block: pad-block(rem(4px), rem(6px), rem(8px));
@@ -15,12 +20,18 @@
         margin-block-end: rem(4px);
         border-radius: rem(4px);
 
+        igx-icon {
+            --component-size: 2;
+
+            color: var-get($_theme, 'actions-icon-color');
+        }
+
         &:hover,
         &:focus {
-            background: color($color: 'gray', $variant: 200);
+            background: var-get($_theme, 'actions-hover-background');
 
             igx-icon {
-                color: color($color: 'gray', $variant: 700);
+                color: var-get($_theme, 'actions-hover-icon-color');
             }
         }
 
@@ -28,7 +39,7 @@
         igx-icon {
             --component-size: 2;
 
-            color: color($color: 'gray', $variant: 600);
+            // color: color($color: 'gray', $variant: 600);
         }
     }
 
@@ -86,27 +97,12 @@
     }
 
     @include e(menu) {
-         background: contrast-color($color: 'gray', $variant: 900);
+         background: var-get($_theme, 'background');
 
         .igx-button-group__item {
             &:not(:nth-child(1)) {
                 margin: 0;
             }
-        }
-
-        .igx-button-group {
-            --item-background: transparent !important;
-            --border-color: transparent !important;
-            --item-border-color: transparent !important;
-            --item-focused-border-color: transparent !important;
-            --item-hover-border-color: transparent !important;
-            --item-selected-border-color: transparent !important;
-            --item-selected-hover-border-color: transparent !important;
-            --item-disabled-border: transparent !important;
-            --disabled-selected-border-color: transparent !important;
-            --elevation: none !important;
-            --item-selected-text-color: contrast-color($color: 'surface') !important;
-            --item-selected-icon-color: contrast-color($color: 'surface') !important;
         }
     }
 
@@ -119,8 +115,10 @@
         gap: sizable(rem(16px));
 
         igx-list {
-            --background: #{color($color: 'surface', $variant: 500)};
+            --background: #{var-get($_theme, 'secondary-background')};
+            --_border-color: #{color-mix(in srgb, var(--ig-excel-filtering-accent-color) 16%, var(--ig-excel-filtering-background))};
 
+            border-block: rem(1px) dashed var(--_border-color, var(--ig-gray-100));
             margin-inline: calc(#{sizable(rem(-16px))} * -1);
 
             // This is the only way to take the gap from the list,
@@ -144,17 +142,13 @@
 
     @include e(actions-pin, $m: disabled) {
         igx-icon {
-            // TODO MOVE excel-filtering-actions-disabled-foreground TO THE FILTERING SCHEMA and use it here.
-            //color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
-            color: color($color: 'gray', $variant: 900, $opacity: .2);
+            color: var-get($_theme, 'actions-disabled-foreground');
         }
     }
 
     @include e(actions-clear, $m: disabled) {
         igx-icon {
-            // TODO MOVE excel-filtering-actions-disabled-foreground TO THE FILTERING SCHEMA and use it here.
-            //color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
-            color: color($color: 'gray', $variant: 900, $opacity: .2);
+            color: var-get($_theme, 'actions-disabled-foreground');
         }
     }
 

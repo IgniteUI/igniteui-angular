@@ -1,6 +1,6 @@
 <div class="properties-panel" [formGroup]="form">
     <h6 class="properties-panel__title">
-        <span>Properties Panel</span>
+        <span>{{ (propertyChangeService.panelTitle | async) || 'Properties Panel' }}</span>
     </h6>
     @for( key of getConfigKeys(); track key ) {
         <div>

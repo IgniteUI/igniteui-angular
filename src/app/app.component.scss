@@ -32,9 +32,16 @@
 	    --sb-track-bg-color-hover: var(--ig-gray-100);
 	    --sb-thumb-bg-color: var(--ig-gray-200);
 	    --sb-thumb-bg-color-hover: var(--ig-gray-200);
-	    
+
         .igx-nav-drawer__aside {
             padding-top: 0;
+        }
+    }
+
+    .demos-settings-nav {
+        .igx-nav-drawer__aside {
+            overflow-y: auto;
+            scrollbar-gutter: stable;
         }
     }
 
@@ -75,7 +82,7 @@
 	overflow-y: auto;
     padding: var(--content-spacing);
 	color: var(--ig-gray-900);
-	
+
 	 > div {
 		max-width: 1200px;
 		width: 100%;

@@ -4,3 +4,4 @@
 
 $tokens: meta.module-variables(tokens);
 @include themes(igx-excel-filter, $tokens, light);
+@include themes(igx-excel-filter__secondary, $tokens, light);

@@ -2,67 +2,326 @@
 @use '../../styles/variables' as vars;
 
 .sample {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding-block-end: 64px;
-
     @include tokens(
         grid-theme(
             $schema: vars.$schema,
             $background: #f7f4f0,
-            $accent-color: #5B8F8A
+            $accent-color: #5b8f8a,
         )
     );
+
+    &.has-header-overrides {
+        @include tokens(
+            grid-theme(
+                $schema: vars.$schema,
+                $background: #f7f4f0,
+                $accent-color: #5b8f8a,
+                $header-background: var(--ig-grid-header-background),
+                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
+            )
+        );
+    }
+
+    &.has-header-border-overrides {
+        @include tokens(
+            grid-theme(
+                $schema: vars.$schema,
+                $background: #f7f4f0,
+                $accent-color: #5b8f8a,
+                $header-border-width: var(--ig-grid-header-border-width),
+                $header-border-style: var(--ig-grid-header-border-style),
+                $header-border-color: var(--ig-grid-header-border-color),
+                $header-background: var(--ig-grid-background),
+                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
+            )
+        );
+    }
+
+    &.has-pinned-border-overrides {
+        @include tokens(
+            grid-theme(
+                $schema: vars.$schema,
+                $background: #f7f4f0,
+                $accent-color: #5b8f8a,
+                $pinned-border-width: var(--ig-grid-pinned-border-width),
+                $pinned-border-style: var(--ig-grid-pinned-border-style),
+                $pinned-border-color: var(--ig-grid-pinned-border-color),
+                $header-background: var(--ig-grid-background),
+                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
+            )
+        );
+    }
+
+    &.has-cell-active-border-overrides {
+        @include tokens(
+            grid-theme(
+                $schema: vars.$schema,
+                $background: #f7f4f0,
+                $accent-color: #5b8f8a,
+                $cell-active-border-width: var(--ig-grid-cell-active-border-width),
+                $active-state-border-style: var(--ig-grid-active-state-border-style),
+                $header-background: var(--ig-grid-background),
+                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
+            )
+        );
+    }
+
+    &.has-cell-selected-overrides {
+        @include tokens(
+            grid-theme(
+                $schema: vars.$schema,
+                $background: #f7f4f0,
+                $accent-color: #5b8f8a,
+                $cell-active-border-color: var(--ig-grid-cell-active-border-color),
+                $cell-selected-background: var(--ig-grid-cell-selected-background),
+                $header-background: var(--ig-grid-background),
+                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
+            )
+        );
+    }
+}
+
+igx-expansion-panel {
+    --ig-expansion-panel-header-focus-background: transparent;
+}
+
+.theme-panel-accordion {
+    --theme: material;
+
+    .igx-input-group__bundle-main {
+        border: none;
+        box-shadow: none;
+        transition: none;
+    }
+
+    .igx-input-group__bundle-start {
+        visibility: visible;
+    }
 }
 
 .color-pickers {
     display: flex;
-    align-items: center;
-    gap: 24px;
-    padding: 8px 0;
+    flex-direction: column;
+    gap: rem(12px);
+}
+
+.color-pickers__title {
+    font-size: rem(15px);
+    font-weight: 600;
+    letter-spacing: .06em;
+    color: var(--ig-gray-600);
+    margin: 0;
+    margin-block-end: rem(4px);
 }
 
 .color-picker-item {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
+    flex-direction: column;
+    gap: rem(6px);
 
-    input[type='color'] {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 36px;
-        height: 36px;
-        border: 1px solid currentColor;
-        padding: 0;
-        cursor: pointer;
+    &__label {
+        font-size: rem(12px);
+        color: var(--ig-gray-700);
 
-        &::-webkit-color-swatch-wrapper { padding: 0; }
-        &::-webkit-color-swatch { border: none; }
-        &::-moz-color-swatch { border: none; }
+        &--scrub {
+            cursor: ns-resize;
+            user-select: none;
+        }
     }
 
-    .no-color {
-        position: relative;
-        width: 36px;
-        height: 36px;
-        border: 1px solid currentColor;
-        background: transparent;
-        cursor: pointer;
+    &__control {
+        display: flex;
+        align-items: center;
+        gap: rem(10px);
+    }
 
-        &::before,
-        &::after {
-            content: '';
+    igx-input-group {
+        --ig-input-group-focused-border-color: var(--ig-gray-500);
+
+        [igxInput] {
+            font-size: rem(13px);
+            font-weight: 400;
+        }
+    }
+
+    &__swatch-wrap {
+        position: relative;
+        width: rem(28px);
+        height: rem(28px);
+        flex-shrink: 0;
+
+        input[type='color'] {
+            -webkit-appearance: none;
+            appearance: none;
             position: absolute;
             inset: 0;
-            margin: auto;
-            width: 1px;
-            height: 70%;
-            background: red;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            margin: 0;
         }
+    }
 
-        &::before { transform: rotate(45deg); }
-        &::after { transform: rotate(-45deg); }
+    &__swatch {
+        position: absolute;
+        inset: 0;
+        border-radius: rem(5px);
+        border: 1px solid var(--ig-gray-400);
+        pointer-events: none;
+
+        svg {
+            display: none;
+        }
+    }
+
+    &__swatch--auto {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--ig-gray-200);
+        color: var(--ig-gray-500);
+
+        svg {
+            display: block;
+            width: rem(12px);
+            height: rem(12px);
+        }
+    }
+
+    &__value {
+        flex: 1;
+        min-width: 0;
+        font-size: rem(13px);
+        cursor: default;
+    }
+
+    &__reset {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: rem(24px);
+        height: rem(24px);
+        border: none;
+        border-radius: rem(4px);
+        background: transparent;
+        color: var(--ig-gray-600);
+        font-size: rem(14px);
+        cursor: pointer;
+        transition: color 120ms ease, background 120ms ease;
+
+        &:hover {
+            color: var(--ig-gray-700);
+        }
+    }
+
+}
+
+.border-combo {
+    width: 100%;
+    margin-block-start: rem(4px);
+}
+
+.theme-panel-accordion {
+    .igx-expansion-panel__header-inner {
+        padding: rem(8px) 0;
+    }
+
+    igx-expansion-panel + igx-expansion-panel {
+        border-block-start: 1px solid var(--ig-gray-200);
+    }
+
+    igx-expansion-panel-header {
+        padding-inline-start: 0;
+    }
+
+    igx-expansion-panel-title {
+        font-size: rem(14px);
+        font-weight: 500;
+        letter-spacing: .06em;
+        color: var(--ig-gray-700);
+    }
+
+    .color-pickers {
+        padding-block-end: rem(12px);
+    }
+}
+
+.border-target {
+    display: flex;
+    align-items: center;
+    gap: rem(8px);
+    font-size: rem(13px);
+    color: var(--ig-gray-700);
+    cursor: pointer;
+    user-select: none;
+
+    input[type='checkbox'] {
+        accent-color: var(--ig-primary-500);
+        width: rem(14px);
+        height: rem(14px);
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+}
+
+.theme-export {
+    margin-block-start: rem(20px);
+
+    &__btn {
+        width: 100%;
+        gap: rem(8px);
+        font-size: rem(13px);
+        letter-spacing: .04em;
+    }
+
+    &__panel {
+        margin-block-start: rem(10px);
+        border: 1px solid var(--ig-gray-300);
+        border-radius: rem(6px);
+        overflow: hidden;
+    }
+
+    &__panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: rem(6px) rem(10px) rem(6px) rem(12px);
+        font-size: rem(12px);
+        color: var(--ig-gray-600);
+        background: var(--ig-gray-100);
+        border-block-end: 1px solid var(--ig-gray-300);
+    }
+
+    &__section-label {
+        padding: rem(6px) rem(12px) rem(4px);
+        font-size: rem(11px);
+        font-weight: 600;
+        letter-spacing: .05em;
+        color: var(--ig-gray-500);
+        background: var(--ig-gray-100);
+        border-block-end: 1px solid var(--ig-gray-300);
+    }
+
+    &__copy {
+        font-size: rem(12px);
+        min-width: rem(56px);
+    }
+
+    &__code {
+        margin: 0;
+        padding: rem(12px) rem(14px);
+        font-size: rem(12px);
+        font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        color: var(--ig-gray-700);
+        background: var(--ig-surface-500);
+        overflow-x: auto;
+        white-space: pre;
+
+        & + .theme-export__section-label {
+            border-block-start: 1px solid var(--ig-gray-300);
+        }
     }
 }

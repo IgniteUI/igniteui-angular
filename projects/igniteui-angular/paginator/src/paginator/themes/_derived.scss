@@ -1,0 +1,67 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/standalone' as *;
+
+/// Applies all sub-component token overrides used by the paginator component.
+/// @access private
+@each $theme-name, $variant-name, $schema in $derived-schemas {
+    @include layer(derived) {
+        --_paginator-background: var(--background, var(--ig-paginator-background));
+        --_paginator-foreground: var(--foreground, var(--ig-paginator-foreground));
+        --_paginator-accent-color: var(--accent-color, var(--ig-paginator-accent-color));
+
+        @scope ([data-ig-theme='#{$theme-name}'][data-ig-theme-variant='#{$variant-name}']) {
+            :where(igx-paginator) {
+                @include tokens(
+                    drop-down-theme(
+                        $schema: $schema,
+                        $background-color: var(--_paginator-background),
+                        $item-text-color: var(--_paginator-foreground),
+                        $border-color: color-mix(in srgb, var(--_paginator-foreground) 12%, var(--_paginator-background)),
+                        $hover-item-background: color-mix(in srgb, var(--_paginator-accent-color) 8%, var(--_paginator-background)),
+                        $focused-item-background: color-mix(in srgb, var(--_paginator-accent-color) 12%, var(--_paginator-background)),
+                        $selected-item-background: color-mix(in srgb, var(--_paginator-accent-color) 12%, var(--_paginator-background)),
+                        $selected-hover-item-background: color-mix(in srgb, var(--_paginator-accent-color) 16%, var(--_paginator-background)),
+                        $selected-focus-item-background: color-mix(in srgb, var(--_paginator-accent-color) 24%, var(--_paginator-background)),
+                    )
+                );
+
+                @include tokens(
+                    flat-icon-button-theme(
+                        $schema: $schema,
+                        $foreground: var(--_paginator-accent-color),
+                        $disabled-background: transparent,
+                        $disabled-foreground: color-mix(in srgb, var(--_paginator-accent-color) 50%, var(--_paginator-background)),
+                    )
+                );
+
+                @include tokens(
+                    input-group-theme(
+                        $schema: $schema,
+                        $idle-bottom-line-color: var(--_paginator-accent-color),
+                        $border-color: var(--_paginator-accent-color),
+                        $idle-text-color: var(--_paginator-foreground),
+                        $placeholder-color: color-mix(in srgb, var(--_paginator-foreground) 80%, var(--_paginator-background)),
+                    )
+                );
+
+                @if $theme-name == 'indigo' {
+                    @include tokens(
+                        select-theme(
+                            $schema: $schema,
+                            $toggle-button-foreground: var(--_paginator-accent-color),
+                            $toggle-button-foreground-disabled: color-mix(in srgb, var(--_paginator-accent-color) 50%, var(--_paginator-background)),
+                        )
+                    );
+                } @else {
+                    @include tokens(
+                        select-theme(
+                            $schema: $schema,
+                            $toggle-button-background: var(--_paginator-accent-color),
+                        )
+                    );
+                }
+            }
+        }
+    }
+}

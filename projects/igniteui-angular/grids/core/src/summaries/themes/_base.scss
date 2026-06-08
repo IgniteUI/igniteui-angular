@@ -95,13 +95,13 @@ $_theme: $material;
 				border-inline-end: map.get($cell-pin, 'style') #999;
 			}
 
-			&:dir(ltr) {
-				box-shadow: inset rem(-1px) 0 0 0 var-get($_theme, 'pinned-border-color');
-			}
+			// &:dir(ltr) {
+			// 	box-shadow: inset rem(-1px) 0 0 0 var-get($_theme, 'pinned-border-color');
+			// }
 
-			&:dir(rtl) {
-				box-shadow: inset rem(1px) 0 0 0 var-get($_theme, 'pinned-border-color');
-			}
+			// &:dir(rtl) {
+			// 	box-shadow: inset rem(1px) 0 0 0 var-get($_theme, 'pinned-border-color');
+			// }
 		}
 
 		@include m(fw) {

@@ -23,6 +23,13 @@ $_theme: $bootstrap;
     }
 }
 
+@include themed-block(igx-advanced-filter, bootstrap) {
+    .igx-excel-filter__secondary-footer {
+        padding: rem(16px);
+        border-top: rem(1px) solid var-get($_theme, 'header-border');
+    }
+}
+
 @include themed-block(igx-filter-tree, bootstrap) {
     @include e(button, $m: 'and') {
         &[igxButton='flat'] {

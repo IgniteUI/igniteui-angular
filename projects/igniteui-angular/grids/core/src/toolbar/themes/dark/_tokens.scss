@@ -3,9 +3,7 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/themes/schemas/components/dark/grid-toolbar' as *;
 
-$props: ('background-color', 'title-text-color', 'border-color', 'size');
-
-$material: list.nth(split-map(digest-schema($dark-material-grid-toolbar), $props), 1);
-$bootstrap: list.nth(split-map(digest-schema($dark-bootstrap-grid-toolbar), $props), 1);
-$fluent: list.nth(split-map(digest-schema($dark-fluent-grid-toolbar), $props), 1);
-$indigo: list.nth(split-map(digest-schema($dark-indigo-grid-toolbar), $props), 1);
+$material: digest-schema($dark-material-grid-toolbar);
+$bootstrap: digest-schema($dark-bootstrap-grid-toolbar);
+$fluent: digest-schema($dark-fluent-grid-toolbar);
+$indigo: digest-schema($dark-indigo-grid-toolbar);

@@ -193,8 +193,3 @@
     }
 }
 
-@include themed-block(igx-advanced-filter, indigo) {
-    background: contrast-color($color: 'gray', $variant: 900);
-    box-shadow: elevation(24);
-    border-radius: rem(10px);
-}

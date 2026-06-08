@@ -5,3 +5,4 @@
 
 $tokens: meta.module-variables(tokens);
 @include themes(igx-query-builder, $tokens, light);
+@include themes(igx-advanced-filtering-dialog, $tokens, light);

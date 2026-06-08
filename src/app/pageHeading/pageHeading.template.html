@@ -1,4 +1,4 @@
-@let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
+@let config = ((propertyChangeService.panelConfig | async | keyvalue)?.length > 0) || !!(propertyChangeService.customControlsSource | async);
 
 <igx-navbar class="demos-navbar">
     <igx-navbar-action>

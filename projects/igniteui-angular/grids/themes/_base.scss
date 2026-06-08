@@ -15,7 +15,7 @@ $cell-editing-outline-width: rem(1px);
 $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 $grid-body-column-border-odd: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-odd');
 $grid-body-column-border-even: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-even');
-$grid-active-state-border: var-get($theme, 'header-border-width')  var-get($theme, 'active-state-border-style') var-get($theme, 'cell-active-border-color');
+$grid-active-state-border: var-get($theme, 'cell-active-border-width')  var-get($theme, 'active-state-border-style') var-get($theme, 'cell-active-border-color');
 $cell-padding-sm: rem(12px);
 $cell-padding-md: rem(16px);
 $cell-padding-lg: rem(24px);
@@ -73,7 +73,7 @@ $z-grid-loading: 10003;
         font-weight: 600;
         border-inline-end: $grid-header-border;
         overflow: hidden;
-        transition: color 250ms ease-in-out;
+        transition: color 120ms ease-in-out;
         outline-style: none;
     }
 
@@ -409,7 +409,7 @@ $z-grid-loading: 10003;
             position: relative;
             display: flex;
             outline-style: none;
-            border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+            border-bottom: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') var-get($theme, 'row-border-color');
 
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
             // this is very important especially if the borders have slide alpha
@@ -723,7 +723,7 @@ $z-grid-loading: 10003;
 
         // First pinned column (left border)
         @include e(td, $m: pinned-first) {
-            border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+            border-inline-start: var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-color');
 
             &::after {
                 width: calc(100% - $pinned-shadow-size);
@@ -734,7 +734,7 @@ $z-grid-loading: 10003;
 
         // Last pinned column (right border)
         @include e(td, $m: pinned-last) {
-            border-inline-end: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+            border-inline-end: var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-color');
         }
 
         // Pinned cell when selected
@@ -2105,7 +2105,7 @@ $z-grid-loading: 10003;
         font-weight: 600;
         border-inline-end: $grid-header-border;
         overflow: hidden;
-        transition: color 250ms ease-in-out;
+        transition: color 120ms ease-in-out;
         outline-style: none;
 
         @include e(expander) {
@@ -2138,7 +2138,6 @@ $z-grid-loading: 10003;
             cursor: initial;
             flex-grow: 1;
             line-height: var(--header-size);
-            transition: color 250ms ease-in-out;
         }
 
         @include e(icons) {
@@ -2340,7 +2339,7 @@ $z-grid-loading: 10003;
 
         // Pinned header (first pinned column)
         @include m(pinned-first) {
-            border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+            border-inline-start: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
 
             &:dir(ltr) {
                 border-inline-start-color: var-get($theme, 'pinned-border-color');
@@ -2358,11 +2357,13 @@ $z-grid-loading: 10003;
             &:dir(ltr) {
                 border-inline-end-color: var-get($theme, 'pinned-border-color');
                 border-inline-end-width: var-get($theme, 'pinned-border-width');
+                border-inline-end-style: var-get($theme, 'pinned-border-style');
             }
 
             &:dir(rtl) {
                 border-inline-start-color: var-get($theme, 'pinned-border-color');
                 border-inline-start-width: var-get($theme, 'pinned-border-width');
+                border-inline-start-style: var-get($theme, 'pinned-border-style');
             }
         }
 
@@ -2688,19 +2689,6 @@ $z-grid-loading: 10003;
     }
 
     @include b(igx-advanced-filter) {
-        background: color($color: 'surface', $variant: 500);
-        box-shadow: elevation(24);
-
-        igx-query-builder {
-            box-shadow: none !important;
-            border: none !important;
-            border-radius: inherit !important;
-        }
-
-        igx-query-builder-header {
-            cursor: grab;
-        }
-
         .igx-excel-filter__secondary-footer {
             --ig-size: 2;
 

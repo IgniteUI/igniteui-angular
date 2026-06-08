@@ -1,29 +1,33 @@
 <div class="sample" #sampleEl
+    [class.has-header-overrides]="gridHeaderBackground() || gridHeaderTextColor()"
+    [class.has-header-border-overrides]="gridHeaderBorderWidth() || gridHeaderBorderStyle() || gridHeaderBorderColor()"
+    [class.has-pinned-border-overrides]="gridPinnedBorderWidth() || gridPinnedBorderStyle() || gridPinnedBorderColor()"
+    [class.has-cell-active-border-overrides]="gridCellActiveBorderWidth() || gridCellActiveBorderStyle() || gridCellActiveBorderColor()"
+    [class.has-cell-selected-overrides]="gridCellSelectedWithinBackground() || gridCellSelectedWithinTextColor() || gridCellSelectedBackground() || gridCellSelectedTextColor()"
     [style.--ig-grid-foreground]="gridForeground() || null"
     [style.--ig-grid-background]="gridBackground() || null"
-    [style.--ig-grid-accent-color]="gridAccentColor() || null">
-
-    <div class="color-pickers">
-        <span class="color-picker-item">
-            <label for="gridBackground">Background</label>
-            <input id="gridBackground" type="color" [value]="gridBackground()" (input)="gridBackground.set($any($event.target).value)" />
-        </span>
-        <span class="color-picker-item">
-            <label for="gridForeground">Foreground</label>
-            @if (gridForeground()) {
-                <input id="gridForeground" type="color" [value]="gridForeground()" (input)="gridForeground.set($any($event.target).value)" />
-                <button (click)="resetForeground()" title="Reset to auto">↺</button>
-            } @else {
-                <button class="no-color" (click)="gridForeground.set('#1E2A35')" title="Auto (click to override)"></button>
-            }
-        </span>
-        <span class="color-picker-item">
-            <label for="gridAccentColor">Accent Color</label>
-            <input id="gridAccentColor" type="color" [value]="gridAccentColor()" (input)="gridAccentColor.set($any($event.target).value)" />
-        </span>
-    </div>
+    [style.--ig-grid-accent-color]="gridAccentColor() || null"
+    [style.--ig-grid-header-background]="gridHeaderBackground() || null"
+    [style.--ig-grid-header-text-color]="gridHeaderTextColor() || null"
+    [style.--ig-grid-header-border-width]="gridHeaderBorderWidth() || null"
+    [style.--ig-grid-header-border-style]="gridHeaderBorderStyle() || null"
+    [style.--ig-grid-header-border-color]="gridHeaderBorderColor() || null"
+    [style.--ig-grid-cell-active-border-width]="gridCellActiveBorderWidth() || null"
+    [style.--ig-grid-active-state-border-style]="gridCellActiveBorderStyle() || null"
+    [style.--ig-grid-cell-active-border-color]="gridCellActiveBorderColor() || null"
+    [style.--ig-grid-cell-selected-within-background]="gridCellSelectedWithinBackground() || null"
+    [style.--ig-grid-cell-selected-within-text-color]="gridCellSelectedWithinTextColor() || null"
+    [style.--ig-grid-cell-selected-background]="gridCellSelectedBackground() || null"
+    [style.--ig-grid-cell-selected-text-color]="gridCellSelectedTextColor() || null"
+    [style.--ig-grid-pinned-border-width]="gridPinnedBorderWidth() || null"
+    [style.--ig-grid-pinned-border-style]="gridPinnedBorderStyle() || null"
+    [style.--ig-grid-pinned-border-color]="gridPinnedBorderColor() || null">
 
     <igx-grid #grid
+        [style.--ig-grid-summary-pinned-border-width]="gridSummaryPinnedBorderWidth() || null"
+        [style.--ig-grid-summary-pinned-border-style]="gridSummaryPinnedBorderStyle() || null"
+        [style.--ig-grid-summary-pinned-border-color]="gridSummaryPinnedBorderColor() || null"
+        [style.--ig-grid-summary-border-color]="gridSummaryBorderColor() || null"
         [data]="data"
         [primaryKey]="'ID'"
         [allowFiltering]="true"
@@ -127,3 +131,326 @@
         <igx-paginator [perPage]="15"></igx-paginator>
     </igx-grid>
 </div>
+
+<ng-template #customControls>
+<igx-accordion class="theme-panel-accordion" data-ig-theme="material" data-ig-theme-variant="light" [singleBranchExpand]="false" [style.--sample-accent]="gridAccentColor()">
+    <igx-expansion-panel [collapsed]="false">
+        <igx-expansion-panel-header><igx-expansion-panel-title>General</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Background</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridBackground()" (input)="gridBackground.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridBackground()"></span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridBackground()" (change)="applyColor(gridBackground, $event)" spellcheck="false" />
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Foreground</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridForeground() || '#1E2A35'" (input)="gridForeground.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridForeground() || null" [class.color-picker-item__swatch--auto]="!gridForeground()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridForeground()" (change)="applyColor(gridForeground, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridForeground()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridForeground.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Accent Color</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridAccentColor()" (input)="gridAccentColor.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridAccentColor()"></span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridAccentColor()" (change)="applyColor(gridAccentColor, $event)" spellcheck="false" />
+            </igx-input-group>
+        </div>
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Header</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Background</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridHeaderBackground() || '#e8e6e2'" (input)="gridHeaderBackground.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridHeaderBackground() || null" [class.color-picker-item__swatch--auto]="!gridHeaderBackground()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridHeaderBackground()" (change)="applyColor(gridHeaderBackground, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridHeaderBackground()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridHeaderBackground.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Text Color</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridHeaderTextColor() || '#1E2A35'" (input)="setHeaderTextColor($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridHeaderTextColor() || null" [class.color-picker-item__swatch--auto]="!gridHeaderTextColor()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridHeaderTextColor()" (change)="applyHeaderTextColor($event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridHeaderTextColor()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridHeaderTextColor.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Borders</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Border Color</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="sharedBorderColor() || '#aaaaaa'" (input)="sharedBorderColor.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="sharedBorderColor() || null" [class.color-picker-item__swatch--auto]="!sharedBorderColor()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="sharedBorderColor()" (change)="applyColor(sharedBorderColor, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (sharedBorderColor()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="sharedBorderColor.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Borders</span>
+            <igx-combo
+                class="border-combo"
+                type="border"
+                [disableFiltering]="true"
+                [data]="borderOptions"
+                [valueKey]="'value'"
+                [displayKey]="'label'"
+                placeholder="Select border targets..."
+                [allowCustomValues]="false"
+                (selectionChanging)="onBorderSelectionChanging($event)">
+            </igx-combo>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label color-picker-item__label--scrub"
+                (pointerdown)="startScrub(sharedBorderWidth, '1px', $event)"
+                title="Drag up/down to change">Border Width</span>
+            <igx-input-group type="border">
+                <input igxInput type="text" [value]="sharedBorderWidth()"
+                    (change)="sharedBorderWidth.set($any($event.target).value.trim())"
+                    (keydown)="scrubKeydown(sharedBorderWidth, '1px', $event)"
+                    spellcheck="false" />
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Border Style</span>
+            <igx-select
+                class="color-picker-item__select"
+                type="border"
+                [value]="sharedBorderStyle()"
+                (selectionChanging)="sharedBorderStyle.set($event.newSelection.value)">
+                <igx-select-item value="solid">Solid</igx-select-item>
+                <igx-select-item value="dashed">Dashed</igx-select-item>
+                <igx-select-item value="dotted">Dotted</igx-select-item>
+                <igx-select-item value="double">Double</igx-select-item>
+                <igx-select-item value="none">None</igx-select-item>
+            </igx-select>
+        </div>
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Active Cell Styles</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Border Color</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridCellActiveBorderColor() || '#aaaaaa'" (input)="gridCellActiveBorderColor.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridCellActiveBorderColor() || null" [class.color-picker-item__swatch--auto]="!gridCellActiveBorderColor()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridCellActiveBorderColor()" (change)="applyColor(gridCellActiveBorderColor, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridCellActiveBorderColor()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridCellActiveBorderColor.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label color-picker-item__label--scrub"
+                (pointerdown)="startScrub(gridCellActiveBorderWidth, '1px', $event)"
+                title="Drag up/down to change">Border Width</span>
+            <igx-input-group type="border">
+                <input igxInput type="text" [value]="gridCellActiveBorderWidth()"
+                    (change)="gridCellActiveBorderWidth.set($any($event.target).value.trim())"
+                    (keydown)="scrubKeydown(gridCellActiveBorderWidth, '1px', $event)"
+                    spellcheck="false" />
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Border Style</span>
+            <igx-select
+                class="color-picker-item__select"
+                type="border"
+                [value]="gridCellActiveBorderStyle()"
+                (selectionChanging)="gridCellActiveBorderStyle.set($event.newSelection.value)">
+                <igx-select-item value="solid">Solid</igx-select-item>
+                <igx-select-item value="dashed">Dashed</igx-select-item>
+                <igx-select-item value="dotted">Dotted</igx-select-item>
+                <igx-select-item value="double">Double</igx-select-item>
+                <igx-select-item value="none">None</igx-select-item>
+            </igx-select>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Selected Background</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridCellSelectedBackground() || '#aaaaaa'" (input)="gridCellSelectedBackground.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridCellSelectedBackground() || null" [class.color-picker-item__swatch--auto]="!gridCellSelectedBackground()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridCellSelectedBackground()" (change)="applyColor(gridCellSelectedBackground, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridCellSelectedBackground()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridCellSelectedBackground.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Selected Text Color</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridCellSelectedTextColor() || '#aaaaaa'" (input)="gridCellSelectedTextColor.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridCellSelectedTextColor() || null" [class.color-picker-item__swatch--auto]="!gridCellSelectedTextColor()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridCellSelectedTextColor()" (change)="applyColor(gridCellSelectedTextColor, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridCellSelectedTextColor()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridCellSelectedTextColor.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Selected-Within Background</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridCellSelectedWithinBackground() || '#aaaaaa'" (input)="gridCellSelectedWithinBackground.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridCellSelectedWithinBackground() || null" [class.color-picker-item__swatch--auto]="!gridCellSelectedWithinBackground()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridCellSelectedWithinBackground()" (change)="applyColor(gridCellSelectedWithinBackground, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridCellSelectedWithinBackground()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridCellSelectedWithinBackground.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Selected-Within Text Color</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridCellSelectedWithinTextColor() || '#aaaaaa'" (input)="gridCellSelectedWithinTextColor.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridCellSelectedWithinTextColor() || null" [class.color-picker-item__swatch--auto]="!gridCellSelectedWithinTextColor()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridCellSelectedWithinTextColor()" (change)="applyColor(gridCellSelectedWithinTextColor, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridCellSelectedWithinTextColor()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridCellSelectedWithinTextColor.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+</igx-accordion>
+
+<div class="theme-export">
+    <button igxButton="outlined" class="theme-export__btn" (click)="showExport.set(!showExport())">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+        Export theme
+    </button>
+
+    @if (showExport()) {
+        <div class="theme-export__panel">
+            <div class="theme-export__panel-header">
+                <span>Export theme</span>
+                <button igxButton="flat" class="theme-export__copy" (click)="copyExport()">
+                    @if (exportCopied()) { ✓ Copied } @else { Copy all }
+                </button>
+            </div>
+            @if (exportCssVars()) {
+                <div class="theme-export__section-label">CSS custom properties</div>
+                <pre class="theme-export__code">{{ exportCssVars() }}</pre>
+            }
+            @if (exportCode()) {
+                <div class="theme-export__section-label">SCSS</div>
+                <pre class="theme-export__code">{{ exportCode() }}</pre>
+            }
+            @if (!exportCssVars() && !exportCode()) {
+                <p class="theme-export__empty">No customizations applied yet.</p>
+            }
+        </div>
+    }
+</div>
+</ng-template>

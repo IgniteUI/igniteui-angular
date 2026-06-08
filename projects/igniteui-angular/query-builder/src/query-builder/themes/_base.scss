@@ -417,4 +417,20 @@ $icon-size: rem(18px);
             margin: 0 !important;
         }
     }
+
+    @include b(igx-advanced-filter) {
+        background: var-get($theme, 'background');;
+        box-shadow: elevation(24);
+        border-radius: $border-radius;
+
+        igx-query-builder {
+            box-shadow: none;
+            border: none;
+            border-radius: inherit;
+        }
+
+        igx-query-builder-header {
+            cursor: grab;
+        }
+    }
 }
