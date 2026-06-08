@@ -59,7 +59,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden @internal
      */
-    public override get focusedItem(): IgxDropDownItemBaseDirective {
+    public override get focusedItem(): IgxDropDownItemBaseDirective | null {
         return super.focusedItem;
     }
 
@@ -75,7 +75,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /** @hidden @internal */
-    public override set focusedItem(item: IgxDropDownItemBaseDirective) {
+    public override set focusedItem(item: IgxDropDownItemBaseDirective | null) {
         if (!item) {
             this._activeDescendantId = null;
         } else if (item.id !== undefined) {
@@ -83,9 +83,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         } else {
             // Virtual { value, index } object passed by navigateItem() under virtual scrolling.
             const resolved = this.children?.find(e => e.index === item.index);
-            if (resolved) {
-                this._activeDescendantId = resolved.id;
-            }
+            this._activeDescendantId = resolved?.id ?? null;
         }
         super.focusedItem = item;
     }
@@ -177,7 +175,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
             return;
         }
         this.comboAPI.set_selected_item(item.itemID);
-        this._activeDescendantId = item.id;
+        this._activeDescendantId = item.id ?? null;
         this._focusedItem = item;
         this.combo.setActiveDescendant();
     }

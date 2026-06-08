@@ -3709,13 +3709,14 @@ describe('igxCombo', () => {
 
         describe('Zoneless', () => {
             beforeEach(async () => {
+                TestBed.resetTestingModule();
                 await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
-                        IgxComboComponent,
+                        IgxComboSampleComponent,
                     ],
                     providers: [
-                        provideZonelessChangeDetection()
+                        provideZonelessChangeDetection(),
                     ]
                 }).compileComponents();
 
@@ -3724,21 +3725,23 @@ describe('igxCombo', () => {
                 combo = fixture.componentInstance.combo;
             });
 
-            it('should not reproduce NG0100 when virtualized combo items update on scroll - issue #17310', async () => {
+            it('should not reproduce NG0100 when virtualized combo items update on scroll - issue #17310', fakeAsync(() => {
                 combo.open();
-                await fixture.whenStable();
+                tick();
+                fixture.detectChanges();
 
                 const scrollEl = combo.virtualScrollContainer.getScroll();
                 expect(scrollEl).toBeTruthy();
 
-                expect(() => {
-                    scrollEl.scrollTop = 300;
-                    scrollEl.dispatchEvent(new Event('scroll'));
+                scrollEl.scrollTop = 300;
+                scrollEl.dispatchEvent(new Event('scroll'));
+                tick(100);
 
-                    fixture.whenStable();
+                expect(() => {
+
                     fixture.detectChanges();
                 }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
-            });
+            }));
 
             it('should not reproduce NG0100 related to active descendant on scroll - issue #17310', fakeAsync(() => {
                 combo.toggle();
