@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { IgxDividerComponent } from './divider.component';
+import { IgxDividerDirective } from './divider.directive';
 
 /**
  * @hidden
  * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
 @NgModule({
-    imports: [IgxDividerComponent],
-    exports: [IgxDividerComponent]
+    imports: [IgxDividerDirective],
+    exports: [IgxDividerDirective]
 })
 export class IgxDividerModule { }

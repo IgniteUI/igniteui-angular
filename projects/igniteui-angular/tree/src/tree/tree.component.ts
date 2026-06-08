@@ -1,22 +1,4 @@
-import {
-    Component,
-    QueryList,
-    Input,
-    Output,
-    EventEmitter,
-    ContentChild,
-    Directive,
-    TemplateRef,
-    OnInit,
-    AfterViewInit,
-    ContentChildren,
-    OnDestroy,
-    HostBinding,
-    ElementRef,
-    booleanAttribute,
-    ViewEncapsulation,
-    inject,
-} from '@angular/core';
+import { Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute, inject } from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
@@ -87,8 +69,6 @@ export class IgxTreeExpandIndicatorDirective {
 @Component({
     selector: 'igx-tree',
     templateUrl: 'tree.component.html',
-    styleUrl: 'tree.component.css',
-    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxTreeService,
         IgxTreeSelectionService,

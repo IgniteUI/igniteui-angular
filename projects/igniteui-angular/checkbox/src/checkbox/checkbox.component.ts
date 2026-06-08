@@ -4,7 +4,6 @@ import {
     Input,
     AfterViewInit,
     booleanAttribute,
-    ViewEncapsulation,
 } from '@angular/core';
 import { CheckboxBaseDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { ControlValueAccessor } from '@angular/forms';
@@ -43,8 +42,6 @@ import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
     ],
     preserveWhitespaces: false,
     templateUrl: 'checkbox.component.html',
-    styleUrl: 'checkbox.component.css',
-    encapsulation: ViewEncapsulation.None,
     imports: [IgxRippleDirective],
 })
 export class IgxCheckboxComponent

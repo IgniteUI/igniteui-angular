@@ -14,9 +14,7 @@ import {
     EventEmitter,
     SimpleChanges,
     booleanAttribute,
-    ViewEncapsulation,
-    inject
-} from '@angular/core';
+    inject} from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBaseDirective } from './drop-down.base';
@@ -52,13 +50,6 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 @Component({
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
-    styles: [`
-        :host {
-            position: absolute;
-        }
-    `],
-    styleUrl: 'drop-down.component.css',
-    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
     imports: [IgxToggleDirective]
 })

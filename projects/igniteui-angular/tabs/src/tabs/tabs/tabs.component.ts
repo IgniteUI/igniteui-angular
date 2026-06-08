@@ -1,15 +1,4 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    HostBinding,
-    Input,
-    NgZone,
-    OnDestroy,
-    ViewChild,
-    ViewEncapsulation,
-    inject
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -69,8 +58,6 @@ let NEXT_TAB_ID = 0;
 @Component({
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
-    styleUrl: 'tabs.component.css',
-    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
     imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgTemplateOutlet, IgxIconButtonDirective]
 })
@@ -192,10 +179,10 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     /** @hidden */
     public resolveHeaderScrollClasses() {
         return {
-            'igx-tabs-header-scroll--start': this.tabAlignment === 'start',
-            'igx-tabs-header-scroll--end': this.tabAlignment === 'end',
-            'igx-tabs-header-scroll--center': this.tabAlignment === 'center',
-            'igx-tabs-header-scroll--justify': this.tabAlignment === 'justify',
+            'igx-tabs__header-scroll--start': this.tabAlignment === 'start',
+            'igx-tabs__header-scroll--end': this.tabAlignment === 'end',
+            'igx-tabs__header-scroll--center': this.tabAlignment === 'center',
+            'igx-tabs__header-scroll--justify': this.tabAlignment === 'justify',
         };
     }
 

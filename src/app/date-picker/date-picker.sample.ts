@@ -7,6 +7,7 @@ import {
     IgxLabelDirective,
     IgxSuffixDirective,
     PickerInteractionMode,
+    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -38,6 +39,7 @@ registerIconFromText('alarm', alarm);
         IgxLabelDirective,
         IgxSuffixDirective,
         IgxIconComponent,
+        IgSizeDirective,
         ReactiveFormsModule,
     ],
 })
@@ -97,6 +99,13 @@ export class DatePickerSampleComponent {
     );
 
     public panelConfig: PropertyPanelConfig = {
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'medium',
+            }
+        },
         mode: {
             control: {
                 type: 'button-group',

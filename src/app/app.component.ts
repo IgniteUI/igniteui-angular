@@ -9,14 +9,14 @@ import {
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { DocumentDirection, IgSize, PageHeaderComponent } from './pageHeading/pageHeading.component';
+import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
 import { IGX_NAVIGATION_DRAWER_DIRECTIVES, IgxNavigationDrawerComponent } from 'igniteui-angular/navigation-drawer';
 import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
-import {IgSizeDirective, IgxDividerComponent, IgxRippleDirective} from 'igniteui-angular/directives';
+import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 
 // I18n
@@ -53,8 +53,6 @@ import localeHant from '@angular/common/locales/zh-Hant';
         IgxPrefixDirective,
         IgxSuffixDirective,
         PropertiesPanelComponent,
-        IgxDividerComponent,
-        IgSizeDirective,
     ]
 })
 export class AppComponent implements OnInit {
@@ -65,7 +63,6 @@ export class AppComponent implements OnInit {
     public navdrawer: IgxNavigationDrawerComponent;
 
     public dirMode = signal<'ltr' | 'rtl'>('ltr');
-    public igSize = signal<IgSize>('medium');
 
     // Filter for navigation items
     public filterText = signal('');
@@ -75,14 +72,9 @@ export class AppComponent implements OnInit {
         this.dirMode.set(dir);
     }
 
-    public onSizeChange(size: IgSize): void {
-        this.igSize.set(size);
-    }
-
     protected propertyChangeService = inject(PropertyChangeService);
 
     public urlString: string;
-    public urlIcon: string;
 
     public drawerState = {
         enableGestures: true,
@@ -836,20 +828,11 @@ export class AppComponent implements OnInit {
         iconService.setFamily('fa-brands', { className: 'fab', type: 'font' });
 
         router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
-            const allLinks = [...this.componentLinks, ...this.directiveLinks, ...this.styleLinks];
-            for (const component of allLinks) {
+            for (const component of this.componentLinks) {
                 if (component.link === router.url) {
                     this.urlString = component.name;
-                    this.urlIcon = component.icon;
                 }
             }
-
-            // Scroll the active drawer item into view
-            requestAnimationFrame(() => {
-                const activeItem = this.navdrawer.drawer
-                    ?.querySelector('.igx-nav-drawer-item--active');
-                activeItem?.scrollIntoView({ block: 'nearest' });
-            });
         });
     }
 

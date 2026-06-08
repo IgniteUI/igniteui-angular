@@ -1,50 +1,77 @@
 @use '../../../projects/igniteui-angular/core/src/core/styles/base' as *;
 
-.demos-navbar {
-    .igx-navbar__title {
-        display: none !important;
-    }
-
-    igx-input-group {
-        display: block grid !important;
-    }
-
-    .igx-navbar__left:not(:empty) {
-        margin-inline: 0;
-    }
-
-    @include tokens(navbar-theme(
-        $background: var(--ig-gray-100),
-        $disable-shadow: true,
-        $border-color: var(--ig-gray-300)
-    ));
+:host {
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
-.header-actions {
+:host ::ng-deep {
+    --ph-background: var(--ig-primary-800);
+    --ph-foreground: var(--ig-primary-800-contrast);
+
+    .hamburger {
+        color: var(--ph-foreground);
+        margin-right: rem(16px);
+
+        [dir='rtl'] & {
+            margin-left: rem(16px);
+            margin-right: initial;
+        }
+    }
+}
+
+.header-actions,
+.sample-header,
+.wrapper {
     display: flex;
     align-items: center;
-    gap: 1rem;
+}
 
-    .toggle-button {
-        color: inherit;
-        font-size: .8rem
+.sample-header {
+    justify-content: space-between;
+    height: rem(90px);
+    padding: 0 rem(16px);
+    background: var(--ph-background);
+    overflow: hidden;
+
+    .title {
+        color: var(--ph-foreground);
+        margin: 0;
+        text-transform: capitalize;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .locale-select,
-    .size-select {
+    .header-actions {
+        gap: .2em
+    }
+
+    .toggle-button {
+        color: var(--ph-foreground);
+    }
+
+    .locale-select {
+        --ig-size: var(--ig-size-small);
         width: 100px;
         cursor: pointer;
+
+        ::ng-deep {
+            input {
+                color: white !important;
+            }
+
+            input[readonly] {
+                cursor: pointer;
+            }
+        }
     }
 }
 
-
-.demos-header {
-    --ig-size: 1;
-
-    grid-column: 1 / -1;
-    grid-row: var(--header-row);
-
-    nav {
-        min-height: var(--demo-navbar-size);
-    }
+.header-actions__title {
+    color: var(--ig-primary-900-contrast);
 }

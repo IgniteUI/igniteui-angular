@@ -124,13 +124,6 @@ export class CardSampleComponent implements OnInit {
     public orderInput: string = '';
 
     public panelConfig: PropertyPanelConfig = {
-        elevated: {
-            label: 'Elevated',
-            control: {
-                type: 'boolean',
-                defaultValue: false
-            }
-        },
         hideMedia: {
             label: 'Hide Media',
             control: {

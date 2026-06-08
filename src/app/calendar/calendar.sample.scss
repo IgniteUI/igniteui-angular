@@ -27,12 +27,8 @@
 }
 
 .custom-controls {
-    > label {
-        display: block;
-        margin-block-end: 8px;
-    }
-
     > *:not(label) {
+        display: block;
         margin-bottom: 16px;
     }
 }

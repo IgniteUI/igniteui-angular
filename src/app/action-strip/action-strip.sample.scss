@@ -1,55 +1,44 @@
 :host {
-    display: grid;
-    row-gap: 2rem;
+    padding-bottom: 4rem;
 }
 
-.standalone-action-strip {
-    display: grid;
-    place-items: center;
-    padding: 0 1rem;
+.display-density-actions {
+    max-width: 600px;
+    margin: 16px;
 
-    min-height: 100px;
+    h4 {
+        margin: 20px 0;
+    }
+}
+
+.parent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    width: 400px;
+    height: 200px;
     position: relative;
-    background-image: linear-gradient(
-            45deg,
-            hsl(240deg 100% 20%) 0%,
-            hsl(269deg 100% 19%) 18%,
-            hsl(285deg 100% 18%) 26%,
-            hsl(301deg 100% 17%) 33%,
-            hsl(314deg 100% 20%) 39%,
-            hsl(323deg 100% 22%) 44%,
-            hsl(330deg 100% 24%) 50%,
-            hsl(336deg 100% 26%) 56%,
-            hsl(341deg 100% 27%) 61%,
-            hsl(345deg 100% 28%) 67%,
-            hsl(350deg 100% 29%) 74%,
-            hsl(354deg 100% 29%) 82%,
-            hsl(0deg 100% 29%) 100%
-    );
-    color: var(--ig-primary-900-contrast);
-    border-radius: .5rem;
-    box-shadow: var(--ig-elevation-4);
-    overflow: hidden;
+    background-color: var(--ig-gray-200);
 }
 
 .my-action-strip {
-    --icon-color: var(--ig-primary-900-contrast);
-    --actions-background: transoarent;
-    --actions-border-radius: .2rem;
-
-    justify-content: center;
-    backdrop-filter: blur(5px);
-    white-space: nowrap;
-    background-color: hsla(240deg 100% 20% / 40%);
-    margin: 0 auto;
-}
-
-.action-strip-template {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(2px);
 }
 
-.commit-tooltip-target {
-    display: inline-flex;
+.cell-template {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+}
+
+h5 {
+    margin-bottom: 10px;
 }

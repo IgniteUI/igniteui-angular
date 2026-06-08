@@ -11,7 +11,6 @@ import {
     ElementRef,
     ChangeDetectorRef,
     ChangeDetectionStrategy,
-    ViewEncapsulation,
     inject,
     AfterContentChecked
 } from '@angular/core';
@@ -53,8 +52,6 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
-    styleUrl: 'days-view.component.css',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxDayItemComponent, TitleCasePipe, DayDigitPipe]
 })

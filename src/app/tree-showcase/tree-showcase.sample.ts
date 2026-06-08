@@ -3,6 +3,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import {
     IGX_TREE_DIRECTIVES,
     IgxTreeSelectionType,
+    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -29,11 +30,17 @@ interface CompanyData {
     styleUrls: ['tree-showcase.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
-    imports: [IGX_TREE_DIRECTIVES],
+    imports: [IGX_TREE_DIRECTIVES, IgSizeDirective],
 })
 export class TreeShowcaseSampleComponent {
     public data: CompanyData[];
     public panelConfig: PropertyPanelConfig = {
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large']
+            }
+        },
         singleBranchExpand: {
             label: 'Single Branch Expand',
             control: {

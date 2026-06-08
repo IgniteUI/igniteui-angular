@@ -1,16 +1,12 @@
 <div
     role="row"
-    class="igx-days-row"
+    class="igx-days-view__row"
     [title]="weekNumberHeader.long | titlecase"
 >
     @if (showWeekNumbers) {
         <div
             role="columnheader"
-            class="
-            igx-day-label
-            igx-day-label--week-number
-            igx-days-row__label
-            igx-days-row__label--week-number"
+            class="igx-days-view__label igx-days-view__label--week-number"
         >
             <span>
                 <i>{{ weekNumberHeader.short | titlecase }}</i>
@@ -21,9 +17,9 @@
         <span
             role="columnheader"
             [attr.aria-label]="dayName.long"
-            class="igx-day-label igx-days-row__label"
+            class="igx-days-view__label"
         >
-            <span class="igx-day-label__inner">
+            <span class="igx-days-view__label-inner">
                 {{ dayName.formatted | titlecase }}
             </span>
         </span>
@@ -35,23 +31,14 @@
     let isLast = $last; let i = $index
 ) {
     <div
-        class="igx-days-row"
+        class="igx-days-view__row"
         role="row"
     >
         @if (showWeekNumbers) {
-            <div
-                class="
-                igx-day-item
-                igx-day-item--week-number
-                igx-days-row__day--week-number"
-            >
+            <div class="igx-days-view__date igx-days-view__date--week-number">
                 <span
                     role="rowheader"
-                    class="
-                    igx-day-item__inner
-                    igx-day-item__inner--week-number
-                    igx-days-row__day-inner
-                    igx-days-row__day-inner--week-number"
+                    class="igx-days-view__date-inner igx-days-view__date-inner--week-number"
                 >
                     {{ getWeekNumber(week[0]) }}
                 </span>
@@ -60,7 +47,7 @@
         @for (day of week; track dateTracker($index, day)) {
             <igx-day-item
                 #item
-                class="igx-day-item"
+                class="igx-days-view__date"
                 role="gridcell"
                 [attr.id]="item.isCurrentMonth && day.timestamp"
                 [attr.aria-selected]="isSelected(day)"

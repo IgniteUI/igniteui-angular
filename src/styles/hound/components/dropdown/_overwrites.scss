@@ -1,6 +1,7 @@
 @use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-.igx-drop-down {
+.igx-drop-down__list {
+
     padding: rem(4px);
 
     .igx-drop-down__item {

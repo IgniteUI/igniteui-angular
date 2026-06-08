@@ -5,8 +5,7 @@ import {
     HostBinding,
     Input,
     OnInit,
-    Output,
-    ViewEncapsulation
+    Output
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
@@ -35,8 +34,6 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-snackbar',
     templateUrl: 'snackbar.component.html',
-    styleUrl: 'snackbar.component.css',
-    encapsulation: ViewEncapsulation.None,
     imports: [IgxButtonDirective]
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective

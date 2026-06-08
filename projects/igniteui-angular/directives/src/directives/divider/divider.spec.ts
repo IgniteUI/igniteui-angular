@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { IgxDividerComponent, IgxDividerType } from './divider.component';
+import { IgxDividerDirective, IgxDividerType } from './divider.directive';
 
 describe('Divider', () => {
     const baseClass = 'igx-divider';
@@ -98,7 +98,7 @@ describe('Divider', () => {
         [inset]="inset"
         [role]="role">
     </igx-divider>`,
-    imports: [IgxDividerComponent]
+    imports: [IgxDividerDirective]
 })
 class TestDividerComponent {
     public type: string;

@@ -343,7 +343,7 @@ describe("Days View Component", () => {
 
             const day = fixture.debugElement.query(
                 By.css(
-                    ".igx-day-item:not(.igx-day-item--inactive)",
+                    ".igx-days-view__date:not(.igx-days-view__date--inactive)",
                 ),
             );
 
@@ -365,7 +365,7 @@ describe("Days View Component", () => {
             spyOn(instance.pageChanged, "emit");
 
             let days = fixture.debugElement.queryAll(
-                By.css(".igx-day-item--inactive"),
+                By.css(".igx-days-view__date--inactive"),
             );
 
             UIInteractions.simulateClickAndSelectEvent(
@@ -380,7 +380,7 @@ describe("Days View Component", () => {
             });
 
             days = fixture.debugElement.queryAll(
-                By.css(".igx-day-item--inactive"),
+                By.css(".igx-days-view__date--inactive"),
             );
 
             UIInteractions.simulateClickAndSelectEvent(
@@ -398,22 +398,22 @@ describe("Days View Component", () => {
 });
 
 function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
-    const days = fixture.debugElement.queryAll(By.css(".igx-day-item"));
+    const days = fixture.debugElement.queryAll(By.css(".igx-days-view__date"));
     const inactiveDays = fixture.debugElement.queryAll(
         By.css(
-            ".igx-day-item--inactive:not(igx-dasy-view--hidden)",
+            ".igx-days-view__date--inactive:not(igx-dasy-view__date--hidden)",
         ),
     );
 
     const firstActiveIndex = days.findIndex(
         (d: DebugElement) =>
             !d.nativeElement.classList.contains(
-                "igx-day-item--inactive",
+                "igx-days-view__date--inactive",
             ),
     );
 
     const notHidden = (d: DebugElement) =>
-        !d.nativeElement.classList.contains("igx-day-item--hidden");
+        !d.nativeElement.classList.contains("igx-days-view__date--hidden");
 
     const leading = inactiveDays.slice(0, firstActiveIndex).filter(notHidden);
     const trailing = inactiveDays

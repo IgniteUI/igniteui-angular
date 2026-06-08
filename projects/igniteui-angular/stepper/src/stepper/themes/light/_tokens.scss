@@ -1,8 +1,0 @@
-@use 'igniteui-theming/sass/themes' as *;
-@use 'igniteui-theming/sass/themes/schemas/components/light/stepper' as *;
-
-$base: digest-schema($light-stepper);
-$material: digest-schema($material-stepper);
-$bootstrap: digest-schema($bootstrap-stepper);
-$fluent: digest-schema($fluent-stepper);
-$indigo: digest-schema($indigo-stepper);

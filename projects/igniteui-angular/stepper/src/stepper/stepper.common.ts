@@ -91,6 +91,8 @@ export interface IgxStep extends ToggleAnimationPlayer {
     /** @hidden @internal */
     contentClasses: any;
     /** @hidden @internal */
+    stepHeaderClasses: any;
+    /** @hidden @internal */
     nativeElement: HTMLElement;
     /** @hidden @internal */
     previous: boolean;

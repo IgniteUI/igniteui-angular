@@ -7,7 +7,7 @@ import { IgxStepperService } from './stepper.service';
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper
+ * @igxKeywords stepper 
  * @igxGroup Layouts
  *
  * @example
@@ -28,7 +28,7 @@ export class IgxStepActiveIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper
+ * @igxKeywords stepper 
  * @igxGroup Layouts
  *
  * @example
@@ -49,7 +49,7 @@ export class IgxStepCompletedIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper
+ * @igxKeywords stepper 
  * @igxGroup Layouts
  *
  * @example
@@ -70,7 +70,7 @@ export class IgxStepInvalidIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper
+ * @igxKeywords stepper 
  * @igxGroup Layouts
  *
  * @example
@@ -91,7 +91,7 @@ export class IgxStepIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper
+ * @igxKeywords stepper 
  * @igxGroup Layouts
  *
  * @example
@@ -106,11 +106,8 @@ export class IgxStepIndicatorDirective { }
     standalone: true
 })
 export class IgxStepTitleDirective {
-    @HostBinding('class.igx-step__title')
+    @HostBinding('class.igx-stepper__step-title')
     public defaultClass = true;
-
-    @HostBinding('class.igx-step-header__title')
-    public headerElementClass = true;
 }
 
 /**
@@ -118,7 +115,7 @@ export class IgxStepTitleDirective {
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper
+ * @igxKeywords stepper 
  * @igxGroup Layouts
  *
  * @example
@@ -133,11 +130,8 @@ export class IgxStepTitleDirective {
     standalone: true
 })
 export class IgxStepSubtitleDirective {
-    @HostBinding('class.igx-step__subtitle')
-    public elementClass = true;
-
-    @HostBinding('class.igx-step-header__subtitle')
-    public headerElementClass = true;
+    @HostBinding('class.igx-stepper__step-subtitle')
+    public defaultClass = true;
 }
 
 /**
@@ -145,7 +139,7 @@ export class IgxStepSubtitleDirective {
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper
+ * @igxKeywords stepper 
  * @igxGroup Layouts
  *
  * @example

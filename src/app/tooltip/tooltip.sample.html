@@ -16,6 +16,7 @@
         <div class="custom-width" #simple="tooltip" igxTooltip id="myid">
             Her name is Toola Tipa
         </div>
+
     </article>
 
     <article class="column">
@@ -87,12 +88,14 @@
                     </div>
                 </igx-card-content>
                 <igx-card-actions>
-                    <span igxStart igxIconButton="flat" igxRipple [igxRippleCentered]="true">
-                        <igx-icon>favorite</igx-icon>
-                    </span>
-                    <span igxStart igxIconButton="flat" igxRipple [igxRippleCentered]="true">
-                        <igx-icon>share</igx-icon>
-                    </span>
+                    <div class="igx-card-actions__igroup--start">
+                        <span igxIconButton="flat" igxRipple [igxRippleCentered]="true">
+                            <igx-icon>favorite</igx-icon>
+                        </span>
+                        <span igxIconButton="flat" igxRipple [igxRippleCentered]="true">
+                            <igx-icon>share</igx-icon>
+                        </span>
+                    </div>
                 </igx-card-actions>
             </igx-card>
         </article>

@@ -16,7 +16,6 @@ import {
     ChangeDetectorRef,
     HostListener,
     booleanAttribute,
-    ViewEncapsulation,
     inject
 } from '@angular/core';
 import {
@@ -29,31 +28,14 @@ import {
     NG_VALIDATORS
 } from '@angular/forms';
 
-import {
-    IgxInputDirective,
-    IgxInputGroupComponent,
-    IgxInputState,
-    IgxLabelDirective,
-    IgxPrefixDirective,
-    IgxReadOnlyInputDirective,
-    IgxSuffixDirective
-} from 'igniteui-angular/input-group';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import {
     IgxItemListDirective,
     IgxTimeItemDirective
 } from './time-picker.directives';
 import { Subscription, noop, fromEvent } from 'rxjs';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
-import { AbsoluteScrollStrategy,
-    DatePart,
-    DatePartDeltas,
-    DateTimeUtil,
-    GridColumnDataType,
-    IgxPickerActionsDirective,
-    PickerHeaderOrientation,
-    PickerInteractionMode,
-    getCurrentResourceStrings
-} from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, DatePart, DatePartDeltas, DateTimeUtil, GridColumnDataType, IgxPickerActionsDirective, PickerHeaderOrientation, PickerInteractionMode, getCurrentResourceStrings } from 'igniteui-angular/core';
 import { AutoPositionStrategy } from 'igniteui-angular/core';
 import { OverlaySettings } from 'igniteui-angular/core';
 import { takeUntil } from 'rxjs/operators';
@@ -67,7 +49,7 @@ import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEv
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IgxDividerComponent } from 'igniteui-angular/directives';
+import { IgxDividerDirective } from 'igniteui-angular/directives';
 import { PickerBaseDirective } from 'igniteui-angular/date-picker';
 
 let NEXT_ID = 0;
@@ -94,33 +76,13 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
         }
     ],
     selector: 'igx-time-picker',
-    styleUrl: 'time-picker.component.css',
     templateUrl: 'time-picker.component.html',
     styles: [
         `:host {
             display: block;
         }`
     ],
-    encapsulation: ViewEncapsulation.None,
-    imports: [
-        IgxInputGroupComponent,
-        IgxInputDirective,
-        IgxDateTimeEditorDirective,
-        IgxTextSelectionDirective,
-        IgxPrefixDirective,
-        IgxIconComponent,
-        IgxSuffixDirective,
-        IgxButtonDirective,
-        IgxToggleDirective,
-        NgClass,
-        IgxItemListDirective,
-        IgxTimeItemDirective,
-        NgTemplateOutlet,
-        TimeFormatPipe,
-        TimeItemPipe,
-        IgxDividerComponent,
-        IgxReadOnlyInputDirective
-    ]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerDirective, IgxReadOnlyInputDirective]
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
     implements

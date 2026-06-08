@@ -1,23 +1,4 @@
-import {
-    AfterViewInit,
-    booleanAttribute,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    HostBinding,
-    HostListener,
-    Input,
-    OnDestroy,
-    Output,
-    Renderer2,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
-    inject
-} from '@angular/core';
+import { AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, OnDestroy, Output, Renderer2, TemplateRef, ViewChild, inject } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT, HorizontalAnimationType } from '../stepper.common';
 import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.directive';
@@ -52,8 +33,6 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-step',
     templateUrl: 'step.component.html',
-    styleUrl: 'step.component.css',
-    encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: IGX_STEP_COMPONENT, useExisting: IgxStepComponent }
     ],
@@ -128,7 +107,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * ```
      */
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-step--completed')
+    @HostBinding('class.igx-stepper__step--completed')
     public completed = false;
 
     /**
@@ -222,17 +201,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     }
 
     /** @hidden @internal */
-    @HostBinding('class.igx-step')
+    @HostBinding('class.igx-stepper__step')
     public cssClass = true;
 
     /** @hidden @internal */
-    @HostBinding('class.igx-step--vertical')
-    public get isVertical(): boolean {
-        return this.stepper.orientation === 'vertical';
-    }
-
-    /** @hidden @internal */
-    @HostBinding('class.igx-step--disabled')
+    @HostBinding('class.igx-stepper__step--disabled')
     public get generalDisabled(): boolean {
         return this.disabled || this.linearDisabled;
     }
@@ -241,35 +214,10 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     @HostBinding('class')
     public get titlePositionTop(): string {
         if (this.stepper.stepType !== IgxStepType.Full) {
-            return 'igx-step--simple';
+            return 'igx-stepper__step--simple';
         }
 
-        return `igx-step--${this.titlePosition}`;
-    }
-
-    /** @hidden @internal */
-    @HostBinding('class.igx-step--current')
-    public get isActive(): boolean {
-        return this.active;
-    }
-
-    /** @hidden @internal */
-    @HostBinding('class.igx-step--invalid')
-    public get isInvalid(): boolean {
-        return !this.isValid
-            && this.stepperService.visitedSteps.has(this)
-            && !this.active
-            && this.isAccessible;
-    }
-
-    /** @hidden @internal */
-    public get stepHeaderClasses(): { [key: string]: boolean } {
-        return {
-            'igx-step-header--invalid': this.isInvalid,
-            'igx-step-header--disabled': this.disabled || this.linearDisabled,
-            'igx-step-header--current': this.active,
-            'igx-step-header--completed': this.completed,
-        };
+        return `igx-stepper__step--${this.titlePosition}`;
     }
 
     /**
@@ -355,7 +303,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     }
 
     /** @hidden @internal */
-    @HostBinding('class.igx-step--horizontal')
     public get isHorizontal(): boolean {
         return this.stepper.orientation === IgxStepperOrientation.Horizontal;
     }
@@ -399,7 +346,17 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         }
     }
 
-/** @hidden @internal */
+    /** @hidden @internal */
+    public get stepHeaderClasses(): any {
+        return {
+            'igx-stepper__step--optional': this.optional,
+            'igx-stepper__step-header--current': this.active,
+            'igx-stepper__step-header--invalid': !this.isValid
+                && this.stepperService.visitedSteps.has(this) && !this.active && this.isAccessible
+        };
+    }
+
+    /** @hidden @internal */
     public get nativeElement(): HTMLElement {
         return this.element.nativeElement;
     }

@@ -103,6 +103,12 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     public maxHeight = null;
 
     /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-drop-down')
+    public cssClass = true;
+
+    /**
      * Get all non-header items
      *
      * ```typescript
