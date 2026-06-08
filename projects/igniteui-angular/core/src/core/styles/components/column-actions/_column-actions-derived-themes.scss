@@ -1,0 +1,78 @@
+@use 'sass:map';
+@use '../../base' as *;
+@use '../_common/extract-theme-schema' as *;
+
+/// Column actions internal components theming
+@mixin column-actions-derived-themes($theme) {
+    $theme-info: extract-theme-schema($theme);
+    $schema: map.get($theme-info, 'schema');
+
+    :where(igx-column-actions) {
+        --_column-actions-background: var(--background, var(--ig-column-actions-background));
+        --_column-actions-foreground: var(--foreground, var(--ig-column-actions-foreground));
+        --_column-actions-accent-color: var(--accent-color, var(--ig-column-actions-accent-color));
+
+        @include tokens(
+            checkbox-theme(
+                $schema: $schema,
+                $empty-color: color-mix(in srgb, var(--_column-actions-foreground) 80%, var(--_column-actions-background)),
+                $empty-fill-color: var(--_column-actions-background),
+                $tick-color-hover: color-mix(in srgb, var(--_column-actions-foreground) 40%, var(--_column-actions-background)),
+                $fill-color: var(--_column-actions-accent-color),
+                $label-color: var(--_column-actions-foreground),
+                $disabled-color: color-mix(in srgb, var(--_column-actions-foreground) 50%, var(--_column-actions-background)),
+            )
+        );
+
+        @include tokens(
+            drop-down-theme(
+                $schema: $schema,
+                $background-color: var(--_column-actions-background),
+                $item-text-color: var(--_column-actions-foreground),
+                $border-color: color-mix(in srgb, var(--_column-actions-foreground) 12%, var(--_column-actions-background)),
+                $hover-item-background: color-mix(in srgb, var(--_column-actions-accent-color) 8%, var(--_column-actions-background)),
+                $focused-item-background: color-mix(in srgb, var(--_column-actions-accent-color) 12%, var(--_column-actions-background)),
+                $selected-item-background: color-mix(in srgb, var(--_column-actions-accent-color) 12%, var(--_column-actions-background)),
+                $selected-hover-item-background: color-mix(in srgb, var(--_column-actions-accent-color) 16%, var(--_column-actions-background)),
+                $selected-focus-item-background: color-mix(in srgb, var(--_column-actions-accent-color) 24%, var(--_column-actions-background)),
+            )
+        );
+
+        @include tokens(
+            flat-button-theme(
+                $schema: $schema,
+                $foreground: var(--_column-actions-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_column-actions-accent-color) 50%, var(--_column-actions-background)),
+            )
+        );
+
+        @include tokens(
+            input-group-theme(
+                $schema: $schema,
+                $idle-bottom-line-color: var(--_column-actions-accent-color),
+                $border-color: var(--_column-actions-accent-color),
+                $idle-text-color: var(--_column-actions-foreground),
+                $placeholder-color: color-mix(in srgb, var(--_column-actions-foreground) 80%, var(--_column-actions-background)),
+            )
+        );
+
+        $scrollbar-theme: digest-schema(map.get($schema, 'scrollbar'));
+        $scrollbar-bg-color: map.get($scrollbar-theme, 'sb-track-bg-color');
+        $scrollbar-thumb-color: map.get($scrollbar-theme, 'sb-thumb-bg-color');
+        $scrollbar-track-border-color: map.get($scrollbar-theme, 'sb-track-border-color');
+
+        --_scrollbar-thumb-color: color-mix(in srgb, var(--_column-actions-foreground) 50%, var(--_column-actions-background));
+        --_scrollbar-track-border-color: color-mix(in srgb, var(--_column-actions-foreground) 16%, var(--_column-actions-background));
+
+        @include tokens(
+            scrollbar-theme(
+                $schema: $schema,
+                $sb-track-bg-color: var(--_column-actions-background, $scrollbar-bg-color),
+                $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
+                $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
+            ),
+            $mode: 'scoped'
+        );
+    }
+}
