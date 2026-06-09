@@ -574,7 +574,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 } catch (_e) {
                     throw new Error(
                         `Cannot find a differ supporting object "${value}" of type "${getTypeNameForDebugging(value)}".
-                     NgFor only supports binding to Iterables such as Arrays.`);;
+                     NgFor only supports binding to Iterables such as Arrays.`);
                 }
             }
         }

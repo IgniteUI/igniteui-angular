@@ -76,7 +76,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     @HostBinding('class.igx-grid-th--pinned-first')
     public get pinnedFirstCSS() {
-        return !this.column.grid.hasColumnLayouts ? this.column.isFirstPinned : false;;
+        return !this.column.grid.hasColumnLayouts ? this.column.isFirstPinned : false;
     }
 
     @HostBinding('attr.role')

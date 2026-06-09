@@ -4,7 +4,7 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
-import { IgxSelectComponent } from 'igniteui-angular/select';;
+import { IgxSelectComponent } from 'igniteui-angular/select';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';

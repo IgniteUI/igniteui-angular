@@ -647,7 +647,7 @@ describe('Navigation Drawer', () => {
 
             flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
 
-            expect(flexBasis).toEqual('240px');;
+            expect(flexBasis).toEqual('240px');
             expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
     });
 
