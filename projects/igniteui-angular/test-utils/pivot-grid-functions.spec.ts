@@ -1,11 +1,6 @@
 import { IPivotGridRecord } from 'igniteui-angular/grids/core';
 
 export class PivotGridFunctions {
-
-    public static checkUniqueValuesCount(data: any[], _value: string, count:number) {
-        expect(data.filter(x => x === data).length).toBe(count);
-    }
-
     public static getDimensionValues(records: IPivotGridRecord[]) {
         return records.map(x => this.transformMapToObject(x.dimensionValues));
     }
