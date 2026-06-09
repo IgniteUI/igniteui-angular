@@ -325,7 +325,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     rowDimensionColumnsByLevel.get(level)!.push(col);
                 });
                 // Sort each level by startIndex
-                rowDimensionColumnsByLevel.forEach((cols, level) => {
+                rowDimensionColumnsByLevel.forEach((cols, _level) => {
                     cols.sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
                 });
             }
@@ -447,12 +447,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         columns: any[],
         rowDimensionHeaders: string[],
         maxLevel: number,
-        maxRowLevel: number,
+        _maxRowLevel: number,
         xStart: number,
         yStart: number,
         baseColumnWidth: number,
         headerHeight: number,
-        tableWidth: number,
+        _tableWidth: number,
         options: IgxPdfExporterOptions,
         allColumns?: any[]
     ): number {
@@ -619,7 +619,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             headersForLevel.sort((a, b) => a.startIndex - b.startIndex);
 
             // Draw each header in this level
-            headersForLevel.forEach((col, idx) => {
+            headersForLevel.forEach((col, _idx) => {
                 const colSpan = col.columnSpan || 1;
                 const width = baseColumnWidth * colSpan;
                 const normalizedStartIndex = resolveLayoutStartIndex(col);
@@ -958,7 +958,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         options: IgxPdfExporterOptions,
         allColumns?: any[],
         isPivotGrid?: boolean,
-        rowDimensionColumnsByLevel?: Map<number, any[]>,
+        _rowDimensionColumnsByLevel?: Map<number, any[]>,
         recordIndex?: number,
         rowDimensionHeaders?: string[]
     ): void {

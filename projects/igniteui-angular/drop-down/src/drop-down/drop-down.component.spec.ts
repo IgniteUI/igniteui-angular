@@ -1612,7 +1612,7 @@ class VirtualizedDropDownComponent {
     public itemsMaxHeight = 400;
     public itemHeight = 40;
     constructor() {
-        this.items = Array.apply(null, { length: 2000 }).map((e, i) => ({
+        this.items = Array.apply(null, { length: 2000 }).map((_e, i) => ({
             name: `Item ${i + 1}`,
             id: i
         }));

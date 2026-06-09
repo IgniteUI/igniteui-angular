@@ -62,7 +62,6 @@ import {
     DatePartDeltas,
     DatePart,
     isDateInRanges,
-    IgxOverlayOutletDirective,
     I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';

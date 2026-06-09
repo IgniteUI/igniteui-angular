@@ -1502,7 +1502,7 @@ export class GridRowPinningComponent {
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
 
     public createSimpleData(count: number) {
-        this.data = Array(count).fill({}).map((x, idx) => x = { idx: idx + 1 });
+        this.data = Array(count).fill({}).map((_x, idx) => ({ idx: idx + 1 }));
     }
 }
 

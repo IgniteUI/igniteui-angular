@@ -3,7 +3,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { data, dataWithoutPK } from '../shared/data';
-import { IColumnPipeArgs, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { IColumnPipeArgs, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 
  @Component({
     providers: [],

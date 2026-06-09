@@ -1,18 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
-import { formatDate, registerLocaleData } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import localeBG from '@angular/common/locales/bg';
-import localeEN from '@angular/common/locales/en';
-import localeDE from '@angular/common/locales/de';
-import localeES from '@angular/common/locales/es';
-import localeFR from '@angular/common/locales/fr';
-import localeIT from '@angular/common/locales/it';
-import localeJA from '@angular/common/locales/ja';
-import localeKO from '@angular/common/locales/ko';
-import localeHans from '@angular/common/locales/zh-Hans';
-import localeHant from '@angular/common/locales/zh-Hant';
-import localeHI from '@angular/common/locales/hi';
+
 import { DATA } from '../shared/financialData';
 
 import {
@@ -29,7 +19,6 @@ import {
     IgxGridToolbarComponent,
     IgxGridToolbarTitleComponent,
     IgxPaginatorComponent,
-    changei18n,
     registerI18n,
     setCurrentI18n,
     IgxGridPinningActionsComponent,
@@ -124,14 +113,6 @@ export class GridLocalizationSampleComponent implements OnInit {
     }
 
     public updateLocale() {
-        const newLocale = this.locales.find(x => x.type === this.locale).resource;
-        // Manual assign of resource strings.
-        //this.grid.resourceStrings = newLocale;
-
-        // Old API
-        // changei18n(newLocale);
-
-        // New API
         setCurrentI18n(this.locale);
     }
 

@@ -167,11 +167,11 @@ export class GridMRLConfigSampleComponent {
         this.colsWidth = event.target.value;
     }
 
-    public onColEnter(event: IDropBaseEventArgs, rowIndex, colIndex) {
+    public onColEnter(_event: IDropBaseEventArgs, rowIndex, colIndex) {
         this.collection[rowIndex][colIndex].hovered = true;
     }
 
-    public onColLeave(event: IDropBaseEventArgs, rowIndex, colIndex) {
+    public onColLeave(_event: IDropBaseEventArgs, rowIndex, colIndex) {
         this.collection[rowIndex][colIndex].hovered = false;
     }
 
@@ -232,7 +232,7 @@ export class GridMRLConfigSampleComponent {
         this.resizeVisible = true;
     }
 
-    public onBlur(event, rowIndex, colIndex) {
+    public onBlur(_event, rowIndex, colIndex) {
         this.cellSelected = null;
         this.collection[rowIndex][colIndex].selected = false;
         this.resizeVisible = false;
@@ -247,7 +247,7 @@ export class GridMRLConfigSampleComponent {
         event.target.setPointerCapture(event.pointerId);
     }
 
-    public pointerMoveResizeLeft(event, cellRef, rowIndex, colIndex) {
+    public pointerMoveResizeLeft(event, cellRef, _rowIndex, colIndex) {
         if (this.dragStarted) {
             const curDistance = this.dragStartX - event.pageX;
             const minIncrease = -this.curResizedCell.colSpan;
@@ -259,7 +259,7 @@ export class GridMRLConfigSampleComponent {
         }
     }
 
-    public pointerMoveResizeRight(event, cellRef, rowIndex, colIndex) {
+    public pointerMoveResizeRight(event, _cellRef, _rowIndex, colIndex) {
         if (this.dragStarted) {
             const curDistance = event.pageX - this.dragStartX;
             const maxIncrease = this.colsCount - (colIndex + this.curResizedCell.colSpan);
@@ -268,7 +268,7 @@ export class GridMRLConfigSampleComponent {
         }
     }
 
-    public pointerUpResizeRight(event, cellRef, rowIndex, colIndex) {
+    public pointerUpResizeRight(_event, _cellRef, rowIndex, colIndex) {
         this.dragStarted = false;
         this.resizeVisible = false;
 
@@ -348,7 +348,7 @@ export class GridMRLConfigSampleComponent {
         this.colSpanIncrease = 0;
     }
 
-    public pointerUpResizeLeft(event, cellRef, targetRowIndex, targetColIndex) {
+    public pointerUpResizeLeft(_event, _cellRef, targetRowIndex, targetColIndex) {
         this.dragStarted = false;
         this.resizeVisible = false;
 

@@ -38,7 +38,7 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
       return `${this.remoteService.url}?$count=true&$skip=${state.startIndex}&$top=${chunkSize}`;
     };
     // eslint-disable-next-line prefer-spread
-    this.localItems = Array.apply(null, { length: 2000 }).map((e, i) => ({
+    this.localItems = Array.apply(null, { length: 2000 }).map((_e, i) => ({
       name: `Item ${i + 1}`,
       id: i
     }));

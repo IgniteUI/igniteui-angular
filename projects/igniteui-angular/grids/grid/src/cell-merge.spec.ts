@@ -136,7 +136,7 @@ describe('IgxGrid - Cell merging #grid', () => {
             it('should allow setting a custom comparer for merging on particular column via mergingComparer.', () => {
                 const col = grid.getColumnByName('ProductName');
                 // all are same and should merge
-                col.mergingComparer = (prev: any, rec: any, field: string) => {
+                col.mergingComparer = (_prev: any, _rec: any, _field: string) => {
                     return true;
                 };
                 grid.pipeTrigger += 1;
@@ -1354,13 +1354,13 @@ export class IntegrationCellMergeGridComponent extends DefaultCellMergeGridCompo
 class NoopMergeStrategy extends DefaultMergeStrategy {
     public override merge(
         data: any[],
-        field: string,
-        comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
-        result: any[],
-        activeRowIndexes: number[],
-        isDate?: boolean,
-        isTime?: boolean,
-        grid?: GridTypeBase
+        _field: string,
+        _comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
+        _result: any[],
+        _activeRowIndexes: number[],
+        _isDate?: boolean,
+        _isTime?: boolean,
+        _grid?: GridTypeBase
     ) {
         return data;
     }

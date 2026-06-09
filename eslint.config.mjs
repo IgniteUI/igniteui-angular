@@ -45,7 +45,7 @@ export default [{
         "@typescript-eslint/no-shadow": "error",
         "no-unused-vars": "off",
 
-        "@typescript-eslint/no-unused-vars": ["warn", {
+        "@typescript-eslint/no-unused-vars": ["error", {
             args: "all",
             argsIgnorePattern: "^_",
             caughtErrors: "all",

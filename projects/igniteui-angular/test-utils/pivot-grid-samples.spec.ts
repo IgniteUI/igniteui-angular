@@ -370,10 +370,10 @@ export class IgxPivotGridFlexContainerComponent extends IgxPivotGridTestBaseComp
 }
 
 export class IgxTotalSaleAggregate {
-    public static totalSale: PivotAggregation = (members, data: any) =>
+    public static totalSale: PivotAggregation = (_members, data: any) =>
         data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
 
-    public static totalMin: PivotAggregation = (members, data: any) => {
+    public static totalMin: PivotAggregation = (_members, data: any) => {
         let min = 0;
         if (data.length === 1) {
             min = data[0].UnitPrice * data[0].UnitsSold || 0;
@@ -383,7 +383,7 @@ export class IgxTotalSaleAggregate {
         return min;
     };
 
-    public static totalMax: PivotAggregation = (members, data: any) => {
+    public static totalMax: PivotAggregation = (_members, data: any) => {
         let max = 0;
         if (data.length === 1) {
             max = data[0].UnitPrice * data[0].UnitsSold;

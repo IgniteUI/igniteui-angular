@@ -134,7 +134,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
     public set selectionMode(selectionMode: 'single' | 'singleRequired' | 'multi') {
         if (this.viewButtons && selectionMode !== this._selectionMode) {
-            this.buttons.forEach((b,i) => {
+            this.buttons.forEach((_b, i) => {
                 this.deselectButton(i);
             });
             this._selectionMode = selectionMode;
