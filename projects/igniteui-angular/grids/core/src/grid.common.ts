@@ -18,6 +18,7 @@ export class IgxGridBodyDirective { }
  */
 export interface RowEditPositionSettings extends PositionSettings {
     container?: HTMLElement;
+    clipToVisibleArea?: boolean;
 }
 
 /**
@@ -64,8 +65,10 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         super.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight },
             document, initialCall, targetElement);
 
-        // After positioning in the top layer, keep the overlay clipped to the visible grid body.
-        this.updateContentClip(contentElement);
+        if (this.settings.clipToVisibleArea) {
+            // After positioning in the top layer, keep the overlay clipped to the visible grid body.
+            this.updateContentClip(contentElement);
+        }
     }
 
     private updateContentClip(contentElement: HTMLElement): void {
@@ -98,28 +101,27 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
 
     private getClippingRect(element: HTMLElement): Pick<DOMRect, 'top' | 'right' | 'bottom' | 'left'> {
         const document = element.ownerDocument;
-        const rect = element.getBoundingClientRect();
-        // Start with the current grid body, then narrow it by every clipping parent.
+        const gridBody = element.closest('[igxgridbody]') as HTMLElement || element;
+        const rect = gridBody.getBoundingClientRect();
+        // Start with the current grid body, then narrow it by parent grid bodies.
         const clippingRect = { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left };
 
-        let parent = element.parentElement;
+        let parent = gridBody.parentElement?.closest('[igxgridbody]') as HTMLElement;
 
-        // Intersect with clipping ancestors so nested grids respect their parent grid scroll bounds.
-        while (parent && parent !== document.body && parent !== document.documentElement) {
-            const style = document.defaultView?.getComputedStyle(parent) ?? parent.style;
-            const overflow = `${style.overflow}${style.overflowX}${style.overflowY}`;
+        // Intersect with parent grid bodies so nested grids respect their parent scroll bounds.
+        while (parent) {
+            const parentRect = parent.getBoundingClientRect();
 
-            // Only ancestors that clip their children should reduce the visible area.
-            if (/(auto|scroll|hidden|clip)/.test(overflow)) {
-                const parentRect = parent.getBoundingClientRect();
+            clippingRect.top = Math.max(clippingRect.top, parentRect.top);
+            clippingRect.right = Math.min(clippingRect.right, parentRect.right);
+            clippingRect.bottom = Math.min(clippingRect.bottom, parentRect.bottom);
+            clippingRect.left = Math.max(clippingRect.left, parentRect.left);
 
-                clippingRect.top = Math.max(clippingRect.top, parentRect.top);
-                clippingRect.right = Math.min(clippingRect.right, parentRect.right);
-                clippingRect.bottom = Math.min(clippingRect.bottom, parentRect.bottom);
-                clippingRect.left = Math.max(clippingRect.left, parentRect.left);
+            if (clippingRect.top >= clippingRect.bottom || clippingRect.left >= clippingRect.right) {
+                break;
             }
 
-            parent = parent.parentElement;
+            parent = parent.parentElement?.closest('[igxgridbody]') as HTMLElement;
         }
 
         // Keep the clipping area inside the viewport because popover content is viewport-positioned.
