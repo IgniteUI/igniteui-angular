@@ -556,6 +556,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * The presence of this method is a signal to the Ivy template type-check compiler that the
      * `IgxForOf` structural directive renders its template with a specific context type.
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static ngTemplateContextGuard<T, U extends T[]>(_dir: IgxForOfDirective<T, U>, ctx: any):
         ctx is IgxForOfContext<T, U> {
         return true;
@@ -1666,6 +1667,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
      * The presence of this method is a signal to the Ivy template type-check compiler that the
      * `IgxGridForOfDirective` structural directive renders its template with a specific context type.
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static override ngTemplateContextGuard<T, U extends T[]>(_dir: IgxGridForOfDirective<T, U>, ctx: any):
         ctx is IgxGridForOfContext<T, U> {
         return true;

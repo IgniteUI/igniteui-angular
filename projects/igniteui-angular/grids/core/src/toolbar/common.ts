@@ -97,9 +97,8 @@ export interface IgxGridToolbarTemplateContext {
 export class IgxGridToolbarDirective {
     public template = inject<TemplateRef<IgxGridToolbarTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_dir: IgxGridToolbarDirective,
-        ctx: unknown): ctx is IgxGridToolbarTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_dir: IgxGridToolbarDirective, ctx: unknown): ctx is IgxGridToolbarTemplateContext {
         return true
     }
 }
