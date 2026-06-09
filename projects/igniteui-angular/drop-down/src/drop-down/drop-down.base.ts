@@ -172,8 +172,8 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * This is used to update the `aria-activedescendant` attribute of
      * the IgxDropDownNavigationDirective host element.
      */
-    public get activeDescendant (): string {
-        return this.focusedItem ? this.focusedItem.id : null;
+    public get activeDescendant (): string | null {
+        return this.focusedItem?.id ?? null;
     }
 
     /**
