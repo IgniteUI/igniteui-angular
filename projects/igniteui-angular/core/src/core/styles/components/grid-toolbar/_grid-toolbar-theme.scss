@@ -1,11 +1,14 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use 'igniteui-theming/sass/themes/schemas' as *;
+@use './grid-toolbar-derived-themes' as *;
 
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
+/// @deprecated Use the `tokens` mixin instead.
+/// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin grid-toolbar($theme) {
-    @include css-vars($theme);
+    @include tokens($theme, $mode: 'scoped');
+    @include grid-toolbar-derived-themes($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
     $bootstrap-theme: $variant == 'bootstrap';
@@ -67,7 +70,7 @@
         grid-row: 1;
         font-size: $grid-toolbar-fs;
         border-bottom: rem(1px) solid var-get($theme, 'border-color');
-        background: var-get($theme, 'background-color');
+        background: var-get($theme, 'background');
         height: auto;
         min-height: var-get($theme, 'size');
         padding-block: 0;
@@ -179,7 +182,7 @@
         bottom: rem(-1px);
         height: rem(2px);
         overflow: hidden;
-        background: var-get($theme, 'background-color');
+        background: var-get($theme, 'background');
 
         igx-linear-bar > * {
             border-radius: 0;
