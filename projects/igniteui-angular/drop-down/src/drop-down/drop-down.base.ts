@@ -227,14 +227,14 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     /**
      * @hidden @internal
      */
-    public get focusedItem(): IgxDropDownItemBaseDirective {
+    public get focusedItem(): IgxDropDownItemBaseDirective | null {
         return this._focusedItem;
     }
 
     /**
      * @hidden @internal
      */
-    public set focusedItem(item: IgxDropDownItemBaseDirective) {
+    public set focusedItem(item: IgxDropDownItemBaseDirective | null) {
         this._focusedItem = item;
     }
 
