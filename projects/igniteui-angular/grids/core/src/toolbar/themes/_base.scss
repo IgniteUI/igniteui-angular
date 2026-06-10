@@ -20,7 +20,7 @@ $theme: $base;
         grid-row: 1;
         font-size: rem(16px);
         border-bottom: rem(1px) solid var-get($theme, 'border-color');
-        background: var-get($theme, 'background-color');
+        background: var-get($theme, 'background');
         height: auto;
         min-height: var-get($theme, 'size');
         padding-block: 0;
@@ -109,7 +109,7 @@ $theme: $base;
             bottom: rem(-1px);
             height: rem(2px);
             overflow: hidden;
-            background: var-get($theme, 'background-color');
+            background: var-get($theme, 'background');
 
             igx-linear-bar > * {
                 border-radius: 0;
