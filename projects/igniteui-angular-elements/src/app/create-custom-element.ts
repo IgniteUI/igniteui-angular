@@ -111,7 +111,7 @@ function guardAttributeNames<T>(strategyFactory: IgxCustomNgElementStrategyFacto
 
     // getComponentDef not public, also technically readonly map
     // the key is the non-minified (template) name
-    const inputs: {[P in keyof T]: string} = (strategyFactory.componentFactory as any).componentDef.inputs;
+    const inputs: {[P in keyof T]: string} = (strategyFactory.component as any).ɵcmp.inputs;
 
     for (const key in inputs) {
         const input = inputs[key];
