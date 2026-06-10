@@ -27,6 +27,7 @@ import {
 } from "./types";
 import { VirtualScrollEngine } from "./scroll-engine";
 import { isPlatformBrowser } from "@angular/common";
+import { isLeftToRight } from "igniteui-angular/core";
 
 const REMOTE_SCROLLING_THRESHOLD = 5;
 
@@ -54,6 +55,13 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   private _viewportResizeObserver: ResizeObserver | null = null;
   private _itemResizeObserver: ResizeObserver | null = null;
   private _onScroll: ((e: Event) => void) | null = null;
+
+  /**
+   * Guards against emitting duplicate `dataRequest` events for the same
+   * `startIndex` while waiting for the consumer to append the requested items.
+   * Reset whenever `data` changes (i.e. new items have arrived).
+   */
+  private _hasPendingDataRequest = false;
 
   /** Views currently inserted into the VCR, ordered by rendered item index. */
   private readonly _activeItems: EmbeddedViewRef<IgxVsItemContext<T>>[] = [];
@@ -103,9 +111,14 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     const domSize = this._engine.domSize();
     position = Math.max(0, Math.min(position, domSize - physicalRangeSize));
 
-    return this._isVertical()
-      ? `translateY(${position}px)`
-      : `translateX(${position}px)`;
+    if (this._isVertical()) {
+      return `translateY(${position}px)`;
+    }
+
+    // In RTL the content wrapper is anchored to the right edge of the track,
+    // so it must translate towards the negative (leading) direction.
+    const offset = this._isLTR() ? position : -position;
+    return `translateX(${offset}px)`;
   });
 
   //#region View and Content Children
@@ -178,7 +191,12 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     effect(() => {
       const count = this.data().length;
       const estimated = this.estimatedItemSize();
-      untracked(() => this._engine.resize(count, estimated));
+      untracked(() => {
+        this._engine.resize(count, estimated);
+        // New data (or a reset) clears any in-flight data request so the next
+        // approach to the end of the list can emit again.
+        this._hasPendingDataRequest = false;
+      });
     });
 
     // Browser setup: runs after first render and whenever orientation changes.
@@ -234,7 +252,12 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       // Only emit once the user has actually scrolled (scrollPosition > 0).
       if (this._scrollPosition() === 0) return;
 
+      // Guard: do not fire again while a previous request is still pending.
+      // The flag is reset when `data` changes (new items have arrived).
+      if (this._hasPendingDataRequest) return;
+
       if (total > 0 && range.endIndex >= total - REMOTE_SCROLLING_THRESHOLD) {
+        this._hasPendingDataRequest = true;
         this.dataRequest.emit({
           startIndex: total,
           count: Math.max(this.overScan() * 4, 20),
@@ -255,8 +278,14 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     if (this._isVertical()) {
       host.scrollTop = offset;
     } else {
-      host.scrollLeft = offset;
+      // Standards-compliant browsers expose a negative scrollLeft in RTL.
+      host.scrollLeft = this._isLTR() ? offset : -offset;
     }
+  }
+
+  /** Whether the host element is laid out left-to-right. */
+  private _isLTR(): boolean {
+    return isLeftToRight(this._hostRef.nativeElement);
   }
 
   private _renderRange(
@@ -386,9 +415,13 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     this._zone.runOutsideAngular(() => {
       this._onScroll = (e: Event) => {
         const target = e.target as HTMLElement;
+        // Normalize the RTL negative scrollLeft into a positive virtual
+        // scroll position so the engine math stays direction-agnostic.
         const scrollPos = this._isVertical()
           ? target.scrollTop
-          : target.scrollLeft;
+          : this._isLTR()
+            ? target.scrollLeft
+            : -target.scrollLeft;
         this._zone.run(() => this._scrollPosition.set(scrollPos));
       };
       host.addEventListener("scroll", this._onScroll!, { passive: true });

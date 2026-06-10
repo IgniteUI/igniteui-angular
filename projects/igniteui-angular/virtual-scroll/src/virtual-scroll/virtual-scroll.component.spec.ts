@@ -237,6 +237,22 @@ class TestHorizontalComponent {
 }
 
 @Component({
+    selector: 'test-virtual-scroll-horizontal-rtl',
+    template: `
+        <igx-virtual-scroll dir="rtl" [data]="items" orientation="horizontal"
+                            style="width: 400px; height: 50px; display: block;">
+            <ng-template igxVirtualItem let-item>
+                <div class="item" style="width: 80px; height: 50px;">{{ item }}</div>
+            </ng-template>
+        </igx-virtual-scroll>
+    `,
+    imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective],
+})
+class TestHorizontalRtlComponent {
+    public items = generateItems(50);
+}
+
+@Component({
     selector: 'test-virtual-scroll-events',
     template: `
         <igx-virtual-scroll [data]="items" style="height: 300px; display: block;"
@@ -407,6 +423,73 @@ describe('IgxVirtualScrollComponent', () => {
                 By.css('.igx-vs__content')
             ).nativeElement;
             expect(content.style.transform).toMatch(/translateX/);
+        });
+    });
+
+    describe('horizontal orientation (RTL)', () => {
+        let fixture: ComponentFixture<TestHorizontalRtlComponent>;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [TestHorizontalRtlComponent],
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestHorizontalRtlComponent);
+            fixture.detectChanges();
+        });
+
+        it('should apply a non-positive translateX transform in RTL', () => {
+            const content: HTMLElement = fixture.debugElement.query(
+                By.css('.igx-vs__content')
+            ).nativeElement;
+            const match = /translateX\((-?\d+(?:\.\d+)?)px\)/.exec(
+                content.style.transform
+            );
+            expect(match).not.toBeNull();
+            // In RTL the content wrapper is anchored to the right edge and
+            // translates towards the negative (leading) direction.
+            expect(parseFloat(match![1])).toBeLessThanOrEqual(0);
+        });
+
+        it('should normalize the RTL negative scrollLeft into a positive scroll position', fakeAsync(() => {
+            const vsEl: HTMLElement = fixture.debugElement.query(
+                By.directive(IgxVirtualScrollComponent)
+            ).nativeElement;
+
+            // Standards-compliant browsers report a negative scrollLeft in RTL.
+            Object.defineProperty(vsEl, 'scrollLeft', {
+                get: () => -160,
+                configurable: true,
+            });
+            vsEl.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
+            tick();
+
+            const content: HTMLElement = fixture.debugElement.query(
+                By.css('.igx-vs__content')
+            ).nativeElement;
+            const match = /translateX\((-?\d+(?:\.\d+)?)px\)/.exec(
+                content.style.transform
+            );
+            expect(match).not.toBeNull();
+            // After scrolling 160px (two 80px items) the content should shift
+            // by roughly that amount in the negative direction.
+            expect(parseFloat(match![1])).toBeLessThan(0);
+        }));
+
+        it('should scroll to a negative scrollLeft in RTL via scrollToIndex', () => {
+            const vs = fixture.debugElement.query(
+                By.directive(IgxVirtualScrollComponent)
+            ).componentInstance as IgxVirtualScrollComponent<string>;
+            const vsEl: HTMLElement = fixture.debugElement.query(
+                By.directive(IgxVirtualScrollComponent)
+            ).nativeElement;
+
+            vs.scrollToIndex(10);
+            // 10 items * 80px = 800px, negated for RTL.
+            expect(vsEl.scrollLeft).toBe(-800);
         });
     });
 

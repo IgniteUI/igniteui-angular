@@ -42,3 +42,10 @@
     width: auto;
   }
 }
+
+:host(.igx-virtual-scroll--horizontal:dir(rtl)) {
+  .igx-vs__content {
+    left: auto;
+    right: 0;
+  }
+}

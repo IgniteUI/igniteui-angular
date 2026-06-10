@@ -129,6 +129,10 @@ Set `orientation="horizontal"`. Items are laid out in a row; ensure each item ha
 </igx-virtual-scroll>
 ```
 
+Right-to-left (RTL) layouts are fully supported. When the component (or an
+ancestor) sets `dir="rtl"`, horizontal scrolling, content positioning, and
+`scrollToIndex` are mirrored automatically — no extra configuration is required.
+
 ---
 
 ## Infinite / remote scrolling
