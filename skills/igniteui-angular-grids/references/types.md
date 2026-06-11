@@ -247,7 +247,7 @@ Columns use `<igx-grid-lite-column>` with these inputs:
 | `field` | `string` | Data property key (required) |
 | `dataType` | `'string' \| 'number' \| 'boolean' \| 'date'` | Column data type |
 | `header` | `string` | Header text |
-| `width` | `string` | CSS width (e.g., `'250px'`) |
+| `width` | `string` | CSS width — omit by default; columns auto-fill available grid space. Only set when a fixed or percentage width is explicitly needed (e.g. `'20%'`). |
 | `hidden` | `boolean` | Hide the column |
 | `resizable` | `boolean` | Allow column resizing |
 | `sortable` | `boolean` | Enable sorting |
@@ -487,6 +487,7 @@ Provide a drag-and-drop UI for users to reshape the pivot interactively:
 2. **Hierarchical Grid**: sorting/filtering/paging are independent per level; configure features on the `<igx-row-island>` blueprint
 3. **Pivot Grid is read-only** — editing, paging, pinning, column moving, row dragging are all disabled; use `pivotConfiguration` for all data operations
 4. **Grid Lite requires `CUSTOM_ELEMENTS_SCHEMA`** and `igniteui-grid-lite` npm package — it has no editing, selection, paging, or export
+5. **Omit `width` on generated `<igx-grid-lite-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for it.
 
 ## See Also
 

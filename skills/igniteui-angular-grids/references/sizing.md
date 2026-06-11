@@ -212,3 +212,4 @@ igx-grid {
 - Use `null` for height only when the data set is small; row virtualization is disabled and large data will hurt performance.
 - When using percentage height, the parent **must** have an explicit height for the percentage to resolve correctly. Without it, the grid falls back to 10 visible rows.
 - A mix of fixed-width and auto-sized columns is valid — auto-sized columns fill the remaining space after fixed-width columns are laid out.
+- **Omit `width` on generated columns.** No `width` = columns equally share available grid width. Pixel widths leave empty space when their sum is less than the grid width. Only set `width` when the user explicitly asks for it.
