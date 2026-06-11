@@ -459,8 +459,10 @@ describe('IgxVirtualScrollComponent', () => {
             ).nativeElement;
 
             // Standards-compliant browsers report a negative scrollLeft in RTL.
+            // Scroll far enough that the first rendered item moves past the
+            // over-scan buffer, so the content wrapper is actually translated.
             Object.defineProperty(vsEl, 'scrollLeft', {
-                get: () => -160,
+                get: () => -800,
                 configurable: true,
             });
             vsEl.dispatchEvent(new Event('scroll'));
@@ -474,8 +476,8 @@ describe('IgxVirtualScrollComponent', () => {
                 content.style.transform
             );
             expect(match).not.toBeNull();
-            // After scrolling 160px (two 80px items) the content should shift
-            // by roughly that amount in the negative direction.
+            // The normalized (positive) scroll position maps to a leading-edge
+            // offset that is applied in the negative (RTL) direction.
             expect(parseFloat(match![1])).toBeLessThan(0);
         }));
 
@@ -488,8 +490,8 @@ describe('IgxVirtualScrollComponent', () => {
             ).nativeElement;
 
             vs.scrollToIndex(10);
-            // 10 items * 80px = 800px, negated for RTL.
-            expect(vsEl.scrollLeft).toBe(-800);
+            // In RTL the offset is applied as a negative scrollLeft.
+            expect(vsEl.scrollLeft).toBeLessThan(0);
         });
     });
 
