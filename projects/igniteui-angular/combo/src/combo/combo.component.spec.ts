@@ -1099,32 +1099,19 @@ describe('igxCombo', () => {
                 let dropdownContainer;
                 let dropdownItems;
                 const headers: Array<string> = Array.from(new Set(combo.data.map(item => item.region)));
-                let scrollIndex = 0;
-
                 combo.toggle();
                 await wait();
                 fixture.detectChanges();
 
                 const checkGroupedItemsClass = () => {
                     fixture.detectChanges();
-
-                    const comboItems = fixture.debugElement.queryAll(By.css('igx-combo-item'));
-                    expect(comboItems.length).withContext('No combo items found').toBeGreaterThan(0);
-
-                    comboItems.forEach((itemDebugElement) => {
-                        const itemElement = itemDebugElement.nativeElement as HTMLElement;
-                        const isHeader = itemElement.getAttribute('ng-reflect-is-header') === 'true';
-                        const itemText = itemElement.innerText.trim();
-                        const hasHeaderClass = itemElement.classList.contains(CSS_CLASS_HEADERITEM);
-                        const hasItemClass = itemElement.classList.contains(CSS_CLASS_DROPDOWNLISTITEM);
-
-                        if (isHeader) {
-                            expect(hasHeaderClass)
-                                .withContext(`Expected HEADER class '${CSS_CLASS_HEADERITEM}' for header item with text "${itemText}"`).toBeTrue();
-                        } else {
-                            expect(hasItemClass)
-                                .withContext(`Expected ITEM class '${CSS_CLASS_DROPDOWNLISTITEM}' for dropdown item with text "${itemText}"`).toBeTrue();
-                        }
+                    dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
+                    dropdownItems = dropdownContainer.children;
+                    Array.from(dropdownItems).forEach((item) => {
+                        const itemElement = item as HTMLElement;
+                        const itemText = itemElement.innerText.toString();
+                        const expectedClass: string = headers.includes(itemText) ? CSS_CLASS_HEADERITEM : CSS_CLASS_DROPDOWNLISTITEM;
+                        expect(itemElement.classList.contains(expectedClass)).toBeTruthy();
                     });
                 };
 

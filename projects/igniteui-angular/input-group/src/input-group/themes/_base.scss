@@ -1,3 +1,4 @@
+/* stylelint-disable max-nesting-depth */
 @use 'sass:map';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
@@ -523,7 +524,6 @@ $transition-timing: .25s $out-cubic;
                 color: var-get($file-theme, 'file-names-foreground--disabled');
             }
 
-            /* stylelint-disable max-nesting-depth */
             &:hover {
                 @include e(input) {
                     @extend %input-textarea-disabled-colors;

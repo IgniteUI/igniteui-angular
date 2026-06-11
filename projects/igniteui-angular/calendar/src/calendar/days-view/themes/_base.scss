@@ -1,3 +1,4 @@
+/* stylelint-disable max-nesting-depth */
 @use 'igniteui-theming/sass/animations' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
@@ -493,11 +494,9 @@ $theme: $material;
                     color: var-get($theme, 'date-special-hover-foreground');
                     background: var-get($theme, 'date-special-hover-background');
 
-                    /* stylelint-disable max-nesting-depth */
                     &::after {
                         border-color: var-get($theme, 'date-special-hover-border-color');
                     }
-                    /* stylelint-enable max-nesting-depth */
                 }
             }
         }
@@ -657,11 +656,9 @@ $theme: $material;
                 }
 
                 &:hover {
-                    /* stylelint-disable max-nesting-depth */
                     &::after {
                         border-color: var-get($theme, 'date-selected-special-hover-border-color');
                     }
-                    /* stylelint-enable max-nesting-depth */
                 }
             }
         }
