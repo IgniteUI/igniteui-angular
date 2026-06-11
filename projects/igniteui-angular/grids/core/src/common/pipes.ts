@@ -248,7 +248,10 @@ export class IgxGridTransactionPipe implements PipeTransform {
                 this.grid.dataCloneStrategy);
             return result;
         }
-        return collection;
+        // Return a shallow copy so downstream pipes and igxGridForOf always
+        // receive a new array reference when pipeTrigger changes, regardless
+        // of whether the source array was mutated in place.
+        return collection.slice();
     }
 }
 
