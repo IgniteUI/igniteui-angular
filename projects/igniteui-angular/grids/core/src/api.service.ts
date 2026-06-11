@@ -320,7 +320,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             const transaction: Transaction = { id: rowId, type: TransactionType.ADD, newValue: rowData };
             grid.transactions.add(transaction);
         } else {
-            (grid.data as any[]).push(rowData);
+            (grid.data ?? (grid.data = [])).push(rowData);
             grid.summaryService.clearSummaryCache();
         }
         grid.validation.markAsTouched(rowId);
@@ -336,7 +336,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                 const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
                 grid.transactions.add(transaction, grid.data[index]);
             } else {
-                (grid.data as any[]).splice(index, 1);
+                (grid.data ?? (grid.data = [])).splice(index, 1);
                 grid.summaryService.clearSummaryCache();
             }
         } else {
