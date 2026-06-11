@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentRef, createComponent, DestroyRef, EnvironmentInjector, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ComponentRef, createComponent, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
@@ -82,8 +82,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // set componentRef to non-null to prevent DOM moves from re-initializing
         // TODO: Fail handling or cancellation needed?
         (this as any).componentRef = {};
-        const ngContentSelectors = reflectComponentType(this._component).ngContentSelectors;
-        const contentChildrenTags = Array.from(element.children).filter(x => ngContentSelectors.some(sel => x.matches(sel))).map(x => x.tagName.toLocaleLowerCase());
+        const ngContentSelectors = [...reflectComponentType(this._component).ngContentSelectors];
+        const contentChildrenTags = Array.from(element.children)
+            .filter(x => ngContentSelectors.some(sel => x.matches(sel)))
+            .map(x => x.tagName.toLocaleLowerCase());
 
         // const toBeOrphanedChildren = Array.from(element.children).filter(x => !ngContentSelectors.some(sel => x.matches(sel)));
         // for (const iterator of toBeOrphanedChildren) {
@@ -149,10 +151,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const childInjector = Injector.create({ providers: [], parent: (this as any).injector });
         const projectableNodes = extractProjectableNodes(
             element,
-            ngContentSelectors as string[],
+            ngContentSelectors,
         );
         (this as any).componentRef = createComponent(this._component, {
-            environmentInjector: ((this as any).injector as Injector).get(EnvironmentInjector),
+            environmentInjector: (this as any).injector,
             elementInjector: childInjector,
             hostElement: element,
             projectableNodes,
@@ -557,8 +559,8 @@ export class IgxCustomNgElementStrategyFactory extends ComponentNgElementStrateg
      * @param injector The injector for the component
      * @param config Additional component hierarchy configuration
      */
-    constructor(component: Type<any>, injector: Injector, private config: ComponentConfig[]) {
-        super(component, injector);
+    constructor(component: Type<any>, private config: ComponentConfig[]) {
+        super(component);
     }
 
     public override create(injector: Injector) {

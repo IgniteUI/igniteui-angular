@@ -24,6 +24,7 @@ import {
   OutputRef,
   reflectComponentType,
   createComponent,
+  ComponentMirror,
 } from '@angular/core';
 import {merge, Observable, ReplaySubject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
@@ -40,18 +41,17 @@ import {
 const DESTROY_DELAY = 10;
 
 /**
- * Factory that creates new ComponentNgElementStrategy instance. Uses reflectComponentType
- * to obtain component metadata and passes the component type to each strategy.
+ * Factory that creates new ComponentNgElementStrategy instance. Gets the component factory with the
+ * constructor's injector's factory resolver and passes that factory to each strategy.
  */
 export class ComponentNgElementStrategyFactory implements NgElementStrategyFactory {
-  component: Type<any>;
+  componentMirror: ComponentMirror<any>;
 
   inputMap = new Map<string, string>();
 
-  constructor(component: Type<any>, injector: Injector) {
-    this.component = component;
-    const mirror = reflectComponentType(component);
-    for (const input of mirror.inputs) {
+  constructor(protected component: Type<any>) {
+    this.componentMirror = reflectComponentType(component)!;
+    for (const input of this.componentMirror.inputs) {
       this.inputMap.set(input.propName, input.templateName);
     }
   }
@@ -200,10 +200,10 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
     const childInjector = Injector.create({providers: [], parent: this.injector});
     const projectableNodes = extractProjectableNodes(
       element,
-      reflectComponentType(this.component).ngContentSelectors as string[],
+      reflectComponentType(this.component)!.ngContentSelectors as string[],
     );
     this.componentRef = createComponent(this.component, {
-      environmentInjector: this.injector.get(EnvironmentInjector),
+      environmentInjector: this.injector as EnvironmentInjector,
       elementInjector: childInjector,
       hostElement: element,
       projectableNodes,
@@ -227,15 +227,15 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
 
   /** Sets up listeners for the component's outputs so that the events stream emits the events. */
   protected initializeOutputs(componentRef: ComponentRef<any>): void {
-    const eventEmitters: Observable<NgElementStrategyEvent>[] = reflectComponentType(this.component).outputs.map(
-      ({propName, templateName}) => {
-        const emitter: EventEmitter<any> | OutputRef<any> = componentRef.instance[propName];
-        return new Observable((observer) => {
-          const sub = emitter.subscribe((value) => observer.next({name: templateName, value}));
-          return () => sub.unsubscribe();
-        });
-      },
-    );
+    const eventEmitters: Observable<NgElementStrategyEvent>[] = reflectComponentType(
+      this.component,
+    )!.outputs.map(({propName, templateName}) => {
+      const emitter: EventEmitter<any> | OutputRef<any> = componentRef.instance[propName];
+      return new Observable((observer) => {
+        const sub = emitter.subscribe((value) => observer.next({name: templateName, value}));
+        return () => sub.unsubscribe();
+      });
+    });
 
     this.eventEmitters.next(eventEmitters);
   }
