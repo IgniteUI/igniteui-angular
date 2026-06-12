@@ -22,7 +22,11 @@ import {
     AfterViewInit,
     Inject,
     booleanAttribute,
-    DOCUMENT
+    DOCUMENT,
+    afterNextRender,
+    runInInjectionContext,
+    Injector,
+    inject
 } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
@@ -406,6 +410,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     private get _isAtBottomIndex() {
         return this.igxForOf && this.state.startIndex + this.state.chunkSize > this.igxForOf.length;
     }
+
+    protected readonly _injector = inject(Injector);
 
     constructor(
         private _viewContainer: ViewContainerRef,
@@ -815,6 +821,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             || containerSize && endTopOffset - containerSize > 5;
     }
 
+    protected isZonelessChangeDetection(): boolean {
+        return this._zone.constructor.name === 'NoopNgZone';
+    }
+
     /**
      * @hidden
      * Function that recalculates and updates cache sizes.
@@ -925,10 +935,21 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         const prevStartIndex = this.state.startIndex;
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
+        const isZoneless = this.isZonelessChangeDetection();
 
-        this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
-
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        runInInjectionContext(this._injector, () => {
+            afterNextRender({
+                write: () => {
+                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+                },
+                mixedReadWrite: isZoneless ? () => {
+                    this.recalcUpdateSizes();
+                } : undefined
+              });
+          });
+        if (!isZoneless) {
+            this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        }
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1121,7 +1142,18 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        const isZoneless = this.isZonelessChangeDetection();
+        if (isZoneless) {
+            runInInjectionContext(this._injector, () => {
+                afterNextRender({
+                    mixedReadWrite: () => {
+                        this.recalcUpdateSizes();
+                    }
+                });
+            });
+        } else {
+            this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        }
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1713,10 +1745,20 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             this._bScrollInternal = false;
         }
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
-
-        this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
-
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        const isZoneless = this.isZonelessChangeDetection();
+        runInInjectionContext(this._injector, () => {
+            afterNextRender({
+                write: () => {
+                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+                    if (!isZoneless) {
+                        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+                    }
+                },
+                mixedReadWrite: isZoneless ? () => {
+                    this.recalcUpdateSizes();
+                } : undefined
+              });
+          });
         this.cdr.markForCheck();
     }
 
