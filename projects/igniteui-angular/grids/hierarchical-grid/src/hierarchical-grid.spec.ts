@@ -783,6 +783,51 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrids[1].height).toBe('200px');
         });
 
+        it('should hide child row editing overlay when parent scroll moves child row out of view', () => {
+            hierarchicalGrid.getRowByIndex(0).expanded = true;
+            fixture.detectChanges();
+
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0] as IgxHierarchicalGridComponent;
+            childGrid.primaryKey = 'ID';
+            childGrid.rowEditable = true;
+            fixture.detectChanges();
+
+            const row = childGrid.gridAPI.get_row_by_index(0);
+            spyOnProperty(childGrid.crudService, 'rowInEditMode', 'get').and.returnValue(row);
+            childGrid.openRowOverlay(row.key);
+            fixture.detectChanges();
+
+            expect(childGrid.rowEditingOverlay.collapsed).toBeFalse();
+
+            const parentTbody = hierarchicalGrid.tbody.nativeElement.parentElement;
+            const childTbody = childGrid.tbody.nativeElement.parentElement;
+            const overlayContent = childGrid.rowEditingOverlay.element.parentElement;
+
+            parentTbody.style.overflow = 'hidden';
+            childTbody.style.overflow = 'hidden';
+            spyOn(parentTbody, 'getBoundingClientRect').and.returnValue({
+                top: 0, right: 500, bottom: 200, left: 0
+            } as DOMRect);
+            spyOn(childTbody, 'getBoundingClientRect').and.returnValue({
+                top: 0, right: 500, bottom: 200, left: 0
+            } as DOMRect);
+            spyOn(childGrid.tbody.nativeElement, 'getBoundingClientRect').and.returnValue({
+                top: -100, right: 500, bottom: 500, left: 0
+            } as DOMRect);
+            spyOn(row.nativeElement, 'getBoundingClientRect').and.returnValue({
+                top: -120, right: 500, bottom: -80, left: 0
+            } as DOMRect);
+            spyOn(overlayContent, 'getBoundingClientRect').and.returnValue({
+                top: -80, right: 500, bottom: -32, left: 0, width: 500, height: 48
+            } as DOMRect);
+
+            childGrid.rowEditingOverlay.reposition();
+            fixture.detectChanges();
+
+            expect(overlayContent.style.clipPath).toBe('inset(100%)');
+            expect(overlayContent.style.pointerEvents).toBe('none');
+        });
+
         it('Should apply runtime option changes to all related child grids (both existing and not yet initialized).', () => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
