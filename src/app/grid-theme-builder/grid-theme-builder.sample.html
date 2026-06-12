@@ -150,6 +150,116 @@
             [perPage]="15">
         </igx-paginator>
     </igx-grid>
+
+    <igx-hierarchical-grid
+        class="hierarchical-grid-preview"
+        [style.--ig-grid-summary-pinned-border-width]="gridSummaryPinnedBorderWidth() || null"
+        [style.--ig-grid-summary-pinned-border-style]="gridSummaryPinnedBorderStyle() || null"
+        [style.--ig-grid-summary-pinned-border-color]="gridSummaryPinnedBorderColor() || null"
+        [style.--ig-grid-summary-background-color]="gridSummaryBackground() || null"
+        [style.--ig-grid-summary-label-color]="gridSummaryLabelColor() || null"
+        [style.--ig-grid-summary-result-color]="gridSummaryResultColor() || null"
+        [style.--ig-grid-summary-border-width]="gridSummaryBorderWidth() || null"
+        [style.--ig-grid-summary-border-style]="gridSummaryBorderStyle() || null"
+        [style.--ig-grid-summary-border-color]="gridSummaryBorderColor() || null"
+        [style.--ig-query-builder-background]="advancedFilteringBackground() || null"
+        [style.--ig-query-builder-foreground]="advancedFilteringForeground() || null"
+        [style.--ig-query-builder-accent-color]="advancedFilteringAccentColor() || null"
+        [style.--ig-excel-filtering-background]="excelStyleFilteringBackground() || null"
+        [style.--ig-excel-filtering-foreground]="excelStyleFilteringForeground() || null"
+        [style.--ig-excel-filtering-accent-color]="excelStyleFilteringAccentColor() || null"
+        [style.--ig-grid-toolbar-background]="gridToolbarBackground() || null"
+        [style.--ig-grid-toolbar-foreground]="gridToolbarForeground() || null"
+        [style.--ig-grid-toolbar-accent-color]="gridToolbarAccentColor() || null"
+        [style.--ig-paginator-background]="paginatorBackground() || null"
+        [style.--ig-paginator-foreground]="paginatorForeground() || null"
+        [style.--ig-paginator-accent-color]="paginatorAccentColor() || null"
+        [data]="hierarchicalData"
+        [primaryKey]="'ID'"
+        [autoGenerate]="false"
+        [height]="'600px'"
+        [showExpandAll]="true"
+        [allowFiltering]="true"
+        [allowAdvancedFiltering]="true"
+        [filterMode]="'excelStyleFilter'">
+
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-title>Hierarchical Grid</igx-grid-toolbar-title>
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
+
+        <igx-column field="ID" dataType="string"
+            [sortable]="true" [filterable]="true" [resizable]="true" [pinned]="true">
+        </igx-column>
+        <igx-column-group header="Information">
+            <igx-column field="ChildLevels" dataType="number"
+                [sortable]="true" [filterable]="true" [resizable]="true" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="ProductName" dataType="string"
+                [sortable]="true" [filterable]="true" [resizable]="true" [editable]="true" [hasSummary]="true">
+            </igx-column>
+        </igx-column-group>
+
+        <igx-row-island
+            [key]="'childData'"
+            [primaryKey]="'ID'"
+            [autoGenerate]="false"
+            [allowFiltering]="true"
+            [allowAdvancedFiltering]="true"
+            [filterMode]="'excelStyleFilter'"
+            [showExpandAll]="true">
+            <igx-grid-toolbar *igxGridToolbar>
+                <igx-grid-toolbar-title>Child Grid</igx-grid-toolbar-title>
+            </igx-grid-toolbar>
+            <igx-column field="ID" dataType="string"
+                [sortable]="true" [filterable]="true" [resizable]="true">
+            </igx-column>
+            <igx-column-group header="Information 2">
+                <igx-column field="ChildLevels" dataType="number"
+                    [sortable]="true" [filterable]="true" [resizable]="true" [hasSummary]="true">
+                </igx-column>
+                <igx-column field="ProductName" dataType="string"
+                    [sortable]="true" [filterable]="true" [resizable]="true" [editable]="true" [hasSummary]="true">
+                </igx-column>
+            </igx-column-group>
+
+            <igx-row-island
+                [key]="'childData'"
+                [primaryKey]="'ID'"
+                [autoGenerate]="false"
+                [allowFiltering]="true"
+                [filterMode]="'excelStyleFilter'">
+                <igx-grid-toolbar *igxGridToolbar>
+                    <igx-grid-toolbar-title>Child of the Child</igx-grid-toolbar-title>
+                </igx-grid-toolbar>
+                <igx-column field="ID" dataType="string" [hasSummary]="true"></igx-column>
+                <igx-column-group header="Information 3">
+                    <igx-column field="ChildLevels" dataType="number" [resizable]="true"></igx-column>
+                    <igx-column field="ProductName" dataType="string" [resizable]="true"></igx-column>
+                </igx-column-group>
+
+                <igx-row-island
+                    [key]="'childData'"
+                    [primaryKey]="'ID'"
+                    [autoGenerate]="false">
+                    <igx-column field="ID" dataType="string" [hasSummary]="true"></igx-column>
+                    <igx-column-group header="Information 4">
+                        <igx-column field="ChildLevels" dataType="number"></igx-column>
+                        <igx-column field="ProductName" dataType="string"></igx-column>
+                    </igx-column-group>
+                </igx-row-island>
+
+                <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+            </igx-row-island>
+
+            <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+        </igx-row-island>
+
+        <igx-paginator [perPage]="5"></igx-paginator>
+    </igx-hierarchical-grid>
 </div>
 
 <ng-template #customControls>
@@ -340,8 +450,11 @@
                             <button type="button" igxButton="contained" [disabled]="!activeBorderTargets().length" (click)="completeBorderRule()">Done</button>
                         </div>
                     </div>
-                } @else if (availableBorderOptions().length) {
-                    <button type="button" igxButton="outlined" class="border-rules__add" (click)="addBorderRule()">Add border style</button>
+                }
+                @if (canAddBorderRule()) {
+                    <button type="button" igxButton="outlined" class="border-rules__add"
+                        [disabled]="borderEditorOpen() && !activeBorderTargets().length"
+                        (click)="addBorderRule()">Add border style</button>
                 }
             </div>
         </igx-expansion-panel-body>
@@ -791,7 +904,7 @@
             <div class="theme-export__panel-header">
                 <span>Export theme</span>
             </div>
-            @if (exportCssVars()) {
+            <!-- @if (exportCssVars()) {
                 <div class="theme-export__section-label">
                     <span>CSS custom properties</span>
                     <button igxButton="flat" class="theme-export__copy" (click)="copyExport(exportCssVars(), 'css')">
@@ -799,7 +912,7 @@
                     </button>
                 </div>
                 <pre class="theme-export__code">{{ exportCssVars() }}</pre>
-            }
+            } -->
             @if (exportCode()) {
                 <div class="theme-export__section-label">
                     <span>SCSS</span>

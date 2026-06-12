@@ -1,14 +1,15 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, OnInit, signal, TemplateRef, viewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SAMPLE_DATA } from '../shared/sample-data';
 import { IGX_GRID_DIRECTIVES, IgxActionStripComponent, IgxButtonDirective, IgxGridComponent, IgxNumberSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
 import { IgxAccordionComponent } from 'igniteui-angular/accordion';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from 'igniteui-angular/expansion-panel';
+import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IGX_SELECT_DIRECTIVES } from 'igniteui-angular/select';
 import { PropertyChangeService } from '../properties-panel/property-change.service';
+import { SAMPLE_DATA } from '../shared/sample-data';
 
 type BorderTarget = 'header' | 'row' | 'pinned' | 'summaryPinned' | 'summary' | 'activeCell';
 
@@ -36,7 +37,7 @@ class EmployeesSummary extends IgxNumberSummaryOperand {
     templateUrl: 'grid-theme-builder.sample.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, NgTemplateOutlet, IGX_GRID_DIRECTIVES, IgxActionStripComponent, IgxButtonDirective, IgxAccordionComponent, IgxComboComponent, IGX_EXPANSION_PANEL_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective]
+    imports: [FormsModule, NgTemplateOutlet, IGX_GRID_DIRECTIVES, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxActionStripComponent, IgxButtonDirective, IgxAccordionComponent, IgxComboComponent, IGX_EXPANSION_PANEL_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
 export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     protected readonly gridForeground = signal('');
@@ -97,6 +98,15 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
         const activeIndex = this.activeBorderRuleIndex();
         const unavailableTargets = this.borderRules().flatMap((rule, index) => index === activeIndex ? [] : rule);
         return this.borderOptions.filter(option => !unavailableTargets.includes(option.value));
+    });
+    protected readonly canAddBorderRule = computed(() => {
+        const activeIndex = this.activeBorderRuleIndex();
+        const activeTargets = this.activeBorderTargets();
+        const assignedTargets = this.borderRules().flatMap((rule, index) =>
+            index === activeIndex ? activeTargets : rule
+        );
+        if (activeIndex === null) assignedTargets.push(...activeTargets);
+        return this.borderOptions.some(option => !assignedTargets.includes(option.value));
     });
     protected readonly isEditingBorderRule = computed(() => this.activeBorderRuleIndex() !== null);
     protected readonly gridCellActiveBorderWidth = signal('');
@@ -286,6 +296,7 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     }
 
     public data: Array<any>;
+    public readonly hierarchicalData = this.generateHierarchicalData(10, 3);
     public readonly employeesSummary = EmployeesSummary;
 
     private readonly borderDefaults: Record<BorderTarget, { color: string, width: string, style: string }> = {
@@ -302,7 +313,34 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
         return value === this.borderDefaults[target][property] ? '' : value;
     }
 
+    private generateHierarchicalData(count: number, level: number, parentID: string = null): Array<any> {
+        const rows = [];
+        const currentLevel = level;
+        let children;
+
+        for (let i = 0; i < count; i++) {
+            const rowID = parentID ? parentID + i : i.toString();
+            if (level > 0) {
+                children = this.generateHierarchicalData(((i % 2) + 1) * Math.round(count / 3), currentLevel - 1, rowID);
+            }
+
+            rows.push({
+                ID: rowID,
+                ChildLevels: currentLevel,
+                ProductName: 'Product: A' + i,
+                childData: children
+            });
+        }
+
+        return rows;
+    }
+
     protected addBorderRule(): void {
+        if (this.borderEditorOpen()) {
+            if (!this.activeBorderTargets().length) return;
+            this.completeBorderRule();
+        }
+
         this.borderEditorSnapshot.clear();
         this.activeBorderRuleIndex.set(null);
         this.activeBorderTargets.set([]);

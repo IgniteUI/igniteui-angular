@@ -419,9 +419,9 @@ $icon-size: rem(18px);
     }
 
     @include b(igx-advanced-filter) {
-        background: var(--ig-query-builder-background);
+        background: var-get($theme, 'background');
         box-shadow: elevation(24);
-        border-radius: var(--ig-query-builder-border-radius)
+        border-radius: $border-radius;
 
         igx-query-builder {
             box-shadow: none;
