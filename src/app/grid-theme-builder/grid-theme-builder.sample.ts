@@ -60,7 +60,6 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     protected readonly gridSummaryPinnedBorderWidth = signal('');
     protected readonly gridSummaryPinnedBorderStyle = signal('');
     protected readonly gridSummaryBackground = signal('');
-    protected readonly gridSummariesPatchBackground = signal('');
     protected readonly gridSummaryLabelColor = signal('');
     protected readonly gridSummaryResultColor = signal('');
     protected readonly gridSummaryPinnedBorderColor = signal('');
@@ -145,7 +144,6 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
         add(gridLines, '$pinned-border-width', this.borderExportValue('pinned', 'width'));
         add(gridLines, '$pinned-border-style', this.borderExportValue('pinned', 'style'));
         add(gridLines, '$pinned-border-color', this.borderExportValue('pinned', 'color'));
-        add(gridLines, '$summaries-patch-background', this.gridSummariesPatchBackground());
         add(gridLines, '$cell-active-border-width', this.borderExportValue('activeCell', 'width'));
         add(gridLines, '$active-state-border-style', this.borderExportValue('activeCell', 'style'));
         add(gridLines, '$cell-active-border-color', this.borderExportValue('activeCell', 'color'));
@@ -231,7 +229,6 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
         add(gridVars, 'grid', 'pinned-border-width', this.borderExportValue('pinned', 'width'));
         add(gridVars, 'grid', 'pinned-border-style', this.borderExportValue('pinned', 'style'));
         add(gridVars, 'grid', 'pinned-border-color', this.borderExportValue('pinned', 'color'));
-        add(gridVars, 'grid', 'summaries-patch-background', this.gridSummariesPatchBackground());
         add(gridVars, 'grid', 'summary-background-color', this.gridSummaryBackground());
         add(gridVars, 'grid', 'summary-label-color', this.gridSummaryLabelColor());
         add(gridVars, 'grid', 'summary-result-color', this.gridSummaryResultColor());
