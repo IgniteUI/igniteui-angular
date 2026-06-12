@@ -1,6 +1,6 @@
 ﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective } from './for_of.directive';
@@ -1228,6 +1228,34 @@ describe('IgxForOf directive -', () => {
             const firstInnerDisplayContainer = displayContainer.children[0];
             expect(firstInnerDisplayContainer.children[0].textContent).toBe('0');
         });
+    });
+
+    describe('zoneless', () => {
+        let fix: ComponentFixture<VerticalVirtualComponent>;
+
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [VerticalVirtualComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+
+            fix = TestBed.createComponent(VerticalVirtualComponent);
+            dg.generateData(300, 5, fix.componentInstance);
+            fix.detectChanges();
+        });
+
+        it('should call recalcUpdateSizes after vertical scroll', fakeAsync(() => {
+            const virtDir = fix.componentInstance.parentVirtDir;
+            const spy = spyOn(virtDir, 'recalcUpdateSizes').and.callThrough();
+
+            fix.componentInstance.scrollTop(300);
+            tick(100);
+            fix.detectChanges();
+
+            expect(spy).toHaveBeenCalled();
+        }));
+
     });
 
     describe('on create new instance', () => {

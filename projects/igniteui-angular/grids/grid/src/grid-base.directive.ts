@@ -3710,7 +3710,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             destructor
         )
             .subscribe(() => {
-                this.zone.run(() => {
+                const work = () => {
                     // do not trigger reflow if element is detached.
                     if (this.nativeElement.isConnected) {
                         if (this.shouldResize) {
@@ -3725,7 +3725,12 @@ export abstract class IgxGridBaseDirective implements GridType,
                         }
                         this.notifyChanges(true);
                     }
-                });
+                };
+                if (this.isZonelessChangeDetection()) {
+                    work();
+                } else {
+                    this.zone.run(work);
+                }
             });
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
