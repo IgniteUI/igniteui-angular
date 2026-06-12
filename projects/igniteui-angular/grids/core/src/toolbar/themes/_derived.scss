@@ -11,6 +11,7 @@
                 --_grid-toolbar-background: var(--background, var(--ig-grid-toolbar-background));
                 --_grid-toolbar-foreground: var(--foreground, var(--ig-grid-toolbar-foreground));
                 --_grid-toolbar-accent-color: var(--accent-color, var(--ig-grid-toolbar-accent-color));
+                --ig-grid-toolbar-title-text-color: var(--_grid-toolbar-foreground);
 
                 @include tokens(
                     column-actions-theme(

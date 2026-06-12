@@ -2,101 +2,29 @@
 @use '../../styles/variables' as vars;
 
 .sample {
+    // @include tokens(
+    //     grid-theme(
+    //         $schema: vars.$schema,
+    //         $background: #f7f4f0,
+    //         $accent-color: #5b8f8a,
+    //     )
+    // );
+
     @include tokens(
         grid-theme(
             $schema: vars.$schema,
-            $background: #f7f4f0,
-            $accent-color: #5b8f8a,
+            $background: #21242c,
+            $accent-color: #77ac82
         )
-    );
-
-    &.has-header-overrides {
-        @include tokens(
-            grid-theme(
-                $schema: vars.$schema,
-                $background: #f7f4f0,
-                $accent-color: #5b8f8a,
-                $header-background: var(--ig-grid-header-background),
-                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
-            )
-        );
-    }
-
-    &.has-header-border-overrides {
-        @include tokens(
-            grid-theme(
-                $schema: vars.$schema,
-                $background: #f7f4f0,
-                $accent-color: #5b8f8a,
-                $header-border-width: var(--ig-grid-header-border-width),
-                $header-border-style: var(--ig-grid-header-border-style),
-                $header-border-color: var(--ig-grid-header-border-color),
-                $header-background: var(--ig-grid-background),
-                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
-            )
-        );
-    }
-
-    &.has-pinned-border-overrides {
-        @include tokens(
-            grid-theme(
-                $schema: vars.$schema,
-                $background: #f7f4f0,
-                $accent-color: #5b8f8a,
-                $pinned-border-width: var(--ig-grid-pinned-border-width),
-                $pinned-border-style: var(--ig-grid-pinned-border-style),
-                $pinned-border-color: var(--ig-grid-pinned-border-color),
-                $header-background: var(--ig-grid-background),
-                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
-            )
-        );
-    }
-
-    &.has-cell-active-border-overrides {
-        @include tokens(
-            grid-theme(
-                $schema: vars.$schema,
-                $background: #f7f4f0,
-                $accent-color: #5b8f8a,
-                $cell-active-border-width: var(--ig-grid-cell-active-border-width),
-                $active-state-border-style: var(--ig-grid-active-state-border-style),
-                $header-background: var(--ig-grid-background),
-                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
-            )
-        );
-    }
-
-    &.has-cell-selected-overrides {
-        @include tokens(
-            grid-theme(
-                $schema: vars.$schema,
-                $background: #f7f4f0,
-                $accent-color: #5b8f8a,
-                $cell-active-border-color: var(--ig-grid-cell-active-border-color),
-                $cell-selected-background: var(--ig-grid-cell-selected-background),
-                $header-background: var(--ig-grid-background),
-                $header-text-color: adaptive-contrast(var(--ig-grid-header-background))
-            )
-        );
-    }
+    )
 }
 
 igx-expansion-panel {
     --ig-expansion-panel-header-focus-background: transparent;
 }
 
-.theme-panel-accordion {
-    --theme: material;
-
-    .igx-input-group__bundle-main {
-        border: none;
-        box-shadow: none;
-        transition: none;
-    }
-
-    .igx-input-group__bundle-start {
-        visibility: visible;
-    }
+.igx-checkbox__ripple {
+    opacity: 0;
 }
 
 .color-pickers {
@@ -219,12 +147,104 @@ igx-expansion-panel {
 
 }
 
+.border-rules {
+    display: grid;
+    gap: rem(8px);
+    padding-block-end: rem(12px);
+
+    &__add {
+        width: 100%;
+    }
+}
+
 .border-combo {
     width: 100%;
-    margin-block-start: rem(4px);
+}
+
+.border-rule {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: rem(4px);
+    min-height: rem(40px);
+    border-block-end: 1px solid var(--ig-gray-200);
+
+    &__summary {
+        display: grid;
+        grid-template-columns: rem(16px) minmax(0, 1fr);
+        gap: rem(2px) rem(8px);
+        align-items: center;
+        min-width: 0;
+        padding: rem(6px) 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    &__swatch {
+        grid-row: 1 / span 2;
+        width: rem(16px);
+        height: rem(16px);
+        border: 1px solid var(--ig-gray-300);
+        border-radius: rem(3px);
+
+        &--auto {
+            background:
+                linear-gradient(135deg, transparent 45%, var(--ig-gray-400) 45%, var(--ig-gray-400) 55%, transparent 55%),
+                var(--ig-gray-100);
+        }
+    }
+
+    &__label {
+        overflow: hidden;
+        color: var(--ig-gray-800);
+        font-size: rem(13px);
+        font-weight: 500;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__value {
+        overflow: hidden;
+        color: var(--ig-gray-600);
+        font-size: rem(11px);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__remove {
+        font-size: rem(11px);
+    }
+}
+
+.border-rule-editor {
+    display: grid;
+    gap: rem(12px);
+    padding-block: rem(4px) rem(12px);
+    border-block-end: 1px solid var(--ig-gray-200);
+
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: rem(4px);
+    }
 }
 
 .theme-panel-accordion {
+    --theme: material;
+
+    .igx-input-group__bundle-main {
+        border: none;
+        box-shadow: none;
+        transition: none;
+    }
+
+    .igx-input-group__bundle-start {
+        visibility: visible;
+    }
+
     .igx-expansion-panel__header-inner {
         padding: rem(8px) 0;
     }
@@ -296,6 +316,10 @@ igx-expansion-panel {
     }
 
     &__section-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: rem(8px);
         padding: rem(6px) rem(12px) rem(4px);
         font-size: rem(11px);
         font-weight: 600;
@@ -307,7 +331,11 @@ igx-expansion-panel {
 
     &__copy {
         font-size: rem(12px);
-        min-width: rem(56px);
+        white-space: nowrap;
+    }
+
+    &__code + &__section-label {
+        border-block-start: 1px solid var(--ig-gray-300);
     }
 
     &__code {
@@ -318,10 +346,6 @@ igx-expansion-panel {
         color: var(--ig-gray-700);
         background: var(--ig-surface-500);
         overflow-x: auto;
-        white-space: pre;
-
-        & + .theme-export__section-label {
-            border-block-start: 1px solid var(--ig-gray-300);
-        }
+        white-space: pre-wrap;
     }
 }

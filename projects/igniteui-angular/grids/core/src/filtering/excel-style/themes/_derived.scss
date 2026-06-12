@@ -33,6 +33,7 @@
                                 var(--ig-btn-group-selected-bg, #{color($color: 'gray', $variant: 100)}),
                             ),
                             $item-hover-background: var(--item-selected-background),
+                            $item-hover-text-color: var(--_excel-filtering-foreground, #{color($color: 'gray', $variant: 700)}),
                             $item-active-border-color: transparent,
                             $item-selected-text-color: var(--_excel-filtering-accent-color, #{if(
                                 $theme-name == 'indigo',
@@ -153,7 +154,7 @@
                 @include tokens(
                     flat-icon-button-theme(
                         $schema: $schema,
-                        $foreground: var(--_excel-filtering-accent-color),
+                        $foreground: var(--_excel-filtering-foreground),
                         $disabled-background: transparent,
                         $disabled-foreground: color-mix(in srgb, var(--_excel-filtering-accent-color) 50%, var(--_excel-filtering-background)),
                     )

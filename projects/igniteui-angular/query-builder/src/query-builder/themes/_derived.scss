@@ -6,12 +6,12 @@
 /// @access private
 @each $theme-name, $variant-name, $schema in $derived-schemas {
     @include layer(derived) {
-        --_query-builder-background: var(--background, var(--ig-query-builder-background));
-        --_query-builder-foreground: var(--foreground, var(--ig-query-builder-foreground));
-        --_query-builder-accent-color: var(--accent-color, var(--ig-query-builder-accent-color));
-
         @scope ([data-ig-theme='#{$theme-name}'][data-ig-theme-variant='#{$variant-name}']) {
             :where(igx-query-builder, igx-advanced-filtering-dialog) {
+                --_query-builder-background: var(--background, var(--ig-query-builder-background));
+                --_query-builder-foreground: var(--foreground, var(--ig-query-builder-foreground));
+                --_query-builder-accent-color: var(--accent-color, var(--ig-query-builder-accent-color));
+
                 @include tokens(query-builder-theme($schema: $schema), $mode: 'scoped');
 
                 @include tokens(

@@ -124,16 +124,6 @@
                         $background: var(--_grid-background),
                         $foreground: var(--_grid-foreground),
                         $accent-color: var(--_grid-accent-color),
-                        $header-foreground: var(--excel-filtering-header-foreground),
-                        $subheader-foreground: var(--excel-filtering-subheader-foreground),
-                        $actions-foreground: var(--excel-filtering-actions-foreground),
-                        $actions-icon-color: var(--excel-filtering-actions-icon-color),
-                        $actions-hover-foreground: var(--excel-filtering-actions-hover-foreground),
-                        $actions-hover-icon-color: var(--excel-filtering-actions-hover-icon-color),
-                        $actions-selected-icon-color: var(--excel-filtering-actions-selected-icon-color),
-                        $actions-hover-background: var(--excel-filtering-actions-hover-background),
-                        $actions-disabled-foreground: var(--excel-filtering-actions-disabled-foreground),
-                        $border-color: var(--excel-filtering-border-color),
                     )
                 );
 
@@ -171,6 +161,7 @@
                         $schema: $schema,
                         $background: var(--_grid-background),
                         $foreground: var(--_grid-foreground),
+                        $title-text-color: var(--_grid-foreground),
                         $accent-color: var(--_grid-accent-color)
                     )
                 );
@@ -275,7 +266,6 @@
                             $background: var(--_grid-background),
                             $foreground: var(--_grid-foreground),
                             $accent-color: var(--_grid-accent-color),
-                            $header-foreground: var(--_grid-foreground),
                             $header-border: color-mix(in srgb, var(--_grid-foreground) 20%, var(--_grid-background)),
                         )
                     );

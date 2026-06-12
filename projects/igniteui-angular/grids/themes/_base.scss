@@ -332,18 +332,18 @@ $z-grid-loading: 10003;
             display: flex;
             flex-flow: row nowrap;
             width: 100%;
-            background: var-get($theme, 'header-background');
+            background: var(--_grid-background, var-get($theme, 'content-background'));
             z-index: $z-grid-scroll;
         }
 
         // Scroll start section
         @include e(scroll-start) {
-            background: var-get($theme, 'header-background');
-            border-inline-end: $grid-header-border;
+            background: var(--_grid-background, var-get($theme, 'content-background'));
+            // border-inline-end: 1px solid var-get($theme, 'pinned-border-color');
         }
 
         @include e(scroll-end) {
-            background: var-get($theme, 'header-background');
+            background: var(--_grid-background, var-get($theme, 'content-background'));
             border-inline-start: $grid-header-border;
         }
 
@@ -396,7 +396,13 @@ $z-grid-loading: 10003;
             position: absolute;
             top: 0;
             inset-inline-end: 0;
-            background: var-get($theme, 'header-background');
+            background: var(
+                --igx-grid-summary-background-color,
+                var(
+                    --ig-grid-summary-background-color,
+                    var(--_grid-background, var-get($theme, 'content-background'))
+                )
+            );
         }
 
         // Grid footer
@@ -1215,7 +1221,7 @@ $z-grid-loading: 10003;
             background: var-get($theme, 'group-row-background');
             display: flex;
             outline-style: none;
-            border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+            border-block: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') var-get($theme, 'row-border-color');
             min-height: var(--header-size);
 
             &::after {
@@ -1850,7 +1856,13 @@ $z-grid-loading: 10003;
             display: flex;
             overflow: hidden;
             outline-style: none;
-            background-color: var-get($theme, 'summaries-patch-background');
+            background-color: var(
+                --igx-grid-summary-background-color,
+                var(
+                    --ig-grid-summary-background-color,
+                    var-get($theme, 'summaries-patch-background')
+                )
+            );
 
             igx-display-container {
                 overflow: visible !important;
@@ -2578,6 +2590,7 @@ $z-grid-loading: 10003;
         @include e(thumb) {
             background: var-get($theme, 'header-background');
             border-block-end: $grid-header-border;
+            border-inline-start: $grid-header-border;
         }
 
         // Pivot grid modifier

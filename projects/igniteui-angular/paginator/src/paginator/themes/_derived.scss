@@ -6,12 +6,15 @@
 /// @access private
 @each $theme-name, $variant-name, $schema in $derived-schemas {
     @include layer(derived) {
-        --_paginator-background: var(--background, var(--ig-paginator-background));
-        --_paginator-foreground: var(--foreground, var(--ig-paginator-foreground));
-        --_paginator-accent-color: var(--accent-color, var(--ig-paginator-accent-color));
-
         @scope ([data-ig-theme='#{$theme-name}'][data-ig-theme-variant='#{$variant-name}']) {
             :where(igx-paginator) {
+                --_paginator-background: var(--background, var(--ig-paginator-background));
+                --_paginator-foreground: var(--foreground, var(--ig-paginator-foreground));
+                --_paginator-accent-color: var(
+                    --igx-paginator-accent-color,
+                    var(--ig-paginator-accent-color, var(--accent-color))
+                );
+
                 @include tokens(
                     drop-down-theme(
                         $schema: $schema,
@@ -58,6 +61,7 @@
                         select-theme(
                             $schema: $schema,
                             $toggle-button-background: var(--_paginator-accent-color),
+                            $toggle-button-background-focus--border: var(--_paginator-accent-color)
                         )
                     );
                 }

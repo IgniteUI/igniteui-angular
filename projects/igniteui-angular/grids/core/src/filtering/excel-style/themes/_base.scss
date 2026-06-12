@@ -302,14 +302,10 @@ $checkbox-indent: (
 
         @include e(actions-select) {
             @extend %grid-excel-actions__action !optional;
-
-            justify-content: center;
         }
 
         @include e(actions-selected) {
             @extend %grid-excel-actions__action !optional;
-
-            justify-content: center;
 
             igx-icon {
                 color: var-get($theme, 'actions-selected-icon-color');
@@ -392,19 +388,12 @@ $checkbox-indent: (
         }
 
         @include e(menu, $m: compact) {
-            .igx-excel-filter__sort {
-                @extend %grid-excel-action--compact;
-
-                igx-buttongroup {
-                    width: rem(208px);
-                }
-
-                header {
-                    @include type-style('body-2');
-                }
+            .igx-excel-filter__actions-select,
+            .igx-excel-filter__actions-selected {
+                justify-content: center;
             }
 
-            igx-excel-filter__move {
+            .igx-excel-filter__sort {
                 @extend %grid-excel-action--compact;
 
                 igx-buttongroup {
@@ -415,15 +404,28 @@ $checkbox-indent: (
                     @include type-style('body-2');
 
                     text-transform: capitalize;
-
                 }
             }
 
-            .igx-excel-filter__menu-header {
+            .igx-excel-filter__move {
+                @extend %grid-excel-action--compact;
+
+                igx-buttongroup {
+                    width: rem(208px);
+                }
+
+                header {
+                    @include type-style('body-2');
+
+                    text-transform: capitalize;
+                }
+            }
+
+            .igx-excel-filter__menu-header > h4 {
                 @include type-style('subtitle-1')
             }
 
-           .igx-excel-filter__menu-header-actions {
+            .igx-excel-filter__menu-header-actions {
                 span {
                     @include type-style('body-2');
                 }
@@ -431,6 +433,13 @@ $checkbox-indent: (
 
             .igx-checkbox__label {
                 @include type-style('body-2');
+            }
+        }
+
+        @include e(menu, $m: cosy) {
+            .igx-excel-filter__actions-select,
+            .igx-excel-filter__actions-selected {
+                justify-content: center;
             }
         }
 
