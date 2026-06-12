@@ -937,17 +937,17 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
         const isZoneless = this.isZonelessChangeDetection();
 
-        runInInjectionContext(this._injector, () => {
-            afterNextRender({
-                write: () => {
-                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                },
-                mixedReadWrite: isZoneless ? () => {
-                    this.recalcUpdateSizes();
-                } : undefined
-              });
-          });
-        if (!isZoneless) {
+        this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
+
+        if (isZoneless) {
+            runInInjectionContext(this._injector, () => {
+                afterNextRender({
+                    mixedReadWrite: () => {
+                        this.recalcUpdateSizes();
+                    }
+                });
+            });
+        } else {
             this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
         }
 
@@ -1746,19 +1746,20 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
         const isZoneless = this.isZonelessChangeDetection();
-        runInInjectionContext(this._injector, () => {
-            afterNextRender({
-                write: () => {
-                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                    if (!isZoneless) {
-                        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+
+        this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
+
+        if (isZoneless) {
+            runInInjectionContext(this._injector, () => {
+                afterNextRender({
+                    mixedReadWrite: () => {
+                        this.recalcUpdateSizes();
                     }
-                },
-                mixedReadWrite: isZoneless ? () => {
-                    this.recalcUpdateSizes();
-                } : undefined
-              });
-          });
+                });
+            });
+        } else {
+            this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        }
         this.cdr.markForCheck();
     }
 
