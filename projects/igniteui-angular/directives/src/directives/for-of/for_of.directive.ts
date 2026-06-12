@@ -857,6 +857,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
 
+    protected isZonelessChangeDetection(): boolean {
+        return this._zone.constructor.name === 'NoopNgZone';
+    }
+
     /**
      * @hidden
      * Function that recalculates and updates cache sizes.
@@ -960,14 +964,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         const prevStartIndex = this.state.startIndex;
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
-        const isZoneless = this._zone.constructor.name === 'NoopNgZone';
+        const isZoneless = this.isZonelessChangeDetection();
 
         runInInjectionContext(this._injector, () => {
             afterNextRender({
                 write: () => {
                     this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
                 },
-                read: isZoneless ? () => {
+                mixedReadWrite: isZoneless ? () => {
                     this.recalcUpdateSizes();
                 } : undefined
               });
@@ -1180,11 +1184,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
-        const isZoneless = this._zone.constructor.name === 'NoopNgZone';
+        const isZoneless = this.isZonelessChangeDetection();
         if (isZoneless) {
             runInInjectionContext(this._injector, () => {
                 afterNextRender({
-                    read: () => {
+                    mixedReadWrite: () => {
                         this.recalcUpdateSizes();
                     }
                 });
@@ -1793,7 +1797,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
         const prevState = Object.assign({}, this.state);
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
-        const isZoneless = this._zone.constructor.name === 'NoopNgZone';
+        const isZoneless = this.isZonelessChangeDetection();
         runInInjectionContext(this._injector, () => {
             afterNextRender({
                 write: () => {
@@ -1802,7 +1806,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
                         this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this, prevState));
                     }
                 },
-                read: isZoneless ? () => {
+                mixedReadWrite: isZoneless ? () => {
                     this.recalcUpdateSizes(prevState);
                 } : undefined
               });
