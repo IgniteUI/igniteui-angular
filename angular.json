@@ -378,8 +378,8 @@
                 {
                   "type": "bundle",
                   "name": "styles",
-                  "maximumWarning": "850kb",
-                  "maximumError": "1000kb"
+                  "maximumWarning": "650kb",
+                  "maximumError": "700kb"
                 },
                 {
                   "type": "anyComponentStyle",

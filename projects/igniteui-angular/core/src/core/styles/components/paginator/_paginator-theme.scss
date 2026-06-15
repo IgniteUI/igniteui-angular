@@ -1,13 +1,11 @@
 @use 'sass:map';
 @use '../../base' as *;
-@use './paginator-derived-themes' as *;
 
-/// @deprecated Use the `tokens` mixin instead.
-/// @see {mixin} tokens
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin paginator($theme) {
-    @include tokens($theme, $mode: 'scoped');
-    @include paginator-derived-themes($theme);
+    @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
 
@@ -23,8 +21,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: var-get($theme, 'foreground');
-        background: var-get($theme, 'background');
+        color: var-get($theme, 'text-color');
+        background: var-get($theme, 'background-color');
         font-size: rem(12px);
         border-top: rem(1px) solid var-get($theme, 'border-color');
 
