@@ -282,7 +282,9 @@ describe('IgxGrid - Zoneless Change Detection #grid', () => {
 
             // Wait for chunkLoad as the reliable signal that virtualization has settled
             let chunkLoaded = false;
-            grid.parentVirtDir.chunkLoad.subscribe(() => { chunkLoaded = true; });
+            grid.parentVirtDir.chunkLoad.subscribe(() => {
+                chunkLoaded = true;
+            });
 
             const hScroller = grid.headerContainer.getScroll();
             hScroller.scrollLeft = 400;
