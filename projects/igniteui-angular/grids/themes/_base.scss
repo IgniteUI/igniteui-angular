@@ -1983,10 +1983,11 @@ $z-grid-loading: 10003;
             justify-content: flex-end;
             flex-wrap: wrap;
             gap: rem(8px);
-            padding: rem(16px) rem(8px);
+            padding-block: pad-block(4px, 6px, 8px);
+            padding-inline: pad-inline(4px, 8px, 16px);
             min-width: rem(320px);
-            color: contrast-color($color: 'surface', $variant: 500);
-            background: color($color: 'surface', $variant: 500);
+            color: var(--ig-grid-foreground, contrast-color($color: 'surface', $variant: 500));
+            background: var(--ig-grid-background, color($color: 'surface', $variant: 500));
             border-radius: 0;
 
             igc-icon,
