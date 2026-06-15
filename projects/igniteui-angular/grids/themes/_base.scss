@@ -447,7 +447,6 @@ $z-grid-loading: 10003;
 
             .igx-grid__tr-action {
                 border-inline-end-color: var-get($theme, 'header-border-color') !important;
-                border-block-end: 0 !important;
             }
 
             .igx-grid__td:not(.igx-grid__td--pinned-last) {
@@ -470,7 +469,6 @@ $z-grid-loading: 10003;
 
             .igx-grid__tr-action {
                 border-inline-end-color: var-get($theme, 'header-border-color') !important;
-                border-block-end: 0 !important;
             }
         }
 
@@ -566,7 +564,7 @@ $z-grid-loading: 10003;
 
         // Pinned row at top
         @include e(tr, $m: pinned-top) {
-            border-bottom: rem(2px) solid var-get($theme, 'pinned-border-color') !important;
+            border-bottom: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color') !important;
 
             .igx-grid__tr:last-of-type {
                 border-bottom: none;
@@ -723,7 +721,7 @@ $z-grid-loading: 10003;
 
         // First pinned column (left border)
         @include e(td, $m: pinned-first) {
-            border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+            border-inline-start: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
 
             &::after {
                 width: calc(100% - $pinned-shadow-size);
@@ -734,7 +732,7 @@ $z-grid-loading: 10003;
 
         // Last pinned column (right border)
         @include e(td, $m: pinned-last) {
-            border-inline-end: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+            border-inline-end: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
         }
 
         // Pinned cell when selected
@@ -2340,7 +2338,7 @@ $z-grid-loading: 10003;
 
         // Pinned header (first pinned column)
         @include m(pinned-first) {
-            border-inline-start: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+            border-inline-start: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
 
             &:dir(ltr) {
                 border-inline-start-color: var-get($theme, 'pinned-border-color');
@@ -2353,7 +2351,7 @@ $z-grid-loading: 10003;
 
         // Pinned header (last pinned column)
         @include m(pinned-last) {
-            border-inline-end: var-get($theme, 'pinned-border-width') solid var-get($theme, 'pinned-border-color');
+            border-inline-end: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
 
             &:dir(ltr) {
                 border-inline-end-color: var-get($theme, 'pinned-border-color');
@@ -2810,8 +2808,7 @@ $z-grid-loading: 10003;
             display: flex;
         }
 
-        .igx-grid-thead__title,
-        .igx-grid__td  {
+        .igx-grid-thead__title {
             border-inline-end: $grid-header-border !important;
             border-block-end: $grid-header-border;
         }
@@ -2821,12 +2818,26 @@ $z-grid-loading: 10003;
         }
 
         .igx-grid-thead__subgroup:only-child .igx-grid-th,
-        .igx-grid-thead__subgroup:last-child .igx-grid-th,
-        .igx-grid__td:only-child,
-        .igx-grid__td:last-child {
+        .igx-grid-thead__subgroup:last-child .igx-grid-th {
             border-block-end: 0;
         }
     }
+	
+	.igx-grid__tr--odd.igx-grid__tr--mrl {
+		.igx-grid__td {
+			--body-column-border-color-odd: #{var-get($theme, 'row-border-color')};
+			
+			border-block-end: rem(1px) solid var-get($theme, 'row-border-color');
+		}
+	}
+	
+	.igx-grid__tr--even.igx-grid__tr--mrl {
+		.igx-grid__td {
+			--body-column-border-color-even: #{var-get($theme, 'row-border-color')};
+			
+			border-block-end: rem(1px) solid var-get($theme, 'row-border-color');
+		}
+	}
 
     // MRL row context - rows in multi-row layout
     .igx-grid__tr--mrl {
@@ -2835,7 +2846,7 @@ $z-grid-loading: 10003;
         .igx-grid__hierarchical-expander--empty,
         .igx-grid__row-indentation,
         .igx-grid__drag-indicator {
-            border-bottom: $grid-header-border;
+	        border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
         }
 
         background-clip: padding-box !important;
