@@ -4188,9 +4188,13 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
-                    this.zone.onStable.pipe(first()).subscribe(() => {
+                    if (this.isZonelessChangeDetection()) {
                         this.autoSizeColumnsInView();
-                    });
+                    } else {
+                        this.zone.onStable.pipe(first()).subscribe(() => {
+                            this.autoSizeColumnsInView();
+                        });
+                    }
                 });
             }
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
@@ -4703,10 +4707,15 @@ export abstract class IgxGridBaseDirective implements GridType,
         // reset auto-size and calculate it again.
         this._columns.forEach(x => x.autoSize = undefined);
         this.resetCaches();
-        this.zone.onStable.pipe(first()).subscribe(() => {
+        if (this.isZonelessChangeDetection()) {
             this.cdr.detectChanges();
             this.autoSizeColumnsInView();
-        });
+        } else {
+            this.zone.onStable.pipe(first()).subscribe(() => {
+                this.cdr.detectChanges();
+                this.autoSizeColumnsInView();
+            });
+        }
     }
 
     /**
@@ -6399,7 +6408,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const tmplId = args.context.templateID.type;
             const index = args.context.index;
             args.view.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            const restoreState = () => {
                 const row = tmplId === 'dataRow' ? this.gridAPI.get_row_by_index(index) : null;
                 const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
                 if (row && row instanceof IgxRowDirective) {
@@ -6407,7 +6416,12 @@ export abstract class IgxGridBaseDirective implements GridType,
                 } else if (summaryRow) {
                     this._restoreVirtState(summaryRow);
                 }
-            });
+            };
+            if (this.isZonelessChangeDetection()) {
+                restoreState();
+            } else {
+                this.zone.onStable.pipe(first()).subscribe(restoreState);
+            }
         }
     }
 
@@ -7113,9 +7127,13 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.resetCaches(recalcFeatureWidth);
         if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            if (this.isZonelessChangeDetection()) {
                 this._autoSizeColumnsNotify.next();
-            });
+            } else {
+                this.zone.onStable.pipe(first()).subscribe(() => {
+                    this._autoSizeColumnsNotify.next();
+                });
+            }
         }
 
         // in case horizontal scrollbar has appeared recalc to size correctly.
@@ -7830,14 +7848,20 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
         this.cdr.markForCheck();
 
-        this.zone.run(() => {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
-                requestAnimationFrame(() => {
-                    this.autoSizeColumnsInView();
-                });
+        const emitChunkLoad = () => {
+            this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
+            requestAnimationFrame(() => {
+                this.autoSizeColumnsInView();
             });
-        });
+        };
+        if (this.isZonelessChangeDetection()) {
+            this.cdr.detectChanges();
+            emitChunkLoad();
+        } else {
+            this.zone.run(() => {
+                this.zone.onStable.pipe(first()).subscribe(emitChunkLoad);
+            });
+        }
         if (!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
             this.hideOverlays();
         }

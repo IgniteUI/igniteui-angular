@@ -2153,11 +2153,17 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         super.calculateGridSizes(recalcFeatureWidth);
         if (this.hasDimensionsToAutosize) {
             this.cdr.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            if (this.isZonelessChangeDetection()) {
                 requestAnimationFrame(() => {
                     this.autoSizeDimensionsInView();
                 });
-            });
+            } else {
+                this.zone.onStable.pipe(first()).subscribe(() => {
+                    requestAnimationFrame(() => {
+                        this.autoSizeDimensionsInView();
+                    });
+                });
+            }
         }
     }
 
