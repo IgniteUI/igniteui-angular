@@ -78,7 +78,7 @@ export class BaseFormatter {
      * Format provided date to reflect locales format. Similar to Angular's formatDate.
      */
     public formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
-        return value != null ? ngFormatDate(value, format, locale, timezone) : '';
+        return value != null ? ngFormatDate(value, format || 'mediumDate', locale, timezone) : '';
     }
 
     /** Format number value based on locale */
