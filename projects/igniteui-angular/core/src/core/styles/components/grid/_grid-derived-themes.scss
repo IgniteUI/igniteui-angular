@@ -96,6 +96,21 @@
             )
         );
 
+        igx-grid-group-by-area {
+            @include tokens(
+                chip-theme(
+                    $schema: $schema,
+                    $background: color-mix(in srgb, var(--ig-grid-header-text-color) 12%, var(--ig-grid-header-background)),
+                    $text-color: var(--ig-grid-header-text-color),
+                    $ghost-background: color-mix(in srgb, var(--ig-grid-header-text-color) 12%, var(--ig-grid-header-background)),
+                    $ghost-text-color: var(--ig-grid-header-text-color),
+                    $disabled-background: color-mix(in srgb, var(--ig-grid-header-text-color) 12%, var(--ig-grid-header-background)),
+                    $disabled-text-color: color-mix(in srgb, var(--ig-grid-header-text-color) 50%, var(--ig-grid-header-background)),
+                    $disabled-border-color: color-mix(in srgb, var(--ig-grid-header-text-color) 24%, var(--ig-grid-header-background)),
+                )
+            );
+        }
+
         @include tokens(
             contained-button-theme(
                 $schema: $schema,
@@ -302,7 +317,7 @@
         @include tokens(
             scrollbar-theme(
                 $schema: $schema,
-                $sb-track-bg-color: var(--_grid-background, $scrollbar-bg-color),
+                $sb-track-bg-color: var(--_grid-background, var(--content-background), $scrollbar-bg-color),
                 $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
                 $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
             ),
