@@ -13,9 +13,9 @@
     @include tokens($theme, $mode: 'scoped', $scope: 'igx-advanced-filtering-dialog');
 
     :where(igx-query-builder, igx-advanced-filtering-dialog) {
-        --_query-builder-background:  var(--background, var(--ig-query-builder-background));
-        --_query-builder-foreground: var(--foreground, var(--ig-query-builder-foreground));
-        --_query-builder-accent-color: var(--accent-color, var(--ig-query-builder-accent-color));
+        --_query-builder-background: var(--ig-query-builder-background);
+        --_query-builder-foreground: var(--ig-query-builder-foreground);
+        --_query-builder-accent-color: var(--ig-query-builder-accent-color);
 
         @include tokens(
             checkbox-theme(

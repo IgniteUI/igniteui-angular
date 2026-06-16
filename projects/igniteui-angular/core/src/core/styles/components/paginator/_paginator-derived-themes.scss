@@ -12,9 +12,9 @@
     $variant: map.get($theme-info, 'variant');
 
     :where(igx-paginator) {
-        --_paginator-background:  var(--background, var(--ig-paginator-background));
-        --_paginator-foreground: var(--foreground, var(--ig-paginator-foreground));
-        --_paginator-accent-color: var(--accent-color, var(--ig-paginator-accent-color));
+        --_paginator-background: var(--ig-paginator-background);
+        --_paginator-foreground: var(--ig-paginator-foreground);
+        --_paginator-accent-color: var(--ig-paginator-accent-color);
 
         @include tokens(
             drop-down-theme(
