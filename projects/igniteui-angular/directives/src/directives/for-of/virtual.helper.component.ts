@@ -1,10 +1,14 @@
-import { Component, HostBinding, Input, ViewChild, ViewContainerRef,
-    OnDestroy, OnInit} from '@angular/core';
+import {
+  Component, HostBinding, Input, ViewChild, ViewContainerRef,
+  OnDestroy, OnInit,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
 @Component({
     selector: 'igx-virtual-helper',
     template: '<div #container class="igx-vhelper__placeholder-content" [style.height.px]="size"></div>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class VirtualHelperComponent extends VirtualHelperBaseDirective implements OnInit, OnDestroy  {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, inject } from '@angular/core';
+import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-base';
 
@@ -17,6 +17,7 @@ import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-ba
 @Component({
     selector: 'igx-slide',
     templateUrl: 'slide.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSlideComponentBase {

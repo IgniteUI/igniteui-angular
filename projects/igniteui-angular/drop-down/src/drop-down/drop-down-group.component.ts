@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding, booleanAttribute } from '@angular/core';
+import { Component, Input, HostBinding, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
 
 let NEXT_ID = 0;
 /**
@@ -11,6 +11,7 @@ let NEXT_ID = 0;
         <label id="{{labelId}}">{{ label }}</label>
         <ng-content select="igx-drop-down-item"></ng-content>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxDropDownGroupComponent {

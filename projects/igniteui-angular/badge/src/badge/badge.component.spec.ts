@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBadgeComponent, IgxBadgeType } from './badge.component';
@@ -112,6 +112,7 @@ describe('Badge', () => {
 
 @Component({
     template: `<igx-badge type="error" value="22" outlined></igx-badge>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBadgeComponent]
 })
 class InitBadgeComponent {
@@ -120,6 +121,7 @@ class InitBadgeComponent {
 
 @Component({
     template: `<igx-badge></igx-badge>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithDefaultsComponent {
@@ -128,6 +130,7 @@ class InitBadgeWithDefaultsComponent {
 
 @Component({
     template: `<igx-badge icon="person" type="info"></igx-badge>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconComponent {
@@ -136,6 +139,7 @@ class InitBadgeWithIconComponent {
 
 @Component({
     template: `<igx-badge icon="person"></igx-badge>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconARIAComponent {
@@ -144,6 +148,7 @@ class InitBadgeWithIconARIAComponent {
 
 @Component({
     template: `<igx-badge dot type="success"></igx-badge>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithDotComponent {
