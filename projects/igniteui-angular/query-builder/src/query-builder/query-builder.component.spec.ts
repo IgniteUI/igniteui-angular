@@ -28,6 +28,7 @@ describe('IgxQueryBuilder', () => {
         IgxQueryBuilderComponent,
         IgxQueryBuilderSampleTestComponent,
         IgxQueryBuilderCustomTemplateSampleTestComponent,
+        IgxQueryBuilderInvalidSampleTestComponent,
         IgxComboComponent
       ]
     }).compileComponents();
