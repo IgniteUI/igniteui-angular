@@ -15,10 +15,10 @@
     igx-grid-excel-style-filtering,
     .igx-excel-filter__secondary
     ) {
-        --_excel-filtering-background: var(--background, var(--ig-excel-filtering-background));
-        --_excel-filtering-secondary-background: var(--secondary-background, var(--ig-excel-filtering-secondary-background));
-        --_excel-filtering-foreground: var(--foreground, var(--ig-excel-filtering-foreground));
-        --_excel-filtering-accent-color: var(--accent-color, var(--ig-excel-filtering-accent-color));
+        --_excel-filtering-background: var(--ig-excel-filtering-background);
+        --_excel-filtering-secondary-background: var(--ig-excel-filtering-secondary-background);
+        --_excel-filtering-foreground: var(--ig-excel-filtering-foreground);
+        --_excel-filtering-accent-color: var(--ig-excel-filtering-accent-color);
 
         .igx-excel-filter__menu .igx-button-group,
         .igx-button-group {
