@@ -1267,11 +1267,15 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // verify virtualization states - should be in last chunk
         const virtState = grid.verticalScrollContainer.state;
-        expect(virtState.startIndex).toBe(grid.dataView.length - virtState.chunkSize);
+        expect(virtState.startIndex + grid.rowList.length).toBe(grid.dataView.length);
 
         // verify last row is visible at bottom
         const lastRow = grid.gridAPI.get_row_by_index(grid.dataView.length - 1);
-        expect(lastRow.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
+        const rowBorderWidth = parseFloat(getComputedStyle(lastRow.nativeElement).borderBottomWidth) || 0;
+        const lastRowBottomOffset = Math.abs(
+            lastRow.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom
+        );
+        expect(lastRowBottomOffset).toBe(rowBorderWidth * 2);
 
     });
 

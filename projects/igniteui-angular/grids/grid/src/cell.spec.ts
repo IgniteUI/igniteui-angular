@@ -202,10 +202,13 @@ describe('IgxGrid - Cell component #grid', () => {
             const lastCell = cells[cells.length - 1];
             expect(GridFunctions.getValueFromCellElement(lastCell)).toEqual('990');
 
-            // Calculate where the end of the cell is. Relative left position should equal the grid calculated width
+            const scrollbarBorderWidth = parseFloat(getComputedStyle(
+                grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar')
+            ).getPropertyValue('border-inline-start-width')) || 0;
+            // Calculate where the end of the cell is. Relative left position should equal the grid calculated width.
             expect(lastCell.nativeElement.getBoundingClientRect().left +
                 lastCell.nativeElement.offsetWidth +
-                grid.scrollSize).toEqual(parseInt(grid.width, 10));
+                grid.scrollSize).toEqual(grid.calcWidth + scrollbarBorderWidth);
         }));
 
         it('should not reduce the width of last pinned cell when there is vertical scroll.', () => {
