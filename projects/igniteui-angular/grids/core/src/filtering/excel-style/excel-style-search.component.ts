@@ -22,8 +22,8 @@ import { Navigate } from 'igniteui-angular/drop-down';
 export class IgxExcelStyleLoadingValuesTemplateDirective {
     public template = inject<TemplateRef<undefined>>(TemplateRef);
 
-    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
-        ctx: unknown): ctx is undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective, ctx: unknown): ctx is undefined {
         return true
     }
 }

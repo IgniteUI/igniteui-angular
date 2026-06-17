@@ -1055,7 +1055,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private initSlides(change: QueryList<IgxSlideComponent>) {
         const diff = this.differ.diff(change.toArray());
         if (diff) {
-            this.slides.reduce((any, c, ind) => c.index = ind, 0); // reset slides indexes
+            this.slides.reduce((_any, c, ind) => c.index = ind, 0); // reset slides indexes
             diff.forEachAddedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
                 const slide = record.item;
                 slide.total = this.total;

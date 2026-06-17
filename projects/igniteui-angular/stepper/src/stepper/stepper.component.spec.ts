@@ -975,7 +975,6 @@ describe('Stepper service unit tests', () => {
     let mockCdr: any;
     let mockAnimationService: any;
     let mockPlatform: any;
-    let mockDocument: any;
 
     let steps: IgxStepComponent[] = [];
     let stepper: IgxStepperComponent;
@@ -1029,15 +1028,6 @@ describe('Stepper service unit tests', () => {
         };
 
         mockPlatform = { isIOS: false };
-
-        mockDocument = {
-            body: mockElement,
-            defaultView: mockElement,
-            createElement: () => mockElement,
-            appendChild: () => { },
-            addEventListener: (_type: string, _listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-            removeEventListener: (_type: string, _listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
-        };
 
         mockCdr = {
             markForCheck: (): void => { },

@@ -68,7 +68,7 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
         const sortIndex = this.esf.grid.sortingExpressions.findIndex(s => s.fieldName === fieldName);
 
         this.cdr.detectChanges();
-        this.sortButtonGroup.buttons.forEach((b, i) => {
+        this.sortButtonGroup.buttons.forEach((_b, i) => {
             this.sortButtonGroup.deselectButton(i);
         });
 

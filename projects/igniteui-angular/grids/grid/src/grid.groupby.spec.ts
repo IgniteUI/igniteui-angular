@@ -4139,7 +4139,7 @@ export class GroupableGridComponent extends DataParent {
     public sortStrategy = new MySortingStrategy();
     public groupStrategy = this.sortStrategy;
 
-    public formatUnboundValue(value: string, rowData: any | undefined): string | undefined {
+    public formatUnboundValue(_value: string, rowData: any | undefined): string | undefined {
         return formatUnboundValueFunction(rowData);
     }
 }
