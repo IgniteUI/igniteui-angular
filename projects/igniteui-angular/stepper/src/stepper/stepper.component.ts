@@ -1,6 +1,6 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, TemplateRef, booleanAttribute, inject } from '@angular/core';
+import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, TemplateRef, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -67,6 +67,7 @@ import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
         IgxStepperService,
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
 export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnChanges, OnInit, AfterContentInit, OnDestroy {

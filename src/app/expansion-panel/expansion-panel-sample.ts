@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from 'igniteui-angular';
 import {
     Properties,
@@ -17,6 +17,7 @@ defineComponents(IgcExpansionPanelComponent);
     templateUrl: './expansion-panel-sample.html',
     styleUrls: ['expansion-panel-sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_EXPANSION_PANEL_DIRECTIVES]
 })
 export class ExpansionPanelSampleComponent {

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, TemplateRef, ViewChild, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, TemplateRef, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
     IgxTimePickerComponent,
@@ -26,6 +26,7 @@ import {
     selector: 'app-time-picker-sample',
     styleUrls: ['time-picker.sample.scss'],
     templateUrl: 'time-picker.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxTimePickerComponent,
         FormsModule,

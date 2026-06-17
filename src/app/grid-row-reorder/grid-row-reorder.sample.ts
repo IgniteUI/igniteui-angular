@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { DATA } from './nwindData';
 import { IgxColumnComponent, IgxDropDirective, IgxGridComponent, IgxRowDirective } from 'igniteui-angular';
@@ -8,6 +8,7 @@ import { IgxColumnComponent, IgxDropDirective, IgxGridComponent, IgxRowDirective
     selector: 'app-grid-row-reorder-sample',
     templateUrl: 'grid-row-reorder.sample.html',
     styleUrls: ['grid-row-reorder.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxDropDirective, IgxColumnComponent]
 })
 export class GridRowReorderComponent {

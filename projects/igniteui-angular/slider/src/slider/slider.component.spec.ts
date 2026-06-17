@@ -1,7 +1,7 @@
-import { Component, Input, ViewChild, inject } from '@angular/core';
+import { Component, Input, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { By, HammerModule } from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
@@ -27,7 +27,7 @@ describe('IgxSlider', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule,
+                NoopAnimationsModule, FormsModule, ReactiveFormsModule,
                 SliderInitializeTestComponent,
                 SliderMinMaxComponent,
                 SliderTestComponent,
@@ -2041,6 +2041,7 @@ describe('IgxSlider', () => {
     template: `
         <div dir="rtl"><igx-slider [type]="type" [value]="value"></igx-slider></div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 export class SliderRtlComponent {
@@ -2067,6 +2068,7 @@ export class SliderRtlComponent {
             [secondaryTickLabels]="secondaryTickLabels"
             [tickLabelsOrientation]="tickLabelsOrientation"></igx-slider>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 export class SliderTicksComponent {
@@ -2086,6 +2088,7 @@ export class SliderTicksComponent {
     selector: 'igx-slider-test-component',
     template: `<igx-slider #slider>
     </igx-slider>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class SliderInitializeTestComponent {
@@ -2096,6 +2099,7 @@ class SliderInitializeTestComponent {
     template: `
         <igx-slider [maxValue]='maxValue' [minValue]='minValue'></igx-slider>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 export class SliderMinMaxComponent {
@@ -2113,6 +2117,7 @@ export class SliderMinMaxComponent {
                                         [type]="type">
                     </igx-slider>
                 </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class SliderTestComponent {
@@ -2135,6 +2140,7 @@ class SliderTestComponent {
     template: `
     <igx-slider [labels]="['Winter', 'Spring', 'Summer', 'Autumn']">
     </igx-slider> `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class SliderWithLabelsComponent {
@@ -2144,6 +2150,7 @@ class SliderWithLabelsComponent {
 @Component({
     template: `<igx-slider #slider [type]="type">
     </igx-slider>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class RangeSliderTestComponent {
@@ -2157,6 +2164,7 @@ class RangeSliderTestComponent {
     [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
     [type]="type">
     </igx-slider> `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class RangeSliderWithLabelsComponent {
@@ -2178,6 +2186,7 @@ class RangeSliderWithLabelsComponent {
         </ng-template>
     </igx-slider>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective]
 })
 class RangeSliderWithCustomTemplateComponent {
@@ -2191,6 +2200,7 @@ class RangeSliderWithCustomTemplateComponent {
             <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn}"></igx-slider>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent, FormsModule]
 })
 export class SliderTemplateFormComponent {
@@ -2207,6 +2217,7 @@ export class SliderTemplateFormComponent {
             <igx-slider [formControl]="formControl"></igx-slider>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent, FormsModule, ReactiveFormsModule]
 })
 export class SliderReactiveFormComponent {
@@ -2219,6 +2230,7 @@ export class SliderReactiveFormComponent {
     template: `
         <igx-slider type="range" [value]="value" [lowerBound]="30" [upperBound]="40"></igx-slider>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 export class SliderWithValueAdjustmentComponent {

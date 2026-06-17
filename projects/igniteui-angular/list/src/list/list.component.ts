@@ -1,21 +1,22 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    Component,
-    ContentChild,
-    ContentChildren,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    HostBinding,
-    Input,
-    Output,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    Directive,
-    booleanAttribute,
-    inject,
-    DestroyRef
+  Component,
+  ContentChild,
+  ContentChildren,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  HostBinding,
+  Input,
+  Output,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  Directive,
+  booleanAttribute,
+  inject,
+  DestroyRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 
@@ -148,6 +149,7 @@ export class IgxListLineSubTitleDirective {
     selector: 'igx-list',
     templateUrl: 'list.component.html',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {

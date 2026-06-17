@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, OnDestroy, OnChanges, ChangeDetectorRef, booleanAttribute, inject } from "@angular/core";
+import { Component, ElementRef, HostBinding, Input, OnInit, OnDestroy, OnChanges, ChangeDetectorRef, booleanAttribute, inject, ChangeDetectionStrategy } from "@angular/core";
 import { IgxIconService } from "./icon.service";
 import type { IconReference } from "./types";
 import { filter, takeUntil } from "rxjs/operators";
@@ -29,6 +29,7 @@ import { SafeHtml } from "@angular/platform-browser";
  */
 @Component({
     selector: "igx-icon",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "icon.component.html",
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {

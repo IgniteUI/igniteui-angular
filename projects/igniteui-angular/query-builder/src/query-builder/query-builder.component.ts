@@ -1,4 +1,4 @@
-import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject, ContentChildren, QueryList } from '@angular/core';
+import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject, ContentChildren, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import {
     Component, Input, ViewChild, OnDestroy, HostBinding
 } from '@angular/core';
@@ -36,6 +36,7 @@ import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxQueryBuilderTreeComponent]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {

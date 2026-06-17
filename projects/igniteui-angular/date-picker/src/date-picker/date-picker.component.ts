@@ -1,24 +1,25 @@
 import {
-    AfterViewChecked,
-    AfterViewInit,
-    AfterContentChecked,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Injector,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    PipeTransform,
-    Renderer2,
-    ViewChild,
-    ViewContainerRef,
-    booleanAttribute,
-    inject
+  AfterViewChecked,
+  AfterViewInit,
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  PipeTransform,
+  Renderer2,
+  ViewChild,
+  ViewContainerRef,
+  booleanAttribute,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
     AbstractControl,
@@ -93,6 +94,7 @@ let NEXT_ID = 0;
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
     styles: [':host { display: block; }'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxInputGroupComponent,
         IgxPrefixDirective,
@@ -904,6 +906,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._initializeCalendarContainer(e.componentRef.instance);
             this._calendarContainer = e.componentRef.location.nativeElement;
             this._collapsed = false;
+            this.cdr.markForCheck();
         });
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
@@ -936,6 +939,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._overlayId = null;
             this._calendar = null;
             this._calendarContainer = undefined;
+            this.cdr.markForCheck();
         });
     }
 

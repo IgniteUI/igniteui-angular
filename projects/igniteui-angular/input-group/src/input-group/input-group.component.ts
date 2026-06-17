@@ -1,17 +1,18 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ContentChildren,
-    DestroyRef,
-    ElementRef,
-    HostBinding,
-    HostListener, Input,
-    QueryList, booleanAttribute,
-    inject,
-    DOCUMENT,
-    AfterContentChecked
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ContentChildren,
+  DestroyRef,
+  ElementRef,
+  HostBinding,
+  HostListener, Input,
+  QueryList, booleanAttribute,
+  inject,
+  DOCUMENT,
+  AfterContentChecked,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from 'igniteui-angular/core';
 import { PlatformUtil, getComponentTheme } from 'igniteui-angular/core';
@@ -34,6 +35,7 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentChecked {

@@ -7433,7 +7433,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
-        if (this.type === 'hierarchical') {
+        if (this.type === 'hierarchical' && source === this.filteredSortedData) {
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
@@ -8143,6 +8143,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             settings = overlay.settings;
         }
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
+        this.rowEditPositioningStrategy.settings.clipToVisibleArea =
+            this.type === 'hierarchical' && (this as GridType).rootGrid !== this;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
         const targetRow = !pinned ?
             this.gridAPI.get_row_by_key(rowID) as IgxRowDirective

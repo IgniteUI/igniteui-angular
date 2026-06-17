@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
 import { takeUntil, throttle, throttleTime } from 'rxjs/operators';
@@ -33,6 +33,7 @@ let NEXT_ID = 0;
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: 'igx-slider',
     templateUrl: 'slider.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTicksComponent, IgxThumbLabelComponent, IgxSliderThumbComponent, IgxTickLabelsPipe]
 })
 export class IgxSliderComponent implements

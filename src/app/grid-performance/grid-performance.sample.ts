@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { GridSelectionMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
 
 
@@ -6,6 +6,7 @@ import { GridSelectionMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbar
     selector: 'app-grid-performance-sample',
     templateUrl: 'grid-performance.sample.html',
     styleUrls: ['grid-performance.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent]
 })
 

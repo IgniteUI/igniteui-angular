@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterContentInit, AfterViewInit, booleanAttribute, Component, ContentChild, ContentChildren, Directive, ElementRef, EventEmitter, forwardRef, HostBinding, Injector, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewInit, booleanAttribute, Component, ContentChild, ContentChildren, Directive, ElementRef, EventEmitter, forwardRef, HostBinding, Injector, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
@@ -73,6 +73,7 @@ export class IgxSelectFooterDirective {
             display: block;
         }
     `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, IgxReadOnlyInputDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
