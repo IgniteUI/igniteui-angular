@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, inject, Input, NgZone, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -59,6 +59,7 @@ let NEXT_TAB_ID = 0;
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgTemplateOutlet, IgxIconButtonDirective]
 })
 

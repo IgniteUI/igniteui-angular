@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
     AbsolutePosition,
     IgxDialogComponent, IgxListComponent, IgxListItemComponent, IgxOverlayService, IgxRippleDirective, IListItemClickEventArgs,
@@ -30,6 +30,7 @@ import {
     selector: 'app-animations-sample',
     styleUrls: ['animations.sample.scss'],
     templateUrl: 'animations.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent, IgxRippleDirective, IgxDialogComponent]
 })
 export class AnimationsSampleComponent {

@@ -1,11 +1,13 @@
 {
     "compilerOptions": {
         "target": "es6",
+        "strict": false,
         "module": "node16",
         "sourceMap": false,
         "composite": true,
         "declaration": true,
         "outDir": "../../../dist/igniteui-angular/schematics/",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "types": ["node", "jasmine"]
     }
 }

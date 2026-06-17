@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { HIERARCHICAL_SAMPLE_DATA, SAMPLE_DATA } from '../shared/sample-data';
@@ -8,6 +8,7 @@ import { GridSummaryCalculationMode, GridSummaryPosition, IPinningConfig, IgxBut
     selector: 'app-grid-row-api-sample',
     styleUrls: ['grid-row-api.sample.scss'],
     templateUrl: 'grid-row-api.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxGridComponent, IgxGridDetailTemplateDirective, IgxColumnComponent, IgxRowDragGhostDirective, IgxIconComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxButtonDirective, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxPaginatorDirective]
 })
 

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, HostBinding, inject, Input } from '@angular/core';
+import { Component, DestroyRef, HostBinding, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 
@@ -14,6 +14,7 @@ import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angu
 */
 @Component({
     selector: 'igx-query-builder-header',
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: 'query-builder-header.component.html'
 })
 export class IgxQueryBuilderHeaderComponent {

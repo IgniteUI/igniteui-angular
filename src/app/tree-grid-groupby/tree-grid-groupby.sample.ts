@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -10,6 +10,7 @@ import { IgxButtonGroupComponent, IgxSwitchComponent, IgxTreeGridComponent, IgxT
     selector: 'app-tree-grid-groupby-sample',
     styleUrls: ['tree-grid-groupby.sample.scss'],
     templateUrl: 'tree-grid-groupby.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe]
 })
 
