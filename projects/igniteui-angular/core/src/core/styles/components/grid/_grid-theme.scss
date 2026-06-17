@@ -857,7 +857,7 @@
     }
 
     %grid-tbody-scrollbar-start {
-        background: var-get($theme, 'header-background');
+        background: var-get($theme, 'content-background');
     }
 
     %grid-tbody-scrollbar-main {
