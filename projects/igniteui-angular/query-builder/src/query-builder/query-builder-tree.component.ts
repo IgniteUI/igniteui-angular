@@ -1,4 +1,4 @@
-import { AfterViewInit, EventEmitter, LOCALE_ID, Output, TemplateRef, inject } from '@angular/core';
+import { AfterViewInit, EventEmitter, LOCALE_ID, Output, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
 
 import {
@@ -114,6 +114,7 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
         NgClass,
         NgTemplateOutlet
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         IgxQueryBuilderDragService
     ],

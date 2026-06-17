@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, DebugElement } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
@@ -427,6 +427,7 @@ describe('IgxGrid - Cell component #grid', () => {
         }
     </igx-grid>`,
     styleUrls: ['../../../test-utils/grid-cell-style-testing.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ConditionalCellStyleTestComponent implements OnInit {

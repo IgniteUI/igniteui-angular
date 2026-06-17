@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
@@ -39,6 +39,7 @@ import { IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-g
         </igx-tab-item>
     </igx-tabs>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent]
 })
 export class BasicTabsComponent {
@@ -86,6 +87,7 @@ export class BasicTabsComponent {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxIconComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective]
 })
 export class TabsTestComponent {
@@ -106,6 +108,7 @@ export class TabsTestComponent {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTest2Component {
@@ -189,6 +192,7 @@ export class TabsTest2Component {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TemplatedTabsTestComponent {
@@ -208,6 +212,7 @@ export class TemplatedTabsTestComponent {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestSelectedTabComponent {
@@ -238,6 +243,7 @@ export class TabsTestSelectedTabComponent {
         </igx-tab-item>
     </igx-tabs>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestCustomStylesComponent {
@@ -263,6 +269,7 @@ export class TabsTestCustomStylesComponent {
         </div>
     </igx-drop-down>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, IgxDropDownComponent, IgxToggleActionDirective, IgxButtonDirective]
 })
 export class TabsTestBug4420Component {
@@ -288,6 +295,7 @@ export class TabsTestBug4420Component {
         </div>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective, RouterLinkActive, RouterLink, RouterOutlet]
 })
 export class TabsRoutingTestComponent {
@@ -323,6 +331,7 @@ export class TabsRoutingTestComponent {
         </div>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective, RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class TabsRoutingDisabledTestComponent {
@@ -346,6 +355,7 @@ export class TabsRoutingDisabledTestComponent {
         </div>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective, RouterLinkActive, RouterLink, RouterOutlet]
 })
 export class TabsRoutingGuardTestComponent {
@@ -369,6 +379,7 @@ export class TabsRoutingGuardTestComponent {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTabsOnlyModeTest1Component {
@@ -403,6 +414,7 @@ export class TabsTabsOnlyModeTest1Component {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsDisabledTestComponent {
@@ -444,6 +456,7 @@ export class TabsDisabledTestComponent {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestHtmlAttributesComponent {
@@ -494,6 +507,7 @@ export class TabsTestHtmlAttributesComponent {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
 export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
@@ -516,6 +530,7 @@ export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsContactsComponent extends TabsTestComponent {
@@ -535,6 +550,7 @@ export class TabsContactsComponent extends TabsTestComponent {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class AddingSelectedTabComponent {
@@ -566,6 +582,7 @@ export class AddingSelectedTabComponent {
         </igx-tabs>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsRtlComponent {

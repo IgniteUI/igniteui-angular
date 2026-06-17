@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridStateDirective, IgxPivotNumericAggregate, IPivotConfiguration, IPivotGridColumn, IPivotGridRecord, PivotAggregation } from 'igniteui-angular/grids/core';
 import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 
@@ -20,6 +20,7 @@ import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-a
      {{value.member}}
     </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent, IgxPivotDataSelectorComponent]
 })
 export class IgxPivotGridTestBaseComponent {
@@ -127,6 +128,7 @@ export class IgxPivotGridTestBaseComponent {
         [rowSelection]="'single'" [columnSelection]="'single'"
         [defaultExpandState]='defaultExpand'>
     </igx-pivot-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestBaseComponent {
@@ -222,6 +224,7 @@ export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestB
     <igx-pivot-grid #grid igxGridState [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy">
     </igx-pivot-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent, IgxGridStateDirective]
 })
 export class IgxPivotGridPersistanceComponent {
@@ -291,6 +294,7 @@ export class IgxPivotGridPersistanceComponent {
     template: `
     <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy" [defaultExpandState]="true">
     </igx-pivot-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {
@@ -364,6 +368,7 @@ export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseCompon
     </div>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridFlexContainerComponent extends IgxPivotGridTestBaseComponent{

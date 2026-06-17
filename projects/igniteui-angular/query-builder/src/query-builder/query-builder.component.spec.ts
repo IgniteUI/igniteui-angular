@@ -4,8 +4,8 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
-import { IgxSelectComponent } from 'igniteui-angular/select';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { IgxSelectComponent } from 'igniteui-angular/select';;
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
@@ -3240,6 +3240,7 @@ describe('IgxQueryBuilder', () => {
      </igx-query-builder>
     `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IgxQueryBuilderComponent
   ]
@@ -3259,6 +3260,7 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
      </igx-query-builder>
     `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IgxQueryBuilderComponent
   ]
@@ -3298,6 +3300,7 @@ export class IgxQueryBuilderInvalidSampleTestComponent implements OnInit {
      </igx-query-builder>
     `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IgxQueryBuilderComponent,
     IgxQueryBuilderHeaderComponent,

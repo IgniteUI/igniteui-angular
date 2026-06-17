@@ -1,4 +1,4 @@
-import { ViewChild, Component, DebugElement, OnInit, QueryList } from '@angular/core';
+import { ViewChild, Component, DebugElement, OnInit, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1491,6 +1491,7 @@ describe('Row Pinning #grid', () => {
             }
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class GridRowPinningComponent {
@@ -1521,6 +1522,7 @@ export class GridRowPinningComponent {
         }
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
@@ -1555,6 +1557,7 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
         </ng-template>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridDetailTemplateDirective]
 })
 export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
@@ -1572,6 +1575,7 @@ export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
             [autoGenerate]="true">
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent { }
@@ -1588,6 +1592,7 @@ export class GridRowPinningWithTransactionsComponent extends GridRowPinningCompo
             [autoGenerate]="true">
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class GridRowPinningWithInitialPinningComponent implements OnInit {
@@ -1615,6 +1620,7 @@ export class GridRowPinningWithInitialPinningComponent implements OnInit {
             <igx-column field="ContactName" [editable]="true"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridRowPinningWithPrimaryKeyComponent extends GridRowPinningComponent { }

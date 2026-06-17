@@ -1,5 +1,5 @@
 import { AnimationBuilder } from '@angular/animations';
-import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1360,6 +1360,7 @@ describe('Stepper service unit tests', () => {
     </igx-stepper>
     <br>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxStepperComponent,
         IgxStepComponent,
@@ -1398,6 +1399,7 @@ export class IgxStepperSampleTestComponent {
         </igx-step>
     </igx-stepper>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxStepperComponent, IgxStepComponent]
 })
 export class IgxStepperLinearComponent {
@@ -1421,6 +1423,7 @@ export class IgxStepperLinearComponent {
             </igx-stepper>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxStepperComponent,
         IgxStepComponent,

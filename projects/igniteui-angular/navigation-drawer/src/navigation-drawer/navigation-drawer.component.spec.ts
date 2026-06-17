@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
@@ -858,6 +858,7 @@ describe('Navigation Drawer', () => {
 @Component({
     selector: 'igx-test-cmp',
     template: '<igx-nav-drawer class="markupClass"></igx-nav-drawer>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponent {
@@ -868,6 +869,7 @@ class TestComponent {
     providers: [IgxNavigationService],
     selector: 'igx-test-cmp-di',
     template: '<igx-nav-drawer></igx-nav-drawer>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentDIComponent {
@@ -880,6 +882,7 @@ class TestComponentDIComponent {
     selector: 'igx-test-cmp-pin',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentPinComponent extends TestComponentDIComponent {
@@ -892,6 +895,7 @@ class TestComponentPinComponent extends TestComponentDIComponent {
     selector: 'igx-test-cmp-mini',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentMiniComponent extends TestComponentDIComponent {
@@ -915,6 +919,7 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
             position: fixed;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
     <div igxLayout>
       <igx-nav-drawer #nav>

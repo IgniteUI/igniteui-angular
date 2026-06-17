@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -31,6 +31,7 @@ import { getDateFormatter } from 'igniteui-i18n-core';
     selector: 'app-grid-localization',
     styleUrls: ['./grid-localization.sample.scss'],
     templateUrl: 'grid-localization.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         ReactiveFormsModule,

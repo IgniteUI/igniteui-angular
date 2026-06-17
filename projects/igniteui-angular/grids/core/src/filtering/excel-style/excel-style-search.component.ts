@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { takeUntil } from 'rxjs/operators';
@@ -35,6 +35,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1378,6 +1378,7 @@ describe('IgxDropDown ', () => {
             </igx-drop-down-item>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective]
 })
 class IgxDropDownTestComponent {
@@ -1426,6 +1427,7 @@ class IgxDropDownTestComponent {
         }
     </igx-drop-down>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent]
 })
 class DoubleIgxDropDownComponent implements OnInit {
@@ -1483,6 +1485,7 @@ class DoubleIgxDropDownComponent implements OnInit {
             </igx-drop-down-item>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent]
 })
 class IgxDropDownAnchorTestComponent {
@@ -1521,6 +1524,7 @@ class IgxDropDownAnchorTestComponent {
             </igx-drop-down-item>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective]
 })
 class InputWithDropDownDirectiveComponent {
@@ -1550,6 +1554,7 @@ class InputWithDropDownDirectiveComponent {
             </igx-drop-down-item-group>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent]
 })
 class GroupDropDownComponent {
@@ -1597,6 +1602,7 @@ class GroupDropDownComponent {
         height: 400px;
     }
     `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxForOfDirective, IgxButtonDirective, IgxDropDownItemNavigationDirective, IgxToggleActionDirective]
 })
 class VirtualizedDropDownComponent {

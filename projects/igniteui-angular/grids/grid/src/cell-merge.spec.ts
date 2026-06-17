@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
@@ -1240,6 +1240,7 @@ describe('IgxGrid - Cell merging #grid', () => {
             <button [style.height.px]="cell.row.index % 2 === 0 ? 100 : 200" type="button">{{value}}</button>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class DefaultCellMergeGridComponent extends DataParent {
@@ -1340,6 +1341,7 @@ export class DefaultCellMergeGridComponent extends DataParent {
             <button>Detail</button>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IntegrationCellMergeGridComponent extends DefaultCellMergeGridComponent {
