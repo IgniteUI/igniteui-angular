@@ -1816,6 +1816,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._rendered ? this._rowCount : null;
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the resource strings.
      *
