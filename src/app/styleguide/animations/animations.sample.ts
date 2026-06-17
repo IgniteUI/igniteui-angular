@@ -1,7 +1,6 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
-    AbsolutePosition,
     IgxDialogComponent, IgxListComponent, IgxListItemComponent, IgxOverlayService, IgxRippleDirective, IListItemClickEventArgs,
 } from 'igniteui-angular';
 import {

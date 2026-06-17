@@ -1,5 +1,5 @@
 import {
-  AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
+  AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren,
   EventEmitter, HostBinding, HostListener, Injector, Input,
   OnChanges, OnDestroy, OnInit, Output, QueryList,
   SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, inject,

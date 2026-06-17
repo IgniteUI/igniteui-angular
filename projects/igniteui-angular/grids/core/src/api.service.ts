@@ -630,7 +630,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     }
 
 
-    protected update_row_in_array(value: any, rowID: any, index: number) {
+    protected update_row_in_array(value: any, _rowID: any, index: number) {
         const grid = this.grid;
         grid.data[index] = value;
     }

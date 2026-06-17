@@ -187,7 +187,7 @@ export class VirtualForSampleComponent implements OnInit {
         this.virtDirHorizontal.scrollTo(parseInt(index, 10));
     }
 
-    public trackByKey(index, item) {
+    public trackByKey(_index, item) {
         return item.key;
     }
 

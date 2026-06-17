@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, NgZone, DebugElement, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
@@ -7,7 +7,6 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { VirtualGridComponent, NoScrollsComponent,
     NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { TestNgZone } from '../../../test-utils/helper-utils.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { HammerGesturesManager, PlatformUtil } from 'igniteui-angular/core';
 

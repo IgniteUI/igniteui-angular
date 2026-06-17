@@ -66,7 +66,6 @@ import {
     IgxDropDownItemComponent,
     IgxDropDownItemNavigationDirective
 } from 'igniteui-angular/drop-down';
-import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe, IgxQueryBuilderSearchValueContext } from './query-builder.common';

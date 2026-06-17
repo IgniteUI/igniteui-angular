@@ -1187,7 +1187,7 @@
         }
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 3)};;
+            --component-size: #{if($variant == 'indigo', 2, 3)};
         }
     }
 
@@ -2623,7 +2623,7 @@
         }
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 3)};;
+            --component-size: #{if($variant == 'indigo', 2, 3)};
 
             color: var-get($theme, 'expand-icon-color');
             max-width: $hierarchical-action-icon;
