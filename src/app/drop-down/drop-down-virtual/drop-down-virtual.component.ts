@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 
 import { Observable } from 'rxjs';
 
-import { RemoteService } from 'src/app/shared/remote.service';
+import { RemoteService } from '../../shared/remote.service';
 import { IForOfState, IgxButtonDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxToastComponent, IgxToggleActionDirective, VerticalAlignment } from 'igniteui-angular';
 
 interface DataItem {
@@ -15,6 +15,7 @@ interface DataItem {
     templateUrl: './drop-down-virtual.component.html',
     styleUrls: ['./drop-down-virtual.component.scss'],
     providers: [RemoteService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxForOfDirective, IgxDropDownItemComponent, IgxToastComponent, AsyncPipe]
 })
 export class DropDownVirtualComponent implements OnInit, AfterViewInit {
@@ -38,7 +39,7 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
       return `${this.remoteService.url}?$count=true&$skip=${state.startIndex}&$top=${chunkSize}`;
     };
     // eslint-disable-next-line prefer-spread
-    this.localItems = Array.apply(null, { length: 2000 }).map((e, i) => ({
+    this.localItems = Array.apply(null, { length: 2000 }).map((_e, i) => ({
       name: `Item ${i + 1}`,
       id: i
     }));

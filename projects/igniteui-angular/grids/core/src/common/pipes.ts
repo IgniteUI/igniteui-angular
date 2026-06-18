@@ -248,7 +248,10 @@ export class IgxGridTransactionPipe implements PipeTransform {
                 this.grid.dataCloneStrategy);
             return result;
         }
-        return collection;
+        // Return a shallow copy so downstream pipes and igxGridForOf always
+        // receive a new array reference when pipeTrigger changes, regardless
+        // of whether the source array was mutated in place.
+        return cloneArray(collection);
     }
 }
 
@@ -309,7 +312,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
 
 
     @buildDataView()
-    public transform(collection: any[], id: string, isPinned = false, _pipeTrigger: number) {
+    public transform(collection: any[], _id: string, isPinned = false, _pipeTrigger: number) {
 
         if (this.grid.hasPinnedRecords && isPinned) {
             const result = collection.filter(rec => !this.grid.isSummaryRow(rec) && this.grid.isRecordPinned(rec));

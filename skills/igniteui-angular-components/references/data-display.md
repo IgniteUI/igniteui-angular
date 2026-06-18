@@ -21,8 +21,6 @@ This reference gives high-level guidance on when to use each data display compon
 
 ## List
 
-> **Docs:** [List Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list)
-
 ```typescript
 import { IGX_LIST_DIRECTIVES } from 'igniteui-angular/list';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
@@ -35,9 +33,8 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
   @for (contact of contacts; track contact.id) {
     <igx-list-item>
       <igx-avatar igxListThumbnail [src]="contact.avatar" shape="circle"></igx-avatar>
-      <span igxListLine>{{ contact.name }}</span>
+      <span igxListLineTitle>{{ contact.name }}</span>
       <span igxListLineSubTitle>{{ contact.phone }}</span>
-      <span igxListLineTitle>{{ contact.email }}</span>
       <igx-icon igxListAction (click)="call(contact)">phone</igx-icon>
     </igx-list-item>
   }
@@ -48,14 +45,12 @@ Auxiliary directives for list items: `igxListThumbnail`, `igxListAction`, `igxLi
 
 ## Tree
 
-> **Docs:** [Tree Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)
-
 ```typescript
 import { IGX_TREE_DIRECTIVES } from 'igniteui-angular/tree';
 ```
 
 ```html
-<igx-tree [selection]="'BiCascade'" (nodeSelection)="onNodeSelect($event)">
+<igx-tree selection="BiState" (nodeSelection)="onNodeSelect($event)">
   @for (node of treeData; track node.id) {
     <igx-tree-node [data]="node" [expanded]="node.expanded">
       <igx-icon>folder</igx-icon>
@@ -71,14 +66,12 @@ import { IGX_TREE_DIRECTIVES } from 'igniteui-angular/tree';
 </igx-tree>
 ```
 
-Selection modes: `'None'`, `'BiCascade'`, `'Cascade'`.
+Selection modes: `'None'`, `'BiState'`, `'Cascading'`.
 
 ## Card
 
-> **Docs:** [Card Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card)
-
 ```typescript
-import { IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxCardMediaDirective, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective, IgxCardHeaderThumbnailDirective } from 'igniteui-angular/card';
+import { IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxCardMediaDirective, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective, IgxCardThumbnailDirective } from 'igniteui-angular/card';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -91,7 +84,8 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
     <img [src]="article.coverImage" />
   </igx-card-media>
   <igx-card-header>
-    <igx-avatar igxCardHeaderThumbnail [src]="author.photo" shape="circle"></igx-avatar>
+    <!-- igx-avatar inside igx-card-header is auto-detected as thumbnail -->
+    <igx-avatar [src]="author.photo" shape="circle"></igx-avatar>
     <h3 igxCardHeaderTitle>{{ article.title }}</h3>
     <h5 igxCardHeaderSubtitle>{{ author.name }}</h5>
   </igx-card-header>
@@ -109,8 +103,6 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 
 ## Chips
 
-> **Docs:** [Chip Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip)
-
 ```typescript
 import { IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 ```
@@ -127,8 +119,6 @@ import { IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips'
 
 ## Avatar & Badge
 
-> **Docs:** [Avatar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar) · [Badge](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge)
-
 ```typescript
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { IgxBadgeComponent } from 'igniteui-angular/badge';
@@ -136,9 +126,10 @@ import { IgxBadgeComponent } from 'igniteui-angular/badge';
 
 ```html
 <!-- Image avatar with badge overlay -->
-<igx-avatar [src]="user.photo" shape="circle" size="large">
-  <igx-badge igxAvatarBadge [type]="'success'" [icon]="'check'"></igx-badge>
-</igx-avatar>
+<div class="avatar-badge-container">
+  <igx-avatar [src]="user.photo" shape="circle" size="large"></igx-avatar>
+  <igx-badge [type]="'success'" [icon]="'check'"></igx-badge>
+</div>
 
 <!-- Initials avatar -->
 <igx-avatar initials="JD" shape="circle"></igx-avatar>
@@ -150,12 +141,25 @@ import { IgxBadgeComponent } from 'igniteui-angular/badge';
 <igx-badge [type]="'error'" [value]="unreadCount"></igx-badge>
 ```
 
+```scss
+// Required styles to position the badge as an overlay on the avatar
+.avatar-badge-container {
+  position: relative;
+  display: inline-flex;
+
+  igx-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(25%, 25%);
+  }
+}
+```
+
 Avatar shapes: `'circle'`, `'rounded'`, `'square'`. Sizes: `'small'`, `'medium'`, `'large'`, or custom CSS.
-Badge types: `'default'`, `'info'`, `'success'`, `'warning'`, `'error'`.
+Badge types: `'primary'`, `'info'`, `'success'`, `'warning'`, `'error'`.
 
 ## Icon
-
-> **Docs:** [Icon Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon)
 
 ```typescript
 import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
@@ -186,8 +190,6 @@ export class AppComponent {
 
 ## Carousel
 
-> **Docs:** [Carousel Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel)
-
 ```typescript
 import { IgxCarouselComponent, IgxSlideComponent } from 'igniteui-angular/carousel';
 ```
@@ -207,8 +209,6 @@ import { IgxCarouselComponent, IgxSlideComponent } from 'igniteui-angular/carous
 
 ## Paginator
 
-> **Docs:** [Paginator Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/paginator)
-
 ```typescript
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 ```
@@ -226,8 +226,6 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 > **NOTE:** For grid paging, attach `<igx-paginator>` inside the grid element. See [`../../igniteui-angular-grids/references/paging-remote.md`](../../igniteui-angular-grids/references/paging-remote.md) for grid-specific paging patterns.
 
 ## Progress Indicators
-
-> **Docs:** [Linear Progress](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear-progress) · [Circular Progress](https://www.infragistics.com/products/ignite-ui-angular/angular/components/circular-progress)
 
 ```typescript
 import { IgxLinearProgressBarComponent } from 'igniteui-angular/progressbar';
@@ -252,11 +250,9 @@ import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
 ```
 
-Types for linear bar: `'default'`, `'info'`, `'success'`, `'warning'`, `'danger'`.
+Types for linear bar: `'default'`, `'info'`, `'success'`, `'warning'`, `'error'`.
 
 ## Chat (AI Chat Component)
-
-> **Docs:** [Chat Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chat)
 
 ```typescript
 import { IgxChatComponent } from 'igniteui-angular/chat';

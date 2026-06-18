@@ -1,10 +1,11 @@
 import {
-    Component,
-    OnInit,
-    ViewChild,
-    ElementRef,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { foods } from './foods';
 import {
@@ -82,6 +83,7 @@ icons.forEach((icon) => {
         IgxIconComponent,
         IgSizeDirective
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DropDownSampleComponent implements OnInit {

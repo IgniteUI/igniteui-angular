@@ -1,4 +1,4 @@
-import { Component, Directive, HostBinding, Input, OnInit, OnChanges, SimpleChanges, booleanAttribute, inject } from '@angular/core';
+import { Component, Directive, HostBinding, Input, OnInit, OnChanges, SimpleChanges, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 
 let NEXT_ID = 0;
 
@@ -57,6 +57,7 @@ export class IgxCardMediaDirective {
 @Component({
     selector: 'igx-card-header',
     templateUrl: 'card-header.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxCardHeaderComponent {
@@ -185,6 +186,7 @@ export class IgxCardFooterDirective {
 @Component({
     selector: 'igx-card',
     templateUrl: 'card.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxCardComponent {
@@ -269,6 +271,7 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
 @Component({
     selector: 'igx-card-actions',
     templateUrl: 'card-actions.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {

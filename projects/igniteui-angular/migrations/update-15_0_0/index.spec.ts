@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import { setupTestTree } from '../common/setup.spec';
 
 const version = '15.0.0';

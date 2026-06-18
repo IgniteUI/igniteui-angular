@@ -1,4 +1,4 @@
-import { AfterContentInit, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed } from '@angular/core';
+import { AfterContentInit, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
@@ -39,6 +39,7 @@ let NEXT_ID = 0;
             height: 100%;
         }
     `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavDrawerItemDirective, NgTemplateOutlet]
 })
 export class IgxNavigationDrawerComponent implements

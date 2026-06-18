@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterContentInit, AfterViewInit, booleanAttribute, Component, ContentChild, ContentChildren, Directive, ElementRef, EventEmitter, forwardRef, HostBinding, Injector, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewInit, booleanAttribute, Component, ContentChild, ContentChildren, Directive, ElementRef, EventEmitter, forwardRef, HostBinding, Injector, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
@@ -73,6 +73,7 @@ export class IgxSelectFooterDirective {
             display: block;
         }
     `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, IgxReadOnlyInputDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
@@ -391,6 +392,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (this.disabled || this.items.length === 0) {
             return;
         }
+
         if (!this.selectedItem) {
             this.navigateFirst();
         }
@@ -539,7 +541,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     protected onStatusChanged() {
         this.manageRequiredAsterisk();
-        if (this.ngControl && !this.disabled && this.isTouchedOrDirty) {
+
+        if (this.ngControl && !this.ngControl.disabled && this.isTouchedOrDirty) {
             if (this.hasValidators && this.inputGroup.isFocused) {
                 this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
