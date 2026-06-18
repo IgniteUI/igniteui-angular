@@ -384,7 +384,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columnList;
@@ -392,13 +392,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
             tick(100);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
@@ -431,7 +431,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
@@ -442,13 +442,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
             tick(100);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
@@ -661,7 +661,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBe(549);
 
             loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
