@@ -96,11 +96,13 @@
             )
         );
 
-        igx-grid-group-by-area {
+        igx-grid-group-by-area,
+        igx-grid-header-row {
             @include tokens(
                 chip-theme(
                     $schema: $schema,
                     $background: color-mix(in srgb, var(--ig-grid-header-text-color) 12%, var(--ig-grid-header-background)),
+                    $hover-background: color-mix(in srgb, var(--ig-grid-header-text-color) 18%, var(--ig-grid-header-background)),
                     $text-color: var(--ig-grid-header-text-color),
                     $ghost-background: color-mix(in srgb, var(--ig-grid-header-text-color) 12%, var(--ig-grid-header-background)),
                     $ghost-text-color: var(--ig-grid-header-text-color),

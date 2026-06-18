@@ -610,6 +610,13 @@
         %grid-row {
             border-bottom: none;
         }
+
+        %grid-mrl-block {
+            %grid-cell-display {
+                border-inline-end: $grid-header-border;
+                border-bottom: $grid-header-border;
+            }
+        }
     }
 
     %grid-thead-container {
@@ -656,7 +663,7 @@
             %igx-grid__header-indentation,
             %igx-grid__row-indentation,
             %grid__cbx-selection {
-                border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+                border-bottom: $grid-header-border;
             }
         }
 
@@ -769,8 +776,8 @@
         }
 
         %grid-cell-display {
-            border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
-            border-bottom: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-end: $grid-row-border;
+            border-bottom: $grid-row-border;
         }
     }
 
