@@ -73,12 +73,12 @@
                     @include tokens(
                         checkbox-theme(
                             $schema: $schema,
-                            $empty-color: var(--header-text-color),
-                            $empty-fill-color: var(--header-background),
-                            $tick-color-hover: color-mix(in srgb, var(--header-text-color) 40%, var(--header-background)),
+                            $empty-color: var(--ig-grid-header-text-color),
+                            $empty-fill-color: var(--ig-grid-header-background),
+                            $tick-color-hover: color-mix(in srgb, var(--ig-grid-header-text-color) 40%, var(--ig-grid-header-background)),
                             $fill-color: var(--_grid-accent-color),
-                            $label-color: var(--header-text-color),
-                            $disabled-color: color-mix(in srgb, var(--header-text-color) 50%, var(--header-background)),
+                            $label-color: var(--ig-grid-header-text-color),
+                            $disabled-color: color-mix(in srgb, var(--ig-grid-header-text-color) 50%, var(--ig-grid-header-background)),
                         )
                     );
                 }
@@ -292,7 +292,7 @@
                 @include tokens(
                     scrollbar-theme(
                         $schema: $schema,
-                        $sb-track-bg-color: var(--_grid-background, $scrollbar-bg-color),
+                        $sb-track-bg-color: var(--_grid-background, var(--content-background), $scrollbar-bg-color),
                         $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
                         $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
                     ),

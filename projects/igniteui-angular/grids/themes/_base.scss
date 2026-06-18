@@ -12,7 +12,11 @@ $theme: $material;
 $cell-font-size: rem(13px);
 $cell-line-height: rem(16px);
 $cell-editing-outline-width: rem(1px);
-$grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+$grid-header-border-color: var(--_grid-header-border-color, hsla(from var-get($theme, 'header-border-color') h s l / 0.38));
+$grid-action-border-color: var(--_grid-action-border-color, hsla(from var-get($theme, 'action-border-color') h s l / 0.38));
+$grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-header-border-color;
+$grid-row-border: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') var-get($theme, 'row-border-color');
+$grid-scrollbar-borders: rem(1px) solid var(--ig-grid-summary-border-color, var(--row-border-color));
 $grid-body-column-border-odd: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-odd');
 $grid-body-column-border-even: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-even');
 $grid-active-state-border: var-get($theme, 'cell-active-border-width')  var-get($theme, 'active-state-border-style') var-get($theme, 'cell-active-border-color');
@@ -318,7 +322,7 @@ $z-grid-loading: 10003;
 
         // Table body scrollbar start section
         @include e(tbody-scrollbar-start) {
-            background: var-get($theme, 'header-background');
+            background: var-get($theme, 'content-background');
         }
 
         // Table body scrollbar end section
@@ -339,12 +343,11 @@ $z-grid-loading: 10003;
         // Scroll start section
         @include e(scroll-start) {
             background: var(--_grid-background, var-get($theme, 'content-background'));
-            // border-inline-end: 1px solid var-get($theme, 'pinned-border-color');
         }
 
         @include e(scroll-end) {
             background: var(--_grid-background, var-get($theme, 'content-background'));
-            border-inline-start: $grid-header-border;
+            border-inline-start: var-get($theme, 'pinned-border-width') solid var(--ig-grid-summary-pinned-border-color, var(--pinned-border-color));
         }
 
         // Scroll main section
@@ -363,7 +366,6 @@ $z-grid-loading: 10003;
             overflow: hidden;
             outline-style: none;
             grid-row: 5;
-            border-top: $grid-header-border;
             z-index: $z-grid-scroll;
 
             .igx-grid__tr {
@@ -452,7 +454,7 @@ $z-grid-loading: 10003;
             color: var-get($theme, 'row-odd-text-color');
 
             .igx-grid__tr-action {
-                border-inline-end-color: var-get($theme, 'header-border-color') !important;
+                border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
             }
 
             .igx-grid__td:not(.igx-grid__td--pinned-last) {
@@ -474,7 +476,7 @@ $z-grid-loading: 10003;
             }
 
             .igx-grid__tr-action {
-                border-inline-end-color: var-get($theme, 'header-border-color') !important;
+                border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
             }
         }
 
@@ -1009,7 +1011,7 @@ $z-grid-loading: 10003;
         // Action row (for row actions like edit, delete buttons)
         @include e(tr-action) {
             &:last-of-type {
-                border-inline-end: $grid-header-border;
+                border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
                 min-height: var(--cell-height);
             }
         }
@@ -1903,7 +1905,9 @@ $z-grid-loading: 10003;
         @include e(summaries-patch) {
             position: relative;
             background: inherit;
-            border-inline-end: $grid-header-border;
+            border-inline-end: var(--ig-grid-summary-border-width, rem(1px))
+            var(--ig-grid-summary-border-style, solid)
+            var(--ig-grid-summary-border-color, $grid-action-border-color);
             z-index: $z-grid-base;
         }
 
@@ -2012,11 +2016,11 @@ $z-grid-loading: 10003;
         }
 
         .igx-banner__border-top {
-            box-shadow: inset 0 rem(1px) 0 0 var-get($theme, 'header-border-color');
+            box-shadow: inset 0 rem(1px) 0 0 var-get($theme, 'row-border-color');
         }
 
         .igx-banner__border-bottom {
-            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'header-border-color');
+            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'row-border-color');
         }
 
         .igx-banner__actions {
@@ -2350,14 +2354,16 @@ $z-grid-loading: 10003;
 
         // Pinned header (first pinned column)
         @include m(pinned-first) {
-            border-inline-start: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
+            border-inline-start: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style');
 
             &:dir(ltr) {
                 border-inline-start-color: var-get($theme, 'pinned-border-color');
+                border-inline-end: none;
             }
 
             &:dir(rtl) {
                 border-inline-end-color: var-get($theme, 'pinned-border-color');
+                border-inline-start: none;
             }
         }
 
@@ -2366,13 +2372,13 @@ $z-grid-loading: 10003;
             border-inline-end: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
 
             &:dir(ltr) {
-                border-inline-end-color: var-get($theme, 'pinned-border-color');
+                border-inline-end-color: var-get($theme, 'header-border-color');
                 border-inline-end-width: var-get($theme, 'pinned-border-width');
                 border-inline-end-style: var-get($theme, 'pinned-border-style');
             }
 
             &:dir(rtl) {
-                border-inline-start-color: var-get($theme, 'pinned-border-color');
+                border-inline-start-color: var-get($theme, 'header-border-color');
                 border-inline-start-width: var-get($theme, 'pinned-border-width');
                 border-inline-start-style: var-get($theme, 'pinned-border-style');
             }
@@ -2510,6 +2516,10 @@ $z-grid-loading: 10003;
                     background: inherit;
                     color: inherit;
                 }
+            }
+
+            .igx-grid__tr-action:last-of-type {
+                border-inline-end: $grid-header-border;
             }
 
             .igx-grid__cbx-selection--push {

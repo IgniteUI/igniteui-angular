@@ -71,11 +71,11 @@ $_theme: $material;
 			border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
 
 			&:dir(ltr) {
-				box-shadow: inset rem(1px) 0 0 0 var-get($_theme, 'pinned-border-color');
+				border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
 			}
 
 			&:dir(rtl) {
-				box-shadow: inset rem(-1px) 0 0 0 var-get($_theme, 'pinned-border-color');
+				border-inline-end: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
 			}
 
 			@media print {
