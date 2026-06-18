@@ -694,7 +694,6 @@ export var registerConfig = [
     selector: "igc-paginator",
     parents: [
       IgxGridComponent,
-      IgxHierarchicalGridComponent,
       IgxTreeGridComponent,
       IgxHierarchicalGridComponent,
       IgxPivotGridComponent,
@@ -901,7 +900,6 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
-      { name: "childLayoutList", writable: true },
       { name: "rowIslandAPI", writable: true },
       { name: "gridAPI", writable: true },
       { name: "navigation", writable: true },

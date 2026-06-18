@@ -40,9 +40,13 @@ import { IgxActionStripToken } from 'igniteui-angular/core';
 export class IgxRowIslandComponent extends IgxRowIsland {
 
     /* contentChildren */
+    /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: RowIslandCollection */
     /* ngQueryListName: childLayoutList */
+    /**
+     * @hidden @internal
+     */
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
     public override childLayoutList: QueryList<IgxRowIslandComponent>;
 
@@ -64,7 +68,7 @@ export class IgxRowIslandComponent extends IgxRowIsland {
     /* blazorCollectionItemName: ActionStrip */
     /* ngQueryListName: actionStripComponents */
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    public override actionStripComponents: QueryList<IgxActionStripToken>;
+    protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     protected override autogenerateColumns() {
         super.autogenerateColumns();
