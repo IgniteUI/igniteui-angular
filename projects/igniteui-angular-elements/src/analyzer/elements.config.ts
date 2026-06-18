@@ -251,7 +251,6 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStripComponent", childType: IgxActionStripToken },
       { property: "toolbar", childType: IgxToolbarToken, isQueryList: true },
       {
         property: "paginationComponents",
@@ -548,7 +547,6 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStripComponent", childType: IgxActionStripToken },
       { property: "toolbar", childType: IgxToolbarToken, isQueryList: true },
       {
         property: "paginationComponents",
@@ -901,7 +899,6 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStripComponent", childType: IgxActionStripToken },
     ],
     additionalProperties: [
       { name: "childLayoutList", writable: true },
@@ -1037,7 +1034,6 @@ export var registerConfig = [
         isQueryList: true,
         descendants: true,
       },
-      { property: "actionStripComponent", childType: IgxActionStripToken },
       { property: "toolbar", childType: IgxToolbarToken, isQueryList: true },
       {
         property: "paginationComponents",

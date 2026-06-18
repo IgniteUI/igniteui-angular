@@ -1147,12 +1147,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
     /** @hidden @internal */
-    @ContentChild(IgxActionStripToken)
-    protected actionStripComponent: IgxActionStripToken;
-
-    /** @hidden @internal */
     public get actionStrip() {
-        return this.actionStripComponent;
+         return this.actionStripComponents?.first;
     }
 
     /**
