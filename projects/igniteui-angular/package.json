@@ -75,7 +75,7 @@
         "igniteui-trial-watermark": "^3.1.0",
         "jspdf": "^4.2.1",
         "lodash-es": "^4.17.21",
-        "igniteui-theming": "^27.2.0",
+        "igniteui-theming": "^27.3.0",
         "igniteui-i18n-core": "^1.0.5",
         "@igniteui/material-icons-extended": "^3.1.0"
     },
@@ -104,7 +104,7 @@
         }
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~21.2.1500"
+        "@igniteui/angular-schematics": "~22.0.1531-beta.1"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json",

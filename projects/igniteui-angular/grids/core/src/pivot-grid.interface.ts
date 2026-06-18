@@ -48,6 +48,7 @@ export interface IPivotDimensionStrategy {
         pivotKeys?: IPivotKeys): any[];
 }
 
+/* csSuppress */
 /**
 * Interface describing a PivotAggregation function.
 * Accepts an array of extracted data members and an optional array of the original data records,

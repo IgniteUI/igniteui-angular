@@ -1167,6 +1167,16 @@ describe('IgxGrid - Cell merging #grid', () => {
                 await activeChange;
                 await wait(20);
                 fix.detectChanges();
+                // eslint-disable-next-line no-console
+                console.log('merge-debug', {
+                    childActiveNode: childGrid.navigation.activeNode,
+                    childActiveNodeRow: childGrid.navigation.activeNode?.row,
+                    childSelectionKeys: Array.from((childGrid as any).selectionService.selection?.keys() || []),
+                    childCachedActiveIndexes: (childGrid as any)._activeRowIndexes,
+                    childActiveIndexes: (childGrid as any).activeRowIndexes,
+                    pipeTrigger: childGrid.pipeTrigger,
+                    childSpans: childGrid.dataRowList.toArray().map(row => row.metaData?.cellMergeMeta?.get(childCol.field)?.rowSpan || 1)
+                });
 
                 GridFunctions.verifyColumnMergedState(childGrid, childCol, [
                     { value: 'Product A', span: 2 },
