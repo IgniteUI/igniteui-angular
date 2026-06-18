@@ -1,3 +1,4 @@
+/* stylelint-disable max-nesting-depth */
 @use 'sass:map';
 @use 'sass:meta';
 @use 'igniteui-theming/sass/bem' as *;
@@ -164,12 +165,10 @@ $theme: $material;
                 }
 
                 #{elem($this, header)} {
-                    /* stylelint-disable max-nesting-depth */
                     &::before {
                         border-top-color: var-get($theme, 'complete-step-separator-color') !important;
                         border-top-style: var-get($theme, 'complete-step-separator-style') !important;
                     }
-                    /* stylelint-enable max-nesting-depth */
                 }
             }
 

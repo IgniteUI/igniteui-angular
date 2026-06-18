@@ -59,8 +59,6 @@ export class HelperTestFunctions {
 
         const year = fixture.nativeElement.querySelector(HelperTestFunctions.CALENDAR_HEADER_YEAR_CSSCLASS);
         expect(year).not.toBeNull();
-
-        console.log("Year innerText:", year.innerText);
         expect(year.innerText).toEqual("SELECT DATE");
 
         const date = fixture.nativeElement.querySelector(HelperTestFunctions.CALENDAR_HEADER_DATE_CSSCLASS);

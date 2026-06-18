@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -1099,32 +1099,19 @@ describe('igxCombo', () => {
                 let dropdownContainer;
                 let dropdownItems;
                 const headers: Array<string> = Array.from(new Set(combo.data.map(item => item.region)));
-                let scrollIndex = 0;
-
                 combo.toggle();
                 await wait();
                 fixture.detectChanges();
 
                 const checkGroupedItemsClass = () => {
                     fixture.detectChanges();
-
-                    const comboItems = fixture.debugElement.queryAll(By.css('igx-combo-item'));
-                    expect(comboItems.length).withContext('No combo items found').toBeGreaterThan(0);
-
-                    comboItems.forEach((itemDebugElement) => {
-                        const itemElement = itemDebugElement.nativeElement as HTMLElement;
-                        const isHeader = itemElement.getAttribute('ng-reflect-is-header') === 'true';
-                        const itemText = itemElement.innerText.trim();
-                        const hasHeaderClass = itemElement.classList.contains(CSS_CLASS_HEADERITEM);
-                        const hasItemClass = itemElement.classList.contains(CSS_CLASS_DROPDOWNLISTITEM);
-
-                        if (isHeader) {
-                            expect(hasHeaderClass)
-                                .withContext(`Expected HEADER class '${CSS_CLASS_HEADERITEM}' for header item with text "${itemText}"`).toBeTrue();
-                        } else {
-                            expect(hasItemClass)
-                                .withContext(`Expected ITEM class '${CSS_CLASS_DROPDOWNLISTITEM}' for dropdown item with text "${itemText}"`).toBeTrue();
-                        }
+                    dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
+                    dropdownItems = dropdownContainer.children;
+                    Array.from(dropdownItems).forEach((item) => {
+                        const itemElement = item as HTMLElement;
+                        const itemText = itemElement.innerText.toString();
+                        const expectedClass: string = headers.includes(itemText) ? CSS_CLASS_HEADERITEM : CSS_CLASS_DROPDOWNLISTITEM;
+                        expect(itemElement.classList.contains(expectedClass)).toBeTruthy();
                     });
                 };
 
@@ -2747,7 +2734,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.headers[0].element.nativeElement.textContent?.trim()).toEqual('New England')
             });
-            it('should sort groups with diacritics correctly', async() => {
+            it('should sort groups with diacritics correctly', async () => {
                 combo.data = [
                     { field: "Alaska", region: "Méxícó" },
                     { field: "California", region: "Méxícó" },
@@ -3740,6 +3727,68 @@ describe('igxCombo', () => {
                     expect(ngModel.touched).toBeTrue();
                 }));
             });
+        });
+
+        describe('Zoneless', () => {
+            beforeEach(async () => {
+                TestBed.resetTestingModule();
+                await TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxComboSampleComponent,
+                    ],
+                    providers: [
+                        provideZonelessChangeDetection(),
+                    ]
+                }).compileComponents();
+
+                fixture = TestBed.createComponent(IgxComboSampleComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+            });
+
+            it('should not reproduce NG0100 when virtualized combo items update on scroll - issue #17310', fakeAsync(() => {
+                combo.open();
+                tick();
+                fixture.detectChanges();
+
+                const scrollEl = combo.virtualScrollContainer.getScroll();
+                expect(scrollEl).toBeTruthy();
+
+                scrollEl.scrollTop = 300;
+                scrollEl.dispatchEvent(new Event('scroll'));
+                tick(100);
+
+                expect(() => {
+
+                    fixture.detectChanges();
+                }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
+            }));
+
+            it('should not reproduce NG0100 related to active descendant on scroll - issue #17310', fakeAsync(() => {
+                combo.toggle();
+                tick();
+                fixture.detectChanges();
+
+                const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                dropdownContent.triggerEventHandler('focus', {});
+                tick();
+                fixture.detectChanges();
+
+                const activeDescendantId = combo.dropdown.activeDescendant;
+                expect(activeDescendantId).toBeTruthy();
+
+                fixture.detectChanges();
+
+                expect(() => {
+                    const scrollEl = combo.virtualScrollContainer.getScroll();
+                    scrollEl.scrollTop = 1000;
+                    scrollEl.dispatchEvent(new Event('scroll'));
+
+                    tick(100);
+                    fixture.detectChanges();
+                }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
+            }));
         });
     });
 });

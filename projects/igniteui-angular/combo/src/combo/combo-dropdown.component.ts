@@ -29,6 +29,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     public combo = inject<IgxComboBase>(IGX_COMBO_COMPONENT);
     protected comboAPI = inject(IgxComboAPIService);
 
+    private _activeDescendantId: string | null = null;
+
     /** @hidden @internal */
     @Input({ transform: booleanAttribute })
     public singleMode = false;
@@ -64,6 +66,38 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
                 .sort((a: IgxDropDownItemBaseDirective, b: IgxDropDownItemBaseDirective) => a.index - b.index);
         }
         return null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public override get focusedItem(): IgxDropDownItemBaseDirective | null {
+        return super.focusedItem;
+    }
+
+    /**
+     * @hidden @internal
+     * Returns a stable aria-activedescendant id, unaffected by virtual scroll position.
+     * The base class computes this from the live focusedItem getter, which reads from the
+     * children QueryList. During virtual scroll the QueryList is recycled, so the getter
+     * can return null mid-CD-cycle causing NG0100 in zoneless apps. The id is cached instead.
+     */
+    public override get activeDescendant(): string | null {
+        return this._activeDescendantId;
+    }
+
+    /** @hidden @internal */
+    public override set focusedItem(item: IgxDropDownItemBaseDirective | null) {
+        if (!item) {
+            this._activeDescendantId = null;
+        } else if (item.id !== undefined) {
+            this._activeDescendantId = item.id;
+        } else {
+            // Virtual { value, index } object passed by navigateItem() under virtual scrolling.
+            const resolved = this.children?.find(e => e.index === item.index);
+            this._activeDescendantId = resolved?.id ?? null;
+        }
+        super.focusedItem = item;
     }
 
     /**
@@ -153,6 +187,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
             return;
         }
         this.comboAPI.set_selected_item(item.itemID);
+        this._activeDescendantId = item.id ?? null;
         this._focusedItem = item;
         this.combo.setActiveDescendant();
     }

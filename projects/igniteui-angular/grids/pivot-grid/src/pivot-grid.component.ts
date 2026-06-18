@@ -74,6 +74,7 @@ import {
     IPivotConfiguration,
     IPivotConfigurationChangedEventArgs,
     IPivotDimension,
+    IPivotGridRecord,
     IPivotUISettings,
     IPivotValue,
     IRowDataCancelableEventArgs,
@@ -2577,6 +2578,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.pipeTrigger++;
         }
     }
+
+    protected trackHorizontalRowGroup = (_index: number, rowGroup: IPivotGridRecord[]) => rowGroup[0]?.dataIndex;
 
     /**
      * @hidden @internal

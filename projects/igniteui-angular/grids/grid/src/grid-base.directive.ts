@@ -7439,7 +7439,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
-        if (this.type === 'hierarchical') {
+        if (this.type === 'hierarchical' && source === this.filteredSortedData) {
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
@@ -7773,12 +7773,18 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
 
-        this.zone.onStable.pipe(first()).subscribe(() => {
+        const callback = () => {
             this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
-        });
+        };
+        if (this.isZonelessChangeDetection()) {
+            this.cdr.detectChanges();
+            callback();
+        } else {
+            this.zone.onStable.pipe(first()).subscribe(callback);
+        }
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7801,6 +7807,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
+    }
+
+    protected isZonelessChangeDetection(): boolean {
+        return this.zone.constructor.name === 'NoopNgZone';
     }
 
     protected hasMenuPinningActions(): boolean {

@@ -1,14 +1,6 @@
 // Import the IgniteUI themes library first
 @use '../../../projects/igniteui-angular/core/src/core/styles/themes' as *;
 
-$new-card-theme: card-theme(
-    $background: royalblue
-);
-
-:host ::ng-deep{
-    @include card($new-card-theme);
-}
-
 .sample-section{
     display: flex;
     flex-direction: row;
