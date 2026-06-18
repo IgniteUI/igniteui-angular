@@ -55,6 +55,7 @@
     $grid-cell-pinned-border-color: color($color: 'gray', $variant: 300);
 
     $grid-header-border-color: if($variant == 'indigo', var-get($theme, 'header-border-color'), hsla(from var-get($theme, 'header-border-color') h s l / 0.38));
+    $grid-action-border-color: if($variant == 'indigo', var-get($theme, 'action-border-color'), hsla(from var-get($theme, 'action-border-color') h s l / 0.38));
     $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-header-border-color;
     $grid-row-border: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') var-get($theme, 'row-border-color');
     $grid-scrollbar-borders: rem(1px) solid var(--ig-grid-summary-border-color, var(--row-border-color));
@@ -2730,7 +2731,7 @@
 
     %igx-grid__tr-action {
         &:last-of-type {
-            border-inline-end: $grid-row-border;
+            border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
 
             @if $variant != 'indigo' {
                 min-height: sizable(
