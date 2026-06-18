@@ -29,7 +29,7 @@ import {
     ISearchInfo
 } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
-import { IgxActionStripToken, IGridResourceStrings } from 'igniteui-angular/core';
+import { IGridResourceStrings } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IGridCreatedEventArgs } from './events';
