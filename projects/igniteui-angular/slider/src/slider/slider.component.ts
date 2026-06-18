@@ -146,7 +146,7 @@ export class IgxSliderComponent implements
 
     /**
      * Sets the type of the slider.
-     * The slider type can be SLIDER(default) or RANGE.
+     * The slider type can be SLIDER (default) or RANGE.
      * ```typescript
      * sliderType: IgxSliderType = IgxSliderType.RANGE;
      * ```
