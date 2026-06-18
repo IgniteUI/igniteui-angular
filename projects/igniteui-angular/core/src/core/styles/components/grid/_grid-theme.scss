@@ -621,8 +621,12 @@
             border-inline-end: $grid-header-border;
         }
 
+        .igx-grid-th--pinned-first {
+            border-inline-start: var(--pinned-border-width) var(--pinned-border-style) var(--header-border-color) !important;
+        }
+
         .igx-grid-th--pinned-last {
-            border-inline-end: var(--pinned-border-width) var(--pinned-border-style) var(--header-border-color) !important
+            border-inline-end: var(--pinned-border-width) var(--pinned-border-style) var(--header-border-color) !important;
         }
 
         %igx-grid__header-indentation {
