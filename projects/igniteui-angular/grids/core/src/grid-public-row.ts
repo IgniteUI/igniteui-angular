@@ -1,9 +1,8 @@
 import { IgxEditRow } from './common/crud.service';
 import { GridSummaryPosition } from './common/enums';
 import { IgxGridCell } from './grid-public-cell';
-import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
-import { GridSummaryCalculationMode, IGroupByRecord, IgxSummaryResult, ITreeGridRecord } from 'igniteui-angular/core';
+import { GridSummaryCalculationMode, IGroupByRecord, IgxSummaryResult, ITreeGridRecord, mergeObjects } from 'igniteui-angular/core';
 
 abstract class BaseRow implements RowType {
     public index: number;
@@ -69,13 +68,8 @@ abstract class BaseRow implements RowType {
      */
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
-                this.grid.transactions.getAggregatedValue(this.key, false),
-                (objValue, srcValue) => {
-                    if (Array.isArray(srcValue)) {
-                        return objValue = srcValue;
-                    }
-                });
+            return mergeObjects(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
+                this.grid.transactions.getAggregatedValue(this.key, false));
         }
         return this._data ?? this.grid.dataView[this.index];
     }
@@ -377,13 +371,8 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      */
     public override get data(): any {
         if (this.inEditMode) {
-            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
-                this.grid.transactions.getAggregatedValue(this.key, false),
-                (objValue, srcValue) => {
-                    if (Array.isArray(srcValue)) {
-                        return objValue = srcValue;
-                    }
-                });
+            return mergeObjects(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
+                this.grid.transactions.getAggregatedValue(this.key, false));
         }
         const rec = this.grid.dataView[this.index];
         return this._data ? this._data : this.grid.isTreeRow(rec) ? rec.data : rec;

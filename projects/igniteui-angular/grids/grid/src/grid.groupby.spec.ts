@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
+import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import { formatNumber } from '@angular/common'
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -167,12 +167,12 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(8);
 
-        const expectedValue1 = groupRows[1].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
-        const actualValue1 = groupRows[1].element.nativeElement.querySelector('.igx-group-label__text').textContent;
-        const expectedValue2 = groupRows[2].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
-        const actualValue2 = groupRows[2].element.nativeElement.querySelector('.igx-group-label__text').textContent;
-        const expectedValue3 = groupRows[3].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
-        const actualValue3 = groupRows[3].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+        const expectedValue1 = groupRows[1].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent.trim();
+        const actualValue1 = groupRows[1].element.nativeElement.querySelector('.igx-group-label__text').textContent.trim();
+        const expectedValue2 = groupRows[2].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent.trim();
+        const actualValue2 = groupRows[2].element.nativeElement.querySelector('.igx-group-label__text').textContent.trim();
+        const expectedValue3 = groupRows[3].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent.trim();
+        const actualValue3 = groupRows[3].element.nativeElement.querySelector('.igx-group-label__text').textContent.trim();
 
         expect(actualValue1).toEqual(expectedValue1);
         expect(actualValue2).toEqual(expectedValue2);
@@ -300,8 +300,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         const groupRows = grid.groupsRowList.toArray();
-        const expectedValue1 = groupRows[0].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
-        const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+        const expectedValue1 = groupRows[0].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent.trim();
+        const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent.trim();
         expect(expectedValue1).toEqual(actualValue1);
     }));
 
@@ -317,8 +317,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         const groupRows = grid.groupsRowList.toArray();
-        const expectedValue1 = groupRows[0].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[4].textContent;
-        const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+        const expectedValue1 = groupRows[0].nativeElement.parentElement.nextElementSibling.querySelectorAll('igx-grid-cell')[4].textContent.trim();
+        const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent.trim();
         expect(expectedValue1).toEqual(actualValue1);
     }));
 
@@ -2663,11 +2663,16 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // scroll down
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
+        await wait(100); // Triggers onStable
+        fix.detectChanges();
+
+        dataRows = grid.dataRowList.toArray();
+        // Workaround for await wait triggering onStable prematurely
+        (grid as any)._restoreVirtState(dataRows[7]);
         await wait(100);
         fix.detectChanges();
 
         // verify rows are scrolled to the right
-        dataRows = grid.dataRowList.toArray();
         dataRows.forEach(dr => {
             const virtualization = dr.virtDirRow;
             // should be at last chunk
@@ -4048,6 +4053,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             <span> Custom template </span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class DefaultGridComponent extends DataParent {
@@ -4121,6 +4127,7 @@ class MySortingStrategy extends IgxGrouping {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class GroupableGridComponent extends DataParent {
@@ -4133,7 +4140,7 @@ export class GroupableGridComponent extends DataParent {
     public sortStrategy = new MySortingStrategy();
     public groupStrategy = this.sortStrategy;
 
-    public formatUnboundValue(value: string, rowData: any | undefined): string | undefined {
+    public formatUnboundValue(_value: string, rowData: any | undefined): string | undefined {
         return formatUnboundValueFunction(rowData);
     }
 }
@@ -4175,6 +4182,7 @@ export class GroupableGridComponent extends DataParent {
                 </span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeaderCollapsedIndicatorDirective]
 })
 export class CustomTemplateGridComponent extends DataParent {
@@ -4200,6 +4208,7 @@ export class CustomTemplateGridComponent extends DataParent {
             }
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupByDataMoreColumnsComponent extends DataParent {
@@ -4239,6 +4248,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
             </igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupByEmptyColumnFieldComponent extends DataParent {
@@ -4271,6 +4281,7 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
             </ng-template>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowSelectorDirective, IgxCheckboxComponent]
 })
 export class GridGroupByRowCustomSelectorsComponent extends DataParent {
@@ -4296,6 +4307,7 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
                 dataType="string"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupByCaseSensitiveComponent {
@@ -4342,6 +4354,7 @@ export class GridGroupByCaseSensitiveComponent {
             <igx-column [field]="'DateTimeField'" [width]="'200px'" [groupable]="true" dataType="dateTime"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupByTestDateTimeDataComponent {
@@ -4368,6 +4381,7 @@ export class GridGroupByTestDateTimeDataComponent {
             <igx-column [field]="'DateTimeField'" [width]="'200px'" [groupable]="true" dataType="dateTime"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridStateDirective]
 })
 export class GridGroupByStateComponent extends GridGroupByTestDateTimeDataComponent {

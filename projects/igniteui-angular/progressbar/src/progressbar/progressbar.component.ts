@@ -1,20 +1,21 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
-    Renderer2,
-    ViewChild,
-    ContentChild,
-    AfterContentInit,
-    Directive,
-    booleanAttribute,
-    inject,
-    ChangeDetectorRef,
-    NgZone,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  Input,
+  Output,
+  Renderer2,
+  ViewChild,
+  ContentChild,
+  AfterContentInit,
+  Directive,
+  booleanAttribute,
+  inject,
+  ChangeDetectorRef,
+  NgZone,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
     IgxProgressBarTextTemplateDirective,
@@ -368,6 +369,7 @@ let NEXT_GRADIENT_ID = 0;
 @Component({
     selector: 'igx-linear-bar',
     templateUrl: 'templates/linear-bar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass]
 })
 export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
@@ -516,6 +518,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 @Component({
     selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet, NgClass]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterContentInit {

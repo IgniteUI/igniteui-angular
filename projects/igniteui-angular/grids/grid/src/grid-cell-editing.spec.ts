@@ -254,7 +254,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
             const firstCell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
-            expect(grid.gridAPI.get_cell_by_index(0, 'fullName').nativeElement.textContent).toBe('John Brown');
+            expect(grid.gridAPI.get_cell_by_index(0, 'fullName').nativeElement.textContent.trim()).toBe('John Brown');
             expect(firstCell.editMode).toBeFalsy();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ContentChildren, Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, booleanAttribute, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChildren, Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import {
     IgxTree,
@@ -128,6 +128,7 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet, IgxIconComponent, IgxCheckboxComponent, NgClass, IgxCircularProgressBarComponent]
 })
 export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, OnDestroy {

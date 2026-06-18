@@ -145,7 +145,7 @@
         }
 
         @include e(details-button) {
-            @extend %filter-tree-details-button !optional;;
+            @extend %filter-tree-details-button !optional;
         }
     }
 }
@@ -162,6 +162,6 @@
 
 @mixin _query-builder-dialog {
     @include b(igx-query-builder-dialog) {
-        @extend %query-builder-dialog !optional;;
+        @extend %query-builder-dialog !optional;
     }
 }

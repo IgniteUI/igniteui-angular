@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IgxStepperComponent } from 'igniteui-angular/stepper';
 
 @Component({
@@ -6,6 +6,7 @@ import { IgxStepperComponent } from 'igniteui-angular/stepper';
   standalone: true,
   imports: [IgxStepperComponent],
   templateUrl: './stepper.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./stepper.component.scss']
 })
 export class StepperComponent {

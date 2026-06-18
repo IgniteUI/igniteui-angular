@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, HostListener, Directive, TemplateRef, inject } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, Directive, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Templates the default toggle icon in the picker.
@@ -17,6 +17,7 @@ import { Component, Output, EventEmitter, HostListener, Directive, TemplateRef, 
 @Component({
     template: `<ng-content></ng-content>`,
     selector: 'igx-picker-toggle',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxPickerToggleComponent {
@@ -48,6 +49,7 @@ export class IgxPickerToggleComponent {
 @Component({
     template: `<ng-content></ng-content>`,
     selector: 'igx-picker-clear',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxPickerClearComponent extends IgxPickerToggleComponent { }

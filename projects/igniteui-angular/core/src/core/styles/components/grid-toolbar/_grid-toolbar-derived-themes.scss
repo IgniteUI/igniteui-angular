@@ -11,9 +11,9 @@
     $schema: map.get($theme-info, 'schema');
 
     :where(igx-grid-toolbar) {
-        --_grid-toolbar-background: var(--background, var(--ig-grid-toolbar-background));
-        --_grid-toolbar-foreground: var(--foreground, var(--ig-grid-toolbar-foreground));
-        --_grid-toolbar-accent-color: var(--accent-color, var(--ig-grid-toolbar-accent-color));
+        --_grid-toolbar-background: var(--ig-grid-toolbar-background);
+        --_grid-toolbar-foreground: var(--ig-grid-toolbar-foreground);
+        --_grid-toolbar-accent-color: var(--ig-grid-toolbar-accent-color);
 
         @include tokens(
             column-actions-theme(

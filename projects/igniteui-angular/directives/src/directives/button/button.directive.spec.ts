@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxButtonDirective } from './button.directive';
@@ -105,6 +105,7 @@ describe('IgxButton', () => {
     template: `<span igxButton="flat" igxRipple="white">
         <i class="material-icons">add</i>
     </span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxRippleDirective]
 })
 class InitButtonComponent {
@@ -114,6 +115,7 @@ class InitButtonComponent {
 
 @Component({
     template: `<span igxButton="contained" [disabled]="disabled">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective]
 })
 class ButtonWithAttribsComponent {

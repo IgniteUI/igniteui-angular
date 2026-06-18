@@ -1,12 +1,13 @@
 import {
-    Component,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
-    Directive,
-    ContentChild,
-    booleanAttribute
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  Output,
+  Directive,
+  ContentChild,
+  booleanAttribute,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -54,6 +55,7 @@ let NEXT_ID = 0;
         }
     `
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 
