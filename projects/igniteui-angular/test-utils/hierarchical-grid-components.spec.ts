@@ -1,6 +1,6 @@
-import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';
+import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from '../../../src/app/shared/sample-data';
 import { IgxButtonDirective } from '../directives/src/directives/button/button.directive';
 import { IgxCheckboxComponent } from '../checkbox/src/checkbox/checkbox.component';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../paginator/src/paginator/paginator.component';
@@ -48,6 +48,7 @@ import { IgxHierarchicalTransactionServiceFactory } from 'igniteui-angular/grids
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxHierarchicalGridComponent,
         IgxColumnComponent,
@@ -124,6 +125,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     providers: [IgxHierarchicalTransactionServiceFactory],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxHierarchicalGridComponent,
         IgxColumnComponent,
@@ -181,6 +183,7 @@ export class IgxHierarchicalGridWithTransactionProviderComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionComponent {
@@ -213,6 +216,7 @@ export class IgxHierarchicalGridRowSelectionComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
@@ -246,6 +250,7 @@ export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
@@ -296,6 +301,7 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
             </igx-checkbox>
         </ng-template>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxHierarchicalGridComponent,
         IgxColumnComponent,
@@ -356,6 +362,7 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
             </igx-grid-toolbar>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
@@ -378,6 +385,7 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
         </igx-row-island>
 
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
@@ -401,6 +409,7 @@ export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchica
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true" [paginatorTemplate]="paginatorTemplate">
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestInputPaginatorComponent extends IgxHierarchicalGridTestBaseComponent { }
@@ -422,6 +431,7 @@ export class IgxHierarchicalGridTestInputPaginatorComponent extends IgxHierarchi
             </igx-action-strip>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxHierarchicalGridComponent,
         IgxActionStripComponent,
@@ -462,6 +472,7 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
     </igx-hierarchical-grid>
     <igx-advanced-filtering-dialog [grid]="hierarchicalGrid">
     </igx-advanced-filtering-dialog>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxAdvancedFilteringDialogComponent]
 })
 export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchicalGridTestBaseComponent {
@@ -510,6 +521,7 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridExportComponent {
@@ -566,6 +578,7 @@ export class IgxHierarchicalGridExportComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
@@ -592,6 +605,7 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMCHCollapsibleComponent {
@@ -627,6 +641,7 @@ export class IgxHierarchicalGridMCHCollapsibleComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
@@ -658,6 +673,7 @@ export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridSummariesExportComponent {
@@ -736,6 +752,7 @@ class MyChildSummary {
             <igx-column field="Headliner"></igx-column>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridDefaultComponent {
@@ -761,6 +778,7 @@ export class IgxHierarchicalGridDefaultComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridEmptyDataExportComponent {
@@ -780,6 +798,7 @@ export class IgxHierarchicalGridEmptyDataExportComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMissingChildDataExportComponent {

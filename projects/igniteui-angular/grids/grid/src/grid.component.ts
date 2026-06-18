@@ -671,7 +671,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public detailsViewFocused(container, rowIndex) {
+    public detailsViewFocused(_container, rowIndex) {
         this.navigation.setActiveNode({ row: rowIndex });
     }
 
@@ -1170,7 +1170,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => {
+        return this.dataView.map((_rec, index) => {
             this.pagingMode === 'remote' && this.page !== 0 ?
                 index = index + this.perPage * this.page : index = this.dataRowList.first.index + index;
             return this.createRow(index);

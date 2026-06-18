@@ -296,7 +296,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @hidden
     * @internal
     */
-    public onDimDragStart(event, area) {
+    public onDimDragStart(_event, area) {
         this.cdr.detectChanges();
         for (const chip of this.notificationChips) {
             const parent = chip.nativeElement.parentElement;
@@ -502,7 +502,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @hidden
     * @internal
     */
-    public onAreaDragLeave(event, area) {
+    public onAreaDragLeave(_event, area) {
         const dataChips = area.chipsList.toArray().filter(x => this.notificationChips.toArray().indexOf(x) === -1);
         dataChips.forEach(element => {
             if (element.nativeElement.previousElementSibling) {

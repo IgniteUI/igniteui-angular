@@ -1,6 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Injectable, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject } from '@angular/core';
-import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight} from 'igniteui-angular/core';
@@ -16,13 +15,6 @@ import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 
 let NEXT_ID = 0;
 
-
-@Injectable()
-export class CarouselHammerConfig extends HammerGestureConfig {
-    public override overrides = {
-        pan: { direction: HammerGesturesManager.Hammer?.DIRECTION_HORIZONTAL }
-    };
-}
 /**
  * **Ignite UI for Angular Carousel** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel.html)
@@ -45,12 +37,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
  * ```
  */
 @Component({
-    providers: [
-        {
-            provide: HAMMER_GESTURE_CONFIG,
-            useClass: CarouselHammerConfig
-        }
-    ],
+    providers: [HammerGesturesManager],
     selector: 'igx-carousel',
     templateUrl: 'carousel.component.html',
     styles: [`
@@ -58,12 +45,14 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         display: block;
         outline-style: none;
     }`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]
 })
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
     private element = inject(ElementRef);
     private iterableDiffers = inject(IterableDiffers);
     private platformUtil = inject(PlatformUtil);
+    private touchManager = inject(HammerGesturesManager);
 
 
 
@@ -553,7 +542,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    @HostListener('tap', ['$event'])
     public onTap(event) {
         // play pause only when tap on slide
         if (event.target && event.target.classList.contains('igx-slide')) {
@@ -586,7 +574,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    @HostListener('panleft', ['$event'])
     public onPanLeft(event) {
         if (!this.vertical) {
             this.pan(event);
@@ -594,7 +581,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    @HostListener('panright', ['$event'])
     public onPanRight(event) {
         if (!this.vertical) {
             this.pan(event);
@@ -602,7 +588,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    @HostListener('panup', ['$event'])
     public onPanUp(event) {
         if (this.vertical) {
             this.pan(event);
@@ -610,7 +595,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    @HostListener('pandown', ['$event'])
     public onPanDown(event) {
         if (this.vertical) {
             this.pan(event);
@@ -620,7 +604,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * @hidden
      */
-    @HostListener('panend', ['$event'])
     public onPanEnd(event) {
         if (!this.gesturesSupport) {
             return;
@@ -670,6 +653,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             .subscribe((change: QueryList<IgxSlideComponent>) => this.initSlides(change));
 
         this.initSlides(this.slides);
+        this.registerGestureEvents();
     }
 
     /** @hidden */
@@ -681,6 +665,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.lastInterval) {
             clearInterval(this.lastInterval);
         }
+        this.touchManager.destroy();
     }
 
     /** @hidden */
@@ -901,6 +886,19 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         return this.currentItem.nativeElement;
     }
 
+    private registerGestureEvents() {
+        if (!this.gesturesSupport || !this.platformUtil.isBrowser) {
+            return;
+        }
+        const el = this.element.nativeElement;
+        this.touchManager.addEventListener(el, 'tap', (e) => this.onTap(e));
+        this.touchManager.addEventListener(el, 'panleft', (e) => this.onPanLeft(e));
+        this.touchManager.addEventListener(el, 'panright', (e) => this.onPanRight(e));
+        this.touchManager.addEventListener(el, 'panup', (e) => this.onPanUp(e));
+        this.touchManager.addEventListener(el, 'pandown', (e) => this.onPanDown(e));
+        this.touchManager.addEventListener(el, 'panend', (e) => this.onPanEnd(e));
+    }
+
     private resetInterval() {
         if (this.lastInterval) {
             clearInterval(this.lastInterval);
@@ -1057,7 +1055,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private initSlides(change: QueryList<IgxSlideComponent>) {
         const diff = this.differ.diff(change.toArray());
         if (diff) {
-            this.slides.reduce((any, c, ind) => c.index = ind, 0); // reset slides indexes
+            this.slides.reduce((_any, c, ind) => c.index = ind, 0); // reset slides indexes
             diff.forEachAddedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
                 const slide = record.item;
                 slide.total = this.total;

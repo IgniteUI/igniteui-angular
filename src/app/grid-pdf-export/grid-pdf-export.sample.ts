@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxGridComponent,
@@ -42,6 +42,7 @@ import {
         IgxInputDirective,
         FormsModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [IgxPdfExporterService]
 })
 export class GridPdfExportSampleComponent {

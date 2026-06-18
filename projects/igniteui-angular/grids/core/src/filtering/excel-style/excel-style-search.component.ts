@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { takeUntil } from 'rxjs/operators';
@@ -22,8 +22,8 @@ import { Navigate } from 'igniteui-angular/drop-down';
 export class IgxExcelStyleLoadingValuesTemplateDirective {
     public template = inject<TemplateRef<undefined>>(TemplateRef);
 
-    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
-        ctx: unknown): ctx is undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective, ctx: unknown): ctx is undefined {
         return true
     }
 }
@@ -35,6 +35,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {

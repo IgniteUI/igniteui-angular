@@ -771,7 +771,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => this.createRow(index));
+        return this.dataView.map((_rec, index) => this.createRow(index));
     }
 
     /**

@@ -1,4 +1,4 @@
-import { Component, ContentChildren, ChangeDetectorRef, EventEmitter, HostBinding, Input, IterableDiffer, IterableDiffers, Output, QueryList, DoCheck, AfterViewInit, OnDestroy, ElementRef, inject } from '@angular/core';
+import { Component, ContentChildren, ChangeDetectorRef, EventEmitter, HostBinding, Input, IterableDiffer, IterableDiffers, Output, QueryList, DoCheck, AfterViewInit, OnDestroy, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxChipComponent,
     IChipSelectEventArgs,
@@ -48,6 +48,7 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
 @Component({
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy {
