@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import { formatNumber } from '@angular/common'
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -2663,11 +2663,16 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // scroll down
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
+        await wait(100); // Triggers onStable
+        fix.detectChanges();
+
+        dataRows = grid.dataRowList.toArray();
+        // Workaround for await wait triggering onStable prematurely
+        (grid as any)._restoreVirtState(dataRows[7]);
         await wait(100);
         fix.detectChanges();
 
         // verify rows are scrolled to the right
-        dataRows = grid.dataRowList.toArray();
         dataRows.forEach(dr => {
             const virtualization = dr.virtDirRow;
             // should be at last chunk
@@ -4135,7 +4140,7 @@ export class GroupableGridComponent extends DataParent {
     public sortStrategy = new MySortingStrategy();
     public groupStrategy = this.sortStrategy;
 
-    public formatUnboundValue(value: string, rowData: any | undefined): string | undefined {
+    public formatUnboundValue(_value: string, rowData: any | undefined): string | undefined {
         return formatUnboundValueFunction(rowData);
     }
 }

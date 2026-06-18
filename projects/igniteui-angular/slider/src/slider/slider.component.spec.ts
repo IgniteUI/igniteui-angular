@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1724,7 +1724,6 @@ describe('IgxSlider', () => {
             const fix = TestBed.createComponent(SliderRtlComponent);
             fix.detectChanges();
 
-            const inst = fix.componentInstance;
             const thumbs = fix.debugElement.queryAll(By.css(THUMB_TAG));
             const labels = fix.debugElement.queryAll(By.css(THUMB_LABEL));
 

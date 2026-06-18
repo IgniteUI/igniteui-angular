@@ -1154,7 +1154,7 @@ export abstract class IgxBaseExporter {
             };
 
             if (column.dataType === 'currency') {
-                columnInfo.currencyCode = this.i18nFormatter.getCurrencyCode(this.locale, column.pipeArgs.currencyCode);;
+                columnInfo.currencyCode = this.i18nFormatter.getCurrencyCode(this.locale, column.pipeArgs.currencyCode);
 
                 columnInfo.displayFormat = column.pipeArgs.display
                     ? column.pipeArgs.display

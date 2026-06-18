@@ -40,7 +40,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * ```
      */
     public override position(contentElement: HTMLElement,
-                    size: Size,
+                    _size: Size,
                     document?: Document,
                     initialCall?: boolean,
                     target?: Point | HTMLElement): void {
@@ -103,7 +103,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      *
      * @param selectFit selectFit to use for computation.
      */
-    protected fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
+    protected fitInViewport(_contentElement: HTMLElement, selectFit: SelectFit) {
         const footer = selectFit.scrollContainerRect.bottom - selectFit.contentElementRect.bottom;
         const header = selectFit.scrollContainerRect.top - selectFit.contentElementRect.top;
         const lastItemFitSize = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff - footer;

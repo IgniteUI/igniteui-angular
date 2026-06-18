@@ -312,7 +312,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
 
 
     @buildDataView()
-    public transform(collection: any[], id: string, isPinned = false, _pipeTrigger: number) {
+    public transform(collection: any[], _id: string, isPinned = false, _pipeTrigger: number) {
 
         if (this.grid.hasPinnedRecords && isPinned) {
             const result = collection.filter(rec => !this.grid.isSummaryRow(rec) && this.grid.isRecordPinned(rec));

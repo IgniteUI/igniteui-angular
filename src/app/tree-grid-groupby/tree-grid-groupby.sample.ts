@@ -37,7 +37,7 @@ export class TreeGridGroupBySampleComponent implements OnInit {
 
     public employeeAggregations: ITreeGridAggregation[] = [{
         field: 'Employees',
-        aggregate: (parent: ITreeGridRecord, children: any[]) => children.map((c) => c.Employees).reduce((sum, n) => sum + n, 0)
+        aggregate: (_parent: ITreeGridRecord, children: any[]) => children.map((c) => c.Employees).reduce((sum, n) => sum + n, 0)
     }];
 
     public ngOnInit(): void {

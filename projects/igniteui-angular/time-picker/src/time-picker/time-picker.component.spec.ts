@@ -9,7 +9,7 @@ import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../../../input-group/src/public_api';
 import { PickerInteractionMode } from '../../../core/src/date-common/types';
-import { PlatformUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
+import { PlatformUtil } from 'igniteui-angular/core';
 import { DatePart } from '../../../core/src/date-common/public_api';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
