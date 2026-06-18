@@ -23,7 +23,7 @@ Your job is to implement visual fixes and style features in the in-repo SCSS sou
 
 1. Read the original request, bug report, or handoff summary.
 2. Read the relevant SCSS, component markup, and any existing tests before editing.
-3. Read `skills/igniteui-angular-theming/references/contributing.md` in full before modifying any `_*-theme.scss` or `_*-component.scss` file, wiring a component into the theme system, or changing style tests.
+3. Read `.github/themes-contributing.md` in full before modifying any `_*-theme.scss` or `_*-component.scss` file, wiring a component into the theme system, or changing style tests.
 4. Decide whether the change belongs in a component theme file, a structural component file, shared style infrastructure, or a minimal supporting markup hook.
 5. Implement the required theming and style changes without expanding into unrelated production logic.
 6. Run the relevant style validation before finishing.
@@ -32,7 +32,7 @@ Your job is to implement visual fixes and style features in the in-repo SCSS sou
 
 ## Required Reference
 
-Contributing to the in-repo SCSS source is covered in `skills/igniteui-angular-theming/references/contributing.md`.
+Contributing to the in-repo SCSS source is covered in `.github/themes-contributing.md`.
 
 Read that file when:
 - modifying or creating `_*-theme.scss` files

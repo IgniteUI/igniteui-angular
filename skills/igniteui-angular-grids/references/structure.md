@@ -71,8 +71,6 @@ export class UsersGridComponent {
 
 ## Column Configuration
 
-> **Docs:** [Column Types](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-types)
-
 ### Data Types
 
 Set `dataType` to enable proper formatting, filtering, sorting, and editing:
@@ -90,8 +88,6 @@ Set `dataType` to enable proper formatting, filtering, sorting, and editing:
 | `image` | Image rendering (read-only) |
 
 ### Column Templates
-
-> **Docs:** [Column Configuration](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#angular-grid-column-configuration)
 
 Override default rendering with template directives:
 
@@ -131,8 +127,6 @@ Override default rendering with template directives:
 
 ### Column Groups
 
-> **Docs:** [Collapsible Column Groups](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/collapsible-column-groups)
-
 Group columns under a shared header:
 
 ```html
@@ -149,8 +143,6 @@ Group columns under a shared header:
 
 ### Multi-Row Layout (MRL)
 
-> **Docs:** [Multi-Row Layout](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/multi-row-layout)
-
 Create complex cell layouts spanning multiple rows/columns:
 
 ```html
@@ -163,8 +155,6 @@ Create complex cell layouts spanning multiple rows/columns:
 
 ### Column Pinning
 
-> **Docs:** [Column Pinning](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-pinning)
-
 ```html
 <igx-column field="name" [pinned]="true"></igx-column>
 ```
@@ -172,8 +162,6 @@ Create complex cell layouts spanning multiple rows/columns:
 Or programmatically: `this.gridRef().pinColumn('name')`.
 
 ## Sorting
-
-> **Docs:** [Sorting](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sorting) (substitute URL prefix per grid type — see hub instruction)
 
 ```html
 <igx-grid
@@ -199,8 +187,6 @@ For advanced programmatic sorting patterns, custom sort strategies, and sorting 
 
 ### Quick Filter (Row Filter)
 
-> **Docs:** [Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/filtering)
-
 ```html
 <igx-grid [allowFiltering]="true" [filterMode]="'quickFilter'">
   <igx-column field="name" [filterable]="true"></igx-column>
@@ -209,8 +195,6 @@ For advanced programmatic sorting patterns, custom sort strategies, and sorting 
 
 ### Excel-Style Filter
 
-> **Docs:** [Excel-Style Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/excel-style-filtering)
-
 ```html
 <igx-grid [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
   <igx-column field="name" [filterable]="true"></igx-column>
@@ -218,8 +202,6 @@ For advanced programmatic sorting patterns, custom sort strategies, and sorting 
 ```
 
 ### Advanced Filtering Dialog
-
-> **Docs:** [Advanced Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/advanced-filtering)
 
 ```html
 <igx-grid [allowAdvancedFiltering]="true">
@@ -243,13 +225,11 @@ For advanced programmatic filtering, complex AND/OR trees, and remote filtering 
 
 ### Row Selection
 
-> **Docs:** [Row Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-selection)
-
 ```html
 <igx-grid [rowSelection]="'multiple'" [primaryKey]="'id'" [(selectedRows)]="selectedIds">
   <!-- Optional: Custom row selector checkbox -->
   <ng-template igxRowSelector let-rowContext>
-    <igx-checkbox [checked]="rowContext.selected" (change)="rowContext.select(!rowContext.selected)">
+    <igx-checkbox [checked]="rowContext.selected" [readonly]="true">
     </igx-checkbox>
   </ng-template>
 </igx-grid>
@@ -259,15 +239,11 @@ Modes: `'none'`, `'single'`, `'multiple'`, `'multipleCascade'` (tree grids).
 
 ### Cell Selection
 
-> **Docs:** [Cell Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/cell-selection)
-
 ```html
 <igx-grid [cellSelection]="'multiple'"></igx-grid>
 ```
 
 ### Column Selection
-
-> **Docs:** [Column Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-selection)
 
 ```html
 <igx-grid [columnSelection]="'multiple'">

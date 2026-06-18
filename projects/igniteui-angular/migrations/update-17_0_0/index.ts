@@ -3,11 +3,9 @@ import type {
     SchematicContext,
     Tree
 } from '@angular-devkit/schematics';
-import type { Element } from '@angular/compiler';
+import type { Element } from '@angular/compiler' with { "resolution-mode": "import" };
 import * as ts from 'typescript';
 import { UpdateChanges } from '../common/UpdateChanges';
-// use bare specifier to escape the schematics encapsulation for the dynamic import:
-import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
 import { igNamedImportFilter } from '../common/tsUtils';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 
@@ -15,7 +13,8 @@ const version = '17.0.0';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
-    const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
+    // bare specifier escapes schematics encapsulation for the compiler dynamic import:
+    const { HtmlParser } = await import('@angular/compiler');
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
     const prop = ['type'];
