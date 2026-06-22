@@ -20,7 +20,6 @@ import {
     DateRange,
     DateRangeDescriptor,
     DateRangeType,
-    IgSizeDirective,
     IFormattingViews,
 } from 'igniteui-angular';
 import {

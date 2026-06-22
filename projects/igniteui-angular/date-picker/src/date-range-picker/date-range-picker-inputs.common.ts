@@ -5,7 +5,6 @@ import {
     IgxInputGroupBase,
     IgxInputGroupComponent,
     IgxInputState,
-    IgxPrefixDirective,
     IgxSuffixDirective
 } from 'igniteui-angular/input-group';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';

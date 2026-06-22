@@ -16,7 +16,7 @@ import {
     IgxSuffixDirective,
     IgxSwitchComponent,
     IgxCircularProgressBarComponent,
-    IgSizeDirective, IgxLabelDirective,
+    IgxLabelDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,

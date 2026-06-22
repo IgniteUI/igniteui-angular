@@ -54,6 +54,7 @@ const Theme = {
     IndigoDesign: "indigo",
 } as const;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Variant = {
     Light: "light",
     Dark: "dark",
