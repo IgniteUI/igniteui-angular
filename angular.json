@@ -376,8 +376,8 @@
               "budgets": [
                 {
                   "type": "allScript",
-                  "maximumWarning": "4mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "2.5mb",
+                  "maximumError": "3.5mb"
                 },
                 {
                   "type": "bundle",
