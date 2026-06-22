@@ -1,16 +1,17 @@
 import {
-    AfterContentInit,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    inject,
-    Input,
-    Output,
-    ViewEncapsulation,
-    booleanAttribute
+  AfterContentInit,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  inject,
+  Input,
+  Output,
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
@@ -30,6 +31,7 @@ let NEXT_ID = 0;
     styleUrl: 'expansion-panel.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IGX_EXPANSION_PANEL_COMPONENT, useExisting: IgxExpansionPanelComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: []
 })
 export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements IgxExpansionPanelBase, AfterContentInit {

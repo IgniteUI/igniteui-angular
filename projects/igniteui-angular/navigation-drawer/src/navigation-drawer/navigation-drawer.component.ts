@@ -15,10 +15,11 @@ import {
     ViewChild,
     Renderer2,
     booleanAttribute,
-    ViewEncapsulation,
     inject,
     signal,
-    computed
+    computed,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
@@ -62,6 +63,7 @@ let NEXT_ID = 0;
     `],
     styleUrl: 'navigation-drawer.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavDrawerItemDirective, NgTemplateOutlet]
 })
 export class IgxNavigationDrawerComponent implements

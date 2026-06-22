@@ -17,8 +17,9 @@ import {
     SimpleChanges,
     TemplateRef,
     booleanAttribute,
-    ViewEncapsulation,
-    inject
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -87,6 +88,7 @@ import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
         IgxStepperService,
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
 export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnChanges, OnInit, AfterContentInit, OnDestroy {

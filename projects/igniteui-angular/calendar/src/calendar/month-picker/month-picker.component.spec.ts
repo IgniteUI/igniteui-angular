@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -737,6 +737,7 @@ describe('IgxMonthPicker', () => {
                           [formatOptions]="formatOptions"
                           [locale]="locale">
                 </igx-month-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxMonthPickerComponent]
 })
 export class IgxMonthPickerSampleComponent {

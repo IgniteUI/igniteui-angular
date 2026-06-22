@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridComponent, IgxColumnComponent, IFilteringExpressionsTree, GridSelectionMode, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular';
 import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
 
@@ -6,7 +6,8 @@ import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
     selector: 'app-grid-esf-load-on-demand',
     templateUrl: './grid-esf-load-on-demand.component.html',
     styleUrls: ['./grid-esf-load-on-demand.component.scss'],
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class GridEsfLoadOnDemandComponent implements OnInit {
     @ViewChild('grid1', { static: true })

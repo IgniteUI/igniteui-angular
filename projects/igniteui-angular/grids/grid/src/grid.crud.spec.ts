@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
@@ -41,6 +41,41 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expectedLength = 11;
         expect(grid.data.length).toEqual(expectedLength);
         expect(grid.rowList.length).toEqual(expectedLength);
+    });
+
+    it('should keep the external data array reference in sync after repeated addRow() calls', () => {
+        const originalRef = fix.componentInstance.data;
+
+        for (let i = 2; i <= 6; i++) {
+            grid.addRow({ index: i, value: i * 10 });
+        }
+        fix.detectChanges();
+
+        expect(grid.data).toBe(originalRef);
+        expect(data.length).toEqual(6);
+        expect(data.find(r => r.index === 6)).toBeDefined();
+        expect(data).toBe(grid.data);
+    });
+
+    it('should keep the external data array reference in sync after repeated deleteRow() calls', () => {
+        const originalRef = fix.componentInstance.data;
+
+        for (let i = 2; i <= 5; i++) {
+            grid.addRow({ index: i, value: i * 10 });
+        }
+        fix.detectChanges();
+
+        expect(data.length).toEqual(5);
+
+        grid.deleteRow(1);
+        grid.deleteRow(3);
+        fix.detectChanges();
+
+        expect(grid.data).toBe(originalRef);
+        expect(data.length).toEqual(3);
+        expect(data.find(r => r.index === 1)).toBeUndefined();
+        expect(data.find(r => r.index === 3)).toBeUndefined();
+        expect(data).toBe(grid.data);
     });
 
     // No longer supported - array mutations are not detected automatically, need ref change.
@@ -351,6 +386,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
             [primaryKey]="'index'">
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class DefaultCRUDGridComponent {

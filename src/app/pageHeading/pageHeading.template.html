@@ -1,4 +1,5 @@
-@let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
+@let config = $safeNavigationMigration((propertyChangeService.panelConfig |
+async | keyvalue)?.length) > 0;
 
 <igx-navbar class="demos-navbar">
     <igx-navbar-action>

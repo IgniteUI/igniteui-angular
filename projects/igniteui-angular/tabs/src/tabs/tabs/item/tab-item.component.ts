@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { IgxTabItemDirective } from '../../tab-item.directive';
 
 @Component({
@@ -7,6 +7,7 @@ import { IgxTabItemDirective } from '../../tab-item.directive';
     styleUrl: 'tab-item.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabItemDirective, useExisting: IgxTabItemComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTabItemComponent extends IgxTabItemDirective {

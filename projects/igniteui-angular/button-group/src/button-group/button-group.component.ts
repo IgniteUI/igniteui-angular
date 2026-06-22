@@ -13,8 +13,9 @@ import {
     OnDestroy,
     ElementRef,
     booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
     ViewEncapsulation,
-    inject
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -60,6 +61,7 @@ let NEXT_ID = 0;
     templateUrl: 'button-group-content.component.html',
     styleUrl: 'buttongroup-content.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
@@ -173,7 +175,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
     public set selectionMode(selectionMode: 'single' | 'singleRequired' | 'multi') {
         if (this.viewButtons && selectionMode !== this._selectionMode) {
-            this.buttons.forEach((b,i) => {
+            this.buttons.forEach((_b, i) => {
                 this.deselectButton(i);
             });
             this._selectionMode = selectionMode;

@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, ElementRef, HostBinding, Output, EventEmitter, OnInit, OnDestroy, TemplateRef, booleanAttribute, inject } from '@angular/core';
+import { Component, Input, HostListener, ElementRef, HostBinding, Output, EventEmitter, OnInit, OnDestroy, TemplateRef, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
 import { Subject } from 'rxjs';
@@ -11,6 +11,7 @@ import { isLeftToRight } from 'igniteui-angular/core';
 @Component({
     selector: 'igx-thumb',
     templateUrl: 'thumb-slider.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass]
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {

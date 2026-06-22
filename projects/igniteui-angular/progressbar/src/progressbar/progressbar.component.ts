@@ -14,7 +14,9 @@ import {
     booleanAttribute,
     inject,
     ChangeDetectorRef,
-    NgZone, ViewEncapsulation,
+    NgZone,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     IgxProgressBarTextTemplateDirective,
@@ -370,6 +372,7 @@ let NEXT_GRADIENT_ID = 0;
     templateUrl: './linear/linear-bar.component.html',
     styleUrl: './linear/linear-bar.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass]
 })
 export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
@@ -520,6 +523,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     templateUrl: './circular/circular-bar.component.html',
     styleUrl: './circular/circular-bar.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet, NgClass]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterContentInit {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxRadioComponent, IgxSwitchComponent } from 'igniteui-angular';
 import { AppComponent } from '../app.component';
@@ -9,6 +9,7 @@ import { AppComponent } from '../app.component';
     selector: 'app-navbar-sample',
     styleUrls: ['navdrawer.sample.scss'],
     templateUrl: 'navdrawer.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent, FormsModule, IgxRadioComponent]
 })
 export class NavdrawerSampleComponent {

@@ -10,11 +10,12 @@ import {
     NgZone,
     Output,
     QueryList,
-    ViewEncapsulation,
     booleanAttribute,
     forwardRef,
     DOCUMENT,
-    inject
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     DragDirection,
@@ -70,6 +71,7 @@ export declare interface ISplitterBarResizeEventArgs {
     templateUrl: './splitter.component.html',
     styleUrl: 'splitter.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [forwardRef(() => IgxSplitBarComponent)]
 })
 export class IgxSplitterComponent implements AfterContentInit {
@@ -403,6 +405,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 @Component({
     selector: 'igx-splitter-bar',
     templateUrl: './splitter-bar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDragDirective, IgxDragIgnoreDirective]
 })
 export class IgxSplitBarComponent {

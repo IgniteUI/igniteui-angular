@@ -14,8 +14,9 @@ import {
     HostBinding,
     ElementRef,
     booleanAttribute,
-    ViewEncapsulation,
     inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { Subject } from 'rxjs';
@@ -95,6 +96,7 @@ export class IgxTreeExpandIndicatorDirective {
         IgxTreeNavigationService,
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {

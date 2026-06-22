@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FilterMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconService } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -7,7 +7,8 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-column-types-sample',
     styleUrls: ['grid-column-types.sample.scss'],
     templateUrl: 'grid-column-types.sample.html',
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class GridColumnTypesSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;

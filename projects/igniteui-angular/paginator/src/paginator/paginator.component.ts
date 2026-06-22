@@ -9,9 +9,10 @@ import {
     HostBinding,
     Input,
     Output,
-    ViewEncapsulation,
     forwardRef,
-    inject
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import {
@@ -58,6 +59,7 @@ export class IgxPaginatorContentDirective {
     templateUrl: 'paginator.component.html',
     styleUrl: 'paginator.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
     providers: [
         { provide: IgxPaginatorToken, useExisting: IgxPaginatorComponent }
@@ -383,6 +385,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-page-size',
     templateUrl: 'page-size-selector.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSelectComponent, FormsModule, IgxSelectItemComponent]
 })
 export class IgxPageSizeSelectorComponent {
@@ -408,6 +411,7 @@ export class IgxPageSizeSelectorComponent {
 @Component({
     selector: 'igx-page-nav',
     templateUrl: 'pager.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxPageNavigationComponent {

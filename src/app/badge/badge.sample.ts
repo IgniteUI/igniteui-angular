@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxBadgeComponent,
     IgxAvatarComponent,
@@ -32,7 +32,8 @@ registerIconFromText('bluetooth', bluetooth);
     styleUrls: ['badge.sample.scss'],
     templateUrl: 'badge.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxBadgeComponent, IgxAvatarComponent, IgxIconComponent]
+    imports: [IgxBadgeComponent, IgxAvatarComponent, IgxIconComponent],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 
 export class BadgeSampleComponent {

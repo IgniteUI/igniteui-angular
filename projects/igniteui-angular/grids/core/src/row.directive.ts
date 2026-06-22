@@ -18,11 +18,10 @@ import {
     ViewChildren
 } from '@angular/core';
 import { IgxGridForOfDirective } from 'igniteui-angular/directives';
-import { ColumnType, TransactionType } from 'igniteui-angular/core';
+import { ColumnType, mergeObjects, TransactionType } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxEditRow } from './common/crud.service';
 import { CellType, GridType, IGX_GRID_BASE } from './common/grid.interface';
-import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { trackByIdentity } from 'igniteui-angular/core';
@@ -71,12 +70,8 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     @Input()
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(this.grid.dataCloneStrategy.clone(this._data), this.grid.transactions.getAggregatedValue(this.key, false),
-                (objValue, srcValue) => {
-                    if (Array.isArray(srcValue)) {
-                        return objValue = srcValue;
-                    }
-                });
+            return mergeObjects(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
+                                this.grid.transactions.getAggregatedValue(this.key, false));
         }
         return this._data;
     }
@@ -84,6 +79,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public set data(v: any) {
         this._data = v;
     }
+
     /**
      * The index of the row.
      *

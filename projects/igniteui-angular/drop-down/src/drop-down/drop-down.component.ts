@@ -1,21 +1,22 @@
 import {
-    Component,
-    ContentChildren,
-    ElementRef,
-    forwardRef,
-    QueryList,
-    OnChanges,
-    Input,
-    OnDestroy,
-    ViewChild,
-    ContentChild,
-    AfterViewInit,
-    Output,
-    EventEmitter,
-    SimpleChanges,
-    booleanAttribute,
-    ViewEncapsulation,
-    inject
+  Component,
+  ContentChildren,
+  ElementRef,
+  forwardRef,
+  QueryList,
+  OnChanges,
+  Input,
+  OnDestroy,
+  ViewChild,
+  ContentChild,
+  AfterViewInit,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  booleanAttribute,
+  inject,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -60,6 +61,7 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
     styleUrl: 'drop-down.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleDirective]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
@@ -164,7 +166,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    public override get focusedItem(): IgxDropDownItemBaseDirective {
+    public override get focusedItem(): IgxDropDownItemBaseDirective | null {
         if (this.virtDir) {
             return this._focusedItem && this._focusedItem.index !== -1 ?
                 (this.children.find(e => e.index === this._focusedItem.index) || null) :
@@ -173,7 +175,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return this._focusedItem;
     }
 
-    public override set focusedItem(value: IgxDropDownItemBaseDirective) {
+    public override set focusedItem(value: IgxDropDownItemBaseDirective | null) {
         if (!value) {
             this.selection.clear(`${this.id}-active`);
             this._focusedItem = null;

@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { IgxTabHeaderBase, IgxTabHeaderDirective } from 'igniteui-angular/tabs';
 
 @Component({
@@ -6,6 +6,7 @@ import { IgxTabHeaderBase, IgxTabHeaderDirective } from 'igniteui-angular/tabs';
     templateUrl: 'bottom-nav-header.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabHeaderBase, useExisting: IgxBottomNavHeaderComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxBottomNavHeaderComponent extends IgxTabHeaderDirective {

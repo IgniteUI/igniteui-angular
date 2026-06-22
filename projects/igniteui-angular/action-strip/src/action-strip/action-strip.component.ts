@@ -1,22 +1,23 @@
 import {
-    Component,
-    Directive,
-    HostBinding,
-    Input,
-    Renderer2,
-    ViewContainerRef,
-    ContentChildren,
-    QueryList,
-    ViewChild,
-    TemplateRef,
-    ChangeDetectorRef,
-    AfterViewInit,
-    ElementRef,
-    booleanAttribute,
-    ViewEncapsulation,
-    inject,
-    DestroyRef,
-    AfterContentInit
+  Component,
+  Directive,
+  HostBinding,
+  Input,
+  Renderer2,
+  ViewContainerRef,
+  ContentChildren,
+  QueryList,
+  ViewChild,
+  TemplateRef,
+  ChangeDetectorRef,
+  AfterViewInit,
+  ElementRef,
+  booleanAttribute,
+  inject,
+  DestroyRef,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 
 
@@ -93,6 +94,7 @@ export class IgxActionStripMenuItemDirective {
         IgxDropDownComponent,
         IgxDropDownItemComponent
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
 export class IgxActionStripComponent implements IgxActionStripToken, AfterViewInit, AfterContentInit {

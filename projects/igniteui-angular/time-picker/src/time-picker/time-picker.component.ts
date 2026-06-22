@@ -16,8 +16,9 @@ import {
     ChangeDetectorRef,
     HostListener,
     booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
     ViewEncapsulation,
-    inject
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -120,7 +121,8 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
         TimeItemPipe,
         IgxDividerComponent,
         IgxReadOnlyInputDirective
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
     implements

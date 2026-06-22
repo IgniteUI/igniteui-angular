@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, provideZonelessChangeDetection } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -3812,6 +3812,7 @@ describe('igxCombo', () => {
             <div class="footer-class">This is a footer</div>
         </ng-template>
     </igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxComboSampleComponent {
@@ -3890,6 +3891,7 @@ class IgxComboSampleComponent {
         </p>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxLabelDirective, ReactiveFormsModule]
 })
 class IgxComboFormComponent {
@@ -3961,6 +3963,7 @@ class IgxComboFormComponent {
         </igx-combo>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxComboInTemplatedFormComponent {
@@ -4031,6 +4034,7 @@ export class LocalService {
     </igx-combo>
     `,
     providers: [LocalService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 export class IgxComboBindingTestComponent {
@@ -4059,6 +4063,7 @@ export class IgxComboBindingTestComponent {
         </igx-combo>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 class IgxComboInContainerTestComponent {
@@ -4129,6 +4134,7 @@ export class RemoteDataService {
     </igx-combo>
     `,
     providers: [RemoteDataService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -4162,6 +4168,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 
 @Component({
     template: `<igx-combo [(ngModel)]="selectedItems" [data]="items"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
@@ -4179,6 +4186,7 @@ export class ComboModelBindingComponent implements OnInit {
 @Component({
     template: `
         <igx-combo [(ngModel)]="selectedItems" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, FormsModule]
 })
 export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
@@ -4199,6 +4207,7 @@ export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
 @Component({
     template: `
         <igx-combo [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 export class ComboArrayTypeValueKeyComponent {
@@ -4227,6 +4236,7 @@ export class ComboArrayTypeValueKeyComponent {
 @Component({
     template: `
         <igx-combo id="id1" [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 export class ComboWithIdComponent {

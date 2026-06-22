@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, ViewEncapsulation } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxTabsBase, IgxTabsDirective } from 'igniteui-angular/tabs';
 
@@ -43,6 +43,7 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
     styleUrl: 'bottom-nav.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabsBase, useExisting: IgxBottomNavComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
 export class IgxBottomNavComponent extends IgxTabsDirective {

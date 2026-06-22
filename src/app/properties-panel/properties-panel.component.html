@@ -70,9 +70,7 @@
             @if (
             getControlType(key) === 'radio' || getControlType(key) === 'radio-inline'
             ) {
-            <igx-radio-group [formControlName]="key" [alignment]="
-            getControlType(key) === 'radio-inline' ? null : radioAlignment
-            ">
+            <igx-radio-group [formControlName]="key" [alignment]="getControlType(key) === 'radio-inline' ? null : radioAlignment">
                 @for (option of getControlOptions(key); track option) {
                     <igx-radio [value]="option">
                       {{ getControlLabels(key)[getControlOptions(key).indexOf(option)] }}

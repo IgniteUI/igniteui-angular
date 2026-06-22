@@ -803,7 +803,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => this.createRow(index));
+        return this.dataView.map((_rec, index) => this.createRow(index));
     }
 
     /**
@@ -988,7 +988,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public trackChanges(index, rec) {
+    public trackChanges(_index, rec) {
         if (rec.childGridsData !== undefined) {
             // if is child rec
             return rec.rowID;

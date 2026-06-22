@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import {
   IGX_BUTTON_GROUP_DIRECTIVES,
@@ -14,7 +14,8 @@ import {
     selector: 'app-tabs-routing-sample',
     styleUrls: ['tabs-routing.sample.scss'],
     templateUrl: 'tabs-routing.sample.html',
-    imports: [IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, RouterOutlet, IGX_TABS_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES]
+    imports: [IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, RouterOutlet, IGX_TABS_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class TabsRoutingSampleComponent {
     public contacts: any[] = [{

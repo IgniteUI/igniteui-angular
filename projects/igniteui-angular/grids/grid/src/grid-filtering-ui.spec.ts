@@ -7681,7 +7681,7 @@ const emitFilteringDoneOnInputClear = (fix, grid, filterVal, columnName, conditi
     verifyEmitFilteringDone(grid, emptyFilter, 2);
 };
 
-const verifyRemoveChipFromHeader = (fix, grid, filterVal, columnName, condition, rowListLength, cellIndex) => {
+const verifyRemoveChipFromHeader = (fix, grid, filterVal, columnName, condition, _rowListLength, cellIndex) => {
     filterGrid(fix, grid, columnName, filterVal, condition);
 
     const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;

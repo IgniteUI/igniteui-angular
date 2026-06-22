@@ -5,10 +5,11 @@ import {
     HostBinding,
     HostListener,
     Input,
-    ViewEncapsulation,
     booleanAttribute,
     OnDestroy,
-    inject
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
@@ -38,6 +39,7 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
     templateUrl: 'radio.component.html',
     styleUrl: 'radio.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective]
 })
 

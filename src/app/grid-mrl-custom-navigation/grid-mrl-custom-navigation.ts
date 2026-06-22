@@ -1,10 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule } from 'igniteui-angular';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { IgxGridComponent, GridSelectionMode, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-custom-navigation-sample',
     templateUrl: 'grid-mrl-custom-navigation.sample.html',
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconComponent],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class GridMRLCustomNavigationSampleComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

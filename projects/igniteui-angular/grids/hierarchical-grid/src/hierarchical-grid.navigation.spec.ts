@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component, ViewChild, DebugElement} from '@angular/core';
+import { Component, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions, waitForSelectionChange } from '../../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -1044,6 +1044,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestBaseComponent {
@@ -1087,6 +1088,7 @@ export class IgxHierarchicalGridTestBaseComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestComplexComponent extends IgxHierarchicalGridTestBaseComponent {
@@ -1108,6 +1110,7 @@ export class IgxHierarchicalGridTestComplexComponent extends IgxHierarchicalGrid
         <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'150px'">
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {}
@@ -1138,6 +1141,7 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxColumnComponent]
 })
 export class IgxHierarchicalGridSmallerChildComponent extends IgxHierarchicalGridTestBaseComponent {}

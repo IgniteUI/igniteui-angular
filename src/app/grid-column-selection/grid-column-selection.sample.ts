@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -61,6 +61,7 @@ export class GridColumnSelectionFilterPipe implements PipeTransform {
     selector: 'app-grid-column-selection-sample',
     styleUrls: ['grid-column-selection.sample.scss'],
     templateUrl: 'grid-column-selection.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe, IgxLabelDirective, IgxIconComponent, IgxSuffixDirective, IgxGridToolbarTitleComponent]
 })
 export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {

@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateRange, IgxDateRangePickerComponent, IgxDateTimeEditorDirective, IgxInputDirective, IgxLabelDirective, IgxRadioComponent, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs, IGX_DATE_RANGE_PICKER_DIRECTIVES, IgxIconComponent, CustomDateRange, CalendarDay, DateRangeType } from 'igniteui-angular';
@@ -18,6 +18,7 @@ defineComponents(IgcDateRangePickerComponent, IgcButtonComponent, IgcIconCompone
             useValue: 'border'
         }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxLabelDirective,

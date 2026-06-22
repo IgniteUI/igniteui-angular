@@ -5,7 +5,8 @@ import {
     Output,
     EventEmitter,
     HostListener,
-    HostBinding
+    HostBinding,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxButtonDirective, IgxButtonType, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
@@ -26,6 +27,7 @@ import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predef
     selector: 'igx-calendar-container',
     styles: [':host {display: block;}'],
     templateUrl: 'calendar-container.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonDirective,
         IgxRippleDirective,

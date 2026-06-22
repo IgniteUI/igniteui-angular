@@ -5,6 +5,8 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -35,6 +37,8 @@ registerIconFromText('face', face);
     styleUrls: ['button.sample.scss'],
     templateUrl: 'button.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxSwitchComponent,

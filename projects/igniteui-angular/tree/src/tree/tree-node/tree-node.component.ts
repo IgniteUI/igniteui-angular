@@ -15,8 +15,9 @@ import {
     TemplateRef,
     ViewChild,
     booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
     ViewEncapsulation,
-    inject
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -149,6 +150,7 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet, IgxIconComponent, IgxCheckboxComponent, NgClass, IgxCircularProgressBarComponent]
 })
 export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, OnDestroy {

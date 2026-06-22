@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -98,6 +98,7 @@ describe('Divider', () => {
         [inset]="inset"
         [role]="role">
     </igx-divider>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDividerComponent]
 })
 class TestDividerComponent {

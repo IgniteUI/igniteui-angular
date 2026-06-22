@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, DestroyRef, inject, TemplateRef, ViewEncapsulation,} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, inject, TemplateRef, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {PropertyChangeService, PropertyPanelConfig,} from './property-change.service';
@@ -10,13 +10,12 @@ import {
     IgxDateTimeEditorModule,
     IgxInputDirective,
     IgxInputGroupComponent,
-    IgxInputGroupModule,
-    IgxRadioModule,
     IgxSelectComponent,
     IgxSelectItemComponent,
     IgxSliderComponent,
     IgxSwitchComponent,
     IgxTimePickerComponent,
+    IgxRadioComponent,
     RadioGroupAlignment
 } from 'igniteui-angular';
 
@@ -26,6 +25,7 @@ import {
     templateUrl: './properties-panel.component.html',
     styleUrl: './properties-panel.component.scss',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -34,10 +34,10 @@ import {
         IgxButtonGroupComponent,
         IgxInputDirective,
         IgxInputGroupComponent,
-        IgxInputGroupModule,
+        IgxInputGroupComponent,
         IgxSliderComponent,
         IgxSwitchComponent,
-        IgxRadioModule,
+        IgxRadioComponent,
         IgxSelectComponent,
         IgxSelectItemComponent,
         IgxDatePickerComponent,

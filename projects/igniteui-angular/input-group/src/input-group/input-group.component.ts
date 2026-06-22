@@ -12,8 +12,9 @@ import {
     QueryList,
     booleanAttribute,
     inject,
+    AfterContentChecked,
+    ChangeDetectionStrategy,
     ViewEncapsulation,
-    AfterContentChecked
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from 'igniteui-angular/core';
 import { getComponentTheme } from 'igniteui-angular/core';
@@ -37,6 +38,7 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
     templateUrl: 'input-group.component.html',
     styleUrl: 'input-group.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
     imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })

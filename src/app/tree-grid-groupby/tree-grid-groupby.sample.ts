@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -10,6 +10,7 @@ import { IgxSwitchComponent, IgxTreeGridComponent, IgxTreeGridGroupByAreaCompone
     selector: 'app-tree-grid-groupby-sample',
     styleUrls: ['tree-grid-groupby.sample.scss'],
     templateUrl: 'tree-grid-groupby.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent, FormsModule, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe]
 })
 
@@ -32,7 +33,7 @@ export class TreeGridGroupBySampleComponent implements OnInit {
 
     public employeeAggregations: ITreeGridAggregation[] = [{
         field: 'Employees',
-        aggregate: (parent: ITreeGridRecord, children: any[]) => children.map((c) => c.Employees).reduce((sum, n) => sum + n, 0)
+        aggregate: (_parent: ITreeGridRecord, children: any[]) => children.map((c) => c.Employees).reduce((sum, n) => sum + n, 0)
     }];
 
     public ngOnInit(): void {

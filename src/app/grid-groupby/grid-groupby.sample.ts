@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition, GroupMemberCountSortingStrategy, IRowSelectionEventArgs, ISortingExpression, ISortingOptions, IgxButtonDirective, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxSwitchComponent, IgxToggleActionDirective, SortingDirection } from 'igniteui-angular';
 
@@ -6,6 +6,7 @@ import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition
     selector: 'app-grid-sample',
     styleUrls: ['grid-groupby.sample.scss'],
     templateUrl: 'grid-groupby.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxSwitchComponent,
         FormsModule,

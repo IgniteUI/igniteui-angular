@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -3163,6 +3163,7 @@ describe('IgxSimpleCombo', () => {
             </igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, IGX_GRID_DIRECTIVES, FormsModule]
 })
 class IgxSimpleComboInGridComponent {
@@ -3204,6 +3205,7 @@ class IgxSimpleComboInGridComponent {
         </ng-template>
     </igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxSimpleComboSampleComponent {
@@ -3254,6 +3256,7 @@ class IgxSimpleComboSampleComponent {
 
 @Component({
     template: `<igx-simple-combo #combo [data]="data" displayKey="test" [(ngModel)]="name"></igx-simple-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboEmptyComponent {
@@ -3268,6 +3271,7 @@ export class IgxSimpleComboEmptyComponent {
     template: `<igx-simple-combo #combo [data]="data" displayKey="name" valueKey="id" [(ngModel)]="name">
                     <ng-template igxComboToggleIcon><igx-icon>search</igx-icon></ng-template>
                 </igx-simple-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, IgxIconComponent, IgxComboToggleIconDirective, FormsModule]
 })
 export class IgxSimpleComboIconTemplatesComponent {
@@ -3283,6 +3287,7 @@ export class IgxSimpleComboIconTemplatesComponent {
 
 @Component({
     template: `<igx-simple-combo [(ngModel)]="selectedItem" [data]="items"></igx-simple-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
@@ -3307,6 +3312,7 @@ export class ComboModelBindingComponent implements OnInit {
 </igx-simple-combo>
 </div>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent]
 })
 class IgxComboInContainerTestComponent {
@@ -3342,6 +3348,7 @@ class IgxComboInContainerTestComponent {
     [ariaLabelledBy]="'mockID'">
     </igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -3384,6 +3391,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
         </igx-simple-combo>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxSimpleComboInTemplatedFormComponent {
@@ -3435,6 +3443,7 @@ class IgxSimpleComboInTemplatedFormComponent {
      <button #button IgxButton (click)="changeValue()">Change value</button>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, AsyncPipe, ReactiveFormsModule]
 })
 export class IgxComboRemoteDataInReactiveFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -3490,6 +3499,7 @@ export class IgxComboRemoteDataInReactiveFormComponent implements OnInit, AfterV
         </igx-simple-combo>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboInReactiveFormComponent {
@@ -3520,6 +3530,7 @@ export class IgxSimpleComboInReactiveFormComponent {
     template: `
         <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
@@ -3545,6 +3556,7 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
         </igx-simple-combo>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent]
 })
 export class IgxBottomPositionSimpleComboComponent {
@@ -3587,6 +3599,7 @@ export class IgxBottomPositionSimpleComboComponent {
     template: `
         <igx-simple-combo [data]="items" [valueKey]="'id'" [displayKey]="'text'" [formControl]="formControl" required></igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxSimpleComboFormControlRequiredComponent implements OnInit {
@@ -3619,6 +3632,7 @@ export class IgxSimpleComboFormControlRequiredComponent implements OnInit {
             </igx-simple-combo>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxSimpleComboFormWithFormControlComponent implements OnInit {
@@ -3647,6 +3661,7 @@ export class IgxSimpleComboFormWithFormControlComponent implements OnInit {
     template: `
         <igx-simple-combo [data]="items" [(ngModel)]="selectedItem" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxSimpleComboNgModelComponent implements OnInit {
@@ -3681,6 +3696,7 @@ export class IgxSimpleComboNgModelComponent implements OnInit {
         </div>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
@@ -3733,6 +3749,7 @@ export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
         </div>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {

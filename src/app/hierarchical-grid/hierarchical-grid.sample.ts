@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
 import {
     IgxRowIslandComponent,
@@ -17,6 +17,7 @@ import {
     selector: 'app-hierarchical-grid-sample',
     styleUrls: ['hierarchical-grid.sample.scss'],
     templateUrl: 'hierarchical-grid.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GridSearchBoxComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxIconComponent, IGX_BUTTON_GROUP_DIRECTIVES, IgxActionStripComponent]
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
