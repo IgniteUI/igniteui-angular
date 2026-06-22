@@ -298,7 +298,7 @@ describe('IgxTreeGrid', () => {
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeTrue();
         }));
 
-        it('should handle excel style filtering when grouping is applied', fakeAsync(() => {
+        it('should handle excel style filtering when grouping is applied and 3 or more items are selected', fakeAsync(() => {
             treeGrid.filterMode = "excelStyleFilter";
             treeGrid.allowFiltering = true;
             treeGrid.expansionDepth = Infinity;
@@ -319,6 +319,28 @@ describe('IgxTreeGrid', () => {
 
 
             expect(treeGrid.filteredData.length).toEqual(8);
+        }));
+
+        it('should handle excel style filtering when grouping is applied and preserve all checked esf items', fakeAsync(() => {
+            treeGrid.filterMode = "excelStyleFilter";
+            treeGrid.allowFiltering = true;
+            treeGrid.expansionDepth = Infinity;
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterIconFromCode(fix, treeGrid, 'Name');
+            let checkboxes: HTMLInputElement[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, null, 'igx-tree-grid') as HTMLInputElement[]);
+            // unselect just one
+            checkboxes[2].click();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix, null, 'igx-tree-grid');
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, treeGrid, 'Name');
+            checkboxes = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, null, 'igx-tree-grid') as HTMLInputElement[]);
+
+            const uncheckedItem = checkboxes.splice(2, 1)[0];
+            expect(uncheckedItem.checked).toBeFalse();
+            checkboxes.forEach(c => expect(c.checked).toBeTrue());
         }));
     });
 
