@@ -880,7 +880,6 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
         <igx-column width="100px" [field]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
     </igx-grid>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridFilteringESFRemoteChunkComponent extends BasicGridComponent {
