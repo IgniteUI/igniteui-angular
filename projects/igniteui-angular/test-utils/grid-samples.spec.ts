@@ -875,6 +875,37 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
 }
 
 @Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true"
+                         [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy">
+        <igx-column width="100px" [field]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+    </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridFilteringESFRemoteChunkComponent extends BasicGridComponent {
+    public fullData = [
+        { ID: 1, ProductName: 'Alpha' },
+        { ID: 2, ProductName: 'beta' },
+        { ID: 3, ProductName: 'Gamma' },
+        { ID: 4, ProductName: 'DELTA' }
+    ];
+
+    // Simulate remote virtualization where the grid keeps only the current chunk.
+    public override data = this.fullData.slice(0, 2);
+
+    private _filteringStrategy = new FilteringStrategy();
+
+    public columnValuesStrategy = (column: IgxColumnComponent,
+        columnExprTree: IFilteringExpressionsTree,
+        done: (uniqueValues: any[]) => void) => {
+            const filteredData = this._filteringStrategy.filter(this.fullData, columnExprTree, null, null);
+            const columnValues = filteredData.map(record => record[column.field]);
+            done(columnValues);
+    };
+}
+
+@Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [moving]="true">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable" [sortable]="true"></igx-column>
