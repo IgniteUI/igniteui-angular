@@ -6,6 +6,7 @@ import { IgxTreeGridGroupByAreaComponent } from 'igniteui-angular/grids/tree-gri
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DefaultSortingStrategy } from 'igniteui-angular/core';
+import { GridFunctions } from 'igniteui-angular/test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid', () => {
 
@@ -24,7 +25,7 @@ describe('IgxTreeGrid', () => {
     let groupByArea: IgxTreeGridGroupByAreaComponent;
 
     const DROP_AREA_MSG = 'Drag a column header and drop it here to group by that column.';
-    describe(' GroupByArea Standalone', ()=> {
+    describe(' GroupByArea Standalone', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridGroupByAreaTestComponent);
@@ -53,7 +54,7 @@ describe('IgxTreeGrid', () => {
             expect(spanElement.innerText).toEqual(DROP_AREA_MSG);
         }));
 
-        it ('has the expected default properties\' values', fakeAsync(() => {
+        it('has the expected default properties\' values', fakeAsync(() => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.grid).toEqual(treeGrid);
             expect(groupByArea.expressions).toEqual([]);
@@ -97,7 +98,7 @@ describe('IgxTreeGrid', () => {
             clearGridSubs();
         });
 
-        it ('GroupByArea has the expected properties\' values set', fakeAsync(() => {
+        it('GroupByArea has the expected properties\' values set', fakeAsync(() => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.expressions.length).toEqual(2);
             expect(groupByArea.grid).toEqual(treeGrid);
@@ -132,7 +133,7 @@ describe('IgxTreeGrid', () => {
             expect(chips[0].id).toEqual('OnPTO');
             expect(chips[1].id).toEqual('HireDate');
 
-            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
             tick();
 
@@ -180,7 +181,7 @@ describe('IgxTreeGrid', () => {
 
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
 
-            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
@@ -295,6 +296,29 @@ describe('IgxTreeGrid', () => {
             // setColumnsVisibility iterates all expressions and hides their columns
             expect(treeGrid.getColumnByName('OnPTO').hidden).toBeTrue();
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeTrue();
+        }));
+
+        it('should handle excel style filtering when grouping is applied', fakeAsync(() => {
+            treeGrid.filterMode = "excelStyleFilter";
+            treeGrid.allowFiltering = true;
+            treeGrid.expansionDepth = Infinity;
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterIconFromCode(fix, treeGrid, 'Name');
+            const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix, null, 'igx-tree-grid');
+            // unselect all
+            checkboxes[0].click();
+            fix.detectChanges();
+
+            checkboxes[2].click();
+            checkboxes[3].click();
+            checkboxes[4].click();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix, null, 'igx-tree-grid');
+            fix.detectChanges();
+
+
+            expect(treeGrid.filteredData.length).toEqual(8);
         }));
     });
 
