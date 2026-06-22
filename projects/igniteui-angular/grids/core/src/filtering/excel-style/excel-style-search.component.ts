@@ -501,7 +501,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 (it.label !== null && it.label !== undefined) &&
                 !it.isBlanks &&
                 (it.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
-                this.matchesNumericValue(it, searchVal)));
+                    this.matchesNumericValue(it, searchVal)));
 
             this.esf.listData.forEach(i => i.isSelected = false);
             this.displayedListData.forEach(i => i.isSelected = true);
@@ -610,7 +610,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         searchVal = new Set(selectedItems.map(e => e.value.toLocaleTimeString()));
                         break;
                     case GridColumnDataType.String:
-                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical()) {
+                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical() && !this.isRemoteData()) {
                             const selectedValues = new Set(selectedItems.map(item => item.value.toLowerCase()));
                             searchVal = new Set();
 
@@ -816,8 +816,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const columnDataType = this.esf.column?.dataType;
         if (typeof item.value !== 'number' ||
             (columnDataType !== GridColumnDataType.Number &&
-             columnDataType !== GridColumnDataType.Currency &&
-             columnDataType !== GridColumnDataType.Percent)) {
+                columnDataType !== GridColumnDataType.Currency &&
+                columnDataType !== GridColumnDataType.Percent)) {
             return false;
         }
 
@@ -895,5 +895,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
         const subRequired = indexOutOfChunk || scrollNeeded;
         return subRequired;
+    }
+
+    private isRemoteData(): boolean {
+        return this.esf.grid.verticalScrollContainer.isRemote;
     }
 }
