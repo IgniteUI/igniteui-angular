@@ -1,13 +1,13 @@
 import { VerticalAlignment, HorizontalAlignment, PositionSettings, ConnectedFit, Point, Size, BaseFitPositionStrategy, Util  } from 'igniteui-angular/core';
 import { IPositionStrategy } from 'igniteui-angular/core';
 
-import { IgxSelectBase } from './select.common';
+import type { IgxSelectComponent } from './select.component';
 import { PlatformUtil } from 'igniteui-angular/core';
 import { Optional } from '@angular/core';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 /** @hidden @internal */
-export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
+export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
     private _selectDefaultSettings = {
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
@@ -22,7 +22,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     private global_xOffset = 0;
     private global_styles: SelectStyles = {};
 
-    constructor(public select: IgxSelectBase, settings?: PositionSettings, @Optional() protected platform?: PlatformUtil) {
+    /** @hidden @internal */
+    public ownsScrollPositioning = true;
+
+    constructor(public select: IgxSelectComponent, settings?: PositionSettings, @Optional() protected platform?: PlatformUtil) {
         super();
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }

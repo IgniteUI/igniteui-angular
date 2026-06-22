@@ -6,6 +6,10 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxSelectComponent`
+    - The default positioning strategy has changed from the internal overlap strategy to `AutoPositionStrategy`. The dropdown now opens below (or above, if there is not enough space) the input element, consistent with other connected components.
+    - Added `IgxSelectOverlapPositionStrategy` - a new publicly exported strategy that preserves the previous behavior of aligning the selected item's text over the input text. Consumers can opt into this behavior by passing `overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) }`.
+
 - **Theming**
     - Added derived themes for the Grid and related internal components. When a parent component theme is included, its internal controls now derive their tokens from the parent theme colors, keeping nested buttons, icons, inputs, dropdowns, checkboxes, scrollbars, chips, and other helper components visually aligned.
 

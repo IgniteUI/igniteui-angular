@@ -9,10 +9,13 @@ import {
     IBaseCancelableBrowserEventArgs,
     IBaseEventArgs,
     AbsoluteScrollStrategy,
+    AutoPositionStrategy,
+    HorizontalAlignment,
+    VerticalAlignment,
     OverlaySettings
 } from 'igniteui-angular/core';
+import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { IgxSelectItemComponent } from './select-item.component';
-import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IgxPrefixDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxInputState, IgxLabelDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { ToggleViewCancelableEventArgs, ToggleViewEventArgs, IgxToggleDirective } from 'igniteui-angular/directives';
@@ -414,7 +417,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this._overlayDefaults = {
             target: this.getEditElement(),
             modal: false,
-            positionStrategy: new SelectPositioningStrategy(this),
+            positionStrategy: new AutoPositionStrategy({
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Bottom,
+                horizontalStartPoint: HorizontalAlignment.Left,
+                verticalStartPoint: VerticalAlignment.Top,
+                openAnimation: fadeIn,
+                closeAnimation: fadeOut
+            }),
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludeFromOutsideClick: [this.inputGroup.element.nativeElement as HTMLElement]
         };
@@ -447,7 +457,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public override onToggleContentAppended(event: ToggleViewEventArgs) {
         const info = this.overlayService.getOverlayById(event.id);
-        if (info?.settings?.positionStrategy instanceof SelectPositioningStrategy) {
+        if ((info?.settings?.positionStrategy as { ownsScrollPositioning?: boolean })?.ownsScrollPositioning) {
             return;
         }
         super.onToggleContentAppended(event);

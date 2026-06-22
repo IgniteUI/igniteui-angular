@@ -9,13 +9,14 @@ import { IGX_DROPDOWN_BASE, IgxDropDownItemComponent, ISelectionEventArgs } from
 import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, AutoPositionStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 import { addScrollDivToElement } from 'igniteui-angular/core/src/services/overlay/overlay.spec';
+import { IgxSelectOverlapPositionStrategy } from './select-overlap-positioning-strategy';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -190,6 +191,31 @@ describe('igxSelect', () => {
             select.disabled = true;
             expect(select.disabled).toBeTruthy();
         });
+
+        it('should use AutoPositionStrategy as the default position strategy', () => {
+            // The public overlaySettings input is undefined by default
+            expect(select.overlaySettings).toBeUndefined();
+            // The internal _overlayDefaults should use AutoPositionStrategy
+            expect((select as any)._overlayDefaults.positionStrategy).toBeInstanceOf(AutoPositionStrategy);
+        });
+
+        it('should allow opt-in to IgxSelectOverlapPositionStrategy via overlaySettings', fakeAsync(() => {
+            const overlapStrategy = new IgxSelectOverlapPositionStrategy(select);
+            select.overlaySettings = { positionStrategy: overlapStrategy };
+            expect(select.overlaySettings.positionStrategy).toBeInstanceOf(IgxSelectOverlapPositionStrategy);
+            expect((select.overlaySettings.positionStrategy as IgxSelectOverlapPositionStrategy).ownsScrollPositioning).toBeTrue();
+
+            // The select should still open correctly when using the overlap strategy
+            select.open();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            select.close();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+        }));
 
         it('should open dropdown on input click', () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
