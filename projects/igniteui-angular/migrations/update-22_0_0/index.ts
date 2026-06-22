@@ -8,7 +8,7 @@ import {
     parseFile
 } from '../common/util';
 
-const version = '21.2.3';
+const version = '22.0.0';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(

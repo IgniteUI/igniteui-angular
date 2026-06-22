@@ -291,9 +291,9 @@
             "factory": "./update-21_2_2"
         },
         "migration-57": {
-            "version": "21.2.3",
-            "description": "Updates Ignite UI for Angular from v21.2.2 to v21.2.3",
-            "factory": "./update-21_2_3"
+            "version": "22.0.0",
+            "description": "Updates Ignite UI for Angular from v21.2.x to v22.0.0",
+            "factory": "./update-22_0_0"
         }
     }
 }
