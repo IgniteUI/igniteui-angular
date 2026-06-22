@@ -296,7 +296,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input()
     public get type(): IgxInputGroupType {
-        return this._type || this._inputGroupType || 'line';
+        return this._type || this._inputGroupType || 'box';
     }
 
     public set type(val: IgxInputGroupType) {
