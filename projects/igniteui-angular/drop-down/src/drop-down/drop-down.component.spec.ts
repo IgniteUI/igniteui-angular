@@ -17,7 +17,6 @@ import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 
-const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down';
 const CSS_CLASS_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
