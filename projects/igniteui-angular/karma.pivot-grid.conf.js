@@ -19,7 +19,6 @@ module.exports = function (config) {
       require('karma-jasmine-spec-tags'),
       require('karma-jasmine-html-reporter'),
       require('karma-spec-reporter'),
-      require('@angular-devkit/build-angular/plugins/karma')
     ],
     parallelOptions: {
       executors: 2,

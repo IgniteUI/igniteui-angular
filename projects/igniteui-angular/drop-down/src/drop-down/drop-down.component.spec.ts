@@ -27,7 +27,7 @@ const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED = 'igx-drop-down__item--disabled';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
-const CSS_CLASS_TABS = '.igx-tabs__header-item';
+const CSS_CLASS_TABS = '.igx-tab-header';
 
 describe('IgxDropDown ', () => {
     let fixture;
@@ -1083,7 +1083,7 @@ describe('IgxDropDown ', () => {
                 tick();
                 fixture.detectChanges();
 
-                const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`)).nativeElement;
+                const dropdownElement = fixture.debugElement.query(By.css('igx-drop-down')).nativeElement;
                 let focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
 
                 expect(focusedItem).toBeTruthy();
@@ -1098,7 +1098,7 @@ describe('IgxDropDown ', () => {
                 tick();
                 fixture.detectChanges();
 
-                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`)));
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', fixture.debugElement.query(By.css('igx-drop-down')));
                 tick();
                 fixture.detectChanges();
 

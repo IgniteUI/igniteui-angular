@@ -657,7 +657,7 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
-        const selected = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const selected = dom.query(By.css('.igx-calendar-view-item--selected'));
         expect(selected.nativeElement.textContent.trim()).toMatch('Jan');
     });
 
@@ -672,7 +672,7 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
-        const selected = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const selected = dom.query(By.css('.igx-calendar-view-item--selected'));
         expect(selected.nativeElement.textContent.trim()).toMatch('Dec');
     });
 
@@ -691,8 +691,8 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
-        const years = dom.queryAll(By.css('.igx-calendar-view__item'));
-        const selected = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const years = dom.queryAll(By.css('.igx-calendar-view-item'));
+        const selected = dom.query(By.css('.igx-calendar-view-item--selected'));
         expect(selected.nativeElement).toBe(years[0].nativeElement);
     });
 
@@ -711,8 +711,8 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
-        const years = dom.queryAll(By.css('.igx-calendar-view__item'));
-        const selected = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const years = dom.queryAll(By.css('.igx-calendar-view-item'));
+        const selected = dom.query(By.css('.igx-calendar-view-item--selected'));
         expect(selected.nativeElement).toBe(years[years.length - 1].nativeElement);
     });
 

@@ -201,9 +201,7 @@
               "src/styles/styles.scss",
               "projects/igniteui-angular/test.css"
             ],
-            "assets": [
-              "projects/igniteui-angular/test-utils/assets"
-            ],
+            "assets": [],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules"
