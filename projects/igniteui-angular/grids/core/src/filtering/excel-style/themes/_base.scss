@@ -38,19 +38,23 @@ $checkbox-indent: (
         padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
         cursor: pointer;
 
-        // TODO MOVE excel-filtering-actions-foreground TO THE FILTERING SCHEMA and use it here.
-        //color: var-get($theme, 'excel-filtering-actions-foreground');
-        color: color($color: 'gray', $variant: 700);
+        color: var-get($theme, 'actions-foreground');
 
         outline-style: none;
 
+        igx-icon {
+            color: var-get($theme, 'actions-icon-color');
+        }
+
         &:hover,
         &:focus {
-            // TODO MOVE excel-filtering-actions-hover-foreground TO THE FILTERING SCHEMA and use it here.
-            //color: var-get($theme, 'excel-filtering-actions-hover-foreground');
-            color: color($color: 'gray', $variant: 700);
+            color: var-get($theme, 'actions-hover-foreground');
 
-            background: color($color: 'gray', $variant: 100);
+            background: var-get($theme, 'actions-hover-background');
+
+            igx-icon {
+                color: var-get($theme, 'actions-hover-icon-color');
+            }
         }
 
         [dir='rtl'] & {
@@ -78,9 +82,7 @@ $checkbox-indent: (
         header {
             @include type-style('overline');
 
-            // TODO MOVE excel-filtering-subheader-foreground TO THE FILTERING SCHEMA and use it here.
-            //color: var-get($theme, 'excel-filtering-subheader-foreground');
-            color: color($color: 'gray', $variant: 700);
+            color: var-get($theme, 'subheader-foreground');
 
             margin-block-end: rem(4px);
         }
@@ -105,7 +107,7 @@ $checkbox-indent: (
         height: 100%;
         flex-grow: 1;
         box-shadow: elevation(12);
-        background: var(--filtering-row-background);
+        background: var-get($theme, 'background');
 
         @include e(sizing) {
             @include sizable();
@@ -124,31 +126,7 @@ $checkbox-indent: (
             // TODO: The border-radius should not be hardcoded.
             border-radius: border-radius(rem(4px));
 
-            background: var(--filtering-row-background);
-
-            .igx-button-group {
-                --elevation: none !important;
-
-
-                --item-background: var(--filtering-row-background);
-
-                --item-hover-background: #{color($color: 'gray', $variant: 100)} !important;
-                --item-selected-background: #{color($color: 'gray', $variant: 100)} !important;
-                --item-text-color: #{color($color: 'gray', $variant: 700)} !important;
-                --item-icon-color: #{color($color: 'gray', $variant: 700)} !important;
-                --item-hover-text-color: #{color($color: 'gray', $variant: 800)} !important;
-                --item-hover-icon-color: #{color($color: 'gray', $variant: 800)} !important;
-                --item-selected-text-color: color($color: 'secondary', $variant: 500) !important;
-                --item-selected-icon-color: color($color: 'secondary', $variant: 500) !important;
-                --item-selected-hover-icon-color: contrast-color($color: 'gray', $variant: 50) !important;
-                --item-border-color: transparent !important;
-                --item-hover-border-color: transparent !important;
-                --item-focused-border-color: transparent !important;
-                --item-selected-border-color: transparent !important;
-                --item-selected-hover-border-color: transparent !important;
-                --item-disabled-border: transparent !important;
-                --disabled-selected-border-color: transparent !important;
-            }
+            background: var-get($theme, 'background');
 
             .igx-tree-node__wrapper {
                 padding: 0;
@@ -183,9 +161,7 @@ $checkbox-indent: (
                 @include type-style('h6');
             }
 
-            // TODO MOVE excel-filtering-header-foreground TO THE FILTERING SCHEMA and use it here.
-            //color: var-get($theme, 'excel-filtering-header-foreground');
-            color: color($color: 'gray', $variant: 700);
+            color: var-get($theme, 'header-foreground');
         }
 
         @include e(menu-main) {
@@ -201,19 +177,19 @@ $checkbox-indent: (
                 overflow: hidden;
                 margin-inline: calc(#{sizable(rem(-4px), rem(-8px), rem(-16px))} * -1);
                 border: 0;
-                border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
-                border-bottom: rem(1px) dashed color($color: 'gray', $variant: 300);
+                border-top: rem(1px) dashed var-get($theme, 'border-color');
+                border-bottom: rem(1px) dashed var-get($theme, 'border-color');
             }
         }
 
         @include e(tree) {
-            background: color($color: 'surface');
+            background: var-get($theme, 'secondary-background');
             overflow-y: auto;
             margin-inline: calc(#{pad-inline(rem(-4px), rem(-8px), rem(-16px))} * -1);
             margin-block: 0;
             flex: 1;
-            border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
-            border-bottom: rem(1px) dashed color($color: 'gray', $variant: 300);
+            border-top: rem(1px) dashed var-get($theme, 'border-color');
+            border-bottom: rem(1px) dashed var-get($theme, 'border-color');
 
             igx-icon {
                 width: var(--ig-icon-size, #{$tree-node-expander-size});
@@ -252,7 +228,7 @@ $checkbox-indent: (
         }
 
         @include e(tree-alike) {
-            background: color($color: 'surface');
+            background: var-get($theme, 'secondary-background');
             display: flex;
             flex-direction: column;
             z-index: 1;
@@ -266,11 +242,11 @@ $checkbox-indent: (
                 map.get($tree-node-height, 'cosy'),
                 map.get($tree-node-height, 'comfortable')
             );
-            background: color($color: 'surface');
+            background: var-get($theme, 'secondary-background');
 
             &:hover,
             &:focus {
-                background: color($color: 'gray', $variant: 200);
+                background: color-mix(in srgb, var(--_excel-filtering-foreground) 12%, var-get($theme, 'background'));
             }
 
             > igx-checkbox {
@@ -311,9 +287,7 @@ $checkbox-indent: (
         @include e(actions-pin, $m: disabled) {
             @extend %grid-excel-actions__action !optional;
 
-            // TODO MOVE excel-filtering-actions-disabled-foreground TO THE FILTERING SCHEMA and use it here.
-            //color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
-            color: color($color: 'gray', $variant: 400);
+            color: var-get($theme, 'actions-disabled-foreground');
 
             pointer-events: none;
         }
@@ -334,7 +308,7 @@ $checkbox-indent: (
             @extend %grid-excel-actions__action !optional;
 
             igx-icon {
-                color: color($color: 'secondary', $variant: 500);
+                color: var-get($theme, 'actions-selected-icon-color');
             }
         }
 
@@ -345,11 +319,8 @@ $checkbox-indent: (
         @include e(actions-filter, $m: active) {
             @extend %grid-excel-actions__action !optional;
 
-            background: color($color: 'gray', $variant: 100);
-
-            // TODO MOVE excel-filtering-actions-hover-foreground TO THE FILTERING SCHEMA and use it here.
-            //color: var-get($theme, 'excel-filtering-actions-hover-foreground');
-            color: color($color: 'gray', $variant: 700);
+            background: color-mix(in srgb, var(--_excel-filtering-accent-color) 8%, var-get($theme, 'background'));
+            color: var-get($theme, 'actions-hover-foreground');
         }
 
         @include e(actions-clear) {
@@ -359,9 +330,7 @@ $checkbox-indent: (
         @include e(actions-clear, $m: disabled) {
             @extend %grid-excel-actions__action !optional;
 
-            // TODO MOVE excel-filtering-actions-disabled-foreground TO THE FILTERING SCHEMA and use it here.
-            //color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
-            color: color($color: 'gray', $variant: 400);
+            color: var-get($theme, 'actions-disabled-foreground');
 
             pointer-events: none;
         }
@@ -374,7 +343,11 @@ $checkbox-indent: (
 
         // Filtering
         @include e(secondary-header) {
-            border-block-end: rem(1px) solid color($color: 'gray', $variant: 300);
+            display: flex;
+            align-items: center;
+            padding: pad(rem(4px), rem(8px), rem(16px));
+            color: var-get($theme, 'header-foreground');
+            border-block-end: rem(1px) solid var-get($theme, 'border-color');
 
             > h4 {
                 @include type-style('h6')
@@ -415,19 +388,12 @@ $checkbox-indent: (
         }
 
         @include e(menu, $m: compact) {
-            .igx-excel-filter__sort {
-                @extend %grid-excel-action--compact;
-
-                igx-buttongroup {
-                    width: rem(208px);
-                }
-
-                header {
-                    @include type-style('body-2');
-                }
+            .igx-excel-filter__actions-select,
+            .igx-excel-filter__actions-selected {
+                justify-content: center;
             }
 
-            igx-excel-filter__move {
+            .igx-excel-filter__sort {
                 @extend %grid-excel-action--compact;
 
                 igx-buttongroup {
@@ -438,15 +404,28 @@ $checkbox-indent: (
                     @include type-style('body-2');
 
                     text-transform: capitalize;
-
                 }
             }
 
-            .igx-excel-filter__menu-header {
+            .igx-excel-filter__move {
+                @extend %grid-excel-action--compact;
+
+                igx-buttongroup {
+                    width: rem(208px);
+                }
+
+                header {
+                    @include type-style('body-2');
+
+                    text-transform: capitalize;
+                }
+            }
+
+            .igx-excel-filter__menu-header > h4 {
                 @include type-style('subtitle-1')
             }
 
-           .igx-excel-filter__menu-header-actions {
+            .igx-excel-filter__menu-header-actions {
                 span {
                     @include type-style('body-2');
                 }
@@ -457,8 +436,96 @@ $checkbox-indent: (
             }
         }
 
+        @include e(menu, $m: cosy) {
+            .igx-excel-filter__actions-select,
+            .igx-excel-filter__actions-selected {
+                justify-content: center;
+            }
+        }
+
         @include e(clear) {
             flex-grow: 1;
+        }
+
+        @include e(secondary) {
+            --component-size: var(--ig-size, var(--ig-size-large));
+
+            width: rem(520px);
+            min-width: rem(520px);
+            background: var-get($theme, 'background');
+            box-shadow: elevation(12);
+            border-radius: border-radius(rem(4px));
+            display: flex;
+            flex-direction: column;
+        }
+
+        @include e(secondary-main) {
+            height: rem(232px);
+            overflow: auto;
+        }
+
+        @include e(secondary-footer) {
+            --ig-size: 2;
+
+            display: flex;
+            justify-content: space-between;
+            padding-inline: pad-inline(rem(24px));
+            padding-block-end: pad-block(rem(24px));
+
+            .igx-excel-filter__clear {
+                flex-grow: 1;
+            }
+
+            .igx-excel-filter__apply,
+            .igx-excel-filter__cancel {
+                flex-grow: 0;
+            }
+        }
+
+        @include e(cancel) {
+            + .igx-excel-filter__apply {
+                margin-inline-start: rem(16px);
+            }
+        }
+
+        @include e(condition) {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+            padding-block: 0;
+
+            igx-select {
+                flex-grow: 1;
+                flex-basis: 40%;
+                margin-block: rem(16px);
+
+                ~ igx-input-group,
+                ~ igx-date-picker,
+                ~ igx-time-picker {
+                    margin-inline-start: rem(16px);
+                }
+            }
+
+            igx-buttongroup {
+                min-width: 30%;
+            }
+
+            [igxIconButton] {
+                --component-size: var(--ig-size, var(--ig-size-large));
+                margin-inline-start: rem(16px);
+            }
+        }
+
+        @include e(add-filter) {
+            margin-inline: pad-inline(rem(4px), rem(4px), rem(16px));
+            margin-block-start: 0;
+
+            igx-icon {
+                width: var(--ig-icon-size, #{rem(18px)});
+                height: var(--ig-icon-size, #{rem(18px)});
+                font-size: var(--ig-icon-size, #{rem(18px)});
+            }
         }
     }
 }

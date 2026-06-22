@@ -8,6 +8,10 @@
 
 $_theme: $indigo;
 
+@include themed-block(igx-advanced-filter, indigo) {
+    box-shadow: elevation(24);
+}
+
 @include themed-block(igx-query-builder, indigo) {
     &:has(.igx-query-builder-header) {
         .igx-query-builder-tree--level-0 {

@@ -131,11 +131,3 @@
     }
 }
 
-@include themed-block(igx-advanced-filter, bootstrap) {
-    border-radius: rem(4px);
-
-    .igx-excel-filter__secondary-footer {
-        padding: rem(16px);
-        border-top: rem(1px) solid color($color: 'gray', $variant: 300);
-    }
-}

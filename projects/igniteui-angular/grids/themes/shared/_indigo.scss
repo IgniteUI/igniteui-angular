@@ -16,11 +16,12 @@
     --ig-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
     --ig-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
     --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+    --_grid-header-border-color: var(--header-border-color);
+    --_grid-action-border-color: var(--action-border-color);
 
     %cell-display {
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px))
     }
-
 
     @include e(filtering-row-main) {
         igx-chips-area {
@@ -191,10 +192,4 @@
     @include e(count-badge) {
         --shadow: none;
     }
-}
-
-@include themed-block(igx-advanced-filter, indigo) {
-    background: contrast-color($color: 'gray', $variant: 900);
-    box-shadow: elevation(24);
-    border-radius: rem(10px);
 }

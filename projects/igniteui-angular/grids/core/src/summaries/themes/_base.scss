@@ -24,8 +24,7 @@ $_theme: $material;
 		overflow: hidden;
 		outline-style: none;
 
-		// TODO MAYBE WE SHOULD RENAME THIS VARIABLES SO THE CAN BE USED IN THE SUMMARY AND grid BODY
-		border-inline-end: var(--header-border-width) var(--header-border-style) var-get($_theme, 'border-color');
+		border-inline-end: var-get($_theme, 'border-width') var-get($_theme, 'border-style') var-get($_theme, 'border-color');
 
 		@include e(item) {
 			display: flex;
@@ -72,11 +71,11 @@ $_theme: $material;
 			border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
 
 			&:dir(ltr) {
-				box-shadow: inset rem(1px) 0 0 0 var-get($_theme, 'pinned-border-color');
+				border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
 			}
 
 			&:dir(rtl) {
-				box-shadow: inset rem(-1px) 0 0 0 var-get($_theme, 'pinned-border-color');
+				border-inline-end: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
 			}
 
 			@media print {
@@ -95,13 +94,13 @@ $_theme: $material;
 				border-inline-end: map.get($cell-pin, 'style') #999;
 			}
 
-			&:dir(ltr) {
-				box-shadow: inset rem(-1px) 0 0 0 var-get($_theme, 'pinned-border-color');
-			}
+			// &:dir(ltr) {
+			// 	box-shadow: inset rem(-1px) 0 0 0 var-get($_theme, 'pinned-border-color');
+			// }
 
-			&:dir(rtl) {
-				box-shadow: inset rem(1px) 0 0 0 var-get($_theme, 'pinned-border-color');
-			}
+			// &:dir(rtl) {
+			// 	box-shadow: inset rem(1px) 0 0 0 var-get($_theme, 'pinned-border-color');
+			// }
 		}
 
 		@include m(fw) {
