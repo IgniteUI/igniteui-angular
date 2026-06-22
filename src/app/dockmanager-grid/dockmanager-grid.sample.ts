@@ -1,4 +1,4 @@
-import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DefaultSortingStrategy, GridColumnDataType, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, IgxColumnComponent, IgxGridComponent, IgxIconModule, IgxOverlayOutletDirective, IgxSelectComponent, IgxSelectModule, IgxSwitchModule, OverlaySettings, SortingDirection } from 'igniteui-angular';
 import { IgcDockManagerLayout, IgcDockManagerPaneType, IgcSplitPane, IgcSplitPaneOrientation } from 'igniteui-dockmanager';
 import { defineCustomElements } from 'igniteui-dockmanager/loader';
@@ -13,6 +13,7 @@ defineCustomElements();
 
 @Component({
     selector: 'app-dock-slot',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
     <div style='width: 100%; height: 100%; overflow-x: hidden;'>
         <ng-container #host></ng-container>
@@ -58,6 +59,7 @@ export class DockSlotComponent implements AfterViewInit, OnDestroy {
         IgxIconModule,
         IgxOverlayOutletDirective
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class GridDockManagerSampleComponent implements OnInit, OnDestroy, AfterViewInit, DoCheck {

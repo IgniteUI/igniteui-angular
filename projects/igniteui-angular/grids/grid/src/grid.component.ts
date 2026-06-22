@@ -70,21 +70,11 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
-/* blazorAdditionalDependency: Column */
-/* blazorAdditionalDependency: ColumnGroup */
-/* blazorAdditionalDependency: ColumnLayout */
-/* blazorAdditionalDependency: GridToolbar */
-/* blazorAdditionalDependency: GridToolbarActions */
-/* blazorAdditionalDependency: GridToolbarTitle */
-/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
-/* blazorAdditionalDependency: GridToolbarExporter */
-/* blazorAdditionalDependency: GridToolbarHiding */
-/* blazorAdditionalDependency: GridToolbarPinning */
-/* blazorAdditionalDependency: ActionStrip */
-/* blazorAdditionalDependency: GridActionsBaseDirective */
-/* blazorAdditionalDependency: GridEditingActions */
-/* blazorAdditionalDependency: GridPinningActions */
-/* blazorIndirectRender */
+/* wcAlternateName: GridBase */
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *
@@ -682,7 +672,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public detailsViewFocused(container, rowIndex) {
+    public detailsViewFocused(_container, rowIndex) {
         this.navigation.setActiveNode({ row: rowIndex });
     }
 
@@ -1181,7 +1171,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => {
+        return this.dataView.map((_rec, index) => {
             this.pagingMode === 'remote' && this.page !== 0 ?
                 index = index + this.perPage * this.page : index = this.dataRowList.first.index + index;
             return this.createRow(index);

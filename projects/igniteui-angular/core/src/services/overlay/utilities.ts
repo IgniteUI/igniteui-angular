@@ -97,12 +97,16 @@ export interface OutOfViewPort {
 }
 
 export interface PositionSettings {
+    /* mustCoerceToInt */
     /** Direction in which the component should show */
     horizontalDirection?: HorizontalAlignment;
+    /* mustCoerceToInt */
     /** Direction in which the component should show */
     verticalDirection?: VerticalAlignment;
+    /* mustCoerceToInt */
     /** Target's starting point */
     horizontalStartPoint?: HorizontalAlignment;
+    /* mustCoerceToInt */
     /** Target's starting point */
     verticalStartPoint?: VerticalAlignment;
     /* blazorSuppress */

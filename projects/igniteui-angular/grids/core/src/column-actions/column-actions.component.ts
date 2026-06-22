@@ -11,10 +11,11 @@ import {
     PipeTransform,
     QueryList,
     ViewChildren,
-    ViewEncapsulation,
     booleanAttribute,
     forwardRef,
-    inject
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
 import { GridType } from '../common/grid.interface';
@@ -38,6 +39,7 @@ let NEXT_ID = 0;
     styleUrl: 'column-actions.component.css',
     templateUrl: './column-actions.component.html',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
 export class IgxColumnActionsComponent implements DoCheck {

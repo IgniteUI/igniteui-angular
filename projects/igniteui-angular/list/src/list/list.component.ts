@@ -14,9 +14,10 @@ import {
     ViewChild,
     Directive,
     booleanAttribute,
-    ViewEncapsulation,
     inject,
-    DestroyRef
+    DestroyRef,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 
 
@@ -153,6 +154,7 @@ export class IgxListLineSubTitleDirective {
     styleUrl: 'list.component.css',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {

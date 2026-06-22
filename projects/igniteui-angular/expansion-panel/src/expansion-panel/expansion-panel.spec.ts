@@ -1,5 +1,5 @@
 
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
@@ -1291,6 +1291,7 @@ describe('igxExpansionPanel', () => {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelGridComponent {
@@ -1339,6 +1340,7 @@ export class IgxExpansionPanelGridComponent {
         </igx-expansion-panel>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxExpansionPanelListComponent {
@@ -1374,6 +1376,7 @@ export class IgxExpansionPanelListComponent {
         }
     </igx-expansion-panel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective]
 })
 export class IgxExpansionPanelSampleComponent {
@@ -1412,6 +1415,7 @@ export class IgxExpansionPanelSampleComponent {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelImageComponent {
@@ -1440,6 +1444,7 @@ export class IgxExpansionPanelImageComponent {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_EXPANSION_PANEL_DIRECTIVES]
 })
 export class IgxExpansionPanelTooltipComponent {

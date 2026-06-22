@@ -20,8 +20,9 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewEncapsulation,
-    inject
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -99,6 +100,7 @@ export class IgxSelectFooterDirective {
             display: block;
         }
     `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, IgxReadOnlyInputDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,

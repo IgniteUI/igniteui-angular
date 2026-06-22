@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxIconButtonDirective,
     IgxIconComponent,
@@ -25,7 +25,8 @@ registerIconFromText('favorite', favorite);
     styleUrls: ['icon-button.sample.scss'],
     templateUrl: 'icon-button.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxIconComponent, IgxIconButtonDirective]
+    imports: [IgxIconComponent, IgxIconButtonDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class IconButtonSampleComponent {
     public panelConfig: PropertyPanelConfig = {

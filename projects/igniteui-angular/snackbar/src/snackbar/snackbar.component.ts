@@ -6,6 +6,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
@@ -37,6 +38,7 @@ let NEXT_ID = 0;
     templateUrl: 'snackbar.component.html',
     styleUrl: 'snackbar.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective]
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective

@@ -5,7 +5,6 @@ import {
     Component,
     ContentChild,
     ContentChildren,
-    ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
@@ -20,8 +19,9 @@ import {
     TemplateRef,
     ViewChild,
     ViewContainerRef,
+    inject,
+    ChangeDetectionStrategy,
     ViewEncapsulation,
-    inject
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -122,6 +122,7 @@ const SingleInputDatesConcatenationString = ' - ';
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         IgxIconComponent,

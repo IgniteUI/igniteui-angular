@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
@@ -540,6 +540,7 @@ describe('igxBanner', () => {
             <igx-banner></igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent]
 })
 export class IgxBannerEmptyComponent {
@@ -559,6 +560,7 @@ export class IgxBannerEmptyComponent {
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent, IgxBannerActionsDirective]
 })
 export class IgxBannerOneButtonComponent {
@@ -580,6 +582,7 @@ export class IgxBannerOneButtonComponent {
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent, IgxBannerActionsDirective, IgxIconComponent]
 })
 export class IgxBannerSampleComponent {
@@ -610,6 +613,7 @@ export class IgxBannerSampleComponent {
             </igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxBannerActionsDirective, IgxAvatarComponent]
 })
 export class IgxBannerCustomTemplateComponent {
@@ -623,6 +627,7 @@ export class IgxBannerCustomTemplateComponent {
             <igx-banner (opening)="handleOpening($event)" (closing)="handleClosing($event)">Simple message</igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent]
 })
 export class SimpleBannerEventsComponent {
@@ -649,6 +654,7 @@ export class SimpleBannerEventsComponent {
         </div>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent]
 })
 export class IgxBannerInitializedOpenComponent {

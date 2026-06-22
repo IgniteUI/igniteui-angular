@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     GridSelectionMode,
@@ -21,6 +21,7 @@ import { data, dataWithoutPK } from '../shared/data';
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html',
     styleUrl: 'grid-cellEditing.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IGX_SELECT_DIRECTIVES,

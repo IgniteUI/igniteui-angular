@@ -7,8 +7,9 @@ import {
     NgZone,
     OnDestroy,
     ViewChild,
+    inject,
+    ChangeDetectionStrategy,
     ViewEncapsulation,
-    inject
 } from '@angular/core';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
@@ -72,6 +73,7 @@ let NEXT_TAB_ID = 0;
     styleUrl: 'tabs.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgTemplateOutlet, IgxIconButtonDirective]
 })
 

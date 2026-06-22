@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ViewChild, inject, signal } from '@angular/core';
+import { Component, DestroyRef, ViewChild, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxGridComponent,
     IgxColumnComponent,
@@ -32,6 +32,7 @@ import { PropertyPanelConfig, PropertyChangeService, Properties } from '../prope
       IgxGridToolbarActionsComponent,
       IgxGridToolbarTitleComponent,
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [IgxPdfExporterService]
 })
 export class GridPdfExportSampleComponent {

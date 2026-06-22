@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, input, Output, signal, ViewEncapsulation} from '@angular/core';
+import { Component, EventEmitter, inject, input, Output, signal, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import {
     IgxButtonDirective,
@@ -22,6 +22,7 @@ export type IgSize = 'small' | 'medium' | 'large';
     styleUrls: ['./pageHeading.styles.scss'],
     templateUrl: './pageHeading.template.html',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxNavbarComponent,
         IgxNavbarActionDirective,

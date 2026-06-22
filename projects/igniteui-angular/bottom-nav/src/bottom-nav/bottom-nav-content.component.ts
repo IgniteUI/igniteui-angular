@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { IgxTabContentBase, IgxTabContentDirective } from 'igniteui-angular/tabs';
 
 @Component({
@@ -6,6 +6,7 @@ import { IgxTabContentBase, IgxTabContentDirective } from 'igniteui-angular/tabs
     templateUrl: 'bottom-nav-content.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabContentBase, useExisting: IgxBottomNavContentComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: []
 })
 export class IgxBottomNavContentComponent extends IgxTabContentDirective {

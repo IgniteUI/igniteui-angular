@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
     IGX_DATE_PICKER_DIRECTIVES,
@@ -32,6 +32,7 @@ registerIconFromText('alarm', alarm);
     styleUrls: ['date-picker.sample.scss'],
     templateUrl: 'date-picker.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IGX_DATE_PICKER_DIRECTIVES,
         IgxButtonDirective,

@@ -18,6 +18,7 @@ export class IgxGridBodyDirective { }
  */
 export interface RowEditPositionSettings extends PositionSettings {
     container?: HTMLElement;
+    clipToVisibleArea?: boolean;
 }
 
 /**
@@ -63,6 +64,73 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
 
         super.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight },
             document, initialCall, targetElement);
+
+        if (this.settings.clipToVisibleArea) {
+            // After positioning in the top layer, keep the overlay clipped to the visible grid body.
+            this.updateContentClip(contentElement);
+        }
+    }
+
+    private updateContentClip(contentElement: HTMLElement): void {
+        const container = this.settings.container;
+
+        if (!container) {
+            return;
+        }
+
+        const clippingRect = this.getClippingRect(container);
+        const contentRect = contentElement.getBoundingClientRect();
+
+        // Convert the clipped overflow on each side to CSS inset values.
+        const top = Math.round(Math.max(clippingRect.top - contentRect.top, 0));
+        const right = Math.round(Math.max(contentRect.right - clippingRect.right, 0));
+        const bottom = Math.round(Math.max(contentRect.bottom - clippingRect.bottom, 0));
+        const left = Math.round(Math.max(clippingRect.left - contentRect.left, 0));
+
+        // When the overlay is fully outside the clipping rect, hide it and block its action buttons.
+        const fullyClipped = top >= contentRect.height || bottom >= contentRect.height ||
+            left >= contentRect.width || right >= contentRect.width;
+
+        // Row-edit overlays are rendered in the top layer, so clip the content explicitly to the grid's visible area.
+        contentElement.style.clipPath = fullyClipped ? 'inset(100%)' :
+            (top || right || bottom || left ? `inset(${top}px ${right}px ${bottom}px ${left}px)` : '');
+
+        contentElement.style.pointerEvents = fullyClipped ? 'none' : '';
+        contentElement.style.visibility = fullyClipped ? 'hidden' : '';
+    }
+
+    private getClippingRect(element: HTMLElement): Pick<DOMRect, 'top' | 'right' | 'bottom' | 'left'> {
+        const document = element.ownerDocument;
+        const gridBody = element.closest('[igxgridbody]') as HTMLElement || element;
+        const rect = gridBody.getBoundingClientRect();
+        // Start with the current grid body, then narrow it by parent grid bodies.
+        const clippingRect = { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left };
+
+        let parent = gridBody.parentElement?.closest('[igxgridbody]') as HTMLElement;
+
+        // Intersect with parent grid bodies so nested grids respect their parent scroll bounds.
+        while (parent) {
+            const parentRect = parent.getBoundingClientRect();
+
+            clippingRect.top = Math.max(clippingRect.top, parentRect.top);
+            clippingRect.right = Math.min(clippingRect.right, parentRect.right);
+            clippingRect.bottom = Math.min(clippingRect.bottom, parentRect.bottom);
+            clippingRect.left = Math.max(clippingRect.left, parentRect.left);
+
+            if (clippingRect.top >= clippingRect.bottom || clippingRect.left >= clippingRect.right) {
+                break;
+            }
+
+            parent = parent.parentElement?.closest('[igxgridbody]') as HTMLElement;
+        }
+
+        // Keep the clipping area inside the viewport because popover content is viewport-positioned.
+        return {
+            top: Math.max(clippingRect.top, 0),
+            right: Math.min(clippingRect.right, document.documentElement.clientWidth),
+            bottom: Math.min(clippingRect.bottom, document.documentElement.clientHeight),
+            left: Math.max(clippingRect.left, 0)
+        };
     }
 
     /**

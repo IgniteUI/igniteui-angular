@@ -20,9 +20,10 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewEncapsulation,
     booleanAttribute,
-    inject
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
@@ -67,6 +68,7 @@ let NEXT_ID = 0;
     templateUrl: 'slider.component.html',
     styleUrl: 'slider.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTicksComponent, IgxThumbLabelComponent, IgxSliderThumbComponent, IgxTickLabelsPipe]
 })
 export class IgxSliderComponent implements

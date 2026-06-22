@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform, Renderer2 } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform, Renderer2, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IgxMaskDirective } from './mask.directive';
@@ -713,6 +713,7 @@ export class DisplayFormatPipe implements PipeTransform {
     </igx-input-group>
     `,
     selector: 'igx-def-mask',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DefMaskComponent {
@@ -731,6 +732,7 @@ class DefMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     selector: 'igx-mask-test',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class MaskComponent {
@@ -749,6 +751,7 @@ class MaskComponent {
                     <input #input1 igxInput [ngModel]="value"/>
                 </igx-input-group>`,
     selector: 'igx-incl-literals',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class IncludeLiteralsComponent {
@@ -767,6 +770,7 @@ class IncludeLiteralsComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     selector: 'igx-digit-space-mask',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DigitSpaceMaskComponent {
@@ -782,6 +786,7 @@ class DigitSpaceMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     selector: 'igx-digital-plus-minus-mask',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DigitPlusMinusMaskComponent {
@@ -797,6 +802,7 @@ class DigitPlusMinusMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     selector: 'igx-letter-space-mask',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class LetterSpaceMaskComponent {
@@ -812,6 +818,7 @@ class LetterSpaceMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     selector: 'igx-alphanum-space-mask',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class AlphanumSpaceMaskComponent {
@@ -829,6 +836,7 @@ class AlphanumSpaceMaskComponent {
     </igx-input-group>
     `,
     selector: 'igx-any-char-mask',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class AnyCharMaskComponent {
@@ -846,6 +854,7 @@ class AnyCharMaskComponent {
         (valueChanged)="handleValueChanged($event)"/>
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class EventFiringComponent {
@@ -873,6 +882,7 @@ class EventFiringComponent {
                 [promptChar]="'* @#'"/>
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class OneWayBindComponent {
@@ -892,6 +902,7 @@ class OneWayBindComponent {
             [igxMask]="mask"/>
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class PlaceholderMaskComponent {
@@ -911,6 +922,7 @@ class PlaceholderMaskComponent {
             [(ngModel)]="value"
             [igxMask]="mask"/>
     </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class PipesMaskComponent {
@@ -931,6 +943,7 @@ class PipesMaskComponent {
         <input #input type="text" igxInput igxMask/>
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class MaskTestComponent {
@@ -943,6 +956,7 @@ class MaskTestComponent {
     <igx-input-group>
         <input #input type="text" igxInput readonly [igxMask]="'00/00/0000'"/>
     </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class ReadonlyMaskTestComponent {

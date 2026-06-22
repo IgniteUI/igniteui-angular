@@ -1,16 +1,17 @@
 import {
-    AfterViewInit,
-    Component,
-    EventEmitter,
-    HostBinding,
-    OnDestroy,
-    Output,
-    ViewChild,
-    ViewContainerRef,
-    ViewEncapsulation,
-    ElementRef,
-    CUSTOM_ELEMENTS_SCHEMA,
-    inject
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  HostBinding,
+  OnDestroy,
+  Output,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation,
+  ElementRef,
+  CUSTOM_ELEMENTS_SCHEMA,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as charts from '../../../images/charts';
@@ -29,6 +30,7 @@ import { SvgPipe } from '../../pipes/svg.pipe';
     styleUrls: ['./chart-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
     imports: [CommonModule, IgxIconComponent, IgxIconButtonDirective, IgxRippleDirective, IgxDividerComponent, SvgPipe],
+    changeDetection: ChangeDetectionStrategy.Eager,
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxChartMenuComponent implements AfterViewInit, OnDestroy {

@@ -7,8 +7,9 @@ import {
     OnChanges,
     SimpleChanges,
     booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
     ViewEncapsulation,
-    inject
 } from '@angular/core';
 
 let NEXT_ID = 0;
@@ -68,6 +69,7 @@ export class IgxCardMediaDirective {
 @Component({
     selector: 'igx-card-header',
     templateUrl: 'card-header.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxCardHeaderComponent {
@@ -198,6 +200,7 @@ export class IgxCardFooterDirective {
     templateUrl: 'card.component.html',
     encapsulation: ViewEncapsulation.None,
     styleUrl: 'card.component.css',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxCardComponent {
@@ -282,6 +285,7 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
 @Component({
     selector: 'igx-card-actions',
     templateUrl: 'card-actions.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {

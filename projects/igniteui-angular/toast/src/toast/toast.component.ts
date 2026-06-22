@@ -6,8 +6,9 @@ import {
     Input,
     OnInit,
     Output,
+    inject,
+    ChangeDetectionStrategy,
     ViewEncapsulation,
-    inject
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -42,7 +43,9 @@ let NEXT_ID = 0;
     selector: 'igx-toast',
     templateUrl: 'toast.component.html',
     styleUrl: 'toast.component.css',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: true
 })
 export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {
     private _element = inject(ElementRef);

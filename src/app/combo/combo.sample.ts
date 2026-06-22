@@ -1,11 +1,12 @@
 import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    OnInit,
-    TemplateRef,
-    ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
     UntypedFormBuilder,
@@ -55,6 +56,7 @@ import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
     selector: 'combo-sample',
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxSimpleComboComponent,

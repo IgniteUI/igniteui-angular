@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -19,7 +19,8 @@ enum DragIcon {
     templateUrl: 'grid-row-draggable.sample.html',
     styleUrls: ['grid-row-draggable.sample.scss'],
     providers: [RemoteService],
-    imports: [IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, IgxGridEmptyTemplateDirective, AsyncPipe]
+    imports: [IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, IgxGridEmptyTemplateDirective, AsyncPipe],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class GridRowDraggableComponent implements AfterViewInit {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })

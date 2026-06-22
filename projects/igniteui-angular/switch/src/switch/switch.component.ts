@@ -4,6 +4,7 @@ import {
     Input,
     AfterViewInit,
     booleanAttribute,
+    ChangeDetectionStrategy,
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -42,6 +43,7 @@ import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
     templateUrl: 'switch.component.html',
     styleUrl: 'switch.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective]
 })
 export class IgxSwitchComponent

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
     IDataCloneStrategy,
     IRowDataEventArgs,
@@ -65,6 +65,7 @@ class User {
     selector: 'app-action-strip-sample',
     styleUrls: ['action-strip.sample.scss'],
     templateUrl: `action-strip.sample.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonDirective,
         IgxActionStripComponent,

@@ -1,5 +1,5 @@
 import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
-import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -168,6 +168,7 @@ describe('igxActionStrip', () => {
         </igx-action-strip>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxActionStripComponent, IgxIconComponent]
 })
 class IgxActionStripTestingComponent {
@@ -205,6 +206,7 @@ class IgxActionStripTestingComponent {
         </igx-action-strip>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripMenuTestingComponent {
@@ -227,6 +229,7 @@ class IgxActionStripMenuTestingComponent {
         </igx-action-strip>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripCombinedMenuTestingComponent {

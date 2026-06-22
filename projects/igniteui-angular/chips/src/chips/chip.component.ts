@@ -1,21 +1,22 @@
 import {
-    Component,
-    ChangeDetectorRef,
-    EventEmitter,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Input,
-    Output,
-    ViewChild,
-    Renderer2,
-    TemplateRef,
-    OnDestroy,
-    booleanAttribute,
-    OnInit,
-    ViewEncapsulation,
-    inject,
-    DOCUMENT
+  Component,
+  ChangeDetectorRef,
+  EventEmitter,
+  ElementRef,
+  HostBinding,
+  HostListener,
+  Input,
+  Output,
+  ViewChild,
+  Renderer2,
+  TemplateRef,
+  OnDestroy,
+  booleanAttribute,
+  OnInit,
+  inject,
+  DOCUMENT,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from 'igniteui-angular/directives';
 import { IBaseEventArgs, ɵSize } from 'igniteui-angular/core';
@@ -87,6 +88,7 @@ let CHIP_ID = 0;
     templateUrl: 'chip.component.html',
     styleUrl: 'chip.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {

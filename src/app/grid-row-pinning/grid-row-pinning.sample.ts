@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 
 import {
     IgxGridComponent,
@@ -28,6 +28,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     providers: [
         IgxIconService
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxGridComponent, IgxTreeGridComponent, IgxIconComponent, GridSearchBoxComponent, IgxSwitchComponent, IgxButtonDirective]
 })
 

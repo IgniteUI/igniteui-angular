@@ -1,15 +1,16 @@
 import {
-    Component,
-    ContentChild,
-    DestroyRef,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    inject,
-    Input,
-    Output,
-    ViewChild,
-    ViewEncapsulation
+  Component,
+  ContentChild,
+  DestroyRef,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  inject,
+  Input,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -55,6 +56,7 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
     templateUrl: 'banner.component.html',
     styleUrl: 'banner.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxBannerComponent implements IToggleView {

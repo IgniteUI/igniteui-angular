@@ -7,9 +7,10 @@ import {
     Input,
     Output,
     Renderer2,
-    ViewEncapsulation,
     booleanAttribute,
-    inject
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from "@angular/core";
 import { first } from "rxjs/operators";
 import { IgxFilterPivotItemsPipe } from "./pivot-grid.pipes";
@@ -64,6 +65,7 @@ interface IDataSelectorPanel {
     styleUrl: "pivot-data-selector.component.css",
     templateUrl: "./pivot-data-selector.component.html",
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })
 export class IgxPivotDataSelectorComponent {

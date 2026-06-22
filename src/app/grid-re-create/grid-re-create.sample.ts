@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 
 
@@ -9,6 +9,7 @@ import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
     standalone: true,
     providers: [
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridRecreateSampleComponent implements OnInit {

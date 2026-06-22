@@ -5,8 +5,9 @@ import {
     HostListener,
     NgZone,
     OnDestroy,
+    inject,
+    ChangeDetectionStrategy,
     ViewEncapsulation,
-    inject
 } from '@angular/core';
 import { IgxTabHeaderDirective } from '../../tab-header.directive';
 import { IgxTabHeaderBase } from '../../tabs.base';
@@ -19,6 +20,7 @@ import { getResizeObserver, isLeftToRight } from 'igniteui-angular/core';
     styleUrl: 'tab-header.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabHeaderBase, useExisting: IgxTabHeaderComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {

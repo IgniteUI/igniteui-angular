@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -1312,6 +1312,7 @@ describe('IgxGrid Master Detail #grid', () => {
         </igx-grid>
     </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective]
 })
 export class DefaultGridMasterDetailComponent {
@@ -1363,6 +1364,7 @@ export class DefaultGridMasterDetailComponent {
         </ng-template>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
@@ -1407,6 +1409,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         </ng-template>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent]
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }

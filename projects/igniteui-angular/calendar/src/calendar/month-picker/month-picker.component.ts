@@ -1,13 +1,14 @@
 import {
-    Component,
-    HostListener,
-    ViewChild,
-    HostBinding,
-    Input,
-    ElementRef,
-    AfterViewInit,
-    OnInit,
-    ViewEncapsulation,
+  Component,
+  HostListener,
+  ViewChild,
+  HostBinding,
+  Input,
+  ElementRef,
+  AfterViewInit,
+  OnInit,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -38,6 +39,7 @@ let NEXT_ID = 0;
     templateUrl: "month-picker.component.html",
     styleUrls: ['month-picker.component.css', '../shared-themes/calendar-picker/calendar-picker.component.css'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         IgxDateFormatterPipe,

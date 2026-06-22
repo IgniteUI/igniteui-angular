@@ -57,7 +57,7 @@ import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, Igx
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { EntityType, FieldType, IFilteringExpressionsTree, IgxActionStripToken, IgxOverlayOutletDirective, flatten, IGridResourceStrings } from 'igniteui-angular/core';
+import { EntityType, FieldType, IFilteringExpressionsTree, IgxOverlayOutletDirective, flatten, IGridResourceStrings } from 'igniteui-angular/core';
 import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 import { IgxGridCellMergePipe, IgxGridComponent, IgxGridFilteringPipe, IgxGridSortingPipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
 
@@ -236,7 +236,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.cdr.detectChanges();
     }
 
-    private setupEventEmitters() {
+    protected setupEventEmitters() {
         const destructor = takeUntil(this.hGrid.destroy$);
 
         const mirror = reflectComponentType(IgxGridComponent);
@@ -262,7 +262,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 
 
-    private _handleLayoutChanges(changes: SimpleChanges) {
+    protected _handleLayoutChanges(changes: SimpleChanges) {
         for (const change in changes) {
             if (changes.hasOwnProperty(change)) {
                 this.hGrid[change] = changes[change].currentValue;
@@ -271,23 +271,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
-
-/* blazorAdditionalDependency: Column */
-/* blazorAdditionalDependency: ColumnGroup */
-/* blazorAdditionalDependency: ColumnLayout */
-/* blazorAdditionalDependency: GridToolbar */
-/* blazorAdditionalDependency: GridToolbarActions */
-/* blazorAdditionalDependency: GridToolbarTitle */
-/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
-/* blazorAdditionalDependency: GridToolbarExporter */
-/* blazorAdditionalDependency: GridToolbarHiding */
-/* blazorAdditionalDependency: GridToolbarPinning */
-/* blazorAdditionalDependency: ActionStrip */
-/* blazorAdditionalDependency: GridActionsBaseDirective */
-/* blazorAdditionalDependency: GridEditingActions */
-/* blazorAdditionalDependency: GridPinningActions */
-/* blazorAdditionalDependency: RowIsland */
-/* blazorIndirectRender */
+/* wcAlternateName: HierarchicalGridBase */
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 /**
  * Hierarchical grid
  *
@@ -441,9 +429,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden @internal
      */
     public childRow: IgxChildGridRowComponent;
-
-    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     /** @hidden @internal */
     public override get actionStrip() {
@@ -803,7 +788,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => this.createRow(index));
+        return this.dataView.map((_rec, index) => this.createRow(index));
     }
 
     /**
@@ -988,7 +973,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public trackChanges(index, rec) {
+    public trackChanges(_index, rec) {
         if (rec.childGridsData !== undefined) {
             // if is child rec
             return rec.rowID;

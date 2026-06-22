@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterMode, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridSelectionMode, IChangeCheckboxEventArgs, IGX_GRID_DIRECTIVES, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxGridComponent, IgxIconComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -9,6 +9,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-filtering-sample',
     styleUrls: ['grid-filtering.sample.scss'],
     templateUrl: 'grid-filtering.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IGX_GRID_DIRECTIVES,

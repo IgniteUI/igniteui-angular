@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList, booleanAttribute, inject } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -53,6 +53,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-accordion',
     templateUrl: 'accordion.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, OnDestroy {

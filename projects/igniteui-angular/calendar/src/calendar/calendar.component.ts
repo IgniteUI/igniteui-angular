@@ -1,16 +1,18 @@
 import {
-	Component,
-	ContentChild,
-	forwardRef,
-	HostBinding,
-	Input,
-	ViewChild,
-	ElementRef,
-	AfterViewInit,
-	ViewChildren,
-	QueryList,
-	booleanAttribute,
-	HostListener, ViewEncapsulation,
+  Component,
+  ContentChild,
+  forwardRef,
+  HostBinding,
+  Input,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  ViewChildren,
+  QueryList,
+  booleanAttribute,
+  HostListener,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -72,6 +74,7 @@ let NEXT_ID = 0;
     templateUrl: 'calendar.component.html',
     styleUrls: ['calendar.component.css', 'shared-themes/calendar-picker/calendar-picker.component.css'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         IgxCalendarScrollPageDirective,

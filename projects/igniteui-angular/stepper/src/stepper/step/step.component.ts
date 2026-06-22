@@ -15,8 +15,9 @@ import {
     Renderer2,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
-    inject
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT, HorizontalAnimationType } from '../stepper.common';
@@ -57,6 +58,7 @@ let NEXT_ID = 0;
     providers: [
         { provide: IGX_STEP_COMPONENT, useExisting: IgxStepComponent }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IgxRippleDirective, NgTemplateOutlet]
 })
 export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, AfterViewInit, OnDestroy, IgxSlideComponentBase {

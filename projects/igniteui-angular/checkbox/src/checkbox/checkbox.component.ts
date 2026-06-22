@@ -1,10 +1,11 @@
 import {
-    Component,
-    HostBinding,
-    Input,
-    AfterViewInit,
-    booleanAttribute,
-    ViewEncapsulation,
+  Component,
+  HostBinding,
+  Input,
+  AfterViewInit,
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import { CheckboxBaseDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { ControlValueAccessor } from '@angular/forms';
@@ -45,6 +46,7 @@ import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
     templateUrl: 'checkbox.component.html',
     styleUrl: 'checkbox.component.css',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective],
 })
 export class IgxCheckboxComponent

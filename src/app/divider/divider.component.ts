@@ -1,5 +1,5 @@
-import { Component, DestroyRef, inject } from '@angular/core';
 import { IgxDividerComponent } from 'igniteui-angular';
+import { Component, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
     PropertyPanelConfig,
     PropertyChangeService,
@@ -12,6 +12,7 @@ import {
         IgxDividerComponent,
     ],
     templateUrl: './divider.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./divider.component.scss']
 })
 export class DividerComponent {

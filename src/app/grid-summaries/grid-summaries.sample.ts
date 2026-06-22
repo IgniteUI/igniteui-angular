@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxGridComponent,
@@ -44,7 +44,8 @@ class MySummary extends IgxNumberSummaryOperand {
     selector: 'app-grid-summaries-sample',
     styleUrls: ['./grid-summaries.component.scss'],
     templateUrl: 'grid-summaries.sample.html',
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class GridSummaryComponent implements OnInit {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })

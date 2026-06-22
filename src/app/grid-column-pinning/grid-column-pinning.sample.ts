@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ColumnPinningPosition, GridSelectionMode, IPinningConfig, IgxButtonDirective, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent, IgxSwitchComponent, RowPinningPosition, RowType } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -10,6 +10,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-column-pinning-sample',
     styleUrls: ['grid-column-pinning.sample.scss'],
     templateUrl: 'grid-column-pinning.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxColumnComponent, IgxSwitchComponent, FormsModule]
 })
 export class GridColumnPinningSampleComponent implements OnInit {

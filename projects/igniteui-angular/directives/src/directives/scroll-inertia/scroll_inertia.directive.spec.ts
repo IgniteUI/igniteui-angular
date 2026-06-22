@@ -1,4 +1,4 @@
-import { Component, Directive, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Directive, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
@@ -346,6 +346,7 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
             <div [style.height]='innerHeight' [style.width]='innerWidth'></div>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTestScrollInertiaDirective]
 })
 export class ScrollInertiaComponent implements OnInit {
