@@ -1,7 +1,8 @@
 import {
-    Component,
-    Input,
-    ViewChild
+  Component,
+  Input,
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -46,6 +47,7 @@ const GROUPING_EXPRESSIONS: IGroupingExpression[] = [{
     selector: 'app-finjs-grid',
     styleUrls: ['./grid-finjs.component.scss'],
     templateUrl: './grid-finjs.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, CurrencyPipe, IGX_GRID_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxFocusDirective, IgxIconComponent, IgxRippleDirective, IgxIconButtonDirective]
 })
 export class GridFinJSComponent {

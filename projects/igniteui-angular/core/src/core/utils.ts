@@ -100,7 +100,8 @@ export const copyDescriptors = (obj) => {
  */
 export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2, (objValue, srcValue) => {
     if (Array.isArray(srcValue)) {
-        return objValue = srcValue;
+        objValue = srcValue;
+        return objValue;
     }
 });
 

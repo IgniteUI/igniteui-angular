@@ -1,5 +1,5 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * @hidden
@@ -7,6 +7,7 @@ import { Component, HostBinding } from '@angular/core';
 @Component({
     selector: 'igx-combo-add-item',
     template: '<ng-content></ng-content>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [{ provide: IgxComboItemComponent, useExisting: IgxComboAddItemComponent }],
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {

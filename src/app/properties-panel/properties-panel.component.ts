@@ -1,9 +1,10 @@
 import {
-    ChangeDetectorRef,
-    Component,
-    DestroyRef,
-    TemplateRef,
-    inject,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  TemplateRef,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -34,6 +35,7 @@ import {
     standalone: true,
     templateUrl: './properties-panel.component.html',
     styleUrl: './properties-panel.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         ReactiveFormsModule,

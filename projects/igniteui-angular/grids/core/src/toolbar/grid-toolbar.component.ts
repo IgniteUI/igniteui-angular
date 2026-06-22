@@ -1,4 +1,4 @@
-import { Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, booleanAttribute, inject } from '@angular/core';
+import { Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarActionsComponent } from './common';
@@ -22,13 +22,14 @@ import { IgxIconService } from 'igniteui-angular/icon';
  * Provides a context-aware container component for UI operations for the grid components.
  *
  * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent
+ * @igxParent IgxGridComponent, IgxHierarchicalGridComponent, IgxTreeGridComponent, IgxPivotGridComponent,
  *
  */
 @Component({
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html',
     providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
 })
 export class IgxGridToolbarComponent implements OnDestroy {

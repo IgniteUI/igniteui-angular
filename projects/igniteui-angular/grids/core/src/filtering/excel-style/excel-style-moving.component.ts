@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -11,6 +11,7 @@ import { ColumnPinningPosition, ColumnType } from 'igniteui-angular/core';
 @Component({
     selector: 'igx-excel-style-moving',
     templateUrl: './excel-style-moving.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleMovingComponent {

@@ -67,7 +67,7 @@ export class TreeGridFunctions {
         const rowCells = [TreeGridFunctions.getTreeCell(rowDOM)].concat(TreeGridFunctions.getNormalCells(rowDOM));
         const cell = rowCells.filter(domCell => domCell.componentInstance.column.field === columnKey)[0];
         const valueDiv = cell.query(By.css(CELL_VALUE_DIV_CSS_CLASS));
-        return valueDiv.nativeElement.textContent;
+        return valueDiv.nativeElement.textContent.trim();
     }
 
     public static getExpansionIndicatorDiv(rowDOM) {

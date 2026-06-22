@@ -556,7 +556,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * The presence of this method is a signal to the Ivy template type-check compiler that the
      * `IgxForOf` structural directive renders its template with a specific context type.
      */
-    public static ngTemplateContextGuard<T, U extends T[]>(dir: IgxForOfDirective<T, U>, ctx: any):
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard<T, U extends T[]>(_dir: IgxForOfDirective<T, U>, ctx: any):
         ctx is IgxForOfContext<T, U> {
         return true;
     }
@@ -571,7 +572,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             if (!this._differ && value) {
                 try {
                     this._differ = this._differs.find(value).create(this.igxForTrackBy);
-                } catch (e) {
+                } catch (_e) {
                     throw new Error(
                         `Cannot find a differ supporting object "${value}" of type "${getTypeNameForDebugging(value)}".
                      NgFor only supports binding to Iterables such as Arrays.`);
@@ -1061,12 +1062,17 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
         for (let i = start; i < end && this.igxForOf[i] !== undefined; i++) {
             const embView = this._embeddedViews.shift();
-            if (!embView.destroyed) {
+            if (embView && !embView.destroyed) {
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
                 const view = container.detach(0);
-
+                // embView and view both refer to the same collections
                 this.updateTemplateContext(embView.context, i);
+
+                // Because in Elements the whole parent div (containing data-index) gets removed (possibly due to being disconnected). In Angular it just gets moved.
+                // This ensures to update it with the new context and remove it first from DOM because of detach action before inserting it manually.
+                view.detectChanges();
+
                 container.insert(view);
                 this._embeddedViews.push(embView);
             }
@@ -1081,12 +1087,15 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const container = this.dc.instance._vcr as ViewContainerRef;
         for (let i = prevIndex - 1; i >= this.state.startIndex && this.igxForOf[i] !== undefined; i--) {
             const embView = this._embeddedViews.pop();
-            if (!embView.destroyed) {
+            if (embView && !embView.destroyed) {
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
+                // embView and view both refer to the same collections
                 const view = container.detach(container.length - 1);
 
                 this.updateTemplateContext(embView.context, i);
+                view.detectChanges();
+
                 container.insert(view, 0);
                 this._embeddedViews.unshift(embView);
             }
@@ -1529,7 +1538,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     protected _updateScrollOffset() {
         let scrollOffset = 0;
-        let currentScroll = this.scrollPosition;
+        const currentScroll = this.scrollPosition;
         if (this._virtRatio !== 1) {
             this._calcVirtualScrollPosition(this.scrollPosition);
             scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
@@ -1666,7 +1675,8 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
      * The presence of this method is a signal to the Ivy template type-check compiler that the
      * `IgxGridForOfDirective` structural directive renders its template with a specific context type.
      */
-    public static override ngTemplateContextGuard<T, U extends T[]>(dir: IgxGridForOfDirective<T, U>, ctx: any):
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static override ngTemplateContextGuard<T, U extends T[]>(_dir: IgxGridForOfDirective<T, U>, ctx: any):
         ctx is IgxGridForOfContext<T, U> {
         return true;
     }
@@ -1695,7 +1705,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             if (!this._differ && value) {
                 try {
                     this._differ = this._differs.find(value).create(this.igxForTrackBy);
-                } catch (e) {
+                } catch (_e) {
                     throw new Error(
                         `Cannot find a differ supporting object "${value}" of type "${getTypeNameForDebugging(value)}".
                      NgFor only supports binding to Iterables such as Arrays.`);

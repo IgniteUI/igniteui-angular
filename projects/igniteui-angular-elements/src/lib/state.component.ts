@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IFilteringExpressionsTree, IGroupingState, IPagingState, ISortingExpression } from 'igniteui-angular/core';
 import { GridFeatures, GridSelectionRange, GridType, IColumnState, IGridStateCollection, IGX_GRID_BASE, IgxGridStateBaseDirective, IPinningConfig, IPivotConfiguration } from 'igniteui-angular/grids/core';
 
@@ -41,6 +41,7 @@ export interface IGridStateInfo {
     selector: 'igx-grid-state',
     template: ``,
     styles: `:host { display: none }`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxGridStateComponent extends IgxGridStateBaseDirective {

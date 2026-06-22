@@ -1,21 +1,22 @@
 import {
-    Component,
-    Directive,
-    HostBinding,
-    Input,
-    Renderer2,
-    ViewContainerRef,
-    ContentChildren,
-    QueryList,
-    ViewChild,
-    TemplateRef,
-    ChangeDetectorRef,
-    AfterViewInit,
-    ElementRef,
-    booleanAttribute,
-    inject,
-    DestroyRef,
-    AfterContentInit
+  Component,
+  Directive,
+  HostBinding,
+  Input,
+  Renderer2,
+  ViewContainerRef,
+  ContentChildren,
+  QueryList,
+  ViewChild,
+  TemplateRef,
+  ChangeDetectorRef,
+  AfterViewInit,
+  ElementRef,
+  booleanAttribute,
+  inject,
+  DestroyRef,
+  AfterContentInit,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 
@@ -65,7 +66,7 @@ export class IgxActionStripMenuItemDirective {
  *
  * @igxGroup Data Entry & Display
  *
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, *
+ * @igxParent IgxGridComponent, IgxHierarchicalGridComponent, IgxTreeGridComponent, IgxRowIslandComponent, *
  *
  * @remarks
  * The Ignite UI Action Strip is a container, overlaying its parent container,
@@ -90,6 +91,7 @@ export class IgxActionStripMenuItemDirective {
         IgxDropDownComponent,
         IgxDropDownItemComponent
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
 export class IgxActionStripComponent implements IgxActionStripToken, AfterViewInit, AfterContentInit {

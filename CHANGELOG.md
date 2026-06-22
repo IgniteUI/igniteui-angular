@@ -2,6 +2,69 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.0.0
+
+### New Features
+
+- **Theming**
+    - Added derived themes for the Grid and related internal components. When a parent component theme is included, its internal controls now derive their tokens from the parent theme colors, keeping nested buttons, icons, inputs, dropdowns, checkboxes, scrollbars, chips, and other helper components visually aligned.
+
+    - The derived themes are introduces for the following components:
+        - Grid
+        - Excel Filtering
+        - Grid Toolbar
+        - Paginator
+        - Column Actions
+        - Query Builder and Advanced Filtering Dialog
+
+    - The derived themes are applied through the existing component theme mixins, so no additional mixin call is required. To style the whole `IgxGrid`, provide the `$background`, `$foreground`, and `$accent-color` properties to `grid-theme()` and include the generated theme with `tokens()`. The `$foreground` property is optional; when omitted, it is derived automatically as a contrast color for the background. Internal components inherit derived tokens from the parent component theme.
+
+    You can also style each compound component inside the grid with its own theme by providing the same color properties. The generated tokens are scoped to that component and affect the nested controls inside it.
+
+    ```scss
+        $grid-theme: grid-theme(
+            $schema: $schema,
+            $background: #ffffff,
+            $foreground: #1f2937,
+            $accent-color: #0061a8
+        );
+
+        $excel-filtering-theme: excel-filtering-theme(
+            $schema: $schema,
+            $background: #ff2323,
+            $accent-color: #21fc9a
+        );
+
+        $query-builder-theme: query-builder-theme(
+            $schema: $schema,
+            $background: #f235ff,
+            $accent-color: #89a800
+        );
+
+        $grid-toolbar-theme: grid-toolbar-theme( ... );
+
+        $paginator-theme: paginator-theme( ... );
+
+        $column-actions-theme: column-actions-theme( ... );
+
+        igx-grid {
+            @include tokens($grid-theme);
+        }
+
+        igx-grid-excel-style-filtering,
+        .igx-excel-filter__secondary {
+            @include tokens($excel-filtering-theme);
+        }
+
+        igx-advanced-filtering-dialog {
+            @include tokens($query-builder-theme);
+        }
+
+        ...
+    ```
+
+    - Added a dedicated `excel-filtering-theme()` for styling the `Excel Style Filtering`. Use it instead of the excel-filtering color properties from `grid-theme()`.
+
 ## 21.2.0
 
 ### New Features
