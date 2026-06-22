@@ -128,7 +128,7 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeStartComponent }
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent { }
 
@@ -164,7 +164,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeEndComponent }
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
 

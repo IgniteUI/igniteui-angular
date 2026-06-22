@@ -8,7 +8,7 @@ import {
     SimpleChanges,
     booleanAttribute,
     inject,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
     ViewEncapsulation,
 } from '@angular/core';
 

@@ -15,6 +15,7 @@ import {
     IgxSliderComponent,
     IgxSwitchComponent,
     IgxTimePickerComponent,
+    IgxRadioGroupDirective,
     IgxRadioComponent,
     RadioGroupAlignment
 } from 'igniteui-angular';
@@ -37,6 +38,7 @@ import {
         IgxInputGroupComponent,
         IgxSliderComponent,
         IgxSwitchComponent,
+        IgxRadioGroupDirective,
         IgxRadioComponent,
         IgxSelectComponent,
         IgxSelectItemComponent,
