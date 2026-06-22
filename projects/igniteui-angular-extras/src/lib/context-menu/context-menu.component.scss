@@ -1,3 +1,4 @@
+/* stylelint-disable selector-pseudo-element-no-unknown */
 @use '../../../../igniteui-angular/core/src/core/styles/themes' as *;
 $font-family: "Titillium Web", "Roboto", "Helvetica Neue", sans-serif;
 
@@ -15,11 +16,11 @@ $scrollbar-theme: scrollbar-theme(
         $focus-foreground: contrast-color($color: 'gray', $variant: 900),
         $border-radius: 0
     );
+
     .analytics-button {
 		@include css-vars($analytics-btn);
-        & {
-            --ig-size: var(--ig-size-small);
-        }
+
+        --ig-size: var(--ig-size-small);
 	}
 }
 
