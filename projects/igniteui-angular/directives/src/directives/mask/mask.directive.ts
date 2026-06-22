@@ -412,10 +412,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 }
 
 /**
- * The mask provides the {@link IgxMaskDirective} inside your application.
+ * The IgxMaskModule provides the {@link IgxMaskDirective} inside your application.
  */
 export interface IMaskEventArgs extends IBaseEventArgs {
     rawValue: string;
     formattedValue: string;
 }
-

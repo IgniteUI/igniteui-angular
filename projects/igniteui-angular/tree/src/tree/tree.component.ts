@@ -94,7 +94,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      *
      * @remarks
      * By default the tree selection mode is 'None'
-     * @param selectionMode: tree selection type
+     * @param selectionMode: IgxTreeSelectionType
      */
     @Input()
     public get selection() {
@@ -367,7 +367,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      *  ];
      *  this.tree.deselectAll(arr);
      * ```
-     * @param nodes: tree node<any>[]
+     * @param nodes: IgxTreeNodeComponent<any>[]
      */
     public deselectAll(nodes?: IgxTreeNodeComponent<any>[]) {
         this.selectionService.deselectNodesWithNoEvent(nodes);
