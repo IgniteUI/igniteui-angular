@@ -187,7 +187,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /**
      * Returns the type of the input group. How the input is styled.
-     * The default is `line`.
+     * The default is `box`.
      * ```typescript
      * @ViewChild("MyInputGroup")
      * public inputGroup: IgxInputGroupComponent;
@@ -197,7 +197,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * ```
      */
     public get type() {
-        return this._type || this._inputGroupType || 'line';
+        return this._type || this._inputGroupType || 'box';
     }
 
     /**
