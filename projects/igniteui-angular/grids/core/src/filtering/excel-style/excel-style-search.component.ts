@@ -14,7 +14,7 @@ import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { cloneHierarchicalArray, columnFieldPath, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, resolveNestedPath, ɵSize } from 'igniteui-angular/core';
 import { Navigate } from 'igniteui-angular/drop-down';
-import { GridPagingMode } from 'igniteui-angular/grids/core';
+import { GridPagingMode } from '../../common/enums';
 
 @Directive({
     selector: '[igxExcelStyleLoading]',
