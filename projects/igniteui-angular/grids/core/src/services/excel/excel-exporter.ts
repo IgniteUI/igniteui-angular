@@ -25,7 +25,7 @@ const EXCEL_MAX_COLS = 16384;
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter_excel.html)
  *
  * The Ignite UI for Angular Excel Exporter service can export data in Microsoft® Excel® format from both raw data
- * (array) or from an `IgxGrid`.
+ * (array) or from an grid.
  *
  * Example:
  * ```typescript

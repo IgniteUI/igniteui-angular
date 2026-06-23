@@ -410,7 +410,7 @@ export interface ITreeGridRecord {
 }
 
 /**
- * Stub type for IgxTreeGridAPIService - minimal interface for typing in core
+ * Stub type for tree grid api - minimal interface for typing in core
  */
 export interface IgxTreeGridAPIService {
     get_row_id(rowData: any): any;
