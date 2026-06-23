@@ -187,7 +187,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     protected override transactionFactory = inject(IgxHierarchicalTransactionFactory);
 
     /**
-     * Sets the child data key of the `IgxTreeGridComponent`.
+     * Sets the child data key of the tree grid.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [autoGenerate]="true"></igx-tree-grid>
      * ```
@@ -198,7 +198,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public childDataKey: string;
 
     /**
-     * Sets the foreign key of the `IgxTreeGridComponent`.
+     * Sets the foreign key of the tree grid.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [autoGenerate]="true">
      * </igx-tree-grid>
@@ -413,7 +413,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * Sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
+     * Sets the count of levels to be expanded in the tree grid. By default it is
      * set to `Infinity` which means all levels would be expanded.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" expansionDepth="1" [autoGenerate]="true"></igx-tree-grid>
@@ -602,7 +602,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     /* blazorCSSuppress */
     /**
-     * Creates a new `IgxTreeGridRowComponent` with the given data. If a parentRowID is not specified, the newly created
+     * Creates a new tree grid row with the given data. If a parentRowID is not specified, the newly created
      * row would be added at the root level. Otherwise, it would be added as a child of the row whose primaryKey matches
      * the specified parentRowID. If the parentRowID does not exist, an error would be thrown.
      * ```typescript
@@ -779,7 +779,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * Returns the `IgxTreeGridRow` by index.
+     * Returns the tree grid row by index.
      *
      * @example
      * ```typescript
@@ -823,7 +823,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * Returns the collection of `IgxTreeGridRow`s for current page.
+     * Returns the collection of tree grid rows for current page.
      *
      * @hidden @internal
      */
@@ -832,7 +832,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * Returns an array of the selected `IgxGridCell`s.
+     * Returns an array of the selected grid cells.
      *
      * @example
      * ```typescript

@@ -384,7 +384,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
+     * Sets the `placeholder` for single-input date range picker.
      *
      *   @example
      * ```html

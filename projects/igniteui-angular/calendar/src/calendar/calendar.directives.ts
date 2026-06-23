@@ -1,5 +1,5 @@
 /**
- * This file contains all the directives used by the @link IgxCalendarComponent.
+ * This file contains all the directives used by the @link calendar.
  * Except for the directives which are used for templating the calendar itself
  * you should generally not use them directly.
  *

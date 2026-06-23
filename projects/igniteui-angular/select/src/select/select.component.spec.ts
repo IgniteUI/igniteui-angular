@@ -141,8 +141,8 @@ describe('igxSelect', () => {
             expect(select.disabled).toBeFalsy();
             expect(select.placeholder).toEqual('Choose a city');
             expect(select.value).toBeNull();
-            // Default type will be set - currently 'line'
-            expect(select.type).toEqual('line');
+            // Default type will be set - currently 'box'
+            expect(select.type).toEqual('box');
             expect(select.overlaySettings).toBeUndefined();
             expect(select.items).toBeDefined();
             // Reset input values
@@ -461,16 +461,10 @@ describe('igxSelect', () => {
 
         it('should render input type properly', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-            // Default type will be set - currently 'line'
-            expect(select.type).toEqual('line');
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeFalsy();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
-            select.type = 'box';
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
+            // Default type will be set - currently 'box'
+            expect(select.type).toEqual('box');
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeTruthy();
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
             select.type = 'border';
             fixture.detectChanges();
             tick();

@@ -1656,12 +1656,12 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     public dropChannel: number | string | number[] | string[];
 
     /**
-     * Sets a drop strategy type that will be executed when an `IgxDrag` element is released inside
+     * Sets a drop strategy type that will be executed when an drag element is released inside
      *  the current drop area. The provided strategies are:
-     *  - IgxDefaultDropStrategy - This is the default base strategy and it doesn't perform any actions.
-     *  - IgxAppendDropStrategy - Appends the dropped element to last position as a direct child to the `igxDrop`.
-     *  - IgxPrependDropStrategy - Prepends the dropped element to first position as a direct child to the `igxDrop`.
-     *  - IgxInsertDropStrategy - If the dropped element is released above a child element of the `igxDrop`, it will be inserted
+     *  - default drop strategy - This is the default base strategy and it doesn't perform any actions.
+     *  - append drop strategy - Appends the dropped element to last position as a direct child to the `igxDrop`.
+     *  - prepend drop strategy - Prepends the dropped element to first position as a direct child to the `igxDrop`.
+     *  - insert drop strategy - If the dropped element is released above a child element of the `igxDrop`, it will be inserted
      *      at that position. Otherwise the dropped element will be appended if released outside any child of the `igxDrop`.
      * ```html
      * <div igxDrag>

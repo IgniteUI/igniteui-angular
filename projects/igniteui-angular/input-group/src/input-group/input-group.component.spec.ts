@@ -37,8 +37,8 @@ describe('IgxInputGroup', () => {
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
         tick();
         fixture.detectChanges();
-        // the default type should be line
-        testInputGroupType('line', igxInputGroup, inputGroupElement);
+        // the default type should be box
+        testInputGroupType('box', igxInputGroup, inputGroupElement);
     }));
 
     it('Initializes an input group with type box.', fakeAsync(() => {

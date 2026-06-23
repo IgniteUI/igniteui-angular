@@ -30,7 +30,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
     /**
      * An event that is emitted after the checkbox state is changed.
-     * Provides references to the `IgxCheckboxComponent` and the `checked` property as event arguments.
+     * Provides references to the checkbox and the `checked` property as event arguments.
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly change: EventEmitter<IChangeCheckboxEventArgs> =

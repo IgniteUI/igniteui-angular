@@ -78,7 +78,7 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
 
     /**
      * An event that will be emitted when the action button is clicked.
-     * Provides reference to the `IgxSnackbarComponent` as an argument.
+     * Provides reference to the snackbar as an argument.
      * ```html
      * <igx-snackbar (clicked)="clickedHandler($event)"></igx-snackbar>
      * ```

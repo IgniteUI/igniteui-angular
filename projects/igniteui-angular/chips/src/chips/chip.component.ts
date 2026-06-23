@@ -168,7 +168,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public data: any;
 
     /**
-     * Defines if the `IgxChipComponent` can be dragged in order to change it's position.
+     * Defines if the chip can be dragged in order to change it's position.
      * By default it is set to false.
      *
      * @example
@@ -204,7 +204,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public hideBaseOnDrag = true;
 
     /**
-     * Defines if the `IgxChipComponent` should render remove button and throw remove events.
+     * Defines if the chip should render remove button and throw remove events.
      * By default it is set to false.
      *
      * @example
@@ -228,7 +228,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public removeIcon: TemplateRef<any>;
 
     /**
-     * Defines if the `IgxChipComponent` can be selected on click or through navigation,
+     * Defines if the chip can be selected on click or through navigation,
      * By default it is set to false.
      *
      * @example
@@ -259,7 +259,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public class = '';
 
     /**
-     * Disables the `IgxChipComponent`. When disabled it restricts user interactions
+     * Disables the chip. When disabled it restricts user interactions
      * like focusing on click or tab, selection on click or Space, dragging.
      * By default it is set to false.
      *
@@ -273,7 +273,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public disabled = false;
 
     /**
-     * Sets the `IgxChipComponent` selected state.
+     * Sets the chip selected state.
      *
      * @example
      * ```html
@@ -292,7 +292,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Returns if the `IgxChipComponent` is selected.
+     * Returns if the chip is selected.
      *
      * @example
      * ```typescript
@@ -315,7 +315,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public selectedChange = new EventEmitter<boolean>();
 
     /**
-     * Sets the `IgxChipComponent` background color.
+     * Sets the chip background color.
      * The `color` property supports string, rgb, hex.
      *
      * @example
@@ -329,7 +329,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Returns the background color of the `IgxChipComponent`.
+     * Returns the background color of the chip.
      *
      * @example
      * ```typescript
@@ -361,8 +361,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Emits an event when the `IgxChipComponent` moving starts.
-     * Returns the moving `IgxChipComponent`.
+     * Emits an event when the chip moving starts.
+     * Returns the moving chip.
      *
      * @example
      * ```html
@@ -373,8 +373,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public moveStart = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` moving ends.
-     * Returns the moved `IgxChipComponent`.
+     * Emits an event when the chip moving ends.
+     * Returns the moved chip.
      *
      * @example
      * ```html
@@ -385,8 +385,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public moveEnd = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` is removed.
-     * Returns the removed `IgxChipComponent`.
+     * Emits an event when the chip is removed.
+     * Returns the removed chip.
      *
      * @example
      * ```html
@@ -397,8 +397,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public remove = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` is clicked.
-     * Returns the clicked `IgxChipComponent`, whether the event should be canceled.
+     * Emits an event when the chip is clicked.
+     * Returns the clicked chip, whether the event should be canceled.
      *
      * @example
      * ```html
@@ -409,7 +409,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public chipClick = new EventEmitter<IChipClickEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` is selected/deselected.
+     * Emits event when the chip is selected/deselected.
      * Returns the selected chip reference, whether the event should be canceled, what is the next selection state and
      * when the event is triggered by interaction `originalEvent` is provided, otherwise `originalEvent` is `null`.
      *
@@ -422,7 +422,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public selectedChanging = new EventEmitter<IChipSelectEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` is selected/deselected and any related animations and transitions also end.
+     * Emits event when the chip is selected/deselected and any related animations and transitions also end.
      *
      * @example
      * ```html
@@ -433,8 +433,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public selectedChanged = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` keyboard navigation is being used.
-     * Returns the focused/selected `IgxChipComponent`, whether the event should be canceled,
+     * Emits an event when the chip keyboard navigation is being used.
+     * Returns the focused/selected chip, whether the event should be canceled,
      * if the `alt`, `shift` or `control` key is pressed and the pressed key name.
      *
      * @example
@@ -446,8 +446,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public keyDown = new EventEmitter<IChipKeyDownEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` has entered the `IgxChipsAreaComponent`.
-     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * Emits an event when the chip has entered the chips area.
+     * Returns the target chip, the drag chip, as  well as
      * the original drop event arguments.
      *
      * @example
@@ -459,8 +459,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public dragEnter = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` has left the `IgxChipsAreaComponent`.
-     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * Emits an event when the chip has left the chips area.
+     * Returns the target chip, the drag chip, as  well as
      * the original drop event arguments.
      *
      * @example
@@ -472,8 +472,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public dragLeave = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` is over the `IgxChipsAreaComponent`.
-     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * Emits an event when the chip is over the chips area.
+     * Returns the target chip, the drag chip, as  well as
      * the original drop event arguments.
      *
      * @example
@@ -485,8 +485,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public dragOver = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` has been dropped in the `IgxChipsAreaComponent`.
-     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * Emits an event when the chip has been dropped in the chips area.
+     * Returns the target chip, the drag chip, as  well as
      * the original drop event arguments.
      *
      * @example
@@ -526,7 +526,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
+     * Property that contains a reference to the drag the chip uses for dragging behavior.
      *
      * @example
      * ```html

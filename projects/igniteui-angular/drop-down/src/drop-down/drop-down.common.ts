@@ -9,7 +9,7 @@ export enum Navigate {
     Down = 1
 }
 
-/** Key actions that have designated handlers in IgxDropDownComponent */
+/** Key actions that have designated handlers in drop down */
 export const DropDownActionKey = {
     ESCAPE: 'escape',
     ENTER: 'enter',
@@ -29,7 +29,7 @@ export interface ISelectionEventArgs extends CancelableEventArgs, IBaseEventArgs
 }
 
 /**
- * Interface for an instance of IgxDropDownNavigationDirective
+ * Interface for an instance of drop down navigation
  *
  * @export
  */

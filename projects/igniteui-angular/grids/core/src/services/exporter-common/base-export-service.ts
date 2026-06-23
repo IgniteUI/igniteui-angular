@@ -217,7 +217,7 @@ export abstract class IgxBaseExporter {
 
     /* alternateName: exportGrid */
     /**
-     * Method for exporting IgxGrid component's data.
+     * Method for exporting grid component's data.
      * ```typescript
      * this.exporterService.export(this.igxGridForExport, this.exportOptions);
      * ```

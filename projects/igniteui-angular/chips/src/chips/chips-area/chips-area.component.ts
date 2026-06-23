@@ -101,7 +101,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      public ariaLabel = 'chip area';
 
     /**
-     * Sets the width of the `IgxChipsAreaComponent`.
+     * Sets the width of the chips area.
      *
      * @example
      * ```html
@@ -118,7 +118,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     }
 
     /**
-     * Sets the height of the `IgxChipsAreaComponent`.
+     * Sets the height of the chips area.
      *
      * @example
      * ```html
@@ -135,8 +135,8 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     }
 
     /**
-     * Emits an event when `IgxChipComponent`s in the `IgxChipsAreaComponent` should be reordered.
-     * Returns an array of `IgxChipComponent`s.
+     * Emits an event when chips in the chips area should be reordered.
+     * Returns an array of chips.
      *
      * @example
      * ```html
@@ -147,9 +147,9 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     public reorder = new EventEmitter<IChipsAreaReorderEventArgs>();
 
     /**
-     * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected/deselected.
+     * Emits an event when an chip in the chips area is selected/deselected.
      * Fired after the chips area is initialized if there are initially selected chips as well.
-     * Returns an array of selected `IgxChipComponent`s and the `IgxChipAreaComponent`.
+     * Returns an array of selected chips and the chip area.
      *
      * @example
      * ```html
@@ -160,7 +160,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     public selectionChange = new EventEmitter<IChipsAreaSelectEventArgs>();
 
     /**
-     * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
+     * Emits an event when an chip in the chips area is moved.
      *
      * @example
      * ```html
@@ -171,7 +171,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     public moveStart = new EventEmitter<IBaseChipsAreaEventArgs>();
 
     /**
-     * Emits an event after an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
+     * Emits an event after an chip in the chips area is moved.
      *
      * @example
      * ```html
@@ -182,7 +182,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     public moveEnd = new EventEmitter<IBaseChipsAreaEventArgs>();
 
     /**
-     * Holds the `IgxChipComponent` in the `IgxChipsAreaComponent`.
+     * Holds the chip in the chips area.
      *
      * @example
      * ```typescript
