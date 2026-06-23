@@ -904,6 +904,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return false;
         }
         const data = this.esf.grid.data;
-        return Array.isArray(data) && data.some(item => item && typeof item === 'object' && TREE_GRID_GROUPING_HIDDEN_FIELD in item);
+        const firstRecord = Array.isArray(data) && data.length > 0 ? data[0] : null;
+        return !!firstRecord && typeof firstRecord === 'object' && firstRecord.hasOwnProperty(TREE_GRID_GROUPING_HIDDEN_FIELD);
     }
 }
