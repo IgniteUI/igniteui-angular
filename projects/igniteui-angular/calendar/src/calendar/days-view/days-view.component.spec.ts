@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { IgxDaysViewComponent } from "./days-view.component";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
@@ -428,6 +428,7 @@ function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
         [value]="date"
         [disabledDates]="disabledDates"
     ></igx-days-view>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDaysViewComponent]
 })
 class InitDaysViewComponent {

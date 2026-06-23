@@ -1,10 +1,11 @@
 import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    OnInit,
-    TemplateRef,
-    ViewChild,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -42,6 +43,7 @@ defineComponents(IgcCalendarComponent);
             useValue: { dateFormat: 'longDate', }
         }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonDirective,
         IgxDateRangePickerModule,

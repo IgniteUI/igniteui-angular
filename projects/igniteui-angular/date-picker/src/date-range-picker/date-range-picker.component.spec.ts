@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
-import { CancelableEventArgs, I18N_FORMATTER, WEEKDAYS } from 'igniteui-angular/core';
+import { CancelableEventArgs, WEEKDAYS } from 'igniteui-angular/core';
 import { IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { DateRangeType } from 'igniteui-angular/core';
@@ -22,7 +22,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
-import { CalendarDay, BaseFormatter } from 'igniteui-angular/core';
+import { CalendarDay } from 'igniteui-angular/core';
 import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
 import { KeyboardNavigationService } from 'igniteui-angular/calendar/src/calendar/calendar.services';
 
@@ -50,6 +50,7 @@ const CSS_CLASS_CALENDAR_HEADER_TITLE = '.igx-calendar__header-year';
 const CSS_CLASS_CALENDAR_SUBHEADER = '.igx-calendar-picker__dates';
 const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
 const CSS_CLASS_CALENDAR_WRAPPER_VERTICAL = 'igx-calendar__wrapper--vertical';
+
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
@@ -1067,6 +1068,29 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     verifyDateRange();
                 });
+
+                it('should not mutate the time of the passed-in value when opening the picker', fakeAsync(() => {
+                    const start = new Date(2026, 4, 10, 14, 30, 45);
+                    const end = new Date(2026, 4, 20, 15, 15, 30);
+                    dateRange.value = { start, end };
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(start.getHours()).toBe(14);
+                    expect(start.getMinutes()).toBe(30);
+                    expect(start.getSeconds()).toBe(45);
+                    expect(end.getHours()).toBe(15);
+                    expect(end.getMinutes()).toBe(15);
+                    expect(end.getSeconds()).toBe(30);
+
+                    dateRange.close();
+                    tick();
+                    fixture.detectChanges();
+                }));
+
                 it('should support different input and display formats', () => {
                     let inputFormat = 'dd/MM/yy';
                     let displayFormat = 'longDate';
@@ -2251,6 +2275,7 @@ describe('IgxDateRangePicker', () => {
 @Component({
     selector: 'igx-date-range-test',
     template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class DateRangeTestComponent implements OnInit {
@@ -2275,6 +2300,7 @@ export class DateRangeTestComponent implements OnInit {
     <igx-date-range-picker [mode]="mode" [disabled]="disabled" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent]
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
@@ -2304,6 +2330,7 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -2336,6 +2363,7 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
             <input igxInput [(ngModel)]="range.end" igxDateTimeEditor>
         </igx-date-range-end>
     </igx-date-range-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule]
 })
 export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
@@ -2359,6 +2387,7 @@ export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestCompone
                 </igx-picker-clear>
             </igx-date-range-end>
         </igx-date-range-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective,
         IgxDateTimeEditorDirective, FormsModule, IgxPickerClearComponent, IgxIconComponent, IgxSuffixDirective]
 })
@@ -2372,6 +2401,7 @@ export class DateRangeTwoInputsClearComponent extends DateRangeTestComponent {
         <label igxLabel>Select Date</label>
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent, IgxLabelDirective]
 })
 export class DateRangeCustomComponent extends DateRangeTestComponent {
@@ -2435,6 +2465,7 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         </igx-picker-clear>
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -2500,6 +2531,7 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
             </igx-date-range-end>
         </igx-date-range-picker>
     </form>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,

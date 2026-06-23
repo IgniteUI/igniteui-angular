@@ -2,19 +2,20 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
-    "types": [
-      "jasmine",
-      "node",
-      "hammerjs"
-    ]
+    "types": ["jasmine", "node", "hammerjs"]
   },
   "exclude": [
     "migrations/**/*.spec.ts",
     "schematics/**/*.spec.ts",
     "cypress/**/*.spec.ts"
   ],
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+  "include": ["**/*.spec.ts", "**/*.d.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

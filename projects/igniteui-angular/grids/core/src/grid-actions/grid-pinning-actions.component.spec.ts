@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -132,6 +132,7 @@ describe('igxGridPinningActions #grid ', () => {
         </igx-action-strip>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent]
 })
 class IgxActionStripTestingComponent implements OnInit {
@@ -178,6 +179,7 @@ class IgxActionStripTestingComponent implements OnInit {
         </igx-action-strip>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent]
 })
 class IgxActionStripPinMenuComponent extends IgxActionStripTestingComponent {

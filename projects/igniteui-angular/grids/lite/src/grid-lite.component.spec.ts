@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, viewChild } from '@angular/core';
+import { Component, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IgxGridLiteComponent, IgxGridLiteFilteringExpression, IgxGridLiteSortingExpression } from './grid-lite.component';
 import { IgxGridLiteColumnComponent, IgxGridLiteCellTemplateDirective, IgxGridLiteHeaderTemplateDirective, IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
@@ -195,6 +195,7 @@ interface TestData {
         </igx-grid-lite>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent]
 })
 class BasicGridComponent {
@@ -253,6 +254,7 @@ class BasicGridComponent {
         </igx-grid-lite>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent]
 })
 class GridComponentAutogenerate extends BasicGridComponent {
@@ -291,6 +293,7 @@ class GridComponentAutogenerate extends BasicGridComponent {
         </igx-grid-lite>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteCellTemplateDirective, IgxGridLiteHeaderTemplateDirective]
 })
 class GridComponentTemplate extends BasicGridComponent {

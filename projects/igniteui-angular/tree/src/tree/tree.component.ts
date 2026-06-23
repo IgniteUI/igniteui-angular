@@ -1,4 +1,4 @@
-import { Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute, inject } from '@angular/core';
+import { Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
@@ -38,7 +38,7 @@ export class IgxTreeExpandIndicatorDirective {
 }
 
 /**
- * IgxTreeComponent allows a developer to show a set of nodes in a hierarchical fashion.
+ * Tree allows a developer to show a set of nodes in a hierarchical fashion.
  *
  * @igxModule IgxTreeModule
  * @igxKeywords tree
@@ -75,6 +75,7 @@ export class IgxTreeExpandIndicatorDirective {
         IgxTreeNavigationService,
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {

@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import { setupTestTree } from '../common/setup.spec';
 
 describe('Update 10.1.0', () => {

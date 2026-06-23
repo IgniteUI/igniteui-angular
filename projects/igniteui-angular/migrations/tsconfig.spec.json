@@ -1,0 +1,17 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": false,
+        "ignoreDeprecations": "6.0",
+        "types": ["node", "jasmine"],
+        "declaration": false,
+        "sourceMap": false,
+        "rootDir": "..",
+        "outDir": "../../../dist/igniteui-angular"
+    },
+    "exclude": [
+        "../../../node_modules"
+    ]
+}

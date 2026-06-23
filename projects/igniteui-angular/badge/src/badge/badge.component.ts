@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, HostBinding, Input } from '@angular/core';
+import { booleanAttribute, Component, HostBinding, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 
 let NEXT_ID = 0;
@@ -32,13 +32,16 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
  *
  * @example
  * ```html
- * <igx-avatar>
- *   <igx-badge icon="check" type="success"></igx-badge>
- * </igx-avatar>
+ * <div class="avatar-badge-container">
+ *  <igx-avatar icon="person" shape="circle" size="small"></igx-avatar>
+ *  <igx-badge icon="check" type="success" shape="square"></igx-badge>
+ * </div>
+ * ```
  */
 @Component({
     selector: 'igx-badge',
     templateUrl: 'badge.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 export class IgxBadgeComponent {
