@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, ViewContainerRef, OnDestroy, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewContainerRef, OnDestroy, CUSTOM_ELEMENTS_SCHEMA, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -50,6 +50,7 @@ import { CHART_TYPE } from '../directives/chart-integration/chart-types';
         IgxNumericYAxisModule,
         IgxIconButtonDirective
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxContextMenuComponent implements AfterViewInit, OnDestroy {

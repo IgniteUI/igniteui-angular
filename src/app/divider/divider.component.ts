@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import {
 	IgxDividerDirective, IgxHintDirective,
 	IgxIconComponent,
@@ -29,6 +29,7 @@ import {
         IgxHintDirective
     ],
     templateUrl: './divider.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./divider.component.scss']
 })
 export class DividerComponent {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ContentChildren, ChangeDetectorRef, EventEmitter, HostBinding, Input, Output, QueryList, Renderer2, ViewChildren, OnDestroy, ElementRef, booleanAttribute, inject } from '@angular/core';
+import { AfterViewInit, Component, ContentChildren, ChangeDetectorRef, EventEmitter, HostBinding, Input, Output, QueryList, Renderer2, ViewChildren, OnDestroy, ElementRef, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -41,6 +41,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-buttongroup',
     templateUrl: 'button-group-content.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
@@ -88,7 +89,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Returns the CSS class of the item content of the `IgxButtonGroup`.
+     * Returns the CSS class of the item content of the button group.
      * ```typescript
      *  @ViewChild("MyChild")
      * public buttonG: IgxButtonGroupComponent;

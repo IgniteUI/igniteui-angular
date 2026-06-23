@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import {
     IgxDropDownComponent,
@@ -22,6 +22,7 @@ export type DocumentDirection = 'ltr' | 'rtl';
     selector: 'app-page-header',
     styleUrls: ['./pageHeading.styles.scss'],
     templateUrl: './pageHeading.template.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxRippleDirective,
         IgxToggleActionDirective,

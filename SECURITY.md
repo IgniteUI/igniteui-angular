@@ -4,7 +4,9 @@
 
 | Version  | Supported          |
 | -------- | ------------------ |
-| 21.0.x   | :white_check_mark: |
+| 21.2.x   | :white_check_mark: |
+| 21.1.x   | :x:                |
+| 21.0.x   | :x:                |
 | 20.1.x   | :white_check_mark: |
 | 20.0.x   | :x:                |
 | 19.2.x   | :white_check_mark: |

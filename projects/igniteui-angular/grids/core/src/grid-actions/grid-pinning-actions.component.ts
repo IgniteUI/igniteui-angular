@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { pinLeft, unpinLeft, jumpDown, jumpUp } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
@@ -17,6 +17,7 @@ import { IgxActionStripActionsToken } from 'igniteui-angular/core';
     selector: 'igx-grid-pinning-actions',
     templateUrl: 'grid-pinning-actions.component.html',
     providers: [{ provide: IgxActionStripActionsToken, useExisting: IgxGridPinningActionsComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridActionButtonComponent]
 })
 

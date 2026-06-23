@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { DefaultSortingStrategy, GridSummaryCalculationMode, IGroupingExpression, IgxSummaryResult } from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
@@ -17,6 +17,7 @@ import { IgxColumnComponent, IgxColumnGroupComponent, IgxExcelStyleColumnOperati
         <igx-column [field]="'Age'" dataType="number" [sortable]="true"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSortingComponent {
@@ -33,6 +34,7 @@ export class IgxTreeGridSortingComponent {
         <igx-column [field]="'Age'" dataType="number" [filterable]="true"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridFilteringComponent {
@@ -62,6 +64,7 @@ export class IgxTreeGridFilteringComponent {
         </igx-grid-excel-style-filtering>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxTreeGridComponent,
         IgxColumnComponent,
@@ -92,6 +95,7 @@ export class IgxTreeGridFilteringESFTemplatesComponent {
         }
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridSimpleComponent {
@@ -112,6 +116,7 @@ export class IgxTreeGridSimpleComponent {
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridWithScrollsComponent {
@@ -129,6 +134,7 @@ export class IgxTreeGridWithScrollsComponent {
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridWithNoScrollsComponent {
@@ -149,6 +155,7 @@ export class IgxTreeGridWithNoScrollsComponent {
         }
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridPrimaryForeignKeyComponent implements OnInit {
@@ -174,6 +181,7 @@ export class IgxTreeGridPrimaryForeignKeyComponent implements OnInit {
         <igx-paginator [perPage]="10"></igx-paginator>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridExpandingComponent {
@@ -197,6 +205,7 @@ export class IgxTreeGridExpandingComponent {
         </ng-template>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridCellSelectionComponent {
@@ -217,6 +226,7 @@ export class IgxTreeGridCellSelectionComponent {
         <igx-paginator [perPage]="10"></igx-paginator>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridNoDataComponent {
@@ -233,6 +243,7 @@ export class IgxTreeGridNoDataComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridStringTreeColumnComponent {
@@ -250,6 +261,7 @@ export class IgxTreeGridStringTreeColumnComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridDateTreeColumnComponent {
@@ -268,6 +280,7 @@ export class IgxTreeGridDateTreeColumnComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridBooleanTreeColumnComponent {
@@ -285,6 +298,7 @@ export class IgxTreeGridBooleanTreeColumnComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridRowEditingComponent {
@@ -302,6 +316,7 @@ export class IgxTreeGridRowEditingComponent {
         <igx-column [field]="'Age'" dataType="number" [sortable]="true" [filterable]="true"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridFilteringRowEditingComponent {
@@ -318,6 +333,7 @@ export class IgxTreeGridFilteringRowEditingComponent {
         <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSelectionRowEditingComponent {
@@ -338,6 +354,7 @@ export class IgxTreeGridSelectionRowEditingComponent {
         </igx-column-group>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class IgxTreeGridMultiColHeadersComponent {
@@ -356,6 +373,7 @@ export class IgxTreeGridMultiColHeadersComponent {
         <igx-column [field]="'OnPTO'" dataType="boolean" [hasSummary]="true"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSummariesComponent {
@@ -377,6 +395,7 @@ export class IgxTreeGridSummariesComponent {
         <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSummariesKeyScroliingComponent {
@@ -395,6 +414,7 @@ export class IgxTreeGridSummariesKeyScroliingComponent {
         <igx-column [field]="'OnPTO'" width="150px" dataType="boolean"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridWithNoForeignKeyComponent {
@@ -416,6 +436,7 @@ export class IgxTreeGridWithNoForeignKeyComponent {
         }
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridSummariesKeyComponent {
@@ -439,6 +460,7 @@ export class IgxTreeGridSummariesKeyComponent {
         <igx-column [field]="'ParentID'" dataType="number" [hasSummary]="false"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSummariesTransactionsComponent {
@@ -534,6 +556,7 @@ class PTOSummary extends IgxSummaryOperand {
         <igx-column [editable]="true" [field]="'JobTitle'" dataType="string"></igx-column>
         <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridRowEditingTransactionComponent {
@@ -552,6 +575,7 @@ export class IgxTreeGridRowEditingTransactionComponent {
         <igx-column [field]="'OnPTO'" dataType="boolean" [hasSummary]="true"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridCustomSummariesComponent {
@@ -572,6 +596,7 @@ export class IgxTreeGridCustomSummariesComponent {
         <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
         <igx-column [editable]="true" [field]="'OnPTO'" dataType="boolean"></igx-column>
     </igx-tree-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
@@ -593,6 +618,7 @@ export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
             <igx-paginator></igx-paginator>
         }
     </igx-tree-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridRowPinningComponent {
@@ -612,6 +638,7 @@ export class IgxTreeGridRowPinningComponent {
             <igx-column [field]="'Age'" dataType="number"></igx-column>
         </igx-tree-grid>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 
@@ -668,6 +695,7 @@ export class IgxTreeGridWrappedInContComponent {
         }
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridSummariesScrollingComponent {
@@ -686,6 +714,7 @@ export class IgxTreeGridSummariesScrollingComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSearchComponent {
@@ -705,6 +734,7 @@ export class IgxTreeGridSearchComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridLoadOnDemandComponent {
@@ -730,6 +760,7 @@ export class IgxTreeGridLoadOnDemandComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSelectionKeyComponent {
@@ -749,6 +780,7 @@ export class IgxTreeGridSelectionKeyComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridLoadOnDemandChildDataComponent {
@@ -775,6 +807,7 @@ export class IgxTreeGridLoadOnDemandChildDataComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSelectionComponent {
@@ -794,6 +827,7 @@ export class IgxTreeGridSelectionComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridLoadOnDemandHasChildrenComponent {
@@ -833,6 +867,7 @@ export class IgxTreeGridLoadOnDemandHasChildrenComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSelectionWithTransactionComponent {
@@ -851,6 +886,7 @@ export class IgxTreeGridSelectionWithTransactionComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridFKeySelectionWithTransactionComponent {
@@ -868,6 +904,7 @@ export class IgxTreeGridFKeySelectionWithTransactionComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridDefaultLoadingComponent implements OnInit {
@@ -905,6 +942,7 @@ export class IgxTreeGridDefaultLoadingComponent implements OnInit {
             </igx-checkbox>
         </ng-template>
     </igx-tree-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxPaginatorComponent, IgxHeadSelectorDirective, IgxRowSelectorDirective]
 })
 export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
@@ -956,6 +994,7 @@ export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
         </ng-template>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective]
 })
 export class IgxTreeGridCustomExpandersTemplateComponent {
@@ -976,6 +1015,7 @@ export class IgxTreeGridCustomExpandersTemplateComponent {
         </igx-action-strip>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 export class IgxTreeGridEditActionsComponent {
@@ -998,6 +1038,7 @@ export class IgxTreeGridEditActionsComponent {
     </igx-action-strip>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 export class IgxTreeGridCascadingSelectionComponent {
@@ -1020,6 +1061,7 @@ export class IgxTreeGridCascadingSelectionComponent {
         </igx-action-strip>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 export class IgxTreeGridCascadingSelectionTransactionComponent {
@@ -1047,6 +1089,7 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxTreeGridGroupByAreaComponent, IgxTreeGridGroupingPipe]
 })
 export class IgxTreeGridGroupingComponent {
@@ -1073,6 +1116,7 @@ export class IgxTreeGridGroupingComponent {
         </igx-tree-grid>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent]
 })
 export class IgxTreeGridGroupByAreaTestComponent {
@@ -1093,6 +1137,7 @@ export class IgxTreeGridGroupByAreaTestComponent {
         </igx-action-strip>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 export class IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent {
@@ -1116,6 +1161,7 @@ export class IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent {
         </igx-action-strip>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent]
 })
 export class IgxTreeGridEditActionsPinningComponent {

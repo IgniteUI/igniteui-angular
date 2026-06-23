@@ -1,5 +1,5 @@
 import { EmptyTree } from '@angular-devkit/schematics';
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import * as path from 'path';
 import { scssImport, cssImport } from './add-normalize';
 import { DEPENDENCIES_MAP, PackageTarget, PackageEntry } from '../utils/dependency-handler';

@@ -10,6 +10,7 @@ import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { HammerGesturesManager } from 'igniteui-angular/core';
 
 describe('Carousel', () => {
     let fixture;
@@ -1114,13 +1115,16 @@ class HelperTestFunctions {
     public static simulateTap(fixture, carousel) {
         const activeSlide = carousel.get(carousel.current).nativeElement;
         const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
-        carouselElement.triggerEventHandler('tap', {target: activeSlide});
-        // Simulator.gestures.press(activeSlide, { duration: 180 });
+        const touchManager = carouselElement.injector.get(HammerGesturesManager);
+        const hammerManager = touchManager.getManagerForElement(carouselElement.nativeElement);
+        (hammerManager as any).emit('tap', { target: activeSlide, srcEvent: { preventDefault: () => {} } });
     }
 
     public static simulatePan(fixture, carousel, deltaOffset, velocity, dir: 'horizontal' | 'vertical') {
         const activeSlide = carousel.get(carousel.current).nativeElement;
         const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
+        const touchManager = carouselElement.injector.get(HammerGesturesManager);
+        const hammerManager = touchManager.getManagerForElement(carouselElement.nativeElement);
         const deltaX = dir === 'horizontal' ? activeSlide.offsetWidth * deltaOffset : 0;
         const deltaY = dir === 'horizontal' ? 0 : activeSlide.offsetHeight * deltaOffset;
 
@@ -1135,12 +1139,13 @@ class HelperTestFunctions {
             deltaY,
             duration: 100,
             velocity,
-            preventDefault: ( () => {  })
+            preventDefault: ( () => {  }),
+            srcEvent: { preventDefault: () => {} }
         };
 
-        carouselElement.triggerEventHandler(event, panOptions);
+        (hammerManager as any).emit(event, panOptions);
         fixture.detectChanges();
-        carouselElement.triggerEventHandler('panend', panOptions);
+        (hammerManager as any).emit('panend', panOptions);
         fixture.detectChanges();
     }
 }
@@ -1153,6 +1158,7 @@ class HelperTestFunctions {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselTestComponent {
@@ -1201,6 +1207,7 @@ class CarouselAnimationsComponent {
             </ng-template>
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective]
 })
 class CarouselTemplateSetInMarkupTestComponent {
@@ -1237,6 +1244,7 @@ class CarouselTemplateSetInMarkupTestComponent {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselTemplateSetInTypescriptTestComponent {
@@ -1261,6 +1269,7 @@ class CarouselTemplateSetInTypescriptTestComponent {
             }
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselDynamicSlidesComponent {

@@ -64,7 +64,7 @@ import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 
 /**
- * Providing reference to `IgxGridCellComponent`:
+ * Providing reference to grid cell:
  * ```typescript
  * @ViewChild('grid', { read: IgxGridComponent })
  *  public grid: IgxGridComponent;
