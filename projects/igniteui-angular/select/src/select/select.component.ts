@@ -411,13 +411,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public ngAfterContentInit() {
-        this._overlayDefaults = {
-            target: this.getEditElement(),
-            modal: false,
-            positionStrategy: new AutoPositionStrategy(),
-            scrollStrategy: new AbsoluteScrollStrategy(),
-            excludeFromOutsideClick: [this.inputGroup.element.nativeElement as HTMLElement]
-        };
         const changes$ = this.children.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.setSelection(this.items.find(x => x.value === this.value));
             this.cdr.detectChanges();
@@ -504,6 +497,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
             this.manageRequiredAsterisk();
         }
+
+        const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
+        this._overlayDefaults = {
+            target: targetElement,
+            modal: false,
+            positionStrategy: new AutoPositionStrategy(),
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            excludeFromOutsideClick: [targetElement]
+        };
 
         this.cdr.detectChanges();
     }
