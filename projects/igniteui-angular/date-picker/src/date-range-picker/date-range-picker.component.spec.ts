@@ -31,7 +31,6 @@ const DEBOUNCE_TIME = 16;
 const DEFAULT_ICON_TEXT = 'date_range';
 const CLEAR_ICON_TEXT = 'clear';
 const DEFAULT_FORMAT_OPTIONS = { day: 'numeric', month: 'numeric', year: 'numeric' };
-const CSS_CLASS_INPUT_BUNDLE = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT_START = '.igx-input-group__bundle-start'
 const CSS_CLASS_INPUT_END = '.igx-input-group__bundle-end'
 const CSS_CLASS_INPUT = '.igx-input-group__input';
