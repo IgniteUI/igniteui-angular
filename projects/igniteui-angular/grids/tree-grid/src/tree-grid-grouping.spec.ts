@@ -6,7 +6,7 @@ import { IgxTreeGridGroupByAreaComponent } from 'igniteui-angular/grids/tree-gri
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DefaultSortingStrategy } from 'igniteui-angular/core';
-import { GridFunctions } from 'igniteui-angular/test-utils/grid-functions.spec';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid', () => {
 
