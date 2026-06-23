@@ -5,6 +5,12 @@ import { setupTestTree } from '../common/setup.spec';
 
 const version = '22.0.0';
 
+const SELECT_POSITION_NOTE =
+    `<!-- TODO: IgxSelectComponent - The default positioning strategy has changed to AutoPositionStrategy. ` +
+    `The dropdown now opens below (or above when there is not enough space) the input element. ` +
+    `To preserve the previous overlap behavior, set [overlaySettings]="{ positionStrategy: overlapStrategy }" ` +
+    `where overlapStrategy is an instance of IgxSelectOverlapPositionStrategy. -->\n`;
+
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
@@ -27,7 +33,7 @@ describe(`Update to ${version}`, () => {
             .toEqual(`<igx-input-group type="line"><input igxInput></igx-input-group>`);
     });
 
-    it('should add type="line" to igx-select without explicit type', async () => {
+    it('should add type="line" and a positioning note to igx-select without explicit type', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `<igx-select><igx-select-item>Option</igx-select-item></igx-select>`
@@ -36,7 +42,19 @@ describe(`Update to ${version}`, () => {
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(`<igx-select type="line"><igx-select-item>Option</igx-select-item></igx-select>`);
+            .toEqual(`${SELECT_POSITION_NOTE}<igx-select type="line"><igx-select-item>Option</igx-select-item></igx-select>`);
+    });
+
+    it('should add a positioning note to igx-select that already has an explicit type', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `<igx-select type="border"><igx-select-item>Option</igx-select-item></igx-select>`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`${SELECT_POSITION_NOTE}<igx-select type="border"><igx-select-item>Option</igx-select-item></igx-select>`);
     });
 
     it('should add type="line" to igx-date-picker without explicit type', async () => {
@@ -111,7 +129,7 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`<igx-input-group type="line"><input igxInput></igx-input-group>
-<igx-select type="line"></igx-select>
+${SELECT_POSITION_NOTE}<igx-select type="line"></igx-select>
 <igx-input-group type="border"><input igxInput></igx-input-group>`);
     });
 });

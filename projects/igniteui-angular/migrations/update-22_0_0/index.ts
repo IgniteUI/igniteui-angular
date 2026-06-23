@@ -72,11 +72,28 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     }
 
     applyChanges();
-    update.applyChanges();
+    changes.clear();
 
-    context.logger.warn(
-        `[IgxSelectComponent] The default positioning strategy has changed to AutoPositionStrategy.\n` +
-        `The dropdown now opens below (or above when there is not enough space) the input element.\n` +
-        `To preserve the previous overlap behavior, set overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(selectRef) }.`
-    );
+    // IgxSelect: default positioning strategy changed to AutoPositionStrategy.
+    // Insert a comment above each <igx-select> to inform the developer.
+    const SELECT_NOTE =
+        `<!-- TODO: IgxSelectComponent - The default positioning strategy has changed to AutoPositionStrategy. ` +
+        `The dropdown now opens below (or above when there is not enough space) the input element. ` +
+        `To preserve the previous overlap behavior, set [overlaySettings]="{ positionStrategy: overlapStrategy }" ` +
+        `where overlapStrategy is an instance of IgxSelectOverlapPositionStrategy. -->\n`;
+
+    for (const path of update.templateFiles) {
+        const root = parseFile(parser, host, path);
+        const nodes = findElementNodes(root, 'igx-select');
+
+        for (const node of nodes) {
+            if (!(node instanceof Element)) continue;
+
+            const { startTag, file } = getSourceOffset(node);
+            addChange(file.url, new FileChange(startTag.start, SELECT_NOTE));
+        }
+    }
+
+    applyChanges();
+    update.applyChanges();
 };
