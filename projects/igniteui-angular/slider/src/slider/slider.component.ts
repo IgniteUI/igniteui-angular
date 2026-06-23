@@ -130,8 +130,8 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Gets the type of the `IgxSliderComponent`.
-     * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
+     * Gets the type of the slider.
+     * The slider type can be SLIDER (default) or RANGE.
      * ```typescript
      * @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -145,8 +145,8 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the type of the `IgxSliderComponent`.
-     * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
+     * Sets the type of the slider.
+     * The slider type can be SLIDER (default) or RANGE.
      * ```typescript
      * sliderType: IgxSliderType = IgxSliderType.RANGE;
      * ```
@@ -305,7 +305,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the minimal displayed track value of the `IgxSliderComponent`.
+     * Returns the minimal displayed track value of the slider.
      * ```typescript
      *  @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -323,7 +323,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the minimal displayed track value for the `IgxSliderComponent`.
+     * Sets the minimal displayed track value for the slider.
      * The default minimal value is 0.
      * ```html
      * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="100">
@@ -369,7 +369,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the maximal displayed track value for the `IgxSliderComponent`.
+     * Sets the maximal displayed track value for the slider.
      * The default maximum value is 100.
      * ```html
      * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="256">
@@ -399,7 +399,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the lower boundary of settable values of the `IgxSliderComponent`.
+     * Returns the lower boundary of settable values of the slider.
      * If not set, will return `minValue`.
      * ```typescript
      * @ViewChild("slider")
@@ -418,7 +418,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the lower boundary of settable values of the `IgxSliderComponent`.
+     * Sets the lower boundary of settable values of the slider.
      * If not set is the same as min value.
      * ```html
      * <igx-slider [step]="5" [lowerBound]="20">
@@ -438,7 +438,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the upper boundary of settable values of the `IgxSliderComponent`.
+     * Returns the upper boundary of settable values of the slider.
      * If not set, will return `maxValue`
      * ```typescript
      * @ViewChild("slider")
@@ -457,7 +457,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the upper boundary of the `IgxSliderComponent`.
+     * Sets the upper boundary of the slider.
      * If not set is the same as max value.
      * ```html
      * <igx-slider [step]="5" [upperBound]="20">
@@ -768,7 +768,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns whether the `IgxSliderComponent` type is RANGE.
+     * Returns whether the slider type is RANGE.
      * ```typescript
      *  @ViewChild("slider")
      * public slider: IgxSliderComponent;
@@ -782,7 +782,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the lower value of a RANGE `IgxSliderComponent`.
+     * Returns the lower value of a RANGE slider.
      * ```typescript
      * @ViewChild("slider")
      * public slider: IgxSliderComponent;
@@ -800,7 +800,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the lower value of a RANGE `IgxSliderComponent`.
+     * Sets the lower value of a RANGE slider.
      * ```typescript
      * @ViewChild("slider")
      * public slider: IgxSliderComponent;
@@ -820,8 +820,8 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the upper value of a RANGE `IgxSliderComponent`.
-     * Returns `value` of a SLIDER `IgxSliderComponent`
+     * Returns the upper value of a RANGE slider.
+     * Returns `value` of a SLIDER slider
      * ```typescript
      *  @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -839,7 +839,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the upper value of a RANGE `IgxSliderComponent`.
+     * Sets the upper value of a RANGE slider.
      * ```typescript
      *  @ViewChild("slider2")
      * public slider: IgxSliderComponent;

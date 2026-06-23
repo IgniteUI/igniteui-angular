@@ -4,7 +4,7 @@ import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-ba
 
 /**
  * A slide component that usually holds an image and/or a caption text.
- * IgxSlideComponent is usually a child component of an IgxCarouselComponent.
+ * Slide is usually a child component of a carousel.
  *
  * ```
  * <igx-slide [input bindings] >

@@ -158,7 +158,7 @@ export class IgxSorting implements IGridSortingStrategy {
 }
 
 /**
- * Represents a class implementing the IGridGroupingStrategy interface and extending the IgxSorting class.
+ * Represents a class implementing the IGridGroupingStrategy interface and extending the sorting class.
  * It provides a method to group data based on the given grouping state.
  */
 export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
@@ -372,7 +372,7 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
 }
 
 /**
- * Represents a class extending the IgxSorting class
+ * Represents a class extending the sorting class
  * Provides custom data record sorting.
  */
 export class IgxDataRecordSorting extends IgxSorting {
