@@ -43,8 +43,8 @@ const CSS_CLASS_DIALOG_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
-const CSS_CLASS_CALENDAR_DATE = 'igx-days-view__date';
-const CSS_CLASS_INACTIVE_DATE = 'igx-days-view__date--inactive';
+const CSS_CLASS_CALENDAR_DATE = 'igx-day-item';
+const CSS_CLASS_INACTIVE_DATE = 'igx-day-item--inactive';
 const CSS_CLASS_CALENDAR_HEADER_TEMPLATE = '.igx-calendar__header-date';
 const CSS_CLASS_CALENDAR_HEADER_TITLE = '.igx-calendar__header-year';
 const CSS_CLASS_CALENDAR_SUBHEADER = '.igx-calendar-picker__dates';
@@ -1915,9 +1915,9 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);
                 fixture.detectChanges();
 
-                const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_BUNDLE));
-                expect(inputGroup.children[1].children[0].classes[CSS_CLASS_LABEL]).toBeTruthy();
-                expect(inputGroup.children[1].children[0].nativeElement.textContent).toEqual('Select Date');
+                const labelEl = fixture.debugElement.query(By.css(`.${CSS_CLASS_LABEL}`));
+                expect(labelEl).toBeTruthy();
+                expect(labelEl.nativeElement.textContent).toEqual('Select Date');
             });
 
             it('should be able to apply custom format', () => {
