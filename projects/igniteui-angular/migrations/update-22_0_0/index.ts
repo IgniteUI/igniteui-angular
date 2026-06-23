@@ -73,4 +73,10 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
     applyChanges();
     update.applyChanges();
+
+    context.logger.warn(
+        `[IgxSelectComponent] The default positioning strategy has changed to AutoPositionStrategy.\n` +
+        `The dropdown now opens below (or above when there is not enough space) the input element.\n` +
+        `To preserve the previous overlap behavior, set overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(selectRef) }.`
+    );
 };
