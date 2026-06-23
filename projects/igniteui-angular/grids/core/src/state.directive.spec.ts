@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1070,6 +1070,7 @@ class HelperFunctions {
             <span>Custom Content: {{cell.value}}</span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxGridStateComponent {
@@ -1098,6 +1099,7 @@ export class IgxGridStateComponent {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxGridStateWithOptionsComponent {
@@ -1127,6 +1129,7 @@ export class IgxGridStateWithOptionsComponent {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridStateDirective, IgxGridDetailTemplateDirective, IgxPaginatorComponent]
 })
 export class IgxGridStateWithDetailsComponent {
@@ -1149,6 +1152,7 @@ export class IgxGridStateWithDetailsComponent {
                 </igx-column-group>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridStateDirective]
 })
 export class CollapsibleColumnGroupTestComponent {
@@ -1178,6 +1182,7 @@ export class CollapsibleColumnGroupTestComponent {
                 </igx-column-layout>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridStateDirective, IgxColumnComponent, IgxColumnLayoutComponent]
 })
 export class IgxGridMRLStateComponent {

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, flush, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -319,9 +319,9 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(100);
-            // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+            // With data, igx-grid__tbody-content is the rowgroup focus host
             const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
-            expect(container.getAttribute('role')).toBe(null);
+            expect(container.getAttribute('role')).toBe('rowgroup');
 
             //Filter grid so no results are available and grid is empty
             grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
@@ -337,6 +337,33 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(container.getAttribute('role')).toMatch('row');
 
+        }));
+
+        it('should have correct ARIA role structure on tbody and tfoot', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            fixture.componentInstance.columns[0].hasSummary = true;
+
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(100);
+
+            // Outer tbody wrapper is layout-only
+            const tbodyWrapper = fixture.nativeElement.querySelector('.igx-grid__tbody');
+            expect(tbodyWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner focus host is the rowgroup
+            const tbodyContent = fixture.nativeElement.querySelector('.igx-grid__tbody-content');
+            expect(tbodyContent.getAttribute('role')).toBe('rowgroup');
+            expect(tbodyContent.getAttribute('tabindex')).toBe('0');
+
+            // Outer tfoot wrapper is layout-only
+            const tfootWrapper = fixture.nativeElement.querySelector('.igx-grid__tfoot');
+            expect(tfootWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner tfoot div is the rowgroup focus host
+            const tfootContent = fixture.nativeElement.querySelector('.igx-grid__tfoot > div');
+            expect(tfootContent.getAttribute('role')).toBe('rowgroup');
+            expect(tfootContent.getAttribute('tabindex')).toBe('0');
         }));
 
         it('should render empty message', fakeAsync(() => {
@@ -357,7 +384,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columnList;
@@ -365,13 +392,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
             tick(100);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
@@ -404,7 +431,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
@@ -415,13 +442,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
             tick(100);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
@@ -634,7 +661,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBe(548);
+            expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBe(549);
 
             loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
@@ -1575,25 +1602,25 @@ describe('IgxGrid Component Tests #grid', () => {
             const rows = grid.rowList.toArray();
             // verify default number formatting
             let expectedValue = '2,760';
-            expect((rows[0].cells.toArray()[3] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[3] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = '1,098';
-            expect((rows[5].cells.toArray()[3] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[5].cells.toArray()[3] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = '7,898';
-            expect((rows[7].cells.toArray()[3] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[7].cells.toArray()[3] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             // verify formatter function formatting
             expectedValue = '2.76e+3';
-            expect((rows[0].cells.toArray()[5] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[5] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = '1.098e+3';
-            expect((rows[5].cells.toArray()[5] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[5].cells.toArray()[5] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = '7.898e+3';
-            expect((rows[7].cells.toArray()[5] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[7].cells.toArray()[5] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             // verify date formatting
             expectedValue = 'Mar 21, 2005';
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             // verify summaries formatting
             let avgValue;
             let earliestValue;
@@ -1631,11 +1658,11 @@ describe('IgxGrid Component Tests #grid', () => {
             // verify cells formatting
             const rows = grid.rowList.toArray();
             let expectedValue = 'Mar 21, 2005';
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
 
             // verify summaries formatting
             let avgValue;
@@ -1674,11 +1701,11 @@ describe('IgxGrid Component Tests #grid', () => {
             // verify cells formatting
             const rows = grid.rowList.toArray();
             let expectedValue = 'Mar 21, 2005';
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
 
             // verify summaries formatting
             let avgValue;
@@ -1716,11 +1743,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
             let rows = grid.rowList.toArray();
             let expectedValue = 'Mar 21, 2005';
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Jan 15, 2008';
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = 'Nov 20, 2010';
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             // verify summaries formatting
             let avgValue;
             let earliestValue;
@@ -1759,11 +1786,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
             rows = grid.rowList.toArray();
             expectedValue = `${ymd('2005-03-21').getUTCDate()}. März 2005`;
-            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue = `${ymd('2005-01-15').getUTCDate()}. Januar 2008`;
-            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
             expectedValue =`${ymd('2005-11-20').getUTCDate()}. November 2010`;
-            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
+            expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent.trim()).toBe(expectedValue);
 
             // verify summaries formatting
             summaries = fixture.debugElement.queryAll(By.css('.igx-grid-summary'));
@@ -3295,6 +3322,7 @@ describe('IgxGrid Component Tests #grid', () => {
             }
         </igx-grid>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridTestComponent {
@@ -3372,6 +3400,7 @@ export class IgxGridTestComponent {
             <igx-paginator></igx-paginator>
         }
     </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxGridDefaultRenderingComponent {
@@ -3452,6 +3481,7 @@ export class IgxGridDefaultRenderingComponent {
       ></igx-column>
     </igx-grid>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridColumnHeaderAutoSizeComponent {
@@ -3483,6 +3513,7 @@ export class IgxGridColumnHeaderAutoSizeComponent {
       ></igx-column>
       </igx-column-group>
     </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class IgxGridColumnHeaderInGroupAutoSizeComponent {
@@ -3497,6 +3528,7 @@ export class IgxGridColumnHeaderInGroupAutoSizeComponent {
             </igx-column>
         }
     </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
@@ -3514,6 +3546,7 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
             </igx-column>
         }
     </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridColumnHiddenPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
@@ -3531,6 +3564,7 @@ export class IgxGridColumnHiddenPercentageWidthComponent extends IgxGridDefaultR
             </igx-grid-footer>
         </igx-grid>
         </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridFooterComponent]
 })
 export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
@@ -3545,6 +3579,7 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
                 }
             </igx-grid>
         </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
@@ -3600,6 +3635,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
                 }
             </igx-grid>
         </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
@@ -3614,6 +3650,7 @@ export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContCo
             <igx-column field="Name"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
@@ -3634,6 +3671,7 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
         </igx-grid>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridEmptyMessage100PercentComponent extends IgxGridTestComponent {
@@ -3685,6 +3723,7 @@ export class LocalService {
         </igx-grid>
     `,
     providers: [LocalService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, AsyncPipe]
 })
 export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewInit {
@@ -3730,6 +3769,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         </ng-template>
     `,
     providers: [LocalService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridEmptyTemplateDirective, IgxGridLoadingTemplateDirective, AsyncPipe]
 })
 export class IgxGridRemoteOnDemandComponent {
@@ -3770,6 +3810,7 @@ export class IgxGridRemoteOnDemandComponent {
         <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hasSummary]="true">
         </igx-column><igx-column field="UnitsInStock" [formatter]="formatNum" [dataType]="'number'" [hasSummary]="true">
         </igx-column>`),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridFormattingComponent extends BasicGridComponent {
@@ -3882,6 +3923,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
     </igx-tabs>
   </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxTabsComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabItemComponent, IgxPaginatorComponent]
 })
 export class IgxGridInsideIgxTabsComponent {
@@ -3934,6 +3976,7 @@ export class IgxGridInsideIgxTabsComponent {
             </igx-paginator>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, AsyncPipe]
 })
 export class IgxGridWithCustomPaginationTemplateComponent {
@@ -3949,6 +3992,7 @@ export class IgxGridWithCustomPaginationTemplateComponent {
             <igx-column [field]="column.field" [header]="column.field" [width]="column.width"></igx-column>
         }
     </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
@@ -4001,6 +4045,7 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxGridNoDataComponent {

@@ -631,13 +631,13 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     }
 
 
-    public onChipPointerdown(args, chip: IgxChipComponent) {
+    public onChipPointerdown(_args, chip: IgxChipComponent) {
         const activeElement = this.column?.grid.document.activeElement;
         this._cancelChipClick = chip.selected
             && activeElement && this.editorFocused(activeElement);
     }
 
-    public onChipClick(args, item: ExpressionUI) {
+    public onChipClick(_args, item: ExpressionUI) {
         if (this._cancelChipClick) {
             this._cancelChipClick = false;
             return;
@@ -681,7 +681,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     /**
      * Event handler for chip removed event.
      */
-    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
+    public onChipRemoved(_eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
         const indexToRemove = this.expressionsList.indexOf(item);
         this.removeExpression(indexToRemove, item.expression);
 

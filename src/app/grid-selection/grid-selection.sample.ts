@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Observable } from 'rxjs';
@@ -12,6 +12,7 @@ import { data } from '../shared/data';
     templateUrl: 'grid-selection.sample.html',
     styleUrls: ['grid-selection.sample.scss'],
     providers: [RemoteService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IGX_INPUT_GROUP_DIRECTIVES,

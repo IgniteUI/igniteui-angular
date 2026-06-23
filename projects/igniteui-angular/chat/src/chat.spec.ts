@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component';
-import { Component, signal, TemplateRef, ViewRef, viewChild } from '@angular/core';
+import { Component, signal, TemplateRef, ViewRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import type { IgcChatComponent, IgcChatMessage, IgcChatMessageAttachment, IgcTextareaComponent } from 'igniteui-webcomponents';
 
 describe('Chat wrapper', () => {
@@ -336,6 +336,7 @@ describe('Chat view lifecycle (_setTemplates)', () => {
             <h3>Your message: {{ message.text }}</h3>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChatComponent, IgxChatMessageContextDirective]
 })
 class ChatTemplatesBed {
@@ -354,6 +355,7 @@ class ChatTemplatesBed {
             <h3>Your message: {{ message.text }}</h3>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChatComponent, IgxChatMessageContextDirective]
 })
 class ChatDynamicTemplatesBed {

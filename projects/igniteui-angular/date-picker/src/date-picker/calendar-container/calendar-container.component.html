@@ -4,7 +4,7 @@
             @if (cancelButtonLabel) {
             <button
             #cancelButton type="button"
-            igxButton="flat" igxRipple
+            [igxButton]="cancelButtonType" igxRipple
             (click)="calendarCancel.emit({ owner: this})"
             >
                 {{ cancelButtonLabel }}
@@ -14,7 +14,7 @@
                 <button
                     #closeButton
                     type="button"
-                    igxButton="flat"
+                    [igxButton]="closeButtonType"
                     igxRipple
                     (click)="calendarClose.emit({ owner: this})"
                 >

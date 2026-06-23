@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostBinding, HostListener, NgZone, OnDestroy, inject } from '@angular/core';
+import { AfterViewInit, Component, HostBinding, HostListener, NgZone, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxTabHeaderDirective } from '../tab-header.directive';
 import { IgxTabHeaderBase } from '../tabs.base';
 import { IgxTabsComponent } from './tabs.component';
@@ -8,6 +8,7 @@ import { getResizeObserver, isLeftToRight } from 'igniteui-angular/core';
     selector: 'igx-tab-header',
     templateUrl: 'tab-header.component.html',
     providers: [{ provide: IgxTabHeaderBase, useExisting: IgxTabHeaderComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {

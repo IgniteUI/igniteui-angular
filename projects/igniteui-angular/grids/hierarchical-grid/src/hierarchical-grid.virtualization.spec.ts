@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -498,6 +498,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestBaseComponent {
@@ -538,6 +539,7 @@ export class IgxHierarchicalGridTestBaseComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridNoScrollTestComponent extends IgxHierarchicalGridTestBaseComponent {

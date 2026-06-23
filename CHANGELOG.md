@@ -2,6 +2,69 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.0.0
+
+### New Features
+
+- **Theming**
+    - Added derived themes for the Grid and related internal components. When a parent component theme is included, its internal controls now derive their tokens from the parent theme colors, keeping nested buttons, icons, inputs, dropdowns, checkboxes, scrollbars, chips, and other helper components visually aligned.
+
+    - The derived themes are introduces for the following components:
+        - Grid
+        - Excel Filtering
+        - Grid Toolbar
+        - Paginator
+        - Column Actions
+        - Query Builder and Advanced Filtering Dialog
+
+    - The derived themes are applied through the existing component theme mixins, so no additional mixin call is required. To style the whole `IgxGrid`, provide the `$background`, `$foreground`, and `$accent-color` properties to `grid-theme()` and include the generated theme with `tokens()`. The `$foreground` property is optional; when omitted, it is derived automatically as a contrast color for the background. Internal components inherit derived tokens from the parent component theme.
+
+    You can also style each compound component inside the grid with its own theme by providing the same color properties. The generated tokens are scoped to that component and affect the nested controls inside it.
+
+    ```scss
+        $grid-theme: grid-theme(
+            $schema: $schema,
+            $background: #ffffff,
+            $foreground: #1f2937,
+            $accent-color: #0061a8
+        );
+
+        $excel-filtering-theme: excel-filtering-theme(
+            $schema: $schema,
+            $background: #ff2323,
+            $accent-color: #21fc9a
+        );
+
+        $query-builder-theme: query-builder-theme(
+            $schema: $schema,
+            $background: #f235ff,
+            $accent-color: #89a800
+        );
+
+        $grid-toolbar-theme: grid-toolbar-theme( ... );
+
+        $paginator-theme: paginator-theme( ... );
+
+        $column-actions-theme: column-actions-theme( ... );
+
+        igx-grid {
+            @include tokens($grid-theme);
+        }
+
+        igx-grid-excel-style-filtering,
+        .igx-excel-filter__secondary {
+            @include tokens($excel-filtering-theme);
+        }
+
+        igx-advanced-filtering-dialog {
+            @include tokens($query-builder-theme);
+        }
+
+        ...
+    ```
+
+    - Added a dedicated `excel-filtering-theme()` for styling the `Excel Style Filtering`. Use it instead of the excel-filtering color properties from `grid-theme()`.
+
 ## 21.2.0
 
 ### New Features
@@ -20,6 +83,18 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxOverlayService`
     - **Deprecation** - The `outlet` property in `OverlaySettings`, `IgxOverlayOutletDirective`, and `igxToggleOutlet` input on `IgxToggleActionDirective` are deprecated and will be removed in a future version. As overlay service now integrates the HTML Popover API and prefers rendering content in place / in the top layer, significantly reducing the need for outlet containers, new code should rely on the default in-place / top-layer rendering behavior instead of custom outlet containers.
+    
+- **AI-Assisted Development - Copilot Skill: Generate from Image Design**
+    - Added a new `igniteui-angular-generate-from-image-design` Copilot Skill that teaches AI coding assistants/agents (e.g., GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to implement Angular application views directly from design images (screenshots, mockups, wireframes).
+    - The skill provides a structured workflow covering image analysis, component discovery via MCP tools (`list_components`, `get_doc`), theme generation (`create_palette`, `create_theme`, `create_component_theme`), layout implementation, and visual refinement (`set_size`, `set_spacing`, `set_roundness`).
+    - Includes reference files:
+        - **Component Mapping** - Maps common UI patterns (dashboards, charts, forms, navigation, data display, gauges) to the most appropriate Ignite UI for Angular component with key properties and decision rules.
+        - **Gotchas** - Documents known pitfalls, component-specific constraints, and corrective patterns to help AI agents avoid common implementation mistakes.
+
+- **AI-Assisted Development - Copilot Skills improvements**
+    - `igniteui-angular-grids` skill - Added a new `sizing.md` reference covering grid and column width/height inputs, percentage and auto sizing modes, column sizing (`minWidth`, `maxWidth`, `*` star-sizing, auto-fit), and cell spacing/density control.
+    - `igniteui-angular-components` skill - Corrected Financial Chart (`IgxFinancialChartComponent`) documentation: updated `chartType` enum values to `Auto`, `Candle`, `Line`, `Bar`, `Column` to match the actual `FinancialChartType` API.
+    - `igniteui-angular-theming` skill - Minor cleanup to remove stale internal contributing reference.
 
 ## 21.1.3
 

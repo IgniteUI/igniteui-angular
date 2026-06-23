@@ -1,10 +1,11 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, HostBinding, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
     styleUrls: ['grid-column-groups.sample.scss'],
     templateUrl: 'grid-column-groups.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxCollapsibleIndicatorTemplateDirective,
         IgxIconComponent,

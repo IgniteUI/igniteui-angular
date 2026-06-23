@@ -194,7 +194,7 @@ describe('IgxTreeGrid', () => {
 
             const aggregations = [{
                 field: 'HireDate',
-                aggregate: (parent: any, children: any[]) => children.map((c) => c.HireDate)
+                aggregate: (_parent: any, children: any[]) => children.map((c) => c.HireDate)
                             .reduce((min, c) => min < c ? min : c, new Date())
             }];
 

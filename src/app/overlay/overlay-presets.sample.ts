@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxDropDownComponent,
@@ -19,6 +19,7 @@ import {
     selector: 'overlay-presets-sample',
     templateUrl: './overlay-presets.sample.html',
     styleUrls: ['overlay-presets.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, FormsModule, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxToggleDirective]
 })
 export class OverlayPresetsSampleComponent implements OnInit {

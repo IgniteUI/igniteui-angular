@@ -44,7 +44,7 @@
         outline-style: none;
 
         @if $variant == 'indigo' {
-            border-top: rem(1px) solid var-get($theme, 'border-color');
+            border-top: var-get($theme, 'border-width') var-get($theme, 'border-style') var-get($theme, 'border-color');
         }
     }
 

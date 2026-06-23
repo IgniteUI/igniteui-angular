@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -2712,7 +2712,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('New England')
             });
-            it('should sort groups with diacritics correctly', async() => {
+            it('should sort groups with diacritics correctly', async () => {
                 combo.data = [
                     { field: "Alaska", region: "Méxícó" },
                     { field: "California", region: "Méxícó" },
@@ -3345,6 +3345,7 @@ describe('igxCombo', () => {
                     combo = fixture.componentInstance.combo;
                     input = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 });
+
                 it('should properly initialize when used as a form control', () => {
                     expect(combo).toBeDefined();
                     const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
@@ -3375,6 +3376,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
+
                 it('should properly initialize when used as a form control - without validators', () => {
                     const form: UntypedFormGroup = fixture.componentInstance.reactiveForm;
                     form.controls.townCombo.validator = null;
@@ -3407,6 +3409,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
+
                 it('should be possible to be enabled/disabled when used as a form control', () => {
                     const form = fixture.componentInstance.reactiveForm;
                     const comboFormReference = form.controls.townCombo;
@@ -3439,6 +3442,47 @@ describe('igxCombo', () => {
                     expect(comboFormReference.disabled).toBeFalsy();
                     expect(combo.disabled).toBeFalsy();
                 });
+
+                it('should render as INITIAL after control.disable() and touched/dirty', () => {
+                    const form = fixture.componentInstance.reactiveForm;
+                    const control = form.controls.townCombo;
+
+                    combo.select([combo.data.at(0)], true);
+                    fixture.detectChanges();
+
+                    control.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+
+                    control.disable();
+                    fixture.detectChanges();
+
+                    expect(combo.disabled).toBe(true);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                });
+
+                it('should render as INITIAL (not INVALID) after control.disable() and previously invalid', () => {
+                    const form = fixture.componentInstance.reactiveForm;
+                    const control = form.controls.townCombo;
+
+                    // markAsTouched must come BEFORE setValue: markAsTouched does not emit
+                    // statusChanges, so onStatusChanged must see touched=true at the moment
+                    // statusChanges fires from setValue.
+                    control.markAsTouched();
+                    control.setValue([]);
+                    fixture.detectChanges();
+
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
+
+                    control.disable();
+                    fixture.detectChanges();
+
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                });
+
                 it('should change value when addressed as a form control', () => {
                     expect(combo).toBeDefined();
                     const form = fixture.componentInstance.reactiveForm;
@@ -3458,6 +3502,7 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                     expect(comboFormReference.value).toEqual([{ field: 'South Carolina', region: 'South Atlantic' }]);
                 });
+
                 it('should properly submit values when used as a form control', () => {
                     expect(combo).toBeDefined();
                     const form = fixture.componentInstance.reactiveForm;
@@ -3473,6 +3518,7 @@ describe('igxCombo', () => {
                     expect(form.status).toEqual('VALID');
                     fixture.debugElement.query(By.css('button')).triggerEventHandler('click', UIInteractions.simulateClickAndSelectEvent);
                 });
+
                 it('should add/remove asterisk when setting validators dynamically', () => {
                     let inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
                     let asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
@@ -3522,6 +3568,7 @@ describe('igxCombo', () => {
                     expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
                 }));
             });
+
             describe('Template form tests: ', () => {
                 let inputGroupRequired: DebugElement;
                 beforeEach(fakeAsync(() => {
@@ -3659,6 +3706,68 @@ describe('igxCombo', () => {
                 }));
             });
         });
+
+        describe('Zoneless', () => {
+            beforeEach(async () => {
+                TestBed.resetTestingModule();
+                await TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxComboSampleComponent,
+                    ],
+                    providers: [
+                        provideZonelessChangeDetection(),
+                    ]
+                }).compileComponents();
+
+                fixture = TestBed.createComponent(IgxComboSampleComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+            });
+
+            it('should not reproduce NG0100 when virtualized combo items update on scroll - issue #17310', fakeAsync(() => {
+                combo.open();
+                tick();
+                fixture.detectChanges();
+
+                const scrollEl = combo.virtualScrollContainer.getScroll();
+                expect(scrollEl).toBeTruthy();
+
+                scrollEl.scrollTop = 300;
+                scrollEl.dispatchEvent(new Event('scroll'));
+                tick(100);
+
+                expect(() => {
+
+                    fixture.detectChanges();
+                }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
+            }));
+
+            it('should not reproduce NG0100 related to active descendant on scroll - issue #17310', fakeAsync(() => {
+                combo.toggle();
+                tick();
+                fixture.detectChanges();
+
+                const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                dropdownContent.triggerEventHandler('focus', {});
+                tick();
+                fixture.detectChanges();
+
+                const activeDescendantId = combo.dropdown.activeDescendant;
+                expect(activeDescendantId).toBeTruthy();
+
+                fixture.detectChanges();
+
+                expect(() => {
+                    const scrollEl = combo.virtualScrollContainer.getScroll();
+                    scrollEl.scrollTop = 1000;
+                    scrollEl.dispatchEvent(new Event('scroll'));
+
+                    tick(100);
+                    fixture.detectChanges();
+                }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
+            }));
+        });
     });
 });
 
@@ -3681,6 +3790,7 @@ describe('igxCombo', () => {
             <div class="footer-class">This is a footer</div>
         </ng-template>
     </igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxComboSampleComponent {
@@ -3759,6 +3869,7 @@ class IgxComboSampleComponent {
         </p>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxLabelDirective, ReactiveFormsModule]
 })
 class IgxComboFormComponent {
@@ -3830,6 +3941,7 @@ class IgxComboFormComponent {
         </igx-combo>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxComboInTemplatedFormComponent {
@@ -3900,6 +4012,7 @@ export class LocalService {
     </igx-combo>
     `,
     providers: [LocalService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 export class IgxComboBindingTestComponent {
@@ -3928,6 +4041,7 @@ export class IgxComboBindingTestComponent {
         </igx-combo>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 class IgxComboInContainerTestComponent {
@@ -3998,6 +4112,7 @@ export class RemoteDataService {
     </igx-combo>
     `,
     providers: [RemoteDataService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -4031,6 +4146,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 
 @Component({
     template: `<igx-combo [(ngModel)]="selectedItems" [data]="items"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
@@ -4048,6 +4164,7 @@ export class ComboModelBindingComponent implements OnInit {
 @Component({
     template: `
         <igx-combo [(ngModel)]="selectedItems" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, FormsModule]
 })
 export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
@@ -4068,6 +4185,7 @@ export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
 @Component({
     template: `
         <igx-combo [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 export class ComboArrayTypeValueKeyComponent {
@@ -4096,6 +4214,7 @@ export class ComboArrayTypeValueKeyComponent {
 @Component({
     template: `
         <igx-combo id="id1" [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 export class ComboWithIdComponent {
