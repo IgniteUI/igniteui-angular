@@ -3720,10 +3720,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             filter(() => !this._init),
             throttle(() =>
                 this.throttleTime$.pipe(
-                  take(1),
-                  switchMap(time => timer(time, this.throttleScheduler))
+                    take(1),
+                    switchMap(time => timer(time, this.throttleScheduler))
                 )
-              ),
+            ),
             destructor
         )
             .subscribe((event) => {
@@ -3770,7 +3770,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
 
             // do not hide the advanced filtering overlay on scroll
-            if (this._advancedFilteringOverlayId === event.id) {
+             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
                     instance.lastActiveNode = this.navigation.activeNode;
@@ -3779,12 +3779,14 @@ export abstract class IgxGridBaseDirective implements GridType,
                 return;
             }
 
-            // do not hide the overlay if it's attached to a row
-            if (this.rowEditingOverlay?.overlayId === event.id) {
+            const inRow = (overlaySettings?.target as HTMLElement)?.classList.contains("igx-grid__tr");
+            // do not hide the overlay if it's attached to a row on scroll
+            if (inRow) {
                 return;
             }
 
-            if (overlaySettings?.outlet === this.outlet && this.overlayIDs.indexOf(event.id) === -1) {
+            const isInGrid = overlaySettings?.target instanceof Node && this.tbody.nativeElement.contains(overlaySettings?.target);
+            if (isInGrid && this.overlayIDs.indexOf(event.id) === -1) {
                 this.overlayIDs.push(event.id);
             }
         });
@@ -7443,7 +7445,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
-        if (this.type === 'hierarchical') {
+        if (this.type === 'hierarchical' && source === this.filteredSortedData) {
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
@@ -7777,12 +7779,18 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
 
-        this.zone.onStable.pipe(first()).subscribe(() => {
+        const callback = () => {
             this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
-        });
+        };
+        if (this.isZonelessChangeDetection()) {
+            this.cdr.detectChanges();
+            callback();
+        } else {
+            this.zone.onStable.pipe(first()).subscribe(callback);
+        }
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7805,6 +7813,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
+    }
+
+    protected isZonelessChangeDetection(): boolean {
+        return this.zone.constructor.name === 'NoopNgZone';
     }
 
     protected hasMenuPinningActions(): boolean {
@@ -8143,6 +8155,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             settings = overlay.settings;
         }
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
+        this.rowEditPositioningStrategy.settings.clipToVisibleArea =
+            this.type === 'hierarchical' && (this as GridType).rootGrid !== this;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
         const targetRow = !pinned ?
             this.gridAPI.get_row_by_key(rowID) as IgxRowDirective
