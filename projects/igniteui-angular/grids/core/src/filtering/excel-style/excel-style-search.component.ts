@@ -14,6 +14,7 @@ import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { cloneHierarchicalArray, columnFieldPath, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, resolveNestedPath, ɵSize } from 'igniteui-angular/core';
 import { Navigate } from 'igniteui-angular/drop-down';
+import { GridPagingMode } from 'igniteui-angular/grids/core';
 
 @Directive({
     selector: '[igxExcelStyleLoading]',
@@ -610,7 +611,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         searchVal = new Set(selectedItems.map(e => e.value.toLocaleTimeString()));
                         break;
                     case GridColumnDataType.String:
-                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical() && !this.isRemoteData()) {
+                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical() && !this.isRemote()) {
                             const selectedValues = new Set(selectedItems.map(item => item.value.toLowerCase()));
                             searchVal = new Set();
 
@@ -897,7 +898,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         return subRequired;
     }
 
-    private isRemoteData(): boolean {
-        return this.esf.grid.verticalScrollContainer.isRemote;
+    private isRemote(): boolean {
+        return this.esf.grid.verticalScrollContainer.isRemote || this.esf.grid.pagingMode === GridPagingMode.Remote;
     }
 }
