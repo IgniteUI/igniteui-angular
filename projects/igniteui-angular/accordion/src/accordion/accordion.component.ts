@@ -13,13 +13,13 @@ const ACCORDION_NAVIGATION_KEYS = new Set('up down arrowup arrowdown home end'.s
 
 export interface IAccordionEventArgs extends IExpansionPanelEventArgs {
     owner: IgxAccordionComponent;
-    /** Provides a reference to the `IgxExpansionPanelComponent` which was expanded/collapsed. */
+    /** Provides a reference to the expansion panel which was expanded/collapsed. */
     panel: IgxExpansionPanelBase;
 }
 
 export interface IAccordionCancelableEventArgs extends IExpansionPanelCancelableEventArgs {
     owner: IgxAccordionComponent;
-    /** Provides a reference to the `IgxExpansionPanelComponent` which is currently expanding/collapsing. */
+    /** Provides a reference to the expansion panel which is currently expanding/collapsing. */
     panel: IgxExpansionPanelBase;
     /** Enables canceling the expansion/collapse operation. */
     cancel: boolean;
@@ -28,7 +28,7 @@ export interface IAccordionCancelableEventArgs extends IExpansionPanelCancelable
 let NEXT_ID = 0;
 
 /**
- * IgxAccordion is a container-based component that contains that can house multiple expansion panels.
+ * Accordion is a container-based component that contains that can house multiple expansion panels.
  *
  * @igxModule IgxAccordionModule
  *

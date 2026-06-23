@@ -169,7 +169,7 @@ abstract class BaseRow implements RowType {
     }
 
     /**
-     * Returns if the row has child rows. Always return false for IgxGridRow.
+     * Returns if the row has child rows. Always return false for grid row.
      */
     public get hasChildren(): boolean {
         return false;
@@ -401,7 +401,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     }
 
     /**
-     * Returns true if child rows exist. Always return false for IgxGridRow.
+     * Returns true if child rows exist. Always return false for grid row.
      */
     public override get hasChildren(): boolean {
         if (this.treeRow.children) {
@@ -539,7 +539,7 @@ export class IgxGroupByRow implements RowType {
     public grid: GridType;
 
     /**
-     * Returns always true, because this is in instance of an IgxGroupByRow.
+     * Returns always true, because this is in instance of an group by row.
      */
     public isGroupByRow: boolean;
 
@@ -692,7 +692,7 @@ export class IgxSummaryRow implements RowType {
     public grid: GridType;
 
     /**
-     * Returns always true, because this is in instance of an IgxGroupByRow.
+     * Returns always true, because this is in instance of an group by row.
      */
     public isSummaryRow: boolean;
 
