@@ -1065,7 +1065,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
                 const view = container.detach(0);
-                view.detectChanges();
                 this.updateTemplateContext(embView.context, i);
 
                 // Because in Elements the whole parent div (containing data-index) gets removed (possibly due to being disconnected). In Angular it just gets moved.
