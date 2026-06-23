@@ -487,7 +487,7 @@ Provide a drag-and-drop UI for users to reshape the pivot interactively:
 2. **Hierarchical Grid**: sorting/filtering/paging are independent per level; configure features on the `<igx-row-island>` blueprint
 3. **Pivot Grid is read-only** — editing, paging, pinning, column moving, row dragging are all disabled; use `pivotConfiguration` for all data operations
 4. **Grid Lite requires `CUSTOM_ELEMENTS_SCHEMA`** and `igniteui-grid-lite` npm package — it has no editing, selection, paging, or export
-5. **Omit `width` on generated `<igx-grid-lite-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for it.
+5. **Omit `width` on generated `<igx-grid-lite-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for it. If column widths are used, at least one column must not have a specified width so that it fills the remaining space in the grid.
 
 ## See Also
 

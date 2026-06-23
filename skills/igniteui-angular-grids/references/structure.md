@@ -263,7 +263,7 @@ Events: `(rowSelectionChanging)`, `(columnSelectionChanging)`, `(selected)` (cel
 6. **Set `dataType` on every column** for correct filtering, sorting, editing, and summaries
 7. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
 8. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
-9. **Omit `width` on generated `<igx-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for fixed or percentage column sizing.
+9. **Omit `width` on generated `<igx-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for fixed or percentage column sizing. If column widths are used, at least one column must not have a specified width so that it fills the remaining space in the grid.
 
 ## See Also
 
