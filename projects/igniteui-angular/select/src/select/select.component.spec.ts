@@ -197,13 +197,21 @@ describe('igxSelect', () => {
             expect(select.overlaySettings).toBeUndefined();
             // The internal _overlayDefaults should use AutoPositionStrategy
             expect((select as any)._overlayDefaults.positionStrategy).toBeInstanceOf(AutoPositionStrategy);
+            // The merged settings should target the input-group bundle element, not the raw input
+            const merged = (select as any).getMergedOverlaySettings();
+            const bundleElement = select.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle');
+            expect(merged.target).toBe(bundleElement);
+            expect(merged.target).not.toBe(select.getEditElement());
         });
 
         it('should allow opt-in to IgxSelectOverlapPositionStrategy via overlaySettings', fakeAsync(() => {
             const overlapStrategy = new IgxSelectOverlapPositionStrategy(select);
             select.overlaySettings = { positionStrategy: overlapStrategy };
             expect(select.overlaySettings.positionStrategy).toBeInstanceOf(IgxSelectOverlapPositionStrategy);
-            expect((select.overlaySettings.positionStrategy as IgxSelectOverlapPositionStrategy).ownsScrollPositioning).toBeTrue();
+            expect((select.overlaySettings.positionStrategy as IgxSelectOverlapPositionStrategy).isItemOverlapPositioning).toBeTrue();
+            // The merged settings should switch the target to the raw input element
+            const merged = (select as any).getMergedOverlaySettings();
+            expect(merged.target).toBe(select.getEditElement());
 
             // The select should still open correctly when using the overlap strategy
             select.open();
@@ -313,6 +321,7 @@ describe('igxSelect', () => {
 
         it('should properly emit opening/closing events on input click', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+            const inputBundle = inputGroup.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
             expect(select).toBeTruthy();
 
             spyOn(select.opening, 'emit');
@@ -323,19 +332,19 @@ describe('igxSelect', () => {
             spyOn(select, 'open').and.callThrough();
             spyOn(select, 'close').and.callThrough();
 
-            inputGroup.nativeElement.click();
+            inputBundle.click();
             tick();
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 0, 1);
 
-            inputGroup.nativeElement.click();
+            inputBundle.click();
             tick();
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
 
             select.disabled = true;
             fixture.detectChanges();
-            inputGroup.nativeElement.click();
+            inputBundle.click();
             tick();
             fixture.detectChanges();
 

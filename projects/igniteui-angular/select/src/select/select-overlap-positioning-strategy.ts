@@ -24,7 +24,7 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
     private global_styles: SelectStyles = {};
 
     /** @hidden @internal */
-    public ownsScrollPositioning = true;
+    public isItemOverlapPositioning = true;
 
     constructor(private select: IgxSelectComponent, settings?: PositionSettings) {
         super();

@@ -397,16 +397,16 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.navigateFirst();
         }
 
-        super.open(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
+        super.open(this.getMergedOverlaySettings(overlaySettings));
     }
 
-    public inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {
+    protected inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {
         const targetElement = event.target as HTMLElement;
 
         if (this.hintElement && targetElement.contains(this.hintElement.nativeElement)) {
             return;
         }
-        this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
+        this.toggle(this.getMergedOverlaySettings(overlaySettings));
     }
 
     /** @hidden @internal */
@@ -440,7 +440,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public override onToggleContentAppended(event: ToggleViewEventArgs) {
         const info = this.overlayService.getOverlayById(event.id);
-        if ((info?.settings?.positionStrategy as { ownsScrollPositioning?: boolean })?.ownsScrollPositioning) {
+        if ((info?.settings?.positionStrategy as { isItemOverlapPositioning?: boolean })?.isItemOverlapPositioning) {
             return;
         }
         super.onToggleContentAppended(event);
@@ -592,6 +592,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
 
         this.cdr.markForCheck();
+    }
+
+    private getMergedOverlaySettings(overlaySettings?: OverlaySettings): OverlaySettings {
+        const merged = Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings);
+        if ((merged.positionStrategy as { isItemOverlapPositioning?: boolean })?.isItemOverlapPositioning) {
+            merged.target = this.getEditElement();
+        }
+        return merged;
     }
 
     private setSelection(item: IgxDropDownItemBaseDirective) {
