@@ -131,9 +131,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         it('checks if attributes are correctly assigned when grid has or does not have data', () => {
 
-            // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+            // With data, igx-grid__tbody-content is the rowgroup focus host
             const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
-            expect(container.getAttribute('role')).toBe(null);
+            expect(container.getAttribute('role')).toBe('rowgroup');
 
             //Filter grid so no results are available and grid is empty
             hierarchicalGrid.filter('index', '111', IgxStringFilteringOperand.instance().condition('contains'), true);
@@ -147,6 +147,26 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
 
             expect(container.getAttribute('role')).toMatch('row');
+        });
+
+        it('should have correct ARIA role structure on tbody and tfoot', () => {
+            // Outer tbody wrapper is layout-only
+            const tbodyWrapper = fixture.nativeElement.querySelector('.igx-grid__tbody');
+            expect(tbodyWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner focus host is the rowgroup
+            const tbodyContent = fixture.nativeElement.querySelector('.igx-grid__tbody-content');
+            expect(tbodyContent.getAttribute('role')).toBe('rowgroup');
+            expect(tbodyContent.getAttribute('tabindex')).toBe('0');
+
+            // Outer tfoot wrapper is layout-only
+            const tfootWrapper = fixture.nativeElement.querySelector('.igx-grid__tfoot');
+            expect(tfootWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner tfoot div is the rowgroup focus host
+            const tfootContent = fixture.nativeElement.querySelector('.igx-grid__tfoot > div');
+            expect(tfootContent.getAttribute('role')).toBe('rowgroup');
+            expect(tfootContent.getAttribute('tabindex')).toBe('0');
         });
 
         it('should allow applying initial expansions state for certain rows through expansionStates option', () => {
@@ -761,6 +781,51 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childGrids = hierarchicalGrid.gridAPI.getChildGrids(false) as IgxHierarchicalGridComponent[];
             expect(childGrids[0].height).toBe('200px');
             expect(childGrids[1].height).toBe('200px');
+        });
+
+        it('should hide child row editing overlay when parent scroll moves child row out of view', () => {
+            hierarchicalGrid.getRowByIndex(0).expanded = true;
+            fixture.detectChanges();
+
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0] as IgxHierarchicalGridComponent;
+            childGrid.primaryKey = 'ID';
+            childGrid.rowEditable = true;
+            fixture.detectChanges();
+
+            const row = childGrid.gridAPI.get_row_by_index(0);
+            spyOnProperty(childGrid.crudService, 'rowInEditMode', 'get').and.returnValue(row);
+            childGrid.openRowOverlay(row.key);
+            fixture.detectChanges();
+
+            expect(childGrid.rowEditingOverlay.collapsed).toBeFalse();
+
+            const parentTbody = hierarchicalGrid.tbody.nativeElement.parentElement;
+            const childTbody = childGrid.tbody.nativeElement.parentElement;
+            const overlayContent = childGrid.rowEditingOverlay.element.parentElement;
+
+            parentTbody.style.overflow = 'hidden';
+            childTbody.style.overflow = 'hidden';
+            spyOn(parentTbody, 'getBoundingClientRect').and.returnValue({
+                top: 0, right: 500, bottom: 200, left: 0
+            } as DOMRect);
+            spyOn(childTbody, 'getBoundingClientRect').and.returnValue({
+                top: 0, right: 500, bottom: 200, left: 0
+            } as DOMRect);
+            spyOn(childGrid.tbody.nativeElement, 'getBoundingClientRect').and.returnValue({
+                top: -100, right: 500, bottom: 500, left: 0
+            } as DOMRect);
+            spyOn(row.nativeElement, 'getBoundingClientRect').and.returnValue({
+                top: -120, right: 500, bottom: -80, left: 0
+            } as DOMRect);
+            spyOn(overlayContent, 'getBoundingClientRect').and.returnValue({
+                top: -80, right: 500, bottom: -32, left: 0, width: 500, height: 48
+            } as DOMRect);
+
+            childGrid.rowEditingOverlay.reposition();
+            fixture.detectChanges();
+
+            expect(overlayContent.style.clipPath).toBe('inset(100%)');
+            expect(overlayContent.style.pointerEvents).toBe('none');
         });
 
         it('Should apply runtime option changes to all related child grids (both existing and not yet initialized).', () => {
