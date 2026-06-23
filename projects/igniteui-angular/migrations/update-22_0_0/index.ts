@@ -81,6 +81,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         `     To preserve overlap behavior: this.select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(this.select) }; -->\n`;
 
     for (const path of update.templateFiles) {
+        const content = host.read(path)!.toString();
         const root = parseFile(parser, host, path);
         const nodes = findElementNodes(root, 'igx-select');
 
@@ -88,6 +89,9 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
             if (!(node instanceof Element)) continue;
 
             const { startTag, file } = getSourceOffset(node);
+            const noteStart = Math.max(0, startTag.start - SELECT_NOTE.length);
+            if (content.slice(noteStart, startTag.start) === SELECT_NOTE) continue;
+
             addChange(file.url, new FileChange(startTag.start, SELECT_NOTE));
         }
     }
