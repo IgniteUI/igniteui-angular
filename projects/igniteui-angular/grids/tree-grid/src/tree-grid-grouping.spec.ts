@@ -299,7 +299,7 @@ describe('IgxTreeGrid', () => {
         }));
 
         it('should handle excel style filtering when grouping is applied and 3 or more items are selected', fakeAsync(() => {
-            treeGrid.filterMode = "excelStyleFilter";
+            treeGrid.filterMode = 'excelStyleFilter';
             treeGrid.allowFiltering = true;
             treeGrid.expansionDepth = Infinity;
             fix.detectChanges();
@@ -322,7 +322,7 @@ describe('IgxTreeGrid', () => {
         }));
 
         it('should handle excel style filtering when grouping is applied and preserve all checked esf items', fakeAsync(() => {
-            treeGrid.filterMode = "excelStyleFilter";
+            treeGrid.filterMode = 'excelStyleFilter';
             treeGrid.allowFiltering = true;
             treeGrid.expansionDepth = Infinity;
             fix.detectChanges();
